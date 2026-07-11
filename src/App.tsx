@@ -19,21 +19,21 @@ export default function App() {
     <>
       <div className="ui-layer">
         <header className="header">
-          <div className="logo">A O R A N / NAROA</div>
+          <a href="https://naroagutierrezgil.com" className="logo">A O R A N / NAROA</a>
           <nav className="nav">
-            <a href="#/exhibition" className="active">COLECCIÓN</a>
-            <a href="#/manifesto">MANIFIESTO</a>
-            <a href="mailto:naroa@naroa.eu">CONTACTO</a>
+            <a href="#/exhibition" className="active">EXPOSICIÓN 3D</a>
+            <a href="https://naroagutierrezgil.com/autodidacta" target="_blank" rel="noopener noreferrer">MANIFIESTO</a>
+            <a href="https://naroagutierrezgil.com/contacto" target="_blank" rel="noopener noreferrer">CONTACTO</a>
           </nav>
         </header>
         <div className="ui-middle">
           <div className="headline">
-            <h1>HIPERREALISMO POP</h1>
-            <p>Retratos sobre pizarra natural y mica mineral</p>
+            <h1>SALA DE JUEGOS & 3D</h1>
+            <p>Fricción interactiva sobre el lienzo de Naroa</p>
           </div>
         </div>
         <footer className="footer">
-          <div>MOSKV-1 APEX ENGINE // C5-REAL</div>
+          <div><a href="https://naroagutierrezgil.com" target="_blank" rel="noopener noreferrer">PORTAL OFICIAL: naroagutierrezgil.com</a></div>
           <div>KOBETAMENDI // 43.2630° N, 2.9350° W</div>
         </footer>
       </div>
