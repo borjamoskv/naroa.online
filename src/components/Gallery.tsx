@@ -6,7 +6,7 @@ import { easing } from 'maath'
 
 // A single item in the gallery
 function GalleryItem({ position, scale, url, index, rotation }: any) {
-  const ref = useRef<any>()
+  const ref = useRef<any>(null)
   const [hovered, hover] = useState(false)
   
   useFrame((state, delta) => {
@@ -16,7 +16,7 @@ function GalleryItem({ position, scale, url, index, rotation }: any) {
       // Smooth hover effects on material properties
       easing.damp3(ref.current.scale, hovered ? [scale[0] * 1.05, scale[1] * 1.05, 1] : scale, 0.2, delta)
       easing.damp(ref.current.material, 'grayscale', hovered ? 0 : 0.8, 0.2, delta)
-      easing.damp(ref.current.material, 'color', hovered ? '#ffffff' : '#666666', 0.2, delta)
+      easing.dampC(ref.current.material.color, hovered ? '#ffffff' : '#666666', 0.2, delta)
     }
   })
 
@@ -35,12 +35,23 @@ function GalleryItem({ position, scale, url, index, rotation }: any) {
   )
 }
 
+const urls = [
+  '/assets/marilyn-rocks--qPeLHxE.webp',
+  '/assets/hq-amy-BRTriASV.webp',
+  '/assets/hq-james-CjsTrO7r.webp',
+  '/assets/hq-johnny-5ueL8eU0.webp',
+  '/assets/celia-cruz-cantinflowers-DO-SRKMB.webp',
+  '/assets/baroque-farrokh-mjg4ClA9.webp',
+  '/assets/divinos-marilyn-By8KYPMI.webp',
+  '/assets/divinos-johnny-gl9M1ZKj.webp'
+]
+
 export function Gallery() {
   const group = useRef<THREE.Group>(null)
   const scroll = useScroll()
 
   // Generate 8 items placed in a cylinder/circle around the center
-  const numItems = 8
+  const numItems = urls.length
   const radius = 5
 
   const items = Array.from({ length: numItems }, (_, i) => {
@@ -52,12 +63,12 @@ export function Gallery() {
     return {
       position: [x, 0, z],
       rotation: rotation,
-      url: '/image1.jpg',
+      url: urls[i],
       scale: [3, 4, 1]
     }
   })
 
-  useFrame((state, delta) => {
+  useFrame((_, delta) => {
     if (group.current) {
       // Rotate the entire gallery based on the scroll offset
       // scroll.offset goes from 0 to 1 over the total scroll area

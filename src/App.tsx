@@ -1,6 +1,6 @@
-import { Suspense, useRef } from 'react'
+import { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { ScrollControls, Environment, Html, Preload, PerspectiveCamera } from '@react-three/drei'
+import { ScrollControls, Environment, Html, Preload } from '@react-three/drei'
 import { EffectComposer, Noise, Vignette, Bloom, ChromaticAberration } from '@react-three/postprocessing'
 import { BlendFunction } from 'postprocessing'
 import * as THREE from 'three'
@@ -14,26 +14,27 @@ function Loader() {
   )
 }
 
-function Rig() {
-  // A dynamic rig that slightly moves camera with mouse, but we'll let ScrollControls handle most of it
-  return null;
-}
-
 export default function App() {
   return (
     <>
       <div className="ui-layer">
         <header className="header">
-          <div className="logo">MOSKV-1 APEX</div>
+          <div className="logo">A O R A N / NAROA</div>
           <nav className="nav">
-            <a href="#">EXHIBITION</a>
-            <a href="#">MANIFESTO</a>
-            <a href="#">INDEX</a>
+            <a href="#/exhibition" className="active">COLECCIÓN</a>
+            <a href="#/manifesto">MANIFIESTO</a>
+            <a href="mailto:naroa@naroa.eu">CONTACTO</a>
           </nav>
         </header>
+        <div className="ui-middle">
+          <div className="headline">
+            <h1>HIPERREALISMO POP</h1>
+            <p>Retratos sobre pizarra natural y mica mineral</p>
+          </div>
+        </div>
         <footer className="footer">
-          <div>INDUSTRIAL NOIR 2026</div>
-          <div>C5-REAL SOVEREIGN ARCHITECTURE</div>
+          <div>MOSKV-1 APEX ENGINE // C5-REAL</div>
+          <div>KOBETAMENDI // 43.2630° N, 2.9350° W</div>
         </footer>
       </div>
 
@@ -47,7 +48,7 @@ export default function App() {
           
           <Environment preset="city" />
           
-          <EffectComposer disableNormalPass>
+          <EffectComposer>
             <Bloom luminanceThreshold={0.2} mipmapBlur intensity={1.5} />
             <Noise opacity={0.035} />
             <Vignette eskil={false} offset={0.1} darkness={1.1} />
