@@ -10,7 +10,7 @@ function Loader() {
   return (
     <Html center>
       <div className="loader-container">
-        <div className="loader">CORTEX ENGINE INITIALIZING</div>
+        <div className="loader">CARGANDO LIENZO</div>
         <div className="loader-bar" />
       </div>
     </Html>
@@ -20,9 +20,6 @@ function Loader() {
 export default function App() {
   return (
     <>
-      {/* Scroll Progress Bar */}
-      <div className="scroll-indicator" id="scroll-bar" />
-
       <div className="ui-layer">
         <header className="header">
           <a href="https://naroagutierrezgil.com" className="logo">
@@ -39,35 +36,13 @@ export default function App() {
         <div className="ui-middle">
           <div className="headline">
             <h1>SALA DE JUEGOS & 3D</h1>
-            <p>Fricción interactiva sobre el lienzo tridimensional de Naroa. Desliza para rotar la galería.</p>
-          </div>
-
-          {/* Telemetry panel matching the C5-REAL styling */}
-          <div className="telemetry-panel">
-            <div className="telemetry-row">
-              <span>SYSTEM LEVEL</span>
-              <span className="telemetry-value">C5-REAL</span>
-            </div>
-            <div className="telemetry-row">
-              <span>EXERGY YIELD</span>
-              <span className="telemetry-value">1000/1000</span>
-            </div>
-            <div className="telemetry-row">
-              <span>LEDGER IDENTITY</span>
-              <span className="telemetry-value">BORJA MOSKV</span>
-            </div>
-            <div className="telemetry-row">
-              <span>BYZANTINE QUORUM</span>
-              <span className="telemetry-value">ACTIVE (N&gt;=3)</span>
-            </div>
+            <p>Fricción interactiva sobre el lienzo de Naroa. Desliza para navegar por la galería.</p>
           </div>
         </div>
 
         <footer className="footer">
           <div><a href="https://naroagutierrezgil.com" target="_blank" rel="noopener noreferrer">PORTAL OFICIAL: naroagutierrezgil.com</a></div>
-          <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.7rem", color: "var(--accent-color)" }}>
-            KOBETAMENDI // 43.2630° N, 2.9350° W
-          </div>
+          <div className="coordinates">KOBETAMENDI // 43.2630° N, 2.9350° W</div>
         </footer>
       </div>
 
