@@ -5,6 +5,7 @@ import { EffectComposer, Noise, Vignette, Bloom, ChromaticAberration } from '@re
 import { BlendFunction } from 'postprocessing'
 import * as THREE from 'three'
 import { Gallery } from './components/Gallery'
+import { motion } from 'framer-motion'
 
 function Loader() {
   return (
@@ -21,7 +22,12 @@ export default function App() {
   return (
     <>
       <div className="ui-layer">
-        <header className="header">
+        <motion.header 
+          className="header"
+          initial={{ y: -50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1], delay: 0.2 }}
+        >
           <a href="https://naroagutierrezgil.com" className="logo">
             <span className="logo-dot"></span>
             A O R A N / NAROA
@@ -31,7 +37,7 @@ export default function App() {
             <a href="https://naroagutierrezgil.com/autodidacta" target="_blank" rel="noopener noreferrer">MANIFIESTO</a>
             <a href="https://naroagutierrezgil.com/contacto" target="_blank" rel="noopener noreferrer">CONTACTO</a>
           </nav>
-        </header>
+        </motion.header>
 
         <div className="ui-middle">
           <div className="headline">
