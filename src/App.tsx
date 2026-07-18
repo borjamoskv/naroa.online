@@ -8,8 +8,8 @@ import { motion } from 'framer-motion'
 
 const Gallery = lazy(() => import('./components/Gallery').then(module => ({ default: module.Gallery })))
 
-// TODO: volver a https://naroagutierrezgil.com cuando el dominio vuelva a estar operativo (ahora 404)
-const PORTAL = 'https://naroa.online'
+// Portal oficial (restaurado 2026-07-18 tras redespliegue a Cloudflare Pages)
+const PORTAL = 'https://naroagutierrezgil.com'
 
 function Loader() {
   return (
@@ -38,8 +38,8 @@ export default function App() {
           </a>
           <nav className="nav">
             <a href="#/" className="active">EXPOSICIÓN 3D</a>
-            <a href={`${PORTAL}/#/about`} target="_blank" rel="noopener noreferrer">MANIFIESTO</a>
-            <a href={`${PORTAL}/#/contacto`} target="_blank" rel="noopener noreferrer">CONTACTO</a>
+            <a href={`${PORTAL}/sobre-mi/`} target="_blank" rel="noopener noreferrer">MANIFIESTO</a>
+            <a href={`${PORTAL}/encargos/`} target="_blank" rel="noopener noreferrer">CONTACTO</a>
           </nav>
         </motion.header>
 
@@ -51,7 +51,7 @@ export default function App() {
         </div>
 
         <footer className="footer">
-          <div><a href={PORTAL} target="_blank" rel="noopener noreferrer">PORTAL OFICIAL: naroa.online</a></div>
+          <div><a href={PORTAL} target="_blank" rel="noopener noreferrer">PORTAL OFICIAL: naroagutierrezgil.com</a></div>
           <div className="coordinates">KOBETAMENDI // 43.2630° N, 2.9350° W</div>
         </footer>
       </div>
