@@ -238,6 +238,95 @@ canvas {
   to { transform: rotate(360deg); }
 }
 
+/* Obra actual (caption inferior) */
+.artwork-caption {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: auto;
+  z-index: 10;
+}
+
+.artwork-caption a {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  text-decoration: none;
+  color: var(--text-color);
+  font-family: var(--font-mono);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0.75;
+  transition: opacity 0.3s, text-shadow 0.3s;
+  animation: caption-in 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.artwork-caption a:hover {
+  opacity: 1;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.35);
+}
+
+.artwork-index {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.artwork-title {
+  font-size: 0.85rem;
+}
+
+.artwork-cta {
+  font-size: 0.65rem;
+  color: var(--accent-color);
+  text-shadow: 0 0 6px var(--accent-glow);
+}
+
+@keyframes caption-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 0.75; transform: translateY(0); }
+}
+
+/* Pista de scroll */
+.scroll-hint {
+  position: absolute;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 44px;
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.scroll-hint span {
+  position: absolute;
+  top: -50%;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background: #FFFFFF;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+  animation: scrollhint 2.2s infinite cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes scrollhint {
+  0% { top: -50%; }
+  100% { top: 110%; }
+}
+
+/* Accesibilidad: menos movimiento si el sistema lo pide */
+@media (prefers-reduced-motion: reduce) {
+  .spinner,
+  .loader-text,
+  .scroll-hint span,
+  .artwork-caption a {
+    animation: none;
+  }
+}
+
 @media (max-width: 768px) {
   .ui-layer {
     padding: 20px;
@@ -257,5 +346,20 @@ canvas {
     gap: 8px;
     text-align: center;
     align-items: center;
+  }
+  .artwork-caption {
+    bottom: 130px;
+    width: 100%;
+    text-align: center;
+  }
+  .artwork-caption a {
+    justify-content: center;
+    gap: 10px;
+  }
+  .artwork-title {
+    font-size: 0.75rem;
+  }
+  .scroll-hint {
+    display: none;
   }
 }

@@ -1,32 +1,28 @@
-import { Suspense, lazy } from 'react'
-import { Canvas } from '@react-three/fiber'
-import { ScrollControls, Environment, Html, Preload } from '@react-three/drei'
-import { EffectComposer, Noise, Vignette, Bloom, ChromaticAberration } from '@react-three/postprocessing'
-import { BlendFunction } from 'postprocessing'
-import * as THREE from 'three'
+import { Suspense, lazy, useState } from 'react'
 import { motion } from 'framer-motion'
+import { ARTWORKS, PORTAL } from './artworks'
 
-const Gallery = lazy(() => import('./components/Gallery').then(module => ({ default: module.Gallery })))
-
-// Portal oficial (restaurado 2026-07-18 tras redespliegue a Cloudflare Pages)
-const PORTAL = 'https://naroagutierrezgil.com'
+// La escena WebGL (three.js + postprocesado) carga en un chunk aparte:
+// la UI y el loader pintan al instante, la sala 3D llega después.
+const Scene = lazy(() => import('./components/Scene'))
 
 function Loader() {
   return (
-    <Html center>
-      <div className="loader">
-        <div className="spinner"></div>
-        <div className="loader-text">SINCRONIZANDO LIENZO 3D...</div>
-      </div>
-    </Html>
+    <div className="loader">
+      <div className="spinner"></div>
+      <div className="loader-text">SINCRONIZANDO LIENZO 3D...</div>
+    </div>
   )
 }
 
 export default function App() {
+  const [current, setCurrent] = useState(0)
+  const artwork = ARTWORKS[current]
+
   return (
     <>
       <div className="ui-layer">
-        <motion.header 
+        <motion.header
           className="header"
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -46,8 +42,18 @@ export default function App() {
         <div className="ui-middle">
           <div className="headline">
             <h1>SALA DE JUEGOS & 3D</h1>
-            <p>Fricción interactiva sobre el lienzo de Naroa. Desliza para navegar por la galería.</p>
+            <p>Fricción interactiva sobre el lienzo de Naroa. Desliza para navegar; haz clic en una obra para verla en el portal.</p>
           </div>
+        </div>
+
+        <div className="artwork-caption">
+          <a href={artwork.href} target="_blank" rel="noopener noreferrer" key={artwork.title}>
+            <span className="artwork-index">
+              {String(current + 1).padStart(2, '0')} / {String(ARTWORKS.length).padStart(2, '0')}
+            </span>
+            <span className="artwork-title">{artwork.title}</span>
+            <span className="artwork-cta">VER OBRA ↗</span>
+          </a>
         </div>
 
         <footer className="footer">
@@ -56,26 +62,11 @@ export default function App() {
         </footer>
       </div>
 
-      <Canvas dpr={[1, 2]} gl={{ antialias: false, toneMapping: THREE.ACESFilmicToneMapping }}>
-        <color attach="background" args={['#0a0a0a']} />
-        
-        <Suspense fallback={<Loader />}>
-          <ScrollControls pages={4} infinite damping={0.1}>
-            <Gallery />
-          </ScrollControls>
-          
-          <Environment preset="city" />
-          
-          <EffectComposer>
-            <Bloom luminanceThreshold={0.15} mipmapBlur intensity={1.2} />
-            <Noise opacity={0.03} />
-            <Vignette eskil={false} offset={0.15} darkness={1.15} />
-            <ChromaticAberration blendFunction={BlendFunction.NORMAL} offset={new THREE.Vector2(0.0015, 0.0015)} />
-          </EffectComposer>
+      <div className="scroll-hint" aria-hidden="true"><span /></div>
 
-          <Preload all />
-        </Suspense>
-      </Canvas>
+      <Suspense fallback={<Loader />}>
+        <Scene onCurrentChange={setCurrent} />
+      </Suspense>
     </>
   )
 }
