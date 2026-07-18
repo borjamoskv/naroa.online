@@ -8,6 +8,9 @@ import { motion } from 'framer-motion'
 
 const Gallery = lazy(() => import('./components/Gallery').then(module => ({ default: module.Gallery })))
 
+// TODO: volver a https://naroagutierrezgil.com cuando el dominio vuelva a estar operativo (ahora 404)
+const PORTAL = 'https://naroa.online'
+
 function Loader() {
   return (
     <Html center>
@@ -29,14 +32,14 @@ export default function App() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1], delay: 0.2 }}
         >
-          <a href="https://naroagutierrezgil.com" className="logo">
+          <a href={PORTAL} className="logo">
             <span className="logo-dot"></span>
             A O R A N / NAROA
           </a>
           <nav className="nav">
-            <a href="#/exhibition" className="active">EXPOSICIÓN 3D</a>
-            <a href="https://naroagutierrezgil.com/autodidacta" target="_blank" rel="noopener noreferrer">MANIFIESTO</a>
-            <a href="https://naroagutierrezgil.com/contacto" target="_blank" rel="noopener noreferrer">CONTACTO</a>
+            <a href="#/" className="active">EXPOSICIÓN 3D</a>
+            <a href={`${PORTAL}/#/about`} target="_blank" rel="noopener noreferrer">MANIFIESTO</a>
+            <a href={`${PORTAL}/#/contacto`} target="_blank" rel="noopener noreferrer">CONTACTO</a>
           </nav>
         </motion.header>
 
@@ -48,7 +51,7 @@ export default function App() {
         </div>
 
         <footer className="footer">
-          <div><a href="https://naroagutierrezgil.com" target="_blank" rel="noopener noreferrer">PORTAL OFICIAL: naroagutierrezgil.com</a></div>
+          <div><a href={PORTAL} target="_blank" rel="noopener noreferrer">PORTAL OFICIAL: naroa.online</a></div>
           <div className="coordinates">KOBETAMENDI // 43.2630° N, 2.9350° W</div>
         </footer>
       </div>
