@@ -1,18 +1,19 @@
-import { Suspense } from 'react'
+import { Suspense, lazy } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { ScrollControls, Environment, Html, Preload } from '@react-three/drei'
 import { EffectComposer, Noise, Vignette, Bloom, ChromaticAberration } from '@react-three/postprocessing'
 import { BlendFunction } from 'postprocessing'
 import * as THREE from 'three'
-import { Gallery } from './components/Gallery'
 import { motion } from 'framer-motion'
+
+const Gallery = lazy(() => import('./components/Gallery').then(module => ({ default: module.Gallery })))
 
 function Loader() {
   return (
     <Html center>
-      <div className="loader-container">
-        <div className="loader">CARGANDO LIENZO</div>
-        <div className="loader-bar" />
+      <div className="loader">
+        <div className="spinner"></div>
+        <div className="loader-text">SINCRONIZANDO LIENZO 3D...</div>
       </div>
     </Html>
   )
