@@ -110,25 +110,7 @@
   function wireReveal() {
     var items = Array.prototype.slice.call(document.querySelectorAll('.gallery-reveal'));
     if (!items.length) return;
-
-    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced || !('IntersectionObserver' in window)) {
-      items.forEach(function (el) { el.classList.add('is-visible'); });
-      return;
-    }
-
-    var observer = new IntersectionObserver(function (entries) {
-      var batch = 0;
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        entry.target.style.setProperty('--reveal-delay', Math.min(batch * 70, 350) + 'ms');
-        entry.target.classList.add('is-visible');
-        observer.unobserve(entry.target);
-        batch++;
-      });
-    }, { threshold: 0.05, rootMargin: '0px 0px -6% 0px' });
-
-    items.forEach(function (el) { observer.observe(el); });
+    items.forEach(function (el) { el.classList.add('is-visible'); });
   }
 
   /* ── Contador de obras en la cabecera ── */
