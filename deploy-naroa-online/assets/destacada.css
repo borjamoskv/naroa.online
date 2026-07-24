@@ -1,0 +1,372 @@
+/* ═══════════════════════════════════════════════════════════════
+   destacada.css — Mejoras de la vista #/destacada (Obra)
+   2026-07-19 · Carga después de main.css
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── 1. Resucitar el lightbox (estaba anulado con display:none !important) ── */
+.gallery-lightbox:not([hidden]) {
+  display: flex !important;
+}
+
+/* Flechas de navegación (estaban ocultas) */
+.gallery-lightbox__nav {
+  display: flex;
+  font-size: 2.2rem;
+  color: #fff;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.gallery-lightbox__nav:after { content: none; }          /* usa el glifo ‹ › del DOM */
+.gallery-lightbox__nav:hover { color: var(--gallery-gold, #d4af37); }
+
+/* En táctil no hay :hover — flechas y metadatos siempre visibles */
+@media (hover: none) {
+  .gallery-lightbox__nav { opacity: 1; }
+}
+
+/* Botón de cierre (no tenía estilo alguno) */
+.gallery-lightbox__close {
+  position: absolute;
+  top: 22px;
+  right: 26px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  color: #fff;
+  cursor: pointer;
+  z-index: 10002;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
+}
+.gallery-lightbox__close:hover,
+.gallery-lightbox__close:focus-visible {
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--gallery-gold, #d4af37);
+  transform: rotate(90deg);
+  outline: none;
+}
+
+/* Línea de serie bajo los metadatos (sin estilo previo) */
+.gallery-lightbox__series {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.55);
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  margin: 0.35rem 0 0;
+}
+
+/* ── 2. Reveal al hacer scroll (la clase .gallery-reveal no tenía CSS) ──
+   Usa `translate` (propiedad individual) para no interferir con el
+   `transform` de :hover ya definido en main.css. */
+.gallery-reveal {
+  opacity: 0;
+  translate: 0 34px;
+  transition:
+    opacity 0.7s ease,
+    translate 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.gallery-reveal.is-visible {
+  opacity: 1;
+  translate: 0 0;
+}
+
+/* ── 3. Títulos visibles en táctil (el overlay solo aparecía con :hover) ── */
+@media (hover: none) {
+  .gallery-massive__overlay {
+    opacity: 1;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.25) 45%, transparent 70%);
+  }
+  .gallery-massive__title { transform: none; }
+}
+
+/* ── 4. La obra hero también abre el lightbox ── */
+.gallery-hero__artwork { cursor: pointer; }
+.gallery-hero__artwork:focus-visible {
+  outline: 2px solid var(--gallery-gold, #d4af37);
+  outline-offset: 6px;
+  border-radius: 6px;
+}
+
+/* ── 5. Accesibilidad teclado en la cuadrícula ── */
+.gallery-massive__item:focus-visible {
+  outline: 2px solid var(--gallery-gold, #d4af37);
+  outline-offset: 3px;
+  z-index: 2;
+}
+.gallery-massive__item:focus-visible .gallery-massive__overlay { opacity: 1; }
+.gallery-massive__item:focus-visible .gallery-massive__title { transform: translateY(0); }
+
+/* ── 6. Contador de obras en la cabecera de sección ── */
+.gallery-count {
+  display: inline-block;
+  margin-top: 1.1rem;
+  padding: 0.35em 1em;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 999px;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gallery-gold, #d4af37);
+}
+
+/* ── 7. Pista visual de que las obras se pueden abrir ── */
+.gallery-massive__item::after { z-index: 2; }
+.gallery-massive__item .gallery-massive__expand {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-size: 0.95rem;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  pointer-events: none;
+  z-index: 4;
+}
+.gallery-massive__item:hover .gallery-massive__expand,
+.gallery-massive__item:focus-visible .gallery-massive__expand {
+  opacity: 1;
+  transform: scale(1);
+}
+@media (hover: none) {
+  .gallery-massive__item .gallery-massive__expand { opacity: 0.85; transform: none; }
+}
+
+/* ── 8. Respeta prefers-reduced-motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .gallery-reveal {
+    opacity: 1;
+    translate: none;
+    transition: none;
+  }
+  .gallery-lightbox__close,
+  .gallery-massive__item .gallery-massive__expand {
+    transition: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   9. Menú móvil — el botón hamburguesa no existía en el markup
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .nav__toggle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    cursor: pointer;
+    position: relative;
+    z-index: 9001; /* por encima del overlay .nav__links (9000) */
+    -webkit-tap-highlight-color: transparent;
+  }
+  .nav__toggle span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    background: #fff;
+    border-radius: 2px;
+    transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.2s ease;
+  }
+  .nav__toggle--open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav__toggle--open span:nth-child(2) { opacity: 0; }
+  .nav__toggle--open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .nav__toggle--open { border-color: rgba(212, 175, 55, 0.5); }
+}
+body.nav-open { overflow: hidden; }
+
+/* ═══════════════════════════════════════════════════════════════
+   10. Panel MICA — más pequeño y más coqueto
+   Antes: 380×600 fijos (y casi pantalla completa en móvil)
+   ═══════════════════════════════════════════════════════════════ */
+.mica-panel {
+  width: 320px;
+  height: auto;
+  max-height: min(460px, calc(100vh - 150px));
+  right: 20px;
+  bottom: 92px;
+  border-radius: 24px 24px 24px 8px; /* burbuja hacia el orbe */
+  display: flex;
+  flex-direction: column;
+}
+.mica-panel:before { display: none; } /* el "lunar" decorativo estorbaba en tamaño pequeño */
+
+.mica-header { padding: 0.8rem 1rem; gap: 0.7rem; }
+.mica-header__avatar { width: 32px; height: 32px; font-size: 15px; border-radius: 10px 8px 9px 6px; }
+.mica-header__name { font-size: 13.5px; }
+.mica-header__status { font-size: 11px; }
+.mica-panel-close { font-size: 1rem; padding: 0.35rem; }
+
+.mica-messages { padding: 0.9rem; gap: 0.65rem; }
+.mica-message { font-size: 13px; padding: 0.65rem 0.85rem; line-height: 1.45; }
+
+.mica-quick-actions { padding: 0 0.9rem 0.6rem; gap: 5px; }
+.mica-quick-actions button { font-size: 11px; padding: 0.35rem 0.65rem; }
+
+.mica-input-container { padding: 0.8rem 0.9rem; gap: 0.55rem; }
+.mica-input { padding: 0.6rem 0.85rem; font-size: 13px; }
+.mica-send { width: 36px; height: 36px; font-size: 15px; border-radius: 11px 8px 9px 6px; }
+
+@media (max-width: 768px) {
+  .mica-panel {
+    width: calc(100vw - 32px);
+    height: auto;
+    max-height: 56vh;
+    right: 16px;
+    bottom: 80px;
+    left: auto;
+    border-radius: 22px 22px 22px 8px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   11. Sección Blog (sincronizada con WordPress)
+   ═══════════════════════════════════════════════════════════════ */
+.blog {
+  padding: clamp(4rem, 8vw, 7rem) clamp(1.2rem, 5vw, 4rem);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.blog__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.4rem;
+  margin-top: 3rem;
+}
+@media (max-width: 1024px) { .blog__grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px)  { .blog__grid { grid-template-columns: 1fr; } }
+
+.blog-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.45s cubic-bezier(0.19, 1, 0.22, 1), border-color 0.35s ease, box-shadow 0.45s ease;
+}
+.blog-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(212, 175, 55, 0.45);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.45), 0 0 40px rgba(212, 175, 55, 0.08);
+}
+.blog-card__media {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #0d0d0f;
+}
+.blog-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.blog-card:hover .blog-card__media img { transform: scale(1.06); }
+.blog-card__media--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  background: linear-gradient(135deg, #17171c 0%, #0d0d0f 100%);
+}
+.blog-card__body { padding: 1.1rem 1.2rem 1.3rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.blog-card__date {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.68rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gallery-gold, #d4af37);
+}
+.blog-card__title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #fff;
+}
+.blog-card__excerpt {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.6);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.blog-card__cta {
+  margin-top: 0.4rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gallery-gold, #d4af37);
+}
+.blog__loading, .blog__error {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem 1rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.95rem;
+}
+.blog__error a { color: var(--gallery-gold, #d4af37); }
+.blog__more { text-align: center; margin-top: 2.5rem; }
+.blog__more-link {
+  display: inline-block;
+  padding: 0.8rem 2rem;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 999px;
+  color: var(--gallery-gold, #d4af37);
+  text-decoration: none;
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+.blog__more-link:hover { background: rgba(212, 175, 55, 0.12); border-color: var(--gallery-gold, #d4af37); }
+
+/* ═══════════════════════════════════════════════════════════════
+   12. AORAN — las letras se retiran «detrás de la cabeza»
+   A los 4 s de contemplar la sección, los caracteres retroceden,
+   se encogen y se disuelven; vuelven al pasar el cursor.
+   ═══════════════════════════════════════════════════════════════ */
+.about__impact-title .aoran-char {
+  display: inline-block;
+  transition:
+    transform 1.5s cubic-bezier(0.19, 1, 0.22, 1),
+    opacity 1.5s ease,
+    filter 1.5s ease;
+  transition-delay: calc(var(--i, 0) * 45ms);
+  will-change: transform, opacity;
+}
+.about__impact-title.aoran-drift .aoran-char {
+  transform: translateY(-0.32em) scale(0.8) rotate(var(--r, 5deg));
+  opacity: 0.22;
+  filter: blur(1px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .about__impact-title .aoran-char { transition: none; }
+  .about__impact-title.aoran-drift .aoran-char { transform: none; opacity: 1; filter: none; }
+}
