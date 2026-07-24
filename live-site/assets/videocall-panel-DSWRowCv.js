@@ -35,12 +35,12 @@ class u{constructor(){this.container=null,this.selectedDate=null,this.selectedTi
                         </div>
                     </a>
                     
-                    <a href="mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20tu%20obra" 
+                    <a href="mailto:naroa@naroa.eu?subject=Consulta%20sobre%20tu%20obra" 
                        class="action-card email magnetic-btn">
                         <div class="action-icon">✉️</div>
                         <div class="action-info">
                             <h3>Email</h3>
-                            <p>naroa@naroagutierrezgil.com</p>
+                            <p>naroa@naroa.eu</p>
                         </div>
                     </a>
                     

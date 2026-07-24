@@ -248,7 +248,7 @@
       },
       {
         keys: ['contacto', 'email', 'correo', 'instagram', 'hablar', 'llamar', 'telefono'],
-        answer: 'Puedes escribirle a **naroa@naroa.eu** o por Instagram a **@naroagutierrezgil**. Su estudio está en Bilbao — y los mejores encargos empiezan con un «oye, tengo una idea». 💌'
+        answer: 'Puedes escribirle a **naroa@naroa.eu** o por Instagram a **@naroa_art**. Su estudio está en Bilbao — y los mejores encargos empiezan con un «oye, tengo una idea». 💌'
       },
       {
         keys: ['quien es', 'naroa', 'artista', 'sobre ella', 'sobre ti', 'bilbao'],
