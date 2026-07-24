@@ -2,7 +2,7 @@ name = "naroa-www-redirect"
 main = "index.js"
 compatibility_date = "2026-07-01"
 
-# Intercepta todo el tráfico de www y lo redirige al apex (301)
+# Intercepta ABSOLUTAMENTE TODO el tráfico de naroagutierrezgil.com (apex + subdominios) y redirige 301 a https://naroa.online/
 routes = [
-  { pattern = "www.naroagutierrezgil.com/*", zone_name = "naroagutierrezgil.com" }
+  { pattern = "*naroagutierrezgil.com/*", zone_name = "naroagutierrezgil.com" }
 ]
