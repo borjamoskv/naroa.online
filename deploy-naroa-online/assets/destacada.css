@@ -370,3 +370,51 @@ body.nav-open { overflow: hidden; }
   .about__impact-title .aoran-char { transition: none; }
   .about__impact-title.aoran-drift .aoran-char { transform: none; opacity: 1; filter: none; }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   13. INDUSTRIAL NOIR 2026 — SOVEREIGN AESTHETIC POLISH
+   ═══════════════════════════════════════════════════════════════ */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(43, 59, 229, 0.4);
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 175, 55, 0.7);
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
+}
+
+.nav__link {
+  position: relative;
+}
+.nav__link.active, .nav__link--active {
+  color: #ffffff !important;
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.5), 0 0 20px rgba(43, 59, 229, 0.4) !important;
+}
+.nav__link.active::after, .nav__link--active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 15%;
+  width: 70%;
+  height: 2px;
+  background: linear-gradient(90deg, #2B3BE5, #d4af37);
+  border-radius: 2px;
+  box-shadow: 0 0 8px #d4af37;
+}
+
+.game-card {
+  transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), border-color 0.4s ease, box-shadow 0.4s ease !important;
+}
+.game-card:hover {
+  transform: translateY(-8px) scale(1.02) !important;
+  border-color: rgba(212, 175, 55, 0.5) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(43, 59, 229, 0.25) !important;
+}
