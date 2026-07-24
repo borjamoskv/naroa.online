@@ -560,6 +560,67 @@ body.nav-open { overflow: hidden; }
   opacity: 1;
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   16. EL LATIDO MINERAL DE LA MICA — ELEGANCIA & PURA OBRA DE ARTE
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Destello mineral de mica sobre el lienzo al pasar el cursor */
+.gallery-massive__item::after,
+.hero-immersive__card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    115deg,
+    transparent 42%,
+    rgba(255, 223, 128, 0.22) 50%,
+    rgba(212, 175, 55, 0.12) 53%,
+    transparent 58%
+  );
+  transform: rotate(-15deg) translateY(-100%);
+  transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.gallery-massive__item:hover::after,
+.hero-immersive__card:hover::after {
+  transform: rotate(-15deg) translateY(100%);
+}
+
+/* Enfoque de luz de museo sobre la pintura */
+.gallery-massive__item {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1) !important;
+}
+
+.gallery-massive__item:hover {
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9), 0 0 30px rgba(212, 175, 55, 0.2) !important;
+  border-color: rgba(212, 175, 55, 0.45) !important;
+}
+
+/* Título de la obra en el overlay con toque de pan de oro */
+.gallery-massive__title {
+  font-family: 'Outfit', sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 1.15rem !important;
+  color: #FFFFFF !important;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+  margin-bottom: 0.25rem;
+}
+
+.gallery-massive__medium {
+  font-family: 'Share Tech Mono', monospace !important;
+  font-size: 0.72rem !important;
+  color: rgba(212, 175, 55, 0.9) !important;
+  letter-spacing: 0.1em !important;
+  text-transform: uppercase;
+}
+
+
 .gallery-massive__title {
   color: #ffffff;
   font-family: inherit;
