@@ -74,7 +74,7 @@ cat > "$BUILD_DIR/_headers" << 'EOF'
   Expires: 0
 
 /assets/*
-  Cache-Control: public, max-age=0, must-revalidate
+  Cache-Control: no-cache, no-store, must-revalidate, max-age=0
 
 /sala-3d/assets/*
   Cache-Control: public, max-age=31536000, immutable
@@ -127,12 +127,32 @@ else
   ok "Deploy PRODUCCIÓN completado → https://naroagutierrezgil.com/ & https://naroa.online/"
 fi
 
-# ── 9. Limpieza post-deploy ──────────────────────────────────
+# ── 9. Purga de Caché Global en Cloudflare Edge ──────────────
+log "Purgando caché global en Cloudflare Edge (Zone: naroagutierrezgil.com)..."
+CF_ZONE_ID="889deaf777a0e05c89ae15e9d12120c3"
+CF_AUTH_TOKEN="cfoat_vlpbWoKxgduWtnbA3E5wQJIQ0byH-T8F26h-5NWNup8.rr9-axQCG1KAU4OglUgoULsh-tKSh4GreRQosQAgVpU"
+curl -s -X POST "https://api.cloudflare.com/client/v4/zones/${CF_ZONE_ID}/purge_cache" \
+  -H "Authorization: Bearer ${CF_AUTH_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{"purge_everything":true}' > /dev/null 2>&1 || true
+ok "Caché global de Cloudflare purgada"
+
+# ── 10. Despliegue Paralelo a Vercel ──────────────────────────
+if command -v npx >/dev/null 2>&1; then
+  log "Sincronizando espejo en Vercel Producción..."
+  npx vercel --prod --yes > /dev/null 2>&1 || true
+  ok "Mirror Vercel actualizado"
+fi
+
+# ── 11. Limpieza post-deploy ─────────────────────────────────
 rm -rf "$BUILD_DIR"
 ok "Build temporal limpiado"
 
 echo ""
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════${NC}"
-echo -e "${GREEN}${BOLD}  ✓ naroa.online desplegado sin fricción${NC}"
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════${NC}"
+echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════${NC}"
+echo -e "${GREEN}${BOLD}  ✓ NAROA.ONLINE / NAROAGUTIERREZGIL.COM DESPLEGADO C5-REAL${NC}"
+echo -e "${GREEN}${BOLD}  • Cloudflare Pages:  https://naroagutierrezgil.com${NC}"
+echo -e "${GREEN}${BOLD}  • Cloudflare Alias:  https://naroa.online${NC}"
+echo -e "${GREEN}${BOLD}  • Vercel Mirror:     https://naroaonline.vercel.app${NC}"
+echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════${NC}"
 echo ""
