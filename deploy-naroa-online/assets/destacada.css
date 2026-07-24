@@ -418,3 +418,49 @@ body.nav-open { overflow: hidden; }
   border-color: rgba(212, 175, 55, 0.5) !important;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 30px rgba(43, 59, 229, 0.25) !important;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   14. APEX INDUSTRIAL NOIR POLISH — MICA ORB, CTA & HERO GLOW
+   ═══════════════════════════════════════════════════════════════ */
+#mica-orb {
+  border-radius: 50% !important;
+  background: radial-gradient(circle, rgba(43, 59, 229, 0.9) 0%, rgba(10, 10, 10, 0.9) 100%) !important;
+  border: 1px solid rgba(212, 175, 55, 0.4) !important;
+  box-shadow: 0 0 20px rgba(43, 59, 229, 0.5), 0 0 35px rgba(212, 175, 55, 0.3) !important;
+  cursor: pointer;
+  transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.4s ease !important;
+  animation: orb-pulse 4s infinite ease-in-out !important;
+}
+#mica-orb:hover {
+  transform: scale(1.12) rotate(10deg) !important;
+  box-shadow: 0 0 30px rgba(43, 59, 229, 0.8), 0 0 50px rgba(212, 175, 55, 0.6) !important;
+}
+@keyframes orb-pulse {
+  0%, 100% { box-shadow: 0 0 15px rgba(43, 59, 229, 0.4), 0 0 25px rgba(212, 175, 55, 0.2); }
+  50% { box-shadow: 0 0 28px rgba(43, 59, 229, 0.7), 0 0 45px rgba(212, 175, 55, 0.5); }
+}
+
+.hero-immersive__cta {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(212, 175, 55, 0.4) !important;
+  background: rgba(10, 10, 10, 0.6) !important;
+  backdrop-filter: blur(12px) !important;
+  transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1) !important;
+}
+.hero-immersive__cta:hover {
+  border-color: rgba(212, 175, 55, 0.8) !important;
+  background: rgba(43, 59, 229, 0.25) !important;
+  box-shadow: 0 0 25px rgba(43, 59, 229, 0.5), 0 0 15px rgba(212, 175, 55, 0.4) !important;
+  transform: translateY(-2px) scale(1.03) !important;
+}
+
+.gallery-massive__item {
+  transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.5s ease, border-color 0.5s ease !important;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.gallery-massive__item:hover {
+  border-color: rgba(212, 175, 55, 0.5) !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 0 0 35px rgba(43, 59, 229, 0.25) !important;
+}
