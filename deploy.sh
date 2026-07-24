@@ -29,7 +29,7 @@ ok()   { echo -e "${GREEN}[  OK  ]${NC} $1"; }
 fail() { echo -e "${RED}[FATAL]${NC} $1"; exit 1; }
 
 # ── 1. Preflight ─────────────────────────────────────────────
-command -v wrangler >/dev/null 2>&1 || fail "wrangler no encontrado. Instala con: npm i -g wrangler"
+[ "$BRANCH" = "--build-only" ] || command -v wrangler >/dev/null 2>&1 || fail "wrangler no encontrado. Instala con: npm i -g wrangler"
 [ -d "live-site" ] || fail "Directorio live-site/ no encontrado"
 
 # ── 2. Limpiar build anterior ────────────────────────────────
@@ -87,11 +87,6 @@ cat > "$BUILD_DIR/_headers" << 'EOF'
 EOF
 
 cat > "$BUILD_DIR/_redirects" << 'EOF'
-# www → apex (301)
-https://www.naroagutierrezgil.com/* https://naroagutierrezgil.com/:splat 301
-https://naroa.online/* https://naroagutierrezgil.com/:splat 301
-https://www.naroa.online/* https://naroagutierrezgil.com/:splat 301
-
 # Landing SEO (SPA fallback dentro de /sala-3d/)
 /sala-3d/* /sala-3d/index.html 200
 
@@ -114,6 +109,11 @@ EOF
 fi
 
 # ── 8. Deploy a Cloudflare Pages ─────────────────────────────
+if [ "$BRANCH" = "--build-only" ]; then
+  ok "Build completado en .deploy/ (Modo --build-only)"
+  exit 0
+fi
+
 DEPLOY_SIZE=$(du -sh "$BUILD_DIR" | cut -f1)
 log "Desplegando ${BOLD}${DEPLOY_SIZE}${NC} → CF Pages proyecto ${BOLD}naroagutierrezgil-com${NC} (Dominio Oficial)..."
 

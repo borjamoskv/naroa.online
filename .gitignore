@@ -34,3 +34,4 @@ pnpm-debug.log*
 naroa-seo-fixes/
 _qa/
 assets-src/
+.vercel
