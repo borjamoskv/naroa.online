@@ -759,6 +759,25 @@
     }, 100);
   }
 
+  /* ── Tactilidad Escultórica 3D (Efecto Inclinación sobre Pizarra) ── */
+  function wire3DTilt() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var cards = document.querySelectorAll('.gallery-massive__item, .gallery-hero__artwork');
+    cards.forEach(function (card) {
+      card.addEventListener('mousemove', function (e) {
+        var rect = card.getBoundingClientRect();
+        var x = e.clientX - rect.left - rect.width / 2;
+        var y = e.clientY - rect.top - rect.height / 2;
+        var rotX = (-y / rect.height) * 8;
+        var rotY = (x / rect.width) * 8;
+        card.style.transform = 'perspective(1000px) rotateX(' + rotX.toFixed(2) + 'deg) rotateY(' + rotY.toFixed(2) + 'deg) scale3d(1.02, 1.02, 1.02)';
+      });
+      card.addEventListener('mouseleave', function () {
+        card.style.transform = '';
+      });
+    });
+  }
+
   /* ── init ───────────────────────────────────────────────────── */
   function init2() {
     wireMobileNav();
@@ -769,6 +788,7 @@
     wireScrollSpy();
     wireSoundscape();
     wireMineralWink();
+    wire3DTilt();
     enforceMicaCoqueta();
     whenMicaReady(function (mica) {
       wireMicaPolitesse(mica);
