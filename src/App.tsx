@@ -1,9 +1,10 @@
 import { Suspense, lazy, useState } from 'react'
 import { motion } from 'framer-motion'
-import { ARTWORKS, PORTAL } from './artworks'
+import { ARTWORKS, PORTAL, type Artwork } from './artworks'
+import { ArtworkModal } from './components/ArtworkModal'
+import { sound } from './utils/audio'
 
-// La escena WebGL (three.js + postprocesado) carga en un chunk aparte:
-// la UI y el loader pintan al instante, la sala 3D llega después.
+// La escena WebGL (three.js + postprocesado) carga en un chunk aparte
 const Scene = lazy(() => import('./components/Scene'))
 
 function Loader() {
@@ -17,7 +18,38 @@ function Loader() {
 
 export default function App() {
   const [current, setCurrent] = useState(0)
+  const [targetIndex, setTargetIndex] = useState<number | null>(null)
+  const [modalArtwork, setModalArtwork] = useState<Artwork | null>(null)
+  const [audioActive, setAudioActive] = useState<boolean>(sound.isEnabled())
+
   const artwork = ARTWORKS[current]
+
+  const handleNext = () => {
+    sound.playTick()
+    const next = (current + 1) % ARTWORKS.length
+    setTargetIndex(next)
+  }
+
+  const handlePrev = () => {
+    sound.playTick()
+    const prev = (current - 1 + ARTWORKS.length) % ARTWORKS.length
+    setTargetIndex(prev)
+  }
+
+  const handleSelectDot = (index: number) => {
+    sound.playTick()
+    setTargetIndex(index)
+  }
+
+  const handleInspect = (index: number) => {
+    sound.playOpen()
+    setModalArtwork(ARTWORKS[index])
+  }
+
+  const toggleAudio = () => {
+    const newState = sound.toggleSound()
+    setAudioActive(newState)
+  }
 
   return (
     <>
@@ -26,47 +58,125 @@ export default function App() {
           className="header"
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1], delay: 0.2 }}
+          transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1], delay: 0.1 }}
         >
-          <a href={PORTAL} className="logo">
+          <a href={PORTAL} className="logo" onClick={() => sound.playTick()}>
             <span className="logo-dot"></span>
             A O R A N / NAROA
           </a>
           <nav className="nav">
             <a href="#/" className="active">EXPOSICIÓN 3D</a>
-            <a href={`${PORTAL}/sobre-mi/`} target="_blank" rel="noopener noreferrer">MANIFIESTO</a>
-            <a href={`${PORTAL}/encargos/`} target="_blank" rel="noopener noreferrer">CONTACTO</a>
+            <a href={`${PORTAL}/sobre-mi/`} target="_blank" rel="noopener noreferrer" onClick={() => sound.playTick()}>
+              MANIFIESTO
+            </a>
+            <a href={`${PORTAL}/encargos/`} target="_blank" rel="noopener noreferrer" onClick={() => sound.playTick()}>
+              CONTACTO
+            </a>
+            <button
+              className={`audio-btn ${audioActive ? 'active' : ''}`}
+              onClick={toggleAudio}
+              title={audioActive ? 'Desactivar audio' : 'Activar audio'}
+            >
+              <span className="audio-icon">{audioActive ? '🔊' : '🔇'}</span>
+              <span className="audio-label">FX {audioActive ? 'ON' : 'OFF'}</span>
+            </button>
           </nav>
         </motion.header>
 
         <div className="ui-middle">
-          <div className="headline">
+          <motion.div
+            className="headline"
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+          >
             <h1>SALA DE JUEGOS & 3D</h1>
-            <p>Fricción interactiva sobre el lienzo de Naroa. Desliza para navegar; haz clic en una obra para verla en el portal.</p>
-          </div>
+            <p>
+              Fricción interactiva sobre el lienzo de Naroa Gutiérrez Gil. Usa las flechas o desliza para navegar por la galería en 360°.
+            </p>
+            <div className="nav-controls-hint">
+              <span className="kbd-tag">←</span>
+              <span className="kbd-tag">→</span>
+              <span className="hint-text">TECLAS DE NAVEGACIÓN // DRAG O SCROLL</span>
+            </div>
+          </motion.div>
         </div>
 
-        <div className="artwork-caption">
-          <a href={artwork.href} target="_blank" rel="noopener noreferrer" key={artwork.title}>
-            <span className="artwork-index">
-              {String(current + 1).padStart(2, '0')} / {String(ARTWORKS.length).padStart(2, '0')}
-            </span>
-            <span className="artwork-title">{artwork.title}</span>
-            <span className="artwork-cta">VER OBRA ↗</span>
-          </a>
+        {/* Caption inferior interactivo con flechas de navegación */}
+        <div className="artwork-caption-wrapper">
+          <button className="caption-arrow" onClick={handlePrev} title="Obra anterior">
+            ‹
+          </button>
+
+          <div className="artwork-caption">
+            <div className="artwork-clickable" onClick={() => handleInspect(current)}>
+              <span className="artwork-index">
+                {String(current + 1).padStart(2, '0')} / {String(ARTWORKS.length).padStart(2, '0')}
+              </span>
+              <span className="artwork-title">{artwork.title}</span>
+              <span className="artwork-medium-badge">{artwork.year}</span>
+              <button
+                className="artwork-cta-btn"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleInspect(current)
+                }}
+              >
+                INSPECCIONAR ⊕
+              </button>
+            </div>
+          </div>
+
+          <button className="caption-arrow" onClick={handleNext} title="Siguiente obra">
+            ›
+          </button>
+        </div>
+
+        {/* Carrusel de indicadores circulares de selector directo */}
+        <div className="gallery-dots-bar">
+          {ARTWORKS.map((item, idx) => (
+            <button
+              key={item.id}
+              className={`dot-item ${idx === current ? 'active' : ''}`}
+              onClick={() => handleSelectDot(idx)}
+              onMouseEnter={() => sound.playHover()}
+              title={`${item.title} (${idx + 1}/${ARTWORKS.length})`}
+            />
+          ))}
         </div>
 
         <footer className="footer">
-          <div><a href={PORTAL} target="_blank" rel="noopener noreferrer">PORTAL OFICIAL: naroagutierrezgil.com</a></div>
+          <div>
+            <a href={PORTAL} target="_blank" rel="noopener noreferrer">
+              PORTAL OFICIAL: naroagutierrezgil.com
+            </a>
+          </div>
           <div className="coordinates">KOBETAMENDI // 43.2630° N, 2.9350° W</div>
         </footer>
       </div>
 
-      <div className="scroll-hint" aria-hidden="true"><span /></div>
+      <div className="scroll-hint" aria-hidden="true">
+        <span />
+      </div>
 
       <Suspense fallback={<Loader />}>
-        <Scene onCurrentChange={setCurrent} />
+        <Scene
+          onCurrentChange={setCurrent}
+          onInspectArtwork={handleInspect}
+          targetIndex={targetIndex}
+        />
       </Suspense>
+
+      {/* Modal de inspección detallada */}
+      <ArtworkModal
+        artwork={modalArtwork}
+        currentIndex={modalArtwork ? ARTWORKS.findIndex((a) => a.id === modalArtwork.id) : 0}
+        onClose={() => setModalArtwork(null)}
+        onNavigate={(idx) => {
+          setModalArtwork(ARTWORKS[idx])
+          setTargetIndex(idx)
+        }}
+      />
     </>
   )
 }

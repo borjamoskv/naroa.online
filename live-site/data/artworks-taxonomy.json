@@ -14,7 +14,12 @@
       "emoji": "🤟",
       "color": "#D4AF37",
       "technique": "Acrílico y Posca sobre pizarra",
-      "works": ["Amy Rocks", "Johnny Rocks", "Marilyn Rocks", "James Rocks"],
+      "works": [
+        "Amy Rocks",
+        "Johnny Rocks",
+        "Marilyn Rocks",
+        "James Rocks"
+      ],
       "facebookAlbum": "https://www.facebook.com/media/set/?set=a.1571125317700217&type=3"
     },
     "divinos": {
@@ -25,7 +30,13 @@
       "emoji": "✨",
       "color": "#8B4513",
       "technique": "Acrílico y mica sobre pizarra natural",
-      "works": ["Asúcar (Celia Cruz)", "RockaGipsy", "Paul Newmum", "Frida DiviNa", "DiviNas VaiVenes"],
+      "works": [
+        "Asúcar (Celia Cruz)",
+        "RockaGipsy",
+        "Paul Newmum",
+        "Frida DiviNa",
+        "DiviNas VaiVenes"
+      ],
       "facebookAlbum": "https://www.facebook.com/media/set/?set=a.989285339217554&type=3"
     },
     "tributos-musicales": {
@@ -36,7 +47,16 @@
       "emoji": "🎤",
       "color": "#FFD700",
       "technique": "Mixta sobre lienzo y pizarra",
-      "works": ["Baroque Farrokh", "Mr. Fahrenheit", "Tedás Queen", "Can-dy Queen", "Los Clarinetes de Bowie", "Bowie Shhh...till Alive", "Starchild", "The Starchild"],
+      "works": [
+        "Baroque Farrokh",
+        "Mr. Fahrenheit",
+        "Tedás Queen",
+        "Can-dy Queen",
+        "Los Clarinetes de Bowie",
+        "Bowie Shhh...till Alive",
+        "Starchild",
+        "The Starchild"
+      ],
       "facebookAlbum": "https://www.facebook.com/media/set/?set=a.3432575976817090&type=3"
     },
     "espejos-del-alma": {
@@ -47,7 +67,9 @@
       "emoji": "🪞",
       "color": "#7B68EE",
       "technique": "Mixta sobre lienzo",
-      "works": ["Espejos del Alma"]
+      "works": [
+        "Espejos del Alma"
+      ]
     },
     "enlatas": {
       "displayName": "En.lata.das",
@@ -57,7 +79,14 @@
       "emoji": "🥫",
       "color": "#C41E3A",
       "technique": "Intervención en lata de conserva",
-      "works": ["En.lata.das", "En.lata.2", "Dar la Lata", "Amor en Conserva", "Temuri en-caja", "en-caja"],
+      "works": [
+        "En.lata.das",
+        "En.lata.2",
+        "Dar la Lata",
+        "Amor en Conserva",
+        "Temuri en-caja",
+        "en-caja"
+      ],
       "facebookAlbum": "https://www.facebook.com/media/set/?set=a.858798248932931&type=3"
     },
     "vaivenes": {
@@ -68,7 +97,11 @@
       "emoji": "🧵",
       "color": "#CD853F",
       "technique": "Collage textil, cable y cobre",
-      "works": ["Cantiflowers", "DiviNas VaiVenes", "VaiVenes Textiles"]
+      "works": [
+        "Cantiflowers",
+        "DiviNas VaiVenes",
+        "VaiVenes Textiles"
+      ]
     },
     "walking-gallery": {
       "displayName": "Walking Gallery",
@@ -78,7 +111,13 @@
       "emoji": "🚶",
       "color": "#4169E1",
       "technique": "Intervención urbana / Performance",
-      "works": ["Walking Gallery Bilbao November 2013", "Walking Gallery Bilbao Art District 2017", "VI Aniversario Walking Gallery Bilbao", "Walking Gallery Bilbao Fair Saturday 2021", "Walking Gallery Bilbao 23 Octubre 2022"],
+      "works": [
+        "Walking Gallery Bilbao November 2013",
+        "Walking Gallery Bilbao Art District 2017",
+        "VI Aniversario Walking Gallery Bilbao",
+        "Walking Gallery Bilbao Fair Saturday 2021",
+        "Walking Gallery Bilbao 23 Octubre 2022"
+      ],
       "facebookAlbum": "https://www.facebook.com/media/set/?set=a.659334275545997&type=3"
     },
     "facefood": {
@@ -89,7 +128,15 @@
       "emoji": "👨‍🍳",
       "color": "#FF6347",
       "technique": "Intervención sobre chaqueta de cocinero",
-      "works": ["facefood: expos de quita y pon", "facefood en Algorta", "Chaqueta de Cocinero Goiri Eder", "Chaqueta de Cocinera Yolanda", "Diego's Soul Kitchen Cook Jacket", "Piel de Chef", "El Cocinero Emplatado"]
+      "works": [
+        "facefood: expos de quita y pon",
+        "facefood en Algorta",
+        "Chaqueta de Cocinero Goiri Eder",
+        "Chaqueta de Cocinera Yolanda",
+        "Diego's Soul Kitchen Cook Jacket",
+        "Piel de Chef",
+        "El Cocinero Emplatado"
+      ]
     },
     "bodas": {
       "displayName": "Bodas Lúdicas",
@@ -99,7 +146,14 @@
       "emoji": "💒",
       "color": "#FFB6C1",
       "technique": "Mixta sobre lienzo / Álbum intervenido",
-      "works": ["Candy Wedding -original-", "Candy Wedding ft. Nissma de Benito", "Cuadro-Álbum Bodorrio (Susana)", "Cuadro-Álbum Bodorrio (Denis)", "La Boda de Mi Mejor Amigo", "¡Viva la Novia!"]
+      "works": [
+        "Candy Wedding -original-",
+        "Candy Wedding ft. Nissma de Benito",
+        "Cuadro-Álbum Bodorrio (Susana)",
+        "Cuadro-Álbum Bodorrio (Denis)",
+        "La Boda de Mi Mejor Amigo",
+        "¡Viva la Novia!"
+      ]
     },
     "artivismos": {
       "displayName": "Artivismos",
@@ -109,7 +163,10 @@
       "emoji": "✊",
       "color": "#228B22",
       "technique": "Mixta / Performance",
-      "works": ["Artivismos", "Artivismos viejunos"]
+      "works": [
+        "Artivismos",
+        "Artivismos viejunos"
+      ]
     },
     "munsters": {
       "displayName": "The Munsters",
@@ -119,7 +176,10 @@
       "emoji": "🧛",
       "color": "#2F4F4F",
       "technique": "Acrílico sobre lienzo",
-      "works": ["The Munsters", "The Munsters (with their new) Family"]
+      "works": [
+        "The Munsters",
+        "The Munsters (with their new) Family"
+      ]
     },
     "retratos": {
       "displayName": "Retratos Personalizados",
@@ -138,7 +198,11 @@
       "emoji": "✨",
       "color": "#FFD700",
       "technique": "Pan de oro y acrílico",
-      "works": ["The Golden Couple", "The Golden Couple & Balloons", "Lágrimas de Oro"]
+      "works": [
+        "The Golden Couple",
+        "The Golden Couple & Balloons",
+        "Lágrimas de Oro"
+      ]
     },
     "amor": {
       "displayName": "Love & Joy",
@@ -148,7 +212,15 @@
       "emoji": "💕",
       "color": "#FF1493",
       "technique": "Mixta sobre lienzo",
-      "works": ["LoVe", "More Amor", "Multidimensional Love", "Smile & the World Smiles Back", "Soy un Amor y tengo Alas", "el Amor que nos Une", "Love in the Air"]
+      "works": [
+        "LoVe",
+        "More Amor",
+        "Multidimensional Love",
+        "Smile & the World Smiles Back",
+        "Soy un Amor y tengo Alas",
+        "el Amor que nos Une",
+        "Love in the Air"
+      ]
     },
     "naturaleza": {
       "displayName": "Nature & Fantasy",
@@ -158,7 +230,14 @@
       "emoji": "🦜",
       "color": "#00CED1",
       "technique": "Mixta",
-      "works": ["Pajarraca Azul", "Wild Not?", "Into the Wild", "Monster Dragon", "Flying Dragon", "Jaguar"]
+      "works": [
+        "Pajarraca Azul",
+        "Wild Not?",
+        "Into the Wild",
+        "Monster Dragon",
+        "Flying Dragon",
+        "Jaguar"
+      ]
     },
     "cantinflas": {
       "displayName": "Cantinflas",
@@ -168,7 +247,13 @@
       "emoji": "🎭",
       "color": "#D4AF37",
       "technique": "Collage textil y acrílico",
-      "works": ["Cantinflas I", "Cantinflas II", "Cantinflas III", "Cantinflas IV", "Cantinflas V"],
+      "works": [
+        "Cantinflas I",
+        "Cantinflas II",
+        "Cantinflas III",
+        "Cantinflas IV",
+        "Cantinflas V"
+      ],
       "facebookAlbum": "https://www.facebook.com/media/set/?set=a.3895610633846953&type=3"
     },
     "flores": {
@@ -179,28 +264,104 @@
       "emoji": "🌸",
       "color": "#FF69B4",
       "technique": "Escultura en papel de cocina",
-      "works": ["Tissukaldeko Loreak", "Flores de Papel"],
+      "works": [
+        "Tissukaldeko Loreak",
+        "Flores de Papel"
+      ],
       "facebookAlbum": "https://www.facebook.com/media/set/?set=a.1039704190842335&type=3"
     }
   },
   "filters": [
-    { "id": "todos", "label": "Todas", "labelEn": "All", "emoji": "🎨" },
-    { "id": "rocks", "label": "Rocks", "emoji": "🤟" },
-    { "id": "divinos", "label": "DiviNos", "emoji": "✨" },
-    { "id": "tributos-musicales", "label": "Tributos", "emoji": "🎤" },
-    { "id": "cantinflas", "label": "Cantinflas", "emoji": "🎭" },
-    { "id": "enlatas", "label": "En.lata.das", "emoji": "🥫" },
-    { "id": "vaivenes", "label": "VaiVenes", "emoji": "🧵" },
-    { "id": "facefood", "label": "Facefood", "emoji": "👨‍🍳" },
-    { "id": "retratos", "label": "Retratos", "emoji": "👤" },
-    { "id": "bodas", "label": "Bodas", "emoji": "💒" },
-    { "id": "golden", "label": "Golden", "emoji": "✨" },
-    { "id": "amor", "label": "Amor", "emoji": "💕" },
-    { "id": "naturaleza", "label": "Naturaleza", "emoji": "🦜" },
-    { "id": "walking-gallery", "label": "Walking Gallery", "emoji": "🚶" },
-    { "id": "espejos-del-alma", "label": "Espejos", "emoji": "🪞" },
-    { "id": "artivismos", "label": "Artivismos", "emoji": "✊" },
-    { "id": "flores", "label": "Flores", "emoji": "🌸" },
-    { "id": "munsters", "label": "Munsters", "emoji": "🧛" }
+    {
+      "id": "todos",
+      "label": "Todas",
+      "labelEn": "All",
+      "emoji": "🎨"
+    },
+    {
+      "id": "rocks",
+      "label": "Rocks",
+      "emoji": "🤟"
+    },
+    {
+      "id": "divinos",
+      "label": "DiviNos",
+      "emoji": "✨"
+    },
+    {
+      "id": "tributos-musicales",
+      "label": "Tributos",
+      "emoji": "🎤"
+    },
+    {
+      "id": "cantinflas",
+      "label": "Cantinflas",
+      "emoji": "🎭"
+    },
+    {
+      "id": "enlatas",
+      "label": "En.lata.das",
+      "emoji": "🥫"
+    },
+    {
+      "id": "vaivenes",
+      "label": "VaiVenes",
+      "emoji": "🧵"
+    },
+    {
+      "id": "facefood",
+      "label": "Facefood",
+      "emoji": "👨‍🍳"
+    },
+    {
+      "id": "retratos",
+      "label": "Retratos",
+      "emoji": "👤"
+    },
+    {
+      "id": "bodas",
+      "label": "Bodas",
+      "emoji": "💒"
+    },
+    {
+      "id": "golden",
+      "label": "Golden",
+      "emoji": "✨"
+    },
+    {
+      "id": "amor",
+      "label": "Amor",
+      "emoji": "💕"
+    },
+    {
+      "id": "naturaleza",
+      "label": "Naturaleza",
+      "emoji": "🦜"
+    },
+    {
+      "id": "walking-gallery",
+      "label": "Walking Gallery",
+      "emoji": "🚶"
+    },
+    {
+      "id": "espejos-del-alma",
+      "label": "Espejos",
+      "emoji": "🪞"
+    },
+    {
+      "id": "artivismos",
+      "label": "Artivismos",
+      "emoji": "✊"
+    },
+    {
+      "id": "flores",
+      "label": "Flores",
+      "emoji": "🌸"
+    },
+    {
+      "id": "munsters",
+      "label": "Munsters",
+      "emoji": "🧛"
+    }
   ]
 }
