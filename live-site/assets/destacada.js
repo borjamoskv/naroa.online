@@ -492,12 +492,92 @@
     io.observe(section);
   }
 
+  /* ── Navegación suave universal sin fricción ────────────────── */
+  function wireUniversalNavigation() {
+    var routeMap = {
+      '#/': 'view-home',
+      '#/home': 'view-home',
+      '#/destacada': 'view-destacada',
+      '#/obra': 'view-destacada',
+      '#/trayectoria': 'view-trayectoria',
+      '#/exposiciones': 'view-trayectoria',
+      '#/about': 'view-about',
+      '#/sobre-mi': 'view-about',
+      '#/blog': 'view-blog',
+      '#/contacto': 'view-contacto'
+    };
+
+    function updateNavActive(targetHash) {
+      document.querySelectorAll('.nav__link').forEach(function (link) {
+        var href = link.getAttribute('href');
+        var isActive = (href === targetHash) || (targetHash === '#/' && href === '#/');
+        link.classList.toggle('nav__link--active', isActive);
+        link.classList.toggle('active', isActive);
+      });
+    }
+
+    function scrollToSection(targetId) {
+      var targetEl = document.getElementById(targetId);
+      if (!targetEl) return false;
+      var nav = document.getElementById('main-nav') || document.querySelector('.nav');
+      var navHeight = nav ? nav.offsetHeight : 60;
+      var targetTop = targetEl.getBoundingClientRect().top + window.pageYOffset - navHeight - 15;
+      
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+
+      window.scrollTo({
+        top: Math.max(0, targetTop),
+        behavior: 'smooth'
+      });
+      return true;
+    }
+
+    // Interceptación de clics en la navegación
+    document.querySelectorAll('a[href^="#/"], .nav__link, .nav__logo').forEach(function (link) {
+      link.addEventListener('click', function (e) {
+        var href = link.getAttribute('href');
+        if (!href || !href.startsWith('#/')) return;
+        
+        var navLinks = document.getElementById('nav-links');
+        var navToggle = document.getElementById('nav-toggle');
+        if (navLinks && navLinks.classList.contains('nav__links--open')) {
+          navLinks.classList.remove('nav__links--open');
+          if (navToggle) navToggle.classList.remove('nav__toggle--open');
+          document.body.classList.remove('nav-open');
+        }
+
+        var targetId = routeMap[href];
+        if (targetId) {
+          e.preventDefault();
+          e.stopPropagation();
+          scrollToSection(targetId);
+          if (window.history && window.history.pushState) {
+            window.history.pushState(null, null, href);
+          } else {
+            window.location.hash = href;
+          }
+          updateNavActive(href);
+        }
+      }, true);
+    });
+
+    // Soporte inicial si la URL ya trae hash al cargar
+    if (window.location.hash && routeMap[window.location.hash]) {
+      setTimeout(function () {
+        scrollToSection(routeMap[window.location.hash]);
+        updateNavActive(window.location.hash);
+      }, 150);
+    }
+  }
+
   /* ── init ───────────────────────────────────────────────────── */
   function init2() {
     wireMobileNav();
     wireBlog();
     wireBlogRoute();
     wireAoranDrift();
+    wireUniversalNavigation();
     whenMicaReady(function (mica) {
       wireMicaPolitesse(mica);
       wireMicaBrain(mica);
@@ -510,3 +590,4 @@
     init2();
   }
 })();
+
