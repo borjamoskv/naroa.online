@@ -732,6 +732,33 @@
     });
   }
 
+  /* ── Enforce MICA Coqueta & Discreta (UI compacta 250px, sin MICA SYSTEM v∞) ── */
+  function enforceMicaCoqueta() {
+    var checkTimer = setInterval(function () {
+      var panel = document.getElementById('mica-panel');
+      var orb = document.getElementById('mica-orb');
+      if (panel) {
+        panel.style.setProperty('width', '250px', 'important');
+        panel.style.setProperty('max-width', '250px', 'important');
+        panel.style.setProperty('max-height', '310px', 'important');
+
+        var nameEl = panel.querySelector('.mica-header__name');
+        var statusEl = panel.querySelector('#mica-status');
+        var avatarEl = panel.querySelector('.mica-header__avatar');
+        if (nameEl) nameEl.textContent = '✨ Mica';
+        if (statusEl) statusEl.textContent = '✨ Curadora del estudio';
+        if (avatarEl) avatarEl.textContent = '✨';
+      }
+      if (orb) {
+        orb.style.setProperty('width', '36px', 'important');
+        orb.style.setProperty('height', '36px', 'important');
+        orb.style.setProperty('min-width', '36px', 'important');
+        orb.style.setProperty('min-height', '36px', 'important');
+      }
+      if (panel && orb) clearInterval(checkTimer);
+    }, 100);
+  }
+
   /* ── init ───────────────────────────────────────────────────── */
   function init2() {
     wireMobileNav();
@@ -742,6 +769,7 @@
     wireScrollSpy();
     wireSoundscape();
     wireMineralWink();
+    enforceMicaCoqueta();
     whenMicaReady(function (mica) {
       wireMicaPolitesse(mica);
       wireMicaBrain(mica);
