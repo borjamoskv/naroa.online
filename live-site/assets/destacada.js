@@ -571,6 +571,110 @@
     }
   }
 
+  /* ── ScrollSpy para resaltar el menú según la sección en pantalla ── */
+  function wireScrollSpy() {
+    var sections = document.querySelectorAll('section[id^="view-"]');
+    var navLinks = document.querySelectorAll('.nav__link');
+    if (!sections.length || !navLinks.length) return;
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          var id = entry.target.getAttribute('id');
+          var hashMap = {
+            'view-home': '#/',
+            'view-destacada': '#/obra',
+            'view-trayectoria': '#/trayectoria',
+            'view-about': '#/sobre-mi',
+            'view-blog': '#/blog',
+            'view-contacto': '#/contacto'
+          };
+          var targetHash = hashMap[id];
+          if (targetHash) {
+            navLinks.forEach(function (link) {
+              var href = link.getAttribute('href');
+              var isActive = (href === targetHash) || (targetHash === '#/' && href === '#/');
+              link.classList.toggle('nav__link--active', isActive);
+              link.classList.toggle('active', isActive);
+            });
+          }
+        }
+      });
+    }, { threshold: 0.35 });
+
+    sections.forEach(function (sec) { observer.observe(sec); });
+  }
+
+  /* ── Studio Ambient Soundscape (Sintetizador Web Audio 432Hz Mineral) ── */
+  function wireSoundscape() {
+    var nav = document.getElementById('main-nav') || document.querySelector('.nav');
+    if (!nav || document.getElementById('ambient-sound-btn')) return;
+
+    var soundBtn = document.createElement('button');
+    soundBtn.id = 'ambient-sound-btn';
+    soundBtn.className = 'ambient-sound-btn';
+    soundBtn.setAttribute('aria-label', 'Activar atmósfera sonora del estudio');
+    soundBtn.title = 'Eco Mineral del Estudio (432 Hz)';
+    soundBtn.innerHTML = '<span>🔊</span> <small class="sound-label">Eco Studio</small>';
+
+    var navRight = nav.querySelector('.nav__right') || nav;
+    navRight.insertBefore(soundBtn, navRight.firstChild);
+
+    var audioCtx = null;
+    var osc1 = null, osc2 = null, gainNode = null;
+    var isPlaying = false;
+
+    soundBtn.addEventListener('click', function () {
+      if (isPlaying) {
+        if (gainNode && audioCtx) {
+          gainNode.gain.setTargetAtTime(0, audioCtx.currentTime, 0.4);
+          setTimeout(function () {
+            if (audioCtx) audioCtx.suspend();
+          }, 500);
+        }
+        isPlaying = false;
+        soundBtn.classList.remove('ambient-sound-btn--active');
+        soundBtn.querySelector('.sound-label').textContent = 'Eco Studio';
+      } else {
+        if (!audioCtx) {
+          var AudioContext = window.AudioContext || window.webkitAudioContext;
+          audioCtx = new AudioContext();
+
+          // Oscilador armónico 432 Hz (Afinación natural mineral)
+          osc1 = audioCtx.createOscillator();
+          osc2 = audioCtx.createOscillator();
+          gainNode = audioCtx.createGain();
+
+          osc1.type = 'sine';
+          osc1.frequency.setValueAtTime(216, audioCtx.currentTime); // Suboctava cálida
+
+          osc2.type = 'triangle';
+          osc2.frequency.setValueAtTime(432, audioCtx.currentTime); // Tono cristalino
+
+          var filter = audioCtx.createBiquadFilter();
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(320, audioCtx.currentTime);
+
+          osc1.connect(gainNode);
+          osc2.connect(filter);
+          filter.connect(gainNode);
+          gainNode.connect(audioCtx.destination);
+
+          osc1.start();
+          osc2.start();
+        }
+
+        audioCtx.resume();
+        gainNode.gain.setValueAtTime(0.001, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.04, audioCtx.currentTime + 1.2); // Volumen sutil y discreto
+
+        isPlaying = true;
+        soundBtn.classList.add('ambient-sound-btn--active');
+        soundBtn.querySelector('.sound-label').textContent = 'Sonando ✨';
+      }
+    });
+  }
+
   /* ── init ───────────────────────────────────────────────────── */
   function init2() {
     wireMobileNav();
@@ -578,6 +682,8 @@
     wireBlogRoute();
     wireAoranDrift();
     wireUniversalNavigation();
+    wireScrollSpy();
+    wireSoundscape();
     whenMicaReady(function (mica) {
       wireMicaPolitesse(mica);
       wireMicaBrain(mica);

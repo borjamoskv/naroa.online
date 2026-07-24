@@ -633,3 +633,37 @@ body.nav-open { overflow: hidden; }
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
 }
 
+/* ═══ Ambient Studio Soundscape Button ═══ */
+.ambient-sound-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 20px;
+  padding: 4px 10px;
+  color: rgba(255, 255, 255, 0.85);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-right: 8px;
+}
+.ambient-sound-btn:hover {
+  background: rgba(212, 175, 55, 0.15);
+  border-color: rgba(212, 175, 55, 0.5);
+  color: #fff;
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.2);
+}
+.ambient-sound-btn--active {
+  background: rgba(212, 175, 55, 0.25);
+  border-color: #d4af37;
+  color: #d4af37;
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.35);
+  animation: soundPulse 2s infinite ease-in-out;
+}
+@keyframes soundPulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(212, 175, 55, 0.25); }
+  50% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.5); }
+}
+
