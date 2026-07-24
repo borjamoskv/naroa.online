@@ -1,7 +1,8 @@
-// Worker: naroagutierrezgil.com/* & www.naroagutierrezgil.com/* → 301 a https://naroa.online/ conservando path y query.
+// Worker: naroa.online/* & www.naroa.online/* → 301 a https://naroagutierrezgil.com/ conservando path y query.
 export default {
   fetch(request) {
     const url = new URL(request.url);
-    return Response.redirect(`https://naroa.online${url.pathname}${url.search}`, 301);
+    return Response.redirect(`https://naroagutierrezgil.com${url.pathname}${url.search}`, 301);
   },
 };
+

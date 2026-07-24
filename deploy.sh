@@ -88,7 +88,9 @@ EOF
 
 cat > "$BUILD_DIR/_redirects" << 'EOF'
 # www → apex (301)
-https://www.naroa.online/* https://naroa.online/:splat 301
+https://www.naroagutierrezgil.com/* https://naroagutierrezgil.com/:splat 301
+https://naroa.online/* https://naroagutierrezgil.com/:splat 301
+https://www.naroa.online/* https://naroagutierrezgil.com/:splat 301
 
 # Landing SEO (SPA fallback dentro de /sala-3d/)
 /sala-3d/* /sala-3d/index.html 200
@@ -106,21 +108,23 @@ if [ ! -f "$BUILD_DIR/robots.txt" ]; then
   cat > "$BUILD_DIR/robots.txt" << 'EOF'
 User-agent: *
 Allow: /
-Sitemap: https://naroa.online/sitemap.xml
+Sitemap: https://naroagutierrezgil.com/sitemap.xml
 EOF
   ok "robots.txt creado"
 fi
 
 # ── 8. Deploy a Cloudflare Pages ─────────────────────────────
 DEPLOY_SIZE=$(du -sh "$BUILD_DIR" | cut -f1)
-log "Desplegando ${BOLD}${DEPLOY_SIZE}${NC} → CF Pages proyecto ${BOLD}${PROJECT}${NC}..."
+log "Desplegando ${BOLD}${DEPLOY_SIZE}${NC} → CF Pages proyecto ${BOLD}naroagutierrezgil-com${NC} (Dominio Oficial)..."
 
 if [ "$BRANCH" = "--preview" ]; then
-  wrangler pages deploy "$BUILD_DIR" --project-name "$PROJECT" --branch preview
+  wrangler pages deploy "$BUILD_DIR" --project-name "naroagutierrezgil-com" --branch preview
+  wrangler pages deploy "$BUILD_DIR" --project-name "naroaonline" --branch preview
   ok "Deploy PREVIEW completado"
 else
-  wrangler pages deploy "$BUILD_DIR" --project-name "$PROJECT" --branch production
-  ok "Deploy PRODUCCIÓN completado → https://naroa.online/"
+  wrangler pages deploy "$BUILD_DIR" --project-name "naroagutierrezgil-com" --branch production
+  wrangler pages deploy "$BUILD_DIR" --project-name "naroaonline" --branch production
+  ok "Deploy PRODUCCIÓN completado → https://naroagutierrezgil.com/ & https://naroa.online/"
 fi
 
 # ── 9. Limpieza post-deploy ──────────────────────────────────
