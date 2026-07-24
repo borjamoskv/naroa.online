@@ -667,3 +667,39 @@ body.nav-open { overflow: hidden; }
   50% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.5); }
 }
 
+/* ═══ EL GUIÑO MINERAL (Micro-animación de párpado mineral) ═══ */
+.mineral-wink-eye {
+  position: absolute;
+  width: 48px;
+  height: 24px;
+  pointer-events: none;
+  z-index: 6;
+  border-radius: 50% 50% 40% 40%;
+  background: radial-gradient(ellipse at center, rgba(212, 175, 55, 0.95) 0%, rgba(10, 10, 10, 0.98) 75%);
+  box-shadow: 0 0 16px rgba(212, 175, 55, 0.8), inset 0 2px 4px rgba(255, 255, 255, 0.4);
+  opacity: 0;
+  transform: scaleY(0.05);
+  transform-origin: center top;
+  transition: opacity 0.08s ease, transform 0.22s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.mineral-wink-eye--active {
+  opacity: 0.95;
+  transform: scaleY(1);
+}
+
+.mineral-wink-spark {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  font-size: 14px;
+  opacity: 0;
+  transform: scale(0.3) rotate(-15deg);
+  transition: all 0.25s ease;
+}
+
+.mineral-wink-eye--active .mineral-wink-spark {
+  opacity: 1;
+  transform: scale(1.1) rotate(15deg);
+}
+

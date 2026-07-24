@@ -675,6 +675,63 @@
     });
   }
 
+  /* ── EL GUIÑO MINERAL (Algunos ojos guiñan con la luz de la mica) ── */
+  function wireMineralWink() {
+    var targets = [
+      { sel: '.hero-immersive__image-wrapper', top: '38%', left: '53%', name: 'Marilyn' },
+      { sel: '#gallery-hero .gallery-hero__artwork', top: '34%', left: '49%', name: 'Amy' },
+      { sel: 'img[src*="hq-james"]', isImg: true, top: '35%', left: '54%', name: 'James' },
+      { sel: 'img[src*="hq-portrait-1"]', isImg: true, top: '36%', left: '48%', name: 'Retrato I' },
+      { sel: 'img[src*="hq-johnny"]', isImg: true, top: '38%', left: '46%', name: 'Johnny' },
+      { sel: 'img[src*="audrey-hepburn"]', isImg: true, top: '36%', left: '51%', name: 'Audrey' },
+      { sel: 'img[src*="geisha"]', isImg: true, top: '39%', left: '49%', name: 'Geisha' }
+    ];
+
+    targets.forEach(function (t) {
+      var container = document.querySelector(t.sel);
+      if (!container) return;
+      if (t.isImg) {
+        container = container.closest('.gallery-massive__item') || container.parentElement;
+      }
+      if (!container || container.querySelector('.mineral-wink-eye')) return;
+
+      container.style.position = 'relative';
+
+      var eye = document.createElement('div');
+      eye.className = 'mineral-wink-eye';
+      eye.style.top = t.top;
+      eye.style.left = t.left;
+
+      var spark = document.createElement('span');
+      spark.className = 'mineral-wink-spark';
+      spark.textContent = '✨';
+      eye.appendChild(spark);
+
+      container.appendChild(eye);
+
+      function triggerWink() {
+        if (eye.classList.contains('mineral-wink-eye--active')) return;
+        eye.classList.add('mineral-wink-eye--active');
+        setTimeout(function () {
+          eye.classList.remove('mineral-wink-eye--active');
+        }, 380); // Guiño discreto y rápido de 380 ms
+      }
+
+      // Guiño al pasar el ratón
+      container.addEventListener('mouseenter', function () {
+        setTimeout(triggerWink, 180);
+      });
+
+      // Guiño aleatorio autónomo (cada 8 a 15 segundos si está en pantalla)
+      var interval = Math.floor(Math.random() * 7000) + 8000;
+      setInterval(function () {
+        var rect = container.getBoundingClientRect();
+        var inView = rect.top < window.innerHeight && rect.bottom > 0;
+        if (inView) triggerWink();
+      }, interval);
+    });
+  }
+
   /* ── init ───────────────────────────────────────────────────── */
   function init2() {
     wireMobileNav();
@@ -684,6 +741,7 @@
     wireUniversalNavigation();
     wireScrollSpy();
     wireSoundscape();
+    wireMineralWink();
     whenMicaReady(function (mica) {
       wireMicaPolitesse(mica);
       wireMicaBrain(mica);
