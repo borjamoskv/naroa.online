@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://naroa.online/sitemap.xml
