@@ -77,7 +77,11 @@ export default function App() {
               onClick={toggleAudio}
               title={audioActive ? 'Desactivar audio' : 'Activar audio'}
             >
-              <span className="audio-icon">{audioActive ? '◉' : '○'}</span>
+              <span className="audio-equalizer">
+                <span className="eq-bar bar-1"></span>
+                <span className="eq-bar bar-2"></span>
+                <span className="eq-bar bar-3"></span>
+              </span>
               <span className="audio-label">FX {audioActive ? 'ON' : 'OFF'}</span>
             </button>
           </nav>

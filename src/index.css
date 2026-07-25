@@ -153,32 +153,70 @@ canvas {
 
 /* Audio FX Toggle Button */
 .audio-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
   padding: 6px 14px;
   border-radius: 20px;
   font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.1em;
+  font-size: 0.82rem;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
   transition: all 0.3s ease;
 }
 
 .audio-btn:hover {
   background: rgba(43, 59, 229, 0.2);
   border-color: var(--accent-color);
-  color: #FFFFFF;
 }
 
 .audio-btn.active {
-  background: rgba(43, 59, 229, 0.25);
   border-color: var(--accent-color);
-  color: #FFFFFF;
-  box-shadow: 0 0 12px rgba(43, 59, 229, 0.3);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+/* Audio Equalizer Bar Animation */
+.audio-equalizer {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2.5px;
+  height: 14px;
+  width: 14px;
+}
+
+.eq-bar {
+  width: 3px;
+  height: 100%;
+  background-color: var(--text-color);
+  border-radius: 1px;
+  transform-origin: bottom;
+  transition: height 0.3s ease, opacity 0.3s ease;
+}
+
+.audio-btn.active .eq-bar {
+  background-color: #39FF14;
+}
+
+.audio-btn.active .bar-1 {
+  animation: eqPulse 0.8s ease-in-out infinite alternate;
+}
+.audio-btn.active .bar-2 {
+  animation: eqPulse 0.6s ease-in-out 0.2s infinite alternate;
+}
+.audio-btn.active .bar-3 {
+  animation: eqPulse 0.9s ease-in-out 0.4s infinite alternate;
+}
+
+.audio-btn:not(.active) .eq-bar {
+  height: 35%;
+  opacity: 0.4;
+}
+
+@keyframes eqPulse {
+  0% { transform: scaleY(0.2); }
+  100% { transform: scaleY(1); }
 }
 
 /* Middle Layout */
