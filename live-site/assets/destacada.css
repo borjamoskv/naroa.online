@@ -3,6 +3,12 @@
    2026-07-19 · Carga después de main.css
    ═══════════════════════════════════════════════════════════════ */
 
+:root {
+  --color-abyss: #0A0A0A;
+  --color-cobalt: #2B3BE5;
+  --color-gold: #D4AF37;
+}
+
 /* ── 1. Resucitar el lightbox (estaba anulado con display:none !important) ── */
 .gallery-lightbox:not([hidden]) {
   display: flex !important;
@@ -208,10 +214,10 @@ body.nav-open { overflow: hidden; }
   border-radius: 16px !important;
   display: flex !important;
   flex-direction: column !important;
-  background: rgba(12, 12, 18, 0.94) !important;
-  backdrop-filter: blur(24px) !important;
-  -webkit-backdrop-filter: blur(24px) !important;
-  border: 1px solid rgba(212, 175, 55, 0.3) !important;
+  background: rgba(10, 10, 10, 0.4) !important;
+  backdrop-filter: blur(40px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+  border: 1px solid rgba(212, 175, 55, 0.4) !important;
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.85), 0 0 20px rgba(212, 175, 55, 0.15) !important;
 }
 .mica-panel:before { display: none; }
@@ -703,3 +709,24 @@ body.nav-open { overflow: hidden; }
   transform: scale(1.1) rotate(15deg);
 }
 
+/* ═══ NAV INNER GLASSMORPHISM ═══ */
+.nav__inner {
+  background: rgba(10, 10, 10, 0.4) !important;
+  backdrop-filter: blur(40px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(180%) !important;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2) !important;
+}
+
+/* ═══ HERO IMMERSIVE OVERLAY CRT FLICKER ═══ */
+.hero-immersive__overlay {
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px) !important;
+  animation: crt-flicker 0.15s infinite !important;
+  pointer-events: none !important;
+  z-index: 10 !important;
+}
+
+@keyframes crt-flicker {
+  0% { opacity: 0.95; }
+  50% { opacity: 0.85; }
+  100% { opacity: 0.95; }
+}
