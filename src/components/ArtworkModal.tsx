@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ARTWORKS, type Artwork } from '../artworks'
 import { sound } from '../utils/audio'
@@ -11,6 +11,8 @@ interface ArtworkModalProps {
 }
 
 export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: ArtworkModalProps) {
+  const touchStartX = useRef<number | null>(null)
+
   useEffect(() => {
     if (artwork) {
       sound.playOpen()
@@ -49,9 +51,53 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
     onNavigate(prev)
   }
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX
+  }
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return
+    const touchEndX = e.changedTouches[0].clientX
+    const diffX = touchStartX.current - touchEndX
+    if (Math.abs(diffX) > 40) {
+      if (diffX > 0) {
+        handleNext()
+      } else {
+        handlePrev()
+      }
+    }
+    touchStartX.current = null
+  }
+
+  const handleShare = async () => {
+    sound.playTick()
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `${artwork.title} — Naroa Gutiérrez Gil`,
+          text: artwork.description,
+          url: window.location.href,
+        })
+      } catch {
+        // Share cancelled or unavailable
+      }
+    } else {
+      await navigator.clipboard.writeText(window.location.href)
+      alert('¡Enlace copiado al portapapeles!')
+    }
+  }
+
   return (
     <AnimatePresence>
-      <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="modal-artwork-title">
+      <div
+        className="modal-backdrop"
+        onClick={onClose}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-artwork-title"
+      >
         <motion.div
           className="modal-content"
           initial={{ opacity: 0, scale: 0.92, y: 20 }}
@@ -93,7 +139,7 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
 
               <p className="modal-description">{artwork.description}</p>
 
-              <div className="modal-actions">
+              <div className="modal-actions" style={{ display: 'flex', gap: '10px' }}>
                 <a
                   href={artwork.href}
                   target="_blank"
@@ -103,6 +149,15 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
                 >
                   ABRIR EN PORTAL OFICIAL ↗
                 </a>
+                <button
+                  type="button"
+                  className="modal-cta"
+                  onClick={handleShare}
+                  style={{ background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.2)' }}
+                  title="Compartir enlace de la obra"
+                >
+                  COMPARTIR ⎘
+                </button>
               </div>
 
               <div className="modal-nav">
@@ -120,3 +175,4 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
     </AnimatePresence>
   )
 }
+

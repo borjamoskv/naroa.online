@@ -7,14 +7,7 @@ export default defineConfig({
   plugins: [react()],
   build: {
     target: 'esnext',
-    minify: 'esbuild',
     chunkSizeWarningLimit: 1200,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['react', 'three']
-        }
-      }
-    }
+
   }
 })
