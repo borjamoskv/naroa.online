@@ -564,10 +564,11 @@
 
     // Soporte inicial si la URL ya trae hash al cargar
     if (window.location.hash && routeMap[window.location.hash]) {
+      var initialTarget = routeMap[window.location.hash];
       setTimeout(function () {
-        scrollToSection(routeMap[window.location.hash]);
+        scrollToSection(initialTarget);
         updateNavActive(window.location.hash);
-      }, 150);
+      }, 300);
     }
   }
 
@@ -583,9 +584,8 @@
           var id = entry.target.getAttribute('id');
           var hashMap = {
             'view-home': '#/',
-            'view-destacada': '#/obra',
-            'view-trayectoria': '#/trayectoria',
-            'view-about': '#/sobre-mi',
+            'view-destacada': '#/destacada',
+            'view-about': '#/about',
             'view-blog': '#/blog',
             'view-contacto': '#/contacto'
           };
@@ -593,14 +593,17 @@
           if (targetHash) {
             navLinks.forEach(function (link) {
               var href = link.getAttribute('href');
-              var isActive = (href === targetHash) || (targetHash === '#/' && href === '#/');
+              var isActive = (href === targetHash) || 
+                             (targetHash === '#/about' && (href === '#/about' || href === '#/sobre-mi')) ||
+                             (targetHash === '#/destacada' && (href === '#/destacada' || href === '#/obra')) ||
+                             (targetHash === '#/' && (href === '#/' || href === ''));
               link.classList.toggle('nav__link--active', isActive);
               link.classList.toggle('active', isActive);
             });
           }
         }
       });
-    }, { threshold: 0.35 });
+    }, { threshold: 0.25 });
 
     sections.forEach(function (sec) { observer.observe(sec); });
   }
