@@ -56,9 +56,10 @@ function GalleryItem({
         : scale
 
       easing.damp3(meshRef.current.scale, targetScale, 0.2, delta)
-      easing.damp(meshRef.current.material, 'grayscale', hovered || isSelected ? 0 : 0.85, 0.2, delta)
+      const material = meshRef.current.material as any
+      easing.damp(material, 'grayscale', hovered || isSelected ? 0 : 0.85, 0.2, delta)
       easing.dampC(
-        meshRef.current.material.color,
+        material.color,
         hovered ? '#ffffff' : isSelected ? '#e0e5ff' : '#555555',
         0.2,
         delta
