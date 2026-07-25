@@ -6,9 +6,20 @@ class SoundEngine {
 
   constructor() {
     // Lazy init audio context on first user interaction
-    const saved = localStorage.getItem('naroa_audio_enabled')
-    if (saved !== null) {
-      this.enabled = saved === 'true'
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('naroa_audio_enabled')
+      if (saved !== null) {
+        this.enabled = saved === 'true'
+      }
+
+      // Resume AudioContext on any initial user gesture for browser autoplay policy compliance
+      const handleUserInteraction = () => {
+        this.initCtx()
+        window.removeEventListener('pointerdown', handleUserInteraction)
+        window.removeEventListener('keydown', handleUserInteraction)
+      }
+      window.addEventListener('pointerdown', handleUserInteraction, { once: true })
+      window.addEventListener('keydown', handleUserInteraction, { once: true })
     }
   }
 
@@ -43,21 +54,22 @@ class SoundEngine {
       this.initCtx()
       if (!this.ctx) return
 
+      const now = this.ctx.currentTime
       const osc = this.ctx.createOscillator()
       const gain = this.ctx.createGain()
 
       osc.type = 'sine'
-      osc.frequency.setValueAtTime(440, this.ctx.currentTime)
-      osc.frequency.exponentialRampToValueAtTime(880, this.ctx.currentTime + 0.04)
+      osc.frequency.setValueAtTime(520, now)
+      osc.frequency.exponentialRampToValueAtTime(1040, now + 0.045)
 
-      gain.gain.setValueAtTime(0.05, this.ctx.currentTime)
-      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.04)
+      gain.gain.setValueAtTime(0.045, now)
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.045)
 
       osc.connect(gain)
       gain.connect(this.ctx.destination)
 
-      osc.start()
-      osc.stop(this.ctx.currentTime + 0.04)
+      osc.start(now)
+      osc.stop(now + 0.045)
     } catch {
       // Ignore audio errors
     }
@@ -69,21 +81,22 @@ class SoundEngine {
       this.initCtx()
       if (!this.ctx) return
 
+      const now = this.ctx.currentTime
       const osc = this.ctx.createOscillator()
       const gain = this.ctx.createGain()
 
       osc.type = 'triangle'
-      osc.frequency.setValueAtTime(220, this.ctx.currentTime)
-      osc.frequency.exponentialRampToValueAtTime(330, this.ctx.currentTime + 0.06)
+      osc.frequency.setValueAtTime(280, now)
+      osc.frequency.exponentialRampToValueAtTime(420, now + 0.055)
 
-      gain.gain.setValueAtTime(0.02, this.ctx.currentTime)
-      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.06)
+      gain.gain.setValueAtTime(0.02, now)
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.055)
 
       osc.connect(gain)
       gain.connect(this.ctx.destination)
 
-      osc.start()
-      osc.stop(this.ctx.currentTime + 0.06)
+      osc.start(now)
+      osc.stop(now + 0.055)
     } catch {
       // Ignore audio errors
     }
@@ -96,21 +109,29 @@ class SoundEngine {
       if (!this.ctx) return
 
       const now = this.ctx.currentTime
-      const osc = this.ctx.createOscillator()
+      const osc1 = this.ctx.createOscillator()
+      const osc2 = this.ctx.createOscillator()
       const gain = this.ctx.createGain()
 
-      osc.type = 'sine'
-      osc.frequency.setValueAtTime(300, now)
-      osc.frequency.exponentialRampToValueAtTime(600, now + 0.12)
+      osc1.type = 'sine'
+      osc1.frequency.setValueAtTime(320, now)
+      osc1.frequency.exponentialRampToValueAtTime(720, now + 0.14)
 
-      gain.gain.setValueAtTime(0.06, now)
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15)
+      osc2.type = 'triangle'
+      osc2.frequency.setValueAtTime(480, now)
+      osc2.frequency.exponentialRampToValueAtTime(960, now + 0.14)
 
-      osc.connect(gain)
+      gain.gain.setValueAtTime(0.05, now)
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.15)
+
+      osc1.connect(gain)
+      osc2.connect(gain)
       gain.connect(this.ctx.destination)
 
-      osc.start(now)
-      osc.stop(now + 0.15)
+      osc1.start(now)
+      osc2.start(now)
+      osc1.stop(now + 0.15)
+      osc2.stop(now + 0.15)
     } catch {
       // Ignore audio errors
     }
@@ -118,3 +139,4 @@ class SoundEngine {
 }
 
 export const sound = new SoundEngine()
+

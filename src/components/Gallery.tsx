@@ -121,28 +121,41 @@ function GalleryItem({
   )
 }
 
-// Control por Teclado (Flechas izquierda/derecha/arriba/abajo)
-function KeyboardNav({ count }: { count: number }) {
+// Control por Teclado (Flechas izquierda/derecha/arriba/abajo, Enter, Espacio, 'I')
+function KeyboardNav({
+  count,
+  selectedIndex,
+  onInspect
+}: {
+  count: number
+  selectedIndex: number
+  onInspect: (index: number) => void
+}) {
   const scroll = useScroll()
 
   useEffect(() => {
     const el = scroll.el
     const step = () => (el.scrollHeight - el.clientHeight) / count
     const onKey = (e: KeyboardEvent) => {
+      // Evitar interceptar teclas si un modal u otro input tiene foco activo
+      if (document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA') return
+
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
         e.preventDefault()
         sound.playTick()
         el.scrollBy({ top: step(), behavior: 'smooth' })
-      }
-      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
         e.preventDefault()
         sound.playTick()
         el.scrollBy({ top: -step(), behavior: 'smooth' })
+      } else if (e.key === 'Enter' || e.key === ' ' || e.code === 'KeyI') {
+        e.preventDefault()
+        onInspect(selectedIndex)
       }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [scroll, count])
+  }, [scroll, count, selectedIndex, onInspect])
 
   return null
 }
@@ -262,7 +275,7 @@ export function Gallery({
           {...item}
         />
       ))}
-      <KeyboardNav count={numItems} />
+      <KeyboardNav count={numItems} selectedIndex={selectedIndex} onInspect={onInspectArtwork} />
     </group>
   )
 }
