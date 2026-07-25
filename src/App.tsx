@@ -1,5 +1,5 @@
 import { Suspense, lazy, useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { ARTWORKS, PORTAL, type Artwork } from './artworks'
 import { ArtworkModal } from './components/ArtworkModal'
 import { sound } from './utils/audio'
@@ -11,7 +11,7 @@ function Loader() {
   return (
     <div className="loader">
       <div className="spinner"></div>
-      <div className="loader-text">SINCRONIZANDO LIENZO 3D...</div>
+      <div className="loader-text">MATERIALIZANDO LIENZO...</div>
     </div>
   )
 }
@@ -77,7 +77,7 @@ export default function App() {
               onClick={toggleAudio}
               title={audioActive ? 'Desactivar audio' : 'Activar audio'}
             >
-              <span className="audio-icon">{audioActive ? '🔊' : '🔇'}</span>
+              <span className="audio-icon">{audioActive ? '◉' : '○'}</span>
               <span className="audio-label">FX {audioActive ? 'ON' : 'OFF'}</span>
             </button>
           </nav>
@@ -90,14 +90,14 @@ export default function App() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
           >
-            <h1>SALA DE JUEGOS & 3D</h1>
+            <h1>GALERÍA 3D</h1>
             <p>
-              Fricción interactiva sobre el lienzo de Naroa Gutiérrez Gil. Usa las flechas o desliza para navegar por la galería en 360°.
+              Obra viva de Naroa Gutiérrez Gil — retratos que respiran en el espacio. Gira, explora e inspecciona cada lienzo.
             </p>
             <div className="nav-controls-hint">
               <span className="kbd-tag">←</span>
               <span className="kbd-tag">→</span>
-              <span className="hint-text">TECLAS DE NAVEGACIÓN // DRAG O SCROLL</span>
+              <span className="hint-text">ARRASTRAR · TECLAS · SCROLL</span>
             </div>
           </motion.div>
         </div>
@@ -113,7 +113,18 @@ export default function App() {
               <span className="artwork-index">
                 {String(current + 1).padStart(2, '0')} / {String(ARTWORKS.length).padStart(2, '0')}
               </span>
-              <span className="artwork-title">{artwork.title}</span>
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={artwork.id}
+                  className="artwork-title"
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  {artwork.title}
+                </motion.span>
+              </AnimatePresence>
               <span className="artwork-medium-badge">{artwork.year}</span>
               <button
                 className="artwork-cta-btn"
@@ -122,7 +133,7 @@ export default function App() {
                   handleInspect(current)
                 }}
               >
-                INSPECCIONAR ⊕
+                INSPECCIONAR +
               </button>
             </div>
           </div>
