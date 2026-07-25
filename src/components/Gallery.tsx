@@ -227,16 +227,26 @@ export function Gallery({
       />
       <ambientLight intensity={0.6} />
 
-      {/* Campo de polvo/estrellas ambientales WebGL */}
+      {/* Campo dual de partículas WebGL (Mica Mineral Gold + Electric Indigo) */}
       {!reducedMotion && (
-        <Sparkles
-          count={120}
-          scale={[14, 8, 14]}
-          size={2.5}
-          speed={0.4}
-          opacity={0.35}
-          color="#2B3BE5"
-        />
+        <>
+          <Sparkles
+            count={90}
+            scale={[16, 10, 16]}
+            size={2.2}
+            speed={0.35}
+            opacity={0.4}
+            color="#2B3BE5"
+          />
+          <Sparkles
+            count={60}
+            scale={[12, 8, 12]}
+            size={2.8}
+            speed={0.25}
+            opacity={0.45}
+            color="#D4AF37"
+          />
+        </>
       )}
 
       {items.map((item, i) => (
