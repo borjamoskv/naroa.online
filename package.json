@@ -9,7 +9,9 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "deploy": "./deploy.sh",
-    "deploy:preview": "./deploy.sh --preview"
+    "deploy:prod": "./deploy.sh",
+    "deploy:preview": "./deploy.sh --preview",
+    "watch:deploy": "chokidar 'src/**/*' 'live-site/**/*' -c './deploy.sh'"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
