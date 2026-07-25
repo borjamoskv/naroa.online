@@ -428,6 +428,15 @@ canvas {
   color: #FFFFFF;
 }
 
+.artwork-title-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
 .artwork-medium-badge {
   font-size: 0.65rem;
   background: rgba(255, 255, 255, 0.1);

@@ -70,7 +70,7 @@ export const ARTWORKS: Artwork[] = [
     id: 7,
     url: '/assets/divinos-marilyn-By8KYPMI.webp',
     title: 'Divinos: Marilyn',
-    href: `${PORTAL}/obra/`,
+    href: `${PORTAL}/obra/divinos-marilyn/`,
     year: '2024',
     medium: 'Serie Divinos — Edición Especial',
     description: 'Pieza de la serie Divinos que explora el mito, la luz de neón y la fragilidad del icono pop.'
@@ -79,7 +79,7 @@ export const ARTWORKS: Artwork[] = [
     id: 8,
     url: '/assets/divinos-johnny-gl9M1ZKj.webp',
     title: 'Divinos: Johnny',
-    href: `${PORTAL}/obra/`,
+    href: `${PORTAL}/obra/divinos-johnny/`,
     year: '2024',
     medium: 'Serie Divinos — Pigmentos & Luz',
     description: 'Exploración de la dualidad mítica en la serie Divinos mediante contrastes de sombras saturadas.'
