@@ -55,7 +55,11 @@
           "addressLocality": "Bilbao",
           "addressRegion": "País Vasco",
           "addressCountry": "ES"
-        }
+        },
+        "gender": "Female",
+        "nationality": "Spanish",
+        "alumniOf": "Universidad del País Vasco",
+        "award": "Artista de Vanguardia en Hiperrealismo POP"
       },
       {
         "@type": "LocalBusiness",
@@ -65,6 +69,9 @@
         "image": "https://naroa.online/images/artworks/marilyn-rocks-hq-5.webp",
         "description": "Estudio de arte en Bilbao. Retratos hiperrealistas por encargo en acrílico sobre pizarra y mica mineral. Obras originales, cuadros pintados a mano y envío a toda España.",
         "priceRange": "€€€",
+        "founder": {
+          "@id": "https://naroagutierrezgil.com/#artist"
+        },
         "address": {
           "@type": "PostalAddress",
           "addressLocality": "Bilbao",
@@ -208,12 +215,12 @@
 </head>
 <body>
   <!-- ═══ NAVIGATION ═══ -->
-  <nav class="nav" id="main-nav">
+  <nav class="nav" id="main-nav" aria-label="Navegación principal">
     <div class="nav__inner">
-      <a href="#/" class="nav__logo">N</a>
+      <a href="#/" class="nav__logo" aria-label="Inicio">N</a>
       <button class="nav__toggle" id="nav-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-links"><span></span><span></span><span></span></button>
       <ul class="nav__links" id="nav-links">
-        <li><a href="#/" class="nav__link active">Home</a></li>
+        <li><a href="#/" class="nav__link active" aria-current="page">Home</a></li>
         <li><a href="#/destacada" class="nav__link">Obra</a></li>
         <li><a href="#/about" class="nav__link">Sobre mí</a></li>
         <li><a href="#/blog" class="nav__link">Blog</a></li>
@@ -234,7 +241,7 @@
   <main id="main-content">
 
     <!-- ═══ SECTION 1: HERO ═══════════════════ -->
-    <section id="view-home" class="view view--home active">
+    <section id="view-home" class="view view--home active" aria-label="Inicio">
 
       <!-- ═══ IMMERSIVE HERO — Cinematic First Impression ═══ -->
       <div class="hero-immersive" id="hero-immersive">
@@ -300,7 +307,7 @@
     </section>
 
     <!-- ═══ SECTION 2: GALERÍA ═════════════════ -->
-    <section id="view-destacada" class="view view--destacada">
+    <section id="view-destacada" class="view view--destacada" aria-labelledby="gallery-section-title">
 
       <!-- HERO: Obra Protagonista Colosal -->
       <div class="gallery-hero" id="gallery-hero">
@@ -323,7 +330,7 @@
       <!-- Gallery Section Divider -->
       <div class="gallery-section-header">
         <span class="gallery-section-header__eyebrow">Colección Completa</span>
-        <h2 class="gallery-section-header__title">Universo<br><em>Artístico</em></h2>
+        <h2 class="gallery-section-header__title" id="gallery-section-title">Universo<br><em>Artístico</em></h2>
         <p class="gallery-section-header__subtitle">Cada trazo es una historia. Cada obra, un fragmento del alma.</p>
         <div class="gallery-section-header__line"></div>
       </div>
@@ -514,13 +521,13 @@
     </section>
 
     <!-- ═══ SECTION 3: ABOUT ══════════════════ -->
-    <section id="view-about" class="view view--about view--premium-dark">
-      <div class="about__impact">
+    <section id="view-about" class="view view--about view--premium-dark" aria-labelledby="about-section-title">
+      <article class="about__impact">
         <div class="about__impact-image">
           <img src="/assets/naroa-portrait-DW8XfHYG.jpg" alt="Naroa Gutiérrez Gil" loading="lazy">
         </div>
         <div class="about__impact-text">
-          <h2 class="about__impact-title">
+          <h2 class="about__impact-title" id="about-section-title">
             <span class="text-gold">A O R A N</span><br>
             N A R O A<br>
             <span class="text-gold">A O R A N</span>
@@ -543,14 +550,14 @@
     </section>
 
     <!-- ═══ SECTION: BLOG (sincronizada en tiempo real con WordPress) ═══ -->
-    <section id="view-blog" class="view view--blog view--premium-dark">
+    <section id="view-blog" class="view view--blog view--premium-dark" aria-labelledby="blog-section-title">
       <div class="blog">
         <div class="gallery-section-header">
           <span class="gallery-section-header__eyebrow">
             <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background:#39FF14; box-shadow:0 0 8px #39FF14; margin-right:6px;"></span>
             WordPress Live Sync · naroagutierrez.wordpress.com
           </span>
-          <h2 class="gallery-section-header__title">Diario de Arte<br><em>& Reflexiones</em></h2>
+          <h2 class="gallery-section-header__title" id="blog-section-title">Diario de Arte<br><em>& Reflexiones</em></h2>
           <p class="gallery-section-header__subtitle">Pensamientos, procesos creativos y exposiciones publicados por Naroa en tiempo real.</p>
           <div class="gallery-section-header__line"></div>
         </div>
@@ -564,12 +571,12 @@
     </section>
 
     <!-- ═══ SECTION 4: ENCARGO + CONTACTO ═══════════════ -->
-    <section id="view-contacto" class="view view--contacto view--premium-dark">
+    <section id="view-contacto" class="view view--contacto view--premium-dark" aria-labelledby="contacto-section-title">
 
       <!-- ── Encargo: cómo trabajamos juntos ── -->
-      <div class="encargo">
+      <article class="encargo">
         <div class="encargo__intro">
-          <h2 class="encargo__headline">Cada retrato empieza con una <em>conversación</em></h2>
+          <h2 class="encargo__headline" id="contacto-section-title">Cada retrato empieza con una <em>conversación</em></h2>
           <p class="encargo__lead">No hay fórmulas. Me siento contigo, escucho tu historia, y entre los dos decidimos cómo contarla sobre el lienzo.</p>
         </div>
 
@@ -608,7 +615,7 @@
           </div>
 
         </div>
-      </div>
+      </article>
 
       <hr class="encargo__divider">
 
@@ -648,9 +655,9 @@
     </section>
 
     <!-- ═══ SECTION 5: JUEGOS (Hub) ═══════════ -->
-    <section id="view-juegos" class="view view--juegos games-hub">
+    <section id="view-juegos" class="view view--juegos games-hub" aria-labelledby="juegos-section-title">
       <header class="games-hub__header">
-        <h2 class="games-hub__title text-shimmer">🎮 Sala de Juegos</h2>
+        <h2 class="games-hub__title text-shimmer" id="juegos-section-title">🎮 Sala de Juegos</h2>
         <p class="games-hub__subtitle">21 minijuegos con las obras de Naroa</p>
       </header>
       <div class="games-grid">
@@ -705,7 +712,7 @@
   </main>
 
   <!-- ═══ FOOTER ═════════════════════════════ -->
-  <footer class="footer" id="footer">
+  <footer class="footer" id="footer" role="contentinfo">
     <div class="footer__content">
       <p class="footer__text">
         © 2026 Naroa Gutiérrez Gil ·
@@ -719,8 +726,8 @@
   </footer>
 
   <!-- ═══ LIGHTBOX ═══════════════════════════ -->
-  <div class="lightbox" id="lightbox" hidden>
-    <button class="lightbox__close" aria-label="Cerrar">&times;</button>
+  <div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Visor de imagen ampliada">
+    <button class="lightbox__close" aria-label="Cerrar imagen">&times;</button>
     <button class="lightbox__prev" aria-label="Anterior">‹</button>
     <button class="lightbox__next" aria-label="Siguiente">›</button>
     <figure class="lightbox__content">
