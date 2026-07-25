@@ -27,6 +27,7 @@ class u{constructor(){this.container=null,this.selectedDate=null,this.selectedTi
                 <section class="quick-actions">
                     <a href="https://wa.me/34600000000?text=Hola%20Naroa,%20me%20interesa%20tu%20obra" 
                        target="_blank" 
+                       rel="noopener noreferrer"
                        class="action-card whatsapp magnetic-btn">
                         <div class="action-icon">💬</div>
                         <div class="action-info">
