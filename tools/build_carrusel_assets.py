@@ -15,7 +15,7 @@ from pathlib import Path
 
 from PIL import Image, ImageFilter
 
-BASE = Path(__file__).resolve().parent
+BASE = Path(__file__).resolve().parent.parent / "public" / "carrusel"
 SRC = BASE / "img" / "src"
 OUT = BASE / "img"
 MANIFEST = BASE / "manifest.json"
