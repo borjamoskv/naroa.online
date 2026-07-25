@@ -6,6 +6,18 @@ import { easing } from 'maath'
 import { ARTWORKS } from '../artworks'
 import { sound } from '../utils/audio'
 
+// Preload masivo de texturas WebGL (Cero pop-in C5-REAL)
+if (typeof window !== 'undefined') {
+  ARTWORKS.forEach((a) => {
+    try {
+      Image.preload(a.url)
+    } catch {
+      // Ignore preloader fail
+    }
+  })
+}
+
+
 interface GalleryItemProps {
   position: [number, number, number]
   rotation: [number, number, number]
