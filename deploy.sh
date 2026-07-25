@@ -75,7 +75,7 @@ cat > "$BUILD_DIR/_headers" << 'EOF'
   Expires: 0
 
 /assets/*
-  Cache-Control: no-cache, no-store, must-revalidate, max-age=0
+  Cache-Control: public, max-age=31536000, immutable
 
 /sala-3d/assets/*
   Cache-Control: public, max-age=31536000, immutable

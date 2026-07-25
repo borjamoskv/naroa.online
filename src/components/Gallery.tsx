@@ -176,6 +176,7 @@ export function Gallery({
   const group = useRef<THREE.Group>(null)
   const scroll = useScroll()
   const lastCurrent = useRef(-1)
+  const lastTickTime = useRef(0)
   const [selectedIndex, setSelectedIndex] = useState(0)
 
   const numItems = ARTWORKS.length
@@ -223,7 +224,11 @@ export function Gallery({
         lastCurrent.current = best
         setSelectedIndex(best)
         onCurrentChange?.(best)
-        sound.playTick()
+        const now = performance.now()
+        if (now - lastTickTime.current > 300) {
+          sound.playTick()
+          lastTickTime.current = now
+        }
       }
     }
   })

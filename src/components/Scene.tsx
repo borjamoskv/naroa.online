@@ -10,6 +10,10 @@ const prefersReducedMotion =
   typeof window !== 'undefined' &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
+const isMobile =
+  typeof window !== 'undefined' &&
+  (window.innerWidth < 768 || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent))
+
 interface SceneProps {
   onCurrentChange: (index: number) => void
   onInspectArtwork: (index: number) => void
@@ -18,7 +22,7 @@ interface SceneProps {
 
 export default function Scene({ onCurrentChange, onInspectArtwork, targetIndex }: SceneProps) {
   return (
-    <Canvas dpr={[1, 2]} gl={{ antialias: false, toneMapping: THREE.ACESFilmicToneMapping }}>
+    <Canvas dpr={[1, isMobile ? 1.5 : 2]} gl={{ antialias: false, toneMapping: THREE.ACESFilmicToneMapping }}>
       <color attach="background" args={['#07070a']} />
 
       <Suspense fallback={null}>
@@ -33,7 +37,7 @@ export default function Scene({ onCurrentChange, onInspectArtwork, targetIndex }
 
         <Environment preset="city" />
 
-        {!prefersReducedMotion && (
+        {!prefersReducedMotion && !isMobile && (
           <EffectComposer>
             <Bloom luminanceThreshold={0.3} mipmapBlur intensity={0.85} />
             <Noise opacity={0.015} />

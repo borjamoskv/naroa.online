@@ -1,10 +1,12 @@
-import { Suspense, lazy, useState } from 'react'
+import { Suspense, lazy, useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ARTWORKS, PORTAL, type Artwork } from './artworks'
 import { ArtworkModal } from './components/ArtworkModal'
 import { sound } from './utils/audio'
 
 // La escena WebGL (three.js + postprocesado) carga en un chunk aparte
+const toSlug = (s: string) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+
 const Scene = lazy(() => import('./components/Scene'))
 
 function Loader() {
@@ -21,6 +23,23 @@ export default function App() {
   const [targetIndex, setTargetIndex] = useState<number | null>(null)
   const [modalArtwork, setModalArtwork] = useState<Artwork | null>(null)
   const [audioActive, setAudioActive] = useState<boolean>(sound.isEnabled())
+
+  useEffect(() => {
+    if (modalArtwork) {
+      const slug = toSlug(modalArtwork.title)
+      window.location.hash = `obra-${slug}`
+    } else if (window.location.hash.startsWith('#obra-')) {
+      history.replaceState(null, '', window.location.pathname)
+    }
+  }, [modalArtwork])
+
+  useEffect(() => {
+    const hash = window.location.hash.replace('#obra-', '')
+    if (hash) {
+      const match = ARTWORKS.find(a => toSlug(a.title) === hash)
+      if (match) setModalArtwork(match)
+    }
+  }, [])
 
   const artwork = ARTWORKS[current]
 
@@ -113,36 +132,28 @@ export default function App() {
           </button>
 
           <div className="artwork-caption">
-            <div
-              className="artwork-clickable"
-              onClick={() => handleInspect(current)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleInspect(current) }}
-              aria-label={`Inspeccionar ${artwork.title}`}
-            >
+            <div className="artwork-clickable">
               <span className="artwork-index">
                 {String(current + 1).padStart(2, '0')} / {String(ARTWORKS.length).padStart(2, '0')}
               </span>
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={artwork.id}
-                  className="artwork-title"
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                >
-                  {artwork.title}
-                </motion.span>
-              </AnimatePresence>
+              <button className="artwork-title-btn" onClick={() => handleInspect(current)}>
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={artwork.id}
+                    className="artwork-title"
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    {artwork.title}
+                  </motion.span>
+                </AnimatePresence>
+              </button>
               <span className="artwork-medium-badge">{artwork.year}</span>
               <button
                 className="artwork-cta-btn"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleInspect(current)
-                }}
+                onClick={() => handleInspect(current)}
                 aria-label={`Detalles de ${artwork.title}`}
               >
                 INSPECCIONAR +
