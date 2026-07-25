@@ -664,13 +664,16 @@
           osc2.start();
         }
 
-        audioCtx.resume();
-        gainNode.gain.setValueAtTime(0.001, audioCtx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.04, audioCtx.currentTime + 1.2); // Volumen sutil y discreto
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        gainNode.gain.cancelScheduledValues(audioCtx.currentTime);
+        gainNode.gain.setValueAtTime(gainNode.gain.value || 0, audioCtx.currentTime);
+        gainNode.gain.linearRampToValueAtTime(0.05, audioCtx.currentTime + 0.8); // Volumen sutil y continuo
 
         isPlaying = true;
         soundBtn.classList.add('ambient-sound-btn--active');
-        soundBtn.querySelector('.sound-label').textContent = 'Sonando ✨';
+        soundBtn.querySelector('.sound-label').textContent = 'Sonando (432Hz) ✨';
       }
     });
   }
