@@ -35,10 +35,10 @@ export default function Scene({ onCurrentChange, onInspectArtwork, targetIndex }
 
         {!prefersReducedMotion && (
           <EffectComposer>
-            <Bloom luminanceThreshold={0.2} mipmapBlur intensity={1.1} />
-            <Noise opacity={0.025} />
-            <Vignette eskil={false} offset={0.12} darkness={1.1} />
-            <ChromaticAberration blendFunction={BlendFunction.NORMAL} offset={new THREE.Vector2(0.0012, 0.0012)} />
+            <Bloom luminanceThreshold={0.3} mipmapBlur intensity={0.85} />
+            <Noise opacity={0.015} />
+            <Vignette eskil={false} offset={0.15} darkness={0.95} />
+            <ChromaticAberration blendFunction={BlendFunction.NORMAL} offset={new THREE.Vector2(0.0008, 0.0008)} />
           </EffectComposer>
         )}
 
