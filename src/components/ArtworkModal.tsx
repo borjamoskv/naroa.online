@@ -51,7 +51,7 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
 
   return (
     <AnimatePresence>
-      <div className="modal-backdrop" onClick={onClose}>
+      <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true" aria-labelledby="modal-artwork-title">
         <motion.div
           className="modal-content"
           initial={{ opacity: 0, scale: 0.92, y: 20 }}
@@ -60,7 +60,7 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
           transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
           onClick={(e) => e.stopPropagation()}
         >
-          <button className="modal-close" onClick={onClose} aria-label="Cerrar modal">
+          <button className="modal-close" onClick={onClose} aria-label="Cerrar modal" autoFocus>
             ✕
           </button>
 
@@ -88,7 +88,7 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
                 <span className="modal-year">{artwork.year}</span>
               </div>
 
-              <h2 className="modal-title">{artwork.title}</h2>
+              <h2 id="modal-artwork-title" className="modal-title">{artwork.title}</h2>
               <div className="modal-medium">{artwork.medium}</div>
 
               <p className="modal-description">{artwork.description}</p>
