@@ -32,6 +32,7 @@ function GalleryItem({
   const meshRef = useRef<any>(null)
   const groupRef = useRef<THREE.Group>(null)
   const [hovered, setHovered] = useState(false)
+  const pointerOffset = useRef({ x: 0, y: 0 })
 
   useFrame((state, delta) => {
     if (meshRef.current && groupRef.current) {
@@ -42,6 +43,12 @@ function GalleryItem({
 
       groupRef.current.position.y = floatY
 
+      // Inclinación 3D reactiva al cursor del usuario
+      const targetRotX = hovered ? pointerOffset.current.y * 0.25 : 0
+      const targetRotY = hovered ? pointerOffset.current.x * 0.25 : 0
+      easing.damp(meshRef.current.rotation, 'x', targetRotX, 0.15, delta)
+      easing.damp(meshRef.current.rotation, 'y', targetRotY, 0.15, delta)
+
       // Escala y matiz al pasar cursor o ser seleccionada
       const targetScale: [number, number, number] = hovered
         ? [scale[0] * 1.08, scale[1] * 1.08, 1]
@@ -50,10 +57,10 @@ function GalleryItem({
         : scale
 
       easing.damp3(meshRef.current.scale, targetScale, 0.2, delta)
-      easing.damp(meshRef.current.material, 'grayscale', hovered || isSelected ? 0 : 0.8, 0.2, delta)
+      easing.damp(meshRef.current.material, 'grayscale', hovered || isSelected ? 0 : 0.85, 0.2, delta)
       easing.dampC(
         meshRef.current.material.color,
-        hovered ? '#ffffff' : isSelected ? '#e0e5ff' : '#666666',
+        hovered ? '#ffffff' : isSelected ? '#e0e5ff' : '#555555',
         0.2,
         delta
       )
@@ -62,17 +69,19 @@ function GalleryItem({
 
   return (
     <group ref={groupRef} position={position} rotation={rotation}>
-      {/* Marco sutil 3D posterior (Glass Backplate) */}
-      <mesh position={[0, 0, -0.05]} scale={[scale[0] + 0.15, scale[1] + 0.15, 0.02]}>
+      {/* Marco sutil 3D posterior (Glass Backplate con Neón Emisivo) */}
+      <mesh position={[0, 0, -0.05]} scale={[scale[0] + 0.18, scale[1] + 0.18, 0.02]}>
         <boxGeometry />
         <meshPhysicalMaterial
           color={isSelected ? '#2B3BE5' : '#111115'}
+          emissive={isSelected ? '#2B3BE5' : hovered ? '#1b26a1' : '#000000'}
+          emissiveIntensity={isSelected ? 0.6 : hovered ? 0.35 : 0}
           roughness={0.2}
           metalness={0.8}
-          clearcoat={0.5}
+          clearcoat={0.6}
           transmission={0.3}
           transparent
-          opacity={hovered ? 0.9 : isSelected ? 0.7 : 0.4}
+          opacity={hovered ? 0.95 : isSelected ? 0.8 : 0.45}
         />
       </mesh>
 
@@ -88,8 +97,17 @@ function GalleryItem({
           sound.playHover()
           document.body.style.cursor = 'pointer'
         }}
+        onPointerMove={(e: ThreeEvent<PointerEvent>) => {
+          if (e.uv) {
+            pointerOffset.current = {
+              x: (e.uv.x - 0.5) * 2,
+              y: -(e.uv.y - 0.5) * 2
+            }
+          }
+        }}
         onPointerOut={() => {
           setHovered(false)
+          pointerOffset.current = { x: 0, y: 0 }
           document.body.style.cursor = 'auto'
         }}
         onClick={(e: ThreeEvent<MouseEvent>) => {
