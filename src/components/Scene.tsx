@@ -1,6 +1,6 @@
-import { Suspense } from 'react'
+import { Suspense, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { ScrollControls, Environment, Preload } from '@react-three/drei'
+import { ScrollControls, Environment, Preload, PerformanceMonitor } from '@react-three/drei'
 import { EffectComposer, Noise, Vignette, Bloom, ChromaticAberration } from '@react-three/postprocessing'
 import { BlendFunction } from 'postprocessing'
 import * as THREE from 'three'
@@ -21,8 +21,11 @@ interface SceneProps {
 }
 
 export default function Scene({ onCurrentChange, onInspectArtwork, targetIndex }: SceneProps) {
+  const [dpr, setDpr] = useState(isMobile ? 1 : 1.5)
+
   return (
-    <Canvas dpr={[1, isMobile ? 1.5 : 2]} gl={{ antialias: false, toneMapping: THREE.ACESFilmicToneMapping }}>
+    <Canvas dpr={dpr} gl={{ antialias: false, toneMapping: THREE.ACESFilmicToneMapping, powerPreference: 'high-performance' }}>
+      <PerformanceMonitor onIncline={() => setDpr(isMobile ? 1.5 : 2)} onDecline={() => setDpr(1)}>
       <color attach="background" args={['#07070a']} />
 
       <Suspense fallback={null}>
@@ -48,6 +51,7 @@ export default function Scene({ onCurrentChange, onInspectArtwork, targetIndex }
 
         <Preload all />
       </Suspense>
+      </PerformanceMonitor>
     </Canvas>
   )
 }
