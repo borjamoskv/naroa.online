@@ -66,8 +66,18 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
 
           <div className="modal-body">
             <div className="modal-image-wrapper">
-              <img src={artwork.url} alt={artwork.title} className="modal-image" />
-              <div className="modal-image-overlay" />
+              <AnimatePresence mode="wait">
+                <motion.img
+                  key={artwork.id}
+                  src={artwork.url}
+                  alt={artwork.title}
+                  className="modal-image"
+                  initial={{ opacity: 0, scale: 0.96 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 1.02 }}
+                  transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                />
+              </AnimatePresence>
             </div>
 
             <div className="modal-info">
