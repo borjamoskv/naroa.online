@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { useRef, useState, useEffect, useMemo } from 'react'
 import { useFrame, type ThreeEvent } from '@react-three/fiber'
-import { Image, useScroll, Sparkles } from '@react-three/drei'
+import { Image, useScroll, Sparkles, useTexture } from '@react-three/drei'
 import { easing } from 'maath'
 import { ARTWORKS } from '../artworks'
 import { sound } from '../utils/audio'
@@ -10,7 +10,7 @@ import { sound } from '../utils/audio'
 if (typeof window !== 'undefined') {
   ARTWORKS.forEach((a) => {
     try {
-      Image.preload(a.url)
+      useTexture.preload(a.url)
     } catch {
       // Ignore preloader fail
     }
