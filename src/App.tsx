@@ -107,13 +107,20 @@ export default function App() {
         </div>
 
         {/* Caption inferior interactivo con flechas de navegación */}
-        <div className="artwork-caption-wrapper">
-          <button className="caption-arrow" onClick={handlePrev} title="Obra anterior">
+        <div className="artwork-caption-wrapper" role="region" aria-label="Navegación de obras">
+          <button className="caption-arrow" onClick={handlePrev} title="Obra anterior" aria-label="Obra anterior">
             ‹
           </button>
 
           <div className="artwork-caption">
-            <div className="artwork-clickable" onClick={() => handleInspect(current)}>
+            <div
+              className="artwork-clickable"
+              onClick={() => handleInspect(current)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleInspect(current) }}
+              aria-label={`Inspeccionar ${artwork.title}`}
+            >
               <span className="artwork-index">
                 {String(current + 1).padStart(2, '0')} / {String(ARTWORKS.length).padStart(2, '0')}
               </span>
@@ -136,22 +143,26 @@ export default function App() {
                   e.stopPropagation()
                   handleInspect(current)
                 }}
+                aria-label={`Detalles de ${artwork.title}`}
               >
                 INSPECCIONAR +
               </button>
             </div>
           </div>
 
-          <button className="caption-arrow" onClick={handleNext} title="Siguiente obra">
+          <button className="caption-arrow" onClick={handleNext} title="Siguiente obra" aria-label="Siguiente obra">
             ›
           </button>
         </div>
 
         {/* Carrusel de indicadores circulares de selector directo */}
-        <div className="gallery-dots-bar">
+        <div className="gallery-dots-bar" role="tablist" aria-label="Selector directo de obras">
           {ARTWORKS.map((item, idx) => (
             <button
               key={item.id}
+              role="tab"
+              aria-selected={idx === current}
+              aria-label={`Seleccionar obra ${idx + 1}: ${item.title}`}
               className={`dot-item ${idx === current ? 'active' : ''}`}
               onClick={() => handleSelectDot(idx)}
               onMouseEnter={() => sound.playHover()}
