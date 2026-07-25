@@ -3,6 +3,7 @@ dist/
 dist-ssr/
 .output/
 .deploy/
+.tempmediaStorage/
 
 # Dependencies
 node_modules/

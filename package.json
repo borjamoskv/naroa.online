@@ -9,7 +9,6 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "deploy": "./deploy.sh",
-    "deploy:prod": "./deploy.sh",
     "deploy:preview": "./deploy.sh --preview",
     "watch:deploy": "chokidar 'src/**/*' 'live-site/**/*' -c './deploy.sh'"
   },
