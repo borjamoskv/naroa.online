@@ -81,10 +81,10 @@ cat > "$BUILD_DIR/_headers" << 'EOF'
   Cache-Control: public, max-age=31536000, immutable
 
 /images/*
-  Cache-Control: public, max-age=2592000
+  Cache-Control: public, max-age=31536000, immutable
 
 /*.webp
-  Cache-Control: public, max-age=2592000
+  Cache-Control: public, max-age=31536000, immutable
 EOF
 
 cat > "$BUILD_DIR/_redirects" << 'EOF'
