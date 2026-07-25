@@ -10,7 +10,6 @@ interface GalleryItemProps {
   position: [number, number, number]
   rotation: [number, number, number]
   url: string
-  href: string
   scale: [number, number, number]
   index: number
   reducedMotion: boolean
@@ -29,7 +28,7 @@ function GalleryItem({
   isSelected,
   onInspect
 }: GalleryItemProps) {
-  const meshRef = useRef<any>(null)
+  const meshRef = useRef<THREE.Mesh>(null)
   const groupRef = useRef<THREE.Group>(null)
   const [hovered, setHovered] = useState(false)
   const pointerOffset = useRef({ x: 0, y: 0 })

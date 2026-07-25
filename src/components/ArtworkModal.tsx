@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ARTWORKS, type Artwork } from '../artworks'
 import { sound } from '../utils/audio'
