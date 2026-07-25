@@ -51,7 +51,8 @@ ok "Galería 3D compilada → dist/"
 log "Montando galería 3D en /sala-3d/..."
 mkdir -p "$BUILD_DIR/sala-3d"
 cp -R dist/* "$BUILD_DIR/sala-3d/"
-ok "Galería 3D montada en /sala-3d/"
+cp -R dist/assets/* "$BUILD_DIR/assets/" 2>/dev/null || true
+ok "Galería 3D montada en /sala-3d/ y assets sincronizados"
 
 # ── 6. Inyectar _headers y _redirects de CF Pages ───────────
 log "Inyectando _headers y _redirects..."

@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 
 // Configuración optimizada de Vite con manualChunks function para Rolldown/Rollup
 export default defineConfig({
+  base: './',
   plugins: [react()],
   build: {
     chunkSizeWarningLimit: 1200,
