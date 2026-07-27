@@ -1,32 +1,48 @@
-# React + TypeScript + Vite
+# 🌐 Naroa Online
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
 
-Currently, two official plugins are available:
+Plataforma web moderna construida con el stack **React + TypeScript + Vite**, diseñada para ofrecer una experiencia de usuario rápida, robusta y escalable.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Características Principales
 
-## React Compiler
+- **Rendimiento Extremo**: Construido sobre Vite para tiempos de carga de desarrollo instantáneos y compilaciones de producción altamente optimizadas.
+- **Tipado Seguro**: Código robusto y libre de errores en tiempo de ejecución gracias a TypeScript.
+- **Arquitectura Modular**: Componentes de React reutilizables para un mantenimiento sencillo y escalabilidad.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 📦 Instalación y Uso
 
-## Expanding the Oxlint configuration
+Para ejecutar el proyecto en tu entorno local:
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+1. **Clona el repositorio**
+   ```bash
+   git clone https://github.com/borjamoskv/naroa.online.git
+   cd naroa.online
+   ```
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
+2. **Instala las dependencias**
+   ```bash
+   npm install
+   ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+3. **Inicia el servidor de desarrollo**
+   ```bash
+   npm run dev
+   ```
+   El proyecto estará disponible en `http://localhost:5173`.
+
+## 🛠️ Comandos Disponibles
+
+- `npm run dev`: Inicia el servidor de desarrollo local.
+- `npm run build`: Compila el proyecto para producción.
+- `npm run preview`: Previsualiza la build de producción de forma local.
+- `npm run lint`: Ejecuta el linter (ESLint) para verificar la calidad del código.
+
+## 🤝 Contribución
+
+Si deseas contribuir, por favor haz un fork del repositorio, crea una nueva rama para tus características (`git checkout -b feature/nueva-caracteristica`) y abre un Pull Request.
+
+---
+*Mantenido por [borjamoskv](https://github.com/borjamoskv).*
