@@ -111,6 +111,7 @@ export default function App() {
             <ul className="nav-pill__links">
               <li><a href="#/" className={`nav-pill__link ${currentView === 'home' ? 'active' : ''}`} onClick={() => sound.playTick()}>Home</a></li>
               <li><a href="#/destacada" className={`nav-pill__link ${currentView === 'destacada' ? 'active' : ''}`} onClick={() => sound.playTick()}>Obra</a></li>
+              <li><a href="#/3d" className={`nav-pill__link ${currentView === '3d' ? 'active' : ''}`} onClick={() => sound.playTick()}>Sala 3D</a></li>
               <li><a href="#/sobre-mi" className={`nav-pill__link ${currentView === 'about' ? 'active' : ''}`} onClick={() => sound.playTick()}>Sobre mí</a></li>
               <li><a href="#/blog" className={`nav-pill__link ${currentView === 'blog' ? 'active' : ''}`} onClick={() => sound.playTick()}>Blog</a></li>
               <li><a href="#/encargos" className={`nav-pill__link nav-pill__link--cta ${currentView === 'encargos' ? 'active' : ''}`} onClick={() => sound.playTick()}>Contacto</a></li>
@@ -197,41 +198,42 @@ export default function App() {
           <>
             <div className="ui-middle">
               <motion.div
-                className="headline brutal-headline"
+                className="headline premium-title"
                 initial={{ opacity: 0, x: -30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                <span className="brutal-badge brutal-badge--yellow">HIPERREALISMO POP</span>
-                <h1>SALA 3D INMERSIVA</h1>
-                <p>
+                <span className="premium-badge premium-badge--gold">HIPERREALISMO POP</span>
+                <h1 style={{ fontSize: '2.5rem', marginTop: '1rem' }}>SALA 3D INMERSIVA</h1>
+                <p className="premium-subtitle" style={{ margin: '1rem 0 2rem' }}>
                   Retratos que respiran en el espacio — acrílico, pizarra natural y mica mineral desde Bilbao.
                 </p>
-                <div className="headline-ctas">
-                  <a href="#/encargos" className="brutal-cta-btn brutal-cta-btn--whatsapp">
+                <div className="headline-ctas" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                  <a href="#/encargos" className="premium-btn premium-btn--primary">
                     ⚡ ENCARGAR PIEZA ÚNICA
                   </a>
-                  <span className="hint-text">← TECLAS / ARRASTRAR 3D →</span>
+                  <span className="premium-subtitle" style={{ fontSize: '0.8rem', letterSpacing: '0.1em' }}>← TECLAS / ARRASTRAR 3D →</span>
                 </div>
               </motion.div>
             </div>
 
             {/* Selector de Obras en la Escena 3D */}
-            <div className="artwork-caption-wrapper brutal-caption-wrapper" role="region" aria-label="Navegación de obras">
-              <button className="caption-arrow brutal-arrow" onClick={handlePrev} title="Obra anterior">
+            <div className="premium-caption-wrapper" role="region" aria-label="Navegación de obras">
+              <button className="premium-arrow" onClick={handlePrev} title="Obra anterior">
                 ‹
               </button>
 
-              <div className="artwork-caption brutal-caption">
-                <div className="artwork-clickable">
-                  <span className="artwork-index brutal-index">
+              <div className="premium-caption">
+                <div className="artwork-clickable" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <span className="premium-subtitle" style={{ fontFamily: 'monospace' }}>
                     {String(current + 1).padStart(2, '0')} / {String(ARTWORKS.length).padStart(2, '0')}
                   </span>
-                  <button className="artwork-title-btn" onClick={() => handleInspect(current)}>
+                  <button className="artwork-title-btn" onClick={() => handleInspect(current)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
                     <AnimatePresence mode="wait">
                       <motion.span
                         key={artwork.id}
-                        className="artwork-title brutal-artwork-title"
+                        className="premium-title"
+                        style={{ fontSize: '1.2rem', margin: 0 }}
                         initial={{ opacity: 0, y: 6 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -6 }}
@@ -241,9 +243,10 @@ export default function App() {
                       </motion.span>
                     </AnimatePresence>
                   </button>
-                  <span className="artwork-medium-badge brutal-badge">{artwork.medium}</span>
+                  <span className="premium-badge">{artwork.medium}</span>
                   <button
-                    className="artwork-cta-btn brutal-btn"
+                    className="premium-btn"
+                    style={{ padding: '0.4rem 1rem', fontSize: '0.75rem' }}
                     onClick={() => handleInspect(current)}
                   >
                     INSPECCIONAR +
@@ -251,7 +254,7 @@ export default function App() {
                 </div>
               </div>
 
-              <button className="caption-arrow brutal-arrow" onClick={handleNext} title="Siguiente obra">
+              <button className="premium-arrow" onClick={handleNext} title="Siguiente obra">
                 ›
               </button>
             </div>
@@ -296,32 +299,32 @@ export default function App() {
 
         {/* VISTA 7: SOBRE MÍ / MANIFIESTO */}
         {currentView === 'about' && (
-          <div className="view-container brutal-container about-view">
-            <div className="brutal-card about-card" style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: '28px', alignItems: 'center' }}>
+          <div className="view-container about-view" style={{ maxWidth: '1000px', margin: '0 auto', paddingTop: '100px' }}>
+            <div className="premium-card about-card" style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: '40px', alignItems: 'center' }}>
               <img
                 src="/assets/naroa-portrait-DW8XfHYG.jpg"
                 alt="Naroa Gutiérrez Gil"
-                style={{ width: '100%', borderRadius: '4px', border: '3px solid #000', boxShadow: '5px 5px 0px var(--brutal-yellow)' }}
+                style={{ width: '100%', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 20px 40px rgba(0,0,0,0.8)' }}
               />
               <div>
-                <span className="brutal-badge brutal-badge--pink">MANIFIESTO ARTÍSTICO</span>
-                <h1 className="brutal-title">
-                  A O R A N / <span className="highlight-yellow">N A R O A</span>
+                <span className="premium-badge premium-badge--gold">MANIFIESTO ARTÍSTICO</span>
+                <h1 className="premium-title" style={{ fontSize: '2.8rem', marginTop: '1rem', lineHeight: '1.1' }}>
+                  A O R A N / <span className="highlight-gold">N A R O A</span>
                 </h1>
-                <p className="about-subtitle" style={{ color: 'var(--brutal-cyan)', fontWeight: 700, margin: '8px 0' }}>
+                <p className="premium-subtitle" style={{ color: '#D4AF37', fontWeight: 500, letterSpacing: '0.1em', marginTop: '0.5rem' }}>
                   A NAROA LA ORAN A
                 </p>
-                <p className="about-lead" style={{ lineHeight: '1.6', color: 'rgba(255, 255, 255, 0.9)' }}>
+                <p className="premium-subtitle" style={{ fontSize: '1.05rem', margin: '1.5rem 0 2rem' }}>
                   Artista visual en Bilbao especializada en hiperrealismo POP sobre pizarra natural y mica mineral.
                   Con más de 12.000 seguidores en su comunidad artística oficial. Cada piedra que uso tiene millones de años.
                   Cada retrato que pinto tiene la edad de quien lo mira.
                 </p>
-                <div className="about-links" style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <div className="about-links" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   <a
                     href="https://www.facebook.com/naroa.artista.plastica"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="brutal-cta-btn brutal-cta-btn--email"
+                    className="premium-btn premium-btn--primary"
                   >
                     📘 FACEBOOK ARTISTA (12K+ SEGUIDORES) ↗
                   </a>
@@ -329,7 +332,7 @@ export default function App() {
                     href={PORTAL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="brutal-cta-btn"
+                    className="premium-btn"
                   >
                     🌐 PORTAL OFICIAL: NAROAGUTIERREZGIL.COM ↗
                   </a>
@@ -339,11 +342,11 @@ export default function App() {
           </div>
         )}
 
-        {/* Footer Brutalista */}
-        <footer className="footer brutal-footer">
-          <div className="footer-left">
+        {/* Footer Premium */}
+        <footer className="premium-footer">
+          <div className="premium-footer-left">
             <span>© 2026 NAROA GUTIÉRREZ GIL · BILBAO</span>
-            <a href="mailto:naroa@naroa.eu" className="footer-link">naroa@naroa.eu</a>
+            <a href="mailto:naroa@naroa.eu" className="premium-footer-link">naroa@naroa.eu</a>
           </div>
           <div className="coordinates">KOBETAMENDI // 43.2630° N, 2.9350° W</div>
         </footer>

@@ -10,6 +10,7 @@ export interface Artwork {
   medium: string
   description: string
   sizeCategory?: 'colossal' | 'large' | 'medium' | 'small'
+  splatUrl?: string
 }
 
 export const ARTWORKS: Artwork[] = [
@@ -22,7 +23,8 @@ export const ARTWORKS: Artwork[] = [
     year: '2024',
     medium: 'Óleo y Acrílico sobre Lienzo',
     description: 'Reinterpretación hiperrealista con textura gestual y capas de fricción sobre la iconografía de Marilyn Monroe.',
-    sizeCategory: 'colossal'
+    sizeCategory: 'colossal',
+    splatUrl: 'https://huggingface.co/datasets/dylanebert/3dgs/resolve/main/shoe/shoe.splat'
   },
   {
     id: 2,
@@ -33,7 +35,8 @@ export const ARTWORKS: Artwork[] = [
     year: '2024',
     medium: 'Acrílico y Posca sobre Pizarra Natural con Mica Mineral',
     description: 'Retrato de Amy Winehouse capturando la crudeza emocional y la vibración del alma soul a través de trazos viscerales sobre pizarra negra.',
-    sizeCategory: 'colossal'
+    sizeCategory: 'colossal',
+    splatUrl: 'https://huggingface.co/datasets/dylanebert/3dgs/resolve/main/chair/chair.splat'
   },
   {
     id: 3,

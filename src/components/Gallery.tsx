@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { useRef, useState, useEffect, useMemo } from 'react'
 import { useFrame, type ThreeEvent } from '@react-three/fiber'
-import { Image, useScroll, Sparkles, useTexture } from '@react-three/drei'
+import { Image, useScroll, Sparkles, useTexture, Html } from '@react-three/drei'
 import { easing } from 'maath'
 import { ARTWORKS } from '../artworks'
 import { sound } from '../utils/audio'
@@ -26,6 +26,7 @@ interface GalleryItemProps {
   index: number
   reducedMotion: boolean
   isSelected: boolean
+  splatUrl?: string
   onSelect: (index: number) => void
   onInspect: (index: number) => void
 }
@@ -38,6 +39,7 @@ function GalleryItem({
   rotation,
   reducedMotion,
   isSelected,
+  splatUrl,
   onInspect
 }: GalleryItemProps) {
   const meshRef = useRef<THREE.Mesh>(null)
@@ -81,6 +83,36 @@ function GalleryItem({
 
   return (
     <group ref={groupRef} position={position} rotation={rotation}>
+      {/* Badge 3DGS flotante de tecnología fotorrealista */}
+      {splatUrl && (
+        <Html position={[0, scale[1] / 2 + 0.35, 0.1]} center distanceFactor={8}>
+          <div
+            onClick={(e) => {
+              e.stopPropagation()
+              sound.playTick()
+              onInspect(index)
+            }}
+            style={{
+              padding: '3px 10px',
+              background: 'linear-gradient(135deg, rgba(212,175,55,0.9) 0%, rgba(43,59,229,0.9) 100%)',
+              color: '#ffffff',
+              fontSize: '10px',
+              fontWeight: 900,
+              fontFamily: 'monospace',
+              letterSpacing: '1px',
+              borderRadius: '12px',
+              border: '1px solid #D4AF37',
+              boxShadow: '0 0 12px rgba(212, 175, 55, 0.6)',
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+              pointerEvents: 'auto',
+            }}
+          >
+            ✨ 3DGS 360°
+          </div>
+        </Html>
+      )}
+
       {/* Marco Escultórico 3D Exterior (Oro Mineral Bevel & Neón Cobalto) */}
       <mesh position={[0, 0, -0.08]} scale={[scale[0] + 0.35, scale[1] + 0.35, 0.06]}>
         <boxGeometry />
@@ -224,6 +256,7 @@ export function Gallery({
         rotation: [0, angle, 0] as [number, number, number],
         url: artwork.url,
         href: artwork.href,
+        splatUrl: artwork.splatUrl,
         scale: [3.1, 4.1, 1] as [number, number, number],
       }
     })

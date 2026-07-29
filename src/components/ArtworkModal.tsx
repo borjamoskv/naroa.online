@@ -1,7 +1,8 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ARTWORKS, type Artwork } from '../artworks'
 import { sound } from '../utils/audio'
+import { SplatViewerModal } from './SplatViewerModal'
 
 interface ArtworkModalProps {
   artwork: Artwork | null
@@ -12,10 +13,12 @@ interface ArtworkModalProps {
 
 export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: ArtworkModalProps) {
   const touchStartX = useRef<number | null>(null)
+  const [showSplat, setShowSplat] = useState(false)
 
   useEffect(() => {
     if (artwork) {
       sound.playOpen()
+      setShowSplat(false)
     }
   }, [artwork])
 
@@ -140,6 +143,25 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
               <p className="modal-description">{artwork.description}</p>
 
               <div className="modal-actions" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                {artwork.splatUrl && (
+                  <button
+                    type="button"
+                    className="modal-cta"
+                    onClick={() => {
+                      sound.playTick()
+                      setShowSplat(true)
+                    }}
+                    style={{
+                      background: 'linear-gradient(135deg, #2B3BE5 0%, #D4AF37 100%)',
+                      border: '1px solid #D4AF37',
+                      color: '#ffffff',
+                      fontWeight: 'bold',
+                      boxShadow: '0 0 15px rgba(212, 175, 55, 0.4)',
+                    }}
+                  >
+                    ✨ EXPLORAR 3D GAUSSIAN SPLAT 360°
+                  </button>
+                )}
                 <a
                   href="#/encargos"
                   className="modal-cta brutal-cta-btn--whatsapp"
@@ -183,6 +205,14 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
           </div>
         </motion.div>
       </div>
+
+      {showSplat && artwork.splatUrl && (
+        <SplatViewerModal
+          splatUrl={artwork.splatUrl}
+          title={artwork.title}
+          onClose={() => setShowSplat(false)}
+        />
+      )}
     </AnimatePresence>
   )
 }
