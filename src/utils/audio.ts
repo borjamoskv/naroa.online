@@ -136,6 +136,68 @@ class SoundEngine {
       // Ignore audio errors
     }
   }
+
+  public playSplatActivate() {
+    if (!this.enabled) return
+    try {
+      this.initCtx()
+      if (!this.ctx) return
+
+      const now = this.ctx.currentTime
+      const osc1 = this.ctx.createOscillator()
+      const osc2 = this.ctx.createOscillator()
+      const gain = this.ctx.createGain()
+
+      osc1.type = 'sine'
+      osc1.frequency.setValueAtTime(440, now)
+      osc1.frequency.exponentialRampToValueAtTime(880, now + 0.25)
+
+      osc2.type = 'sine'
+      osc2.frequency.setValueAtTime(554.37, now) // C#5 harmonic
+      osc2.frequency.exponentialRampToValueAtTime(1108.73, now + 0.25)
+
+      gain.gain.setValueAtTime(0.06, now)
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.3)
+
+      osc1.connect(gain)
+      osc2.connect(gain)
+      gain.connect(this.ctx.destination)
+
+      osc1.start(now)
+      osc2.start(now)
+      osc1.stop(now + 0.3)
+      osc2.stop(now + 0.3)
+    } catch {
+      // Ignore audio errors
+    }
+  }
+
+  public playSplatLightChange() {
+    if (!this.enabled) return
+    try {
+      this.initCtx()
+      if (!this.ctx) return
+
+      const now = this.ctx.currentTime
+      const osc = this.ctx.createOscillator()
+      const gain = this.ctx.createGain()
+
+      osc.type = 'sine'
+      osc.frequency.setValueAtTime(660, now)
+      osc.frequency.exponentialRampToValueAtTime(330, now + 0.08)
+
+      gain.gain.setValueAtTime(0.04, now)
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08)
+
+      osc.connect(gain)
+      gain.connect(this.ctx.destination)
+
+      osc.start(now)
+      osc.stop(now + 0.08)
+    } catch {
+      // Ignore audio errors
+    }
+  }
 }
 
 export const sound = new SoundEngine()

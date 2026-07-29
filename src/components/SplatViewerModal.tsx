@@ -1,8 +1,9 @@
-import { Suspense, useState, useRef } from 'react'
+import { Suspense, useState, useRef, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Splat, OrbitControls, Float, Sparkles, Center } from '@react-three/drei'
 import * as THREE from 'three'
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
+import { sound } from '../utils/audio'
 
 interface SplatViewerProps {
   splatUrl: string
@@ -42,6 +43,15 @@ export function SplatViewerModal({ splatUrl, title, onClose }: SplatViewerProps)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const controlsRef = useRef<OrbitControlsImpl>(null)
+
+  useEffect(() => {
+    sound.playSplatActivate()
+  }, [])
+
+  const changeLightPreset = (preset: LightingPreset) => {
+    sound.playSplatLightChange()
+    setLightPreset(preset)
+  }
 
   const toggleFullscreen = () => {
     if (!containerRef.current) return
@@ -171,7 +181,7 @@ export function SplatViewerModal({ splatUrl, title, onClose }: SplatViewerProps)
         </span>
 
         <button
-          onClick={() => setLightPreset('gold')}
+          onClick={() => changeLightPreset('gold')}
           style={{
             padding: '6px 14px',
             borderRadius: '20px',
@@ -188,7 +198,7 @@ export function SplatViewerModal({ splatUrl, title, onClose }: SplatViewerProps)
         </button>
 
         <button
-          onClick={() => setLightPreset('neon')}
+          onClick={() => changeLightPreset('neon')}
           style={{
             padding: '6px 14px',
             borderRadius: '20px',
@@ -205,7 +215,7 @@ export function SplatViewerModal({ splatUrl, title, onClose }: SplatViewerProps)
         </button>
 
         <button
-          onClick={() => setLightPreset('studio')}
+          onClick={() => changeLightPreset('studio')}
           style={{
             padding: '6px 14px',
             borderRadius: '20px',

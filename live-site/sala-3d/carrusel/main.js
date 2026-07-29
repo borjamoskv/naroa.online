@@ -91,8 +91,7 @@
     const res = await fetch('./manifest.json');
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     obras = await res.json();
-  } catch {
-    console.error('Error cargando manifest');
+  } catch (err) {
     track.innerHTML = '<p class="error">No se pudo cargar <code>manifest.json</code>. ' +
       'Sirve la página por HTTP (p. ej. <code>npm run dev</code>).</p>';
     document.body.classList.add('is-ready');
@@ -356,7 +355,7 @@
     if (e.button !== undefined && e.button > 0) return;
     e.preventDefault();
     state.dragging = true;
-    try { viewport.setPointerCapture(e.pointerId); } catch { /* noop */ }
+    try { viewport.setPointerCapture(e.pointerId); } catch (_) { /* noop */ }
     state.startX = state.lastX = e.clientX;
     state.lastT = performance.now();
     state.vel = 0;

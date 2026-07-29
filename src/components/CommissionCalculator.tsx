@@ -72,7 +72,7 @@ export function CommissionCalculator() {
 
 ¿Podemos hablar de los detalles?`
 
-  const whatsappUrl = `https://wa.me/34600000000?text=${encodeURIComponent(summaryText)}`
+  const whatsappUrl = `https://wa.me/34636060609?text=${encodeURIComponent(summaryText)}`
   const mailtoUrl = `mailto:naroa@naroa.eu?subject=${encodeURIComponent(`Encargo Retrato - ${selectedSubject.label}`)}&body=${encodeURIComponent(summaryText)}`
 
   return (
