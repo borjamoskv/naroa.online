@@ -6,6 +6,7 @@ import { CommissionCalculator } from './components/CommissionCalculator'
 import { GamesHub } from './components/GamesHub'
 import { GalleryGrid } from './components/GalleryGrid'
 import { BlogSection } from './components/BlogSection'
+import { CustomCursor } from './components/CustomCursor'
 import { sound } from './utils/audio'
 
 const toSlug = (s: string) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
@@ -96,6 +97,7 @@ export default function App() {
 
   return (
     <>
+      <CustomCursor />
       <div className="ui-layer">
         {/* Navegación Premium Pill */}
         <motion.nav

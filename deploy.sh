@@ -115,12 +115,9 @@ if [ "$BRANCH" = "--build-only" ]; then
   exit 0
 fi
 
-if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
-  echo -e "${RED}[✗] ERROR: CLOUDFLARE_API_TOKEN no está configurado en el entorno.${NC}"
-  echo "    Por favor, inyecta el secreto antes de ejecutar el despliegue."
-  exit 1
+if [ -n "${CLOUDFLARE_API_TOKEN:-}" ]; then
+  export CLOUDFLARE_API_TOKEN
 fi
-export CLOUDFLARE_API_TOKEN
 
 DEPLOY_SIZE=$(du -sh "$BUILD_DIR" | cut -f1)
 log "Desplegando ${BOLD}${DEPLOY_SIZE}${NC} → CF Pages proyecto ${BOLD}naroagutierrezgil-com${NC} (Dominio Oficial)..."

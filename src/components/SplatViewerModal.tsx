@@ -1,8 +1,10 @@
 import { Suspense, useState, useRef, useEffect } from 'react'
-import { Canvas } from '@react-three/fiber'
-import { Splat, OrbitControls, Float, Sparkles, Center } from '@react-three/drei'
+import { Canvas, useFrame } from '@react-three/fiber'
+import { Splat, OrbitControls, Float, Sparkles, Center, PerformanceMonitor } from '@react-three/drei'
 import * as THREE from 'three'
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
+import { EffectComposer, Bloom, ChromaticAberration, Noise, Vignette } from '@react-three/postprocessing'
+import { BlendFunction } from 'postprocessing'
 import { sound } from '../utils/audio'
 
 interface SplatViewerProps {
@@ -13,19 +15,40 @@ interface SplatViewerProps {
 
 type LightingPreset = 'gold' | 'neon' | 'studio'
 
+import { easing } from 'maath'
+
+function AnimatedSplatGroup({ children }: { children: React.ReactNode }) {
+  const groupRef = useRef<THREE.Group>(null)
+  
+  useFrame((_, delta) => {
+    if (groupRef.current) {
+      easing.damp3(groupRef.current.scale, [1, 1, 1], 1.5, delta)
+      easing.dampE(groupRef.current.rotation, [0, 0, 0], 2.0, delta)
+    }
+  })
+
+  return (
+    <group ref={groupRef} scale={0.01} rotation={[0, -Math.PI / 2, 0]}>
+      {children}
+    </group>
+  )
+}
+
 function SplatScene({ splatUrl, lightPreset }: { splatUrl: string; lightPreset: LightingPreset }) {
   const primaryLightColor = lightPreset === 'gold' ? '#D4AF37' : lightPreset === 'neon' ? '#2B3BE5' : '#ffffff'
   const secondaryLightColor = lightPreset === 'gold' ? '#2B3BE5' : lightPreset === 'neon' ? '#ff0055' : '#e0e0e0'
 
   return (
     <Center top position={[0, 0, 0]}>
-      <Float speed={1.2} rotationIntensity={0.15} floatIntensity={0.4}>
-        <Splat
-          src={splatUrl}
-          scale={1.6}
-          rotation={[0, 0, 0]}
-        />
-      </Float>
+      <AnimatedSplatGroup>
+        <Float speed={1.2} rotationIntensity={0.15} floatIntensity={0.4}>
+          <Splat
+            src={splatUrl}
+            scale={1.6}
+            rotation={[0, 0, 0]}
+          />
+        </Float>
+      </AnimatedSplatGroup>
 
       {/* Iluminación Dinámica PBR Reactiva al Preset */}
       <ambientLight intensity={lightPreset === 'studio' ? 2.0 : 1.2} />
@@ -41,6 +64,8 @@ export function SplatViewerModal({ splatUrl, title, onClose }: SplatViewerProps)
   const [lightPreset, setLightPreset] = useState<LightingPreset>('gold')
   const [autoRotate, setAutoRotate] = useState(true)
   const [isFullscreen, setIsFullscreen] = useState(false)
+  const [dpr, setDpr] = useState(1.5)
+  const [enableEffects, setEnableEffects] = useState(true)
   const containerRef = useRef<HTMLDivElement>(null)
   const controlsRef = useRef<OrbitControlsImpl>(null)
 
@@ -288,9 +313,17 @@ export function SplatViewerModal({ splatUrl, title, onClose }: SplatViewerProps)
       {/* Canvas 3D R3F para Gaussian Splatting */}
       <div style={{ width: '100%', height: '100%', cursor: 'grab' }}>
         <Canvas
+          dpr={dpr}
           camera={{ position: [0, 1.2, 3.5], fov: 45 }}
           gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping, powerPreference: 'high-performance' }}
         >
+          <PerformanceMonitor
+            onDecline={() => {
+              setDpr(1)
+              setEnableEffects(false)
+            }}
+            onIncline={() => setDpr(1.5)}
+          />
           <color attach="background" args={['#040407']} />
 
           <Sparkles count={100} scale={[12, 12, 12]} size={2.5} speed={0.4} color={lightPreset === 'gold' ? '#D4AF37' : '#2B3BE5'} />
@@ -310,6 +343,20 @@ export function SplatViewerModal({ splatUrl, title, onClose }: SplatViewerProps)
             minDistance={0.8}
             maxDistance={9}
           />
+
+          {enableEffects && (
+            <EffectComposer multisampling={4}>
+              <Bloom luminanceThreshold={0.5} luminanceSmoothing={0.9} height={300} opacity={0.6} intensity={0.5} />
+              <ChromaticAberration
+                blendFunction={BlendFunction.NORMAL}
+                offset={new THREE.Vector2(0.002, 0.002)}
+                radialModulation={false}
+                modulationOffset={0}
+              />
+              <Noise opacity={0.065} blendFunction={BlendFunction.OVERLAY} />
+              <Vignette eskil={false} offset={0.1} darkness={1.1} />
+            </EffectComposer>
+          )}
         </Canvas>
       </div>
     </div>

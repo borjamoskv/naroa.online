@@ -22,6 +22,11 @@ html, body, #root {
   font-family: var(--font-sans);
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
+  cursor: none;
+}
+
+* {
+  cursor: none !important;
 }
 
 /* Scanline atmosférico sutil */
