@@ -218,7 +218,7 @@
       },
       {
         keys: ['tecnica', 'material', 'pizarra', 'mica', 'acrilico', 'posca', 'oleo', 'como pinta', 'hiperreal'],
-        answer: 'Naroa trabaja el **hiperrealismo POP**: acrílico y Posca sobre pizarra natural, con mica mineral que hace «latir» los ojos de sus retratos. Como dice ella: cada piedra tiene millones de años; cada retrato, la edad de quien lo mira. ✨'
+        answer: 'Naroa trabaja el **hiperrealismo POP**: acrílico y Posca sobre pizarra natural, con mica mineral que hace «latir» los ojos de sus retratos. Como dice ella: cada piedra tiene millones de años; cada retrato, la edad de quien lo mira. '
       },
       {
         keys: ['obra', 'galeria', 'cuadro', 'coleccion', 'serie', 'rocks', 'divinos', 'ver arte'],
@@ -778,13 +778,13 @@
 
         isPlaying = true;
         soundBtn.classList.add('ambient-sound-btn--active');
-        soundBtn.querySelector('.sound-label').textContent = 'Sonando (432Hz) ✨';
+        soundBtn.querySelector('.sound-label').textContent = 'Sonando (432Hz) ';
       }
     });
   }
 
   /* ── EL GUIÑO MINERAL (Algunos ojos guiñan con la luz de la mica) ── */
-  function wireMineralWink() {
+  function wireMineralWink() { return; // PURGED
     var targets = [
       { sel: '.hero-immersive__image-wrapper', top: '38%', left: '53%', name: 'Marilyn' },
       { sel: '#gallery-hero .gallery-hero__artwork', top: '34%', left: '49%', name: 'Amy' },
@@ -801,27 +801,27 @@
       if (t.isImg) {
         container = container.closest('.gallery-massive__item') || container.parentElement;
       }
-      if (!container || container.querySelector('.mineral-wink-eye')) return;
+      if (!container || container.querySelector('.mineral-wink-disabled')) return;
 
       container.style.position = 'relative';
 
       var eye = document.createElement('div');
-      eye.className = 'mineral-wink-eye';
+      eye.className = 'mineral-wink-disabled';
       eye.style.top = t.top;
       eye.style.left = t.left;
 
       var spark = document.createElement('span');
-      spark.className = 'mineral-wink-spark';
-      spark.textContent = '✨';
+      spark.className = 'mineral-wink-disabled-spark';
+      spark.textContent = '';
       eye.appendChild(spark);
 
       container.appendChild(eye);
 
       function triggerWink() {
-        if (eye.classList.contains('mineral-wink-eye--active')) return;
-        eye.classList.add('mineral-wink-eye--active');
+        if (eye.classList.contains('mineral-wink-disabled--active')) return;
+        eye.classList.add('mineral-wink-disabled--active');
         setTimeout(function () {
-          eye.classList.remove('mineral-wink-eye--active');
+          eye.classList.remove('mineral-wink-disabled--active');
         }, 380); // Guiño discreto y rápido de 380 ms
       }
 
@@ -853,9 +853,9 @@
         var nameEl = panel.querySelector('.mica-header__name');
         var statusEl = panel.querySelector('#mica-status');
         var avatarEl = panel.querySelector('.mica-header__avatar');
-        if (nameEl) nameEl.textContent = '✨ Mica';
-        if (statusEl) statusEl.textContent = '✨ Curadora del estudio';
-        if (avatarEl) avatarEl.textContent = '✨';
+        if (nameEl) nameEl.textContent = ' Mica';
+        if (statusEl) statusEl.textContent = ' Curadora del estudio';
+        if (avatarEl) avatarEl.textContent = '';
       }
       if (orb) {
         orb.style.setProperty('width', '36px', 'important');

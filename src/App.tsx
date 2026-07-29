@@ -97,120 +97,92 @@ export default function App() {
   return (
     <>
       <div className="ui-layer">
-        {/* Cabecera Flotante Premium */}
-        <motion.header
-          className="header premium-header"
+        {/* Navegación Premium Pill */}
+        <motion.nav
+          className="nav-pill"
           initial={{ y: -50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
+          transition={{ duration: 1, ease: [0.25, 1, 0.5, 1], delay: 0.3 }}
         >
-          <a href="#/" className="premium-logo" onClick={() => { sound.playTick(); window.location.hash = '#/'; }}>
-            N
-          </a>
-
-          <nav className="nav premium-nav">
-            <a
-              href="#/"
-              className={currentView === 'home' ? 'active' : ''}
-              onClick={() => sound.playTick()}
-            >
-              Home
+          <div className="nav-pill__inner">
+            <a href="#/" className="nav-pill__logo" onClick={() => { sound.playTick(); window.location.hash = '#/'; }}>
+              N
             </a>
-            <a
-              href="#/destacada"
-              className={currentView === 'destacada' ? 'active' : ''}
-              onClick={() => sound.playTick()}
+            <ul className="nav-pill__links">
+              <li><a href="#/" className={`nav-pill__link ${currentView === 'home' ? 'active' : ''}`} onClick={() => sound.playTick()}>Home</a></li>
+              <li><a href="#/destacada" className={`nav-pill__link ${currentView === 'destacada' ? 'active' : ''}`} onClick={() => sound.playTick()}>Obra</a></li>
+              <li><a href="#/sobre-mi" className={`nav-pill__link ${currentView === 'about' ? 'active' : ''}`} onClick={() => sound.playTick()}>Sobre mí</a></li>
+              <li><a href="#/blog" className={`nav-pill__link ${currentView === 'blog' ? 'active' : ''}`} onClick={() => sound.playTick()}>Blog</a></li>
+              <li><a href="#/encargos" className={`nav-pill__link nav-pill__link--cta ${currentView === 'encargos' ? 'active' : ''}`} onClick={() => sound.playTick()}>Contacto</a></li>
+            </ul>
+            <button
+              className={`nav-pill__audio ${audioActive ? 'active' : ''}`}
+              onClick={toggleAudio}
+              title={audioActive ? 'Desactivar audio FX' : 'Activar audio FX'}
             >
-              Obra
-            </a>
-            <a
-              href="#/sobre-mi"
-              className={currentView === 'about' ? 'active' : ''}
-              onClick={() => sound.playTick()}
-            >
-              Sobre mi
-            </a>
-            <a
-              href="#/blog"
-              className={currentView === 'blog' ? 'active' : ''}
-              onClick={() => sound.playTick()}
-            >
-              Blog
-            </a>
-            <a
-              href="#/encargos"
-              className={`premium-btn-contact ${currentView === 'encargos' ? 'active' : ''}`}
-              onClick={() => sound.playTick()}
-            >
-              CONTACTO
-            </a>
-          </nav>
-
-          <button
-            className={`audio-btn premium-audio-btn ${audioActive ? 'active' : ''}`}
-            onClick={toggleAudio}
-            title={audioActive ? 'Desactivar audio FX' : 'Activar audio FX'}
-          >
-            <span className="audio-equalizer">
-              <span className="eq-bar bar-1"></span>
-              <span className="eq-bar bar-2"></span>
-              <span className="eq-bar bar-3"></span>
-            </span>
-          </button>
-        </motion.header>
-
-        {/* VISTA 1: HOME (Premium Layout) */}
-        {currentView === 'home' && (
-          <div className="view-container premium-home-view">
-            <div className="premium-home-split">
-              
-              {/* Mitad Izquierda (Imagen + Etiqueta de Técnica) */}
-              <div className="premium-home-left">
-                <div className="premium-hero-img-wrapper">
-                  <div className="premium-eco-studio">Eco Studio</div>
-                  <img
-                    src="/assets/marilyn-rocks--qPeLHxE.webp"
-                    alt="Marilyn Rocks — Naroa Gutiérrez Gil"
-                    className="premium-hero-img"
-                  />
-                  <div className="premium-technique-badge">
-                    <span className="badge-label">TÉCNICA</span>
-                    <span className="badge-value">ÓLEO · ACRÍLICO · PIZARRA</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Mitad Derecha (Tipografía Fina + CTA) */}
-              <div className="premium-home-right">
-                
-                <div className="premium-top-meta">
-                  <div className="premium-pill-outline">ARTISTA VISUAL</div>
-                  <div className="premium-meta-info">
-                    <span className="meta-label">COLECCIÓN</span>
-                    <span className="meta-value">40+ OBRAS ORIGINALES</span>
-                  </div>
-                </div>
-
-                <div className="premium-center-content">
-                  <h1 className="premium-main-title">
-                    HIPERREALISMO POP · MIXED<br/>MEDIA
-                  </h1>
-                </div>
-
-                <div className="premium-bottom-cta">
-                  <a href="#/destacada" className="premium-cta-btn" onClick={() => sound.playTick()}>
-                    EXPLORAR OBRA ↗
-                  </a>
-                </div>
-
-                <div className="premium-scroll-indicator">
-                  <span className="scroll-text">SCROLL</span>
-                  <span className="scroll-dot"></span>
-                </div>
-
-              </div>
-            </div>
+              <span className="audio-equalizer">
+                <span className="eq-bar bar-1"></span>
+                <span className="eq-bar bar-2"></span>
+                <span className="eq-bar bar-3"></span>
+              </span>
+            </button>
           </div>
+        </motion.nav>
+
+        {/* VISTA 1: HOME — Hero Inmersivo Fullscreen (como naroa.online) */}
+        {currentView === 'home' && (
+          <section className="hero-immersive">
+            {/* Imagen de fondo fullscreen */}
+            <div className="hero-immersive__image-wrapper">
+              <img
+                src="/assets/marilyn-rocks--qPeLHxE.webp"
+                alt="Marilyn Rocks — Naroa Gutiérrez Gil · Acrílico sobre pizarra"
+                className="hero-immersive__image"
+              />
+            </div>
+
+            {/* Overlays cinematográficos */}
+            <div className="hero-immersive__overlay"></div>
+            <div className="hero-immersive__overlay--top"></div>
+            <div className="hero-immersive__overlay--bottom"></div>
+            <div className="hero-immersive__grain"></div>
+
+            {/* Contenido centrado */}
+            <div className="hero-immersive__content">
+              <span className="hero-immersive__eyebrow">Artista Visual · Bilbao</span>
+              <h1 className="hero-immersive__title">
+                <span>Naroa</span>
+                <span className="hero-immersive__title-accent">Gutiérrez Gil</span>
+              </h1>
+              <p className="hero-immersive__subtitle">Hiperrealismo POP · Mixed Media</p>
+              <div className="hero-immersive__divider"></div>
+              <a href="#/destacada" className="hero-immersive__cta" onClick={() => sound.playTick()}>
+                <span>Explorar Obra</span>
+                <span className="hero-immersive__cta-arrow">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M7 17L17 7M17 7H7M17 7V17"/>
+                  </svg>
+                </span>
+              </a>
+            </div>
+
+            {/* Metadatos flotantes */}
+            <div className="hero-immersive__meta hero-immersive__meta--left">
+              <span>Técnica</span>
+              <span className="hero-immersive__meta-value">Óleo · Acrílico · Pizarra</span>
+            </div>
+            <div className="hero-immersive__meta hero-immersive__meta--right">
+              <span>Colección</span>
+              <span className="hero-immersive__meta-value">40+ Obras Originales</span>
+            </div>
+
+            {/* Scroll indicator */}
+            <div className="hero-immersive__scroll">
+              <span className="hero-immersive__scroll-label">Scroll</span>
+              <div className="hero-immersive__scroll-line"></div>
+              <div className="hero-immersive__scroll-dot"></div>
+            </div>
+          </section>
         )}
 
         {/* VISTA 2: OBRA / GALERÍA MASIVA (Rejilla completa como naroa.online) */}

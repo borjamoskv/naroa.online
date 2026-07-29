@@ -129,7 +129,7 @@ function GalleryItem({
           e.stopPropagation()
           setHovered(true)
           sound.playHover()
-          document.body.classList.add('hovering-artwork')
+          document.body.style.cursor = 'pointer'
         }}
         onPointerMove={(e: ThreeEvent<PointerEvent>) => {
           if (e.uv) {
@@ -142,7 +142,7 @@ function GalleryItem({
         onPointerOut={() => {
           setHovered(false)
           pointerOffset.current = { x: 0, y: 0 }
-          document.body.classList.remove('hovering-artwork')
+          document.body.style.cursor = 'auto'
         }}
         onClick={(e: ThreeEvent<MouseEvent>) => {
           e.stopPropagation()

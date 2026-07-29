@@ -71,8 +71,6 @@ export function GalleryGrid({ onInspect }: GalleryGridProps) {
               key={artwork.id}
               className={`gallery-item-card brutal-card ${sizeClass}`}
               whileHover={{ scale: 1.02 }}
-              onMouseEnter={() => document.body.classList.add('hovering-artwork')}
-              onMouseLeave={() => document.body.classList.remove('hovering-artwork')}
               onClick={() => {
                 sound.playOpen()
                 onInspect(idx)
