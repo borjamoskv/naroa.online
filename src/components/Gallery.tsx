@@ -81,21 +81,43 @@ function GalleryItem({
 
   return (
     <group ref={groupRef} position={position} rotation={rotation}>
-      {/* Marco sutil 3D posterior (Glass Backplate con Neón Emisivo) */}
-      <mesh position={[0, 0, -0.05]} scale={[scale[0] + 0.18, scale[1] + 0.18, 0.02]}>
+      {/* Marco Escultórico 3D Exterior (Oro Mineral Bevel & Neón Cobalto) */}
+      <mesh position={[0, 0, -0.08]} scale={[scale[0] + 0.35, scale[1] + 0.35, 0.06]}>
         <boxGeometry />
-        <meshPhysicalMaterial
-          color={isSelected ? '#2B3BE5' : '#111115'}
-          emissive={isSelected ? '#2B3BE5' : hovered ? '#1b26a1' : '#000000'}
-          emissiveIntensity={isSelected ? 0.6 : hovered ? 0.35 : 0}
-          roughness={0.2}
-          metalness={0.8}
-          clearcoat={0.6}
-          transmission={0.3}
-          transparent
-          opacity={hovered ? 0.95 : isSelected ? 0.8 : 0.45}
+        <meshStandardMaterial
+          color={isSelected ? '#D4AF37' : hovered ? '#b8952b' : '#1c1b18'}
+          metalness={0.9}
+          roughness={0.25}
+          emissive={isSelected ? '#D4AF37' : hovered ? '#D4AF37' : '#000000'}
+          emissiveIntensity={isSelected ? 0.5 : hovered ? 0.25 : 0}
         />
       </mesh>
+
+      {/* Marco 3D Interior de Pizarra Negra (Matte Slate Backplate) */}
+      <mesh position={[0, 0, -0.04]} scale={[scale[0] + 0.16, scale[1] + 0.16, 0.04]}>
+        <boxGeometry />
+        <meshPhysicalMaterial
+          color={isSelected ? '#2B3BE5' : '#0a0a0d'}
+          emissive={isSelected ? '#2B3BE5' : hovered ? '#1b26a1' : '#000000'}
+          emissiveIntensity={isSelected ? 0.7 : hovered ? 0.4 : 0}
+          roughness={0.15}
+          metalness={0.85}
+          clearcoat={0.8}
+          transmission={0.25}
+          transparent
+          opacity={hovered ? 0.95 : isSelected ? 0.85 : 0.6}
+        />
+      </mesh>
+
+      {/* Foco Escultórico Directo sobre la Obra */}
+      {(isSelected || hovered) && (
+        <pointLight
+          position={[0, scale[1] * 0.6, 0.8]}
+          intensity={isSelected ? 4.5 : 2.8}
+          distance={6}
+          color={isSelected ? '#D4AF37' : '#2B3BE5'}
+        />
+      )}
 
       {/* Imagen WebGL principal */}
       <Image
@@ -107,7 +129,7 @@ function GalleryItem({
           e.stopPropagation()
           setHovered(true)
           sound.playHover()
-          document.body.style.cursor = 'pointer'
+          document.body.classList.add('hovering-artwork')
         }}
         onPointerMove={(e: ThreeEvent<PointerEvent>) => {
           if (e.uv) {
@@ -120,7 +142,7 @@ function GalleryItem({
         onPointerOut={() => {
           setHovered(false)
           pointerOffset.current = { x: 0, y: 0 }
-          document.body.style.cursor = 'auto'
+          document.body.classList.remove('hovering-artwork')
         }}
         onClick={(e: ThreeEvent<MouseEvent>) => {
           e.stopPropagation()

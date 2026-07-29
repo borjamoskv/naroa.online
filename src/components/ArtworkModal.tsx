@@ -139,7 +139,18 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
 
               <p className="modal-description">{artwork.description}</p>
 
-              <div className="modal-actions" style={{ display: 'flex', gap: '10px' }}>
+              <div className="modal-actions" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                <a
+                  href="#/encargos"
+                  className="modal-cta brutal-cta-btn--whatsapp"
+                  onClick={() => {
+                    sound.playTick()
+                    onClose()
+                  }}
+                  style={{ textDecoration: 'none' }}
+                >
+                  ⚡ ENCARGAR EN ESTE ESTILO
+                </a>
                 <a
                   href={artwork.href}
                   target="_blank"
@@ -147,7 +158,7 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
                   className="modal-cta"
                   onClick={() => sound.playTick()}
                 >
-                  ABRIR EN PORTAL OFICIAL ↗
+                  PORTAL OFICIAL ↗
                 </a>
                 <button
                   type="button"

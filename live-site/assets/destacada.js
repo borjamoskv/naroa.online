@@ -341,12 +341,10 @@
       }
       url = url || m.source_url || null;
     } catch (e) { /* sin destacada */ }
-    // Sin imagen destacada: primera imagen del contenido (suele ser un gif suyo)
     if (!url && p.content && p.content.rendered) {
       var match = p.content.rendered.match(/<img[^>]+src=["']([^"']+)["']/i);
       if (match) url = match[1];
     }
-    // Redimensionar vía CDN de WP.com para no arrastrar originales
     if (url && url.indexOf('wordpress.com') !== -1) {
       url += (url.indexOf('?') === -1 ? '?' : '&') + 'w=720';
     }
@@ -357,10 +355,61 @@
       return new Date(iso).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
     } catch (e) { return iso.slice(0, 10); }
   }
+  function calcReadTime(html) {
+    var text = stripTags(html || '');
+    var words = text.trim().split(/\s+/).length;
+    var mins = Math.max(1, Math.ceil(words / 200));
+    return mins + ' min de lectura';
+  }
+  function postCategory(p) {
+    try {
+      var terms = p._embedded['wp:term'][0];
+      if (terms && terms.length > 0) {
+        return terms[0].name;
+      }
+    } catch (e) {}
+    return 'Bitácora';
+  }
+
+  function injectBlogSchema(posts) {
+    try {
+      var oldSchema = document.getElementById('jsonld-blog-posts');
+      if (oldSchema) oldSchema.remove();
+      var schemaData = {
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        'name': 'Diario de Arte — Naroa Gutiérrez Gil',
+        'itemListElement': posts.map(function (p, idx) {
+          return {
+            '@type': 'ListItem',
+            'position': idx + 1,
+            'item': {
+              '@type': 'BlogPosting',
+              'headline': decodeEntities(p.title.rendered || ''),
+              'url': p.link,
+              'datePublished': p.date,
+              'author': {
+                '@type': 'Person',
+                'name': 'Naroa Gutiérrez Gil',
+                'url': 'https://naroa.online'
+              }
+            }
+          };
+        })
+      };
+      var script = document.createElement('script');
+      script.id = 'jsonld-blog-posts';
+      script.type = 'application/ld+json';
+      script.textContent = JSON.stringify(schemaData);
+      document.head.appendChild(script);
+    } catch (e) {}
+  }
 
   function wireBlog() {
     var grid = document.getElementById('blog-posts');
     if (!grid) return;
+
+    window.__retryBlog = wireBlog;
 
     fetch(WP_API)
       .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
@@ -368,11 +417,47 @@
         if (!posts || !posts.length) throw new Error('sin entradas');
         grid.textContent = '';
         var brainFeed = [];
+
+        injectBlogSchema(posts);
+
+        // Filter bar container
+        var blogSection = grid.parentElement;
+        var existingFilters = blogSection.querySelector('.blog-filters');
+        if (existingFilters) existingFilters.remove();
+
+        var categories = ['Todos'];
+        posts.forEach(function (p) {
+          var c = postCategory(p);
+          if (categories.indexOf(c) === -1) categories.push(c);
+        });
+
+        if (categories.length > 2) {
+          var filterBar = document.createElement('div');
+          filterBar.className = 'blog-filters';
+          categories.forEach(function (cat) {
+            var btn = document.createElement('button');
+            btn.className = 'blog-filter-btn' + (cat === 'Todos' ? ' blog-filter-btn--active' : '');
+            btn.textContent = cat;
+            btn.addEventListener('click', function () {
+              filterBar.querySelectorAll('.blog-filter-btn').forEach(function (b) { b.classList.remove('blog-filter-btn--active'); });
+              btn.classList.add('blog-filter-btn--active');
+              grid.querySelectorAll('.blog-card').forEach(function (card) {
+                var cardCat = card.getAttribute('data-category');
+                card.style.display = (cat === 'Todos' || cardCat === cat) ? 'flex' : 'none';
+              });
+            });
+            filterBar.appendChild(btn);
+          });
+          grid.parentNode.insertBefore(filterBar, grid);
+        }
+
         posts.forEach(function (p) {
           var title = decodeEntities(p.title.rendered || 'Sin título');
           var excerpt = stripTags(p.excerpt.rendered || '').trim();
           var dateText = fmtDate(p.date);
           var img = postImage(p);
+          var readTime = calcReadTime(p.content ? p.content.rendered : p.excerpt ? p.excerpt.rendered : '');
+          var catName = postCategory(p);
           brainFeed.push({ title: title, dateText: dateText, link: p.link });
 
           var card = document.createElement('a');
@@ -380,7 +465,8 @@
           card.href = p.link;
           card.target = '_blank';
           card.rel = 'noopener noreferrer';
-          card.setAttribute('aria-label', 'Leer «' + title + '» en el blog de Naroa');
+          card.setAttribute('data-category', catName);
+          card.setAttribute('aria-label', 'Leer «' + title + '» en el blog de Naroa (' + readTime + ')');
 
           var media = document.createElement('div');
           if (img) {
@@ -393,10 +479,24 @@
             media.textContent = '🎨';
           }
 
+          // Category Badge Overlay
+          var badge = document.createElement('span');
+          badge.className = 'blog-card__badge';
+          badge.textContent = catName;
+          media.appendChild(badge);
+
           var body = document.createElement('div');
           body.className = 'blog-card__body';
+
+          var metaRow = document.createElement('div');
+          metaRow.className = 'blog-card__meta';
           var time = document.createElement('time');
           time.className = 'blog-card__date'; time.textContent = dateText;
+          var readTag = document.createElement('span');
+          readTag.className = 'blog-card__read-time'; readTag.textContent = '⏱️ ' + readTime;
+          metaRow.appendChild(time);
+          metaRow.appendChild(readTag);
+
           var h = document.createElement('h3');
           h.className = 'blog-card__title'; h.textContent = title;
           var ex = document.createElement('p');
@@ -404,7 +504,8 @@
           var cta = document.createElement('span');
           cta.className = 'blog-card__cta'; cta.textContent = 'Leer en el blog →';
 
-          body.appendChild(time); body.appendChild(h);
+          body.appendChild(metaRow);
+          body.appendChild(h);
           if (excerpt) body.appendChild(ex);
           body.appendChild(cta);
           card.appendChild(media); card.appendChild(body);
@@ -414,7 +515,8 @@
       })
       .catch(function () {
         grid.innerHTML = '<div class="blog__error">No se pudieron cargar las entradas ahora mismo. ' +
-          'Visita el blog directamente: <a href="https://naroagutierrez.wordpress.com/" target="_blank" rel="noopener noreferrer">naroagutierrez.wordpress.com</a></div>';
+          'Visita el blog directamente: <a href="https://naroagutierrez.wordpress.com/" target="_blank" rel="noopener noreferrer">naroagutierrez.wordpress.com</a> ' +
+          '<br><button onclick="window.__retryBlog()" style="margin-top:10px; padding:6px 14px; background:rgba(212,175,55,0.2); border:1px solid #D4AF37; color:#FFF; border-radius:20px; cursor:pointer;">🔄 Reintentar conexión</button></div>';
       });
   }
 
@@ -784,6 +886,127 @@
     });
   }
 
+  /* ── Barra de Progreso de Lectura Mineral ────────────────────── */
+  function wireScrollProgress() {
+    var nav = document.getElementById('main-nav') || document.querySelector('.nav');
+    if (!nav || document.getElementById('scroll-progress-bar')) return;
+
+    var bar = document.createElement('div');
+    bar.id = 'scroll-progress-bar';
+    bar.className = 'scroll-progress-bar';
+    nav.appendChild(bar);
+
+    window.addEventListener('scroll', function () {
+      var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var scrolled = (winScroll / Math.max(1, height)) * 100;
+      bar.style.width = Math.min(100, Math.max(0, scrolled)) + '%';
+    }, { passive: true });
+  }
+
+  /* ── Barra de Buscador Instantáneo de Obras ──────────────────── */
+  function wireArtworkSearch() {
+    var header = document.querySelector('#view-destacada .gallery-section-header');
+    var gallery = document.getElementById('featured-gallery');
+    if (!header || !gallery || document.getElementById('artwork-search-input')) return;
+
+    var container = document.createElement('div');
+    container.className = 'artwork-search-container';
+
+    var input = document.createElement('input');
+    input.id = 'artwork-search-input';
+    input.className = 'artwork-search-input';
+    input.type = 'text';
+    input.placeholder = '🔍 Buscar obra por título, serie o técnica...';
+    input.setAttribute('aria-label', 'Buscar obra por título o serie');
+
+    container.appendChild(input);
+    header.appendChild(container);
+
+    var items = gallery.querySelectorAll('.gallery-massive__item');
+    var countEl = header.querySelector('.gallery-count');
+    var totalCount = items.length;
+
+    input.addEventListener('input', function () {
+      var query = (input.value || '').toLowerCase().trim();
+      var visibleCount = 0;
+
+      items.forEach(function (item) {
+        var title = (item.querySelector('.gallery-massive__title') || {}).textContent || '';
+        var medium = (item.querySelector('.gallery-massive__medium') || {}).textContent || '';
+        var alt = (item.querySelector('img') || {}).alt || '';
+
+        var match = !query || 
+          title.toLowerCase().indexOf(query) !== -1 ||
+          medium.toLowerCase().indexOf(query) !== -1 ||
+          alt.toLowerCase().indexOf(query) !== -1;
+
+        item.style.display = match ? '' : 'none';
+        if (match) visibleCount++;
+      });
+
+      if (countEl) {
+        countEl.textContent = query ? (visibleCount + ' de ' + totalCount + ' obras') : (totalCount + ' obras');
+      }
+    });
+  }
+
+  /* ── Botón Flotante Volver Arriba ────────────────────────────── */
+  function wireBackToTop() {
+    if (document.getElementById('back-to-top-btn')) return;
+
+    var btn = document.createElement('button');
+    btn.id = 'back-to-top-btn';
+    btn.className = 'back-to-top-btn';
+    btn.setAttribute('aria-label', 'Volver al inicio de la página');
+    btn.title = 'Volver arriba';
+    btn.innerHTML = '↑';
+
+    document.body.appendChild(btn);
+
+    window.addEventListener('scroll', function () {
+      var top = document.body.scrollTop || document.documentElement.scrollTop;
+      btn.classList.toggle('back-to-top-btn--visible', top > 400);
+    }, { passive: true });
+
+    btn.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  /* ── Conmutador de Disposición de Galería (Cuadrícula vs. Lista) ── */
+  function wireGalleryLayoutToggle() {
+    var searchContainer = document.querySelector('.artwork-search-container');
+    var gallery = document.getElementById('featured-gallery');
+    if (!searchContainer || !gallery || document.getElementById('gallery-view-toggle')) return;
+
+    var btn = document.createElement('button');
+    btn.id = 'gallery-view-toggle';
+    btn.className = 'gallery-view-toggle';
+    btn.setAttribute('aria-label', 'Cambiar vista de galería entre Cuadrícula y Lista');
+    btn.title = 'Cambiar modo de vista';
+    btn.innerHTML = '<span class="view-icon">⊞</span> <span class="view-text">Mosaico</span>';
+
+    searchContainer.appendChild(btn);
+
+    var currentView = 'grid'; // 'grid' | 'list'
+    btn.addEventListener('click', function () {
+      if (currentView === 'grid') {
+        currentView = 'list';
+        gallery.classList.add('gallery-massive--list');
+        btn.classList.add('gallery-view-toggle--active');
+        btn.querySelector('.view-icon').textContent = '☰';
+        btn.querySelector('.view-text').textContent = 'Lista';
+      } else {
+        currentView = 'grid';
+        gallery.classList.remove('gallery-massive--list');
+        btn.classList.remove('gallery-view-toggle--active');
+        btn.querySelector('.view-icon').textContent = '⊞';
+        btn.querySelector('.view-text').textContent = 'Mosaico';
+      }
+    });
+  }
+
   /* ── init ───────────────────────────────────────────────────── */
   function init2() {
     wireMobileNav();
@@ -795,6 +1018,10 @@
     wireSoundscape();
     wireMineralWink();
     wire3DTilt();
+    wireScrollProgress();
+    wireArtworkSearch();
+    wireGalleryLayoutToggle();
+    wireBackToTop();
     enforceMicaCoqueta();
     whenMicaReady(function (mica) {
       wireMicaPolitesse(mica);

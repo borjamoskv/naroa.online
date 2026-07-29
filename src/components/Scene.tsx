@@ -1,6 +1,6 @@
 import { Suspense, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { ScrollControls, Environment, Preload, PerformanceMonitor } from '@react-three/drei'
+import { ScrollControls, Preload, PerformanceMonitor } from '@react-three/drei'
 import { EffectComposer, Noise, Vignette, Bloom, ChromaticAberration } from '@react-three/postprocessing'
 import { BlendFunction } from 'postprocessing'
 import * as THREE from 'three'
@@ -38,7 +38,10 @@ export default function Scene({ onCurrentChange, onInspectArtwork, targetIndex }
           />
         </ScrollControls>
 
-        <Environment preset="city" />
+        <ambientLight intensity={1.8} />
+        <directionalLight position={[10, 10, 10]} intensity={2.5} castShadow />
+        <pointLight position={[-10, -10, -10]} intensity={1.2} />
+        <spotLight position={[0, 15, 10]} angle={0.3} penumbra={1} intensity={2} />
 
         {!prefersReducedMotion && !isMobile && (
           <EffectComposer>
