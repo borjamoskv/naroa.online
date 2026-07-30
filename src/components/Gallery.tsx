@@ -1,12 +1,11 @@
 import * as THREE from 'three'
 import { useRef, useState, useEffect, useMemo } from 'react'
-import { useFrame, type ThreeEvent } from '@react-three/fiber'
-import { Image, useScroll, Sparkles, useTexture, Html } from '@react-three/drei'
+import { useFrame, useThree } from '@react-three/fiber'
+import { Image, Sparkles, useTexture, Html } from '@react-three/drei'
 import { easing } from 'maath'
 import { ARTWORKS } from '../artworks'
 import { sound } from '../utils/audio'
 
-// Preload masivo de texturas WebGL (Cero pop-in C5-REAL)
 if (typeof window !== 'undefined') {
   ARTWORKS.forEach((a) => {
     try {
@@ -17,7 +16,6 @@ if (typeof window !== 'undefined') {
   })
 }
 
-
 interface GalleryItemProps {
   position: [number, number, number]
   rotation: [number, number, number]
@@ -27,8 +25,6 @@ interface GalleryItemProps {
   reducedMotion: boolean
   isSelected: boolean
   splatUrl?: string
-  onSelect: (index: number) => void
-  onInspect: (index: number) => void
 }
 
 function GalleryItem({
@@ -39,42 +35,29 @@ function GalleryItem({
   rotation,
   reducedMotion,
   isSelected,
-  splatUrl,
-  onInspect
+  splatUrl
 }: GalleryItemProps) {
   const meshRef = useRef<THREE.Mesh>(null)
   const groupRef = useRef<THREE.Group>(null)
-  const [hovered, setHovered] = useState(false)
-  const pointerOffset = useRef({ x: 0, y: 0 })
 
   useFrame((state, delta) => {
     if (meshRef.current && groupRef.current) {
-      // Flotación sutil sincronizada
       const floatY = reducedMotion
         ? position[1]
         : position[1] + Math.sin(state.clock.elapsedTime * 1.5 + index * 0.8) * 0.09
 
       groupRef.current.position.y = floatY
 
-      // Inclinación 3D reactiva al cursor del usuario
-      const targetRotX = hovered ? pointerOffset.current.y * 0.25 : 0
-      const targetRotY = hovered ? pointerOffset.current.x * 0.25 : 0
-      easing.damp(meshRef.current.rotation, 'x', targetRotX, 0.15, delta)
-      easing.damp(meshRef.current.rotation, 'y', targetRotY, 0.15, delta)
-
-      // Escala y matiz al pasar cursor o ser seleccionada
-      const targetScale: [number, number, number] = hovered
-        ? [scale[0] * 1.08, scale[1] * 1.08, 1]
-        : isSelected
-        ? [scale[0] * 1.03, scale[1] * 1.03, 1]
+      const targetScale: [number, number, number] = isSelected
+        ? [scale[0] * 1.05, scale[1] * 1.05, 1]
         : scale
 
       easing.damp3(meshRef.current.scale, targetScale, 0.2, delta)
       const material = meshRef.current.material as any
-      easing.damp(material, 'grayscale', hovered || isSelected ? 0 : 0.85, 0.2, delta)
+      easing.damp(material, 'grayscale', isSelected ? 0 : 0.4, 0.2, delta)
       easing.dampC(
         material.color,
-        hovered ? '#ffffff' : isSelected ? '#e0e5ff' : '#555555',
+        isSelected ? '#ffffff' : '#aaaaaa',
         0.2,
         delta
       )
@@ -82,16 +65,10 @@ function GalleryItem({
   })
 
   return (
-    <group ref={groupRef} position={position} rotation={rotation}>
-      {/* Badge 3DGS flotante de tecnología fotorrealista */}
+    <group ref={groupRef} position={position} rotation={rotation} userData={{ isArtwork: true, index }}>
       {splatUrl && (
         <Html position={[0, scale[1] / 2 + 0.35, 0.1]} center distanceFactor={8}>
           <div
-            onClick={(e) => {
-              e.stopPropagation()
-              sound.playTick()
-              onInspect(index)
-            }}
             style={{
               padding: '3px 10px',
               background: 'linear-gradient(135deg, rgba(212,175,55,0.9) 0%, rgba(43,59,229,0.9) 100%)',
@@ -103,9 +80,7 @@ function GalleryItem({
               borderRadius: '12px',
               border: '1px solid #D4AF37',
               boxShadow: '0 0 12px rgba(212, 175, 55, 0.6)',
-              cursor: 'pointer',
-              whiteSpace: 'nowrap',
-              pointerEvents: 'auto',
+              pointerEvents: 'none', // Desactivado para no interferir con FPS
             }}
           >
             ✨ 3DGS 360°
@@ -113,147 +88,79 @@ function GalleryItem({
         </Html>
       )}
 
-      {/* Marco Escultórico 3D Exterior (Oro Mineral Bevel & Neón Cobalto) */}
       <mesh position={[0, 0, -0.08]} scale={[scale[0] + 0.35, scale[1] + 0.35, 0.06]}>
         <boxGeometry />
         <meshStandardMaterial
-          color={isSelected ? '#D4AF37' : hovered ? '#b8952b' : '#1c1b18'}
+          color={isSelected ? '#D4AF37' : '#1c1b18'}
           metalness={0.9}
           roughness={0.25}
-          emissive={isSelected ? '#D4AF37' : hovered ? '#D4AF37' : '#000000'}
-          emissiveIntensity={isSelected ? 0.5 : hovered ? 0.25 : 0}
+          emissive={isSelected ? '#D4AF37' : '#000000'}
+          emissiveIntensity={isSelected ? 0.5 : 0}
         />
       </mesh>
 
-      {/* Marco 3D Interior de Pizarra Negra (Matte Slate Backplate) */}
       <mesh position={[0, 0, -0.04]} scale={[scale[0] + 0.16, scale[1] + 0.16, 0.04]}>
         <boxGeometry />
         <meshPhysicalMaterial
           color={isSelected ? '#2B3BE5' : '#0a0a0d'}
-          emissive={isSelected ? '#2B3BE5' : hovered ? '#1b26a1' : '#000000'}
-          emissiveIntensity={isSelected ? 0.7 : hovered ? 0.4 : 0}
+          emissive={isSelected ? '#2B3BE5' : '#000000'}
+          emissiveIntensity={isSelected ? 0.7 : 0}
           roughness={0.15}
           metalness={0.85}
           clearcoat={0.8}
           transmission={0.25}
           transparent
-          opacity={hovered ? 0.95 : isSelected ? 0.85 : 0.6}
+          opacity={isSelected ? 0.85 : 0.6}
         />
       </mesh>
 
-      {/* Foco Escultórico Directo sobre la Obra */}
-      {(isSelected || hovered) && (
+      {isSelected && (
         <pointLight
           position={[0, scale[1] * 0.6, 0.8]}
-          intensity={isSelected ? 4.5 : 2.8}
+          intensity={4.5}
           distance={6}
-          color={isSelected ? '#D4AF37' : '#2B3BE5'}
+          color="#D4AF37"
         />
       )}
 
-      {/* Imagen WebGL principal */}
       <Image
         ref={meshRef}
         url={url}
         transparent
         side={THREE.DoubleSide}
-        onPointerOver={(e: ThreeEvent<PointerEvent>) => {
-          e.stopPropagation()
-          setHovered(true)
-          sound.playHover()
-          document.body.style.cursor = 'pointer'
-        }}
-        onPointerMove={(e: ThreeEvent<PointerEvent>) => {
-          if (e.uv) {
-            pointerOffset.current = {
-              x: (e.uv.x - 0.5) * 2,
-              y: -(e.uv.y - 0.5) * 2
-            }
-          }
-        }}
-        onPointerOut={() => {
-          setHovered(false)
-          pointerOffset.current = { x: 0, y: 0 }
-          document.body.style.cursor = 'auto'
-        }}
-        onClick={(e: ThreeEvent<MouseEvent>) => {
-          e.stopPropagation()
-          sound.playTick()
-          onInspect(index)
-        }}
         toneMapped={false}
       />
     </group>
   )
 }
 
-// Control por Teclado (Flechas izquierda/derecha/arriba/abajo, Enter, Espacio, 'I')
-function KeyboardNav({
-  count,
-  selectedIndex,
-  onInspect
-}: {
-  count: number
-  selectedIndex: number
-  onInspect: (index: number) => void
-}) {
-  const scroll = useScroll()
-
-  useEffect(() => {
-    const el = scroll.el
-    const step = () => (el.scrollHeight - el.clientHeight) / count
-    const onKey = (e: KeyboardEvent) => {
-      // Evitar interceptar teclas si un modal u otro input tiene foco activo
-      if (document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA') return
-
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-        e.preventDefault()
-        sound.playTick()
-        el.scrollBy({ top: step(), behavior: 'smooth' })
-      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        e.preventDefault()
-        sound.playTick()
-        el.scrollBy({ top: -step(), behavior: 'smooth' })
-      } else if (e.key === 'Enter' || e.key === ' ' || e.code === 'KeyI') {
-        e.preventDefault()
-        onInspect(selectedIndex)
-      }
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [scroll, count, selectedIndex, onInspect])
-
-  return null
-}
-
 interface GalleryProps {
-  onCurrentChange?: (index: number) => void
   onInspectArtwork: (index: number) => void
-  targetIndex?: number | null
   reducedMotion: boolean
+  setInteractionPrompt: (prompt: string | null) => void
+  isStarted: boolean
 }
 
 export function Gallery({
-  onCurrentChange,
   onInspectArtwork,
-  targetIndex,
-  reducedMotion
+  reducedMotion,
+  setInteractionPrompt,
+  isStarted
 }: GalleryProps) {
   const group = useRef<THREE.Group>(null)
-  const scroll = useScroll()
-  const lastCurrent = useRef(-1)
-  const lastTickTime = useRef(0)
-  const [selectedIndex, setSelectedIndex] = useState(0)
-
+  const { camera, scene } = useThree()
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
+  
   const numItems = ARTWORKS.length
-  const radius = 5.4
-
+  const radius = 10 // Radio más grande para poder caminar dentro
+  
   const items = useMemo(() => {
     return ARTWORKS.map((artwork, i) => {
       const angle = (i / numItems) * Math.PI * 2
       return {
-        position: [Math.sin(angle) * radius, 0, Math.cos(angle) * radius] as [number, number, number],
-        rotation: [0, angle, 0] as [number, number, number],
+        // Elevamos las obras para que estén a la altura de los ojos (1.7)
+        position: [Math.sin(angle) * radius, 1.7, Math.cos(angle) * radius] as [number, number, number],
+        rotation: [0, angle + Math.PI, 0] as [number, number, number], // Mirando hacia adentro del círculo
         url: artwork.url,
         href: artwork.href,
         splatUrl: artwork.splatUrl,
@@ -262,70 +169,85 @@ export function Gallery({
     })
   }, [numItems, radius])
 
-  // Desplazamiento programático al seleccionar un índice directo
+  // Raycaster logic for FPS interaction
   useEffect(() => {
-    if (targetIndex !== undefined && targetIndex !== null && scroll.el) {
-      const el = scroll.el
-      const targetScroll = (targetIndex / numItems) * (el.scrollHeight - el.clientHeight)
-      el.scrollTo({ top: targetScroll, behavior: 'smooth' })
-    }
-  }, [targetIndex, numItems, scroll.el])
+    if (!isStarted) return;
+    
+    const raycaster = new THREE.Raycaster()
+    const center = new THREE.Vector2(0, 0)
+    
+    let currentHoveredIndex: number | null = null
 
-  useFrame((_, delta) => {
-    if (group.current) {
-      const targetRotation = scroll.offset * Math.PI * 2
-      easing.damp(group.current.rotation, 'y', targetRotation, 0.22, delta)
-
-      // Determina cuál es la obra orientada frontalmente a la cámara
-      const currentRot = group.current.rotation.y
-      let best = 0
-      let bestCos = -Infinity
-      for (let i = 0; i < numItems; i++) {
-        const c = Math.cos((i / numItems) * Math.PI * 2 + currentRot)
-        if (c > bestCos) {
-          bestCos = c
-          best = i
-        }
-      }
-      if (best !== lastCurrent.current) {
-        lastCurrent.current = best
-        setSelectedIndex(best)
-        onCurrentChange?.(best)
-        const now = performance.now()
-        if (now - lastTickTime.current > 300) {
-          sound.playTick()
-          lastTickTime.current = now
-        }
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code === 'KeyE' && currentHoveredIndex !== null) {
+        sound.playOpen()
+        onInspectArtwork(currentHoveredIndex)
       }
     }
-  })
+    
+    window.addEventListener('keydown', handleKeyDown)
+
+    // Poll raycaster every frame would be heavy, but we can do it in a fast interval or useFrame
+    const interval = setInterval(() => {
+      raycaster.setFromCamera(center, camera)
+      // Buscar intersecciones solo en los grupos de obras
+      const intersects = raycaster.intersectObjects(scene.children, true)
+      
+      let foundIndex: number | null = null
+      
+      for (let i = 0; i < intersects.length; i++) {
+        const obj = intersects[i].object
+        // Subir en la jerarquía hasta encontrar userData.isArtwork
+        let parent: THREE.Object3D | null = obj
+        while (parent && parent.userData) {
+          if (parent.userData.isArtwork) {
+            // Check distance (interaction range)
+            if (intersects[i].distance < 6.0) {
+              foundIndex = parent.userData.index
+            }
+            break
+          }
+          parent = parent.parent
+        }
+        if (foundIndex !== null) break
+      }
+      
+      if (foundIndex !== currentHoveredIndex) {
+        currentHoveredIndex = foundIndex
+        setSelectedIndex(foundIndex)
+        if (foundIndex !== null) {
+          setInteractionPrompt(`[E] INSPECCIONAR: ${ARTWORKS[foundIndex].title.toUpperCase()}`)
+          sound.playHover()
+        } else {
+          setInteractionPrompt(null)
+        }
+      }
+      
+    }, 100) // 10 ticks per second is enough for UI prompts
+
+    return () => {
+      clearInterval(interval)
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [camera, scene, onInspectArtwork, isStarted])
 
   return (
-    <group ref={group} position={[0, -0.15, -4.2]}>
-      {/* Luz focal sobre la obra seleccionada */}
-      <spotLight
-        position={[0, 6, 2]}
-        intensity={2.5}
-        angle={0.6}
-        penumbra={0.8}
-        color="#2B3BE5"
-      />
+    <group ref={group} position={[0, 0, 0]}>
       <ambientLight intensity={0.6} />
 
-      {/* Campo dual de partículas WebGL (Mica Mineral Gold + Electric Indigo) */}
       {!reducedMotion && (
         <>
           <Sparkles
-            count={90}
-            scale={[16, 10, 16]}
+            count={200}
+            scale={[30, 10, 30]}
             size={2.2}
             speed={0.35}
             opacity={0.4}
             color="#2B3BE5"
           />
           <Sparkles
-            count={60}
-            scale={[12, 8, 12]}
+            count={100}
+            scale={[25, 8, 25]}
             size={2.8}
             speed={0.25}
             opacity={0.45}
@@ -340,14 +262,9 @@ export function Gallery({
           index={i}
           isSelected={selectedIndex === i}
           reducedMotion={reducedMotion}
-          onSelect={(idx) => {
-            setSelectedIndex(idx)
-          }}
-          onInspect={onInspectArtwork}
           {...item}
         />
       ))}
-      <KeyboardNav count={numItems} selectedIndex={selectedIndex} onInspect={onInspectArtwork} />
     </group>
   )
 }

@@ -1,5 +1,5 @@
 import { Suspense, lazy, useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { ARTWORKS, PORTAL, type Artwork } from './artworks'
 import { ArtworkModal } from './components/ArtworkModal'
 
@@ -9,6 +9,7 @@ import { sound } from './utils/audio'
 import { NavigationPill } from './components/NavigationPill'
 import { HomeHero } from './components/HomeHero'
 import { PremiumFooter } from './components/PremiumFooter'
+import { VideogameHUD } from './components/VideogameHUD'
 
 // Vistas con Lazy Loading (Ultrathink Code-Splitting)
 const Scene = lazy(() => import('./components/Scene'))
@@ -30,14 +31,23 @@ function Loader() {
 
 export default function App() {
   const [currentView, setCurrentView] = useState<'home' | '3d' | 'destacada' | 'encargos' | 'juegos' | 'about' | 'blog'>('home')
-  const [current, setCurrent] = useState(0)
-  const [targetIndex, setTargetIndex] = useState<number | null>(null)
+
   const [modalArtwork, setModalArtwork] = useState<Artwork | null>(null)
   const [audioActive, setAudioActive] = useState<boolean>(sound.isEnabled())
   const [isWebGLMounted, setIsWebGLMounted] = useState(false)
+  
+  // Estados del Videojuego FPS
+  const [isStarted, setIsStarted] = useState(false)
+  const [interactionPrompt, setInteractionPrompt] = useState<string | null>(null)
+
+  // Desactivar isStarted si salimos de la vista 3D
+  useEffect(() => {
+    if (currentView !== '3d') {
+      setIsStarted(false)
+    }
+  }, [currentView])
 
   // Ultrathink Deferred WebGL Mounting: 
-  // Evitamos cargar y parsear Three.js durante el First Contentful Paint.
   useEffect(() => {
     const timer = setTimeout(() => setIsWebGLMounted(true), 800)
     return () => clearTimeout(timer)
@@ -80,28 +90,13 @@ export default function App() {
     }
   }, [modalArtwork])
 
-  const artwork = ARTWORKS[current]
-
-  const handleNext = () => {
-    sound.playTick()
-    const next = (current + 1) % ARTWORKS.length
-    setTargetIndex(next)
-  }
-
-  const handlePrev = () => {
-    sound.playTick()
-    const prev = (current - 1 + ARTWORKS.length) % ARTWORKS.length
-    setTargetIndex(prev)
-  }
-
-  const handleSelectDot = (index: number) => {
-    sound.playTick()
-    setTargetIndex(index)
-  }
-
   const handleInspect = (index: number) => {
     sound.playOpen()
     setModalArtwork(ARTWORKS[index])
+    // Liberar puntero temporalmente al inspeccionar
+    if (document.pointerLockElement) {
+      document.exitPointerLock()
+    }
   }
 
   const toggleAudio = () => {
@@ -109,15 +104,29 @@ export default function App() {
     setAudioActive(newState)
   }
 
-  // Determinamos si Scene debe estar activo
   const isSceneActive = currentView === '3d' || currentView === 'destacada'
+
+  // Escuchar cuando el usuario presiona ESC para salir del PointerLock
+  useEffect(() => {
+    const handlePointerLockChange = () => {
+      if (!document.pointerLockElement) {
+        setIsStarted(false)
+      }
+    }
+    document.addEventListener('pointerlockchange', handlePointerLockChange)
+    return () => document.removeEventListener('pointerlockchange', handlePointerLockChange)
+  }, [])
 
   return (
     <>
       <div className="ui-layer" style={{ pointerEvents: 'none' }}>
-        <div style={{ pointerEvents: 'auto', width: '100%', zIndex: 50 }}>
-          <NavigationPill currentView={currentView} audioActive={audioActive} toggleAudio={toggleAudio} />
-        </div>
+        
+        {/* Mostrar Navbar SIEMPRE que NO hayamos iniciado el modo FPS inmersivo */}
+        {!isStarted && (
+          <div style={{ pointerEvents: 'auto', width: '100%', zIndex: 50 }}>
+            <NavigationPill currentView={currentView} audioActive={audioActive} toggleAudio={toggleAudio} />
+          </div>
+        )}
 
         {currentView === 'home' && <HomeHero />}
 
@@ -130,77 +139,11 @@ export default function App() {
         )}
 
         {currentView === '3d' && (
-          <>
-            <div className="ui-middle" style={{ pointerEvents: 'auto' }}>
-              <motion.div
-                className="headline premium-title"
-                initial={{ opacity: 0, x: -30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-              >
-                <span className="premium-badge premium-badge--gold">HIPERREALISMO POP</span>
-                <h1 style={{ fontSize: '2.5rem', marginTop: '1rem' }}>SALA 3D INMERSIVA</h1>
-                <p className="premium-subtitle" style={{ margin: '1rem 0 2rem' }}>
-                  Retratos que respiran en el espacio — acrílico, pizarra natural y mica mineral desde Bilbao.
-                </p>
-                <div className="headline-ctas" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                  <a href="#/encargos" className="premium-btn premium-btn--primary">
-                    ⚡ ENCARGAR PIEZA ÚNICA
-                  </a>
-                  <span className="premium-subtitle" style={{ fontSize: '0.8rem', letterSpacing: '0.1em' }}>← TECLAS / ARRASTRAR 3D →</span>
-                </div>
-              </motion.div>
-            </div>
-
-            <div className="premium-caption-wrapper" role="region" aria-label="Navegación de obras" style={{ pointerEvents: 'auto' }}>
-              <button className="premium-arrow" onClick={handlePrev} title="Obra anterior">‹</button>
-              <div className="premium-caption">
-                <div className="artwork-clickable" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                  <span className="premium-subtitle" style={{ fontFamily: 'monospace' }}>
-                    {String(current + 1).padStart(2, '0')} / {String(ARTWORKS.length).padStart(2, '0')}
-                  </span>
-                  <button className="artwork-title-btn" onClick={() => handleInspect(current)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
-                    <AnimatePresence mode="wait">
-                      <motion.span
-                        key={artwork.id}
-                        className="premium-title"
-                        style={{ fontSize: '1.2rem', margin: 0 }}
-                        initial={{ opacity: 0, y: 6 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -6 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        {artwork.title}
-                      </motion.span>
-                    </AnimatePresence>
-                  </button>
-                  <span className="premium-badge">{artwork.medium}</span>
-                  <button
-                    className="premium-btn"
-                    style={{ padding: '0.4rem 1rem', fontSize: '0.75rem' }}
-                    onClick={() => handleInspect(current)}
-                  >
-                    INSPECCIONAR +
-                  </button>
-                </div>
-              </div>
-              <button className="premium-arrow" onClick={handleNext} title="Siguiente obra">›</button>
-            </div>
-
-            <div className="gallery-dots-bar brutal-dots" role="tablist" style={{ pointerEvents: 'auto' }}>
-              {ARTWORKS.map((item, idx) => (
-                <button
-                  key={item.id}
-                  role="tab"
-                  aria-selected={idx === current}
-                  className={`dot-item brutal-dot ${idx === current ? 'active' : ''}`}
-                  onClick={() => handleSelectDot(idx)}
-                  onMouseEnter={() => sound.playHover()}
-                  title={`${item.title} (${idx + 1}/${ARTWORKS.length})`}
-                />
-              ))}
-            </div>
-          </>
+          <VideogameHUD 
+            isStarted={isStarted} 
+            onStart={() => setIsStarted(true)} 
+            interactionPrompt={interactionPrompt} 
+          />
         )}
 
         {currentView === 'encargos' && (
@@ -268,12 +211,14 @@ export default function App() {
           </div>
         )}
 
-        <div style={{ pointerEvents: 'auto', width: '100%', marginTop: 'auto' }}>
-          <PremiumFooter />
-        </div>
+        {!isStarted && (
+          <div style={{ pointerEvents: 'auto', width: '100%', marginTop: 'auto' }}>
+            <PremiumFooter />
+          </div>
+        )}
       </div>
 
-      {/* Escena 3D optimizada - Lazy Mounted */}
+      {/* Escena 3D - FPS Game Engine */}
       {isWebGLMounted && (
         <Suspense fallback={null}>
           <div style={{ 
@@ -285,10 +230,10 @@ export default function App() {
             transition: 'opacity 0.5s ease-in-out'
           }}>
             <Scene
-              onCurrentChange={setCurrent}
               onInspectArtwork={handleInspect}
-              targetIndex={targetIndex}
               active={isSceneActive}
+              setInteractionPrompt={setInteractionPrompt}
+              isStarted={isStarted}
             />
           </div>
         </Suspense>
@@ -300,7 +245,6 @@ export default function App() {
         onClose={() => setModalArtwork(null)}
         onNavigate={(idx) => {
           setModalArtwork(ARTWORKS[idx])
-          setTargetIndex(idx)
         }}
       />
     </>
