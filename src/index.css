@@ -1,12 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@500;600;700&family=Share+Tech+Mono&display=swap');
 
 :root {
-  --bg-color: #07070a;
+  --bg-color: #020202;
   --text-color: #FFFFFF;
-  --accent-color: #2B3BE5;
-  --accent-glow: rgba(43, 59, 229, 0.45);
-  --border-color: rgba(43, 59, 229, 0.2);
-  --glass-bg: rgba(10, 10, 14, 0.75);
+  --accent-color: #ffffff;
+  --accent-glow: transparent;
+  --border-color: rgba(255, 255, 255, 0.15);
+  --glass-bg: transparent;
   --glass-border: rgba(255, 255, 255, 0.12);
   --font-sans: 'Outfit', sans-serif;
   --font-mono: 'Share Tech Mono', monospace;
@@ -22,11 +22,10 @@ html, body, #root {
   font-family: var(--font-sans);
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
-  cursor: none;
 }
 
 * {
-  cursor: none !important;
+  box-sizing: border-box;
 }
 
 /* Scanline atmosférico sutil */

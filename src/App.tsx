@@ -2,7 +2,7 @@ import { Suspense, lazy, useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ARTWORKS, PORTAL, type Artwork } from './artworks'
 import { ArtworkModal } from './components/ArtworkModal'
-import { CustomCursor } from './components/CustomCursor'
+
 import { sound } from './utils/audio'
 
 // Componentes estáticos
@@ -47,7 +47,7 @@ export default function App() {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash
-      if (hash === '#/destacada' || hash === '#/galeria') {
+      if (hash === '#/destacada' || hash === '#/galeria' || hash === '#/archivo') {
         setCurrentView('destacada')
       } else if (hash === '#/encargos' || hash === '#/contacto') {
         setCurrentView('encargos')
@@ -114,7 +114,6 @@ export default function App() {
 
   return (
     <>
-      <CustomCursor />
       <div className="ui-layer" style={{ pointerEvents: 'none' }}>
         <div style={{ pointerEvents: 'auto', width: '100%', zIndex: 50 }}>
           <NavigationPill currentView={currentView} audioActive={audioActive} toggleAudio={toggleAudio} />

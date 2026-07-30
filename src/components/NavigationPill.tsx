@@ -10,59 +10,66 @@ interface NavigationPillProps {
 export function NavigationPill({ currentView, audioActive, toggleAudio }: NavigationPillProps) {
   return (
     <motion.nav
-      className="nav-pill"
-      initial={{ y: -50, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 1, ease: [0.25, 1, 0.5, 1], delay: 0.3 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1.5 }}
+      style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '24px 40px',
+        background: 'transparent',
+        borderBottom: '1px solid rgba(255,255,255,0.05)'
+      }}
     >
-      <div className="nav-pill__inner">
-        <a href="#/" className="nav-pill__logo" onClick={() => { sound.playTick(); window.location.hash = '#/'; }}>
-          N
-        </a>
-        <ul className="nav-pill__links">
-          <li>
-            <a href="#/" className={`nav-pill__link ${currentView === 'home' ? 'active' : ''}`} onClick={() => sound.playTick()}>
-              Home
-            </a>
-          </li>
-          <li>
-            <a href="#/destacada" className={`nav-pill__link ${currentView === 'destacada' ? 'active' : ''}`} onClick={() => sound.playTick()}>
-              Obra
-            </a>
-          </li>
-          <li>
-            <a href="#/3d" className={`nav-pill__link ${currentView === '3d' ? 'active' : ''}`} onClick={() => sound.playTick()}>
-              Sala 3D
-            </a>
-          </li>
-          <li>
-            <a href="#/sobre-mi" className={`nav-pill__link ${currentView === 'about' ? 'active' : ''}`} onClick={() => sound.playTick()}>
-              Sobre mí
-            </a>
-          </li>
-          <li>
-            <a href="#/blog" className={`nav-pill__link ${currentView === 'blog' ? 'active' : ''}`} onClick={() => sound.playTick()}>
-              Blog
-            </a>
-          </li>
-          <li>
-            <a href="#/encargos" className={`nav-pill__link nav-pill__link--cta ${currentView === 'encargos' ? 'active' : ''}`} onClick={() => sound.playTick()}>
-              Contacto
-            </a>
-          </li>
-        </ul>
-        <button
-          className={`nav-pill__audio ${audioActive ? 'active' : ''}`}
-          onClick={toggleAudio}
-          title={audioActive ? 'Desactivar audio FX' : 'Activar audio FX'}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '40px' }}>
+        <a 
+          href="#/" 
+          onClick={() => { sound.playTick(); window.location.hash = '#/'; }}
+          style={{
+            fontFamily: 'var(--font-sans)',
+            fontSize: '1rem',
+            fontWeight: 400,
+            color: '#fff',
+            textDecoration: 'none',
+            letterSpacing: '0.1em'
+          }}
         >
-          <span className="audio-equalizer">
-            <span className="eq-bar bar-1"></span>
-            <span className="eq-bar bar-2"></span>
-            <span className="eq-bar bar-3"></span>
-          </span>
-        </button>
+          NAROA.
+        </a>
+        <ul style={{
+          display: 'flex',
+          gap: '24px',
+          listStyle: 'none',
+          margin: 0,
+          padding: 0,
+          fontFamily: 'var(--font-mono)',
+          fontSize: '0.75rem',
+          letterSpacing: '0.05em'
+        }}>
+          <li><a href="#/destacada" style={{ color: currentView === 'destacada' ? '#fff' : 'rgba(255,255,255,0.4)', textDecoration: 'none' }} onClick={() => sound.playTick()}>OBRA</a></li>
+          <li><a href="#/3d" style={{ color: currentView === '3d' ? '#fff' : 'rgba(255,255,255,0.4)', textDecoration: 'none' }} onClick={() => sound.playTick()}>3D</a></li>
+          <li><a href="#/sobre-mi" style={{ color: currentView === 'about' ? '#fff' : 'rgba(255,255,255,0.4)', textDecoration: 'none' }} onClick={() => sound.playTick()}>SOBRE MÍ</a></li>
+          <li><a href="#/blog" style={{ color: currentView === 'blog' ? '#fff' : 'rgba(255,255,255,0.4)', textDecoration: 'none' }} onClick={() => sound.playTick()}>BLOG</a></li>
+          <li><a href="#/encargos" style={{ color: currentView === 'encargos' ? '#fff' : 'rgba(255,255,255,0.4)', textDecoration: 'none' }} onClick={() => sound.playTick()}>CONTACTO</a></li>
+        </ul>
       </div>
+      
+      <button
+        onClick={toggleAudio}
+        title={audioActive ? 'Silenciar' : 'Activar sonido'}
+        style={{
+          background: 'none',
+          border: 'none',
+          color: audioActive ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.3)',
+          fontFamily: 'var(--font-mono)',
+          fontSize: '0.7rem',
+          cursor: 'pointer',
+          letterSpacing: '0.1em'
+        }}
+      >
+        [ {audioActive ? 'AUDIO ON' : 'AUDIO OFF'} ]
+      </button>
     </motion.nav>
   )
 }

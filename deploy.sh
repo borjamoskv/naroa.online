@@ -37,22 +37,10 @@ log "Limpiando build anterior..."
 rm -rf "$BUILD_DIR"
 mkdir -p "$BUILD_DIR"
 
-# ── 3. Copiar el portal SEO (live-site/) como base ──────────
-log "Copiando portal SEO (live-site/) → ${BUILD_DIR}/"
-cp -R live-site/* "$BUILD_DIR/"
-ok "Portal SEO copiado"
-
-# ── 4. Construir la galería 3D (Vite) ───────────────────────
-log "Construyendo galería 3D (Vite + React + Three.js)..."
-npm run build || fail "Build de Vite falló"
-ok "Galería 3D compilada → dist/"
-
-# ── 5. Ensamblar: montar la galería 3D en /sala-3d/ ─────────
-log "Montando galería 3D en /sala-3d/..."
-mkdir -p "$BUILD_DIR/sala-3d"
-cp -R dist/* "$BUILD_DIR/sala-3d/"
-cp -R dist/assets/* "$BUILD_DIR/assets/" 2>/dev/null || true
-ok "Galería 3D montada en /sala-3d/ y assets sincronizados"
+# ── 3. Copiar Galería 3D / SPA (dist/) a la raíz del sitio ──
+log "Montando SPA (dist/) en la raíz → ${BUILD_DIR}/"
+cp -R dist/* "$BUILD_DIR/"
+ok "SPA montada en la raíz del sitio"
 
 # ── 6. Inyectar _headers y _redirects de CF Pages ───────────
 log "Inyectando _headers y _redirects..."
@@ -134,8 +122,8 @@ fi
 
 # ── 9. Purga de Caché Global en Cloudflare Edge ──────────────
 log "Purgando caché global en Cloudflare Edge (Zone: naroagutierrezgil.com)..."
-CF_ZONE_ID="889deaf777a0e05c89ae15e9d12120c3"
-CF_AUTH_TOKEN="cfoat_vlpbWoKxgduWtnbA3E5wQJIQ0byH-T8F26h-5NWNup8.rr9-axQCG1KAU4OglUgoULsh-tKSh4GreRQosQAgVpU"
+CF_ZONE_ID="${CF_ZONE_ID:?Error: CF_ZONE_ID env var not set}"
+CF_AUTH_TOKEN="${CF_AUTH_TOKEN:?Error: CF_AUTH_TOKEN env var not set}"
 curl -s -X POST "https://api.cloudflare.com/client/v4/zones/${CF_ZONE_ID}/purge_cache" \
   -H "Authorization: Bearer ${CF_AUTH_TOKEN}" \
   -H "Content-Type: application/json" \
