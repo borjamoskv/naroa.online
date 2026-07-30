@@ -120,14 +120,14 @@ else
 fi
 
 # ── 9. Purga de Caché Global en Cloudflare Edge ──────────────
-log "Purgando caché global en Cloudflare Edge (Zone: naroagutierrezgil.com)..."
-CF_ZONE_ID="${CF_ZONE_ID:?Error: CF_ZONE_ID env var not set}"
-CF_AUTH_TOKEN="${CF_AUTH_TOKEN:?Error: CF_AUTH_TOKEN env var not set}"
-curl -s -X POST "https://api.cloudflare.com/client/v4/zones/${CF_ZONE_ID}/purge_cache" \
-  -H "Authorization: Bearer ${CF_AUTH_TOKEN}" \
-  -H "Content-Type: application/json" \
-  -d '{"purge_everything":true}' > /dev/null 2>&1 || true
-ok "Caché global de Cloudflare purgada"
+if [ -n "${CF_ZONE_ID:-}" ] && [ -n "${CF_AUTH_TOKEN:-}" ]; then
+  log "Purgando caché global en Cloudflare Edge (Zone: naroagutierrezgil.com)..."
+  curl -s -X POST "https://api.cloudflare.com/client/v4/zones/${CF_ZONE_ID}/purge_cache" \
+    -H "Authorization: Bearer ${CF_AUTH_TOKEN}" \
+    -H "Content-Type: application/json" \
+    -d '{"purge_everything":true}' > /dev/null 2>&1 || true
+  ok "Caché global de Cloudflare purgada"
+fi
 
 # ── 10. Despliegue Paralelo a Vercel ──────────────────────────
 if command -v npx >/dev/null 2>&1; then
