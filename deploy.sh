@@ -37,9 +37,13 @@ log "Limpiando build anterior..."
 rm -rf "$BUILD_DIR"
 mkdir -p "$BUILD_DIR"
 
-# ── 3. Copiar Galería 3D / SPA (dist/) a la raíz del sitio ──
+# ── 3. Construir y copiar Galería 3D / SPA (dist/) ──────────
+log "Construyendo SPA (Vite + React + Three.js)..."
+npm run build || fail "Build de Vite falló"
+ok "Galería 3D compilada → dist/"
+
 log "Montando SPA (dist/) en la raíz → ${BUILD_DIR}/"
-cp -R dist/* "$BUILD_DIR/"
+cp -R dist/. "$BUILD_DIR/"
 ok "SPA montada en la raíz del sitio"
 
 # ── 6. Inyectar _headers y _redirects de CF Pages ───────────
@@ -65,24 +69,19 @@ cat > "$BUILD_DIR/_headers" << 'EOF'
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
 
-/sala-3d/assets/*
-  Cache-Control: public, max-age=31536000, immutable
-
-/images/*
-  Cache-Control: public, max-age=31536000, immutable
-
 /*.webp
   Cache-Control: public, max-age=31536000, immutable
 EOF
 
 cat > "$BUILD_DIR/_redirects" << 'EOF'
-# Landing SEO (SPA fallback dentro de /sala-3d/)
-/sala-3d/* /sala-3d/index.html 200
+# Aliases
+/3d / 302
+/galeria / 302
+/gallery / 302
+/sala-3d / 302
 
-# Aliases útiles
-/3d /sala-3d/ 302
-/galeria /sala-3d/ 302
-/gallery /sala-3d/ 302
+# SPA fallback para todas las rutas
+/* /index.html 200
 EOF
 
 ok "_headers y _redirects inyectados"
