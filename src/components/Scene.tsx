@@ -18,13 +18,21 @@ interface SceneProps {
   onCurrentChange: (index: number) => void
   onInspectArtwork: (index: number) => void
   targetIndex?: number | null
+  active?: boolean
 }
 
-export default function Scene({ onCurrentChange, onInspectArtwork, targetIndex }: SceneProps) {
+export default function Scene({ onCurrentChange, onInspectArtwork, targetIndex, active = true }: SceneProps) {
   const [dpr, setDpr] = useState(isMobile ? 1 : 1.5)
 
+  // Use frameloop='demand' when inactive to save GPU resources, 'always' when active.
+  const frameloop = active ? 'always' : 'demand'
+
   return (
-    <Canvas dpr={dpr} gl={{ antialias: false, toneMapping: THREE.ACESFilmicToneMapping, powerPreference: 'high-performance' }}>
+    <Canvas 
+      dpr={dpr} 
+      frameloop={frameloop}
+      gl={{ antialias: false, toneMapping: THREE.ACESFilmicToneMapping, powerPreference: 'high-performance' }}
+    >
       <PerformanceMonitor onIncline={() => setDpr(isMobile ? 1.5 : 2)} onDecline={() => setDpr(1)}>
       <color attach="background" args={['#07070a']} />
 
