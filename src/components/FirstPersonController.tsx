@@ -3,12 +3,17 @@ import { useFrame, useThree } from '@react-three/fiber'
 import { PointerLockControls } from '@react-three/drei'
 import * as THREE from 'three'
 import { usePlayerControls } from '../hooks/usePlayerControls'
+import { sound } from '../utils/audio'
 
 const MOVEMENT_SPEED = 5.0
 const SPRINT_MULTIPLIER = 1.8
 const DAMPING = 8.0 // Fricción/Inercia
 
-export function FirstPersonController() {
+interface FirstPersonControllerProps {
+  onPlayerMove?: (pos: { x: number; z: number }, rotY: number) => void
+}
+
+export function FirstPersonController({ onPlayerMove }: FirstPersonControllerProps) {
   const { forward, backward, left, right, sprint } = usePlayerControls()
   const { camera } = useThree()
   
@@ -58,25 +63,33 @@ export function FirstPersonController() {
     camera.position.addScaledVector(rightVector, velocity.current.x)
     camera.position.addScaledVector(forwardVector, -velocity.current.z)
 
-    // 4. Lógica de Head Bobbing (Balanceo de cabeza al caminar)
+    // 4. Lógica de Head Bobbing (Balanceo de cabeza al caminar) + Sonido de Pisadas
     if (isMoving) {
-      // Incrementar timer basado en la velocidad
+      const prevSin = Math.sin(headBobTimer.current)
       headBobTimer.current += delta * (sprint ? 12 : 8)
-      // Math.sin para el eje Y (Arriba/Abajo) y Math.cos para el eje X (Izquierda/Derecha)
-      camera.position.y = 1.7 + Math.sin(headBobTimer.current) * 0.05
+      const currentSin = Math.sin(headBobTimer.current)
+
+      // Reproducir sonido al tocar suelo (cruzar cero hacia arriba)
+      if (prevSin < 0 && currentSin >= 0) {
+        sound.playStep()
+      }
+
+      camera.position.y = 1.7 + currentSin * 0.05
     } else {
       // Regresar suavemente a la altura base si no se está moviendo
       camera.position.y += (1.7 - camera.position.y) * 10 * delta
     }
 
     // 5. Limitar la posición del jugador (Muros invisibles)
-    // Para que no salga del círculo (r=10) ni se acerque mucho al centro
     const dist = Math.sqrt(camera.position.x ** 2 + camera.position.z ** 2)
-    if (dist > 12) {
-      // Rebotar suavemente hacia adentro
-      camera.position.x *= 12 / dist
-      camera.position.z *= 12 / dist
+    if (dist > 13) {
+      camera.position.x *= 13 / dist
+      camera.position.z *= 13 / dist
     }
+
+    // 6. Reportar posición y rotación al Minimapa
+    const euler = new THREE.Euler().setFromQuaternion(camera.quaternion, 'YXZ')
+    onPlayerMove?.({ x: camera.position.x, z: camera.position.z }, euler.y)
   })
 
   return <PointerLockControls />

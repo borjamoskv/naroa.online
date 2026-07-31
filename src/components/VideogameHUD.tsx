@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react'
+import { Minimap } from './Minimap'
 
 interface VideogameHUDProps {
   onStart: () => void;
   isStarted: boolean;
   interactionPrompt: string | null;
+  playerPos: { x: number; z: number };
+  playerRotation: number;
 }
 
-export function VideogameHUD({ onStart, isStarted, interactionPrompt }: VideogameHUDProps) {
+export function VideogameHUD({ onStart, isStarted, interactionPrompt, playerPos, playerRotation }: VideogameHUDProps) {
   const [glitch, setGlitch] = useState(false)
 
   // Efecto de Glitch aleatorio
@@ -198,18 +201,22 @@ export function VideogameHUD({ onStart, isStarted, interactionPrompt }: Videogam
         </div>
       )}
 
-      {/* Bottom HUD */}
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
+      {/* Bottom HUD: Controles + Radar Minimap */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', width: '100%' }}>
         <p style={{ 
-          color: 'rgba(255,255,255,0.3)', 
+          color: 'rgba(255,255,255,0.4)', 
           fontFamily: 'monospace', 
-          fontSize: '0.9rem',
-          background: 'rgba(0,0,0,0.5)',
-          padding: '5px 15px',
-          borderRadius: '4px'
+          fontSize: '0.85rem',
+          background: 'rgba(0,0,0,0.6)',
+          padding: '6px 16px',
+          borderRadius: '4px',
+          border: '1px solid rgba(255,255,255,0.1)'
         }}>
           [ESC] DESCONECTAR SIMULADOR
         </p>
+
+        {/* Minimapa Radar (Bottom-Right) */}
+        <Minimap playerPos={playerPos} playerRotation={playerRotation} />
       </div>
     </div>
   )

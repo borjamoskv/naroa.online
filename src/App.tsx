@@ -30,7 +30,7 @@ function Loader() {
 }
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<'home' | '3d' | 'destacada' | 'encargos' | 'juegos' | 'about' | 'blog'>('home')
+  const [currentView, setCurrentView] = useState<'home' | '3d' | 'destacada' | 'encargos' | 'juegos' | 'about' | 'blog'>('3d')
 
   const [modalArtwork, setModalArtwork] = useState<Artwork | null>(null)
   const [audioActive, setAudioActive] = useState<boolean>(sound.isEnabled())
@@ -39,6 +39,8 @@ export default function App() {
   // Estados del Videojuego FPS
   const [isStarted, setIsStarted] = useState(false)
   const [interactionPrompt, setInteractionPrompt] = useState<string | null>(null)
+  const [playerPos, setPlayerPos] = useState({ x: 0, z: 0 })
+  const [playerRotation, setPlayerRotation] = useState(0)
 
   // Desactivar isStarted si salimos de la vista 3D
   useEffect(() => {
@@ -143,6 +145,8 @@ export default function App() {
             isStarted={isStarted} 
             onStart={() => setIsStarted(true)} 
             interactionPrompt={interactionPrompt} 
+            playerPos={playerPos}
+            playerRotation={playerRotation}
           />
         )}
 
@@ -234,6 +238,10 @@ export default function App() {
               active={isSceneActive}
               setInteractionPrompt={setInteractionPrompt}
               isStarted={isStarted}
+              onPlayerMove={(pos, rot) => {
+                setPlayerPos(pos)
+                setPlayerRotation(rot)
+              }}
             />
           </div>
         </Suspense>

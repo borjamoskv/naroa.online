@@ -24,9 +24,10 @@ interface SceneProps {
   active?: boolean
   setInteractionPrompt: (prompt: string | null) => void
   isStarted: boolean
+  onPlayerMove?: (pos: { x: number; z: number }, rot: number) => void
 }
 
-export default function Scene({ onInspectArtwork, active = true, setInteractionPrompt, isStarted }: SceneProps) {
+export default function Scene({ onInspectArtwork, active = true, setInteractionPrompt, isStarted, onPlayerMove }: SceneProps) {
   const [dpr, setDpr] = useState(isMobile ? 1 : 1.5)
 
   // Use frameloop='always' to support FPS movement smoothly.
@@ -46,7 +47,7 @@ export default function Scene({ onInspectArtwork, active = true, setInteractionP
       <Suspense fallback={null}>
         
         {/* Controles FPS, activados solo cuando isStarted es true */}
-        {isStarted && <FirstPersonController />}
+        {isStarted && <FirstPersonController onPlayerMove={onPlayerMove} />}
 
         {/* Nivel / Entorno (Suelo Grid) */}
         <EnvironmentLevel />
