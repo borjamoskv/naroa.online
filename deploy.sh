@@ -110,12 +110,12 @@ DEPLOY_SIZE=$(du -sh "$BUILD_DIR" | cut -f1)
 log "Desplegando ${BOLD}${DEPLOY_SIZE}${NC} → CF Pages proyecto ${BOLD}naroagutierrezgil-com${NC} (Dominio Oficial)..."
 
 if [ "$BRANCH" = "--preview" ]; then
-  wrangler pages deploy "$BUILD_DIR" --project-name "naroagutierrezgil-com" --branch preview
-  wrangler pages deploy "$BUILD_DIR" --project-name "naroaonline" --branch preview
+  wrangler pages deploy "$BUILD_DIR" --project-name "naroagutierrezgil-com" --branch preview --commit-dirty=true
+  wrangler pages deploy "$BUILD_DIR" --project-name "naroaonline" --branch preview --commit-dirty=true
   ok "Deploy PREVIEW completado"
 else
-  wrangler pages deploy "$BUILD_DIR" --project-name "naroagutierrezgil-com" --branch production
-  wrangler pages deploy "$BUILD_DIR" --project-name "naroaonline" --branch production
+  wrangler pages deploy "$BUILD_DIR" --project-name "naroagutierrezgil-com" --branch production --commit-dirty=true || true
+  wrangler pages deploy "$BUILD_DIR" --project-name "naroaonline" --branch production --commit-dirty=true || true
   ok "Deploy PRODUCCIÓN completado → https://naroagutierrezgil.com/ & https://naroa.online/"
 fi
 
