@@ -36,3 +36,4 @@ naroa-seo-fixes/
 _qa/
 assets-src/
 .vercel
+.env.vercel
