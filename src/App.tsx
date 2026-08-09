@@ -30,7 +30,7 @@ function Loader() {
 }
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<'home' | '3d' | 'destacada' | 'encargos' | 'juegos' | 'about' | 'blog'>('3d')
+  const [currentView, setCurrentView] = useState<'home' | '3d' | 'destacada' | 'encargos' | 'juegos' | 'about' | 'blog'>('destacada')
 
   const [modalArtwork, setModalArtwork] = useState<Artwork | null>(null)
   const [audioActive, setAudioActive] = useState<boolean>(sound.isEnabled())
@@ -49,7 +49,7 @@ export default function App() {
     }
   }, [currentView])
 
-  // Ultrathink Deferred WebGL Mounting: 
+  // Deferred WebGL Mounting: 
   useEffect(() => {
     const timer = setTimeout(() => setIsWebGLMounted(true), 800)
     return () => clearTimeout(timer)
@@ -58,25 +58,44 @@ export default function App() {
   // Hash Navigation Handler
   useEffect(() => {
     const handleHashChange = () => {
-      const hash = window.location.hash
-      if (hash === '#/destacada' || hash === '#/galeria' || hash === '#/archivo') {
+      const rawHash = window.location.hash
+      const cleanHash = rawHash.replace(/^#\/?/, '')
+
+      if (cleanHash === 'destacada' || cleanHash === 'galeria' || cleanHash === 'archivo' || cleanHash === 'obra' || cleanHash === 'obras') {
         setCurrentView('destacada')
-      } else if (hash === '#/encargos' || hash === '#/contacto') {
+        setModalArtwork(null)
+      } else if (cleanHash === 'encargos' || cleanHash === 'contacto') {
         setCurrentView('encargos')
-      } else if (hash === '#/juegos') {
+        setModalArtwork(null)
+      } else if (cleanHash === 'juegos') {
         setCurrentView('juegos')
-      } else if (hash === '#/blog') {
+        setModalArtwork(null)
+      } else if (cleanHash === 'blog') {
         setCurrentView('blog')
-      } else if (hash === '#/sobre-mi' || hash === '#/about') {
+        setModalArtwork(null)
+      } else if (cleanHash === 'sobre-mi' || cleanHash === 'about') {
         setCurrentView('about')
-      } else if (hash === '#/3d') {
+        setModalArtwork(null)
+      } else if (cleanHash === '3d') {
         setCurrentView('3d')
-      } else if (hash.startsWith('#obra-')) {
-        const slug = hash.replace('#obra-', '')
-        const match = ARTWORKS.find(a => toSlug(a.title) === slug || a.slug === slug)
-        if (match) setModalArtwork(match)
+        setModalArtwork(null)
+      } else if (cleanHash.startsWith('obra-') || cleanHash.startsWith('obra/')) {
+        const slug = cleanHash.replace(/^obra[-/]/, '')
+        const match = ARTWORKS.find(a => a.slug === slug || toSlug(a.title) === slug)
+        if (match) {
+          setModalArtwork(match)
+          setCurrentView('destacada')
+        }
       } else {
-        setCurrentView('home')
+        const match = ARTWORKS.find(a => a.slug === cleanHash || toSlug(a.title) === cleanHash)
+        if (match) {
+          setModalArtwork(match)
+          setCurrentView('destacada')
+        } else if (cleanHash === '') {
+          setCurrentView('destacada')
+        } else {
+          setCurrentView('destacada')
+        }
       }
     }
 
@@ -92,10 +111,16 @@ export default function App() {
     }
   }, [modalArtwork])
 
+  const handleCloseModal = () => {
+    setModalArtwork(null)
+    setCurrentView('destacada')
+    window.location.hash = '#/destacada'
+  }
+
   const handleInspect = (index: number) => {
     sound.playOpen()
     setModalArtwork(ARTWORKS[index])
-    // Liberar puntero temporalmente al inspeccionar
+    setCurrentView('destacada')
     if (document.pointerLockElement) {
       document.exitPointerLock()
     }
@@ -121,6 +146,20 @@ export default function App() {
 
   return (
     <>
+      {/* Background SoundCloud Player: Boards Of Burgos (Borja Moskv) */}
+      {audioActive && (
+        <iframe
+          id="soundcloud-bg-player"
+          width="1"
+          height="1"
+          scrolling="no"
+          frameBorder="no"
+          allow="autoplay"
+          src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F1927936712&auto_play=true&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false"
+          style={{ position: 'fixed', top: -9999, left: -9999, width: 1, height: 1, opacity: 0, pointerEvents: 'none', zIndex: -1 }}
+        />
+      )}
+
       <div className="ui-layer" style={{ pointerEvents: 'none' }}>
         
         {/* Mostrar Navbar SIEMPRE que NO hayamos iniciado el modo FPS inmersivo */}
@@ -250,7 +289,7 @@ export default function App() {
       <ArtworkModal
         artwork={modalArtwork}
         currentIndex={modalArtwork ? ARTWORKS.findIndex((a) => a.id === modalArtwork.id) : 0}
-        onClose={() => setModalArtwork(null)}
+        onClose={handleCloseModal}
         onNavigate={(idx) => {
           setModalArtwork(ARTWORKS[idx])
         }}

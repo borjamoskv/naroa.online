@@ -6,47 +6,46 @@ interface OptionItem {
   label: string
   sublabel: string
   badge?: string
-  multiplier: number
   icon: string
 }
 
 const SUBJECT_OPTIONS: OptionItem[] = [
-  { id: 'individual', label: 'Retrato Individual', sublabel: '1 rostro (Familiar, Autoretrato, Icono)', multiplier: 1.0, icon: '👤' },
-  { id: 'couple', label: 'Pareja / Dúo', sublabel: '2 personas (Parejas, Hermanos, Amigos)', multiplier: 1.45, icon: '👥' },
-  { id: 'pet', label: 'Retrato de Mascota', sublabel: 'Perros, gatos, animales de compañía', multiplier: 0.9, icon: '🐶' },
-  { id: 'icon', label: 'Icono Pop Personalizado', sublabel: 'Tributo a artista, músico o mito pop', multiplier: 1.15, icon: '⚡' },
-  { id: 'family', label: 'Familia / Grupo', sublabel: '3 o más figuras en composición', multiplier: 1.85, icon: '✨' },
+  { id: 'individual', label: 'Retrato Individual', sublabel: '1 rostro (Familiar, Autoretrato, Icono)', icon: '👤' },
+  { id: 'couple', label: 'Pareja / Dúo', sublabel: '2 personas (Parejas, Hermanos, Amigos)', icon: '👥' },
+  { id: 'pet', label: 'Retrato de Mascota', sublabel: 'Perros, gatos, animales de compañía', icon: '🐶' },
+  { id: 'icon', label: 'Icono Pop Personalizado', sublabel: 'Tributo a artista, músico o mito pop', icon: '⚡' },
+  { id: 'family', label: 'Familia / Grupo', sublabel: '3 o más figuras en composición', icon: '✨' },
 ]
 
 const MEDIUM_OPTIONS: OptionItem[] = [
-  { id: 'slate_mica', label: 'Pizarra Natural + Mica Mineral', sublabel: 'La técnica insignia de Naroa con destellos minerales', badge: 'MÁS POPULAR', multiplier: 1.2, icon: '💎' },
-  { id: 'canvas_3d', label: 'Lienzo 3D + Acrílico', sublabel: 'Grosor especial con textura gestual e hiperrealismo', multiplier: 1.0, icon: '🖼️' },
-  { id: 'gold_mixed', label: 'Mixed Media + Pan de Oro', sublabel: 'Integración de pan de oro de 24k y pigmentos puros', badge: 'EXCLUSIVO', multiplier: 1.35, icon: '🌟' },
+  { id: 'slate_mica', label: 'Pizarra Natural + Mica Mineral', sublabel: 'Técnica sobre pizarra con destellos de mica mineral', badge: 'DESTACADO', icon: '💎' },
+  { id: 'canvas_3d', label: 'Lienzo 3D + Acrílico', sublabel: 'Grosor especial con textura gestual e hiperrealismo', icon: '🖼️' },
+  { id: 'gold_mixed', label: 'Mixed Media + Pan de Oro', sublabel: 'Integración de pan de oro puros y acrílico', badge: 'EXCLUSIVO', icon: '🌟' },
 ]
 
 const SIZE_OPTIONS: OptionItem[] = [
-  { id: 'small', label: 'Íntimo (30 × 40 cm)', sublabel: 'Ideal para espacios acogedores o escritorio', multiplier: 380, icon: '📐' },
-  { id: 'medium', label: 'Presencia (50 × 70 cm)', sublabel: 'El formato más equilibrado para salón o estudio', badge: 'RECOMENDADO', multiplier: 680, icon: '🎨' },
-  { id: 'large', label: 'Monumental (100 × 80 cm)', sublabel: 'Gran formato de alto impacto visual', multiplier: 1250, icon: '🏛️' },
-  { id: 'custom', label: 'Medida Especial', sublabel: 'Para proyectos específicos o murales', multiplier: 1500, icon: '✂️' },
+  { id: 'small', label: 'Formato Íntimo (30 × 40 cm)', sublabel: 'Para espacios acogedores o escritorio', icon: '📐' },
+  { id: 'medium', label: 'Formato Medio (50 × 70 cm)', sublabel: 'El formato estándar para salón o estudio', badge: 'RECOMENDADO', icon: '🎨' },
+  { id: 'large', label: 'Formato Grande (100 × 80 cm)', sublabel: 'Gran formato de alto impacto visual', icon: '🏛️' },
+  { id: 'custom', label: 'Medida Especial', sublabel: 'Para proyectos específicos o formatos a medida', icon: '✂️' },
 ]
 
 const FAQS = [
   {
     q: '¿Qué necesito para encargar un retrato personalizado?',
-    a: 'Solo necesitas una o varias fotos de buena calidad con iluminación clara. Naroa te guiará personalmente en la elección de la foto ideal para convertirla en una pieza única.'
+    a: 'Solo necesitas una o varias fotos de buena calidad con iluminación clara. Naroa te asesorará personalmente en la elección de la foto ideal para convertirla en obra de arte.'
   },
   {
-    q: '¿Cuánto tarda en pintarse y entregarse la obra?',
-    a: 'El proceso artesanal hiperrealista requiere entre 3 y 6 semanas de elaboración. Recibirás fotografías de los avances semana a semana para ver cómo cobra vida.'
+    q: '¿Cómo se definen los plazos de entrega?',
+    a: 'El proceso artesanal requiere tiempo según complejidad y formato. Naroa acuerda contigo los plazos y te envía fotografías de los avances durante la creación.'
   },
   {
     q: '¿Cómo se realizan los envíos?',
-    a: 'Todas las obras se embalan en cajas de madera o protección rígida de alta resistencia y se envían aseguradas a cualquier punto de España y del extranjero.'
+    a: 'Las obras se embalan con protección de alta resistencia y se envían aseguradas a cualquier punto de España y del extranjero.'
   },
   {
     q: '¿Se entregan con Certificado de Autenticidad?',
-    a: 'Sí, cada obra incluye el Certificado de Autenticidad firmado por Naroa Gutiérrez Gil, detallando la fecha, materiales (pizarra, mica, acrílicos) y número de registro.'
+    a: 'Sí, cada obra incluye el Certificado de Autenticidad firmado por Naroa Gutiérrez Gil, detallando la fecha y materiales originales.'
   }
 ]
 
@@ -60,49 +59,44 @@ export function CommissionCalculator() {
   const selectedMedium = MEDIUM_OPTIONS.find(m => m.id === medium) || MEDIUM_OPTIONS[0]
   const selectedSize = SIZE_OPTIONS.find(sz => sz.id === size) || SIZE_OPTIONS[1]
 
-  const basePrice = selectedSize.multiplier * selectedSubject.multiplier * selectedMedium.multiplier
-  const minPrice = Math.round(basePrice * 0.95 / 10) * 10
-  const maxPrice = Math.round(basePrice * 1.15 / 10) * 10
-
-  const summaryText = `Hola Naroa! Me gustaría encargar un retrato personalizado.
-- Tipo: ${selectedSubject.label} (${selectedSubject.icon})
+  const summaryText = `Hola Naroa! Me gustaría consultar un encargo de retrato personalizado:
+- Sujeto: ${selectedSubject.label} (${selectedSubject.icon})
 - Soporte/Técnica: ${selectedMedium.label} (${selectedMedium.icon})
-- Tamaño: ${selectedSize.label} (${selectedSize.icon})
-- Presupuesto estimado: ${minPrice}€ - ${maxPrice}€
+- Formato: ${selectedSize.label} (${selectedSize.icon})
 
-¿Podemos hablar de los detalles?`
+¿Podemos hablar de la propuesta?`
 
   const whatsappUrl = `https://wa.me/34636060609?text=${encodeURIComponent(summaryText)}`
-  const mailtoUrl = `mailto:naroa@naroa.eu?subject=${encodeURIComponent(`Encargo Retrato - ${selectedSubject.label}`)}&body=${encodeURIComponent(summaryText)}`
+  const mailtoUrl = `mailto:naroa@naroa.eu?subject=${encodeURIComponent(`Consulta Encargo - ${selectedSubject.label}`)}&body=${encodeURIComponent(summaryText)}`
 
   return (
     <div className="commission-page brutal-container">
-      {/* Ticker Marquesina Brutalista */}
+      {/* Ticker Marquesina */}
       <div className="brutal-marquee-bar">
         <div className="brutal-marquee-content">
-          <span>⚡ CADA PIEDRA TIENE MILLONES DE AÑOS · ENCARGA TU RETRATO ÚNICO · RETRATOS EN BILBAO · MICA MINERAL & PIZARRA NATURAL ⚡</span>
-          <span>⚡ CADA PIEDRA TIENE MILLONES DE AÑOS · ENCARGA TU RETRATO ÚNICO · RETRATOS EN BILBAO · MICA MINERAL & PIZARRA NATURAL ⚡</span>
+          <span>⚡ RETRATOS POR ENCARGO EN BILBAO · CADA OBRA ES ÚNICA · MICA MINERAL & PIZARRA NATURAL ⚡</span>
+          <span>⚡ RETRATOS POR ENCARGO EN BILBAO · CADA OBRA ES ÚNICA · MICA MINERAL & PIZARRA NATURAL ⚡</span>
         </div>
       </div>
 
       <header className="commission-header">
-        <span className="brutal-badge brutal-badge--pink">ENCARGOS EXCLUSIVOS 2026</span>
+        <span className="brutal-badge brutal-badge--pink">ENCARGOS PERSONALIZADOS</span>
         <h1 className="brutal-title">
-          DISEÑA TU <span className="highlight-yellow">RETRATO</span>
+          CONSULTA TU <span className="highlight-yellow">RETRATO</span>
         </h1>
         <p className="brutal-subtitle">
           Transforma una fotografía en una obra de arte hiperrealista sobre pizarra, mica mineral o lienzo.
-          Personaliza los detalles a continuación para obtener una estimación inmediata.
+          Selecciona las opciones a continuación y contacta directamente con Naroa para recibir una propuesta personalizada.
         </p>
       </header>
 
       <div className="commission-grid">
-        {/* Panel Izquierdo: Configuración paso a paso */}
+        {/* Panel Izquierdo: Selección paso a paso */}
         <div className="calculator-panel">
           {/* PASO 1: Sujeto */}
           <div className="calc-step-card brutal-card">
             <div className="step-num-badge">01</div>
-            <h2 className="step-title">¿A quién quieres inmortalizar?</h2>
+            <h2 className="step-title">¿A quién quieres retratar?</h2>
             <div className="options-grid">
               {SUBJECT_OPTIONS.map(opt => (
                 <button
@@ -165,14 +159,14 @@ export function CommissionCalculator() {
           </div>
         </div>
 
-        {/* Panel Derecho: Resumen en vivo & Enlaces de Conversión Directa */}
+        {/* Panel Derecho: Resumen & Contacto Directo */}
         <div className="summary-panel">
           <div className="brutal-card summary-card sticky-card">
             <div className="summary-top">
-              <span className="brutal-tag brutal-tag--green">PRESUPUESTO ESTIMADO</span>
+              <span className="brutal-tag brutal-tag--green">PRESUPUESTO A MEDIDA</span>
               <div className="price-display">
-                <span className="price-range">{minPrice}€ — {maxPrice}€</span>
-                <span className="price-note">*Impuestos y certificado incluidos</span>
+                <span className="price-range" style={{ fontSize: '1.5rem', color: '#D4AF37' }}>Consulta Directa</span>
+                <span className="price-note">*Sin compromiso. Asesoramiento directo según la foto de referencia</span>
               </div>
             </div>
 
@@ -189,16 +183,12 @@ export function CommissionCalculator() {
                 <span className="spec-key">Formato</span>
                 <span className="spec-val">{selectedSize.icon} {selectedSize.label}</span>
               </div>
-              <div className="spec-item">
-                <span className="spec-key">Tiempo estimado</span>
-                <span className="spec-val">⏳ 3 a 5 semanas</span>
-              </div>
             </div>
 
             <div className="guarantees-box">
               <div className="g-item">✓ Certificado de Autenticidad Firmado</div>
               <div className="g-item">✓ Embalaje seguro de madera/protección</div>
-              <div className="g-item">✓ Seguimiento fotográfico del proceso</div>
+              <div className="g-item">✓ Seguimiento de avances durante la creación</div>
             </div>
 
             <div className="action-buttons">
@@ -208,44 +198,44 @@ export function CommissionCalculator() {
                 rel="noopener noreferrer"
                 className="brutal-cta-btn brutal-cta-btn--whatsapp"
               >
-                💬 SOLICITAR POR WHATSAPP
+                💬 CONSULTAR POR WHATSAPP
               </a>
               <a
                 href={mailtoUrl}
                 className="brutal-cta-btn brutal-cta-btn--email"
               >
-                ✉️ SOLICITAR POR EMAIL
+                ✉️ CONSULTAR POR EMAIL
               </a>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Sección Proceso de Encargo en 4 Fases */}
+      {/* Sección Proceso de Encargo */}
       <section className="process-section">
         <h2 className="section-brutal-title">
-          CÓMO TRABAJAMOS <span className="highlight-pink">JUNTOS</span>
+          PROCESO DE <span className="highlight-pink">CREACIÓN</span>
         </h2>
         <div className="process-grid">
           <div className="process-card brutal-card">
             <div className="process-num">01</div>
-            <h3>Conversación Inicial</h3>
-            <p>Me envías tus fotos de referencia y me cuentas la historia detrás de la persona o mascota a retratar.</p>
+            <h3>Contacto & Fotos</h3>
+            <p>Envías tus fotos de referencia y comentáis la idea personal o el regalo a realizar.</p>
           </div>
           <div className="process-card brutal-card">
             <div className="process-num">02</div>
-            <h3>Boceto & Selección</h3>
-            <p>Definimos la composición, paleta de color y materiales (pizarra, mica, lienzo) antes de dar el primer trazo.</p>
+            <h3>Composición & Formato</h3>
+            <p>Definís la composición, tonos y materiales (pizarra, mica, lienzo) antes de iniciar.</p>
           </div>
           <div className="process-card brutal-card">
             <div className="process-num">03</div>
-            <h3>Creación & Avances</h3>
-            <p>Pinto la obra. Recibes fotos del avance para que sientas cómo cobra vida paso a paso.</p>
+            <h3>Pintura & Seguimiento</h3>
+            <p>Naroa pinta la obra y te comparte el proceso progresivo.</p>
           </div>
           <div className="process-card brutal-card">
             <div className="process-num">04</div>
             <h3>Entrega & Certificado</h3>
-            <p>Envío asegurado en caja protectora con su Certificado de Autenticidad oficial firmado por Naroa.</p>
+            <p>Envío protegido con su Certificado de Autenticidad oficial firmado por Naroa.</p>
           </div>
         </div>
       </section>

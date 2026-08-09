@@ -57,15 +57,16 @@ export function NavigationPill({ currentView, audioActive, toggleAudio }: Naviga
       
       <button
         onClick={toggleAudio}
-        title={audioActive ? 'Silenciar' : 'Activar sonido'}
+        title={audioActive ? 'Silenciar — Reproduciendo: Boards Of Burgos (Borja Moskv)' : 'Activar sonido — Boards Of Burgos'}
         style={{
           background: 'none',
           border: 'none',
-          color: audioActive ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.3)',
+          color: audioActive ? '#D4AF37' : 'rgba(255,255,255,0.3)',
           fontFamily: 'var(--font-mono)',
           fontSize: '0.7rem',
           cursor: 'pointer',
-          letterSpacing: '0.1em'
+          letterSpacing: '0.1em',
+          transition: 'color 0.3s ease'
         }}
       >
         [ {audioActive ? 'AUDIO ON' : 'AUDIO OFF'} ]

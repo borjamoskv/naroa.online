@@ -37,3 +37,4 @@ _qa/
 assets-src/
 .vercel
 .env.vercel
+.env*
