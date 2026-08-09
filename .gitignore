@@ -37,4 +37,7 @@ _qa/
 assets-src/
 .vercel
 .env.vercel
-.env*
+
+# Added by Antigravity C5-REAL Audit
+*.pem
+*.key

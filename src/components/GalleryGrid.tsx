@@ -7,83 +7,81 @@ interface GalleryGridProps {
 }
 
 export function GalleryGrid({ onInspect }: GalleryGridProps) {
+  const heroArtwork = ARTWORKS.find(a => a.slug === 'amy-rocks') || ARTWORKS[1]
+
   return (
-    <div className="gallery-page brutal-container" style={{ paddingTop: '20px', paddingBottom: '80px', width: '100%' }}>
-      {/* REJILLA GIGANTE DE OBRAS (CERO RELLENO DE TEXTO, MÁS IMPACTO VISUAL) */}
-      <div 
-        className="gigantic-artworks-grid"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(440px, 1fr))',
-          gap: '32px',
-          width: '100%',
-          maxWidth: '1920px',
-          margin: '0 auto',
-          padding: '0 20px'
-        }}
-      >
+    <div className="gallery-page brutal-container">
+      {/* Ticker Marquesina */}
+      <div className="brutal-marquee-bar">
+        <div className="brutal-marquee-content">
+          <span>💥 UNIVERSO ARTÍSTICO NAROA · 27+ OBRAS ORIGINALES · AC RÍLICO, MICA MINERAL Y PIZARRA NATURAL · BILBAO 💥</span>
+          <span>💥 UNIVERSO ARTÍSTICO NAROA · 27+ OBRAS ORIGINALES · AC RÍLICO, MICA MINERAL Y PIZARRA NATURAL · BILBAO 💥</span>
+        </div>
+      </div>
+
+      {/* HERO COLOSAL DE OBRA DESTACADA (Amy Winehouse) */}
+      <section className="gallery-hero-box brutal-card" style={{ marginBottom: '32px', borderColor: 'var(--brutal-pink)' }}>
+        <div className="hero-artwork-wrap" style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '24px', alignItems: 'center' }}>
+          <img
+            src={heroArtwork.url}
+            alt={heroArtwork.title}
+            className="gallery-hero-img"
+            style={{ width: '100%', maxHeight: '480px', objectFit: 'cover', border: '3px solid #000', boxShadow: '5px 5px 0px #000' }}
+          />
+          <div className="hero-artwork-info">
+            <span className="brutal-badge brutal-badge--yellow">OBRA PROTAGONISTA</span>
+            <h1 className="brutal-title" style={{ fontSize: '3rem' }}>{heroArtwork.title}</h1>
+            <p className="brutal-badge brutal-badge--pink" style={{ marginTop: '6px' }}>{heroArtwork.year} · {heroArtwork.medium}</p>
+            <p className="brutal-subtitle" style={{ fontSize: '0.95rem', margin: '16px 0' }}>{heroArtwork.description}</p>
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button
+                className="brutal-btn"
+                onClick={() => {
+                  sound.playOpen()
+                  const idx = ARTWORKS.findIndex(a => a.id === heroArtwork.id)
+                  onInspect(idx)
+                }}
+              >
+                🔍 INSPECCIONAR EN DETALLE
+              </button>
+              <a href="#/encargos" className="brutal-cta-btn brutal-cta-btn--whatsapp" style={{ width: 'auto', padding: '10px 18px' }}>
+                ⚡ ENCARGAR PARECIDO
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <header className="gallery-header">
+        <span className="brutal-badge brutal-badge--cyan">COLECCIÓN COMPLETA</span>
+        <h2 className="brutal-title">
+          UNIVERSO <span className="highlight-yellow">ARTÍSTICO</span>
+        </h2>
+        <p className="brutal-subtitle">
+          Cada trazo es una historia. Cada pieza en pizarra o lienzo es un fragmento del alma pop.
+        </p>
+      </header>
+
+      {/* REJILLA DE TAMAÑOS VARIABLES */}
+      <div className="massive-gallery-grid">
         {ARTWORKS.map((artwork, idx) => {
+          const sizeClass = artwork.sizeCategory ? `grid-item--${artwork.sizeCategory}` : 'grid-item--medium'
           return (
             <motion.div
               key={artwork.id}
-              className="gigantic-artwork-card"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: Math.min(idx * 0.03, 0.4) }}
-              whileHover={{ scale: 1.018, y: -6 }}
+              className={`gallery-item-card brutal-card ${sizeClass}`}
+              whileHover={{ scale: 1.02 }}
               onClick={() => {
                 sound.playOpen()
                 onInspect(idx)
               }}
-              style={{
-                cursor: 'pointer',
-                overflow: 'hidden',
-                position: 'relative',
-                borderRadius: '16px',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
-                background: '#0d0d12',
-                boxShadow: '0 12px 35px rgba(0,0,0,0.7)'
-              }}
             >
-              <div className="gigantic-img-wrap" style={{ width: '100%', height: '560px', overflow: 'hidden', position: 'relative' }}>
-                <img
-                  src={artwork.url}
-                  alt={artwork.title}
-                  loading={idx < 4 ? "eager" : "lazy"}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    objectPosition: 'center',
-                    transition: 'transform 0.5s ease-out'
-                  }}
-                />
-                <div 
-                  className="gigantic-card-overlay"
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: 'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.3) 35%, transparent 100%)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'flex-end',
-                    padding: '24px',
-                    pointerEvents: 'none'
-                  }}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-                    <div>
-                      <h3 style={{ margin: 0, fontSize: '2rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.02em', textShadow: '0 2px 10px rgba(0,0,0,0.8)' }}>
-                        {artwork.title}
-                      </h3>
-                      <span style={{ fontSize: '0.88rem', color: '#D4AF37', fontFamily: 'var(--font-mono)', marginTop: '4px', display: 'block', fontWeight: 500 }}>
-                        {artwork.medium}
-                      </span>
-                    </div>
-                    <span style={{ fontSize: '0.8rem', padding: '4px 12px', background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.25)', borderRadius: '20px', color: '#fff', fontFamily: 'var(--font-mono)', fontWeight: 600 }}>
-                      {artwork.year}
-                    </span>
-                  </div>
+              <div className="item-img-container">
+                <img src={artwork.url} alt={artwork.title} className="item-img" loading="lazy" />
+                <div className="item-overlay">
+                  <span className="item-badge">{artwork.year}</span>
+                  <h3 className="item-title">{artwork.title}</h3>
+                  <span className="item-medium">{artwork.medium}</span>
                 </div>
               </div>
             </motion.div>

@@ -7,7 +7,7 @@ export function PremiumFooter() {
           naroa@naroa.eu
         </a>
       </div>
-      <div className="coordinates">BOLUETA // 43.2497° N, 2.9067° W</div>
+      <div className="coordinates">KOBETAMENDI // 43.2630° N, 2.9350° W</div>
     </footer>
   )
 }
