@@ -3,11 +3,10 @@
   "cleanUrls": true,
   "buildCommand": "./deploy.sh --build-only",
   "outputDirectory": ".deploy",
-  "redirects": [
+  "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "https://naroagutierrezgil.com/$1",
-      "permanent": true
+      "destination": "/index.html"
     }
   ],
   "headers": [
