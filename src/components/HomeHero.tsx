@@ -111,7 +111,7 @@ export function HomeHero() {
         <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', letterSpacing: '0.25em', color: '#D4AF37', margin: '0 0 16px 0', textTransform: 'uppercase' }}>
           Naroa Gutiérrez Gil · Hiperrealismo POP & Mica Mineral
         </p>
-        <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
           <a
             href="#/destacada"
             onClick={() => sound.playTick()}
@@ -123,7 +123,7 @@ export function HomeHero() {
               fontSize: '0.85rem',
               fontWeight: 600,
               letterSpacing: '0.1em',
-              padding: '10px 28px',
+              padding: '10px 24px',
               border: '1px solid rgba(212, 175, 55, 0.6)',
               borderRadius: '50px',
               background: 'rgba(0,0,0,0.6)',
@@ -153,7 +153,7 @@ export function HomeHero() {
               fontSize: '0.85rem',
               fontWeight: 600,
               letterSpacing: '0.1em',
-              padding: '10px 28px',
+              padding: '10px 24px',
               border: '1px solid rgba(255, 255, 255, 0.2)',
               borderRadius: '50px',
               background: 'rgba(255,255,255,0.05)',
@@ -168,6 +168,36 @@ export function HomeHero() {
             }}
           >
             ENTRAR MUSEO 3D 🕹️
+          </a>
+          <a
+            href="#/juegos"
+            onClick={() => sound.playTick()}
+            style={{
+              display: 'inline-block',
+              color: '#fff',
+              textDecoration: 'none',
+              fontFamily: 'var(--font-sans)',
+              fontSize: '0.85rem',
+              fontWeight: 600,
+              letterSpacing: '0.1em',
+              padding: '10px 24px',
+              border: '1px solid rgba(255, 0, 128, 0.4)',
+              borderRadius: '50px',
+              background: 'rgba(255,0,128,0.1)',
+              backdropFilter: 'blur(10px)',
+              boxShadow: '0 0 15px rgba(255,0,128,0.2)',
+              transition: 'all 0.3s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(255,0,128,0.8)'
+              e.currentTarget.style.color = '#fff'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(255,0,128,0.1)'
+              e.currentTarget.style.color = '#fff'
+            }}
+          >
+            SALA DE JUEGOS 🎮
           </a>
         </div>
       </motion.div>

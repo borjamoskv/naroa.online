@@ -39,19 +39,22 @@ export function NavigationPill({ currentView, audioActive, toggleAudio }: Naviga
         </a>
         <ul style={{
           display: 'flex',
-          gap: '24px',
+          gap: '20px',
           listStyle: 'none',
           margin: 0,
           padding: 0,
           fontFamily: 'var(--font-mono)',
           fontSize: '0.75rem',
-          letterSpacing: '0.05em'
+          letterSpacing: '0.05em',
+          flexWrap: 'wrap'
         }}>
-          <li><a href="#/destacada" style={{ color: currentView === 'destacada' ? '#fff' : 'rgba(255,255,255,0.4)', textDecoration: 'none' }} onClick={() => sound.playTick()}>OBRA</a></li>
-          <li><a href="#/3d" style={{ color: currentView === '3d' ? '#fff' : 'rgba(255,255,255,0.4)', textDecoration: 'none' }} onClick={() => sound.playTick()}>3D</a></li>
-          <li><a href="#/sobre-mi" style={{ color: currentView === 'about' ? '#fff' : 'rgba(255,255,255,0.4)', textDecoration: 'none' }} onClick={() => sound.playTick()}>SOBRE MÍ</a></li>
-          <li><a href="#/blog" style={{ color: currentView === 'blog' ? '#fff' : 'rgba(255,255,255,0.4)', textDecoration: 'none' }} onClick={() => sound.playTick()}>BLOG</a></li>
-          <li><a href="#/encargos" style={{ color: currentView === 'encargos' ? '#fff' : 'rgba(255,255,255,0.4)', textDecoration: 'none' }} onClick={() => sound.playTick()}>CONTACTO</a></li>
+          <li><a href="#/" style={{ color: currentView === 'home' ? '#D4AF37' : 'rgba(255,255,255,0.5)', textDecoration: 'none', fontWeight: currentView === 'home' ? 700 : 400 }} onClick={() => sound.playTick()}>INICIO</a></li>
+          <li><a href="#/destacada" style={{ color: currentView === 'destacada' ? '#D4AF37' : 'rgba(255,255,255,0.5)', textDecoration: 'none', fontWeight: currentView === 'destacada' ? 700 : 400 }} onClick={() => sound.playTick()}>OBRA</a></li>
+          <li><a href="#/3d" style={{ color: currentView === '3d' ? '#D4AF37' : 'rgba(255,255,255,0.5)', textDecoration: 'none', fontWeight: currentView === '3d' ? 700 : 400 }} onClick={() => sound.playTick()}>3D 🕹️</a></li>
+          <li><a href="#/juegos" style={{ color: currentView === 'juegos' ? '#D4AF37' : 'rgba(255,255,255,0.5)', textDecoration: 'none', fontWeight: currentView === 'juegos' ? 700 : 400 }} onClick={() => sound.playTick()}>JUEGOS 🎮</a></li>
+          <li><a href="#/sobre-mi" style={{ color: currentView === 'about' ? '#D4AF37' : 'rgba(255,255,255,0.5)', textDecoration: 'none', fontWeight: currentView === 'about' ? 700 : 400 }} onClick={() => sound.playTick()}>SOBRE MÍ</a></li>
+          <li><a href="#/blog" style={{ color: currentView === 'blog' ? '#D4AF37' : 'rgba(255,255,255,0.5)', textDecoration: 'none', fontWeight: currentView === 'blog' ? 700 : 400 }} onClick={() => sound.playTick()}>BLOG</a></li>
+          <li><a href="#/encargos" style={{ color: currentView === 'encargos' ? '#D4AF37' : 'rgba(255,255,255,0.5)', textDecoration: 'none', fontWeight: currentView === 'encargos' ? 700 : 400 }} onClick={() => sound.playTick()}>CONTACTO</a></li>
         </ul>
       </div>
       
@@ -59,16 +62,19 @@ export function NavigationPill({ currentView, audioActive, toggleAudio }: Naviga
         onClick={toggleAudio}
         title={audioActive ? 'Silenciar' : 'Activar sonido'}
         style={{
-          background: 'none',
-          border: 'none',
-          color: audioActive ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.3)',
+          background: audioActive ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.05)',
+          border: '1px solid ' + (audioActive ? 'rgba(212,175,55,0.4)' : 'rgba(255,255,255,0.1)'),
+          color: audioActive ? '#D4AF37' : 'rgba(255,255,255,0.4)',
           fontFamily: 'var(--font-mono)',
           fontSize: '0.7rem',
+          padding: '6px 14px',
+          borderRadius: '20px',
           cursor: 'pointer',
-          letterSpacing: '0.1em'
+          letterSpacing: '0.1em',
+          transition: 'all 0.3s ease'
         }}
       >
-        [ {audioActive ? 'AUDIO ON' : 'AUDIO OFF'} ]
+        🔊 {audioActive ? 'AUDIO ON' : 'AUDIO OFF'}
       </button>
     </motion.nav>
   )

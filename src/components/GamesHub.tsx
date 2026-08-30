@@ -20,11 +20,9 @@ const ALL_GAMES: GameDef[] = [
   { id: 'memory', title: 'Memory Artístico', category: 'LÓGICA', icon: '🧠', desc: 'Encuentra las parejas de lienzos e iconos de Naroa.', badge: 'JUGABLE AHORA', playable: true },
   { id: 'quiz', title: 'Quiz Hiperrealista', category: 'TRIVIA', icon: '⚡', desc: 'Demuestra cuánto sabes sobre las obras y materiales de Naroa.', badge: 'JUGABLE AHORA', playable: true },
   { id: 'tetris', title: 'Tetris de Lienzos', category: 'ARCADE', icon: '🕹️', desc: 'Encaja los bloques formados por texturas de acrílico.', badge: 'SALA ARCADE' },
-  { id: 'snake', title: 'Snake del Arte', category: 'CLÁSICO', icon: '🐍', desc: 'Guía la serpiente para recoger pigmentos y mica mineral.', badge: 'SALA ARCADE' },
-  { id: 'breakout', title: 'Breakout Pizarra', category: 'ARCADE', icon: '🧱', desc: 'Rompe los bloques de piedra con la bola de cristal.', badge: 'SALA ARCADE' },
-  { id: 'oca', title: 'Juego de la Oca', category: 'TABLERO', icon: '🎲', desc: 'Recorre las casillas descubriendo el catálogo de 40+ obras.', badge: 'SALA ARCADE' },
-  { id: 'collage', title: 'Collage Alquímico', category: 'CREATIVO', icon: '🎨', desc: 'Combina fragmentos de obras, marcos y sobres de azúcar.', badge: 'SALA ARCADE' },
-  { id: 'color_match', title: 'Color Match Pop', category: 'VELOCIDAD', icon: '🌈', desc: 'Identifica la paleta exacta usada en cada retrato.', badge: 'SALA ARCADE' },
+  { id: 'snake', title: 'Snake del Arte', category: 'CLÁSICO', icon: '🐍', desc: 'Guía la serpiente para recoger pigmentos y mica mineral.', badge: 'JUGABLE AHORA', playable: true },
+  { id: 'breakout', title: 'Breakout Pizarra', category: 'ARCADE', icon: '🧱', desc: 'Rompe los bloques de piedra con la bola de cristal.', badge: 'JUGABLE AHORA', playable: true },
+  { id: 'color_match', title: 'Color Match Pop', category: 'VELOCIDAD', icon: '🌈', desc: 'Identifica la paleta exacta usada en cada retrato.', badge: 'JUGABLE AHORA', playable: true },
   { id: 'sound_matrix', title: 'Matriz Sonora Soul', category: 'AUDIO', icon: '🎵', desc: 'Toca las notas que acompañan a la serie Tributos Musicales.', badge: 'SALA ARCADE' },
   { id: 'spot_difference', title: 'Siete Diferencias', category: 'OBSERVACIÓN', icon: '🔍', desc: 'Compara dos versiones del retrato de Amy Winehouse.', badge: 'SALA ARCADE' },
   { id: 'brush_frenzy', title: 'Pincelada Rápida', category: 'REFLEJOS', icon: '🖌️', desc: 'Aplica capas de barniz antes de que venza el temporizador.', badge: 'SALA ARCADE' },
@@ -312,6 +310,196 @@ function SlidingPuzzleGame() {
   )
 }
 
+// ── MINI-JUEGO 4: COLOR MATCH POP ────────────────────────────
+function ColorMatchGame() {
+  const PALETTES = [
+    { name: 'Mica Gold (Amy Winehouse)', color: '#D4AF37', options: ['#D4AF37', '#2B3BE5', '#E63946', '#2A9D8F'] },
+    { name: 'Pop Cobalt (Johnny Depp)', color: '#2B3BE5', options: ['#9B5DE5', '#2B3BE5', '#F4A261', '#E76F51'] },
+    { name: 'Pan de Oro (DiviNos Marilyn)', color: '#FFD700', options: ['#C0C0C0', '#FFD700', '#CD7F32', '#B8860B'] },
+    { name: 'Slate Dark (Pizarra Natural)', color: '#1B1B22', options: ['#1B1B22', '#333340', '#050508', '#4A4A5A'] },
+    { name: 'Crimson Pop (Marilyn Rocks)', color: '#E63946', options: ['#F72585', '#7209B7', '#E63946', '#480CA8'] },
+  ]
+
+  const [currentIdx, setCurrentIdx] = useState(0)
+  const [score, setScore] = useState(0)
+  const [streak, setStreak] = useState(0)
+
+  const handlePick = (opt: string) => {
+    if (opt === PALETTES[currentIdx].color) {
+      setScore(s => s + 150)
+      setStreak(st => st + 1)
+      sound.playGoldSparkle()
+    } else {
+      setStreak(0)
+      sound.playTick()
+    }
+    setCurrentIdx(idx => (idx + 1) % PALETTES.length)
+  }
+
+  const current = PALETTES[currentIdx]
+
+  return (
+    <div style={{ textAlign: 'center', margin: '16px auto', maxWidth: '420px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.85rem' }}>
+        <span>PUNTOS: <strong>{score}</strong></span>
+        <span>RACHA: <strong>{streak} 🔥</strong></span>
+      </div>
+
+      <div className="brutal-card" style={{ padding: '24px', background: '#0a0a0f', border: '3px solid #D4AF37' }}>
+        <h3 style={{ fontFamily: 'var(--font-sans)', fontSize: '1.1rem', marginBottom: '12px' }}>
+          Identifica la paleta: <span style={{ color: '#D4AF37' }}>{current.name}</span>
+        </h3>
+
+        <div
+          style={{
+            width: '100px',
+            height: '100px',
+            margin: '0 auto 20px',
+            borderRadius: '50%',
+            backgroundColor: current.color,
+            boxShadow: `0 0 30px ${current.color}`,
+            border: '3px solid #fff'
+          }}
+        />
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+          {current.options.map((opt, i) => (
+            <button
+              key={i}
+              className="brutal-btn"
+              onClick={() => handlePick(opt)}
+              style={{
+                backgroundColor: opt,
+                color: opt === '#1B1B22' || opt === '#050508' ? '#fff' : '#000',
+                fontWeight: 'bold',
+                padding: '14px',
+                border: '2px solid rgba(255,255,255,0.4)',
+                borderRadius: '8px',
+                cursor: 'pointer'
+              }}
+            >
+              {opt}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── MINI-JUEGO 5: SNAKE DEL ARTE ──────────────────────────────
+function SnakeArtGame() {
+  const [snake, setSnake] = useState<[number, number][]>([[5, 5], [4, 5], [3, 5]])
+  const [food, setFood] = useState<[number, number]>([10, 10])
+  const [dir, setDir] = useState<'UP' | 'DOWN' | 'LEFT' | 'RIGHT'>('RIGHT')
+  const [score, setScore] = useState(0)
+  const [gameOver, setGameOver] = useState(false)
+
+  const GRID_SIZE = 14
+
+  useEffect(() => {
+    if (gameOver) return
+    const interval = setInterval(() => {
+      setSnake((prev) => {
+        const head = [...prev[0]] as [number, number]
+        if (dir === 'UP') head[1] -= 1
+        if (dir === 'DOWN') head[1] += 1
+        if (dir === 'LEFT') head[0] -= 1
+        if (dir === 'RIGHT') head[0] += 1
+
+        if (head[0] < 0 || head[0] >= GRID_SIZE || head[1] < 0 || head[1] >= GRID_SIZE) {
+          setGameOver(true)
+          sound.playTick()
+          return prev
+        }
+
+        for (const segment of prev) {
+          if (segment[0] === head[0] && segment[1] === head[1]) {
+            setGameOver(true)
+            sound.playTick()
+            return prev
+          }
+        }
+
+        const newSnake = [head, ...prev]
+        if (head[0] === food[0] && head[1] === food[1]) {
+          setScore((s) => s + 100)
+          sound.playGoldSparkle()
+          setFood([
+            Math.floor(Math.random() * GRID_SIZE),
+            Math.floor(Math.random() * GRID_SIZE),
+          ])
+        } else {
+          newSnake.pop()
+        }
+        return newSnake
+      })
+    }, 160)
+
+    return () => clearInterval(interval)
+  }, [dir, food, gameOver])
+
+  const restart = () => {
+    setSnake([[5, 5], [4, 5], [3, 5]])
+    setFood([10, 10])
+    setDir('RIGHT')
+    setScore(0)
+    setGameOver(false)
+  }
+
+  return (
+    <div style={{ textAlign: 'center', margin: '16px auto', maxWidth: '380px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', fontFamily: 'var(--font-mono)' }}>
+        <span>MICA RECOLECTADA: <strong>{score} PTS</strong></span>
+        <button className="brutal-btn" onClick={restart}>↻ REINICIAR</button>
+      </div>
+
+      {gameOver ? (
+        <div className="victory-banner brutal-card">
+          <h2>💥 ¡FIN DE LA PARTIDA!</h2>
+          <p>Puntuación Final: {score} PTS</p>
+          <button className="brutal-cta-btn brutal-cta-btn--whatsapp" onClick={restart}>
+            VOLVER A INTENTAR
+          </button>
+        </div>
+      ) : (
+        <>
+          <div style={{ display: 'grid', gridTemplateColumns: `repeat(${GRID_SIZE}, 1fr)`, gap: '2px', background: '#111116', padding: '6px', borderRadius: '12px', border: '3px solid #D4AF37' }}>
+            {Array.from({ length: GRID_SIZE * GRID_SIZE }).map((_, i) => {
+              const x = i % GRID_SIZE
+              const y = Math.floor(i / GRID_SIZE)
+              const isSnake = snake.some((s) => s[0] === x && s[1] === y)
+              const isHead = snake[0][0] === x && snake[0][1] === y
+              const isFood = food[0] === x && food[1] === y
+
+              return (
+                <div
+                  key={i}
+                  style={{
+                    aspectRatio: '1/1',
+                    borderRadius: isFood ? '50%' : '3px',
+                    backgroundColor: isHead ? '#D4AF37' : isSnake ? '#2B3BE5' : isFood ? '#FFD700' : '#08080c',
+                    boxShadow: isFood ? '0 0 10px #FFD700' : 'none'
+                  }}
+                />
+              )
+            })}
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px', marginTop: '12px' }}>
+            <div />
+            <button className="brutal-btn" onClick={() => setDir('UP')}>▲</button>
+            <div />
+            <button className="brutal-btn" onClick={() => setDir('LEFT')}>◀</button>
+            <button className="brutal-btn" onClick={() => setDir('DOWN')}>▼</button>
+            <button className="brutal-btn" onClick={() => setDir('RIGHT')}>▶</button>
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
+
 // ── COMPONENTE PRINCIPAL: SALA DE JUEGOS ────────────────────────
 export function GamesHub() {
   const [activeGame, setActiveGame] = useState<string | null>(null)
@@ -528,8 +716,14 @@ export function GamesHub() {
               </div>
             )}
 
+            {/* JUEGO 6: COLOR MATCH */}
+            {activeGame === 'color_match' && <ColorMatchGame />}
+
+            {/* JUEGO 7: SNAKE */}
+            {activeGame === 'snake' && <SnakeArtGame />}
+
             {/* OTROS JUEGOS ARCADE */}
-            {activeGame !== 'scratch' && activeGame !== 'kintsugi' && activeGame !== 'puzzle' && activeGame !== 'memory' && activeGame !== 'quiz' && (
+            {activeGame !== 'scratch' && activeGame !== 'kintsugi' && activeGame !== 'puzzle' && activeGame !== 'memory' && activeGame !== 'quiz' && activeGame !== 'color_match' && activeGame !== 'snake' && (
               <div className="generic-game-preview">
                 <div className="arcade-screen brutal-card">
                   <div className="arcade-text">
