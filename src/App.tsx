@@ -148,6 +148,10 @@ export default function App() {
           <VideogameHUD 
             isStarted={isStarted} 
             onStart={() => setIsStarted(true)} 
+            onExit={() => {
+              setIsStarted(false)
+              if (document.pointerLockElement) document.exitPointerLock()
+            }}
             interactionPrompt={interactionPrompt} 
             playerPos={playerPos}
             playerRotation={playerRotation}

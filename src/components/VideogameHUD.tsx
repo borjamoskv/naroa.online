@@ -3,13 +3,14 @@ import { Minimap } from './Minimap'
 
 interface VideogameHUDProps {
   onStart: () => void;
+  onExit?: () => void;
   isStarted: boolean;
   interactionPrompt: string | null;
   playerPos: { x: number; z: number };
   playerRotation: number;
 }
 
-export function VideogameHUD({ onStart, isStarted, interactionPrompt, playerPos, playerRotation }: VideogameHUDProps) {
+export function VideogameHUD({ onStart, onExit, isStarted, interactionPrompt, playerPos, playerRotation }: VideogameHUDProps) {
   const [glitch, setGlitch] = useState(false)
 
   // Efecto de Glitch aleatorio
@@ -70,11 +71,38 @@ export function VideogameHUD({ onStart, isStarted, interactionPrompt, playerPos,
             border: '2px solid #D4AF37',
             background: 'rgba(212,175,55,0.1)',
             boxShadow: '0 0 20px rgba(212,175,55,0.3) inset',
-            animation: 'pulse 2s infinite'
+            animation: 'pulse 2s infinite',
+            cursor: 'pointer'
           }}
         >
           [ CLICK ] INICIALIZAR SIMULACIÓN
         </button>
+
+        <a
+          href="#/"
+          style={{
+            marginTop: '24px',
+            color: 'rgba(255, 255, 255, 0.5)',
+            textDecoration: 'none',
+            fontFamily: 'monospace',
+            fontSize: '0.85rem',
+            letterSpacing: '0.1em',
+            padding: '8px 18px',
+            border: '1px solid rgba(255, 255, 255, 0.15)',
+            borderRadius: '4px',
+            transition: 'all 0.2s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = '#D4AF37'
+            e.currentTarget.style.borderColor = '#D4AF37'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = 'rgba(255, 255, 255, 0.5)'
+            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)'
+          }}
+        >
+          ← VOLVER AL PORTFOLIO WEB
+        </a>
       </div>
     )
   }
@@ -203,17 +231,36 @@ export function VideogameHUD({ onStart, isStarted, interactionPrompt, playerPos,
 
       {/* Bottom HUD: Controles + Radar Minimap */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', width: '100%' }}>
-        <p style={{ 
-          color: 'rgba(255,255,255,0.4)', 
-          fontFamily: 'monospace', 
-          fontSize: '0.85rem',
-          background: 'rgba(0,0,0,0.6)',
-          padding: '6px 16px',
-          borderRadius: '4px',
-          border: '1px solid rgba(255,255,255,0.1)'
-        }}>
-          [ESC] DESCONECTAR SIMULADOR
-        </p>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <button
+            onClick={() => {
+              if (onExit) onExit()
+              else if (document.pointerLockElement) document.exitPointerLock()
+            }}
+            style={{ 
+              color: 'rgba(255,255,255,0.7)', 
+              fontFamily: 'monospace', 
+              fontSize: '0.85rem',
+              background: 'rgba(0,0,0,0.6)',
+              padding: '6px 16px',
+              borderRadius: '4px',
+              border: '1px solid rgba(255,255,255,0.2)',
+              cursor: 'pointer',
+              pointerEvents: 'auto',
+              transition: 'all 0.2s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = '#D4AF37'
+              e.currentTarget.style.borderColor = '#D4AF37'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = 'rgba(255,255,255,0.7)'
+              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)'
+            }}
+          >
+            [ESC / CLICK] SALIR DEL SIMULADOR
+          </button>
+        </div>
 
         {/* Minimapa Radar (Bottom-Right) */}
         <Minimap playerPos={playerPos} playerRotation={playerRotation} />
