@@ -39,6 +39,7 @@ mkdir -p "$BUILD_DIR"
 
 # ── 3. Construir y copiar Galería 3D / SPA (dist/) ──────────
 log "Construyendo SPA (Vite + React + Three.js)..."
+export NODE_ENV=production
 npm run build || fail "Build de Vite falló"
 ok "Galería 3D compilada → dist/"
 
@@ -55,6 +56,7 @@ cat > "$BUILD_DIR/_headers" << 'EOF'
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 
 /
   Cache-Control: no-cache, no-store, must-revalidate, max-age=0

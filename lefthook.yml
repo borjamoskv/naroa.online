@@ -5,4 +5,4 @@ pre-commit:
     secrets:
       glob: "*"
       run: detect-secrets-hook --baseline .secrets.baseline {staged_files}
-      fallback: echo "ALERTA: detect-secrets no instalado. Previniendo fuga entrópica por defecto."
+      fallback: echo "ALERTA CRÍTICA: detect-secrets no instalado. Abortando commit para prevenir fuga entrópica." && exit 1

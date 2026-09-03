@@ -15,7 +15,7 @@ interface FirstPersonControllerProps {
 
 export function FirstPersonController({ onPlayerMove }: FirstPersonControllerProps) {
   const { forward, backward, left, right, sprint } = usePlayerControls()
-  const { camera } = useThree()
+  const three = useThree()
   
   const velocity = useRef(new THREE.Vector3())
   const direction = useRef(new THREE.Vector3())
@@ -25,10 +25,11 @@ export function FirstPersonController({ onPlayerMove }: FirstPersonControllerPro
 
   useEffect(() => {
     // Configuración inicial de la cámara
-    camera.position.set(0, 1.7, 5) // Altura promedio del jugador
-  }, [camera])
+    three.camera.position.set(0, 1.7, 5) // Altura promedio del jugador
+  }, [three.camera])
 
-  useFrame((_, delta) => {
+  useFrame((state, delta) => {
+    const camera = state.camera
     // 1. Aplicar fricción / inercia a la velocidad actual
     velocity.current.x -= velocity.current.x * DAMPING * delta
     velocity.current.z -= velocity.current.z * DAMPING * delta

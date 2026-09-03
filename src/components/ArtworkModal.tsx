@@ -14,11 +14,17 @@ interface ArtworkModalProps {
 export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: ArtworkModalProps) {
   const touchStartX = useRef<number | null>(null)
   const [showSplat, setShowSplat] = useState(false)
+  const [prevArtworkId, setPrevArtworkId] = useState<number | null>(null)
+
+  // Reset showSplat during render if artwork changes
+  if (artwork && artwork.id !== prevArtworkId) {
+    setPrevArtworkId(artwork.id)
+    setShowSplat(false)
+  }
 
   useEffect(() => {
     if (artwork) {
       sound.playOpen()
-      setShowSplat(false)
     }
   }, [artwork])
 

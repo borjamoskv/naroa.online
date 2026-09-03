@@ -5,7 +5,7 @@ import { ArtworkModal } from './components/ArtworkModal'
 
 import { sound } from './utils/audio'
 
-// Componentes estáticos
+import { ErrorBoundary } from './components/ErrorBoundary'
 import { NavigationPill } from './components/NavigationPill'
 import { HomeHero } from './components/HomeHero'
 import { PremiumFooter } from './components/PremiumFooter'
@@ -38,16 +38,18 @@ export default function App() {
   
   // Estados del Videojuego FPS
   const [isStarted, setIsStarted] = useState(false)
+  const [prevView, setPrevView] = useState(currentView)
   const [interactionPrompt, setInteractionPrompt] = useState<string | null>(null)
   const [playerPos, setPlayerPos] = useState({ x: 0, z: 0 })
   const [playerRotation, setPlayerRotation] = useState(0)
 
   // Desactivar isStarted si salimos de la vista 3D
-  useEffect(() => {
-    if (currentView !== '3d') {
+  if (currentView !== prevView) {
+    setPrevView(currentView)
+    if (currentView !== '3d' && isStarted) {
       setIsStarted(false)
     }
-  }, [currentView])
+  }
 
   // Ultrathink Deferred WebGL Mounting: 
   useEffect(() => {
@@ -134,9 +136,11 @@ export default function App() {
 
         {currentView === 'destacada' && (
           <div className="view-container" style={{ pointerEvents: 'auto' }}>
-            <Suspense fallback={<Loader />}>
-              <GalleryGrid onInspect={handleInspect} />
-            </Suspense>
+            <ErrorBoundary name="Galería Destacada">
+              <Suspense fallback={<Loader />}>
+                <GalleryGrid onInspect={handleInspect} />
+              </Suspense>
+            </ErrorBoundary>
           </div>
         )}
 
@@ -152,25 +156,31 @@ export default function App() {
 
         {currentView === 'encargos' && (
           <div className="view-container" style={{ pointerEvents: 'auto' }}>
-            <Suspense fallback={<Loader />}>
-              <CommissionCalculator />
-            </Suspense>
+            <ErrorBoundary name="Calculadora de Encargos">
+              <Suspense fallback={<Loader />}>
+                <CommissionCalculator />
+              </Suspense>
+            </ErrorBoundary>
           </div>
         )}
 
         {currentView === 'juegos' && (
           <div className="view-container" style={{ pointerEvents: 'auto' }}>
-            <Suspense fallback={<Loader />}>
-              <GamesHub />
-            </Suspense>
+            <ErrorBoundary name="Centro de Juegos">
+              <Suspense fallback={<Loader />}>
+                <GamesHub />
+              </Suspense>
+            </ErrorBoundary>
           </div>
         )}
 
         {currentView === 'blog' && (
           <div className="view-container" style={{ pointerEvents: 'auto' }}>
-            <Suspense fallback={<Loader />}>
-              <BlogSection />
-            </Suspense>
+            <ErrorBoundary name="Blog / Manifiesto">
+              <Suspense fallback={<Loader />}>
+                <BlogSection />
+              </Suspense>
+            </ErrorBoundary>
           </div>
         )}
 
@@ -224,27 +234,29 @@ export default function App() {
 
       {/* Escena 3D - FPS Game Engine */}
       {isWebGLMounted && (
-        <Suspense fallback={null}>
-          <div style={{ 
-            position: 'absolute', 
-            inset: 0, 
-            zIndex: 1,
-            opacity: isSceneActive ? 1 : 0, 
-            pointerEvents: isSceneActive ? 'auto' : 'none',
-            transition: 'opacity 0.5s ease-in-out'
-          }}>
-            <Scene
-              onInspectArtwork={handleInspect}
-              active={isSceneActive}
-              setInteractionPrompt={setInteractionPrompt}
-              isStarted={isStarted}
-              onPlayerMove={(pos, rot) => {
-                setPlayerPos(pos)
-                setPlayerRotation(rot)
-              }}
-            />
-          </div>
-        </Suspense>
+        <ErrorBoundary name="Galería 3D (Three.js WebGL)">
+          <Suspense fallback={null}>
+            <div style={{ 
+              position: 'absolute', 
+              inset: 0, 
+              zIndex: 1,
+              opacity: isSceneActive ? 1 : 0, 
+              pointerEvents: isSceneActive ? 'auto' : 'none',
+              transition: 'opacity 0.5s ease-in-out'
+            }}>
+              <Scene
+                onInspectArtwork={handleInspect}
+                active={isSceneActive}
+                setInteractionPrompt={setInteractionPrompt}
+                isStarted={isStarted}
+                onPlayerMove={(pos, rot) => {
+                  setPlayerPos(pos)
+                  setPlayerRotation(rot)
+                }}
+              />
+            </div>
+          </Suspense>
+        </ErrorBoundary>
       )}
 
       <ArtworkModal

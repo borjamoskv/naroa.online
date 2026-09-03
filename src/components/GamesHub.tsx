@@ -223,26 +223,26 @@ function KintsugiGame() {
   )
 }
 
+function createShuffledTiles() {
+  const arr = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[arr[i], arr[j]] = [arr[j], arr[i]]
+  }
+  return arr
+}
+
 // ── MINI-JUEGO 3: PUZZLE DESLIZANTE ────────────────────────────
 function SlidingPuzzleGame() {
-  const [tiles, setTiles] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8])
+  const [tiles, setTiles] = useState(createShuffledTiles)
   const [moves, setMoves] = useState(0)
   const [won, setWon] = useState(false)
 
   const shuffle = () => {
-    const arr = [0, 1, 2, 3, 4, 5, 6, 7, 8]
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1))
-      ;[arr[i], arr[j]] = [arr[j], arr[i]]
-    }
-    setTiles(arr)
+    setTiles(createShuffledTiles())
     setMoves(0)
     setWon(false)
   }
-
-  useEffect(() => {
-    shuffle()
-  }, [])
 
   const moveTile = (index: number) => {
     const emptyIndex = tiles.indexOf(8)
