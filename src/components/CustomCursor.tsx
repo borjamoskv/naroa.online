@@ -6,6 +6,11 @@ export function CustomCursor() {
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
+    // Only enable on desktop / fine pointers (no touch screens)
+    if (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches) {
+      return
+    }
+
     const handleMouseMove = (e: MouseEvent) => {
       setPosition({ x: e.clientX, y: e.clientY })
       if (!isVisible) setIsVisible(true)
