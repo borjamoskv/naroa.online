@@ -1566,5 +1566,14 @@ a:focus:not(:focus-visible) {
     grid-column: span 1;
     grid-row: span 1;
   }
+  .desktop-only {
+    display: none !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-only {
+    display: none !important;
+  }
 }
 

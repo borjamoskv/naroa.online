@@ -9,8 +9,8 @@ interface NavigationPillProps {
 }
 
 const NAV_ITEMS = [
-  { view: 'home', label: 'INICIO', href: '#/' },
-  { view: 'coleccion', label: 'COLECCIÓN', href: '#/coleccion' },
+  { view: 'home', label: 'EXPOSICIÓN', href: '#/' },
+  { view: 'coleccion', label: 'CATÁLOGO', href: '#/coleccion' },
   { view: '3d', label: 'ESPACIO 3D', href: '#/3d' },
   { view: 'artista', label: 'ARTISTA', href: '#/artista' },
   { view: 'atelier', label: 'ATELIER', href: '#/atelier' },

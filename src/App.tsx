@@ -5,7 +5,7 @@ import { ArtworkModal } from './components/ArtworkModal'
 import { sound } from './utils/audio'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { NavigationPill } from './components/NavigationPill'
-import { HomeHero } from './components/HomeHero'
+import { ImmersiveExhibition } from './components/ImmersiveExhibition'
 import { PremiumFooter } from './components/PremiumFooter'
 import { VideogameHUD } from './components/VideogameHUD'
 import { CustomCursor } from './components/CustomCursor'
@@ -184,8 +184,8 @@ export default function App() {
 
       {/* Contenido Principal de Exposición */}
       <main className="main-content">
-        {/* ACT I: EL MONOLITO (Hero Monumental) */}
-        {currentView === 'home' && <HomeHero onInspectArtwork={handleInspect} />}
+        {/* ACT I: EXPOSICIÓN CINEMÁTICA MONUMENTAL */}
+        {currentView === 'home' && <ImmersiveExhibition onInspectArtwork={handleInspect} />}
 
         {/* ACT II: LA COLECCIÓN (Exposición de Alta Definición) */}
         {currentView === 'coleccion' && (
@@ -413,8 +413,8 @@ export default function App() {
         )}
       </main>
 
-      {/* Footer minimalista de estudio */}
-      {!is3DActive && currentView !== '3d' && <PremiumFooter />}
+      {/* Footer minimalista de estudio (solo en vistas de scroll) */}
+      {!is3DActive && currentView !== '3d' && currentView !== 'home' && <PremiumFooter />}
 
       {/* Escena 3D - Pabellón Arquitectónico (Three.js WebGL) */}
       {isWebGLMounted && (
