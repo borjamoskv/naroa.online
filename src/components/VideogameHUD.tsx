@@ -13,6 +13,8 @@ interface VideogameHUDProps {
 export function VideogameHUD({ onStart, onExit, isStarted, interactionPrompt, playerPos, playerRotation }: VideogameHUDProps) {
   const [glitch, setGlitch] = useState(false)
 
+  const isTouchDevice = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0)
+
   // Efecto de Glitch aleatorio
   useEffect(() => {
     if (!isStarted) return
@@ -32,45 +34,49 @@ export function VideogameHUD({ onStart, onExit, isStarted, interactionPrompt, pl
           position: 'absolute',
           inset: 0,
           zIndex: 100,
-          backgroundColor: 'rgba(0, 0, 0, 0.9)',
+          backgroundColor: 'rgba(0, 0, 0, 0.92)',
           backgroundImage: 'radial-gradient(circle at center, rgba(43,59,229,0.2) 0%, transparent 70%)',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
           color: 'white',
-          pointerEvents: 'auto'
+          pointerEvents: 'auto',
+          padding: '20px',
+          textAlign: 'center'
         }}
       >
         <div style={{ position: 'relative' }}>
           <h1 style={{ 
-            fontSize: '4rem', 
-            letterSpacing: '0.3em', 
-            marginBottom: '1rem', 
+            fontSize: 'clamp(2.5rem, 8vw, 4.5rem)', 
+            letterSpacing: '0.25em', 
+            marginBottom: '0.8rem', 
             textShadow: '0 0 30px #2B3BE5, 0 0 10px #D4AF37',
             fontFamily: 'monospace',
             fontWeight: 900
           }}>
             N A R O A <span style={{ color: '#D4AF37' }}>/</span> O S
           </h1>
-          <div style={{ position: 'absolute', top: -10, right: -20, background: '#D4AF37', color: 'black', padding: '2px 8px', fontSize: '0.8rem', fontWeight: 'bold' }}>
-            v1.0.0 (ULTRATHINK)
+          <div style={{ position: 'absolute', top: -10, right: -15, background: '#D4AF37', color: 'black', padding: '2px 8px', fontSize: '0.75rem', fontWeight: 'bold' }}>
+            v1.2.0 (HIGH-EXERGY)
           </div>
         </div>
         
-        <p style={{ fontSize: '1.2rem', marginBottom: '3rem', opacity: 0.7, letterSpacing: '0.2em', fontFamily: 'monospace' }}>
-          [W A S D] MOVER • [RATÓN] CÁMARA • [E] INSPECCIONAR
+        <p style={{ fontSize: 'clamp(0.9rem, 3vw, 1.2rem)', marginBottom: '2.5rem', opacity: 0.8, letterSpacing: '0.15em', fontFamily: 'monospace', maxWidth: '600px' }}>
+          {isTouchDevice 
+            ? '📱 [DISPOSITIVO TÁCTIL] TOCA ENTRAR PARA NAVEGAR EL MUSEO VIRTUAL' 
+            : '[W A S D] MOVER • [RATÓN] CÁMARA • [E / CLICK] INSPECCIONAR'}
         </p>
         
         <button 
           onClick={onStart}
           className="premium-btn premium-btn--primary"
           style={{ 
-            fontSize: '1.5rem', 
-            padding: '1.5rem 4rem',
+            fontSize: 'clamp(1.1rem, 3.5vw, 1.5rem)', 
+            padding: '1.2rem 3rem',
             border: '2px solid #D4AF37',
-            background: 'rgba(212,175,55,0.1)',
-            boxShadow: '0 0 20px rgba(212,175,55,0.3) inset',
+            background: 'rgba(212,175,55,0.15)',
+            boxShadow: '0 0 25px rgba(212,175,55,0.3) inset',
             animation: 'pulse 2s infinite',
             cursor: 'pointer'
           }}
@@ -126,11 +132,11 @@ export function VideogameHUD({ onStart, onExit, isStarted, interactionPrompt, pl
       }}
     >
       {/* Top HUD */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
         <div style={{ 
           background: 'rgba(0,0,0,0.7)', 
           borderLeft: '4px solid #D4AF37', 
-          padding: '15px 25px',
+          padding: '12px 20px',
           color: '#D4AF37',
           fontFamily: 'monospace',
           backdropFilter: 'blur(8px)',
@@ -139,21 +145,52 @@ export function VideogameHUD({ onStart, onExit, isStarted, interactionPrompt, pl
           transform: glitch ? 'translateX(5px)' : 'translateX(0)',
           transition: 'transform 0.1s'
         }}>
-          <div style={{ fontSize: '0.8rem', opacity: 0.7 }}>Nivel de Exergía</div>
-          <div style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>MAX_CAPACITY</div>
+          <div style={{ fontSize: '0.75rem', opacity: 0.7 }}>Nivel de Exergía</div>
+          <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>MAX_CAPACITY</div>
         </div>
+
+        <button
+          onClick={() => {
+            if (onExit) onExit()
+            else if (document.pointerLockElement) document.exitPointerLock()
+          }}
+          style={{
+            pointerEvents: 'auto',
+            background: 'rgba(212,175,55,0.2)',
+            border: '1px solid #D4AF37',
+            color: '#D4AF37',
+            fontFamily: 'monospace',
+            fontSize: '0.85rem',
+            fontWeight: 700,
+            padding: '10px 20px',
+            borderRadius: '6px',
+            cursor: 'pointer',
+            boxShadow: '0 0 15px rgba(212,175,55,0.3)',
+            transition: 'all 0.2s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = '#D4AF37'
+            e.currentTarget.style.color = '#000000'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'rgba(212,175,55,0.2)'
+            e.currentTarget.style.color = '#D4AF37'
+          }}
+        >
+          ✕ SALIR AL MENÚ
+        </button>
         
         <div style={{ 
           background: 'rgba(0,0,0,0.7)', 
           borderRight: '4px solid #2B3BE5', 
-          padding: '15px 25px',
+          padding: '12px 20px',
           color: '#2B3BE5',
           fontFamily: 'monospace',
           backdropFilter: 'blur(8px)',
           textAlign: 'right'
         }}>
-          <div style={{ fontSize: '0.8rem', opacity: 0.7 }}>Protocolo Activo</div>
-          <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>ULTRATHINK Ω</div>
+          <div style={{ fontSize: '0.75rem', opacity: 0.7 }}>Protocolo Activo</div>
+          <div style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>ULTRATHINK Ω</div>
         </div>
       </div>
 

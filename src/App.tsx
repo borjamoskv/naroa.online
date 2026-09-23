@@ -1,6 +1,6 @@
 import { Suspense, lazy, useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { ARTWORKS, PORTAL, type Artwork } from './artworks'
+import { ARTWORKS, type Artwork } from './artworks'
 import { ArtworkModal } from './components/ArtworkModal'
 
 import { sound } from './utils/audio'
@@ -18,6 +18,18 @@ const CommissionCalculator = lazy(() => import('./components/CommissionCalculato
 const GamesHub = lazy(() => import('./components/GamesHub').then(module => ({ default: module.GamesHub })))
 const BlogSection = lazy(() => import('./components/BlogSection').then(module => ({ default: module.BlogSection })))
 
+type ViewMode = 'home' | '3d' | 'destacada' | 'encargos' | 'juegos' | 'about' | 'blog'
+
+const getViewFromHash = (hash: string): ViewMode => {
+  if (hash === '#/destacada' || hash === '#/galeria' || hash === '#/archivo') return 'destacada'
+  if (hash === '#/encargos' || hash === '#/contacto') return 'encargos'
+  if (hash === '#/juegos') return 'juegos'
+  if (hash === '#/blog') return 'blog'
+  if (hash === '#/sobre-mi' || hash === '#/about') return 'about'
+  if (hash === '#/3d') return '3d'
+  return 'home'
+}
+
 const toSlug = (s: string) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
 
 function Loader() {
@@ -30,9 +42,20 @@ function Loader() {
 }
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<'home' | '3d' | 'destacada' | 'encargos' | 'juegos' | 'about' | 'blog'>('3d')
+  const [currentView, setCurrentView] = useState<ViewMode>(() => {
+    if (typeof window !== 'undefined') {
+      return getViewFromHash(window.location.hash)
+    }
+    return 'home'
+  })
 
-  const [modalArtwork, setModalArtwork] = useState<Artwork | null>(null)
+  const [modalArtwork, setModalArtwork] = useState<Artwork | null>(() => {
+    if (typeof window !== 'undefined' && window.location.hash.startsWith('#obra-')) {
+      const slug = window.location.hash.replace('#obra-', '')
+      return ARTWORKS.find(a => toSlug(a.title) === slug || a.slug === slug) || null
+    }
+    return null
+  })
   const [audioActive, setAudioActive] = useState<boolean>(sound.isEnabled())
   const [isWebGLMounted, setIsWebGLMounted] = useState(false)
   
@@ -53,7 +76,7 @@ export default function App() {
 
   // Ultrathink Deferred WebGL Mounting: 
   useEffect(() => {
-    const timer = setTimeout(() => setIsWebGLMounted(true), 800)
+    const timer = setTimeout(() => setIsWebGLMounted(true), 600)
     return () => clearTimeout(timer)
   }, [])
 
@@ -61,28 +84,16 @@ export default function App() {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash
-      if (hash === '#/destacada' || hash === '#/galeria' || hash === '#/archivo') {
-        setCurrentView('destacada')
-      } else if (hash === '#/encargos' || hash === '#/contacto') {
-        setCurrentView('encargos')
-      } else if (hash === '#/juegos') {
-        setCurrentView('juegos')
-      } else if (hash === '#/blog') {
-        setCurrentView('blog')
-      } else if (hash === '#/sobre-mi' || hash === '#/about') {
-        setCurrentView('about')
-      } else if (hash === '#/3d') {
-        setCurrentView('3d')
-      } else if (hash.startsWith('#obra-')) {
+      if (hash.startsWith('#obra-')) {
         const slug = hash.replace('#obra-', '')
         const match = ARTWORKS.find(a => toSlug(a.title) === slug || a.slug === slug)
         if (match) setModalArtwork(match)
       } else {
-        setCurrentView('home')
+        const nextView = getViewFromHash(hash)
+        setCurrentView(nextView)
       }
     }
 
-    handleHashChange()
     window.addEventListener('hashchange', handleHashChange)
     return () => window.removeEventListener('hashchange', handleHashChange)
   }, [])
@@ -108,7 +119,7 @@ export default function App() {
     setAudioActive(newState)
   }
 
-  const isSceneActive = currentView === '3d' || currentView === 'destacada'
+  const isSceneActive = currentView === '3d'
 
   // Escuchar cuando el usuario presiona ESC para salir del PointerLock
   useEffect(() => {
@@ -217,11 +228,14 @@ export default function App() {
                   Cada retrato que pinto tiene la edad de quien lo mira.
                 </p>
                 <div className="about-links" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  <a href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer" className="premium-btn premium-btn--primary">
-                    📘 FACEBOOK ARTISTA (12K+ SEGUIDORES) ↗
+                  <a href="https://instagram.com/naroagutierrezgil" target="_blank" rel="noopener noreferrer" className="premium-btn premium-btn--primary">
+                    📸 INSTAGRAM OFICIAL (@naroagutierrezgil) ↗
                   </a>
-                  <a href={PORTAL} target="_blank" rel="noopener noreferrer" className="premium-btn">
-                    🌐 PORTAL OFICIAL: NAROAGUTIERREZGIL.COM ↗
+                  <a href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer" className="premium-btn">
+                    📘 COMUNIDAD FACEBOOK (12K+ SEGUIDORES) ↗
+                  </a>
+                  <a href="#/encargos" onClick={() => sound.playTick()} className="premium-btn" style={{ border: '1px solid #D4AF37', color: '#D4AF37' }}>
+                    ⚡ ENCARGAR RETRATO PERSONALIZADO ↗
                   </a>
                 </div>
               </motion.div>

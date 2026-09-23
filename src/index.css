@@ -739,6 +739,15 @@ a:focus:not(:focus-visible) {
 }
 
 @media (max-width: 860px) {
+  .nav-desktop-links {
+    display: none !important;
+  }
+  .nav-mobile-toggle {
+    display: block !important;
+  }
+  .audio-btn-text {
+    display: none;
+  }
   .modal-body {
     grid-template-columns: 1fr;
   }

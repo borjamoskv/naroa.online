@@ -15,6 +15,7 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
   const touchStartX = useRef<number | null>(null)
   const [showSplat, setShowSplat] = useState(false)
   const [prevArtworkId, setPrevArtworkId] = useState<number | null>(null)
+  const [copied, setCopied] = useState(false)
 
   // Reset showSplat during render if artwork changes
   if (artwork && artwork.id !== prevArtworkId) {
@@ -91,10 +92,18 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
         // Share cancelled or unavailable
       }
     } else {
-      await navigator.clipboard.writeText(window.location.href)
-      alert('¡Enlace copiado al portapapeles!')
+      try {
+        await navigator.clipboard.writeText(window.location.href)
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2200)
+      } catch {
+        // Clipboard error fallback
+      }
     }
   }
+
+  const queryText = `Hola Naroa! Me interesa conocer la disponibilidad y precio de la obra original "${artwork.title}" (${artwork.year}, ${artwork.medium}). ¿Podemos hablar de los detalles?`
+  const artworkWhatsAppUrl = `https://wa.me/34636060609?text=${encodeURIComponent(queryText)}`
 
   return (
     <AnimatePresence>
@@ -169,6 +178,24 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
                   </button>
                 )}
                 <a
+                  href={artworkWhatsAppUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="modal-cta"
+                  onClick={() => sound.playTick()}
+                  style={{
+                    background: '#25D366',
+                    color: '#000',
+                    fontWeight: 700,
+                    textDecoration: 'none',
+                    border: 'none',
+                    boxShadow: '0 0 15px rgba(37, 211, 102, 0.3)'
+                  }}
+                  title="Consultar precio y disponibilidad de la obra original en WhatsApp"
+                >
+                  💬 CONSULTAR DISPONIBILIDAD ↗
+                </a>
+                <a
                   href="#/encargos"
                   className="modal-cta brutal-cta-btn--whatsapp"
                   onClick={() => {
@@ -179,23 +206,19 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
                 >
                   ⚡ ENCARGAR EN ESTE ESTILO
                 </a>
-                <a
-                  href={artwork.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="modal-cta"
-                  onClick={() => sound.playTick()}
-                >
-                  PORTAL OFICIAL ↗
-                </a>
                 <button
                   type="button"
                   className="modal-cta"
                   onClick={handleShare}
-                  style={{ background: 'rgba(255, 255, 255, 0.08)', border: '1px solid rgba(255, 255, 255, 0.2)' }}
+                  style={{
+                    background: copied ? 'rgba(212, 175, 55, 0.25)' : 'rgba(255, 255, 255, 0.08)',
+                    border: copied ? '1px solid #D4AF37' : '1px solid rgba(255, 255, 255, 0.2)',
+                    color: copied ? '#D4AF37' : '#FFFFFF',
+                    transition: 'all 0.2s ease'
+                  }}
                   title="Compartir enlace de la obra"
                 >
-                  COMPARTIR ⎘
+                  {copied ? '✓ ¡ENLACE COPIADO!' : 'COMPARTIR ⎘'}
                 </button>
               </div>
 

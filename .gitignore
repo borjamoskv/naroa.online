@@ -41,3 +41,4 @@ assets-src/
 # Added by Antigravity C5-REAL Audit
 *.pem
 *.key
+.env*
