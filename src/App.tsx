@@ -104,6 +104,30 @@ export default function App() {
     setAudioActive(newState)
   }
 
+  // Atajos de teclado globales de alta gama (I: Índice, A: Artista, S: Sonido, 3: 3D)
+  useEffect(() => {
+    const handleGlobalKeys = (e: KeyboardEvent) => {
+      if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) return
+
+      if (e.key === 'i' || e.key === 'I') {
+        setIsIndexOpen((prev) => !prev)
+      } else if (e.key === 'a' || e.key === 'A') {
+        setIsArtistOpen((prev) => !prev)
+      } else if (e.key === 's' || e.key === 'S') {
+        const nextState = sound.toggleSound()
+        setAudioActive(nextState)
+      } else if (e.key === '3') {
+        setActiveMode((prev) => {
+          const next = prev === '3d' ? 'horizon' : '3d'
+          window.location.hash = next === '3d' ? '#/3d' : '#/'
+          return next
+        })
+      }
+    }
+    window.addEventListener('keydown', handleGlobalKeys)
+    return () => window.removeEventListener('keydown', handleGlobalKeys)
+  }, [])
+
   // Liberar puntero al pulsar ESC en modo 3D
   useEffect(() => {
     const handlePointerLockChange = () => {

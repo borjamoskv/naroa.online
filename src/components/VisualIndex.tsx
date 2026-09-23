@@ -117,6 +117,7 @@ export function VisualIndex({ isOpen, onClose, onSelectArtwork }: VisualIndexPro
         {ARTWORKS.map((artwork, idx) => (
           <motion.div
             key={artwork.id}
+            className="visual-index-card"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: Math.min(idx * 0.025, 0.4), ease: [0.16, 1, 0.3, 1] }}
@@ -134,24 +135,34 @@ export function VisualIndex({ isOpen, onClose, onSelectArtwork }: VisualIndexPro
             }}
             whileHover={{ y: -6 }}
           >
-            {/* Contenedor de la Imagen */}
+            {/* Contenedor de la Piedra (Silueta Mineral Flotante, Sin Marcos) */}
             <div
               style={{
                 position: 'relative',
                 width: '100%',
                 aspectRatio: '3/4',
-                background: '#040407',
-                borderRadius: '8px',
-                overflow: 'hidden',
-                border: '1px solid rgba(255, 255, 255, 0.06)',
-                boxShadow: '0 15px 35px rgba(0, 0, 0, 0.85)',
+                background: 'transparent',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: '16px',
+                padding: '8px',
                 boxSizing: 'border-box',
               }}
             >
+              {/* Resplandor Aureo Sutil en Hover */}
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: '10%',
+                  background: 'radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 70%)',
+                  filter: 'blur(30px)',
+                  opacity: 0,
+                  transition: 'opacity 0.3s ease',
+                  pointerEvents: 'none',
+                }}
+                className="hover-glow"
+              />
+
               <img
                 src={artwork.url}
                 alt={artwork.title}
@@ -160,8 +171,8 @@ export function VisualIndex({ isOpen, onClose, onSelectArtwork }: VisualIndexPro
                   maxHeight: '100%',
                   maxWidth: '100%',
                   objectFit: 'contain',
-                  filter: 'drop-shadow(0 15px 25px rgba(0,0,0,0.9))',
-                  transition: 'transform 0.4s ease, filter 0.4s ease',
+                  filter: 'drop-shadow(0 18px 30px rgba(0,0,0,0.92)) drop-shadow(0 6px 12px rgba(0,0,0,0.6))',
+                  transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease',
                 }}
               />
 
@@ -169,8 +180,8 @@ export function VisualIndex({ isOpen, onClose, onSelectArtwork }: VisualIndexPro
               <span
                 style={{
                   position: 'absolute',
-                  top: '12px',
-                  left: '12px',
+                  top: '4px',
+                  left: '4px',
                   fontFamily: 'var(--font-mono, monospace)',
                   fontSize: '0.68rem',
                   letterSpacing: '0.15em',

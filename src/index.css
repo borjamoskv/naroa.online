@@ -40,6 +40,10 @@ body.mode-3d-active {
   display: none;
 }
 
+.visual-index-card:hover .hover-glow {
+  opacity: 1 !important;
+}
+
 * {
   box-sizing: border-box;
 }

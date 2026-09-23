@@ -9,13 +9,16 @@ interface StudioLoupeProps {
   onNavigate: (index: number) => void
 }
 
+const ZOOM_LEVELS = [1.0, 2.5, 4.0] as const
+
 export function StudioLoupe({ artworkIndex, onClose, onNavigate }: StudioLoupeProps) {
-  const [zoomActive, setZoomActive] = useState(true)
+  const [zoomLevelIndex, setZoomLevelIndex] = useState(1) // 2.5x default
   const [lensOrigin, setLensOrigin] = useState({ x: 50, y: 50 })
   const imageContainerRef = useRef<HTMLDivElement>(null)
 
   const isOpen = artworkIndex !== null
   const currentArtwork = isOpen ? ARTWORKS[artworkIndex] : null
+  const currentZoom = ZOOM_LEVELS[zoomLevelIndex]
 
   const handleNext = useCallback(() => {
     if (artworkIndex === null) return
@@ -40,6 +43,10 @@ export function StudioLoupe({ artworkIndex, onClose, onNavigate }: StudioLoupePr
         handleNext()
       } else if (e.key === 'ArrowLeft') {
         handlePrev()
+      } else if (e.key === '+' || e.key === '=') {
+        setZoomLevelIndex((prev) => Math.min(prev + 1, ZOOM_LEVELS.length - 1))
+      } else if (e.key === '-') {
+        setZoomLevelIndex((prev) => Math.max(prev - 1, 0))
       }
     }
     window.addEventListener('keydown', handleKeyDown)
@@ -53,6 +60,15 @@ export function StudioLoupe({ artworkIndex, onClose, onNavigate }: StudioLoupePr
     const x = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100))
     const y = Math.max(0, Math.min(100, ((e.clientY - rect.top) / rect.height) * 100))
     setLensOrigin({ x: Math.round(x), y: Math.round(y) })
+  }
+
+  const handleWheel = (e: React.WheelEvent) => {
+    e.stopPropagation()
+    if (e.deltaY < -20) {
+      setZoomLevelIndex((prev) => Math.min(prev + 1, ZOOM_LEVELS.length - 1))
+    } else if (e.deltaY > 20) {
+      setZoomLevelIndex((prev) => Math.max(prev - 1, 0))
+    }
   }
 
   return (
@@ -92,7 +108,7 @@ export function StudioLoupe({ artworkIndex, onClose, onNavigate }: StudioLoupePr
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
               <span
                 style={{
                   fontFamily: 'var(--font-mono, monospace)',
@@ -105,23 +121,37 @@ export function StudioLoupe({ artworkIndex, onClose, onNavigate }: StudioLoupePr
                 {String(artworkIndex + 1).padStart(2, '0')} / {String(ARTWORKS.length).padStart(2, '0')}
               </span>
               <span style={{ color: 'rgba(255,255,255,0.2)' }}>·</span>
-              <button
-                onClick={() => setZoomActive((prev) => !prev)}
-                style={{
-                  background: zoomActive ? 'rgba(212, 175, 55, 0.15)' : 'transparent',
-                  border: '1px solid ' + (zoomActive ? '#D4AF37' : 'rgba(255, 255, 255, 0.2)'),
-                  color: zoomActive ? '#D4AF37' : 'rgba(255, 255, 255, 0.6)',
-                  fontFamily: 'var(--font-mono, monospace)',
-                  fontSize: '0.7rem',
-                  padding: '4px 12px',
-                  borderRadius: '20px',
-                  cursor: 'pointer',
-                  letterSpacing: '0.12em',
-                  transition: 'all 0.2s ease',
-                }}
-              >
-                {zoomActive ? 'LUPA 2.5× ACTIVA' : 'VISTA GLOBAL'}
-              </button>
+
+              {/* SELECTORES DE ZOOM MACRO */}
+              <div style={{ display: 'flex', gap: '6px' }}>
+                {ZOOM_LEVELS.map((lvl, idx) => {
+                  const isActive = idx === zoomLevelIndex
+                  const labels = ['1.0× GLOBAL', '2.5× MACRO', '4.0× FÓSIL']
+                  return (
+                    <button
+                      key={lvl}
+                      onClick={() => {
+                        sound.playTick()
+                        setZoomLevelIndex(idx)
+                      }}
+                      style={{
+                        background: isActive ? 'rgba(212, 175, 55, 0.18)' : 'transparent',
+                        border: '1px solid ' + (isActive ? '#D4AF37' : 'rgba(255, 255, 255, 0.15)'),
+                        color: isActive ? '#D4AF37' : 'rgba(255, 255, 255, 0.55)',
+                        fontFamily: 'var(--font-mono, monospace)',
+                        fontSize: '0.68rem',
+                        padding: '3px 10px',
+                        borderRadius: '16px',
+                        cursor: 'pointer',
+                        letterSpacing: '0.1em',
+                        transition: 'all 0.2s ease',
+                      }}
+                    >
+                      {labels[idx]}
+                    </button>
+                  )
+                })}
+              </div>
             </div>
 
             {/* BOTÓN CERRAR ESC */}
@@ -228,9 +258,11 @@ export function StudioLoupe({ artworkIndex, onClose, onNavigate }: StudioLoupePr
             <div
               ref={imageContainerRef}
               onMouseMove={handleMouseMove}
+              onWheel={handleWheel}
               onClick={(e) => {
                 e.stopPropagation()
-                setZoomActive((prev) => !prev)
+                sound.playTick()
+                setZoomLevelIndex((prev) => (prev + 1) % ZOOM_LEVELS.length)
               }}
               style={{
                 position: 'relative',
@@ -240,7 +272,7 @@ export function StudioLoupe({ artworkIndex, onClose, onNavigate }: StudioLoupePr
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                cursor: zoomActive ? 'crosshair' : 'zoom-in',
+                cursor: currentZoom > 1 ? 'crosshair' : 'zoom-in',
                 overflow: 'hidden',
               }}
             >
@@ -251,11 +283,11 @@ export function StudioLoupe({ artworkIndex, onClose, onNavigate }: StudioLoupePr
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{
                   opacity: 1,
-                  scale: zoomActive ? 2.5 : 1,
+                  scale: currentZoom,
                   transformOrigin: `${lensOrigin.x}% ${lensOrigin.y}%`,
                 }}
                 transition={{
-                  scale: { duration: 0.3, ease: 'easeOut' },
+                  scale: { duration: 0.35, ease: [0.16, 1, 0.3, 1] },
                   opacity: { duration: 0.4 },
                 }}
                 style={{
@@ -272,7 +304,7 @@ export function StudioLoupe({ artworkIndex, onClose, onNavigate }: StudioLoupePr
                 style={{
                   position: 'absolute',
                   inset: 0,
-                  background: `radial-gradient(circle 260px at ${lensOrigin.x}% ${lensOrigin.y}%, rgba(212, 175, 55, 0.28) 0%, rgba(255, 255, 255, 0.08) 25%, transparent 70%)`,
+                  background: `radial-gradient(circle 280px at ${lensOrigin.x}% ${lensOrigin.y}%, rgba(212, 175, 55, 0.28) 0%, rgba(255, 255, 255, 0.08) 25%, transparent 70%)`,
                   mixBlendMode: 'overlay',
                   pointerEvents: 'none',
                 }}
