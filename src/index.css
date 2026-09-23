@@ -1,14 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@500;600;700&family=Share+Tech+Mono&display=swap');
 
 :root {
-  --bg-color: #020202;
+  --bg-color: #020204;
   --text-color: #FFFFFF;
-  --accent-color: #ffffff;
-  --accent-glow: transparent;
-  --border-color: rgba(255, 255, 255, 0.15);
-  --glass-bg: transparent;
-  --glass-border: rgba(255, 255, 255, 0.12);
-  --font-sans: 'Outfit', sans-serif;
+  --accent-gold: #D4AF37;
+  --accent-gold-light: #F0E6D2;
+  --accent-glow: rgba(212, 175, 55, 0.15);
+  --border-color: rgba(212, 175, 55, 0.18);
+  --glass-bg: rgba(5, 5, 8, 0.85);
+  --glass-border: rgba(212, 175, 55, 0.22);
+  --font-serif: 'Cinzel', 'Cormorant Garamond', Georgia, serif;
+  --font-editorial: 'Cormorant Garamond', Garamond, serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'Share Tech Mono', monospace;
 }
 
@@ -27,6 +30,14 @@ html, body, #root {
 body.mode-3d-active {
   overflow: hidden;
   height: 100vh;
+}
+
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 * {
