@@ -10,6 +10,7 @@ import { NavigationPill } from './components/NavigationPill'
 import { HomeHero } from './components/HomeHero'
 import { PremiumFooter } from './components/PremiumFooter'
 import { VideogameHUD } from './components/VideogameHUD'
+import { CustomCursor } from './components/CustomCursor'
 
 // Vistas con Lazy Loading (Ultrathink Code-Splitting)
 const Scene = lazy(() => import('./components/Scene'))
@@ -134,6 +135,7 @@ export default function App() {
 
   return (
     <>
+      <CustomCursor />
       <div className="ui-layer" style={{ pointerEvents: 'none' }}>
         
         {/* Mostrar Navbar SIEMPRE que NO hayamos iniciado el modo FPS inmersivo */}
