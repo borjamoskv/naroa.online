@@ -170,6 +170,36 @@ export function HomeHero() {
             ENTRAR MUSEO 3D 🕹️
           </a>
           <a
+            href="#/encargos"
+            onClick={() => sound.playTick()}
+            style={{
+              display: 'inline-block',
+              color: '#D4AF37',
+              textDecoration: 'none',
+              fontFamily: 'var(--font-sans)',
+              fontSize: '0.85rem',
+              fontWeight: 700,
+              letterSpacing: '0.1em',
+              padding: '10px 24px',
+              border: '1px solid #D4AF37',
+              borderRadius: '50px',
+              background: 'rgba(212, 175, 55, 0.12)',
+              backdropFilter: 'blur(10px)',
+              boxShadow: '0 0 15px rgba(212, 175, 55, 0.25)',
+              transition: 'all 0.3s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = '#D4AF37'
+              e.currentTarget.style.color = '#000'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(212, 175, 55, 0.12)'
+              e.currentTarget.style.color = '#D4AF37'
+            }}
+          >
+            ENCARGOS A MEDIDA ⚡
+          </a>
+          <a
             href="#/juegos"
             onClick={() => sound.playTick()}
             style={{

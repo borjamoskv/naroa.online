@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
-import { PointerLockControls } from '@react-three/drei'
+import { PointerLockControls, OrbitControls } from '@react-three/drei'
 import * as THREE from 'three'
 import { usePlayerControls } from '../hooks/usePlayerControls'
 import { sound } from '../utils/audio'
@@ -92,6 +92,21 @@ export function FirstPersonController({ onPlayerMove }: FirstPersonControllerPro
     const euler = new THREE.Euler().setFromQuaternion(camera.quaternion, 'YXZ')
     onPlayerMove?.({ x: camera.position.x, z: camera.position.z }, euler.y)
   })
+
+  const isTouchDevice = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0)
+
+  if (isTouchDevice) {
+    return (
+      <OrbitControls
+        enablePan={false}
+        enableZoom={true}
+        minDistance={1.2}
+        maxDistance={9.5}
+        target={[0, 1.7, 0]}
+        rotateSpeed={0.7}
+      />
+    )
+  }
 
   return <PointerLockControls />
 }

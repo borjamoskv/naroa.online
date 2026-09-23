@@ -25,6 +25,7 @@ interface GalleryItemProps {
   reducedMotion: boolean
   isSelected: boolean
   splatUrl?: string
+  onInspect: (index: number) => void
 }
 
 function GalleryItem({
@@ -35,7 +36,8 @@ function GalleryItem({
   rotation,
   reducedMotion,
   isSelected,
-  splatUrl
+  splatUrl,
+  onInspect
 }: GalleryItemProps) {
   const meshRef = useRef<THREE.Mesh>(null)
   const groupRef = useRef<THREE.Group>(null)
@@ -65,7 +67,24 @@ function GalleryItem({
   })
 
   return (
-    <group ref={groupRef} position={position} rotation={rotation} userData={{ isArtwork: true, index }}>
+    <group 
+      ref={groupRef} 
+      position={position} 
+      rotation={rotation} 
+      userData={{ isArtwork: true, index }}
+      onClick={(e) => {
+        e.stopPropagation()
+        sound.playOpen()
+        onInspect(index)
+      }}
+      onPointerOver={(e) => {
+        e.stopPropagation()
+        document.body.style.cursor = 'pointer'
+      }}
+      onPointerOut={() => {
+        document.body.style.cursor = 'default'
+      }}
+    >
       {splatUrl && (
         <Html position={[0, scale[1] / 2 + 0.35, 0.1]} center distanceFactor={8}>
           <div
@@ -262,6 +281,7 @@ export function Gallery({
           index={i}
           isSelected={selectedIndex === i}
           reducedMotion={reducedMotion}
+          onInspect={onInspectArtwork}
           {...item}
         />
       ))}
