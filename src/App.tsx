@@ -200,42 +200,182 @@ export default function App() {
         )}
 
         {currentView === 'about' && (
-          <div className="view-container about-view" style={{ maxWidth: '1000px', margin: '0 auto', paddingTop: '100px', pointerEvents: 'auto' }}>
-            <div className="premium-card about-card" style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: '40px', alignItems: 'center' }}>
-              <motion.img
-                initial={{ opacity: 0, scale: 0.95 }}
+          <div className="view-container about-view" style={{ maxWidth: '960px', margin: '0 auto', paddingTop: '100px', paddingBottom: '60px', pointerEvents: 'auto' }}>
+            <div 
+              style={{ 
+                display: 'grid', 
+                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
+                gap: '40px', 
+                alignItems: 'center',
+                background: 'rgba(15, 15, 20, 0.85)',
+                border: '1px solid rgba(212, 175, 55, 0.4)',
+                borderRadius: '20px',
+                padding: 'clamp(24px, 5vw, 48px)',
+                boxShadow: '0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(212,175,55,0.1)',
+                backdropFilter: 'blur(15px)'
+              }}
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8 }}
-                src="/assets/naroa-portrait-DW8XfHYG.jpg"
-                alt="Naroa Gutiérrez Gil"
-                style={{ width: '100%', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 20px 40px rgba(0,0,0,0.8)' }}
-              />
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
+                style={{ position: 'relative' }}
               >
-                <span className="premium-badge premium-badge--gold">MANIFIESTO ARTÍSTICO</span>
-                <h1 className="premium-title" style={{ fontSize: '2.8rem', marginTop: '1rem', lineHeight: '1.1' }}>
-                  A O R A N / <span className="highlight-gold">N A R O A</span>
+                <img
+                  src="/assets/naroa-portrait-DW8XfHYG.webp"
+                  alt="Naroa Gutiérrez Gil"
+                  style={{ 
+                    width: '100%', 
+                    borderRadius: '14px', 
+                    border: '1px solid rgba(255,255,255,0.15)', 
+                    boxShadow: '0 15px 35px rgba(0,0,0,0.9)',
+                    display: 'block',
+                    objectFit: 'cover'
+                  }}
+                  onError={(e) => {
+                    e.currentTarget.src = '/assets/naroa-portrait-DW8XfHYG.jpg'
+                  }}
+                />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
+              >
+                <h1 
+                  style={{ 
+                    fontSize: 'clamp(2.2rem, 5vw, 3.4rem)', 
+                    fontFamily: 'var(--font-serif, "Cinzel", Georgia, serif)',
+                    fontWeight: 700,
+                    letterSpacing: '0.12em',
+                    lineHeight: 1.1,
+                    margin: '0 0 8px 0',
+                    color: '#FFFFFF'
+                  }}
+                >
+                  AORAN / <span style={{ color: '#D4AF37' }}>NAROA</span>
                 </h1>
-                <p className="premium-subtitle" style={{ color: '#D4AF37', fontWeight: 500, letterSpacing: '0.1em', marginTop: '0.5rem' }}>
+
+                <p 
+                  style={{ 
+                    fontFamily: 'var(--font-mono, monospace)',
+                    color: '#D4AF37', 
+                    fontSize: '0.85rem', 
+                    letterSpacing: '0.2em', 
+                    margin: '0 0 28px 0',
+                    textTransform: 'uppercase'
+                  }}
+                >
                   A NAROA LA ORAN A
                 </p>
-                <p className="premium-subtitle" style={{ fontSize: '1.05rem', margin: '1.5rem 0 2rem' }}>
-                  Artista visual en Bilbao especializada en hiperrealismo POP sobre pizarra natural y mica mineral.
-                  Con más de 12.000 seguidores en su comunidad artística oficial. Cada piedra que uso tiene millones de años.
-                  Cada retrato que pinto tiene la edad de quien lo mira.
-                </p>
-                <div className="about-links" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  <a href="https://instagram.com/naroagutierrezgil" target="_blank" rel="noopener noreferrer" className="premium-btn premium-btn--primary">
-                    📸 INSTAGRAM OFICIAL (@naroagutierrezgil) ↗
+
+                <blockquote 
+                  style={{ 
+                    margin: '0 0 32px 0',
+                    padding: '0 0 0 18px',
+                    borderLeft: '2px solid #D4AF37',
+                    color: 'rgba(255,255,255,0.85)',
+                    fontSize: 'clamp(1.05rem, 2.5vw, 1.25rem)',
+                    lineHeight: 1.7,
+                    fontStyle: 'italic',
+                    fontFamily: 'var(--font-serif, "Cinzel", Georgia, serif)'
+                  }}
+                >
+                  «Cada piedra que uso tiene millones de años.<br />
+                  Cada retrato que pinto tiene la edad de quien lo mira.»
+                </blockquote>
+
+                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                  <a 
+                    href="https://www.instagram.com/naroa_art/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    onClick={() => sound.playTick()}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      background: 'rgba(212, 175, 55, 0.15)',
+                      border: '1px solid #D4AF37',
+                      color: '#D4AF37',
+                      padding: '10px 18px',
+                      borderRadius: '8px',
+                      fontSize: '0.85rem',
+                      fontWeight: 700,
+                      textDecoration: 'none',
+                      transition: 'all 0.2s ease',
+                      boxShadow: '0 0 15px rgba(212,175,55,0.2)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = '#D4AF37'
+                      e.currentTarget.style.color = '#000000'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'rgba(212, 175, 55, 0.15)'
+                      e.currentTarget.style.color = '#D4AF37'
+                    }}
+                  >
+                    INSTAGRAM (@naroa_art) ↗
                   </a>
-                  <a href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer" className="premium-btn">
-                    📘 COMUNIDAD FACEBOOK (12K+ SEGUIDORES) ↗
+                  <a 
+                    href="https://www.facebook.com/naroa.artista.plastica" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    onClick={() => sound.playTick()}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      background: 'rgba(255, 255, 255, 0.06)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      color: 'rgba(255,255,255,0.8)',
+                      padding: '10px 18px',
+                      borderRadius: '8px',
+                      fontSize: '0.85rem',
+                      fontWeight: 600,
+                      textDecoration: 'none',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = '#FFFFFF'
+                      e.currentTarget.style.color = '#FFFFFF'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'
+                      e.currentTarget.style.color = 'rgba(255,255,255,0.8)'
+                    }}
+                  >
+                    FACEBOOK ↗
                   </a>
-                  <a href="#/encargos" onClick={() => sound.playTick()} className="premium-btn" style={{ border: '1px solid #D4AF37', color: '#D4AF37' }}>
-                    ⚡ ENCARGAR RETRATO PERSONALIZADO ↗
+                  <a 
+                    href="#/encargos" 
+                    onClick={() => sound.playTick()}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      background: 'rgba(255, 255, 255, 0.06)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      color: 'rgba(255,255,255,0.8)',
+                      padding: '10px 18px',
+                      borderRadius: '8px',
+                      fontSize: '0.85rem',
+                      fontWeight: 600,
+                      textDecoration: 'none',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = '#D4AF37'
+                      e.currentTarget.style.color = '#D4AF37'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'
+                      e.currentTarget.style.color = 'rgba(255,255,255,0.8)'
+                    }}
+                  >
+                    ENCARGOS & CONTACTO ↗
                   </a>
                 </div>
               </motion.div>

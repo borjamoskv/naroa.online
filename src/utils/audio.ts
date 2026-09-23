@@ -4,6 +4,8 @@ class SoundEngine {
   private ctx: AudioContext | null = null
   private enabled: boolean = true
 
+  private bgMusic: HTMLAudioElement | null = null
+
   constructor() {
     // Lazy init audio context on first user interaction
     if (typeof window !== 'undefined') {
@@ -12,9 +14,12 @@ class SoundEngine {
         this.enabled = saved === 'true'
       }
 
-      // Resume AudioContext on any initial user gesture for browser autoplay policy compliance
+      // Resume AudioContext and ambient music on initial user gesture
       const handleUserInteraction = () => {
         this.initCtx()
+        if (this.enabled) {
+          this.playMusic()
+        }
         window.removeEventListener('pointerdown', handleUserInteraction)
         window.removeEventListener('keydown', handleUserInteraction)
       }
@@ -35,11 +40,40 @@ class SoundEngine {
     }
   }
 
+  public playMusic() {
+    if (!this.enabled || typeof window === 'undefined') return
+    try {
+      if (!this.bgMusic) {
+        this.bgMusic = new Audio('/audio/boards-of-burgos.mp3')
+        this.bgMusic.loop = true
+        this.bgMusic.volume = 0.35
+      }
+      this.bgMusic.play().catch(() => {
+        // Autoplay policy fallback
+      })
+    } catch {
+      // Ignore audio error
+    }
+  }
+
+  public pauseMusic() {
+    if (this.bgMusic) {
+      try {
+        this.bgMusic.pause()
+      } catch {
+        // Ignore error
+      }
+    }
+  }
+
   public toggleSound(): boolean {
     this.enabled = !this.enabled
     localStorage.setItem('naroa_audio_enabled', String(this.enabled))
     if (this.enabled) {
       this.playTick()
+      this.playMusic()
+    } else {
+      this.pauseMusic()
     }
     return this.enabled
   }
