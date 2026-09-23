@@ -10,12 +10,10 @@ interface NavigationPillProps {
 
 const NAV_ITEMS = [
   { view: 'home', label: 'INICIO', href: '#/' },
-  { view: 'destacada', label: 'OBRA', href: '#/destacada' },
-  { view: '3d', label: '3D 🕹️', href: '#/3d' },
-  { view: 'juegos', label: 'JUEGOS 🎮', href: '#/juegos' },
+  { view: 'destacada', label: 'COLECCIÓN', href: '#/destacada' },
+  { view: '3d', label: 'ESPACIO 3D', href: '#/3d' },
   { view: 'about', label: 'SOBRE MÍ', href: '#/sobre-mi' },
-  { view: 'blog', label: 'BLOG', href: '#/blog' },
-  { view: 'encargos', label: 'CONTACTO', href: '#/encargos' },
+  { view: 'encargos', label: 'ATELIER', href: '#/encargos' },
 ] as const
 
 export function NavigationPill({ currentView, audioActive, toggleAudio }: NavigationPillProps) {
@@ -39,18 +37,18 @@ export function NavigationPill({ currentView, audioActive, toggleAudio }: Naviga
 
   return (
     <motion.header
-      initial={{ opacity: 0, y: -10 }}
+      initial={{ opacity: 0, y: -12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8 }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       style={{
         position: 'relative',
         width: '100%',
         zIndex: 100,
-        background: 'rgba(2, 2, 4, 0.75)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(212, 175, 55, 0.15)',
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.6)'
+        background: 'rgba(3, 3, 5, 0.72)',
+        backdropFilter: 'blur(24px)',
+        WebkitBackdropFilter: 'blur(24px)',
+        borderBottom: '1px solid rgba(212, 175, 55, 0.18)',
+        boxShadow: '0 4px 30px rgba(0, 0, 0, 0.7)',
       }}
     >
       <div
@@ -58,45 +56,48 @@ export function NavigationPill({ currentView, audioActive, toggleAudio }: Naviga
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          padding: '16px 28px',
+          padding: '14px 32px',
           maxWidth: '1400px',
           margin: '0 auto',
         }}
       >
         {/* LOGO ARTISTA */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '36px' }}>
           <a
             href="#/"
-            onClick={() => { sound.playTick(); window.location.hash = '#/'; }}
+            onClick={() => {
+              sound.playTick()
+              window.location.hash = '#/'
+            }}
             style={{
-              fontFamily: 'var(--font-sans)',
+              fontFamily: 'var(--font-serif, "Cinzel", Georgia, serif)',
               fontSize: '1.25rem',
               fontWeight: 700,
               color: '#FFFFFF',
               textDecoration: 'none',
-              letterSpacing: '0.12em',
+              letterSpacing: '0.14em',
               display: 'flex',
               alignItems: 'center',
-              gap: '6px'
+              gap: '4px',
             }}
           >
             <span>NAROA</span>
             <span style={{ color: '#D4AF37' }}>.</span>
           </a>
 
-          {/* ENLACES DESKTOP (Ocultos en móvil por CSS) */}
+          {/* ENLACES DESKTOP */}
           <ul
             className="nav-desktop-links"
             style={{
               display: 'flex',
-              gap: '22px',
+              gap: '26px',
               listStyle: 'none',
               margin: 0,
               padding: 0,
-              fontFamily: 'var(--font-mono)',
-              fontSize: '0.8rem',
-              letterSpacing: '0.08em',
-              alignItems: 'center'
+              fontFamily: 'var(--font-mono, monospace)',
+              fontSize: '0.78rem',
+              letterSpacing: '0.12em',
+              alignItems: 'center',
             }}
           >
             {NAV_ITEMS.map((item) => {
@@ -107,19 +108,19 @@ export function NavigationPill({ currentView, audioActive, toggleAudio }: Naviga
                     href={item.href}
                     onClick={handleNavClick}
                     style={{
-                      color: isActive ? '#D4AF37' : 'rgba(255,255,255,0.65)',
+                      color: isActive ? '#D4AF37' : 'rgba(255,255,255,0.6)',
                       textDecoration: 'none',
                       fontWeight: isActive ? 700 : 500,
                       position: 'relative',
                       padding: '6px 2px',
-                      transition: 'color 0.2s ease',
-                      borderBottom: isActive ? '2px solid #D4AF37' : '2px solid transparent'
+                      transition: 'color 0.25s ease',
+                      borderBottom: isActive ? '2px solid #D4AF37' : '2px solid transparent',
                     }}
                     onMouseEnter={(e) => {
                       if (!isActive) e.currentTarget.style.color = '#FFFFFF'
                     }}
                     onMouseLeave={(e) => {
-                      if (!isActive) e.currentTarget.style.color = 'rgba(255,255,255,0.65)'
+                      if (!isActive) e.currentTarget.style.color = 'rgba(255,255,255,0.6)'
                     }}
                   >
                     {item.label}
@@ -130,32 +131,48 @@ export function NavigationPill({ currentView, audioActive, toggleAudio }: Naviga
           </ul>
         </div>
 
-        {/* ACCIONES DERECHA: AUDIO + HAMBURGUESA MÓVIL */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+        {/* ACCIONES DERECHA: AUDIO TELEMETRY + CONCIERGE ATELIER */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          {/* BOTÓN SINESTÉSICO AUDIO "BOARDS OF BURGOS" */}
           <button
             onClick={toggleAudio}
-            title={audioActive ? 'Silenciar audio procedural' : 'Activar audio procedural'}
+            title={audioActive ? 'Banda Sonora Activa: Boards of Burgos (Borja Moskv)' : 'Activar Audio Ambiental'}
             style={{
-              background: audioActive ? 'rgba(212,175,55,0.15)' : 'rgba(255,255,255,0.06)',
-              border: '1px solid ' + (audioActive ? 'rgba(212,175,55,0.5)' : 'rgba(255,255,255,0.15)'),
-              color: audioActive ? '#D4AF37' : 'rgba(255,255,255,0.5)',
-              fontFamily: 'var(--font-mono)',
-              fontSize: '0.72rem',
+              background: audioActive ? 'rgba(212,175,55,0.12)' : 'rgba(255,255,255,0.04)',
+              border: '1px solid ' + (audioActive ? 'rgba(212,175,55,0.45)' : 'rgba(255,255,255,0.12)'),
+              color: audioActive ? '#D4AF37' : 'rgba(255,255,255,0.45)',
+              fontFamily: 'var(--font-mono, monospace)',
+              fontSize: '0.7rem',
               padding: '6px 14px',
               borderRadius: '20px',
               cursor: 'pointer',
-              letterSpacing: '0.08em',
+              letterSpacing: '0.12em',
               transition: 'all 0.25s ease',
               display: 'flex',
               alignItems: 'center',
-              gap: '6px'
+              gap: '8px',
             }}
           >
-            <span>{audioActive ? '🔊' : '🔇'}</span>
-            <span className="audio-btn-text">{audioActive ? 'AUDIO ON' : 'AUDIO OFF'}</span>
+            {/* Animación de barras de espectro doradas */}
+            <div style={{ display: 'flex', alignItems: 'flex-end', gap: '2px', height: '11px' }}>
+              {[0.5, 1, 0.35].map((val, idx) => (
+                <motion.span
+                  key={idx}
+                  animate={audioActive ? { height: ['3px', `${val * 11}px`, '3px'] } : { height: '3px' }}
+                  transition={{ repeat: Infinity, duration: 0.7 + idx * 0.2, ease: 'easeInOut' }}
+                  style={{
+                    width: '2px',
+                    background: audioActive ? '#D4AF37' : 'rgba(255,255,255,0.4)',
+                    borderRadius: '1px',
+                    display: 'inline-block',
+                  }}
+                />
+              ))}
+            </div>
+            <span className="audio-btn-text">{audioActive ? 'SONIDO ACTIVO' : 'SONIDO SILENCIADO'}</span>
           </button>
 
-          {/* BOTÓN HAMBURGUESA (visible en pantallas móviles <= 860px) */}
+          {/* BOTÓN HAMBURGUESA RESPONSIVE */}
           <button
             className="nav-mobile-toggle"
             onClick={() => {
@@ -171,7 +188,7 @@ export function NavigationPill({ currentView, audioActive, toggleAudio }: Naviga
               fontSize: '1.2rem',
               padding: '6px 12px',
               borderRadius: '8px',
-              cursor: 'pointer'
+              cursor: 'pointer',
             }}
           >
             {mobileMenuOpen ? '✕' : '☰'}
@@ -179,7 +196,7 @@ export function NavigationPill({ currentView, audioActive, toggleAudio }: Naviga
         </div>
       </div>
 
-      {/* DRAWER RESPONSIVE MÓVIL (Animado con Framer Motion) */}
+      {/* DRAWER RESPONSIVE MÓVIL */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
@@ -190,10 +207,10 @@ export function NavigationPill({ currentView, audioActive, toggleAudio }: Naviga
             transition={{ duration: 0.3, ease: 'easeInOut' }}
             style={{
               overflow: 'hidden',
-              background: 'rgba(5, 5, 8, 0.96)',
+              background: 'rgba(3, 3, 5, 0.98)',
               borderTop: '1px solid rgba(212, 175, 55, 0.2)',
               boxShadow: '0 20px 40px rgba(0,0,0,0.9)',
-              padding: '20px 28px'
+              padding: '24px 28px',
             }}
           >
             <ul
@@ -204,8 +221,9 @@ export function NavigationPill({ currentView, audioActive, toggleAudio }: Naviga
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '16px',
-                fontFamily: 'var(--font-mono)',
-                fontSize: '1rem'
+                fontFamily: 'var(--font-mono, monospace)',
+                fontSize: '0.95rem',
+                letterSpacing: '0.12em',
               }}
             >
               {NAV_ITEMS.map((item) => {
@@ -225,7 +243,7 @@ export function NavigationPill({ currentView, audioActive, toggleAudio }: Naviga
                         padding: '10px 14px',
                         background: isActive ? 'rgba(212,175,55,0.1)' : 'transparent',
                         borderRadius: '8px',
-                        borderLeft: isActive ? '3px solid #D4AF37' : '3px solid transparent'
+                        borderLeft: isActive ? '3px solid #D4AF37' : '3px solid transparent',
                       }}
                     >
                       <span>{item.label}</span>
@@ -238,11 +256,11 @@ export function NavigationPill({ currentView, audioActive, toggleAudio }: Naviga
 
             <div
               style={{
-                marginTop: '20px',
+                marginTop: '22px',
                 paddingTop: '16px',
-                borderTop: '1px solid rgba(255,255,255,0.1)',
+                borderTop: '1px solid rgba(255,255,255,0.08)',
                 display: 'flex',
-                gap: '12px'
+                gap: '12px',
               }}
             >
               <a
@@ -259,10 +277,11 @@ export function NavigationPill({ currentView, audioActive, toggleAudio }: Naviga
                   background: '#25D366',
                   color: '#000',
                   fontWeight: 700,
-                  fontSize: '0.85rem',
-                  padding: '10px',
+                  fontSize: '0.82rem',
+                  padding: '11px',
                   borderRadius: '8px',
-                  textDecoration: 'none'
+                  textDecoration: 'none',
+                  letterSpacing: '0.08em',
                 }}
               >
                 WHATSAPP ↗
@@ -276,13 +295,14 @@ export function NavigationPill({ currentView, audioActive, toggleAudio }: Naviga
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '6px',
-                  background: 'rgba(255,255,255,0.1)',
+                  background: 'rgba(255,255,255,0.06)',
                   color: '#fff',
-                  fontSize: '0.85rem',
-                  padding: '10px',
+                  fontSize: '0.82rem',
+                  padding: '11px',
                   borderRadius: '8px',
                   textDecoration: 'none',
-                  border: '1px solid rgba(255,255,255,0.2)'
+                  border: '1px solid rgba(255,255,255,0.15)',
+                  letterSpacing: '0.08em',
                 }}
               >
                 EMAIL ✉

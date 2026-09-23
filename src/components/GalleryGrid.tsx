@@ -13,35 +13,41 @@ export function GalleryGrid({ onInspect }: GalleryGridProps) {
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>('all')
   const [searchQuery, setSearchQuery] = useState('')
 
-  const heroArtwork = ARTWORKS.find(a => a.slug === 'amy-rocks') || ARTWORKS[1]
+  const heroArtwork = ARTWORKS.find((a) => a.slug === 'amy-rocks') || ARTWORKS[1]
 
   const categories: { id: CategoryFilter; label: string; count: number }[] = useMemo(() => {
     const counts = {
       all: ARTWORKS.length,
-      slate: ARTWORKS.filter(a => a.medium.toLowerCase().includes('pizarra') || a.medium.toLowerCase().includes('mica')).length,
-      canvas: ARTWORKS.filter(a => a.medium.toLowerCase().includes('lienzo') || a.medium.toLowerCase().includes('óleo')).length,
-      music_pop: ARTWORKS.filter(a =>
-        a.title.toLowerCase().includes('rocks') ||
-        a.medium.toLowerCase().includes('divinos') ||
-        a.description.toLowerCase().includes('soul') ||
-        a.description.toLowerCase().includes('música') ||
-        a.description.toLowerCase().includes('pop')
+      slate: ARTWORKS.filter(
+        (a) => a.medium.toLowerCase().includes('pizarra') || a.medium.toLowerCase().includes('mica')
       ).length,
-      enlata: ARTWORKS.filter(a => a.medium.toLowerCase().includes('en.lata') || a.title.toLowerCase().includes('lata')).length,
+      canvas: ARTWORKS.filter(
+        (a) => a.medium.toLowerCase().includes('lienzo') || a.medium.toLowerCase().includes('óleo')
+      ).length,
+      music_pop: ARTWORKS.filter(
+        (a) =>
+          a.title.toLowerCase().includes('rocks') ||
+          a.medium.toLowerCase().includes('divinos') ||
+          a.description.toLowerCase().includes('soul') ||
+          a.description.toLowerCase().includes('música') ||
+          a.description.toLowerCase().includes('pop')
+      ).length,
+      enlata: ARTWORKS.filter(
+        (a) => a.medium.toLowerCase().includes('en.lata') || a.title.toLowerCase().includes('lata')
+      ).length,
     }
 
     return [
       { id: 'all', label: 'Todas las Obras', count: counts.all },
-      { id: 'slate', label: '💎 Pizarra & Mica Mineral', count: counts.slate },
-      { id: 'canvas', label: '🖼️ Lienzo & Óleo 3D', count: counts.canvas },
-      { id: 'music_pop', label: '⚡ Tributos Pop & Rock', count: counts.music_pop },
-      { id: 'enlata', label: '🥫 Serie En.lata', count: counts.enlata },
+      { id: 'slate', label: 'Pizarra & Mica Mineral', count: counts.slate },
+      { id: 'canvas', label: 'Lienzo & Óleo 3D', count: counts.canvas },
+      { id: 'music_pop', label: 'Tributos Pop & Rock', count: counts.music_pop },
+      { id: 'enlata', label: 'Serie En.lata', count: counts.enlata },
     ]
   }, [])
 
   const filteredArtworks = useMemo(() => {
     return ARTWORKS.filter((artwork) => {
-      // Category filter
       let matchesCategory = true
       const medLower = artwork.medium.toLowerCase()
       const titleLower = artwork.title.toLowerCase()
@@ -64,7 +70,6 @@ export function GalleryGrid({ onInspect }: GalleryGridProps) {
 
       if (!matchesCategory) return false
 
-      // Search query filter
       if (!searchQuery.trim()) return true
       const q = searchQuery.toLowerCase().trim()
       return (
@@ -77,265 +82,277 @@ export function GalleryGrid({ onInspect }: GalleryGridProps) {
   }, [selectedCategory, searchQuery])
 
   return (
-    <div className="gallery-page" style={{ maxWidth: '1400px', margin: '0 auto', padding: '100px 20px 60px' }}>
+    <div className="gallery-page" style={{ maxWidth: '1440px', margin: '0 auto', padding: '60px 24px 80px' }}>
       
-      {/* Ticker Marquesina Mineral */}
-      <div 
+      {/* OBRA PRINCIPAL EN SALA (Hero de Curaduría) */}
+      <section
         style={{
-          background: 'rgba(10, 10, 14, 0.85)',
-          borderTop: '1px solid rgba(212, 175, 55, 0.4)',
-          borderBottom: '1px solid rgba(212, 175, 55, 0.4)',
-          padding: '10px 0',
-          overflow: 'hidden',
-          whiteSpace: 'nowrap',
-          marginBottom: '40px',
-          boxShadow: '0 0 25px rgba(212, 175, 55, 0.1)',
-          backdropFilter: 'blur(10px)'
+          position: 'relative',
+          background: 'radial-gradient(ellipse at 70% 40%, rgba(212, 175, 55, 0.08) 0%, rgba(5, 5, 8, 0.95) 70%)',
+          border: '1px solid rgba(212, 175, 55, 0.3)',
+          borderRadius: '20px',
+          padding: 'clamp(24px, 4vw, 48px)',
+          marginBottom: '60px',
+          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(212, 175, 55, 0.1)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
         }}
       >
-        <div 
+        <div
           style={{
-            display: 'inline-block',
-            animation: 'marquee 28s linear infinite',
-            fontFamily: 'var(--font-mono, monospace)',
-            fontSize: '0.8rem',
-            letterSpacing: '0.2em',
-            color: '#D4AF37',
-            textTransform: 'uppercase'
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gap: '40px',
+            alignItems: 'center',
           }}
         >
-          ✦ UNIVERSO ARTÍSTICO NAROA · 27+ OBRAS ORIGINALES · AC RÍLICO, MICA MINERAL Y PIZARRA NATURAL · BILBAO · ENCARGOS PERSONALIZADOS A MEDIDA ✦
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          ✦ UNIVERSO ARTÍSTICO NAROA · 27+ OBRAS ORIGINALES · AC RÍLICO, MICA MINERAL Y PIZARRA NATURAL · BILBAO · ENCARGOS PERSONALIZADOS A MEDIDA ✦
-        </div>
-      </div>
-
-      {/* HERO COLOSAL DE OBRA DESTACADA (Amy Winehouse) */}
-      <section 
-        className="gallery-hero-box" 
-        style={{
-          background: 'radial-gradient(circle at 70% 30%, rgba(43, 59, 229, 0.15) 0%, rgba(10, 10, 14, 0.95) 70%)',
-          border: '1px solid rgba(212, 175, 55, 0.5)',
-          borderRadius: '16px',
-          padding: 'clamp(20px, 4vw, 40px)',
-          marginBottom: '50px',
-          boxShadow: '0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(212, 175, 55, 0.15)'
-        }}
-      >
-        <div 
-          className="hero-artwork-wrap" 
-          style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
-            gap: '32px', 
-            alignItems: 'center' 
-          }}
-        >
-          <div style={{ position: 'relative', overflow: 'hidden', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.15)' }}>
+          {/* Imagen de Gran Formato con Relieve */}
+          <div
+            style={{
+              position: 'relative',
+              borderRadius: '14px',
+              overflow: 'hidden',
+              boxShadow: '0 20px 45px rgba(0,0,0,0.9)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              background: '#030305',
+              cursor: 'pointer',
+            }}
+            onClick={() => {
+              sound.playOpen()
+              const idx = ARTWORKS.findIndex((a) => a.id === heroArtwork.id)
+              onInspect(idx)
+            }}
+          >
             <img
               src={heroArtwork.url}
               alt={heroArtwork.title}
-              className="gallery-hero-img"
-              style={{ 
-                width: '100%', 
-                maxHeight: '480px', 
-                objectFit: 'cover', 
+              style={{
+                width: '100%',
+                maxHeight: '520px',
+                objectFit: 'cover',
                 display: 'block',
-                transition: 'transform 0.5s ease'
+                transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
               }}
+              onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.03)')}
+              onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
             />
-            <div 
+
+            <div
               style={{
                 position: 'absolute',
-                top: '14px',
-                left: '14px',
-                background: '#D4AF37',
-                color: '#000',
-                fontFamily: 'monospace',
-                fontWeight: 900,
-                fontSize: '0.75rem',
+                top: '16px',
+                left: '16px',
+                background: 'rgba(5, 5, 8, 0.85)',
+                border: '1px solid rgba(212, 175, 55, 0.5)',
+                color: '#D4AF37',
+                fontFamily: 'var(--font-mono, monospace)',
+                fontWeight: 700,
+                fontSize: '0.7rem',
                 padding: '4px 10px',
                 borderRadius: '4px',
-                letterSpacing: '0.1em'
+                letterSpacing: '0.15em',
+                backdropFilter: 'blur(8px)',
               }}
             >
-              OBRA INSIGNIA
+              OBRA DESTACADA
             </div>
           </div>
 
-          <div className="hero-artwork-info">
-            <span 
+          {/* Información Curatorial */}
+          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <span
               style={{
                 display: 'inline-block',
-                background: 'rgba(212, 175, 55, 0.15)',
-                border: '1px solid #D4AF37',
                 color: '#D4AF37',
-                padding: '4px 12px',
-                borderRadius: '20px',
-                fontSize: '0.75rem',
-                fontWeight: 700,
-                fontFamily: 'monospace',
-                letterSpacing: '0.15em',
-                marginBottom: '12px'
+                fontSize: '0.78rem',
+                fontFamily: 'var(--font-mono, monospace)',
+                letterSpacing: '0.2em',
+                textTransform: 'uppercase',
+                marginBottom: '12px',
               }}
             >
-              PIZARRA NATURAL & MICA MINERAL
+              {heroArtwork.medium}
             </span>
-            <h1 
-              style={{ 
-                fontSize: 'clamp(2rem, 5vw, 3.2rem)', 
+
+            <h1
+              style={{
+                fontSize: 'clamp(2.4rem, 5vw, 3.8rem)',
                 fontFamily: 'var(--font-serif, "Cinzel", Georgia, serif)',
                 fontWeight: 700,
                 color: '#FFFFFF',
-                lineHeight: 1.1,
-                margin: '0 0 10px 0'
+                lineHeight: 1.05,
+                margin: '0 0 14px 0',
+                letterSpacing: '0.06em',
               }}
             >
               {heroArtwork.title}
             </h1>
-            <p style={{ color: '#D4AF37', fontSize: '0.95rem', fontWeight: 600, margin: '0 0 16px 0', fontFamily: 'monospace' }}>
-              {heroArtwork.year} · {heroArtwork.medium}
-            </p>
-            <p style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.75)', lineHeight: 1.6, margin: '0 0 24px 0' }}>
+
+            <p
+              style={{
+                color: 'rgba(255, 255, 255, 0.75)',
+                fontSize: '1rem',
+                lineHeight: 1.7,
+                margin: '0 0 28px 0',
+                fontFamily: 'var(--font-sans, system-ui, sans-serif)',
+                fontWeight: 300,
+                maxWidth: '540px',
+              }}
+            >
               {heroArtwork.description}
             </p>
+
             <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
               <button
                 onClick={() => {
                   sound.playOpen()
-                  const idx = ARTWORKS.findIndex(a => a.id === heroArtwork.id)
+                  const idx = ARTWORKS.findIndex((a) => a.id === heroArtwork.id)
                   onInspect(idx)
                 }}
                 style={{
-                  background: '#D4AF37',
-                  color: '#000',
+                  background: 'linear-gradient(135deg, #F0E6D2 0%, #D4AF37 100%)',
+                  color: '#000000',
                   border: 'none',
-                  borderRadius: '8px',
-                  padding: '12px 24px',
+                  borderRadius: '30px',
+                  padding: '12px 28px',
                   fontWeight: 700,
-                  fontSize: '0.9rem',
-                  letterSpacing: '0.05em',
+                  fontSize: '0.82rem',
+                  fontFamily: 'var(--font-mono, monospace)',
+                  letterSpacing: '0.12em',
                   cursor: 'pointer',
-                  boxShadow: '0 4px 15px rgba(212, 175, 55, 0.4)',
-                  transition: 'all 0.2s ease'
+                  boxShadow: '0 0 25px rgba(212, 175, 55, 0.4)',
+                  transition: 'all 0.25s ease',
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
-                onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                onMouseEnter={(e) => (e.currentTarget.style.transform = 'translateY(-2px)')}
+                onMouseLeave={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
               >
                 🔍 INSPECCIONAR EN DETALLE
               </button>
-              <a 
-                href="#/encargos" 
+
+              <a
+                href="#/encargos"
                 onClick={() => sound.playTick()}
-                style={{ 
+                style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  background: 'rgba(255, 255, 255, 0.08)',
+                  background: 'rgba(255, 255, 255, 0.05)',
                   color: '#FFFFFF',
-                  border: '1px solid rgba(255, 255, 255, 0.25)',
-                  borderRadius: '8px',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderRadius: '30px',
                   padding: '12px 24px',
-                  fontWeight: 600,
-                  fontSize: '0.9rem',
+                  fontWeight: 500,
+                  fontSize: '0.82rem',
+                  fontFamily: 'var(--font-mono, monospace)',
+                  letterSpacing: '0.12em',
                   textDecoration: 'none',
-                  transition: 'all 0.2s ease'
+                  transition: 'all 0.25s ease',
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.borderColor = '#D4AF37'
                   e.currentTarget.style.color = '#D4AF37'
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.25)'
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'
                   e.currentTarget.style.color = '#FFFFFF'
                 }}
               >
-                ⚡ ENCARGAR RETRATO PERSONALIZADO ↗
+                SOLICITAR ENCARGO BESPOKE ↗
               </a>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CABECERA DE FILTROS & BÚSQUEDA */}
-      <header className="gallery-header" style={{ marginBottom: '32px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '20px', marginBottom: '24px' }}>
+      {/* CABECERA DE FILTROS & BÚSQUEDA MINIMALISTA */}
+      <header style={{ marginBottom: '36px' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-end',
+            flexWrap: 'wrap',
+            gap: '24px',
+            marginBottom: '26px',
+          }}
+        >
           <div>
-            <span 
+            <span
               style={{
                 color: '#D4AF37',
-                fontFamily: 'monospace',
-                fontSize: '0.8rem',
-                letterSpacing: '0.2em',
+                fontFamily: 'var(--font-mono, monospace)',
+                fontSize: '0.75rem',
+                letterSpacing: '0.22em',
                 textTransform: 'uppercase',
                 display: 'block',
-                marginBottom: '6px'
+                marginBottom: '6px',
               }}
             >
-              Catálogo Razonado · Colección Oficial
+              CATÁLOGO RAZONADO
             </span>
-            <h2 
+            <h2
               style={{
-                fontSize: 'clamp(1.8rem, 4vw, 2.6rem)',
+                fontSize: 'clamp(2rem, 4vw, 2.8rem)',
                 fontFamily: 'var(--font-serif, "Cinzel", Georgia, serif)',
                 fontWeight: 700,
+                letterSpacing: '0.08em',
                 color: '#FFFFFF',
-                margin: 0
+                margin: 0,
               }}
             >
-              UNIVERSO <span style={{ color: '#D4AF37' }}>ARTÍSTICO</span>
+              COLECCIÓN <span style={{ color: '#D4AF37' }}>OFICIAL</span>
             </h2>
           </div>
 
-          {/* Buscador Interactivo */}
-          <div style={{ position: 'relative', minWidth: '280px', flex: '1', maxWidth: '420px' }}>
+          {/* Buscador de Obras */}
+          <div style={{ position: 'relative', minWidth: '280px', flex: '1', maxWidth: '380px' }}>
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Buscar por obra, técnica o año..."
+              placeholder="Buscar por título o materia..."
               style={{
                 width: '100%',
-                background: 'rgba(15, 15, 20, 0.8)',
-                border: '1px solid rgba(212, 175, 55, 0.4)',
+                background: 'rgba(10, 10, 15, 0.8)',
+                border: '1px solid rgba(212, 175, 55, 0.35)',
                 borderRadius: '50px',
-                padding: '12px 42px 12px 20px',
+                padding: '11px 40px 11px 18px',
                 color: '#FFFFFF',
-                fontSize: '0.9rem',
+                fontSize: '0.85rem',
+                fontFamily: 'var(--font-mono, monospace)',
                 outline: 'none',
                 backdropFilter: 'blur(10px)',
-                boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
-                transition: 'border-color 0.2s'
+                transition: 'border-color 0.2s',
               }}
-              onFocus={(e) => e.target.style.borderColor = '#D4AF37'}
-              onBlur={(e) => e.target.style.borderColor = 'rgba(212, 175, 55, 0.4)'}
+              onFocus={(e) => (e.target.style.borderColor = '#D4AF37')}
+              onBlur={(e) => (e.target.style.borderColor = 'rgba(212, 175, 55, 0.35)')}
             />
             {searchQuery ? (
               <button
                 onClick={() => setSearchQuery('')}
                 style={{
                   position: 'absolute',
-                  right: '14px',
+                  right: '12px',
                   top: '50%',
                   transform: 'translateY(-50%)',
                   background: 'none',
                   border: 'none',
-                  color: 'rgba(255,255,255,0.5)',
+                  color: 'rgba(255,255,255,0.6)',
                   cursor: 'pointer',
-                  fontSize: '1rem',
-                  padding: '4px'
+                  fontSize: '0.9rem',
                 }}
               >
                 ✕
               </button>
             ) : (
-              <span 
+              <span
                 style={{
                   position: 'absolute',
-                  right: '18px',
+                  right: '16px',
                   top: '50%',
                   transform: 'translateY(-50%)',
-                  opacity: 0.5,
-                  pointerEvents: 'none'
+                  opacity: 0.45,
+                  pointerEvents: 'none',
+                  fontSize: '0.85rem',
                 }}
               >
                 🔍
@@ -344,7 +361,7 @@ export function GalleryGrid({ onInspect }: GalleryGridProps) {
           </div>
         </div>
 
-        {/* Píldoras de Categorías */}
+        {/* Píldoras de Categoría */}
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center' }}>
           {categories.map((cat) => {
             const isSelected = selectedCategory === cat.id
@@ -356,27 +373,29 @@ export function GalleryGrid({ onInspect }: GalleryGridProps) {
                   setSelectedCategory(cat.id)
                 }}
                 style={{
-                  background: isSelected ? '#D4AF37' : 'rgba(255, 255, 255, 0.05)',
-                  color: isSelected ? '#000000' : 'rgba(255, 255, 255, 0.75)',
-                  border: isSelected ? '1px solid #D4AF37' : '1px solid rgba(255, 255, 255, 0.15)',
+                  background: isSelected ? '#D4AF37' : 'rgba(255, 255, 255, 0.04)',
+                  color: isSelected ? '#000000' : 'rgba(255, 255, 255, 0.7)',
+                  border: isSelected ? '1px solid #D4AF37' : '1px solid rgba(255, 255, 255, 0.12)',
                   borderRadius: '30px',
-                  padding: '8px 18px',
-                  fontSize: '0.85rem',
+                  padding: '7px 18px',
+                  fontSize: '0.78rem',
+                  fontFamily: 'var(--font-mono, monospace)',
+                  letterSpacing: '0.08em',
                   fontWeight: isSelected ? 700 : 500,
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
-                  boxShadow: isSelected ? '0 0 15px rgba(212, 175, 55, 0.35)' : 'none'
+                  boxShadow: isSelected ? '0 0 20px rgba(212, 175, 55, 0.35)' : 'none',
                 }}
                 onMouseEnter={(e) => {
                   if (!isSelected) {
-                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)'
+                    e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.5)'
                     e.currentTarget.style.color = '#FFFFFF'
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!isSelected) {
-                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'
-                    e.currentTarget.style.color = 'rgba(255, 255, 255, 0.75)'
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)'
+                    e.currentTarget.style.color = 'rgba(255, 255, 255, 0.7)'
                   }
                 }}
               >
@@ -385,28 +404,21 @@ export function GalleryGrid({ onInspect }: GalleryGridProps) {
             )
           })}
         </div>
-
-        {/* Contador de Resultados */}
-        <div style={{ marginTop: '14px', fontSize: '0.8rem', color: 'rgba(255,255,255,0.45)', fontFamily: 'monospace' }}>
-          Mostrando {filteredArtworks.length} de {ARTWORKS.length} piezas originales catalogadas
-        </div>
       </header>
 
-      {/* REJILLA DE OBRAS */}
+      {/* REJILLA DE OBRAS DE ALTA DEFINICIÓN */}
       {filteredArtworks.length === 0 ? (
-        <div 
-          style={{ 
-            textAlign: 'center', 
-            padding: '60px 20px', 
-            background: 'rgba(15,15,20,0.5)', 
-            borderRadius: '16px', 
-            border: '1px dashed rgba(212, 175, 55, 0.3)' 
+        <div
+          style={{
+            textAlign: 'center',
+            padding: '80px 20px',
+            background: 'rgba(10, 10, 15, 0.4)',
+            borderRadius: '16px',
+            border: '1px dashed rgba(212, 175, 55, 0.25)',
           }}
         >
-          <div style={{ fontSize: '2.5rem', marginBottom: '10px' }}>🔍</div>
-          <h3 style={{ color: '#FFFFFF', margin: '0 0 8px 0' }}>No se encontraron obras con ese criterio</h3>
-          <p style={{ color: 'rgba(255,255,255,0.6)', margin: '0 0 20px 0', fontSize: '0.9rem' }}>
-            Prueba a cambiar los términos de búsqueda o selecciona otra categoría.
+          <p style={{ color: 'rgba(255,255,255,0.7)', margin: '0 0 16px 0', fontFamily: 'var(--font-mono, monospace)' }}>
+            No se encontraron obras con ese criterio.
           </p>
           <button
             onClick={() => {
@@ -417,204 +429,191 @@ export function GalleryGrid({ onInspect }: GalleryGridProps) {
               background: '#D4AF37',
               color: '#000',
               border: 'none',
-              padding: '10px 20px',
-              borderRadius: '8px',
+              padding: '10px 22px',
+              borderRadius: '25px',
               fontWeight: 700,
-              cursor: 'pointer'
+              fontSize: '0.8rem',
+              fontFamily: 'var(--font-mono, monospace)',
+              cursor: 'pointer',
             }}
           >
             RESTABLECER FILTROS
           </button>
         </div>
       ) : (
-        <motion.div 
-          layout 
-          className="massive-gallery-grid"
+        <motion.div
+          layout
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-            gap: '24px'
+            gridTemplateColumns: 'repeat(auto-fill, minmax(290px, 1fr))',
+            gap: '28px',
           }}
         >
           <AnimatePresence>
             {filteredArtworks.map((artwork) => {
-              const originalIdx = ARTWORKS.findIndex(a => a.id === artwork.id)
-              const inquiryText = `Hola Naroa! Me interesa conocer la disponibilidad de tu obra "${artwork.title}" (${artwork.year}, ${artwork.medium}). ¿Está disponible?`
-              const waUrl = `https://wa.me/34636060609?text=${encodeURIComponent(inquiryText)}`
+              const originalIdx = ARTWORKS.findIndex((a) => a.id === artwork.id)
 
               return (
                 <motion.div
                   layout
-                  initial={{ opacity: 0, scale: 0.95 }}
+                  initial={{ opacity: 0, scale: 0.96 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.3 }}
+                  exit={{ opacity: 0, scale: 0.96 }}
+                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                   key={artwork.id}
                   style={{
-                    background: 'rgba(15, 15, 20, 0.9)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    borderRadius: '14px',
+                    background: 'rgba(8, 8, 12, 0.92)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderRadius: '16px',
                     overflow: 'hidden',
                     display: 'flex',
                     flexDirection: 'column',
-                    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.6)',
+                    boxShadow: '0 12px 35px rgba(0, 0, 0, 0.7)',
                     cursor: 'pointer',
-                    transition: 'border-color 0.3s, transform 0.3s, box-shadow 0.3s'
+                    transition: 'border-color 0.3s, transform 0.3s, box-shadow 0.3s',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.8)'
-                    e.currentTarget.style.transform = 'translateY(-4px)'
-                    e.currentTarget.style.boxShadow = '0 15px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(212, 175, 55, 0.15)'
+                    e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.75)'
+                    e.currentTarget.style.transform = 'translateY(-5px)'
+                    e.currentTarget.style.boxShadow = '0 20px 45px rgba(0, 0, 0, 0.9), 0 0 25px rgba(212, 175, 55, 0.15)'
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)'
                     e.currentTarget.style.transform = 'translateY(0)'
-                    e.currentTarget.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.6)'
+                    e.currentTarget.style.boxShadow = '0 12px 35px rgba(0, 0, 0, 0.7)'
                   }}
                   onClick={() => {
                     sound.playOpen()
                     onInspect(originalIdx)
                   }}
                 >
-                  {/* Contenedor Imagen */}
-                  <div style={{ position: 'relative', width: '100%', aspectRatio: '4/5', overflow: 'hidden', background: '#050508' }}>
-                    <img 
-                      src={artwork.url} 
-                      alt={artwork.title} 
-                      loading="lazy" 
-                      style={{ 
-                        width: '100%', 
-                        height: '100%', 
+                  {/* Contenedor Fotográfico */}
+                  <div
+                    style={{
+                      position: 'relative',
+                      width: '100%',
+                      aspectRatio: '4/5',
+                      overflow: 'hidden',
+                      background: '#030305',
+                    }}
+                  >
+                    <img
+                      src={artwork.url}
+                      alt={artwork.title}
+                      loading="lazy"
+                      style={{
+                        width: '100%',
+                        height: '100%',
                         objectFit: 'cover',
                         display: 'block',
-                        transition: 'transform 0.5s ease'
-                      }} 
+                        transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.04)')}
+                      onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
                     />
-                    <div 
+
+                    {/* Año en micro-etiqueta mineral */}
+                    <div
                       style={{
                         position: 'absolute',
                         top: '12px',
                         right: '12px',
-                        background: 'rgba(0, 0, 0, 0.75)',
-                        border: '1px solid rgba(212, 175, 55, 0.5)',
+                        background: 'rgba(3, 3, 5, 0.8)',
+                        border: '1px solid rgba(212, 175, 55, 0.4)',
                         color: '#D4AF37',
                         padding: '3px 8px',
-                        borderRadius: '6px',
-                        fontFamily: 'monospace',
-                        fontSize: '0.75rem',
+                        borderRadius: '4px',
+                        fontFamily: 'var(--font-mono, monospace)',
+                        fontSize: '0.7rem',
                         fontWeight: 700,
-                        backdropFilter: 'blur(6px)'
+                        backdropFilter: 'blur(8px)',
                       }}
                     >
                       {artwork.year}
                     </div>
 
+                    {/* Distintivo 3D Gaussian Splats si procede */}
                     {artwork.splatUrl && (
-                      <div 
+                      <div
                         style={{
                           position: 'absolute',
                           bottom: '12px',
                           left: '12px',
-                          background: 'linear-gradient(135deg, rgba(43,59,229,0.9), rgba(212,175,55,0.9))',
-                          color: '#fff',
+                          background: 'rgba(3, 3, 5, 0.85)',
+                          border: '1px solid rgba(212, 175, 55, 0.6)',
+                          color: '#FFFFFF',
                           padding: '3px 8px',
-                          borderRadius: '6px',
-                          fontFamily: 'monospace',
-                          fontSize: '0.7rem',
+                          borderRadius: '4px',
+                          fontFamily: 'var(--font-mono, monospace)',
+                          fontSize: '0.65rem',
                           fontWeight: 700,
-                          backdropFilter: 'blur(6px)'
+                          backdropFilter: 'blur(8px)',
+                          letterSpacing: '0.1em',
                         }}
                       >
-                        ✨ 3DGS 360°
+                        ✦ 3DGS 360°
                       </div>
                     )}
                   </div>
 
-                  {/* Metadatos y Acciones */}
-                  <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
+                  {/* Metadatos Editoriales Puros */}
+                  <div
+                    style={{
+                      padding: '18px 20px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      flex: 1,
+                      justifyContent: 'space-between',
+                    }}
+                  >
                     <div>
-                      <h3 
-                        style={{ 
-                          fontSize: '1.2rem', 
-                          fontWeight: 700, 
-                          color: '#FFFFFF', 
+                      <h3
+                        style={{
+                          fontSize: '1.25rem',
+                          fontWeight: 700,
+                          color: '#FFFFFF',
                           margin: '0 0 6px 0',
-                          fontFamily: 'var(--font-serif, "Cinzel", Georgia, serif)'
+                          fontFamily: 'var(--font-serif, "Cinzel", Georgia, serif)',
+                          letterSpacing: '0.04em',
                         }}
                       >
                         {artwork.title}
                       </h3>
-                      <p 
-                        style={{ 
-                          fontSize: '0.8rem', 
-                          color: '#D4AF37', 
-                          margin: '0 0 14px 0', 
-                          fontFamily: 'monospace',
-                          lineHeight: 1.4
+                      <p
+                        style={{
+                          fontSize: '0.78rem',
+                          color: 'rgba(212, 175, 55, 0.85)',
+                          margin: 0,
+                          fontFamily: 'var(--font-mono, monospace)',
+                          letterSpacing: '0.06em',
                         }}
                       >
                         {artwork.medium}
                       </p>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '8px', marginTop: 'auto', paddingTop: '10px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          sound.playOpen()
-                          onInspect(originalIdx)
-                        }}
+                    {/* Línea de Acción Sutil */}
+                    <div
+                      style={{
+                        marginTop: '16px',
+                        paddingTop: '12px',
+                        borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <span
                         style={{
-                          flex: 1,
-                          background: 'rgba(255, 255, 255, 0.08)',
-                          border: '1px solid rgba(255, 255, 255, 0.2)',
-                          color: '#FFFFFF',
-                          padding: '8px 12px',
-                          borderRadius: '6px',
-                          fontSize: '0.75rem',
-                          fontWeight: 600,
-                          cursor: 'pointer',
-                          transition: 'all 0.2s ease'
+                          fontFamily: 'var(--font-mono, monospace)',
+                          fontSize: '0.72rem',
+                          color: 'rgba(255, 255, 255, 0.5)',
+                          letterSpacing: '0.1em',
                         }}
-                        onMouseEnter={(e) => e.currentTarget.style.borderColor = '#D4AF37'}
-                        onMouseLeave={(e) => e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'}
                       >
-                        🔍 VER DETALLE
-                      </button>
-                      <a
-                        href={waUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          sound.playTick()
-                        }}
-                        style={{
-                          background: 'rgba(37, 211, 102, 0.15)',
-                          border: '1px solid rgba(37, 211, 102, 0.4)',
-                          color: '#25D366',
-                          padding: '8px 12px',
-                          borderRadius: '6px',
-                          fontSize: '0.75rem',
-                          fontWeight: 700,
-                          textDecoration: 'none',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '4px',
-                          transition: 'all 0.2s ease'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = '#25D366'
-                          e.currentTarget.style.color = '#000'
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = 'rgba(37, 211, 102, 0.15)'
-                          e.currentTarget.style.color = '#25D366'
-                        }}
-                        title="Consultar disponibilidad en WhatsApp"
-                      >
-                        💬 WHATSAPP
-                      </a>
+                        DETALLE ↗
+                      </span>
+                      <span style={{ color: '#D4AF37', fontSize: '0.8rem' }}>●</span>
                     </div>
                   </div>
                 </motion.div>

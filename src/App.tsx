@@ -21,8 +21,8 @@ const BlogSection = lazy(() => import('./components/BlogSection').then(module =>
 type ViewMode = 'home' | '3d' | 'destacada' | 'encargos' | 'juegos' | 'about' | 'blog'
 
 const getViewFromHash = (hash: string): ViewMode => {
-  if (hash === '#/destacada' || hash === '#/galeria' || hash === '#/archivo') return 'destacada'
-  if (hash === '#/encargos' || hash === '#/contacto') return 'encargos'
+  if (hash === '#/destacada' || hash === '#/galeria' || hash === '#/archivo' || hash === '#/coleccion') return 'destacada'
+  if (hash === '#/encargos' || hash === '#/contacto' || hash === '#/atelier') return 'encargos'
   if (hash === '#/juegos') return 'juegos'
   if (hash === '#/blog') return 'blog'
   if (hash === '#/sobre-mi' || hash === '#/about') return 'about'

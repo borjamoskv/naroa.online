@@ -102,7 +102,7 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
     }
   }
 
-  const queryText = `Hola Naroa! Me interesa conocer la disponibilidad y precio de la obra original "${artwork.title}" (${artwork.year}, ${artwork.medium}). ¿Podemos hablar de los detalles?`
+  const queryText = `Hola Naroa! Me interesa conocer la disponibilidad y detalles de la obra original "${artwork.title}" (${artwork.year}, ${artwork.medium}). ¿Podemos hablar de los detalles?`
   const artworkWhatsAppUrl = `https://wa.me/34636060609?text=${encodeURIComponent(queryText)}`
 
   return (
@@ -191,7 +191,7 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
                     border: 'none',
                     boxShadow: '0 0 15px rgba(37, 211, 102, 0.3)'
                   }}
-                  title="Consultar precio y disponibilidad de la obra original en WhatsApp"
+                  title="Consultar disponibilidad de la obra original en WhatsApp"
                 >
                   💬 CONSULTAR DISPONIBILIDAD ↗
                 </a>
