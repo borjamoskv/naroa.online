@@ -101,6 +101,13 @@ export default function App() {
     return () => clearTimeout(timer)
   }, [])
 
+  // Control del scroll del body en modo 3D
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.body.classList.toggle('mode-3d-active', is3DActive)
+    }
+  }, [is3DActive])
+
   // Desactivar estado inmersivo si salimos de la vista 3D
   const [prevView, setPrevView] = useState(currentView)
   if (currentView !== prevView) {
@@ -162,28 +169,27 @@ export default function App() {
   const isSceneVisible = currentView === '3d'
 
   return (
-    <>
+    <div className={`app-shell ${is3DActive ? 'mode-3d-active' : ''}`}>
       {/* Cursor inercial de oro mineral */}
       <CustomCursor />
 
-      <div className="ui-layer" style={{ pointerEvents: 'none' }}>
-        {/* Barra de Navegación de Alta Gama */}
-        {!is3DActive && (
-          <div style={{ pointerEvents: 'auto', width: '100%', zIndex: 50 }}>
-            <NavigationPill
-              currentView={currentView}
-              audioActive={audioActive}
-              toggleAudio={toggleAudio}
-            />
-          </div>
-        )}
+      {/* Barra de Navegación de Alta Gama */}
+      {!is3DActive && (
+        <NavigationPill
+          currentView={currentView}
+          audioActive={audioActive}
+          toggleAudio={toggleAudio}
+        />
+      )}
 
+      {/* Contenido Principal de Exposición */}
+      <main className="main-content">
         {/* ACT I: EL MONOLITO (Hero Monumental) */}
-        {currentView === 'home' && <HomeHero />}
+        {currentView === 'home' && <HomeHero onInspectArtwork={handleInspect} />}
 
         {/* ACT II: LA COLECCIÓN (Exposición de Alta Definición) */}
         {currentView === 'coleccion' && (
-          <div className="view-container" style={{ pointerEvents: 'auto' }}>
+          <div className="view-container">
             <ErrorBoundary name="Colección Oficial">
               <Suspense fallback={<MinimalLoader />}>
                 <GalleryGrid onInspect={handleInspect} />
@@ -397,7 +403,7 @@ export default function App() {
 
         {/* ACT V: EL ATELIER (Encargos Bespoke) */}
         {currentView === 'atelier' && (
-          <div className="view-container" style={{ pointerEvents: 'auto' }}>
+          <div className="view-container">
             <ErrorBoundary name="Atelier de Encargos">
               <Suspense fallback={<MinimalLoader />}>
                 <CommissionCalculator />
@@ -405,13 +411,10 @@ export default function App() {
             </ErrorBoundary>
           </div>
         )}
+      </main>
 
-        {!is3DActive && (
-          <div style={{ pointerEvents: 'auto', width: '100%', marginTop: 'auto' }}>
-            <PremiumFooter />
-          </div>
-        )}
-      </div>
+      {/* Footer minimalista de estudio */}
+      {!is3DActive && currentView !== '3d' && <PremiumFooter />}
 
       {/* Escena 3D - Pabellón Arquitectónico (Three.js WebGL) */}
       {isWebGLMounted && (
@@ -419,9 +422,9 @@ export default function App() {
           <Suspense fallback={null}>
             <div
               style={{
-                position: 'absolute',
+                position: 'fixed',
                 inset: 0,
-                zIndex: 1,
+                zIndex: isSceneVisible ? 1 : -1,
                 opacity: isSceneVisible ? 1 : 0,
                 pointerEvents: isSceneVisible ? 'auto' : 'none',
                 transition: 'opacity 0.6s ease-in-out',
@@ -451,6 +454,6 @@ export default function App() {
           setModalArtwork(ARTWORKS[idx])
         }}
       />
-    </>
+    </div>
   )
 }

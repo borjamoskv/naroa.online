@@ -41,14 +41,17 @@ export function NavigationPill({ currentView, audioActive, toggleAudio }: Naviga
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
       style={{
-        position: 'relative',
+        position: 'sticky',
+        top: 0,
+        left: 0,
+        right: 0,
         width: '100%',
         zIndex: 100,
-        background: 'rgba(3, 3, 5, 0.72)',
+        background: 'rgba(3, 3, 5, 0.85)',
         backdropFilter: 'blur(24px)',
         WebkitBackdropFilter: 'blur(24px)',
-        borderBottom: '1px solid rgba(212, 175, 55, 0.18)',
-        boxShadow: '0 4px 30px rgba(0, 0, 0, 0.7)',
+        borderBottom: '1px solid rgba(212, 175, 55, 0.2)',
+        boxShadow: '0 4px 30px rgba(0, 0, 0, 0.75)',
       }}
     >
       <div
