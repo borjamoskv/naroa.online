@@ -273,22 +273,6 @@ export default function App() {
                   A NAROA LA ORAN A
                 </p>
 
-                <blockquote 
-                  style={{ 
-                    margin: '0 0 32px 0',
-                    padding: '0 0 0 18px',
-                    borderLeft: '2px solid #D4AF37',
-                    color: 'rgba(255,255,255,0.85)',
-                    fontSize: 'clamp(1.05rem, 2.5vw, 1.25rem)',
-                    lineHeight: 1.7,
-                    fontStyle: 'italic',
-                    fontFamily: 'var(--font-serif, "Cinzel", Georgia, serif)'
-                  }}
-                >
-                  «Cada piedra que uso tiene millones de años.<br />
-                  Cada retrato que pinto tiene la edad de quien lo mira.»
-                </blockquote>
-
                 <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                   <a 
                     href="https://www.instagram.com/naroa_art/" 
