@@ -245,6 +245,7 @@ export function KineticHorizon({
           lastAnnouncedIndexRef.current = nearestIdx
           activeIndexRef.current = nearestIdx
           setActiveIdx(nearestIdx)
+          sound.playTick()
           onSelectArtwork(nearestIdx)
         }
       } else {
@@ -557,6 +558,9 @@ export function KineticHorizon({
           const isCentered = absDist < 0.45
           const auraColor = ARTWORK_AURA_COLORS[artwork.id] || 'rgba(212, 175, 55, 0.3)'
 
+          const tiltX = isCentered ? Math.max(-4, Math.min(4, (mouseCoord.y - (typeof window !== 'undefined' ? window.innerHeight : 900) / 2) * -0.01)) : 0
+          const tiltY = isCentered ? Math.max(-5, Math.min(5, (mouseCoord.x - viewportWidth / 2) * 0.012)) : 0
+
           return (
             <div
               key={artwork.id}
@@ -575,7 +579,7 @@ export function KineticHorizon({
                 position: 'absolute',
                 left: `calc(50% + ${offset}px)`,
                 top: '50%',
-                transform: `translate(-50%, -50%) scale(${scale}) rotateY(${rotateY}deg)`,
+                transform: `translate(-50%, -50%) scale(${scale}) rotateX(${tiltX}deg) rotateY(${rotateY + tiltY}deg)`,
                 transformOrigin: 'center center',
                 transformStyle: 'preserve-3d',
                 opacity,
@@ -656,6 +660,22 @@ export function KineticHorizon({
                     transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
                   }}
                 />
+
+                {/* DESTELLO ESPECULAR DINÁMICO DE MICA MINERAL */}
+                {isCentered && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      background: `radial-gradient(circle 320px at ${Math.max(10, Math.min(90, ((mouseCoord.x - (viewportWidth / 2 - 180)) / 360) * 100))}% ${Math.max(10, Math.min(90, ((mouseCoord.y - ((typeof window !== 'undefined' ? window.innerHeight : 900) / 2 - 240)) / 480) * 100))}%, rgba(255, 255, 255, 0.22) 0%, rgba(212, 175, 55, 0.14) 35%, transparent 70%)`,
+                      mixBlendMode: 'color-dodge',
+                      pointerEvents: 'none',
+                      zIndex: 15,
+                      opacity: cursorOverArtwork === idx ? 0.95 : 0.45,
+                      transition: 'opacity 0.25s ease',
+                    }}
+                  />
+                )}
 
                 {/* SOMBRA DE CONTACTO MONUMENTAL DE LA PIEDRA */}
                 <div

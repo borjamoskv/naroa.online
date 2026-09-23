@@ -85,8 +85,8 @@ export function VideogameHUD({
           }}
         >
           {isTouchDevice
-            ? '📱 Recorrido 360° táctil. Desliza para explorar y pulsa sobre cualquier obra.'
-            : '[ W A S D ] Explorar Sala · [ Ratón ] Perspectiva · [ Clic ] Inspeccionar Obra'}
+            ? '📱 Recorrido 360° táctil. Desliza para explorar la sala y pulsa sobre cualquier obra.'
+            : '[ W A S D ] Explorar Sala · [ Ratón ] Perspectiva Libre · [ Clic ] Inspeccionar Obra'}
         </p>
 
         <button
@@ -117,22 +117,25 @@ export function VideogameHUD({
             e.currentTarget.style.boxShadow = '0 0 35px rgba(212, 175, 55, 0.4)'
           }}
         >
-          ENTRAR A LA SALA 3D ↗
+          ENTRAR AL PABELLÓN 3D ↗
         </button>
 
-        <a
-          href="#/"
-          onClick={() => sound.playTick()}
+        <button
+          onClick={() => {
+            sound.playTick()
+            if (onExit) onExit()
+          }}
           style={{
             marginTop: '28px',
+            background: 'transparent',
             color: 'rgba(255, 255, 255, 0.5)',
-            textDecoration: 'none',
             fontFamily: 'var(--font-mono, monospace)',
             fontSize: '0.8rem',
             letterSpacing: '0.14em',
             padding: '8px 20px',
             border: '1px solid rgba(255, 255, 255, 0.15)',
             borderRadius: '30px',
+            cursor: 'pointer',
             transition: 'all 0.25s ease',
           }}
           onMouseEnter={(e) => {
@@ -144,8 +147,8 @@ export function VideogameHUD({
             e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)'
           }}
         >
-          ← VOLVER AL PORTFOLIO
-        </a>
+          ← VOLVER AL HORIZONTE
+        </button>
       </div>
     )
   }
