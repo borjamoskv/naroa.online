@@ -2,9 +2,7 @@ import { Suspense, lazy, useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { ARTWORKS, type Artwork } from './artworks'
 import { ArtworkModal } from './components/ArtworkModal'
-
 import { sound } from './utils/audio'
-
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { NavigationPill } from './components/NavigationPill'
 import { HomeHero } from './components/HomeHero'
@@ -12,32 +10,62 @@ import { PremiumFooter } from './components/PremiumFooter'
 import { VideogameHUD } from './components/VideogameHUD'
 import { CustomCursor } from './components/CustomCursor'
 
-// Vistas con Lazy Loading (Ultrathink Code-Splitting)
+// Vistas con Lazy Loading de Alta Eficiencia
 const Scene = lazy(() => import('./components/Scene'))
-const GalleryGrid = lazy(() => import('./components/GalleryGrid').then(module => ({ default: module.GalleryGrid })))
-const CommissionCalculator = lazy(() => import('./components/CommissionCalculator').then(module => ({ default: module.CommissionCalculator })))
-const GamesHub = lazy(() => import('./components/GamesHub').then(module => ({ default: module.GamesHub })))
-const BlogSection = lazy(() => import('./components/BlogSection').then(module => ({ default: module.BlogSection })))
+const GalleryGrid = lazy(() => import('./components/GalleryGrid').then(m => ({ default: m.GalleryGrid })))
+const CommissionCalculator = lazy(() => import('./components/CommissionCalculator').then(m => ({ default: m.CommissionCalculator })))
 
-type ViewMode = 'home' | '3d' | 'destacada' | 'encargos' | 'juegos' | 'about' | 'blog'
+export type ViewMode = 'home' | 'coleccion' | '3d' | 'artista' | 'atelier'
 
 const getViewFromHash = (hash: string): ViewMode => {
-  if (hash === '#/destacada' || hash === '#/galeria' || hash === '#/archivo' || hash === '#/coleccion') return 'destacada'
-  if (hash === '#/encargos' || hash === '#/contacto' || hash === '#/atelier') return 'encargos'
-  if (hash === '#/juegos') return 'juegos'
-  if (hash === '#/blog') return 'blog'
-  if (hash === '#/sobre-mi' || hash === '#/about') return 'about'
-  if (hash === '#/3d') return '3d'
+  if (hash === '#/coleccion' || hash === '#/destacada' || hash === '#/galeria' || hash === '#/obras') return 'coleccion'
+  if (hash === '#/atelier' || hash === '#/encargos' || hash === '#/contacto') return 'atelier'
+  if (hash === '#/artista' || hash === '#/sobre-mi' || hash === '#/about') return 'artista'
+  if (hash === '#/3d' || hash === '#/museo' || hash === '#/espacio') return '3d'
   return 'home'
 }
 
-const toSlug = (s: string) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+const toSlug = (s: string) =>
+  s
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '')
 
-function Loader() {
+function MinimalLoader() {
   return (
-    <div className="loader">
-      <div className="spinner"></div>
-      <div className="loader-text">MATERIALIZANDO...</div>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '60vh',
+        gap: '16px',
+      }}
+    >
+      <div
+        style={{
+          width: '28px',
+          height: '28px',
+          border: '1.5px solid rgba(212, 175, 55, 0.2)',
+          borderTopColor: '#D4AF37',
+          borderRadius: '50%',
+          animation: 'spin 0.8s linear infinite',
+        }}
+      />
+      <span
+        style={{
+          fontFamily: 'var(--font-mono, monospace)',
+          fontSize: '0.68rem',
+          letterSpacing: '0.2em',
+          color: 'rgba(212, 175, 55, 0.8)',
+          textTransform: 'uppercase',
+        }}
+      >
+        MATERIALIZANDO...
+      </span>
     </div>
   )
 }
@@ -57,31 +85,32 @@ export default function App() {
     }
     return null
   })
+
   const [audioActive, setAudioActive] = useState<boolean>(sound.isEnabled())
   const [isWebGLMounted, setIsWebGLMounted] = useState(false)
-  
-  // Estados del Videojuego FPS
-  const [isStarted, setIsStarted] = useState(false)
-  const [prevView, setPrevView] = useState(currentView)
+
+  // Estados del Pabellón 3D
+  const [is3DActive, setIs3DActive] = useState(false)
   const [interactionPrompt, setInteractionPrompt] = useState<string | null>(null)
   const [playerPos, setPlayerPos] = useState({ x: 0, z: 0 })
   const [playerRotation, setPlayerRotation] = useState(0)
 
-  // Desactivar isStarted si salimos de la vista 3D
-  if (currentView !== prevView) {
-    setPrevView(currentView)
-    if (currentView !== '3d' && isStarted) {
-      setIsStarted(false)
-    }
-  }
-
-  // Ultrathink Deferred WebGL Mounting: 
+  // Carga diferida de WebGL para rendimiento óptimo
   useEffect(() => {
-    const timer = setTimeout(() => setIsWebGLMounted(true), 600)
+    const timer = setTimeout(() => setIsWebGLMounted(true), 400)
     return () => clearTimeout(timer)
   }, [])
 
-  // Hash Navigation Handler
+  // Desactivar estado inmersivo si salimos de la vista 3D
+  const [prevView, setPrevView] = useState(currentView)
+  if (currentView !== prevView) {
+    setPrevView(currentView)
+    if (currentView !== '3d' && is3DActive) {
+      setIs3DActive(false)
+    }
+  }
+
+  // Navegación reactiva por Hash
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash
@@ -109,7 +138,6 @@ export default function App() {
   const handleInspect = (index: number) => {
     sound.playOpen()
     setModalArtwork(ARTWORKS[index])
-    // Liberar puntero temporalmente al inspeccionar
     if (document.pointerLockElement) {
       document.exitPointerLock()
     }
@@ -120,119 +148,108 @@ export default function App() {
     setAudioActive(newState)
   }
 
-  const isSceneActive = currentView === '3d'
-
-  // Escuchar cuando el usuario presiona ESC para salir del PointerLock
+  // Liberar puntero al pulsar ESC
   useEffect(() => {
     const handlePointerLockChange = () => {
       if (!document.pointerLockElement) {
-        setIsStarted(false)
+        setIs3DActive(false)
       }
     }
     document.addEventListener('pointerlockchange', handlePointerLockChange)
     return () => document.removeEventListener('pointerlockchange', handlePointerLockChange)
   }, [])
 
+  const isSceneVisible = currentView === '3d'
+
   return (
     <>
+      {/* Cursor inercial de oro mineral */}
       <CustomCursor />
+
       <div className="ui-layer" style={{ pointerEvents: 'none' }}>
-        
-        {/* Mostrar Navbar SIEMPRE que NO hayamos iniciado el modo FPS inmersivo */}
-        {!isStarted && (
+        {/* Barra de Navegación de Alta Gama */}
+        {!is3DActive && (
           <div style={{ pointerEvents: 'auto', width: '100%', zIndex: 50 }}>
-            <NavigationPill currentView={currentView} audioActive={audioActive} toggleAudio={toggleAudio} />
+            <NavigationPill
+              currentView={currentView}
+              audioActive={audioActive}
+              toggleAudio={toggleAudio}
+            />
           </div>
         )}
 
+        {/* ACT I: EL MONOLITO (Hero Monumental) */}
         {currentView === 'home' && <HomeHero />}
 
-        {currentView === 'destacada' && (
+        {/* ACT II: LA COLECCIÓN (Exposición de Alta Definición) */}
+        {currentView === 'coleccion' && (
           <div className="view-container" style={{ pointerEvents: 'auto' }}>
-            <ErrorBoundary name="Galería Destacada">
-              <Suspense fallback={<Loader />}>
+            <ErrorBoundary name="Colección Oficial">
+              <Suspense fallback={<MinimalLoader />}>
                 <GalleryGrid onInspect={handleInspect} />
               </Suspense>
             </ErrorBoundary>
           </div>
         )}
 
+        {/* ACT III: ESPACIO 3D (Pabellón Arquitectónico) */}
         {currentView === '3d' && (
-          <VideogameHUD 
-            isStarted={isStarted} 
-            onStart={() => setIsStarted(true)} 
+          <VideogameHUD
+            isStarted={is3DActive}
+            onStart={() => setIs3DActive(true)}
             onExit={() => {
-              setIsStarted(false)
+              setIs3DActive(false)
               if (document.pointerLockElement) document.exitPointerLock()
             }}
-            interactionPrompt={interactionPrompt} 
+            interactionPrompt={interactionPrompt}
             playerPos={playerPos}
             playerRotation={playerRotation}
           />
         )}
 
-        {currentView === 'encargos' && (
-          <div className="view-container" style={{ pointerEvents: 'auto' }}>
-            <ErrorBoundary name="Calculadora de Encargos">
-              <Suspense fallback={<Loader />}>
-                <CommissionCalculator />
-              </Suspense>
-            </ErrorBoundary>
-          </div>
-        )}
-
-        {currentView === 'juegos' && (
-          <div className="view-container" style={{ pointerEvents: 'auto' }}>
-            <ErrorBoundary name="Centro de Juegos">
-              <Suspense fallback={<Loader />}>
-                <GamesHub />
-              </Suspense>
-            </ErrorBoundary>
-          </div>
-        )}
-
-        {currentView === 'blog' && (
-          <div className="view-container" style={{ pointerEvents: 'auto' }}>
-            <ErrorBoundary name="Blog / Manifiesto">
-              <Suspense fallback={<Loader />}>
-                <BlogSection />
-              </Suspense>
-            </ErrorBoundary>
-          </div>
-        )}
-
-        {currentView === 'about' && (
-          <div className="view-container about-view" style={{ maxWidth: '960px', margin: '0 auto', paddingTop: '100px', paddingBottom: '60px', pointerEvents: 'auto' }}>
-            <div 
-              style={{ 
-                display: 'grid', 
-                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
-                gap: '40px', 
+        {/* ACT IV: EL PALÍNDROMO (Artista & Manifiesto) */}
+        {currentView === 'artista' && (
+          <div
+            className="view-container about-view"
+            style={{
+              maxWidth: '980px',
+              margin: '0 auto',
+              padding: '80px 24px 80px',
+              pointerEvents: 'auto',
+            }}
+          >
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                gap: '48px',
                 alignItems: 'center',
-                background: 'rgba(15, 15, 20, 0.85)',
-                border: '1px solid rgba(212, 175, 55, 0.4)',
-                borderRadius: '20px',
-                padding: 'clamp(24px, 5vw, 48px)',
-                boxShadow: '0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(212,175,55,0.1)',
-                backdropFilter: 'blur(15px)'
+                background: 'rgba(8, 8, 12, 0.88)',
+                border: '1px solid rgba(212, 175, 55, 0.35)',
+                borderRadius: '24px',
+                padding: 'clamp(28px, 5vw, 56px)',
+                boxShadow: '0 25px 60px rgba(0,0,0,0.85), 0 0 35px rgba(212,175,55,0.08)',
+                backdropFilter: 'blur(20px)',
+                WebkitBackdropFilter: 'blur(20px)',
               }}
             >
+              {/* Retrato Oficial Nítido */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8 }}
+                transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
                 style={{ position: 'relative' }}
               >
                 <img
                   src="/assets/naroa-portrait-DW8XfHYG.webp"
                   alt="Naroa Gutiérrez Gil"
-                  style={{ 
-                    width: '100%', 
-                    borderRadius: '14px', 
-                    border: '1px solid rgba(255,255,255,0.15)', 
-                    boxShadow: '0 15px 35px rgba(0,0,0,0.9)',
+                  style={{
+                    width: '100%',
+                    borderRadius: '16px',
+                    border: '1px solid rgba(255,255,255,0.12)',
+                    boxShadow: '0 15px 40px rgba(0,0,0,0.9)',
                     display: 'block',
-                    objectFit: 'cover'
+                    objectFit: 'cover',
                   }}
                   onError={(e) => {
                     e.currentTarget.src = '/assets/naroa-portrait-DW8XfHYG.jpg'
@@ -240,59 +257,62 @@ export default function App() {
                 />
               </motion.div>
 
+              {/* El Palíndromo & Identidad Visual Pura */}
               <motion.div
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
+                transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                 style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
               >
-                <h1 
-                  style={{ 
-                    fontSize: 'clamp(2.2rem, 5vw, 3.4rem)', 
+                <h1
+                  style={{
+                    fontSize: 'clamp(2.4rem, 5vw, 3.8rem)',
                     fontFamily: 'var(--font-serif, "Cinzel", Georgia, serif)',
                     fontWeight: 700,
-                    letterSpacing: '0.12em',
-                    lineHeight: 1.1,
-                    margin: '0 0 8px 0',
-                    color: '#FFFFFF'
+                    letterSpacing: '0.14em',
+                    lineHeight: 1.05,
+                    margin: '0 0 10px 0',
+                    color: '#FFFFFF',
                   }}
                 >
                   AORAN / <span style={{ color: '#D4AF37' }}>NAROA</span>
                 </h1>
 
-                <p 
-                  style={{ 
+                <p
+                  style={{
                     fontFamily: 'var(--font-mono, monospace)',
-                    color: '#D4AF37', 
-                    fontSize: '0.85rem', 
-                    letterSpacing: '0.2em', 
-                    margin: '0 0 28px 0',
-                    textTransform: 'uppercase'
+                    color: '#D4AF37',
+                    fontSize: '0.88rem',
+                    letterSpacing: '0.25em',
+                    margin: '0 0 32px 0',
+                    textTransform: 'uppercase',
                   }}
                 >
                   A NAROA LA ORAN A
                 </p>
 
-                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                  <a 
-                    href="https://www.instagram.com/naroa_art/" 
-                    target="_blank" 
+                <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
+                  <a
+                    href="https://www.instagram.com/naroa_art/"
+                    target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => sound.playTick()}
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center',
-                      gap: '6px',
+                      gap: '8px',
                       background: 'rgba(212, 175, 55, 0.15)',
                       border: '1px solid #D4AF37',
                       color: '#D4AF37',
-                      padding: '10px 18px',
-                      borderRadius: '8px',
-                      fontSize: '0.85rem',
+                      padding: '12px 22px',
+                      borderRadius: '30px',
+                      fontSize: '0.82rem',
+                      fontFamily: 'var(--font-mono, monospace)',
                       fontWeight: 700,
+                      letterSpacing: '0.1em',
                       textDecoration: 'none',
-                      transition: 'all 0.2s ease',
-                      boxShadow: '0 0 15px rgba(212,175,55,0.2)'
+                      transition: 'all 0.25s ease',
+                      boxShadow: '0 0 20px rgba(212,175,55,0.25)',
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.background = '#D4AF37'
@@ -305,24 +325,27 @@ export default function App() {
                   >
                     INSTAGRAM (@naroa_art) ↗
                   </a>
-                  <a 
-                    href="https://www.facebook.com/naroa.artista.plastica" 
-                    target="_blank" 
+
+                  <a
+                    href="https://www.facebook.com/naroa.artista.plastica"
+                    target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => sound.playTick()}
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center',
                       gap: '6px',
-                      background: 'rgba(255, 255, 255, 0.06)',
+                      background: 'rgba(255, 255, 255, 0.05)',
                       border: '1px solid rgba(255, 255, 255, 0.2)',
-                      color: 'rgba(255,255,255,0.8)',
-                      padding: '10px 18px',
-                      borderRadius: '8px',
-                      fontSize: '0.85rem',
+                      color: 'rgba(255,255,255,0.85)',
+                      padding: '12px 20px',
+                      borderRadius: '30px',
+                      fontSize: '0.82rem',
+                      fontFamily: 'var(--font-mono, monospace)',
                       fontWeight: 600,
+                      letterSpacing: '0.1em',
                       textDecoration: 'none',
-                      transition: 'all 0.2s ease'
+                      transition: 'all 0.25s ease',
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.borderColor = '#FFFFFF'
@@ -330,27 +353,30 @@ export default function App() {
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'
-                      e.currentTarget.style.color = 'rgba(255,255,255,0.8)'
+                      e.currentTarget.style.color = 'rgba(255,255,255,0.85)'
                     }}
                   >
                     FACEBOOK ↗
                   </a>
-                  <a 
-                    href="#/encargos" 
+
+                  <a
+                    href="#/atelier"
                     onClick={() => sound.playTick()}
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center',
                       gap: '6px',
-                      background: 'rgba(255, 255, 255, 0.06)',
+                      background: 'rgba(255, 255, 255, 0.05)',
                       border: '1px solid rgba(255, 255, 255, 0.2)',
-                      color: 'rgba(255,255,255,0.8)',
-                      padding: '10px 18px',
-                      borderRadius: '8px',
-                      fontSize: '0.85rem',
+                      color: 'rgba(255,255,255,0.85)',
+                      padding: '12px 20px',
+                      borderRadius: '30px',
+                      fontSize: '0.82rem',
+                      fontFamily: 'var(--font-mono, monospace)',
                       fontWeight: 600,
+                      letterSpacing: '0.1em',
                       textDecoration: 'none',
-                      transition: 'all 0.2s ease'
+                      transition: 'all 0.25s ease',
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.borderColor = '#D4AF37'
@@ -358,10 +384,10 @@ export default function App() {
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'
-                      e.currentTarget.style.color = 'rgba(255,255,255,0.8)'
+                      e.currentTarget.style.color = 'rgba(255,255,255,0.85)'
                     }}
                   >
-                    ENCARGOS & CONTACTO ↗
+                    ENCARGOS A MEDIDA ↗
                   </a>
                 </div>
               </motion.div>
@@ -369,30 +395,43 @@ export default function App() {
           </div>
         )}
 
-        {!isStarted && (
+        {/* ACT V: EL ATELIER (Encargos Bespoke) */}
+        {currentView === 'atelier' && (
+          <div className="view-container" style={{ pointerEvents: 'auto' }}>
+            <ErrorBoundary name="Atelier de Encargos">
+              <Suspense fallback={<MinimalLoader />}>
+                <CommissionCalculator />
+              </Suspense>
+            </ErrorBoundary>
+          </div>
+        )}
+
+        {!is3DActive && (
           <div style={{ pointerEvents: 'auto', width: '100%', marginTop: 'auto' }}>
             <PremiumFooter />
           </div>
         )}
       </div>
 
-      {/* Escena 3D - FPS Game Engine */}
+      {/* Escena 3D - Pabellón Arquitectónico (Three.js WebGL) */}
       {isWebGLMounted && (
-        <ErrorBoundary name="Galería 3D (Three.js WebGL)">
+        <ErrorBoundary name="Pabellón 3D (Three.js WebGL)">
           <Suspense fallback={null}>
-            <div style={{ 
-              position: 'absolute', 
-              inset: 0, 
-              zIndex: 1,
-              opacity: isSceneActive ? 1 : 0, 
-              pointerEvents: isSceneActive ? 'auto' : 'none',
-              transition: 'opacity 0.5s ease-in-out'
-            }}>
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                zIndex: 1,
+                opacity: isSceneVisible ? 1 : 0,
+                pointerEvents: isSceneVisible ? 'auto' : 'none',
+                transition: 'opacity 0.6s ease-in-out',
+              }}
+            >
               <Scene
                 onInspectArtwork={handleInspect}
-                active={isSceneActive}
+                active={isSceneVisible}
                 setInteractionPrompt={setInteractionPrompt}
-                isStarted={isStarted}
+                isStarted={is3DActive}
                 onPlayerMove={(pos, rot) => {
                   setPlayerPos(pos)
                   setPlayerRotation(rot)
@@ -403,9 +442,10 @@ export default function App() {
         </ErrorBoundary>
       )}
 
+      {/* Lightbox Modal de Inspección Cinemático */}
       <ArtworkModal
         artwork={modalArtwork}
-        currentIndex={modalArtwork ? ARTWORKS.findIndex((a) => a.id === modalArtwork.id) : 0}
+        currentIndex={modalArtwork ? ARTWORKS.findIndex(a => a.id === modalArtwork.id) : 0}
         onClose={() => setModalArtwork(null)}
         onNavigate={(idx) => {
           setModalArtwork(ARTWORKS[idx])

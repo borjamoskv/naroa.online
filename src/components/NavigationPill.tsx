@@ -3,17 +3,17 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { sound } from '../utils/audio'
 
 interface NavigationPillProps {
-  currentView: 'home' | '3d' | 'destacada' | 'encargos' | 'juegos' | 'about' | 'blog'
+  currentView: 'home' | 'coleccion' | '3d' | 'artista' | 'atelier'
   audioActive: boolean
   toggleAudio: () => void
 }
 
 const NAV_ITEMS = [
   { view: 'home', label: 'INICIO', href: '#/' },
-  { view: 'destacada', label: 'COLECCIÓN', href: '#/destacada' },
+  { view: 'coleccion', label: 'COLECCIÓN', href: '#/coleccion' },
   { view: '3d', label: 'ESPACIO 3D', href: '#/3d' },
-  { view: 'about', label: 'SOBRE MÍ', href: '#/sobre-mi' },
-  { view: 'encargos', label: 'ATELIER', href: '#/encargos' },
+  { view: 'artista', label: 'ARTISTA', href: '#/artista' },
+  { view: 'atelier', label: 'ATELIER', href: '#/atelier' },
 ] as const
 
 export function NavigationPill({ currentView, audioActive, toggleAudio }: NavigationPillProps) {

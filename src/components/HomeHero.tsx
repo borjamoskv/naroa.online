@@ -333,7 +333,7 @@ export function HomeHero() {
         {/* Acciones de Alta Gama (Purga de Botones Dispersos) */}
         <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center' }}>
           <a
-            href="#/destacada"
+            href="#/coleccion"
             onClick={() => sound.playTick()}
             style={{
               display: 'inline-flex',
@@ -399,7 +399,7 @@ export function HomeHero() {
           </a>
 
           <a
-            href="#/encargos"
+            href="#/atelier"
             onClick={() => sound.playTick()}
             style={{
               display: 'inline-flex',

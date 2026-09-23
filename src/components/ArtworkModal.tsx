@@ -196,15 +196,15 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
                   💬 CONSULTAR DISPONIBILIDAD ↗
                 </a>
                 <a
-                  href="#/encargos"
-                  className="modal-cta brutal-cta-btn--whatsapp"
+                  href="#/atelier"
+                  className="modal-cta"
                   onClick={() => {
                     sound.playTick()
                     onClose()
                   }}
                   style={{ textDecoration: 'none' }}
                 >
-                  ⚡ ENCARGAR EN ESTE ESTILO
+                  SOLICITAR EN ESTE ESTILO ↗
                 </a>
                 <button
                   type="button"

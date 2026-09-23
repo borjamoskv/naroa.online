@@ -60,9 +60,10 @@ export default function Scene({ onInspectArtwork, active = true, setInteractionP
           isStarted={isStarted}
         />
 
-        <directionalLight position={[10, 20, 10]} intensity={1.5} castShadow />
-        <pointLight position={[-10, 5, -10]} intensity={1.2} color="#2B3BE5" />
-        <spotLight position={[0, 15, 0]} angle={0.8} penumbra={1} intensity={2} color="#D4AF37" />
+        <directionalLight position={[10, 20, 10]} intensity={1.2} color="#F5EFE6" />
+        <ambientLight intensity={0.5} color="#12131a" />
+        <pointLight position={[-10, 7, -10]} intensity={1.4} color="#D4AF37" />
+        <spotLight position={[0, 14, 0]} angle={0.85} penumbra={1} intensity={2.8} color="#FFF8E7" />
 
         {!prefersReducedMotion && !isMobile && (
           <EffectComposer>

@@ -121,15 +121,15 @@ function GalleryItem({
       <mesh position={[0, 0, -0.04]} scale={[scale[0] + 0.16, scale[1] + 0.16, 0.04]}>
         <boxGeometry />
         <meshPhysicalMaterial
-          color={isSelected ? '#2B3BE5' : '#0a0a0d'}
-          emissive={isSelected ? '#2B3BE5' : '#000000'}
-          emissiveIntensity={isSelected ? 0.7 : 0}
-          roughness={0.15}
-          metalness={0.85}
-          clearcoat={0.8}
-          transmission={0.25}
+          color={isSelected ? '#D4AF37' : '#0a0a0d'}
+          emissive={isSelected ? '#D4AF37' : '#000000'}
+          emissiveIntensity={isSelected ? 0.35 : 0}
+          roughness={0.2}
+          metalness={0.8}
+          clearcoat={0.9}
+          transmission={0.2}
           transparent
-          opacity={isSelected ? 0.85 : 0.6}
+          opacity={isSelected ? 0.9 : 0.6}
         />
       </mesh>
 

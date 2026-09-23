@@ -230,7 +230,7 @@ export function GalleryGrid({ onInspect }: GalleryGridProps) {
               </button>
 
               <a
-                href="#/encargos"
+                href="#/atelier"
                 onClick={() => sound.playTick()}
                 style={{
                   display: 'inline-flex',
