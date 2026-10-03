@@ -104,15 +104,26 @@ function GalleryItem({
         toneMapped={false}
       />
 
-      {/* ── 4. CARTELA FÍSICA DE MUSEO ── */}
+      {/* ── 4. CARTELA FÍSICA DE MUSEO MINERAL ── */}
       <group position={[0, -scale[1] / 2 - 0.24, 0.04]}>
+        {/* Bisel de bronce sutil */}
+        <mesh position={[0, 0, -0.005]}>
+          <planeGeometry args={[Math.min(scale[0] * 0.85, 2.0) + 0.02, 0.24]} />
+          <meshStandardMaterial
+            color={active ? '#a68c4a' : '#222019'}
+            roughness={0.5}
+            metalness={0.6}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+
         {/* Placa de papel mineral */}
         <mesh>
           <planeGeometry args={[Math.min(scale[0] * 0.85, 2.0), 0.22]} />
           <meshStandardMaterial
-            color="#0b0c10"
-            roughness={0.9}
-            metalness={0.1}
+            color={active ? '#12141c' : '#0b0c10'}
+            roughness={0.85}
+            metalness={0.15}
             side={THREE.DoubleSide}
           />
         </mesh>
@@ -134,7 +145,7 @@ function GalleryItem({
         <Text
           position={[0, -0.05, 0.01]}
           fontSize={0.055}
-          color="rgba(180, 160, 120, 0.75)"
+          color={active ? '#EAD6A6' : 'rgba(180, 160, 120, 0.75)'}
           anchorX="center"
           anchorY="middle"
           letterSpacing={0.08}
@@ -143,16 +154,13 @@ function GalleryItem({
         </Text>
       </group>
 
-      {/* ── 5. PROYECTOR CENITAL DE GALERÍA (ILUMINACIÓN REALISTA) ── */}
-      <spotLight
-        position={[0, scale[1] / 2 + 1.2, 2.0]}
-        target-position={[0, 0, 0]}
-        intensity={active ? 3.6 : 2.0}
-        angle={0.68}
-        penumbra={0.8}
-        distance={6.5}
-        color="#FFF5E4"
+      {/* ── 5. PROYECTOR CENITAL DE GALERÍA (ILUMINACIÓN FÍSICA DE MUSEO) ── */}
+      <pointLight
+        position={[0, scale[1] / 2 + 0.9, 1.5]}
+        intensity={active ? 3.8 : 2.2}
+        distance={6.2}
         decay={2}
+        color="#FFF6E8"
       />
     </group>
   )

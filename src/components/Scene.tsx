@@ -44,8 +44,17 @@ function CameraGlideController({ selectedIndex }: CameraGlideControllerProps) {
     } else {
       // Regreso a la perspectiva general de la sala
       targetLookAt.current.set(0, 1.8, 0)
-      if (prevIndexRef.current !== null) {
-        targetCamPos.current.set(0, 2.2, 7.5)
+      if (prevIndexRef.current !== null && ARTWORKS[prevIndexRef.current]) {
+        // Retroceso hemisférico armónico: retrocede en el mismo cuadrante angular
+        // conservando la orientación del observador y evitando atravesar el banco central
+        const numItems = ARTWORKS.length
+        const angle = (prevIndexRef.current / numItems) * Math.PI * 2
+        const pullbackRadius = 7.2
+        targetCamPos.current.set(
+          Math.sin(angle) * pullbackRadius,
+          2.1,
+          Math.cos(angle) * pullbackRadius
+        )
         isTransitioningRef.current = true
       }
     }
@@ -72,6 +81,7 @@ function CameraGlideController({ selectedIndex }: CameraGlideControllerProps) {
       ref={controlsRef}
       enableDamping
       dampingFactor={0.05}
+      rotateSpeed={0.65}
       minDistance={2.2}
       maxDistance={17.5}
       minPolarAngle={Math.PI / 4}
@@ -108,7 +118,11 @@ export default function Scene({
         powerPreference: 'high-performance',
       }}
       camera={{ position: [0, 2.0, 7.0], fov: 60 }}
-      onPointerMissed={() => onSelectArtwork(null)}
+      onPointerMissed={(e) => {
+        if (e.type === 'click') {
+          onSelectArtwork(null)
+        }
+      }}
     >
       <PerformanceMonitor onIncline={() => setDpr(isMobile ? 1.5 : 2)} onDecline={() => setDpr(1)}>
         <color attach="background" args={['#06060a']} />

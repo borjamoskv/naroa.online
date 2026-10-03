@@ -69,7 +69,13 @@ export function EnvironmentLevel() {
         <meshStandardMaterial color="#08080c" roughness={0.95} side={THREE.DoubleSide} />
       </mesh>
 
-      {/* Anillo del óculo */}
+      {/* Disco de apertura celeste profunda a través del óculo */}
+      <mesh position={[0, 10.35, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[4.18, 64]} />
+        <meshBasicMaterial color="#0b0d16" side={THREE.DoubleSide} />
+      </mesh>
+
+      {/* Anillo de bronce arquitectónico del óculo */}
       <mesh position={[0, 9.96, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[4.1, 4.25, 64]} />
         <meshStandardMaterial
