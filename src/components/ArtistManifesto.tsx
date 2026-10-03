@@ -296,6 +296,43 @@ export function ArtistManifesto({ isOpen, onClose }: ArtistManifestoProps) {
                 EMAIL ATELIER ✉
               </a>
             </div>
+
+            {/* ENLACE CRUZADO CANÓNICO AL DOMINIO INSTITUCIONAL ("EL MUSEO") */}
+            <a
+              href="https://naroagutierrezgil.com/bio"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => sound.playTick()}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                background: 'rgba(212, 175, 55, 0.08)',
+                border: '1px solid rgba(212, 175, 55, 0.4)',
+                color: '#D4AF37',
+                padding: '11px 18px',
+                borderRadius: '30px',
+                fontSize: '0.74rem',
+                fontFamily: 'var(--font-mono, monospace)',
+                fontWeight: 700,
+                letterSpacing: '0.12em',
+                textDecoration: 'none',
+                transition: 'all 0.25s ease',
+                marginTop: '4px',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#D4AF37'
+                e.currentTarget.style.color = '#000000'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(212, 175, 55, 0.08)'
+                e.currentTarget.style.color = '#D4AF37'
+              }}
+            >
+              <span>🏛️</span>
+              <span>BIOGRAFÍA & TRAYECTORIA / naroagutierrezgil.com ↗</span>
+            </a>
           </div>
         </div>
       </motion.div>

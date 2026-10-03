@@ -43,12 +43,18 @@
       </p>
     </section>
 
-    <div class="filter-bar">
-      <button class="filter-pill active" data-filter="all">TODAS (36)</button>
-      <button class="filter-pill" data-filter="rocks">ROCKS & PIZARRA (13)</button>
-      <button class="filter-pill" data-filter="divinos">DIVINOS & POP (10)</button>
-      <button class="filter-pill" data-filter="kintsugi">KINTSUGI & LATAS (7)</button>
-      <button class="filter-pill" data-filter="drawing">DIBUJO & PASTEL (6)</button>
+    <div class="search-filter-row">
+      <div class="filter-bar">
+        <button class="filter-pill active" data-filter="all">TODAS (36)</button>
+        <button class="filter-pill" data-filter="rocks">ROCKS & PIZARRA (13)</button>
+        <button class="filter-pill" data-filter="divinos">DIVINOS & POP (10)</button>
+        <button class="filter-pill" data-filter="kintsugi">KINTSUGI & LATAS (7)</button>
+        <button class="filter-pill" data-filter="drawing">DIBUJO & PASTEL (6)</button>
+      </div>
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="obra-search" class="search-input" placeholder="Buscar por título o técnica..." autocomplete="off" />
+      </div>
     </div>
 
     <div class="artwork-grid">
@@ -622,23 +628,46 @@
     </div>
 
     <script>
-      // Filtrado interactivo instantáneo
+      // Filtrado interactivo multi-criterio instantáneo
+      let currentFilter = 'all';
+      let currentQuery = '';
+
+      function applyFilters() {
+        document.querySelectorAll('.artwork-card').forEach(card => {
+          const cat = card.getAttribute('data-category');
+          const title = (card.getAttribute('data-title') || '').toLowerCase();
+          const medium = (card.getAttribute('data-medium') || '').toLowerCase();
+          const desc = (card.getAttribute('data-desc') || '').toLowerCase();
+
+          const matchesCat = (currentFilter === 'all' || cat === currentFilter);
+          const matchesQuery = !currentQuery || title.includes(currentQuery) || medium.includes(currentQuery) || desc.includes(currentQuery);
+
+          if (matchesCat && matchesQuery) {
+            card.style.display = 'flex';
+            card.style.animation = 'fadeInCard 0.35s ease forwards';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      }
+
       document.querySelectorAll('.filter-pill').forEach(btn => {
         btn.addEventListener('click', () => {
           document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
-          const filter = btn.getAttribute('data-filter');
-          document.querySelectorAll('.artwork-card').forEach(card => {
-            const cat = card.getAttribute('data-category');
-            if (filter === 'all' || cat === filter) {
-              card.style.display = 'flex';
-              card.style.animation = 'fadeInCard 0.35s ease forwards';
-            } else {
-              card.style.display = 'none';
-            }
-          });
+          currentFilter = btn.getAttribute('data-filter');
+          applyFilters();
         });
       });
+
+      const searchInput = document.getElementById('obra-search');
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          currentQuery = e.target.value.toLowerCase().trim();
+          applyFilters();
+        });
+      }
+
 
       // Lightbox Haute Curatorial
       const lightbox = document.getElementById('museum-lightbox');

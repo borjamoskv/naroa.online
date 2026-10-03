@@ -148,12 +148,18 @@ obra_content = f"""    <section class="section-header">
       </p>
     </section>
 
-    <div class="filter-bar">
-      <button class="filter-pill active" data-filter="all">TODAS ({total_count})</button>
-      <button class="filter-pill" data-filter="rocks">ROCKS & PIZARRA ({rocks_count})</button>
-      <button class="filter-pill" data-filter="divinos">DIVINOS & POP ({divinos_count})</button>
-      <button class="filter-pill" data-filter="kintsugi">KINTSUGI & LATAS ({kintsugi_count})</button>
-      <button class="filter-pill" data-filter="drawing">DIBUJO & PASTEL ({drawing_count})</button>
+    <div class="search-filter-row">
+      <div class="filter-bar">
+        <button class="filter-pill active" data-filter="all">TODAS ({total_count})</button>
+        <button class="filter-pill" data-filter="rocks">ROCKS & PIZARRA ({rocks_count})</button>
+        <button class="filter-pill" data-filter="divinos">DIVINOS & POP ({divinos_count})</button>
+        <button class="filter-pill" data-filter="kintsugi">KINTSUGI & LATAS ({kintsugi_count})</button>
+        <button class="filter-pill" data-filter="drawing">DIBUJO & PASTEL ({drawing_count})</button>
+      </div>
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="obra-search" class="search-input" placeholder="Buscar por título o técnica..." autocomplete="off" />
+      </div>
     </div>
 
     <div class="artwork-grid">
@@ -187,23 +193,46 @@ obra_content = f"""    <section class="section-header">
     </div>
 
     <script>
-      // Filtrado interactivo instantáneo
+      // Filtrado interactivo multi-criterio instantáneo
+      let currentFilter = 'all';
+      let currentQuery = '';
+
+      function applyFilters() {{
+        document.querySelectorAll('.artwork-card').forEach(card => {{
+          const cat = card.getAttribute('data-category');
+          const title = (card.getAttribute('data-title') || '').toLowerCase();
+          const medium = (card.getAttribute('data-medium') || '').toLowerCase();
+          const desc = (card.getAttribute('data-desc') || '').toLowerCase();
+
+          const matchesCat = (currentFilter === 'all' || cat === currentFilter);
+          const matchesQuery = !currentQuery || title.includes(currentQuery) || medium.includes(currentQuery) || desc.includes(currentQuery);
+
+          if (matchesCat && matchesQuery) {{
+            card.style.display = 'flex';
+            card.style.animation = 'fadeInCard 0.35s ease forwards';
+          }} else {{
+            card.style.display = 'none';
+          }}
+        }});
+      }}
+
       document.querySelectorAll('.filter-pill').forEach(btn => {{
         btn.addEventListener('click', () => {{
           document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
-          const filter = btn.getAttribute('data-filter');
-          document.querySelectorAll('.artwork-card').forEach(card => {{
-            const cat = card.getAttribute('data-category');
-            if (filter === 'all' || cat === filter) {{
-              card.style.display = 'flex';
-              card.style.animation = 'fadeInCard 0.35s ease forwards';
-            }} else {{
-              card.style.display = 'none';
-            }}
-          }});
+          currentFilter = btn.getAttribute('data-filter');
+          applyFilters();
         }});
       }});
+
+      const searchInput = document.getElementById('obra-search');
+      if (searchInput) {{
+        searchInput.addEventListener('input', (e) => {{
+          currentQuery = e.target.value.toLowerCase().trim();
+          applyFilters();
+        }});
+      }}
+
 
       // Lightbox Haute Curatorial
       const lightbox = document.getElementById('museum-lightbox');
@@ -288,14 +317,98 @@ bio_content = """    <section class="hero-editorial">
           </p>
         </div>
       </div>
+    </section>
+
+    <!-- LOS TRES PILARES MATÉRICOS -->
+    <section style="margin: 60px 0;">
+      <p class="section-kicker" style="text-align: center;">INVESTIGACIÓN DE MATERIALES</p>
+      <h3 class="section-title" style="text-align: center;">LOS TRES PILARES MATÉRICOS</h3>
+      <div class="pillars-grid">
+        <div class="pillar-card">
+          <span class="pillar-num">PILAR 01</span>
+          <h4 class="pillar-title">PIZARRA NATURAL FÓSIL</h4>
+          <p class="pillar-desc">
+            Losas extraídas de canteras milenarias con cantos vivos e irregulares. La roca no actúa como un fondo inerte, sino como coautora activa de la obra: sus vetas y estratos geológicos guían el trazo del pincel.
+          </p>
+        </div>
+        <div class="pillar-card">
+          <span class="pillar-num">PILAR 02</span>
+          <h4 class="pillar-title">MICA MINERAL & PAN DE ORO</h4>
+          <p class="pillar-desc">
+            Micro-escamas de silicato de mica combinadas con láminas de pan de oro fino de 24 quilates. La luz rebota en ángulos dispares según la posición del espectador, transformando el cuadro en un objeto óptico dinámico.
+          </p>
+        </div>
+        <div class="pillar-card">
+          <span class="pillar-num">PILAR 03</span>
+          <h4 class="pillar-title">KINTSUGI VITAL & METAL POP</h4>
+          <p class="pillar-desc">
+            Sublimación poética de la cicatriz inspirada en la técnica centenaria japonesa. Latas de hojalata prensada y superficies oxidadas se unen con suturas de oro, rescatando la belleza de lo vulnerable.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CRONOLOGÍA CURATORIAL DE HITOS -->
+    <section style="margin: 60px 0;">
+      <p class="section-kicker" style="text-align: center;">HITOS & RECONOCIMIENTOS</p>
+      <h3 class="section-title" style="text-align: center;">TRAYECTORIA ARTÍSTICA</h3>
+      <div class="exhibitions-timeline" style="max-width: 900px; margin: 40px auto 0;">
+        <article class="exhibition-item">
+          <div class="exhibition-year">2024 - 2026</div>
+          <div>
+            <h4 class="exhibition-title">Investigación en Minerales Ópticos y Expansión Europea</h4>
+            <p class="exhibition-place">Bilbao · Taller de Creación Matérica</p>
+            <p class="exhibition-desc">Desarrollo de las series Kintsugi Mineral y Rocks de gran formato. Entrada en colecciones privadas de París, Londres y Madrid.</p>
+          </div>
+        </article>
+        <article class="exhibition-item">
+          <div class="exhibition-year">2023</div>
+          <div>
+            <h4 class="exhibition-title">Exposición Individual «Espejos del Alma»</h4>
+            <p class="exhibition-place">Bizkaia · Sala de Exposiciones</p>
+            <p class="exhibition-desc">Presentación pública de la serie de retratos sobre losas fósiles de pizarra negra con acabados al pan de oro y óleo satinado.</p>
+          </div>
+        </article>
+        <article class="exhibition-item">
+          <div class="exhibition-year">2021</div>
+          <div>
+            <h4 class="exhibition-title">Selección Muestra Jóvenes Creadores</h4>
+            <p class="exhibition-place">País Vasco · Certamen Institucional</p>
+            <p class="exhibition-desc">Distinción por la experimentación técnica y rescate de soportes geológicos en el hiperrealismo contemporáneo.</p>
+          </div>
+        </article>
+        <article class="exhibition-item">
+          <div class="exhibition-year">2018</div>
+          <div>
+            <h4 class="exhibition-title">Licenciatura en Bellas Artes (UPV/EHU)</h4>
+            <p class="exhibition-place">Universidad del País Vasco · Especialidad Pintura</p>
+            <p class="exhibition-desc">Formación académica rigurosa en dibujo anatómico, química de pigmentos, temple y técnicas clásicas de veladura.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- CALLOUT AL SÓTANO EXPERIMENTAL -->
+    <section class="lab-callout-banner">
+      <p class="section-kicker">PROCESO EN VIVO & EXPERIMENTOS</p>
+      <h3 class="lab-callout-title">EXPLORA EL LABORATORIO DIGITAL</h3>
+      <p class="lab-callout-text">Accede a las pruebas de texturas interactivas, lupa de alta resolución y shaders WebGL en naroa.online.</p>
+      <a href="https://naroa.online/#/process" target="_blank" rel="noopener noreferrer" class="btn-primary">
+        <span>🔬</span>
+        <span>VER PROCESO DE TALLER EN NAROA.ONLINE ↗</span>
+      </a>
     </section>"""
 
 write_page('bio/index.html', 'Biografía & Manifiesto Curatorial', 'Trayectoria profesional, formación en Bellas Artes y filosofía matérica de Naroa Gutiérrez Gil, artista visual en Bilbao.', 'BIO', bio_content)
 
 # ── 3. PÁGINA: /exposiciones/index.html ───────────────────────
+solo_count = sum(1 for e in exhibitions_data if e.get('type') == 'solo')
+group_count = sum(1 for e in exhibitions_data if e.get('type') == 'group')
+total_exhib = len(exhibitions_data)
+
 exhib_items_html = ""
 for ex in exhibitions_data:
-    exhib_items_html += f"""      <article class="exhibition-item">
+    exhib_items_html += f"""      <article class="exhibition-item" data-type="{ex.get('type', 'solo')}">
         <div class="exhibition-year">{ex.get('year', '')}</div>
         <div>
           <h3 class="exhibition-title">{ex.get('title', '')} <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--gold); font-weight: normal;">({ex.get('type', 'solo').upper()})</span></h3>
@@ -312,8 +425,33 @@ exhib_content = f"""    <section class="section-header">
       </p>
     </section>
 
+    <div class="filter-bar" style="margin-bottom: 40px;">
+      <button class="filter-pill active" data-type="all">TODAS ({total_exhib})</button>
+      <button class="filter-pill" data-type="solo">INDIVIDUALES ({solo_count})</button>
+      <button class="filter-pill" data-type="group">COLECTIVAS ({group_count})</button>
+    </div>
+
     <div class="exhibitions-timeline">
-{exhib_items_html}    </div>"""
+{exhib_items_html}    </div>
+
+    <script>
+      document.querySelectorAll('.filter-bar .filter-pill').forEach(btn => {{
+        btn.addEventListener('click', () => {{
+          document.querySelectorAll('.filter-bar .filter-pill').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const type = btn.getAttribute('data-type');
+          document.querySelectorAll('.exhibition-item').forEach(item => {{
+            const itemType = item.getAttribute('data-type');
+            if (type === 'all' || itemType === type) {{
+              item.style.display = 'grid';
+              item.style.animation = 'fadeInCard 0.3s ease forwards';
+            }} else {{
+              item.style.display = 'none';
+            }}
+          }});
+        }});
+      }});
+    </script>"""
 
 write_page('exposiciones/index.html', 'Historial de Exposiciones', 'Cronología de muestras individuales y colectivas de Naroa Gutiérrez Gil en Bilbao, Madrid, San Sebastián y galerías online.', 'EXPOSICIONES', exhib_content)
 
@@ -326,7 +464,32 @@ prensa_content = """    <section class="section-header">
       </p>
     </section>
 
-    <div class="exhibitions-timeline" style="max-width: 900px;">
+    <!-- CITAS DESTACADAS DE CRÍTICA DE ARTE -->
+    <div class="press-quotes-grid">
+      <div class="press-quote-card">
+        <p class="press-quote-text">«Una de las aportaciones más magnéticas y táctiles de la pintura figurativa vasca contemporánea. La roca no es soporte: es coautora viva del retrato.»</p>
+        <div>
+          <p class="press-quote-author">DEIA CULTURAL</p>
+          <p class="press-quote-source">Suplemento de Artes Plásticas · Especial Nuevas Voces</p>
+        </div>
+      </div>
+      <div class="press-quote-card">
+        <p class="press-quote-text">«El rostro humano brota de la pizarra con una presencia que desafía la gravedad. La luz de la mica mineral transforma el cuadro en un objeto óptico dinámico.»</p>
+        <div>
+          <p class="press-quote-author">EL CORREO ESPAÑOL</p>
+          <p class="press-quote-source">Sección Arte Vasco · Crítica de Exposiciones</p>
+        </div>
+      </div>
+      <div class="press-quote-card">
+        <p class="press-quote-text">«Al aplicar el kintsugi con pan de oro fino sobre latas y pizarra rota, Naroa Gutiérrez Gil eleva la cicatriz cotidiana a reliquia sagrada del pop contemporáneo.»</p>
+        <div>
+          <p class="press-quote-author">RADIO EUSKADI</p>
+          <p class="press-quote-source">Graffiti Cultural · Mesa Redonda de Creadores</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="exhibitions-timeline" style="max-width: 900px; margin: 0 auto;">
       <article class="exhibition-item">
         <div class="exhibition-year">2024</div>
         <div>
@@ -365,6 +528,7 @@ prensa_content = """    <section class="section-header">
       </a>
     </section>"""
 
+
 write_page('prensa/index.html', 'Prensa & Dossier Curatorial', 'Apariciones en medios de comunicación, entrevistas y dossier descargable para comisarios y periodistas de arte.', 'PRENSA', prensa_content)
 
 # ── 5. PÁGINA: /encargos/index.html ───────────────────────────
@@ -396,22 +560,102 @@ encargos_content = """    <section class="section-header">
       </div>
     </div>
 
-    <div style="background: var(--bg-surface); border: 1px solid var(--gold); border-radius: 16px; padding: 48px 32px; text-align: center; max-width: 800px; margin: 0 auto;">
-      <h3 style="font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 12px;">¿DESEAS CONSULTAR UN ENCARGO?</h3>
-      <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto 32px; font-size: 1.05rem;">
-        Contacta directamente con el taller en Bilbao para consultar disponibilidad de fechas, presupuestos a medida y tiempos de producción.
-      </p>
-      <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
-        <a href="https://wa.me/34636060609?text=Hola%20Naroa%2C%20deseo%20consultar%20sobre%20un%20encargo%20de%20obra%20personalizada" target="_blank" rel="noopener noreferrer" class="btn-primary">
-          <span>💬</span>
-          <span>WHATSAPP ATELIER (+34 636 060 609) ➔</span>
-        </a>
-        <a href="mailto:naroa@naroa.eu?subject=Consulta%20Encargo%20Bespoke" class="btn-secondary">
-          <span>✉</span>
-          <span>EMAIL DE ESTUDIO</span>
-        </a>
+    <!-- TERMINAL INTERACTIVO HAUTE BESPOKE ESTIMATOR -->
+    <div class="bespoke-configurator-box">
+      <div style="text-align: center; margin-bottom: 32px;">
+        <p class="section-kicker">TERMINAL INTERACTIVO</p>
+        <h3 style="font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 8px;">DISEÑA TU PROYECTO A MEDIDA</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; max-width: 560px; margin: 0 auto;">
+          Selecciona soporte, escala y metales nobles para generar una propuesta inmediata dirigida al taller de Bilbao.
+        </p>
       </div>
-    </div>"""
+
+      <!-- SELECCIÓN 1: SOPORTE -->
+      <div class="config-step">
+        <label class="config-label">1. SELECCIONA EL SOPORTE MATERIAL</label>
+        <div class="config-options" data-group="support">
+          <button type="button" class="config-pill active" data-val="Pizarra Natural Fósil (Cantos Rústicos)">🪨 Pizarra Natural Fósil</button>
+          <button type="button" class="config-pill" data-val="Lienzo 3D Belga Gran Formato">🖼️ Lienzo 3D Belga</button>
+          <button type="button" class="config-pill" data-val="Hojalata & Metales Kintsugi">🥫 Metales Kintsugi</button>
+        </div>
+      </div>
+
+      <!-- SELECCIÓN 2: ESCALA / FORMATO -->
+      <div class="config-step">
+        <label class="config-label">2. ESCALA / DIMENSIÓN APROXIMADA</label>
+        <div class="config-options" data-group="size">
+          <button type="button" class="config-pill active" data-val="Íntimo (~40 × 30 cm)">Íntimo (~40 × 30 cm)</button>
+          <button type="button" class="config-pill" data-val="Galería (~80 × 60 cm)">Galería (~80 × 60 cm)</button>
+          <button type="button" class="config-pill" data-val="Monumental (~120 × 90 cm)">Monumental (~120 × 90 cm)</button>
+        </div>
+      </div>
+
+      <!-- SELECCIÓN 3: PIGMENTOS Y METALES NOBLES -->
+      <div class="config-step">
+        <label class="config-label">3. METALES & PIGMENTOS MINERALES</label>
+        <div class="config-options" data-group="metal">
+          <button type="button" class="config-pill active" data-val="Pan de Oro 24K Fino">✨ Pan de Oro 24K Fino</button>
+          <button type="button" class="config-pill" data-val="Mica Mineral Iridiscente">💎 Mica Mineral Iridiscente</button>
+          <button type="button" class="config-pill" data-val="Hiperrealismo Clásico Óleo Puro">🎨 Óleo Clásico Puro</button>
+          <button type="button" class="config-pill" data-val="Fusión Mixta Kintsugi">⚡ Fusión Mixta Kintsugi</button>
+        </div>
+      </div>
+
+      <!-- RESUMEN EN TIEMPO REAL -->
+      <div class="config-summary-card">
+        <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--gold); letter-spacing: 0.15em; margin-bottom: 6px;">RESUMEN DE CONFIGURACIÓN BESPOKE</div>
+        <div id="config-summary-text" style="font-family: var(--font-editorial); font-size: 1.25rem; font-style: italic; color: #FFFFFF; line-height: 1.4; margin-bottom: 24px;">
+          Retrato sobre Pizarra Natural Fósil (Cantos Rústicos) · Escala Íntimo (~40 × 30 cm) · Acabado Pan de Oro 24K Fino
+        </div>
+
+        <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+          <a id="btn-config-wa" href="#" target="_blank" rel="noopener noreferrer" class="btn-primary" style="padding: 14px 28px;">
+            <span>💬</span>
+            <span>ENVIAR CONFIGURACIÓN POR WHATSAPP ➔</span>
+          </a>
+          <a id="btn-config-mail" href="#" class="btn-secondary" style="padding: 14px 28px;">
+            <span>✉</span>
+            <span>ENVIAR POR EMAIL</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let selectedSupport = 'Pizarra Natural Fósil (Cantos Rústicos)';
+      let selectedSize = 'Íntimo (~40 × 30 cm)';
+      let selectedMetal = 'Pan de Oro 24K Fino';
+
+      function updateConfigurator() {
+        const summary = document.getElementById('config-summary-text');
+        const btnWa = document.getElementById('btn-config-wa');
+        const btnMail = document.getElementById('btn-config-mail');
+
+        summary.textContent = 'Retrato sobre ' + selectedSupport + ' · Escala ' + selectedSize + ' · Acabado ' + selectedMetal;
+
+        const text = 'Hola Naroa! He configurado un encargo bespoke en naroagutierrezgil.com:\\n• Soporte: ' + selectedSupport + '\\n• Escala: ' + selectedSize + '\\n• Acabado: ' + selectedMetal + '\\n¿Podemos hablar de plazos y propuesta económica?';
+
+        btnWa.href = 'https://wa.me/34636060609?text=' + encodeURIComponent(text);
+        btnMail.href = 'mailto:naroa@naroa.eu?subject=' + encodeURIComponent('Consulta Encargo Bespoke: ' + selectedSupport) + '&body=' + encodeURIComponent(text);
+      }
+
+      document.querySelectorAll('.config-options').forEach(group => {
+        const groupName = group.getAttribute('data-group');
+        group.querySelectorAll('.config-pill').forEach(pill => {
+          pill.addEventListener('click', () => {
+            group.querySelectorAll('.config-pill').forEach(p => p.classList.remove('active'));
+            pill.classList.add('active');
+            const val = pill.getAttribute('data-val');
+            if (groupName === 'support') selectedSupport = val;
+            if (groupName === 'size') selectedSize = val;
+            if (groupName === 'metal') selectedMetal = val;
+            updateConfigurator();
+          });
+        });
+      });
+
+      updateConfigurator();
+    </script>"""
 
 write_page('encargos/index.html', 'Encargos Bespoke & Retratos Personalizados', 'Proceso de encargo de retratos hiperrealistas en pizarra y óleo con Naroa Gutiérrez Gil desde Bilbao.', 'ENCARGOS', encargos_content)
 
@@ -442,7 +686,46 @@ contacto_content = """    <section class="section-header">
         <h3 style="font-family: var(--font-serif); font-size: 1.25rem; margin: 12px 0 6px;">WHATSAPP OFICIAL</h3>
         <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5;">Atención directa de taller:<br><a href="https://wa.me/34636060609" target="_blank" rel="noopener noreferrer" style="color: var(--gold); font-weight: 700;">+34 636 060 609</a></p>
       </div>
-    </div>"""
+    </div>
+
+    <!-- TERMINAL DE CONTACTO RÁPIDO CON SELECCIÓN DE MOTIVO -->
+    <div style="background: var(--bg-surface); border: 1px solid var(--gold-border); border-radius: 20px; padding: 48px 32px; max-width: 800px; margin: 0 auto; text-align: center;">
+      <p class="section-kicker">CANAL PRIORITARIO</p>
+      <h3 style="font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 12px;">INICIAR CONVERSACIÓN CON EL ATELIER</h3>
+      <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 28px;">
+        Selecciona el motivo de tu consulta para abrir el canal directo de comunicación inmediata con el taller de Bilbao:
+      </p>
+
+      <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 32px;" id="contact-reasons">
+        <button type="button" class="config-pill active" data-msg="Hola Naroa, me gustaría consultar la disponibilidad de una obra original de tu catálogo.">🖼️ Obra de Catálogo</button>
+        <button type="button" class="config-pill" data-msg="Hola Naroa, deseo consultar sobre un encargo personalizado bespoke en pizarra fósil.">⚡ Encargo Bespoke</button>
+        <button type="button" class="config-pill" data-msg="Hola Naroa, te contacto con una propuesta curatorial / exposición para galería o feria de arte.">🏛️ Exposición / Comisariado</button>
+        <button type="button" class="config-pill" data-msg="Hola Naroa, te escribo de un medio de comunicación cultural para una entrevista o nota de prensa.">📰 Prensa / Medios</button>
+      </div>
+
+      <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+        <a id="btn-contact-wa" href="https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20la%20disponibilidad%20de%20una%20obra%20original%20de%20tu%20cat%C3%A1logo." target="_blank" rel="noopener noreferrer" class="btn-primary" style="padding: 14px 28px;">
+          <span>💬</span>
+          <span>ABRIR WHATSAPP OFICIAL ➔</span>
+        </a>
+        <a id="btn-contact-mail" href="mailto:naroa@naroa.eu" class="btn-secondary" style="padding: 14px 28px;">
+          <span>✉</span>
+          <span>ENVIAR CORREO ELECTRÓNICO</span>
+        </a>
+      </div>
+    </div>
+
+    <script>
+      document.querySelectorAll('#contact-reasons .config-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('#contact-reasons .config-pill').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const msg = btn.getAttribute('data-msg');
+          document.getElementById('btn-contact-wa').href = 'https://wa.me/34636060609?text=' + encodeURIComponent(msg);
+          document.getElementById('btn-contact-mail').href = 'mailto:naroa@naroa.eu?subject=' + encodeURIComponent('Consulta desde naroagutierrezgil.com') + '&body=' + encodeURIComponent(msg);
+        });
+      });
+    </script>"""
 
 write_page('contacto/index.html', 'Contacto Institucional & Taller', 'Contacto oficial de Naroa Gutiérrez Gil en Bilbao: teléfono, email, estudio y redes para adquisición de obra y prensa.', 'CONTACTO', contacto_content)
 

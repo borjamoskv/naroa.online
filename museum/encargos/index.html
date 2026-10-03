@@ -63,22 +63,102 @@
       </div>
     </div>
 
-    <div style="background: var(--bg-surface); border: 1px solid var(--gold); border-radius: 16px; padding: 48px 32px; text-align: center; max-width: 800px; margin: 0 auto;">
-      <h3 style="font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 12px;">¿DESEAS CONSULTAR UN ENCARGO?</h3>
-      <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto 32px; font-size: 1.05rem;">
-        Contacta directamente con el taller en Bilbao para consultar disponibilidad de fechas, presupuestos a medida y tiempos de producción.
-      </p>
-      <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
-        <a href="https://wa.me/34636060609?text=Hola%20Naroa%2C%20deseo%20consultar%20sobre%20un%20encargo%20de%20obra%20personalizada" target="_blank" rel="noopener noreferrer" class="btn-primary">
-          <span>💬</span>
-          <span>WHATSAPP ATELIER (+34 636 060 609) ➔</span>
-        </a>
-        <a href="mailto:naroa@naroa.eu?subject=Consulta%20Encargo%20Bespoke" class="btn-secondary">
-          <span>✉</span>
-          <span>EMAIL DE ESTUDIO</span>
-        </a>
+    <!-- TERMINAL INTERACTIVO HAUTE BESPOKE ESTIMATOR -->
+    <div class="bespoke-configurator-box">
+      <div style="text-align: center; margin-bottom: 32px;">
+        <p class="section-kicker">TERMINAL INTERACTIVO</p>
+        <h3 style="font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 8px;">DISEÑA TU PROYECTO A MEDIDA</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; max-width: 560px; margin: 0 auto;">
+          Selecciona soporte, escala y metales nobles para generar una propuesta inmediata dirigida al taller de Bilbao.
+        </p>
+      </div>
+
+      <!-- SELECCIÓN 1: SOPORTE -->
+      <div class="config-step">
+        <label class="config-label">1. SELECCIONA EL SOPORTE MATERIAL</label>
+        <div class="config-options" data-group="support">
+          <button type="button" class="config-pill active" data-val="Pizarra Natural Fósil (Cantos Rústicos)">🪨 Pizarra Natural Fósil</button>
+          <button type="button" class="config-pill" data-val="Lienzo 3D Belga Gran Formato">🖼️ Lienzo 3D Belga</button>
+          <button type="button" class="config-pill" data-val="Hojalata & Metales Kintsugi">🥫 Metales Kintsugi</button>
+        </div>
+      </div>
+
+      <!-- SELECCIÓN 2: ESCALA / FORMATO -->
+      <div class="config-step">
+        <label class="config-label">2. ESCALA / DIMENSIÓN APROXIMADA</label>
+        <div class="config-options" data-group="size">
+          <button type="button" class="config-pill active" data-val="Íntimo (~40 × 30 cm)">Íntimo (~40 × 30 cm)</button>
+          <button type="button" class="config-pill" data-val="Galería (~80 × 60 cm)">Galería (~80 × 60 cm)</button>
+          <button type="button" class="config-pill" data-val="Monumental (~120 × 90 cm)">Monumental (~120 × 90 cm)</button>
+        </div>
+      </div>
+
+      <!-- SELECCIÓN 3: PIGMENTOS Y METALES NOBLES -->
+      <div class="config-step">
+        <label class="config-label">3. METALES & PIGMENTOS MINERALES</label>
+        <div class="config-options" data-group="metal">
+          <button type="button" class="config-pill active" data-val="Pan de Oro 24K Fino">✨ Pan de Oro 24K Fino</button>
+          <button type="button" class="config-pill" data-val="Mica Mineral Iridiscente">💎 Mica Mineral Iridiscente</button>
+          <button type="button" class="config-pill" data-val="Hiperrealismo Clásico Óleo Puro">🎨 Óleo Clásico Puro</button>
+          <button type="button" class="config-pill" data-val="Fusión Mixta Kintsugi">⚡ Fusión Mixta Kintsugi</button>
+        </div>
+      </div>
+
+      <!-- RESUMEN EN TIEMPO REAL -->
+      <div class="config-summary-card">
+        <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--gold); letter-spacing: 0.15em; margin-bottom: 6px;">RESUMEN DE CONFIGURACIÓN BESPOKE</div>
+        <div id="config-summary-text" style="font-family: var(--font-editorial); font-size: 1.25rem; font-style: italic; color: #FFFFFF; line-height: 1.4; margin-bottom: 24px;">
+          Retrato sobre Pizarra Natural Fósil (Cantos Rústicos) · Escala Íntimo (~40 × 30 cm) · Acabado Pan de Oro 24K Fino
+        </div>
+
+        <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+          <a id="btn-config-wa" href="#" target="_blank" rel="noopener noreferrer" class="btn-primary" style="padding: 14px 28px;">
+            <span>💬</span>
+            <span>ENVIAR CONFIGURACIÓN POR WHATSAPP ➔</span>
+          </a>
+          <a id="btn-config-mail" href="#" class="btn-secondary" style="padding: 14px 28px;">
+            <span>✉</span>
+            <span>ENVIAR POR EMAIL</span>
+          </a>
+        </div>
       </div>
     </div>
+
+    <script>
+      let selectedSupport = 'Pizarra Natural Fósil (Cantos Rústicos)';
+      let selectedSize = 'Íntimo (~40 × 30 cm)';
+      let selectedMetal = 'Pan de Oro 24K Fino';
+
+      function updateConfigurator() {
+        const summary = document.getElementById('config-summary-text');
+        const btnWa = document.getElementById('btn-config-wa');
+        const btnMail = document.getElementById('btn-config-mail');
+
+        summary.textContent = 'Retrato sobre ' + selectedSupport + ' · Escala ' + selectedSize + ' · Acabado ' + selectedMetal;
+
+        const text = 'Hola Naroa! He configurado un encargo bespoke en naroagutierrezgil.com:\n• Soporte: ' + selectedSupport + '\n• Escala: ' + selectedSize + '\n• Acabado: ' + selectedMetal + '\n¿Podemos hablar de plazos y propuesta económica?';
+
+        btnWa.href = 'https://wa.me/34636060609?text=' + encodeURIComponent(text);
+        btnMail.href = 'mailto:naroa@naroa.eu?subject=' + encodeURIComponent('Consulta Encargo Bespoke: ' + selectedSupport) + '&body=' + encodeURIComponent(text);
+      }
+
+      document.querySelectorAll('.config-options').forEach(group => {
+        const groupName = group.getAttribute('data-group');
+        group.querySelectorAll('.config-pill').forEach(pill => {
+          pill.addEventListener('click', () => {
+            group.querySelectorAll('.config-pill').forEach(p => p.classList.remove('active'));
+            pill.classList.add('active');
+            const val = pill.getAttribute('data-val');
+            if (groupName === 'support') selectedSupport = val;
+            if (groupName === 'size') selectedSize = val;
+            if (groupName === 'metal') selectedMetal = val;
+            updateConfigurator();
+          });
+        });
+      });
+
+      updateConfigurator();
+    </script>
   </main>
   <footer class="site-footer">
     <div class="footer-inner">

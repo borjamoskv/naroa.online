@@ -43,8 +43,14 @@
       </p>
     </section>
 
+    <div class="filter-bar" style="margin-bottom: 40px;">
+      <button class="filter-pill active" data-type="all">TODAS (8)</button>
+      <button class="filter-pill" data-type="solo">INDIVIDUALES (2)</button>
+      <button class="filter-pill" data-type="group">COLECTIVAS (4)</button>
+    </div>
+
     <div class="exhibitions-timeline">
-      <article class="exhibition-item">
+      <article class="exhibition-item" data-type="solo">
         <div class="exhibition-year">2024</div>
         <div>
           <h3 class="exhibition-title">Espejos del Alma <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--gold); font-weight: normal;">(SOLO)</span></h3>
@@ -52,7 +58,7 @@
           <p class="exhibition-desc">Una inmersión profunda en la psique humana a través de 15 retratos de gran formato. La exposición explora cómo la mirada construye identidad.</p>
         </div>
       </article>
-      <article class="exhibition-item">
+      <article class="exhibition-item" data-type="group">
         <div class="exhibition-year">2024</div>
         <div>
           <h3 class="exhibition-title">Identity Fragments <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--gold); font-weight: normal;">(GROUP)</span></h3>
@@ -60,7 +66,7 @@
           <p class="exhibition-desc">Participación con la obra 'Fragmentación IV' en una muestra sobre la identidad digital y física en la era moderna.</p>
         </div>
       </article>
-      <article class="exhibition-item">
+      <article class="exhibition-item" data-type="online">
         <div class="exhibition-year">2023</div>
         <div>
           <h3 class="exhibition-title">POP Culture Icons <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--gold); font-weight: normal;">(ONLINE)</span></h3>
@@ -68,7 +74,7 @@
           <p class="exhibition-desc">Muestra digital curada seleccionando las mejores reinterpretaciones del pop art actual. Naroa presentó su serie 'Neon Dreams'.</p>
         </div>
       </article>
-      <article class="exhibition-item">
+      <article class="exhibition-item" data-type="solo">
         <div class="exhibition-year">2022</div>
         <div>
           <h3 class="exhibition-title">Retratos Vivos <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--gold); font-weight: normal;">(SOLO)</span></h3>
@@ -76,7 +82,7 @@
           <p class="exhibition-desc">Primera gran exposición individual presentando la técnica de hiperrealismo con texturas mixtas. Un éxito de crítica local.</p>
         </div>
       </article>
-      <article class="exhibition-item">
+      <article class="exhibition-item" data-type="group">
         <div class="exhibition-year">2021</div>
         <div>
           <h3 class="exhibition-title">Artistas Emergentes Euskadi <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--gold); font-weight: normal;">(GROUP)</span></h3>
@@ -84,7 +90,7 @@
           <p class="exhibition-desc">Seleccionada como una de las 10 artistas revelación del año. Obra expuesta: 'La Mirada Ausente'.</p>
         </div>
       </article>
-      <article class="exhibition-item">
+      <article class="exhibition-item" data-type="market">
         <div class="exhibition-year">2020</div>
         <div>
           <h3 class="exhibition-title">Bilbao Art Market <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--gold); font-weight: normal;">(MARKET)</span></h3>
@@ -92,7 +98,7 @@
           <p class="exhibition-desc">Stand propio en la feria de arte navideña, con venta directa de obra pequeña y láminas limitadas.</p>
         </div>
       </article>
-      <article class="exhibition-item">
+      <article class="exhibition-item" data-type="group">
         <div class="exhibition-year">2019</div>
         <div>
           <h3 class="exhibition-title">Mujeres Creadoras <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--gold); font-weight: normal;">(GROUP)</span></h3>
@@ -100,7 +106,7 @@
           <p class="exhibition-desc">Exposición colectiva celebrando el mes de la mujer. Participación con tríptico sobre la maternidad.</p>
         </div>
       </article>
-      <article class="exhibition-item">
+      <article class="exhibition-item" data-type="group">
         <div class="exhibition-year">2018</div>
         <div>
           <h3 class="exhibition-title">Grado BBAA Final Show <span style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--gold); font-weight: normal;">(GROUP)</span></h3>
@@ -109,6 +115,25 @@
         </div>
       </article>
     </div>
+
+    <script>
+      document.querySelectorAll('.filter-bar .filter-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.filter-bar .filter-pill').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const type = btn.getAttribute('data-type');
+          document.querySelectorAll('.exhibition-item').forEach(item => {
+            const itemType = item.getAttribute('data-type');
+            if (type === 'all' || itemType === type) {
+              item.style.display = 'grid';
+              item.style.animation = 'fadeInCard 0.3s ease forwards';
+            } else {
+              item.style.display = 'none';
+            }
+          });
+        });
+      });
+    </script>
   </main>
   <footer class="site-footer">
     <div class="footer-inner">

@@ -62,6 +62,45 @@
         <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5;">Atención directa de taller:<br><a href="https://wa.me/34636060609" target="_blank" rel="noopener noreferrer" style="color: var(--gold); font-weight: 700;">+34 636 060 609</a></p>
       </div>
     </div>
+
+    <!-- TERMINAL DE CONTACTO RÁPIDO CON SELECCIÓN DE MOTIVO -->
+    <div style="background: var(--bg-surface); border: 1px solid var(--gold-border); border-radius: 20px; padding: 48px 32px; max-width: 800px; margin: 0 auto; text-align: center;">
+      <p class="section-kicker">CANAL PRIORITARIO</p>
+      <h3 style="font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 12px;">INICIAR CONVERSACIÓN CON EL ATELIER</h3>
+      <p style="color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 28px;">
+        Selecciona el motivo de tu consulta para abrir el canal directo de comunicación inmediata con el taller de Bilbao:
+      </p>
+
+      <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 32px;" id="contact-reasons">
+        <button type="button" class="config-pill active" data-msg="Hola Naroa, me gustaría consultar la disponibilidad de una obra original de tu catálogo.">🖼️ Obra de Catálogo</button>
+        <button type="button" class="config-pill" data-msg="Hola Naroa, deseo consultar sobre un encargo personalizado bespoke en pizarra fósil.">⚡ Encargo Bespoke</button>
+        <button type="button" class="config-pill" data-msg="Hola Naroa, te contacto con una propuesta curatorial / exposición para galería o feria de arte.">🏛️ Exposición / Comisariado</button>
+        <button type="button" class="config-pill" data-msg="Hola Naroa, te escribo de un medio de comunicación cultural para una entrevista o nota de prensa.">📰 Prensa / Medios</button>
+      </div>
+
+      <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+        <a id="btn-contact-wa" href="https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20la%20disponibilidad%20de%20una%20obra%20original%20de%20tu%20cat%C3%A1logo." target="_blank" rel="noopener noreferrer" class="btn-primary" style="padding: 14px 28px;">
+          <span>💬</span>
+          <span>ABRIR WHATSAPP OFICIAL ➔</span>
+        </a>
+        <a id="btn-contact-mail" href="mailto:naroa@naroa.eu" class="btn-secondary" style="padding: 14px 28px;">
+          <span>✉</span>
+          <span>ENVIAR CORREO ELECTRÓNICO</span>
+        </a>
+      </div>
+    </div>
+
+    <script>
+      document.querySelectorAll('#contact-reasons .config-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('#contact-reasons .config-pill').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const msg = btn.getAttribute('data-msg');
+          document.getElementById('btn-contact-wa').href = 'https://wa.me/34636060609?text=' + encodeURIComponent(msg);
+          document.getElementById('btn-contact-mail').href = 'mailto:naroa@naroa.eu?subject=' + encodeURIComponent('Consulta desde naroagutierrezgil.com') + '&body=' + encodeURIComponent(msg);
+        });
+      });
+    </script>
   </main>
   <footer class="site-footer">
     <div class="footer-inner">

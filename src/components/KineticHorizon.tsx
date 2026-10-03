@@ -696,8 +696,27 @@ export function KineticHorizon({
                   transition: 'opacity 0.3s ease, transform 0.3s ease',
                   pointerEvents: isCentered ? 'auto' : 'none',
                   zIndex: 20,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
                 }}
               >
+                {artwork.kicker && isCentered && (
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-editorial, "Cormorant Garamond", Georgia, serif)',
+                      fontStyle: 'italic',
+                      fontSize: 'clamp(0.88rem, 1.2vw, 1.05rem)',
+                      color: 'rgba(212, 175, 55, 0.95)',
+                      letterSpacing: '0.04em',
+                      marginBottom: '4px',
+                      textShadow: '0 2px 10px rgba(0, 0, 0, 0.9)',
+                    }}
+                  >
+                    «{artwork.kicker}»
+                  </div>
+                )}
+
                 <h2
                   style={{
                     margin: 0,
@@ -725,6 +744,30 @@ export function KineticHorizon({
                 >
                   {artwork.year} · {artwork.medium}
                 </p>
+
+                {isCentered && (
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                      marginTop: '8px',
+                      fontFamily: 'var(--font-mono, monospace)',
+                      fontSize: '0.62rem',
+                      letterSpacing: '0.18em',
+                      color: 'rgba(255, 255, 255, 0.55)',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(212, 175, 55, 0.28)',
+                      padding: '3px 12px',
+                      borderRadius: '20px',
+                      backdropFilter: 'blur(10px)',
+                      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.6)',
+                    }}
+                  >
+                    <span>🔍</span>
+                    <span>PULSA PARA LUPA DE ALTA RESOLUCIÓN</span>
+                  </span>
+                )}
               </div>
             </div>
           )
