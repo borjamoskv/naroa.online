@@ -1,81 +1,140 @@
-import { Suspense, useState } from 'react'
-import { Canvas } from '@react-three/fiber'
-import { Preload, PerformanceMonitor } from '@react-three/drei'
-import { EffectComposer, Noise, Vignette, Bloom, ChromaticAberration } from '@react-three/postprocessing'
-import { BlendFunction } from 'postprocessing'
+import { Suspense, useState, useRef, useEffect } from 'react'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { Preload, PerformanceMonitor, OrbitControls } from '@react-three/drei'
 import * as THREE from 'three'
+import { easing } from 'maath'
 
-import { Gallery } from './Gallery'
-import { FirstPersonController } from './FirstPersonController'
+import { Gallery, ROTUNDA_RADIUS } from './Gallery'
 import { EnvironmentLevel } from './EnvironmentLevel'
-
-const prefersReducedMotion =
-  typeof window !== 'undefined' &&
-  window.matchMedia('(prefers-reduced-motion: reduce)').matches
+import { ARTWORKS } from '../artworks'
 
 const isMobile =
   typeof window !== 'undefined' &&
   (window.innerWidth < 768 || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent))
 
-interface SceneProps {
-  onCurrentChange?: (index: number) => void // Opcional, ya que no usamos scroll carousel
-  onInspectArtwork: (index: number) => void
-  targetIndex?: number | null // Opcional
-  active?: boolean
-  setInteractionPrompt: (prompt: string | null) => void
-  isStarted: boolean
-  onPlayerMove?: (pos: { x: number; z: number }, rot: number) => void
+interface CameraGlideControllerProps {
+  selectedIndex: number | null
 }
 
-export default function Scene({ onInspectArtwork, active = true, setInteractionPrompt, isStarted, onPlayerMove }: SceneProps) {
-  const [dpr, setDpr] = useState(isMobile ? 1 : 1.5)
+function CameraGlideController({ selectedIndex }: CameraGlideControllerProps) {
+  const { camera } = useThree()
+  const controlsRef = useRef<any>(null)
+  const isTransitioningRef = useRef(false)
+  const prevIndexRef = useRef<number | null>(null)
 
-  // Use frameloop='always' to support FPS movement smoothly.
+  const targetCamPos = useRef(new THREE.Vector3(0, 2.0, 7.0))
+  const targetLookAt = useRef(new THREE.Vector3(0, 1.8, 0))
+
+  useEffect(() => {
+    if (selectedIndex !== null && ARTWORKS[selectedIndex]) {
+      const numItems = ARTWORKS.length
+      const angle = (selectedIndex / numItems) * Math.PI * 2
+      const artX = Math.sin(angle) * ROTUNDA_RADIUS
+      const artZ = Math.cos(angle) * ROTUNDA_RADIUS
+      const artY = 2.0
+
+      // Distancia de contemplación natural (3.8 metros frente a la obra)
+      const viewDist = 3.8
+      const camX = Math.sin(angle) * (ROTUNDA_RADIUS - viewDist)
+      const camZ = Math.cos(angle) * (ROTUNDA_RADIUS - viewDist)
+
+      targetCamPos.current.set(camX, artY, camZ)
+      targetLookAt.current.set(artX, artY, artZ)
+      isTransitioningRef.current = true
+    } else {
+      // Regreso a la perspectiva general de la sala
+      targetLookAt.current.set(0, 1.8, 0)
+      if (prevIndexRef.current !== null) {
+        targetCamPos.current.set(0, 2.2, 7.5)
+        isTransitioningRef.current = true
+      }
+    }
+    prevIndexRef.current = selectedIndex
+  }, [selectedIndex])
+
+  useFrame((_, delta) => {
+    if (isTransitioningRef.current && controlsRef.current) {
+      easing.damp3(camera.position, targetCamPos.current, 0.28, delta)
+      easing.damp3(controlsRef.current.target, targetLookAt.current, 0.28, delta)
+      controlsRef.current.update()
+
+      if (
+        camera.position.distanceTo(targetCamPos.current) < 0.05 &&
+        controlsRef.current.target.distanceTo(targetLookAt.current) < 0.05
+      ) {
+        isTransitioningRef.current = false
+      }
+    }
+  })
+
+  return (
+    <OrbitControls
+      ref={controlsRef}
+      enableDamping
+      dampingFactor={0.05}
+      minDistance={2.2}
+      maxDistance={17.5}
+      minPolarAngle={Math.PI / 4}
+      maxPolarAngle={Math.PI / 2 - 0.02}
+      target={[0, 1.8, 0]}
+    />
+  )
+}
+
+interface SceneProps {
+  onInspectArtwork: (index: number) => void
+  selectedIndex: number | null
+  onSelectArtwork: (index: number | null) => void
+  active?: boolean
+}
+
+export default function Scene({
+  onInspectArtwork,
+  selectedIndex,
+  onSelectArtwork,
+  active = true,
+}: SceneProps) {
+  const [dpr, setDpr] = useState(isMobile ? 1 : 1.5)
   const frameloop = active ? 'always' : 'demand'
 
   return (
-    <Canvas 
-      dpr={dpr} 
+    <Canvas
+      dpr={dpr}
       frameloop={frameloop}
-      gl={{ antialias: false, toneMapping: THREE.ACESFilmicToneMapping, powerPreference: 'high-performance' }}
-      camera={{ position: [0, 1.7, 0], fov: 75 }} // FOV más amplio para sensación FPS
+      gl={{
+        antialias: true,
+        toneMapping: THREE.ACESFilmicToneMapping,
+        toneMappingExposure: 1.1,
+        powerPreference: 'high-performance',
+      }}
+      camera={{ position: [0, 2.0, 7.0], fov: 60 }}
+      onPointerMissed={() => onSelectArtwork(null)}
     >
       <PerformanceMonitor onIncline={() => setDpr(isMobile ? 1.5 : 2)} onDecline={() => setDpr(1)}>
-      <color attach="background" args={['#030305']} />
-      <fog attach="fog" args={['#030305', 10, 30]} />
+        <color attach="background" args={['#06060a']} />
+        <fog attach="fog" args={['#06060a', 14, 38]} />
 
-      <Suspense fallback={null}>
-        
-        {/* Controles FPS, activados solo cuando isStarted es true */}
-        {isStarted && <FirstPersonController onPlayerMove={onPlayerMove} />}
+        <Suspense fallback={null}>
+          {/* Controlador de cámara suave y orgánico */}
+          <CameraGlideController selectedIndex={selectedIndex} />
 
-        {/* Nivel / Entorno (Suelo Grid) */}
-        <EnvironmentLevel />
+          {/* Espacio arquitectónico */}
+          <EnvironmentLevel />
 
-        {/* Galería (Obras distribuidas en círculo y Raycaster) */}
-        <Gallery
-          onInspectArtwork={onInspectArtwork}
-          reducedMotion={prefersReducedMotion}
-          setInteractionPrompt={setInteractionPrompt}
-          isStarted={isStarted}
-        />
+          {/* Obras colgadas en la rotonda */}
+          <Gallery
+            selectedIndex={selectedIndex}
+            onSelectArtwork={onSelectArtwork}
+            onInspectArtwork={onInspectArtwork}
+          />
 
-        <directionalLight position={[10, 20, 10]} intensity={1.2} color="#F5EFE6" />
-        <ambientLight intensity={0.5} color="#12131a" />
-        <pointLight position={[-10, 7, -10]} intensity={1.4} color="#D4AF37" />
-        <spotLight position={[0, 14, 0]} angle={0.85} penumbra={1} intensity={2.8} color="#FFF8E7" />
+          {/* Iluminación de sala cálida y natural */}
+          <directionalLight position={[12, 18, 12]} intensity={1.1} color="#FFF8EE" />
+          <ambientLight intensity={0.4} color="#151720" />
+          <pointLight position={[0, 8, 0]} intensity={1.6} color="#FFE6C2" distance={24} />
 
-        {!prefersReducedMotion && !isMobile && (
-          <EffectComposer>
-            <Bloom luminanceThreshold={0.2} mipmapBlur intensity={1.2} />
-            <Noise opacity={0.025} />
-            <Vignette eskil={false} offset={0.15} darkness={0.95} />
-            <ChromaticAberration blendFunction={BlendFunction.NORMAL} offset={new THREE.Vector2(0.0015, 0.0015)} />
-          </EffectComposer>
-        )}
-
-        <Preload all />
-      </Suspense>
+          <Preload all />
+        </Suspense>
       </PerformanceMonitor>
     </Canvas>
   )

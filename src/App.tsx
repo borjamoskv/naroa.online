@@ -37,11 +37,8 @@ export default function App() {
   const [audioActive, setAudioActive] = useState<boolean>(sound.isEnabled())
   const [isWebGLMounted, setIsWebGLMounted] = useState(false)
 
-  // Estados del Pabellón 3D
-  const [is3DActive, setIs3DActive] = useState(false)
-  const [interactionPrompt, setInteractionPrompt] = useState<string | null>(null)
-  const [playerPos, setPlayerPos] = useState({ x: 0, z: 0 })
-  const [playerRotation, setPlayerRotation] = useState(0)
+  // Estado de enfoque en el Pabellón 3D
+  const [selected3DIndex, setSelected3DIndex] = useState<number | null>(null)
 
   // Carga diferida de WebGL
   useEffect(() => {
@@ -52,9 +49,9 @@ export default function App() {
   // Control del scroll en modo 3D
   useEffect(() => {
     if (typeof document !== 'undefined') {
-      document.body.classList.toggle('mode-3d-active', is3DActive || activeMode === '3d')
+      document.body.classList.toggle('mode-3d-active', activeMode === '3d')
     }
-  }, [is3DActive, activeMode])
+  }, [activeMode])
 
   // Enrutamiento reactivo por Hash
   useEffect(() => {
@@ -82,7 +79,7 @@ export default function App() {
         setIsCommissionOpen(true)
       } else {
         setActiveMode('horizon')
-        setIs3DActive(false)
+        setSelected3DIndex(null)
         setLoupeIndex(null)
       }
     }
@@ -143,16 +140,6 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleGlobalKeys)
   }, [])
 
-  // Liberar puntero al pulsar ESC en modo 3D
-  useEffect(() => {
-    const handlePointerLockChange = () => {
-      if (!document.pointerLockElement && activeMode === '3d') {
-        setIs3DActive(false)
-      }
-    }
-    document.addEventListener('pointerlockchange', handlePointerLockChange)
-    return () => document.removeEventListener('pointerlockchange', handlePointerLockChange)
-  }, [activeMode])
 
   const isSceneVisible = activeMode === '3d'
 
@@ -266,23 +253,24 @@ export default function App() {
         currentArtwork={loupeIndex !== null ? ARTWORKS[loupeIndex] : ARTWORKS[currentIndex]}
       />
 
-      {/* HUD DE CONTROL PABELLÓN 3D */}
+      {/* CAPA CURATORIAL MINIMALISTA PABELLÓN 3D */}
       {isSceneVisible && (
         <VideogameHUD
-          isStarted={is3DActive}
-          onStart={() => setIs3DActive(true)}
           onExit={() => {
-            setIs3DActive(false)
-            if (document.pointerLockElement) document.exitPointerLock()
+            setSelected3DIndex(null)
             setActiveMode('horizon')
           }}
-          interactionPrompt={interactionPrompt}
-          playerPos={playerPos}
-          playerRotation={playerRotation}
+          selectedIndex={selected3DIndex}
+          onSelectArtwork={setSelected3DIndex}
+          onInspectArtwork={handleInspectArtwork}
+          onOpenCommission={(title) => {
+            setCommissionPieceTitle(title)
+            setIsCommissionOpen(true)
+          }}
         />
       )}
 
-      {/* ESCENA 3D (THREE.JS WEBGL) */}
+      {/* ESCENA 3D ARQUITECTÓNICA (THREE.JS WEBGL) */}
       {isWebGLMounted && (
         <ErrorBoundary name="Pabellón 3D (Three.js WebGL)">
           <Suspense fallback={null}>
@@ -298,13 +286,9 @@ export default function App() {
             >
               <Scene
                 onInspectArtwork={handleInspectArtwork}
+                selectedIndex={selected3DIndex}
+                onSelectArtwork={setSelected3DIndex}
                 active={isSceneVisible}
-                setInteractionPrompt={setInteractionPrompt}
-                isStarted={is3DActive}
-                onPlayerMove={(pos, rot) => {
-                  setPlayerPos(pos)
-                  setPlayerRotation(rot)
-                }}
               />
             </div>
           </Suspense>

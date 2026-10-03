@@ -1,8 +1,6 @@
 import * as THREE from 'three'
-import { useRef, useState, useEffect, useMemo } from 'react'
-import { useFrame, useThree } from '@react-three/fiber'
-import { Image, Sparkles, useTexture } from '@react-three/drei'
-import { easing } from 'maath'
+import { useRef, useState, useMemo } from 'react'
+import { Image, Sparkles, useTexture, Text } from '@react-three/drei'
 import { ARTWORKS } from '../artworks'
 import { sound } from '../utils/audio'
 
@@ -11,19 +9,25 @@ if (typeof window !== 'undefined') {
     try {
       useTexture.preload(a.url)
     } catch {
-      // Ignore preloader fail
+      // Ignorar fallo de precarga individual
     }
   })
 }
+
+export const ROTUNDA_RADIUS = 20.0
 
 interface GalleryItemProps {
   position: [number, number, number]
   rotation: [number, number, number]
   url: string
+  title: string
+  year: string
+  medium: string
   scale: [number, number, number]
   index: number
-  reducedMotion: boolean
   isSelected: boolean
+  isHovered: boolean
+  onSelect: (index: number) => void
   onInspect: (index: number) => void
 }
 
@@ -31,232 +35,179 @@ function GalleryItem({
   position,
   scale,
   url,
+  title,
+  year,
   index,
   rotation,
-  reducedMotion,
   isSelected,
-  onInspect
+  onSelect,
+  onInspect,
 }: GalleryItemProps) {
-  const meshRef = useRef<THREE.Mesh>(null)
-  const groupRef = useRef<THREE.Group>(null)
-
-  useFrame((state, delta) => {
-    if (meshRef.current && groupRef.current) {
-      const floatY = reducedMotion
-        ? position[1]
-        : position[1] + Math.sin(state.clock.elapsedTime * 1.5 + index * 0.8) * 0.09
-
-      groupRef.current.position.y = floatY
-
-      const targetScale: [number, number, number] = isSelected
-        ? [scale[0] * 1.05, scale[1] * 1.05, 1]
-        : scale
-
-      easing.damp3(meshRef.current.scale, targetScale, 0.2, delta)
-      const material = meshRef.current.material as any
-      easing.damp(material, 'grayscale', isSelected ? 0 : 0.4, 0.2, delta)
-      easing.dampC(
-        material.color,
-        isSelected ? '#ffffff' : '#aaaaaa',
-        0.2,
-        delta
-      )
-    }
-  })
+  const [hovered, setHovered] = useState(false)
+  const active = isSelected || hovered
 
   return (
-    <group 
-      ref={groupRef} 
-      position={position} 
-      rotation={rotation} 
+    <group
+      position={position}
+      rotation={rotation}
       userData={{ isArtwork: true, index }}
       onClick={(e) => {
         e.stopPropagation()
-        sound.playOpen()
-        onInspect(index)
+        sound.playTick()
+        if (isSelected) {
+          onInspect(index)
+        } else {
+          onSelect(index)
+        }
       }}
       onPointerOver={(e) => {
         e.stopPropagation()
+        setHovered(true)
         document.body.style.cursor = 'pointer'
       }}
       onPointerOut={() => {
+        setHovered(false)
         document.body.style.cursor = 'default'
       }}
     >
-      <mesh position={[0, 0, -0.08]} scale={[scale[0] + 0.35, scale[1] + 0.35, 0.06]}>
+      {/* ── 1. PANEL TRASERO MONOLÍTICO DE PIZARRA (SOPORTE FÍSICO) ── */}
+      <mesh position={[0, 0, -0.05]} scale={[scale[0] + 0.32, scale[1] + 0.32, 0.06]} castShadow receiveShadow>
         <boxGeometry />
         <meshStandardMaterial
-          color={isSelected ? '#D4AF37' : '#1c1b18'}
-          metalness={0.9}
-          roughness={0.25}
-          emissive={isSelected ? '#D4AF37' : '#000000'}
-          emissiveIntensity={isSelected ? 0.5 : 0}
+          color="#121318"
+          metalness={0.2}
+          roughness={0.8}
         />
       </mesh>
 
-      <mesh position={[0, 0, -0.04]} scale={[scale[0] + 0.16, scale[1] + 0.16, 0.04]}>
+      {/* ── 2. JUNTA PERIMETRAL EN BRONCE SUAVE ── */}
+      <mesh position={[0, 0, -0.015]} scale={[scale[0] + 0.08, scale[1] + 0.08, 0.02]}>
         <boxGeometry />
-        <meshPhysicalMaterial
-          color={isSelected ? '#D4AF37' : '#0a0a0d'}
-          emissive={isSelected ? '#D4AF37' : '#000000'}
-          emissiveIntensity={isSelected ? 0.35 : 0}
-          roughness={0.2}
-          metalness={0.8}
-          clearcoat={0.9}
-          transmission={0.2}
-          transparent
-          opacity={isSelected ? 0.9 : 0.6}
+        <meshStandardMaterial
+          color={active ? '#bfa157' : '#332e22'}
+          metalness={0.6}
+          roughness={0.4}
         />
       </mesh>
 
-      {isSelected && (
-        <pointLight
-          position={[0, scale[1] * 0.6, 0.8]}
-          intensity={4.5}
-          distance={6}
-          color="#D4AF37"
-        />
-      )}
-
+      {/* ── 3. LIENZO / OBRA DE ARTE (TEXTURA REAL Y COLOR ÍNTEGRO) ── */}
       <Image
-        ref={meshRef}
         url={url}
+        scale={[scale[0], scale[1]]}
         transparent
         side={THREE.DoubleSide}
         toneMapped={false}
+      />
+
+      {/* ── 4. CARTELA DE GALERÍA (MUSEUM LABEL CARD) ── */}
+      <group position={[0, -scale[1] / 2 - 0.32, 0.04]}>
+        {/* Soporte discreto de papel mineral */}
+        <mesh>
+          <planeGeometry args={[Math.min(scale[0] * 0.72, 1.8), 0.24]} />
+          <meshStandardMaterial
+            color="#0b0c10"
+            roughness={0.9}
+            metalness={0.1}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+
+        {/* Título en tipografía serena */}
+        <Text
+          position={[0, 0.04, 0.01]}
+          fontSize={0.075}
+          color={active ? '#EAD6A6' : '#C8C6C0'}
+          anchorX="center"
+          anchorY="middle"
+          maxWidth={scale[0] * 0.68}
+          letterSpacing={0.05}
+        >
+          {title.toUpperCase()}
+        </Text>
+
+        {/* Año y técnica */}
+        <Text
+          position={[0, -0.05, 0.01]}
+          fontSize={0.055}
+          color="rgba(180, 160, 120, 0.75)"
+          anchorX="center"
+          anchorY="middle"
+          letterSpacing={0.08}
+        >
+          {`${year} · PIZARRA, MICA Y PIGMENTOS`}
+        </Text>
+      </group>
+
+      {/* ── 5. PROYECTOR DE GALERÍA CENITAL (ILUMINACIÓN DE ACENTO DIRIGIDA) ── */}
+      <spotLight
+        position={[0, scale[1] * 0.7 + 0.8, 1.8]}
+        target-position={[0, 0, 0]}
+        intensity={active ? 3.4 : 1.8}
+        angle={0.7}
+        penumbra={0.8}
+        distance={6.0}
+        color="#FFF5E4"
+        decay={2}
       />
     </group>
   )
 }
 
 interface GalleryProps {
+  selectedIndex: number | null
+  onSelectArtwork: (index: number | null) => void
   onInspectArtwork: (index: number) => void
-  reducedMotion: boolean
-  setInteractionPrompt: (prompt: string | null) => void
-  isStarted: boolean
+  reducedMotion?: boolean
 }
 
 export function Gallery({
+  selectedIndex,
+  onSelectArtwork,
   onInspectArtwork,
-  reducedMotion,
-  setInteractionPrompt,
-  isStarted
+  reducedMotion = false,
 }: GalleryProps) {
   const group = useRef<THREE.Group>(null)
-  const { camera, scene } = useThree()
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
-  
+
   const numItems = ARTWORKS.length
-  const radius = 10 // Radio más grande para poder caminar dentro
-  
+  const radius = ROTUNDA_RADIUS
+
   const items = useMemo(() => {
     return ARTWORKS.map((artwork, i) => {
       const angle = (i / numItems) * Math.PI * 2
       return {
-        // Elevamos las obras para que estén a la altura de los ojos (1.7)
-        position: [Math.sin(angle) * radius, 1.7, Math.cos(angle) * radius] as [number, number, number],
-        rotation: [0, angle + Math.PI, 0] as [number, number, number], // Mirando hacia adentro del círculo
+        position: [Math.sin(angle) * radius, 2.0, Math.cos(angle) * radius] as [number, number, number],
+        rotation: [0, angle + Math.PI, 0] as [number, number, number],
         url: artwork.url,
-        href: artwork.href,
-        splatUrl: artwork.splatUrl,
-        scale: [3.1, 4.1, 1] as [number, number, number],
+        title: artwork.title,
+        year: artwork.year,
+        medium: artwork.medium,
+        scale: [2.2, 2.9, 1] as [number, number, number],
       }
     })
   }, [numItems, radius])
 
-  // Raycaster logic for FPS interaction
-  useEffect(() => {
-    if (!isStarted) return;
-    
-    const raycaster = new THREE.Raycaster()
-    const center = new THREE.Vector2(0, 0)
-    
-    let currentHoveredIndex: number | null = null
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.code === 'KeyE' && currentHoveredIndex !== null) {
-        sound.playOpen()
-        onInspectArtwork(currentHoveredIndex)
-      }
-    }
-    
-    window.addEventListener('keydown', handleKeyDown)
-
-    // Poll raycaster every frame would be heavy, but we can do it in a fast interval or useFrame
-    const interval = setInterval(() => {
-      raycaster.setFromCamera(center, camera)
-      // Buscar intersecciones solo en los grupos de obras
-      const intersects = raycaster.intersectObjects(scene.children, true)
-      
-      let foundIndex: number | null = null
-      
-      for (let i = 0; i < intersects.length; i++) {
-        const obj = intersects[i].object
-        // Subir en la jerarquía hasta encontrar userData.isArtwork
-        let parent: THREE.Object3D | null = obj
-        while (parent && parent.userData) {
-          if (parent.userData.isArtwork) {
-            // Check distance (interaction range)
-            if (intersects[i].distance < 6.0) {
-              foundIndex = parent.userData.index
-            }
-            break
-          }
-          parent = parent.parent
-        }
-        if (foundIndex !== null) break
-      }
-      
-      if (foundIndex !== currentHoveredIndex) {
-        currentHoveredIndex = foundIndex
-        setSelectedIndex(foundIndex)
-        if (foundIndex !== null) {
-          setInteractionPrompt(`[E] INSPECCIONAR: ${ARTWORKS[foundIndex].title.toUpperCase()}`)
-          sound.playHover()
-        } else {
-          setInteractionPrompt(null)
-        }
-      }
-      
-    }, 100) // 10 ticks per second is enough for UI prompts
-
-    return () => {
-      clearInterval(interval)
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [camera, scene, onInspectArtwork, isStarted, setInteractionPrompt])
-
   return (
     <group ref={group} position={[0, 0, 0]}>
-      <ambientLight intensity={0.6} />
-
+      {/* ── MOTAS DE MICA EN EL AIRE (TRANQUILAS Y ORGÁNICAS) ── */}
       {!reducedMotion && (
-        <>
-          <Sparkles
-            count={200}
-            scale={[30, 10, 30]}
-            size={2.2}
-            speed={0.35}
-            opacity={0.4}
-            color="#2B3BE5"
-          />
-          <Sparkles
-            count={100}
-            scale={[25, 8, 25]}
-            size={2.8}
-            speed={0.25}
-            opacity={0.45}
-            color="#D4AF37"
-          />
-        </>
+        <Sparkles
+          count={70}
+          scale={[35, 8, 35]}
+          size={1.6}
+          speed={0.15}
+          opacity={0.25}
+          color="#D8C395"
+        />
       )}
 
+      {/* ── LAS 27 OBRAS CANÓNICAS COLGADAS EN ARMONÍA ── */}
       {items.map((item, i) => (
         <GalleryItem
           key={i}
           index={i}
           isSelected={selectedIndex === i}
-          reducedMotion={reducedMotion}
+          isHovered={false}
+          onSelect={onSelectArtwork}
           onInspect={onInspectArtwork}
           {...item}
         />

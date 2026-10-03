@@ -81,11 +81,15 @@ export function FirstPersonController({ onPlayerMove }: FirstPersonControllerPro
       camera.position.y += (1.7 - camera.position.y) * 10 * delta
     }
 
-    // 5. Limitar la posición del jugador (Muros invisibles)
+    // 5. Limitar la posición del jugador (Muros perimetrales y banco central)
     const dist = Math.sqrt(camera.position.x ** 2 + camera.position.z ** 2)
-    if (dist > 13) {
-      camera.position.x *= 13 / dist
-      camera.position.z *= 13 / dist
+    if (dist > 19.2) {
+      camera.position.x *= 19.2 / dist
+      camera.position.z *= 19.2 / dist
+    }
+    if (dist < 2.7) {
+      camera.position.x *= 2.7 / dist
+      camera.position.z *= 2.7 / dist
     }
 
     // 6. Reportar posición y rotación al Minimapa
