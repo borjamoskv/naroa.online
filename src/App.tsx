@@ -31,6 +31,7 @@ export default function App() {
   const [isIndexOpen, setIsIndexOpen] = useState(false)
   const [isArtistOpen, setIsArtistOpen] = useState(false)
   const [isCommissionOpen, setIsCommissionOpen] = useState(false)
+  const [commissionPieceTitle, setCommissionPieceTitle] = useState<string | undefined>(undefined)
   const [isMicaOpen, setIsMicaOpen] = useState(false)
 
   const [audioActive, setAudioActive] = useState<boolean>(sound.isEnabled())
@@ -178,7 +179,10 @@ export default function App() {
         }}
         onOpenIndex={() => setIsIndexOpen(true)}
         onOpenArtist={() => setIsArtistOpen(true)}
-        onOpenCommission={() => setIsCommissionOpen(true)}
+        onOpenCommission={() => {
+          setCommissionPieceTitle(undefined)
+          setIsCommissionOpen(true)
+        }}
         isMicaOpen={isMicaOpen}
         onToggleMica={() => setIsMicaOpen((prev) => !prev)}
         audioActive={audioActive}
@@ -202,8 +206,9 @@ export default function App() {
           setCurrentIndex(idx)
           setLoupeIndex(idx)
         }}
-        onOpenCommission={() => {
+        onOpenCommission={(pieceTitle) => {
           setLoupeIndex(null)
+          setCommissionPieceTitle(pieceTitle)
           setIsCommissionOpen(true)
         }}
       />
@@ -227,7 +232,11 @@ export default function App() {
       {/* CALCULADORA / FORMULARIO INTERACTIVO DE ENCARGOS BESPOKE */}
       <CommissionCalculator
         isOpen={isCommissionOpen}
-        onClose={() => setIsCommissionOpen(false)}
+        onClose={() => {
+          setIsCommissionOpen(false)
+          setCommissionPieceTitle(undefined)
+        }}
+        initialPieceTitle={commissionPieceTitle}
       />
 
       {/* ASISTENTE CONVERSACIONAL SOTA: MICA SYSTEM v∞ */}
@@ -235,8 +244,9 @@ export default function App() {
         isOpen={isMicaOpen}
         onToggle={() => setIsMicaOpen((prev) => !prev)}
         onClose={() => setIsMicaOpen(false)}
-        onOpenCommission={() => {
+        onOpenCommission={(pieceTitle) => {
           setIsMicaOpen(false)
+          setCommissionPieceTitle(pieceTitle)
           setIsCommissionOpen(true)
         }}
         onOpenArtwork={(idx) => {
@@ -253,6 +263,7 @@ export default function App() {
           setIsMicaOpen(false)
           setIsIndexOpen(true)
         }}
+        currentArtwork={loupeIndex !== null ? ARTWORKS[loupeIndex] : ARTWORKS[currentIndex]}
       />
 
       {/* HUD DE CONTROL PABELLÓN 3D */}

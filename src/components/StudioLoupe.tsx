@@ -7,7 +7,7 @@ interface StudioLoupeProps {
   artworkIndex: number | null
   onClose: () => void
   onNavigate: (index: number) => void
-  onOpenCommission?: () => void
+  onOpenCommission?: (pieceTitle?: string) => void
 }
 
 const ZOOM_LEVELS = [1.0, 2.5, 4.0] as const
@@ -410,7 +410,7 @@ export function StudioLoupe({ artworkIndex, onClose, onNavigate, onOpenCommissio
                 <button
                   onClick={() => {
                     sound.playTick()
-                    onOpenCommission()
+                    onOpenCommission(currentArtwork.title)
                   }}
                   style={{
                     background: 'rgba(255, 255, 255, 0.05)',

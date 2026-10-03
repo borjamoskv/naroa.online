@@ -12,6 +12,7 @@ interface OptionItem {
 interface CommissionCalculatorProps {
   isOpen?: boolean
   onClose?: () => void
+  initialPieceTitle?: string
 }
 
 const SUBJECT_OPTIONS: OptionItem[] = [
@@ -33,7 +34,7 @@ const SIZE_OPTIONS: OptionItem[] = [
   { id: 'small', label: 'Íntimo (30 × 40 cm)', sublabel: 'Colección de gabinete', code: '30×40' },
 ]
 
-export function CommissionCalculator({ isOpen, onClose }: CommissionCalculatorProps = {}) {
+export function CommissionCalculator({ isOpen, onClose, initialPieceTitle }: CommissionCalculatorProps = {}) {
   if (isOpen === false) return null
 
   const [subject, setSubject] = useState<string>('individual')
@@ -44,16 +45,16 @@ export function CommissionCalculator({ isOpen, onClose }: CommissionCalculatorPr
   const selectedMedium = MEDIUM_OPTIONS.find((m) => m.id === medium) || MEDIUM_OPTIONS[0]
   const selectedSize = SIZE_OPTIONS.find((sz) => sz.id === size) || SIZE_OPTIONS[0]
 
-  const summaryText = `Hola Naroa! Deseo encargar una pieza exclusiva a medida:
+  const summaryText = `Hola Naroa! Deseo encargar una pieza exclusiva a medida${initialPieceTitle ? ` (inspirada en la atmósfera de «${initialPieceTitle}»)` : ''}:
 - Motivo: ${selectedSubject.label}
 - Soporte: ${selectedMedium.label}
-- Formato: ${selectedSize.label}
+- Formato: ${selectedSize.label}${initialPieceTitle ? `\n- Obra de Referencia: ${initialPieceTitle}` : ''}
 
 ¿Podemos coordinar la fotografía de referencia y detalles del encargo?`
 
   const whatsappUrl = `https://wa.me/34636060609?text=${encodeURIComponent(summaryText)}`
   const mailtoUrl = `mailto:naroa@naroa.eu?subject=${encodeURIComponent(
-    `Encargo Bespoke - ${selectedSubject.label}`
+    `Encargo Bespoke - ${selectedSubject.label}${initialPieceTitle ? ` [Ref: ${initialPieceTitle}]` : ''}`
   )}&body=${encodeURIComponent(summaryText)}`
 
   const content = (
@@ -85,6 +86,23 @@ export function CommissionCalculator({ isOpen, onClose }: CommissionCalculatorPr
         >
           ENCARGOS <span style={{ color: '#D4AF37' }}>A MEDIDA</span>
         </h1>
+        {initialPieceTitle && (
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              background: 'rgba(212, 175, 55, 0.15)',
+              border: '1px solid rgba(212, 175, 55, 0.45)',
+              borderRadius: '20px',
+              padding: '6px 16px',
+              marginBottom: '16px',
+            }}
+          >
+            <span style={{ color: '#D4AF37', fontSize: '0.78rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.08em' }}>✦ PIEZA DE REFERENCIA:</span>
+            <span style={{ color: '#FFFFFF', fontWeight: 600, fontSize: '0.85rem' }}>{initialPieceTitle}</span>
+          </div>
+        )}
         <p
           style={{
             color: 'rgba(255, 255, 255, 0.65)',
