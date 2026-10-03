@@ -1,0 +1,11 @@
+# Redirecciones canónicas hacia rutas institucionales de El Museo
+/catalogo /obra/ 301
+/galeria /obra/ 301
+/gallery /obra/ 301
+/biografia /bio/ 301
+/sobre-mi /bio/ 301
+/exhibitions /exposiciones/ 301
+/press /prensa/ 301
+/commission /encargos/ 301
+/bespoke /encargos/ 301
+/contact /contacto/ 301

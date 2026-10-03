@@ -155,7 +155,7 @@ export function KineticHorizon({
           lastAnnouncedIndexRef.current = nearestIdx
           activeIndexRef.current = nearestIdx
           setActiveIdx(nearestIdx)
-          sound.playTick()
+          sound.playHapticClick(1.0 + (nearestIdx % 3) * 0.08)
           onSelectArtwork(nearestIdx)
         }
       } else {
@@ -180,7 +180,7 @@ export function KineticHorizon({
   const glideTo = useCallback(
     (newIndex: number) => {
       const clamped = Math.max(0, Math.min(ARTWORKS.length - 1, newIndex))
-      sound.playTick()
+      sound.playHapticClick(1.1)
       targetXRef.current = clamped * itemSpacing
       lastAnnouncedIndexRef.current = clamped
       activeIndexRef.current = clamped
@@ -218,6 +218,10 @@ export function KineticHorizon({
     const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY
     const maxX = (ARTWORKS.length - 1) * itemSpacing
 
+    if (Math.abs(delta) > 6) {
+      sound.playHapticSlide(delta * 0.04)
+    }
+
     // Acumular desplazamiento continuo en el objetivo de inercia
     targetXRef.current = Math.max(0, Math.min(maxX, targetXRef.current + delta * 1.15))
   }
@@ -233,6 +237,10 @@ export function KineticHorizon({
     lastDragXRef.current = e.clientX
     lastDragTimeRef.current = performance.now()
     velocityRef.current = 0
+    sound.playHapticClick(0.9)
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('naroa:cursor', { detail: { label: 'ARRASTRAR' } }))
+    }
   }
 
   const handlePointerMove = (e: React.PointerEvent) => {
@@ -251,6 +259,9 @@ export function KineticHorizon({
 
     if (dt > 0) {
       velocityRef.current = dx / dt
+      if (Math.abs(velocityRef.current) > 0.08) {
+        sound.playHapticSlide(velocityRef.current)
+      }
     }
 
     lastDragXRef.current = e.clientX
@@ -273,6 +284,9 @@ export function KineticHorizon({
     if (!isDraggingRef.current) return
     isDraggingRef.current = false
     setIsDragging(false)
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('naroa:cursor', { detail: { label: null } }))
+    }
 
     const maxX = (ARTWORKS.length - 1) * itemSpacing
 
@@ -285,6 +299,7 @@ export function KineticHorizon({
     const finalSnappedTarget = targetIdx * itemSpacing
 
     targetXRef.current = Math.max(0, Math.min(maxX, finalSnappedTarget))
+    sound.playHapticClick(1.05)
   }
 
   // Color de aura ambiental correspondiente a la obra central
@@ -342,6 +357,7 @@ export function KineticHorizon({
       {/* FLECHA DE NAVEGACIÓN IZQUIERDA (FLOTANTE MINIMALISTA) */}
       <button
         className="desktop-only"
+        data-cursor="ANTERIOR"
         onClick={(e) => {
           e.stopPropagation()
           handlePrev()
@@ -390,6 +406,7 @@ export function KineticHorizon({
       {/* FLECHA DE NAVEGACIÓN DERECHA (FLOTANTE MINIMALISTA) */}
       <button
         className="desktop-only"
+        data-cursor="SIGUIENTE"
         onClick={(e) => {
           e.stopPropagation()
           handleNext()
@@ -471,12 +488,22 @@ export function KineticHorizon({
           const isCentered = absDist < 0.45
           const auraColor = ARTWORK_AURA_COLORS[artwork.id] || 'rgba(212, 175, 55, 0.3)'
 
-          const tiltX = isCentered ? Math.max(-4, Math.min(4, (mouseCoord.y - (typeof window !== 'undefined' ? window.innerHeight : 900) / 2) * -0.01)) : 0
-          const tiltY = isCentered ? Math.max(-5, Math.min(5, (mouseCoord.x - viewportWidth / 2) * 0.012)) : 0
+          // Cálculo de coordenadas relativas normalizadas para perspectiva 3D interactiva y brillo de mica
+          const winH = typeof window !== 'undefined' ? window.innerHeight : 900
+          const normMouseX = Math.max(-1, Math.min(1, (mouseCoord.x - viewportWidth / 2) / (viewportWidth * 0.28)))
+          const normMouseY = Math.max(-1, Math.min(1, (mouseCoord.y - winH / 2) / (winH * 0.36)))
+
+          const interactiveTiltX = isCentered && cursorOverArtwork === idx ? -normMouseY * 13 : 0
+          const interactiveTiltY = isCentered && cursorOverArtwork === idx ? normMouseX * 15 : 0
+
+          // Coordenadas del foco especular de mica mineral (5% a 95%)
+          const micaShineX = Math.round(Math.max(5, Math.min(95, 50 + normMouseX * 42)))
+          const micaShineY = Math.round(Math.max(5, Math.min(95, 50 + normMouseY * 42)))
 
           return (
             <div
               key={artwork.id}
+              data-cursor={isCentered ? 'LUPA' : 'EXPLORAR'}
               onClick={(e) => {
                 e.stopPropagation()
                 if (isCentered) {
@@ -492,7 +519,7 @@ export function KineticHorizon({
                 position: 'absolute',
                 left: `calc(50% + ${offset}px)`,
                 top: '50%',
-                transform: `translate(-50%, -50%) scale(${scale}) rotateX(${tiltX}deg) rotateY(${rotateY + tiltY}deg)`,
+                transform: `translate(-50%, -50%) scale(${scale}) rotateX(${interactiveTiltX}deg) rotateY(${rotateY + interactiveTiltY}deg)`,
                 transformOrigin: 'center center',
                 transformStyle: 'preserve-3d',
                 opacity,
@@ -505,7 +532,7 @@ export function KineticHorizon({
                 pointerEvents: 'auto',
                 transition: isDragging
                   ? 'none'
-                  : 'transform 0.12s ease-out, opacity 0.15s ease-out',
+                  : 'transform 0.14s ease-out, opacity 0.15s ease-out',
               }}
             >
               {/* NUMERAL MONUMENTAL EN PARALLAX CLÁSICO DE ALTA COSTURA */}
@@ -514,7 +541,7 @@ export function KineticHorizon({
                   position: 'absolute',
                   top: '38%',
                   left: '50%',
-                  transform: `translate(-50%, -50%) translateX(${offset * -0.15}px)`,
+                  transform: `translate(-50%, -50%) translateX(${offset * -0.15}px) translateZ(-60px)`,
                   fontFamily: 'var(--font-serif, "Cinzel", Georgia, serif)',
                   fontSize: 'clamp(180px, 26vw, 340px)',
                   fontWeight: 700,
@@ -553,6 +580,7 @@ export function KineticHorizon({
                   flexDirection: 'column',
                   alignItems: 'center',
                   zIndex: 10,
+                  transformStyle: 'preserve-3d',
                 }}
               >
                 <img
@@ -567,27 +595,44 @@ export function KineticHorizon({
                     objectFit: 'contain',
                     display: 'block',
                     filter: isCentered
-                      ? 'drop-shadow(0 25px 50px rgba(0,0,0,0.92)) drop-shadow(0 8px 20px rgba(0,0,0,0.65))'
+                      ? `drop-shadow(${-normMouseX * 14}px ${25 - normMouseY * 10}px 50px rgba(0,0,0,0.92)) drop-shadow(0 8px 20px rgba(0,0,0,0.65))`
                       : 'drop-shadow(0 15px 30px rgba(0,0,0,0.85)) brightness(0.75)',
-                    transform: cursorOverArtwork === idx && isCentered ? 'scale(1.025)' : 'scale(1)',
+                    transform: cursorOverArtwork === idx && isCentered ? 'scale(1.025) translateZ(20px)' : 'scale(1) translateZ(0px)',
                     transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
                   }}
                 />
 
-                {/* DESTELLO ESPECULAR DINÁMICO DE MICA MINERAL */}
+                {/* DESTELLO ESPECULAR CAÚSTICO MULTICAPA DE MICA MINERAL & ORO 24K */}
                 {isCentered && (
-                  <div
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      background: `radial-gradient(circle 320px at ${Math.max(10, Math.min(90, ((mouseCoord.x - (viewportWidth / 2 - 180)) / 360) * 100))}% ${Math.max(10, Math.min(90, ((mouseCoord.y - ((typeof window !== 'undefined' ? window.innerHeight : 900) / 2 - 240)) / 480) * 100))}%, rgba(255, 255, 255, 0.22) 0%, rgba(212, 175, 55, 0.14) 35%, transparent 70%)`,
-                      mixBlendMode: 'color-dodge',
-                      pointerEvents: 'none',
-                      zIndex: 15,
-                      opacity: cursorOverArtwork === idx ? 0.95 : 0.45,
-                      transition: 'opacity 0.25s ease',
-                    }}
-                  />
+                  <>
+                    {/* Capa 1: Foco caústico radial de mica */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: `radial-gradient(circle 380px at ${micaShineX}% ${micaShineY}%, rgba(255, 255, 255, 0.46) 0%, rgba(212, 175, 55, 0.35) 22%, rgba(212, 175, 55, 0.08) 48%, transparent 72%)`,
+                        mixBlendMode: 'color-dodge',
+                        pointerEvents: 'none',
+                        zIndex: 15,
+                        opacity: cursorOverArtwork === idx ? 0.95 : 0.42,
+                        transition: 'opacity 0.25s ease',
+                      }}
+                    />
+
+                    {/* Capa 2: Franja laminar anisótropa de mica (shimmer sheen) */}
+                    <div
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: `linear-gradient(${112 + normMouseX * 24}deg, transparent 30%, rgba(255, 235, 175, 0.22) 46%, rgba(255, 255, 255, 0.65) 50%, rgba(212, 175, 55, 0.3) 54%, transparent 70%)`,
+                        mixBlendMode: 'overlay',
+                        pointerEvents: 'none',
+                        zIndex: 16,
+                        opacity: cursorOverArtwork === idx ? 0.88 : 0.22,
+                        transition: 'opacity 0.25s ease',
+                      }}
+                    />
+                  </>
                 )}
 
                 {/* SOMBRA DE CONTACTO MONUMENTAL DE LA PIEDRA */}
@@ -702,6 +747,7 @@ export function KineticHorizon({
         onClick={(e) => e.stopPropagation()}
       >
         <div
+          data-cursor="ARRASTRAR"
           style={{
             position: 'relative',
             width: 'clamp(280px, 44vw, 680px)',
@@ -744,6 +790,7 @@ export function KineticHorizon({
               return (
                 <div
                   key={idx}
+                  data-cursor="VER"
                   onClick={(e) => {
                     e.stopPropagation()
                     glideTo(idx)

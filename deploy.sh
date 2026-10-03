@@ -14,7 +14,7 @@
 set -euo pipefail
 
 PROJECT="naroaonline"
-BUILD_DIR=".deploy"
+BUILD_DIR="dist"
 BRANCH="${1:-production}"
 
 # Colores
@@ -32,20 +32,11 @@ fail() { echo -e "${RED}[FATAL]${NC} $1"; exit 1; }
 [ "$BRANCH" = "--build-only" ] || command -v wrangler >/dev/null 2>&1 || fail "wrangler no encontrado. Instala con: npm i -g wrangler"
 [ -d "live-site" ] || fail "Directorio live-site/ no encontrado"
 
-# ── 2. Limpiar build anterior ────────────────────────────────
-log "Limpiando build anterior..."
-rm -rf "$BUILD_DIR"
-mkdir -p "$BUILD_DIR"
-
-# ── 3. Construir y copiar Galería 3D / SPA (dist/) ──────────
+# ── 2. Construir Galería 3D / SPA (dist/) ──────────
 log "Construyendo SPA (Vite + React + Three.js)..."
 export NODE_ENV=production
 npm run build || fail "Build de Vite falló"
 ok "Galería 3D compilada → dist/"
-
-log "Montando SPA (dist/) en la raíz → ${BUILD_DIR}/"
-cp -R dist/. "$BUILD_DIR/"
-ok "SPA montada en la raíz del sitio"
 
 # ── 6. Inyectar _headers y _redirects de CF Pages ───────────
 log "Inyectando _headers y _redirects..."
@@ -105,9 +96,14 @@ EOF
   ok "robots.txt creado"
 fi
 
+# ── 7b. Compilar El Museo Institucional (museum/) ───────────
+log "Compilando sitio institucional El Museo (naroagutierrezgil.com)..."
+python3 tools/build_museum_site.py || fail "Compilación de El Museo falló"
+ok "El Museo compilado → museum/ (6 rutas canónicas)"
+
 # ── 8. Deploy a Cloudflare Pages ─────────────────────────────
 if [ "$BRANCH" = "--build-only" ]; then
-  ok "Build completado en .deploy/ (Modo --build-only)"
+  ok "Build completado en .deploy/ y museum/ (Modo --build-only)"
   exit 0
 fi
 
@@ -115,17 +111,16 @@ if [ -n "${CLOUDFLARE_API_TOKEN:-}" ]; then
   export CLOUDFLARE_API_TOKEN
 fi
 
-DEPLOY_SIZE=$(du -sh "$BUILD_DIR" | cut -f1)
-log "Desplegando ${BOLD}${DEPLOY_SIZE}${NC} → CF Pages proyecto ${BOLD}naroagutierrezgil-com${NC} (Dominio Oficial)..."
-
+log "Desplegando EL MUSEO → CF Pages proyecto ${BOLD}naroagutierrezgil-com${NC}..."
 if [ "$BRANCH" = "--preview" ]; then
-  wrangler pages deploy "$BUILD_DIR" --project-name "naroagutierrezgil-com" --branch preview --commit-dirty=true
+  wrangler pages deploy museum --project-name "naroagutierrezgil-com" --branch preview --commit-dirty=true
   wrangler pages deploy "$BUILD_DIR" --project-name "naroaonline" --branch preview --commit-dirty=true
   ok "Deploy PREVIEW completado"
 else
-  wrangler pages deploy "$BUILD_DIR" --project-name "naroagutierrezgil-com" --branch production --commit-dirty=true || true
+  wrangler pages deploy museum --project-name "naroagutierrezgil-com" --branch production --commit-dirty=true || true
+  log "Desplegando EL SÓTANO / LAB → CF Pages proyecto ${BOLD}naroaonline${NC}..."
   wrangler pages deploy "$BUILD_DIR" --project-name "naroaonline" --branch production --commit-dirty=true || true
-  ok "Deploy PRODUCCIÓN completado → https://naroagutierrezgil.com/ & https://naroa.online/"
+  ok "Deploy PRODUCCIÓN completado → https://naroagutierrezgil.com/ (El Museo) & https://naroa.online/ (El Sótano)"
 fi
 
 # ── 9. Purga de Caché Global en Cloudflare Edge ──────────────
@@ -145,9 +140,8 @@ if command -v npx >/dev/null 2>&1; then
   ok "Mirror Vercel actualizado"
 fi
 
-# ── 11. Limpieza post-deploy ─────────────────────────────────
-rm -rf "$BUILD_DIR"
-ok "Build temporal limpiado"
+# ── 11. Finalización ─────────────────────────────────────────
+ok "Despliegue finalizado exitosamente"
 
 echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════${NC}"

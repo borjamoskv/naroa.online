@@ -82,8 +82,32 @@ class SoundEngine {
     return this.enabled
   }
 
-  public playTick() {
+  private lastSlideSoundTime = 0
+  private lastHapticClickTime = 0
+  private noiseBuffer: AudioBuffer | null = null
+
+  private getNoiseBuffer(): AudioBuffer | null {
+    if (this.noiseBuffer || !this.ctx) return this.noiseBuffer
+    try {
+      const bufferSize = Math.floor(this.ctx.sampleRate * 0.15) // 150ms noise
+      const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate)
+      const data = buffer.getChannelData(0)
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1
+      }
+      this.noiseBuffer = buffer
+      return buffer
+    } catch {
+      return null
+    }
+  }
+
+  public playHapticClick(pitchMultiplier: number = 1.0) {
     if (!this.enabled) return
+    const nowMs = performance.now()
+    if (nowMs - this.lastHapticClickTime < 35) return // Throttling 35ms
+    this.lastHapticClickTime = nowMs
+
     try {
       this.initCtx()
       if (!this.ctx) return
@@ -91,22 +115,108 @@ class SoundEngine {
       const now = this.ctx.currentTime
       const osc = this.ctx.createOscillator()
       const gain = this.ctx.createGain()
+      const filter = this.ctx.createBiquadFilter()
 
-      osc.type = 'sine'
-      osc.frequency.setValueAtTime(520, now)
-      osc.frequency.exponentialRampToValueAtTime(1040, now + 0.045)
+      osc.type = 'triangle'
+      osc.frequency.setValueAtTime(860 * pitchMultiplier, now)
+      osc.frequency.exponentialRampToValueAtTime(220 * pitchMultiplier, now + 0.016)
+
+      filter.type = 'bandpass'
+      filter.frequency.setValueAtTime(950 * pitchMultiplier, now)
+      filter.Q.setValueAtTime(3.0, now)
 
       gain.gain.setValueAtTime(0.045, now)
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.045)
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.02)
 
-      osc.connect(gain)
+      osc.connect(filter)
+      filter.connect(gain)
       gain.connect(this.ctx.destination)
 
       osc.start(now)
-      osc.stop(now + 0.045)
+      osc.stop(now + 0.02)
     } catch {
       // Ignore audio errors
     }
+  }
+
+  public playHapticSlide(velocity: number = 1.0) {
+    if (!this.enabled) return
+    const nowMs = performance.now()
+    if (nowMs - this.lastSlideSoundTime < 65) return // Throttling 65ms
+    this.lastSlideSoundTime = nowMs
+
+    try {
+      this.initCtx()
+      if (!this.ctx) return
+      const now = this.ctx.currentTime
+      const buf = this.getNoiseBuffer()
+      if (!buf) return
+
+      const source = this.ctx.createBufferSource()
+      source.buffer = buf
+
+      const filter = this.ctx.createBiquadFilter()
+      filter.type = 'bandpass'
+      filter.frequency.setValueAtTime(280 + Math.min(380, Math.abs(velocity) * 140), now)
+      filter.Q.setValueAtTime(3.2, now)
+
+      const gain = this.ctx.createGain()
+      const vol = Math.min(0.035, 0.006 + Math.abs(velocity) * 0.018)
+      gain.gain.setValueAtTime(vol, now)
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.065)
+
+      source.connect(filter)
+      filter.connect(gain)
+      gain.connect(this.ctx.destination)
+
+      source.start(now)
+      source.stop(now + 0.065)
+    } catch {
+      // Ignore audio errors
+    }
+  }
+
+  public playLoupeReveal() {
+    if (!this.enabled) return
+    try {
+      this.initCtx()
+      if (!this.ctx) return
+
+      const now = this.ctx.currentTime
+      const chord = [293.66, 369.99, 440.00, 587.33, 739.99] // D maj 9 mineral shimmer
+      chord.forEach((freq, idx) => {
+        if (!this.ctx) return
+        const osc = this.ctx.createOscillator()
+        const gain = this.ctx.createGain()
+        const filter = this.ctx.createBiquadFilter()
+
+        osc.type = 'sine'
+        osc.frequency.setValueAtTime(freq, now)
+
+        filter.type = 'bandpass'
+        filter.frequency.setValueAtTime(freq * 1.15, now)
+        filter.Q.setValueAtTime(4.5, now)
+
+        const delay = idx * 0.035
+        gain.gain.setValueAtTime(0.0001, now + delay)
+        gain.gain.exponentialRampToValueAtTime(0.022, now + delay + 0.05)
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + delay + 0.5)
+
+        osc.connect(filter)
+        filter.connect(gain)
+        gain.connect(this.ctx.destination)
+
+        osc.start(now + delay)
+        osc.stop(now + delay + 0.55)
+      })
+    } catch {
+      // Ignore audio errors
+    }
+  }
+
+  public playTick() {
+    if (!this.enabled) return
+    this.playHapticClick(1.0)
   }
 
   public playHover() {

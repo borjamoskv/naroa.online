@@ -11,6 +11,183 @@ interface VisualIndexProps {
 
 type FilterCategory = 'all' | 'rocks' | 'divinos' | 'kintsugi' | 'drawing'
 
+interface VisualIndexCardProps {
+  artwork: (typeof ARTWORKS)[0]
+  originalIndex: number
+  onSelect: () => void
+}
+
+function VisualIndexCard({ artwork, originalIndex, onSelect }: VisualIndexCardProps) {
+  const [mousePos, setMousePos] = useState({ x: 50, y: 50 })
+  const [isHovered, setIsHovered] = useState(false)
+  const aspect = artwork.aspectRatio || 0.75
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const x = Math.round(((e.clientX - rect.left) / rect.width) * 100)
+    const y = Math.round(((e.clientY - rect.top) / rect.height) * 100)
+    setMousePos({ x, y })
+  }
+
+  return (
+    <motion.div
+      data-cursor="INSPECT"
+      className="visual-index-card"
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+      onClick={() => {
+        sound.playOpen()
+        onSelect()
+      }}
+      onMouseEnter={() => {
+        setIsHovered(true)
+        sound.playHapticClick(0.92)
+      }}
+      onMouseLeave={() => setIsHovered(false)}
+      onMouseMove={handleMouseMove}
+      style={{
+        cursor: 'pointer',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '12px',
+        transition: 'transform 0.3s ease',
+      }}
+      whileHover={{ y: -6 }}
+    >
+      {/* Contenedor de la Pieza con Caustic Mica Sheen */}
+      <div
+        style={{
+          position: 'relative',
+          width: '100%',
+          aspectRatio: aspect >= 1.2 ? '16/10' : aspect >= 0.9 ? '1/1' : '3/4',
+          background: 'rgba(255, 255, 255, 0.02)',
+          border: isHovered ? '1px solid rgba(212, 175, 55, 0.55)' : '1px solid rgba(255, 255, 255, 0.07)',
+          borderRadius: '16px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '14px',
+          boxSizing: 'border-box',
+          overflow: 'hidden',
+          boxShadow: isHovered
+            ? '0 20px 48px rgba(0, 0, 0, 0.92), 0 0 24px rgba(212, 175, 55, 0.14)'
+            : 'none',
+          transition: 'border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease',
+        }}
+      >
+        <img
+          src={artwork.url}
+          alt={`${artwork.title} — Hiperrealismo POP sobre ${artwork.medium} (${artwork.year}) | Naroa Gutiérrez Gil`}
+          loading="lazy"
+          style={{
+            maxHeight: '100%',
+            maxWidth: '100%',
+            objectFit: 'contain',
+            filter:
+              'drop-shadow(0 16px 28px rgba(0,0,0,0.92)) drop-shadow(0 4px 10px rgba(0,0,0,0.6))',
+            transform: isHovered ? 'scale(1.035)' : 'scale(1)',
+            transition: 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+          }}
+        />
+
+        {/* Destello cáustico de mica mineral */}
+        {isHovered && (
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: `radial-gradient(circle 240px at ${mousePos.x}% ${mousePos.y}%, rgba(212, 175, 55, 0.32) 0%, rgba(255, 255, 255, 0.12) 30%, transparent 70%)`,
+              mixBlendMode: 'screen',
+              pointerEvents: 'none',
+              zIndex: 15,
+            }}
+          />
+        )}
+
+        {/* Número de Colección */}
+        <span
+          style={{
+            position: 'absolute',
+            top: '8px',
+            left: '10px',
+            fontFamily: 'var(--font-mono, monospace)',
+            fontSize: '0.65rem',
+            letterSpacing: '0.15em',
+            color: 'rgba(212, 175, 55, 0.8)',
+            fontWeight: 700,
+          }}
+        >
+          {String(originalIndex + 1).padStart(2, '0')}
+        </span>
+
+        {/* Píldora de formato */}
+        <span
+          style={{
+            position: 'absolute',
+            bottom: '8px',
+            right: '10px',
+            fontFamily: 'var(--font-mono, monospace)',
+            fontSize: '0.58rem',
+            letterSpacing: '0.12em',
+            color: 'rgba(255, 255, 255, 0.45)',
+            background: 'rgba(0, 0, 0, 0.65)',
+            padding: '2px 6px',
+            borderRadius: '8px',
+          }}
+        >
+          {aspect >= 1.2 ? 'APAISADO' : aspect >= 0.9 ? 'CUADRADO' : 'VERTICAL'}
+        </span>
+      </div>
+
+      {/* Metadatos Curatorial */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+        <h3
+          style={{
+            fontFamily: 'var(--font-serif, "Cinzel", Georgia, serif)',
+            fontSize: '0.98rem',
+            fontWeight: 600,
+            letterSpacing: '0.08em',
+            color: isHovered ? '#D4AF37' : '#FFFFFF',
+            margin: 0,
+            lineHeight: 1.2,
+            textTransform: 'uppercase',
+            transition: 'color 0.2s ease',
+          }}
+        >
+          {artwork.title}
+        </h3>
+        {artwork.kicker && (
+          <span
+            style={{
+              fontFamily: 'var(--font-editorial, "Cormorant Garamond", Georgia, serif)',
+              fontStyle: 'italic',
+              fontSize: '0.86rem',
+              color: 'rgba(212, 175, 55, 0.95)',
+              lineHeight: 1.25,
+              letterSpacing: '0.02em',
+            }}
+          >
+            «{artwork.kicker}»
+          </span>
+        )}
+        <p
+          style={{
+            fontFamily: 'var(--font-editorial, "Cormorant Garamond", Georgia, serif)',
+            fontStyle: 'italic',
+            fontSize: '0.84rem',
+            color: 'rgba(255, 255, 255, 0.65)',
+            margin: 0,
+            letterSpacing: '0.03em',
+          }}
+        >
+          {artwork.year} · {artwork.medium}
+        </p>
+      </div>
+    </motion.div>
+  )
+}
+
 export function VisualIndex({ isOpen, onClose, onSelectArtwork }: VisualIndexProps) {
   const [activeFilter, setActiveFilter] = useState<FilterCategory>('all')
   const [searchQuery, setSearchQuery] = useState('')
@@ -125,6 +302,7 @@ export function VisualIndex({ isOpen, onClose, onSelectArtwork }: VisualIndexPro
           </div>
 
           <button
+            data-cursor="CERRAR"
             onClick={() => {
               sound.playClose()
               onClose()
@@ -180,8 +358,9 @@ export function VisualIndex({ isOpen, onClose, onSelectArtwork }: VisualIndexPro
               return (
                 <button
                   key={tab.key}
+                  data-cursor="FILTRO"
                   onClick={() => {
-                    sound.playTick()
+                    sound.playHapticClick(active ? 1.0 : 1.15)
                     setActiveFilter(tab.key)
                   }}
                   style={{
@@ -198,6 +377,7 @@ export function VisualIndex({ isOpen, onClose, onSelectArtwork }: VisualIndexPro
                   }}
                   onMouseEnter={(e) => {
                     if (!active) {
+                      sound.playHapticClick(0.85)
                       e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.4)'
                       e.currentTarget.style.color = '#FFFFFF'
                     }
@@ -228,6 +408,7 @@ export function VisualIndex({ isOpen, onClose, onSelectArtwork }: VisualIndexPro
           >
             <input
               type="text"
+              data-cursor="BUSCAR"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Buscar por título, técnica..."
@@ -257,7 +438,11 @@ export function VisualIndex({ isOpen, onClose, onSelectArtwork }: VisualIndexPro
             />
             {searchQuery ? (
               <button
-                onClick={() => setSearchQuery('')}
+                data-cursor="LIMPIAR"
+                onClick={() => {
+                  sound.playTick()
+                  setSearchQuery('')
+                }}
                 style={{
                   position: 'absolute',
                   right: '10px',
@@ -300,150 +485,17 @@ export function VisualIndex({ isOpen, onClose, onSelectArtwork }: VisualIndexPro
           alignItems: 'start',
         }}
       >
-        {filteredItems.map(({ artwork, originalIndex }) => {
-          const aspect = artwork.aspectRatio || 0.75
-          return (
-            <motion.div
-              key={artwork.id}
-              className="visual-index-card"
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              onClick={() => {
-                sound.playOpen()
-                onSelectArtwork(originalIndex)
-                onClose()
-              }}
-              style={{
-                cursor: 'pointer',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '12px',
-                transition: 'transform 0.3s ease',
-              }}
-              whileHover={{ y: -5 }}
-            >
-              {/* Contenedor de la Pieza respetando ratio nativo */}
-              <div
-                style={{
-                  position: 'relative',
-                  width: '100%',
-                  aspectRatio: aspect >= 1.2 ? '16/10' : aspect >= 0.9 ? '1/1' : '3/4',
-                  background: 'rgba(255, 255, 255, 0.02)',
-                  border: '1px solid rgba(255, 255, 255, 0.07)',
-                  borderRadius: '16px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '14px',
-                  boxSizing: 'border-box',
-                  overflow: 'hidden',
-                  transition: 'border-color 0.25s ease, background 0.25s ease',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.45)'
-                  e.currentTarget.style.background = 'rgba(212, 175, 55, 0.04)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.07)'
-                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)'
-                }}
-              >
-                <img
-                  src={artwork.url}
-                  alt={artwork.title}
-                  loading="lazy"
-                  style={{
-                    maxHeight: '100%',
-                    maxWidth: '100%',
-                    objectFit: 'contain',
-                    filter:
-                      'drop-shadow(0 16px 28px rgba(0,0,0,0.92)) drop-shadow(0 4px 10px rgba(0,0,0,0.6))',
-                    transition: 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
-                  }}
-                />
-
-                {/* Número de Colección */}
-                <span
-                  style={{
-                    position: 'absolute',
-                    top: '8px',
-                    left: '10px',
-                    fontFamily: 'var(--font-mono, monospace)',
-                    fontSize: '0.65rem',
-                    letterSpacing: '0.15em',
-                    color: 'rgba(212, 175, 55, 0.8)',
-                    fontWeight: 700,
-                  }}
-                >
-                  {String(originalIndex + 1).padStart(2, '0')}
-                </span>
-
-                {/* Píldora de formato */}
-                <span
-                  style={{
-                    position: 'absolute',
-                    bottom: '8px',
-                    right: '10px',
-                    fontFamily: 'var(--font-mono, monospace)',
-                    fontSize: '0.58rem',
-                    letterSpacing: '0.12em',
-                    color: 'rgba(255, 255, 255, 0.45)',
-                    background: 'rgba(0, 0, 0, 0.65)',
-                    padding: '2px 6px',
-                    borderRadius: '8px',
-                  }}
-                >
-                  {aspect >= 1.2 ? 'APAISADO' : aspect >= 0.9 ? 'CUADRADO' : 'VERTICAL'}
-                </span>
-              </div>
-
-              {/* Metadatos Curatorial */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-                <h3
-                  style={{
-                    fontFamily: 'var(--font-serif, "Cinzel", Georgia, serif)',
-                    fontSize: '0.98rem',
-                    fontWeight: 600,
-                    letterSpacing: '0.08em',
-                    color: '#FFFFFF',
-                    margin: 0,
-                    lineHeight: 1.2,
-                    textTransform: 'uppercase',
-                  }}
-                >
-                  {artwork.title}
-                </h3>
-                {artwork.kicker && (
-                  <span
-                    style={{
-                      fontFamily: 'var(--font-editorial, "Cormorant Garamond", Georgia, serif)',
-                      fontStyle: 'italic',
-                      fontSize: '0.86rem',
-                      color: 'rgba(212, 175, 55, 0.95)',
-                      lineHeight: 1.25,
-                      letterSpacing: '0.02em',
-                    }}
-                  >
-                    «{artwork.kicker}»
-                  </span>
-                )}
-                <p
-                  style={{
-                    fontFamily: 'var(--font-editorial, "Cormorant Garamond", Georgia, serif)',
-                    fontStyle: 'italic',
-                    fontSize: '0.84rem',
-                    color: 'rgba(255, 255, 255, 0.65)',
-                    margin: 0,
-                    letterSpacing: '0.03em',
-                  }}
-                >
-                  {artwork.year} · {artwork.medium}
-                </p>
-              </div>
-            </motion.div>
-          )
-        })}
+        {filteredItems.map(({ artwork, originalIndex }) => (
+          <VisualIndexCard
+            key={artwork.id}
+            artwork={artwork}
+            originalIndex={originalIndex}
+            onSelect={() => {
+              onSelectArtwork(originalIndex)
+              onClose()
+            }}
+          />
+        ))}
       </div>
     </motion.div>
   )

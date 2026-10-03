@@ -173,7 +173,11 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
           {/* Botón Cerrar */}
           <button
             className="modal-close"
-            onClick={onClose}
+            data-cursor="CERRAR"
+            onClick={() => {
+              sound.playClose()
+              onClose()
+            }}
             aria-label="Cerrar modal"
             style={{
               position: 'absolute',
@@ -194,6 +198,7 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
               transition: 'all 0.2s ease',
             }}
             onMouseEnter={(e) => {
+              sound.playHapticClick(0.9)
               e.currentTarget.style.borderColor = '#D4AF37'
               e.currentTarget.style.color = '#D4AF37'
             }}
@@ -219,6 +224,7 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
             {/* Contenedor Fotográfico con Lupa Textura 200% */}
             <div
               className="modal-image-wrapper"
+              data-cursor={isZoomed ? 'ALEJAR' : 'ZOOM 2.2×'}
               onMouseMove={handleImageMouseMove}
               onClick={toggleZoom}
               style={{
@@ -367,10 +373,12 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
                 {artwork.splatUrl && (
                   <button
                     type="button"
+                    data-cursor="3DGS 360°"
                     onClick={() => {
                       sound.playTick()
                       setShowSplat(true)
                     }}
+                    onMouseEnter={() => sound.playHapticClick(1.1)}
                     style={{
                       background: 'linear-gradient(135deg, rgba(212,175,55,0.2) 0%, rgba(43,59,229,0.3) 100%)',
                       border: '1px solid #D4AF37',
@@ -393,7 +401,9 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
                   href={artworkWhatsAppUrl}
                   target="_blank"
                   rel="noopener noreferrer"
+                  data-cursor="CONSULTAR"
                   onClick={() => sound.playTick()}
+                  onMouseEnter={() => sound.playHapticClick(1.05)}
                   style={{
                     background: '#25D366',
                     color: '#000000',
@@ -416,10 +426,12 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
 
                 <a
                   href="#/atelier"
+                  data-cursor="ESTILO"
                   onClick={() => {
                     sound.playTick()
                     onClose()
                   }}
+                  onMouseEnter={() => sound.playHapticClick(0.95)}
                   style={{
                     background: 'rgba(255, 255, 255, 0.05)',
                     border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -439,7 +451,9 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
 
                 <button
                   type="button"
+                  data-cursor="COMPARTIR"
                   onClick={handleShare}
+                  onMouseEnter={() => sound.playHapticClick(0.9)}
                   style={{
                     background: copied ? 'rgba(212, 175, 55, 0.2)' : 'rgba(255, 255, 255, 0.05)',
                     border: copied ? '1px solid #D4AF37' : '1px solid rgba(255, 255, 255, 0.15)',
@@ -467,6 +481,7 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
                 }}
               >
                 <button
+                  data-cursor="ANTERIOR"
                   onClick={handlePrev}
                   style={{
                     background: 'none',
@@ -479,12 +494,16 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
                     padding: '6px 0',
                     transition: 'color 0.2s ease',
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = '#D4AF37')}
+                  onMouseEnter={(e) => {
+                    sound.playHapticClick(0.85)
+                    e.currentTarget.style.color = '#D4AF37'
+                  }}
                   onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.6)')}
                 >
                   ← ANTERIOR
                 </button>
                 <button
+                  data-cursor="SIGUIENTE"
                   onClick={handleNext}
                   style={{
                     background: 'none',
@@ -497,7 +516,10 @@ export function ArtworkModal({ artwork, currentIndex, onClose, onNavigate }: Art
                     padding: '6px 0',
                     transition: 'color 0.2s ease',
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = '#D4AF37')}
+                  onMouseEnter={(e) => {
+                    sound.playHapticClick(0.95)
+                    e.currentTarget.style.color = '#D4AF37'
+                  }}
                   onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.6)')}
                 >
                   SIGUIENTE →

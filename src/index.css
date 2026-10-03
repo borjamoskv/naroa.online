@@ -48,20 +48,37 @@ body.mode-3d-active {
   box-sizing: border-box;
 }
 
-/* Scanline atmosférico sutil */
+/* ════════════════════════════════════════════════════════════════
+   CAPA DE GRANO ANALÓGICO Y TEXTURA DE PIZARRA MINERAL (AWWWARDS SOTD)
+   Genera profundidad física de galería contemporánea sin coste de CPU
+   ════════════════════════════════════════════════════════════════ */
 html::after {
   content: '';
   position: fixed;
   inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.03) 2px,
-    rgba(0, 0, 0, 0.03) 4px
-  );
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='slateNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.055 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23slateNoise)'/%3E%3C/svg%3E");
   pointer-events: none;
-  z-index: 5;
+  z-index: 999990;
+  opacity: 0.6;
+  mix-blend-mode: overlay;
+}
+
+/* Viñeta de Iluminación Cenital de Galería de Arte & Micro-relieve de Pizarra */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 50% 48%, transparent 45%, rgba(2, 2, 4, 0.45) 80%, rgba(0, 0, 0, 0.88) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* En desktop con puntero fino, ocultar el cursor nativo en el escenario cinético para evitar duplicación */
+@media (pointer: fine) {
+  .kinetic-stage,
+  .kinetic-stage * {
+    cursor: none !important;
+  }
 }
 
 canvas {

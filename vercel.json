@@ -2,7 +2,7 @@
   "version": 2,
   "cleanUrls": true,
   "buildCommand": "./deploy.sh --build-only",
-  "outputDirectory": ".deploy",
+  "outputDirectory": "dist",
   "redirects": [
     {
       "source": "/(.*)",

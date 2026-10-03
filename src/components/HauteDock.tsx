@@ -237,8 +237,9 @@ export function HauteDock({
       >
         {/* BOTÓN LABORATORIO */}
         <button
+          data-cursor="HORIZONTE"
           onClick={() => {
-            sound.playTick()
+            sound.playHapticClick(1.0)
             onSelectMode('horizon')
             window.location.hash = '#/lab'
           }}
@@ -261,8 +262,9 @@ export function HauteDock({
 
         {/* BOTÓN PABELLÓN 3D EXPERIMENTS */}
         <button
+          data-cursor="3D EXP"
           onClick={() => {
-            sound.playTick()
+            sound.playHapticClick(1.1)
             onSelectMode('3d')
             window.location.hash = '#/experiments'
           }}
@@ -285,8 +287,9 @@ export function HauteDock({
 
         {/* BOTÓN ARCHIVO CANÓNICO */}
         <button
+          data-cursor="CATÁLOGO"
           onClick={() => {
-            sound.playTick()
+            sound.playHapticClick(1.0)
             onOpenIndex()
             window.location.hash = '#/archive'
           }}
@@ -316,8 +319,9 @@ export function HauteDock({
 
         {/* BOTÓN PROCESO / TALLER */}
         <button
+          data-cursor="ATELIER"
           onClick={() => {
-            sound.playTick()
+            sound.playHapticClick(1.0)
             onOpenArtist()
             window.location.hash = '#/process'
           }}
@@ -347,8 +351,9 @@ export function HauteDock({
 
         {/* BOTÓN ENCARGOS BESPOKE */}
         <button
+          data-cursor="BESPOKE"
           onClick={() => {
-            sound.playTick()
+            sound.playHapticClick(1.2)
             onOpenCommission()
           }}
           style={{
@@ -380,8 +385,9 @@ export function HauteDock({
         {/* BOTÓN ASISTENTE MICA SYSTEM */}
         {onToggleMica && (
           <button
+            data-cursor="MICA AI"
             onClick={() => {
-              sound.playTick()
+              sound.playHapticClick(1.15)
               onToggleMica()
             }}
             title="Abrir Asistente MICA SYSTEM v∞"
@@ -427,7 +433,8 @@ export function HauteDock({
           href="https://naroagutierrezgil.com"
           target="_blank"
           rel="noopener noreferrer"
-          onClick={() => sound.playTick()}
+          data-cursor="MUSEO ↗"
+          onClick={() => sound.playHapticClick(1.0)}
           style={{
             background: 'transparent',
             border: '1px solid transparent',

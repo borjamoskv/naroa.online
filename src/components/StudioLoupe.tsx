@@ -30,15 +30,22 @@ export function StudioLoupe({ artworkIndex, onClose, onNavigate, onOpenCommissio
   const currentArtwork = isOpen ? ARTWORKS[artworkIndex] : null
   const currentZoom = ZOOM_LEVELS[zoomLevelIndex]
 
+  // Acústica de revelación mineral al abrir la lupa
+  useEffect(() => {
+    if (isOpen) {
+      sound.playLoupeReveal()
+    }
+  }, [isOpen, artworkIndex])
+
   const handleNext = useCallback(() => {
     if (artworkIndex === null) return
-    sound.playTick()
+    sound.playHapticClick(1.1)
     onNavigate((artworkIndex + 1) % ARTWORKS.length)
   }, [artworkIndex, onNavigate])
 
   const handlePrev = useCallback(() => {
     if (artworkIndex === null) return
-    sound.playTick()
+    sound.playHapticClick(0.95)
     onNavigate((artworkIndex - 1 + ARTWORKS.length) % ARTWORKS.length)
   }, [artworkIndex, onNavigate])
 
@@ -208,8 +215,9 @@ export function StudioLoupe({ artworkIndex, onClose, onNavigate, onOpenCommissio
                   return (
                     <button
                       key={lvl}
+                      data-cursor={labels[idx]}
                       onClick={() => {
-                        sound.playTick()
+                        sound.playHapticClick(1.0 + idx * 0.15)
                         setZoomLevelIndex(idx)
                       }}
                       style={{
@@ -234,6 +242,7 @@ export function StudioLoupe({ artworkIndex, onClose, onNavigate, onOpenCommissio
 
             {/* BOTÓN CERRAR ESC */}
             <button
+              data-cursor="CERRAR"
               onClick={() => {
                 sound.playClose()
                 onClose()
@@ -283,6 +292,7 @@ export function StudioLoupe({ artworkIndex, onClose, onNavigate, onOpenCommissio
           >
             {/* NAVEGACIÓN PREV / NEXT LATERAL */}
             <button
+              data-cursor="ANTERIOR"
               onClick={(e) => {
                 e.stopPropagation()
                 handlePrev()
@@ -308,6 +318,7 @@ export function StudioLoupe({ artworkIndex, onClose, onNavigate, onOpenCommissio
             </button>
 
             <button
+              data-cursor="SIGUIENTE"
               onClick={(e) => {
                 e.stopPropagation()
                 handleNext()
@@ -335,6 +346,7 @@ export function StudioLoupe({ artworkIndex, onClose, onNavigate, onOpenCommissio
             {/* CONTENEDOR DE LA IMAGEN CON LUPA DE PROFUNDIDAD */}
             <div
               ref={imageContainerRef}
+              data-cursor={currentZoom === 1.0 ? 'ZOOM 2.5×' : currentZoom === 2.5 ? 'ZOOM 4.0×' : 'GLOBAL 1.0×'}
               onMouseMove={handleMouseMove}
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
@@ -342,7 +354,7 @@ export function StudioLoupe({ artworkIndex, onClose, onNavigate, onOpenCommissio
               onWheel={handleWheel}
               onClick={(e) => {
                 e.stopPropagation()
-                sound.playTick()
+                sound.playHapticClick(currentZoom === 1.0 ? 1.15 : currentZoom === 2.5 ? 1.3 : 0.9)
                 setZoomLevelIndex((prev) => (prev + 1) % ZOOM_LEVELS.length)
               }}
               style={{
@@ -360,7 +372,7 @@ export function StudioLoupe({ artworkIndex, onClose, onNavigate, onOpenCommissio
               <motion.img
                 key={currentArtwork.id}
                 src={currentArtwork.url}
-                alt={currentArtwork.title}
+                alt={`${currentArtwork.title} — Hiperrealismo POP sobre ${currentArtwork.medium} (${currentArtwork.year}) | Naroa Gutiérrez Gil`}
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{
                   opacity: 1,
@@ -477,7 +489,8 @@ export function StudioLoupe({ artworkIndex, onClose, onNavigate, onOpenCommissio
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => sound.playTick()}
+                data-cursor="ENCARGAR ↗"
+                onClick={() => sound.playHapticClick(1.2)}
                 style={{
                   background: 'rgba(212, 175, 55, 0.2)',
                   border: '1px solid rgba(212, 175, 55, 0.6)',
@@ -509,8 +522,9 @@ export function StudioLoupe({ artworkIndex, onClose, onNavigate, onOpenCommissio
 
               {onOpenCommission && (
                 <button
+                  data-cursor="CONFIGURAR"
                   onClick={() => {
-                    sound.playTick()
+                    sound.playHapticClick(1.1)
                     onOpenCommission(currentArtwork.title)
                   }}
                   style={{
@@ -537,8 +551,9 @@ export function StudioLoupe({ artworkIndex, onClose, onNavigate, onOpenCommissio
               )}
 
               <button
+                data-cursor={copied ? 'COPIADO' : 'COMPARTIR'}
                 onClick={() => {
-                  sound.playTick()
+                  sound.playHapticClick(1.0)
                   const slug = currentArtwork.slug || toSlug(currentArtwork.title)
                   const url = `${window.location.origin}/#obra-${slug}`
                   if (navigator.clipboard) {
