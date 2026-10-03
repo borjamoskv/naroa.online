@@ -868,6 +868,36 @@ export function KineticHorizon({
             }}
           />
         </div>
+
+        {/* Curatorial HUD / Interaction hints */}
+        <div
+          className="desktop-only"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '14px',
+            marginTop: '4px',
+            fontFamily: 'var(--font-mono, monospace)',
+            fontSize: '0.62rem',
+            letterSpacing: '0.14em',
+            color: 'rgba(255, 255, 255, 0.38)',
+            textTransform: 'uppercase',
+            userSelect: 'none',
+          }}
+        >
+          <span>
+            <strong style={{ color: '#D4AF37', fontWeight: 600 }}>← →</strong> NAVEGAR
+          </span>
+          <span style={{ opacity: 0.3 }}>·</span>
+          <span>
+            <strong style={{ color: '#D4AF37', fontWeight: 600 }}>ESPACIO</strong> LUPA ULTRA-HD
+          </span>
+          <span style={{ opacity: 0.3 }}>·</span>
+          <span>
+            <strong style={{ color: '#D4AF37', fontWeight: 600 }}>WHEEL</strong> INERCIA FLUIDA
+          </span>
+        </div>
       </div>
     </div>
   )

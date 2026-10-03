@@ -50,16 +50,22 @@
         <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5;">Bilbao, Bizkaia (País Vasco, España). Visitas para coleccionistas concertadas previamente.</p>
       </div>
 
-      <div style="background: var(--bg-card); border: 1px solid var(--gold-border); border-radius: 16px; padding: 32px;">
-        <span style="font-size: 2rem;">✉</span>
-        <h3 style="font-family: var(--font-serif); font-size: 1.25rem; margin: 12px 0 6px;">CORREO ELECTRÓNICO</h3>
-        <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5;">Atención institucional y pedidos:<br><a href="mailto:naroa@naroa.eu" style="color: var(--gold); font-weight: 700;">naroa@naroa.eu</a></p>
+      <div style="background: var(--bg-card); border: 1px solid var(--gold-border); border-radius: 16px; padding: 32px; display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <span style="font-size: 2rem;">✉</span>
+          <h3 style="font-family: var(--font-serif); font-size: 1.25rem; margin: 12px 0 6px;">CORREO ELECTRÓNICO</h3>
+          <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5;">Atención institucional y pedidos:<br><a href="mailto:naroa@naroa.eu" style="color: var(--gold); font-weight: 700;">naroa@naroa.eu</a></p>
+        </div>
+        <button type="button" class="btn-copy" onclick="copyContactText(this, 'naroa@naroa.eu')">📋 COPIAR EMAIL</button>
       </div>
 
-      <div style="background: var(--bg-card); border: 1px solid var(--gold-border); border-radius: 16px; padding: 32px;">
-        <span style="font-size: 2rem;">💬</span>
-        <h3 style="font-family: var(--font-serif); font-size: 1.25rem; margin: 12px 0 6px;">WHATSAPP OFICIAL</h3>
-        <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5;">Atención directa de taller:<br><a href="https://wa.me/34636060609" target="_blank" rel="noopener noreferrer" style="color: var(--gold); font-weight: 700;">+34 636 060 609</a></p>
+      <div style="background: var(--bg-card); border: 1px solid var(--gold-border); border-radius: 16px; padding: 32px; display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <span style="font-size: 2rem;">💬</span>
+          <h3 style="font-family: var(--font-serif); font-size: 1.25rem; margin: 12px 0 6px;">WHATSAPP OFICIAL</h3>
+          <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5;">Atención directa de taller:<br><a href="https://wa.me/34636060609" target="_blank" rel="noopener noreferrer" style="color: var(--gold); font-weight: 700;">+34 636 060 609</a></p>
+        </div>
+        <button type="button" class="btn-copy" onclick="copyContactText(this, '+34636060609')">📋 COPIAR TELÉFONO</button>
       </div>
     </div>
 
@@ -91,6 +97,20 @@
     </div>
 
     <script>
+      function copyContactText(btn, text) {
+        navigator.clipboard.writeText(text).then(() => {
+          const original = btn.textContent;
+          btn.textContent = '✓ ¡COPIADO!';
+          btn.style.background = '#D4AF37';
+          btn.style.color = '#000000';
+          setTimeout(() => {
+            btn.textContent = original;
+            btn.style.background = '';
+            btn.style.color = '';
+          }, 2000);
+        });
+      }
+
       document.querySelectorAll('#contact-reasons .config-pill').forEach(btn => {
         btn.addEventListener('click', () => {
           document.querySelectorAll('#contact-reasons .config-pill').forEach(b => b.classList.remove('active'));

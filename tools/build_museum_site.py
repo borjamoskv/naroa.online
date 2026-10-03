@@ -165,16 +165,22 @@ obra_content = f"""    <section class="section-header">
     <div class="artwork-grid">
 {cards_html}    </div>
 
-    <!-- MODAL LIGHTBOX HAUTE CURATORIAL -->
+    <!-- MODAL LIGHTBOX HAUTE CURATORIAL CON NAVEGACIÓN SECUENCIAL -->
     <div id="museum-lightbox" class="museum-lightbox" aria-hidden="true">
       <div class="lightbox-backdrop" onclick="closeMuseumLightbox()"></div>
       <div class="lightbox-dialog" role="dialog" aria-modal="true">
         <button class="lightbox-close" onclick="closeMuseumLightbox()" aria-label="Cerrar">✕</button>
+        <button class="lightbox-nav-btn lightbox-prev" onclick="navigateMuseumLightbox(-1)" aria-label="Obra anterior">‹</button>
+        <button class="lightbox-nav-btn lightbox-next" onclick="navigateMuseumLightbox(1)" aria-label="Obra siguiente">›</button>
+
         <div class="lightbox-media">
           <img id="lightbox-img" src="" alt="" />
         </div>
         <div class="lightbox-details">
-          <span id="lightbox-series" class="lightbox-series"></span>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <span id="lightbox-series" class="lightbox-series"></span>
+            <span id="lightbox-counter" class="lightbox-counter"></span>
+          </div>
           <h3 id="lightbox-title" class="lightbox-title"></h3>
           <p id="lightbox-medium" class="lightbox-medium"></p>
           <p id="lightbox-desc" class="lightbox-desc"></p>
@@ -233,8 +239,7 @@ obra_content = f"""    <section class="section-header">
         }});
       }}
 
-
-      // Lightbox Haute Curatorial
+      // Lightbox Haute Curatorial con Navegación Secuencial
       const lightbox = document.getElementById('museum-lightbox');
       const lbImg = document.getElementById('lightbox-img');
       const lbTitle = document.getElementById('lightbox-title');
@@ -242,8 +247,16 @@ obra_content = f"""    <section class="section-header">
       const lbSeries = document.getElementById('lightbox-series');
       const lbDesc = document.getElementById('lightbox-desc');
       const lbWa = document.getElementById('lightbox-wa');
+      const lbCounter = document.getElementById('lightbox-counter');
 
-      function openMuseumLightbox(card) {{
+      let currentCardIndex = -1;
+      let visibleCards = [];
+
+      function getVisibleCards() {{
+        return Array.from(document.querySelectorAll('.artwork-card')).filter(c => c.style.display !== 'none');
+      }}
+
+      function renderLightbox(card, index, total) {{
         const title = card.getAttribute('data-title');
         const medium = card.getAttribute('data-medium');
         const year = card.getAttribute('data-year');
@@ -257,6 +270,7 @@ obra_content = f"""    <section class="section-header">
         lbMedium.textContent = year + ' · ' + medium;
         lbSeries.textContent = 'SERIE ' + cat.toUpperCase();
         lbDesc.textContent = desc;
+        lbCounter.textContent = String(index).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
 
         const waText = 'Hola Naroa! Me interesa conocer los detalles y disponibilidad de la obra "' + title + '" (' + year + ', ' + medium + ') expuesta en el catálogo oficial de naroagutierrezgil.com.';
         lbWa.href = 'https://wa.me/34636060609?text=' + encodeURIComponent(waText);
@@ -265,18 +279,40 @@ obra_content = f"""    <section class="section-header">
         document.body.style.overflow = 'hidden';
       }}
 
+      function openMuseumLightboxByIndex(idx) {{
+        visibleCards = getVisibleCards();
+        if (visibleCards.length === 0) return;
+        if (idx < 0) idx = visibleCards.length - 1;
+        if (idx >= visibleCards.length) idx = 0;
+        currentCardIndex = idx;
+        renderLightbox(visibleCards[currentCardIndex], currentCardIndex + 1, visibleCards.length);
+      }}
+
+      function navigateMuseumLightbox(delta) {{
+        openMuseumLightboxByIndex(currentCardIndex + delta);
+      }}
+
       function closeMuseumLightbox() {{
         lightbox.classList.remove('active');
         document.body.style.overflow = '';
       }}
 
-      document.querySelectorAll('.artwork-card').forEach(card => {{
-        card.addEventListener('click', () => openMuseumLightbox(card));
+      document.querySelectorAll('.artwork-card').forEach((card) => {{
+        card.addEventListener('click', () => {{
+          visibleCards = getVisibleCards();
+          const idx = visibleCards.indexOf(card);
+          openMuseumLightboxByIndex(idx !== -1 ? idx : 0);
+        }});
       }});
 
       window.addEventListener('keydown', (e) => {{
-        if (e.key === 'Escape' && lightbox.classList.contains('active')) {{
+        if (!lightbox.classList.contains('active')) return;
+        if (e.key === 'Escape') {{
           closeMuseumLightbox();
+        }} else if (e.key === 'ArrowRight') {{
+          navigateMuseumLightbox(1);
+        }} else if (e.key === 'ArrowLeft') {{
+          navigateMuseumLightbox(-1);
         }}
       }});
     </script>
@@ -675,16 +711,22 @@ contacto_content = """    <section class="section-header">
         <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5;">Bilbao, Bizkaia (País Vasco, España). Visitas para coleccionistas concertadas previamente.</p>
       </div>
 
-      <div style="background: var(--bg-card); border: 1px solid var(--gold-border); border-radius: 16px; padding: 32px;">
-        <span style="font-size: 2rem;">✉</span>
-        <h3 style="font-family: var(--font-serif); font-size: 1.25rem; margin: 12px 0 6px;">CORREO ELECTRÓNICO</h3>
-        <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5;">Atención institucional y pedidos:<br><a href="mailto:naroa@naroa.eu" style="color: var(--gold); font-weight: 700;">naroa@naroa.eu</a></p>
+      <div style="background: var(--bg-card); border: 1px solid var(--gold-border); border-radius: 16px; padding: 32px; display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <span style="font-size: 2rem;">✉</span>
+          <h3 style="font-family: var(--font-serif); font-size: 1.25rem; margin: 12px 0 6px;">CORREO ELECTRÓNICO</h3>
+          <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5;">Atención institucional y pedidos:<br><a href="mailto:naroa@naroa.eu" style="color: var(--gold); font-weight: 700;">naroa@naroa.eu</a></p>
+        </div>
+        <button type="button" class="btn-copy" onclick="copyContactText(this, 'naroa@naroa.eu')">📋 COPIAR EMAIL</button>
       </div>
 
-      <div style="background: var(--bg-card); border: 1px solid var(--gold-border); border-radius: 16px; padding: 32px;">
-        <span style="font-size: 2rem;">💬</span>
-        <h3 style="font-family: var(--font-serif); font-size: 1.25rem; margin: 12px 0 6px;">WHATSAPP OFICIAL</h3>
-        <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5;">Atención directa de taller:<br><a href="https://wa.me/34636060609" target="_blank" rel="noopener noreferrer" style="color: var(--gold); font-weight: 700;">+34 636 060 609</a></p>
+      <div style="background: var(--bg-card); border: 1px solid var(--gold-border); border-radius: 16px; padding: 32px; display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <span style="font-size: 2rem;">💬</span>
+          <h3 style="font-family: var(--font-serif); font-size: 1.25rem; margin: 12px 0 6px;">WHATSAPP OFICIAL</h3>
+          <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5;">Atención directa de taller:<br><a href="https://wa.me/34636060609" target="_blank" rel="noopener noreferrer" style="color: var(--gold); font-weight: 700;">+34 636 060 609</a></p>
+        </div>
+        <button type="button" class="btn-copy" onclick="copyContactText(this, '+34636060609')">📋 COPIAR TELÉFONO</button>
       </div>
     </div>
 
@@ -716,6 +758,20 @@ contacto_content = """    <section class="section-header">
     </div>
 
     <script>
+      function copyContactText(btn, text) {
+        navigator.clipboard.writeText(text).then(() => {
+          const original = btn.textContent;
+          btn.textContent = '✓ ¡COPIADO!';
+          btn.style.background = '#D4AF37';
+          btn.style.color = '#000000';
+          setTimeout(() => {
+            btn.textContent = original;
+            btn.style.background = '';
+            btn.style.color = '';
+          }, 2000);
+        });
+      }
+
       document.querySelectorAll('#contact-reasons .config-pill').forEach(btn => {
         btn.addEventListener('click', () => {
           document.querySelectorAll('#contact-reasons .config-pill').forEach(b => b.classList.remove('active'));
