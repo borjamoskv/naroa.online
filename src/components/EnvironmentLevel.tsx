@@ -1,12 +1,16 @@
 import { MeshReflectorMaterial } from '@react-three/drei'
 import * as THREE from 'three'
 
+interface EnvironmentLevelProps {
+  onResetView?: () => void
+}
+
 /**
  * Entorno arquitectónico sereno y orgánico para las obras de Naroa.
  * La arquitectura no compite con la obra: suelo de piedra volcánica/pizarra apomazada,
  * luz cenital difusa y muros monolíticos curvos de cal y ceniza.
  */
-export function EnvironmentLevel() {
+export function EnvironmentLevel({ onResetView }: EnvironmentLevelProps = {}) {
   return (
     <group>
       {/* ── 1. SUELO DE PIEDRA NATURAL APOMAZADA (REFLEXIÓN SUAVE Y DIFUSA) ── */}
@@ -28,7 +32,24 @@ export function EnvironmentLevel() {
       </mesh>
 
       {/* ── 2. BANCO MONOLÍTICO DE CONTEMPLACIÓN (PIEDRA Y MADERA OSCURA) ── */}
-      <group position={[0, 0.22, 0]}>
+      <group
+        position={[0, 0.22, 0]}
+        onClick={(e) => {
+          if (onResetView) {
+            e.stopPropagation()
+            onResetView()
+          }
+        }}
+        onPointerOver={(e) => {
+          if (onResetView) {
+            e.stopPropagation()
+            document.body.style.cursor = 'pointer'
+          }
+        }}
+        onPointerOut={() => {
+          document.body.style.cursor = 'default'
+        }}
+      >
         {/* Base de piedra */}
         <mesh receiveShadow castShadow>
           <cylinderGeometry args={[2.2, 2.3, 0.44, 48]} />

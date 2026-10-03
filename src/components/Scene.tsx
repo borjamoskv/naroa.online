@@ -132,8 +132,8 @@ export default function Scene({
           {/* Controlador de cámara suave y orgánico */}
           <CameraGlideController selectedIndex={selectedIndex} />
 
-          {/* Espacio arquitectónico */}
-          <EnvironmentLevel />
+          {/* Espacio arquitectónico mineral */}
+          <EnvironmentLevel onResetView={() => onSelectArtwork(null)} />
 
           {/* Obras colgadas en la rotonda */}
           <Gallery

@@ -64,7 +64,10 @@ export function VideogameHUD({
         } else {
           onExit()
         }
-      } else if ((e.key === ' ' || e.key === 'Enter') && selectedIndex !== null) {
+      } else if (
+        (e.key === ' ' || e.key === 'Enter' || e.key === 'l' || e.key === 'L' || e.key === 'z' || e.key === 'Z') &&
+        selectedIndex !== null
+      ) {
         e.preventDefault()
         sound.playOpen()
         onInspectArtwork(selectedIndex)
@@ -106,7 +109,9 @@ export function VideogameHUD({
             textTransform: 'uppercase',
           }}
         >
-          ROTONDA · 27 OBRAS
+          {selectedIndex !== null
+            ? `ROTONDA · OBRA ${String(selectedIndex + 1).padStart(2, '0')} / ${String(ARTWORKS.length).padStart(2, '0')}`
+            : `ROTONDA · ${ARTWORKS.length} OBRAS`}
         </div>
 
         <button
@@ -310,13 +315,16 @@ export function VideogameHUD({
             fontFamily: 'var(--font-mono, monospace)',
             fontSize: '0.65rem',
             letterSpacing: '0.18em',
-            color: 'rgba(255, 255, 255, 0.3)',
+            color: 'rgba(255, 255, 255, 0.35)',
             textTransform: 'uppercase',
           }}
         >
-          DESLIZA PARA RECORRER · PULSA UNA OBRA PARA ACERCARTE
+          DESLIZA PARA RECORRER · PULSA UNA OBRA PARA ACERCARTE (LUPA: L · ESC: SALIR)
         </div>
       )}
     </div>
   )
 }
+
+export const RotundaHUD = VideogameHUD
+
