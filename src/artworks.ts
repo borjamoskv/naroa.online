@@ -10,6 +10,7 @@ export interface Artwork {
   medium: string
   description: string
   sizeCategory?: 'colossal' | 'large' | 'medium' | 'small'
+  aspectRatio?: number
   splatUrl?: string
 }
 
@@ -17,6 +18,7 @@ export const ARTWORKS: Artwork[] = [
   {
     id: 1,
     slug: 'marilyn-rocks',
+    aspectRatio: 0.75,
     url: '/assets/marilyn-rocks--qPeLHxE.webp',
     title: 'Marilyn Rocks',
     href: '#obra-marilyn-rocks',
@@ -29,6 +31,7 @@ export const ARTWORKS: Artwork[] = [
   {
     id: 2,
     slug: 'amy-rocks',
+    aspectRatio: 1.309,
     url: '/assets/hq-amy-BRTriASV.webp',
     title: 'Amy Rocks',
     href: '#obra-amy-rocks',
@@ -41,6 +44,7 @@ export const ARTWORKS: Artwork[] = [
   {
     id: 3,
     slug: 'james-rocks',
+    aspectRatio: 0.75,
     url: '/assets/hq-james-CjsTrO7r.webp',
     title: 'James Rocks',
     href: '#obra-james-rocks',
@@ -52,6 +56,7 @@ export const ARTWORKS: Artwork[] = [
   {
     id: 4,
     slug: 'johnny-rocks',
+    aspectRatio: 0.75,
     url: '/assets/hq-johnny-5ueL8eU0.webp',
     title: 'Johnny Rocks',
     href: '#obra-johnny-rocks',
@@ -63,6 +68,7 @@ export const ARTWORKS: Artwork[] = [
   {
     id: 5,
     slug: 'asucar-celia-cruz',
+    aspectRatio: 1.005,
     url: '/assets/celia-cruz-cantinflowers-DO-SRKMB.webp',
     title: 'Asúcar (Celia Cruz)',
     href: '#obra-asucar-celia-cruz',
@@ -74,6 +80,7 @@ export const ARTWORKS: Artwork[] = [
   {
     id: 6,
     slug: 'baroque-farrokh',
+    aspectRatio: 1.234,
     url: '/assets/baroque-farrokh-mjg4ClA9.webp',
     title: 'Baroque Farrokh',
     href: '#obra-baroque-farrokh',
@@ -85,6 +92,7 @@ export const ARTWORKS: Artwork[] = [
   {
     id: 7,
     slug: 'divinos-marilyn',
+    aspectRatio: 0.75,
     url: '/assets/divinos-marilyn-By8KYPMI.webp',
     title: 'Divinos: Marilyn',
     href: '#obra-divinos-marilyn',
@@ -96,6 +104,7 @@ export const ARTWORKS: Artwork[] = [
   {
     id: 8,
     slug: 'divinos-johnny',
+    aspectRatio: 0.75,
     url: '/assets/divinos-johnny-gl9M1ZKj.webp',
     title: 'Divinos: Johnny',
     href: '#obra-divinos-johnny',
@@ -107,6 +116,7 @@ export const ARTWORKS: Artwork[] = [
   {
     id: 9,
     slug: 'divinos-amy',
+    aspectRatio: 1.333,
     url: '/assets/divinos-amy-Celol3XJ.webp',
     title: 'Divinos: Amy',
     href: '#obra-divinos-amy',
@@ -118,6 +128,7 @@ export const ARTWORKS: Artwork[] = [
   {
     id: 10,
     slug: 'el-gran-dakari',
+    aspectRatio: 0.749,
     url: '/assets/el-gran-dakari-C1tAWAhR.webp',
     title: 'El Gran Dakari',
     href: '#obra-el-gran-dakari',
@@ -129,6 +140,7 @@ export const ARTWORKS: Artwork[] = [
   {
     id: 11,
     slug: 'audrey-hepburn',
+    aspectRatio: 0.75,
     url: '/assets/audrey-hepburn-DbIBTtIp.webp',
     title: 'Audrey Hepburn',
     href: '#obra-audrey-hepburn',
@@ -140,6 +152,7 @@ export const ARTWORKS: Artwork[] = [
   {
     id: 12,
     slug: 'geisha',
+    aspectRatio: 0.831,
     url: '/assets/geisha-MfRtKWdu.webp',
     title: 'Geisha',
     href: '#obra-geisha',
@@ -151,6 +164,7 @@ export const ARTWORKS: Artwork[] = [
   {
     id: 13,
     slug: 'lagrimas-de-oro',
+    aspectRatio: 0.747,
     url: '/assets/lagrimas-de-oro-DikHc-Tk.webp',
     title: 'Lágrimas de Oro',
     href: '#obra-lagrimas-de-oro',
@@ -162,6 +176,7 @@ export const ARTWORKS: Artwork[] = [
   {
     id: 14,
     slug: 'love',
+    aspectRatio: 0.75,
     url: '/assets/love-DA7L_L5F.webp',
     title: 'Love',
     href: '#obra-love',
@@ -173,6 +188,7 @@ export const ARTWORKS: Artwork[] = [
   {
     id: 15,
     slug: 'la-pensadora',
+    aspectRatio: 1.333,
     url: '/assets/la-pensadora-CFHSnMA0.webp',
     title: 'La Pensadora',
     href: '#obra-la-pensadora',
@@ -184,6 +200,7 @@ export const ARTWORKS: Artwork[] = [
   {
     id: 16,
     slug: 'amor-en-conserva',
+    aspectRatio: 1.337,
     url: '/assets/amor-en-conserva-CMHRIKXx.webp',
     title: 'Amor en Conserva',
     href: '#obra-amor-en-conserva',
@@ -195,6 +212,7 @@ export const ARTWORKS: Artwork[] = [
   {
     id: 17,
     slug: 'cantinflas-i',
+    aspectRatio: 1.489,
     url: '/assets/cantinflas-0-D712oJYO.webp',
     title: 'Cantinflas I',
     href: '#obra-cantinflas-i',
@@ -206,6 +224,7 @@ export const ARTWORKS: Artwork[] = [
   {
     id: 18,
     slug: 'dar-la-lata',
+    aspectRatio: 0.75,
     url: '/assets/dar-la-lata-DxWlKgS-.webp',
     title: 'Dar la Lata',
     href: '#obra-dar-la-lata',
@@ -217,6 +236,7 @@ export const ARTWORKS: Artwork[] = [
   {
     id: 19,
     slug: 'mr-fahrenheit',
+    aspectRatio: 1.234,
     url: '/assets/mr-fahrenheit-BzcoVisa.webp',
     title: 'Mr. Fahrenheit',
     href: '#obra-mr-fahrenheit',
@@ -228,6 +248,7 @@ export const ARTWORKS: Artwork[] = [
   {
     id: 20,
     slug: 'tedas-queen',
+    aspectRatio: 0.75,
     url: '/assets/tedas-queen-GT9W8egT.webp',
     title: 'Tedás Queen',
     href: '#obra-tedas-queen',
@@ -239,6 +260,7 @@ export const ARTWORKS: Artwork[] = [
   {
     id: 21,
     slug: 'hammock-in-tin',
+    aspectRatio: 1.334,
     url: '/assets/hammock-in-tin-XD5nAoyg.webp',
     title: 'Hammock in Tin',
     href: '#obra-hammock-in-tin',
@@ -250,6 +272,7 @@ export const ARTWORKS: Artwork[] = [
   {
     id: 22,
     slug: 'sardine-tin-collage',
+    aspectRatio: 0.667,
     url: '/assets/sardine-tin-collage-Bo41LZ-o.webp',
     title: 'Sardine Tin Collage',
     href: '#obra-sardine-tin-collage',
@@ -261,6 +284,7 @@ export const ARTWORKS: Artwork[] = [
   {
     id: 23,
     slug: 'en-caja',
+    aspectRatio: 0.748,
     url: '/assets/en-caja-CDdrJMsP.webp',
     title: 'En Caja',
     href: '#obra-en-caja',
@@ -272,6 +296,7 @@ export const ARTWORKS: Artwork[] = [
   {
     id: 24,
     slug: 'soy-un-amor-y-tengo-alas',
+    aspectRatio: 0.75,
     url: '/assets/soy-un-amor-y-tengo-alas-ItTo7aOd.webp',
     title: 'Soy un Amor y tengo Alas',
     href: '#obra-soy-un-amor-y-tengo-alas',
@@ -283,6 +308,7 @@ export const ARTWORKS: Artwork[] = [
   {
     id: 25,
     slug: 'the-golden-couple',
+    aspectRatio: 1.334,
     url: '/assets/the-golden-couple-C9C95N75.webp',
     title: 'The Golden Couple',
     href: '#obra-the-golden-couple',
@@ -294,6 +320,7 @@ export const ARTWORKS: Artwork[] = [
   {
     id: 26,
     slug: 'pink-and-sparkles',
+    aspectRatio: 1.0,
     url: '/assets/pink-and-sparkles-c4K6RUzC.webp',
     title: 'Pink and Sparkles',
     href: '#obra-pink-and-sparkles',
@@ -305,6 +332,7 @@ export const ARTWORKS: Artwork[] = [
   {
     id: 27,
     slug: 'monster-dragon',
+    aspectRatio: 0.726,
     url: '/assets/monster-dragon-QQiqdImO.webp',
     title: 'Monster Dragon',
     href: '#obra-monster-dragon',

@@ -70,17 +70,22 @@ function GalleryItem({
         document.body.style.cursor = 'default'
       }}
     >
-      {/* ── 1. PANEL TRASERO MONOLÍTICO DE PIZARRA (SOPORTE FÍSICO) ── */}
-      <mesh position={[0, 0, -0.05]} scale={[scale[0] + 0.32, scale[1] + 0.32, 0.06]} castShadow receiveShadow>
+      {/* ── 1. PANEL MONOLÍTICO DE PIZARRA TRASERO (PROPORCIONAL AL LIENZO) ── */}
+      <mesh
+        position={[0, 0, -0.05]}
+        scale={[scale[0] + 0.28, scale[1] + 0.28, 0.06]}
+        castShadow
+        receiveShadow
+      >
         <boxGeometry />
         <meshStandardMaterial
-          color="#121318"
+          color="#111216"
           metalness={0.2}
           roughness={0.8}
         />
       </mesh>
 
-      {/* ── 2. JUNTA PERIMETRAL EN BRONCE SUAVE ── */}
+      {/* ── 2. BISEL DE BRONCE MINERAL OSCURO ── */}
       <mesh position={[0, 0, -0.015]} scale={[scale[0] + 0.08, scale[1] + 0.08, 0.02]}>
         <boxGeometry />
         <meshStandardMaterial
@@ -90,7 +95,7 @@ function GalleryItem({
         />
       </mesh>
 
-      {/* ── 3. LIENZO / OBRA DE ARTE (TEXTURA REAL Y COLOR ÍNTEGRO) ── */}
+      {/* ── 3. LIENZO / OBRA DE ARTE (PROPORCIÓN Y COLOR AUTÉNTICO 1:1) ── */}
       <Image
         url={url}
         scale={[scale[0], scale[1]]}
@@ -99,11 +104,11 @@ function GalleryItem({
         toneMapped={false}
       />
 
-      {/* ── 4. CARTELA DE GALERÍA (MUSEUM LABEL CARD) ── */}
-      <group position={[0, -scale[1] / 2 - 0.32, 0.04]}>
-        {/* Soporte discreto de papel mineral */}
+      {/* ── 4. CARTELA FÍSICA DE MUSEO ── */}
+      <group position={[0, -scale[1] / 2 - 0.24, 0.04]}>
+        {/* Placa de papel mineral */}
         <mesh>
-          <planeGeometry args={[Math.min(scale[0] * 0.72, 1.8), 0.24]} />
+          <planeGeometry args={[Math.min(scale[0] * 0.85, 2.0), 0.22]} />
           <meshStandardMaterial
             color="#0b0c10"
             roughness={0.9}
@@ -112,14 +117,14 @@ function GalleryItem({
           />
         </mesh>
 
-        {/* Título en tipografía serena */}
+        {/* Título */}
         <Text
           position={[0, 0.04, 0.01]}
           fontSize={0.075}
           color={active ? '#EAD6A6' : '#C8C6C0'}
           anchorX="center"
           anchorY="middle"
-          maxWidth={scale[0] * 0.68}
+          maxWidth={Math.min(scale[0] * 0.8, 1.9)}
           letterSpacing={0.05}
         >
           {title.toUpperCase()}
@@ -138,14 +143,14 @@ function GalleryItem({
         </Text>
       </group>
 
-      {/* ── 5. PROYECTOR DE GALERÍA CENITAL (ILUMINACIÓN DE ACENTO DIRIGIDA) ── */}
+      {/* ── 5. PROYECTOR CENITAL DE GALERÍA (ILUMINACIÓN REALISTA) ── */}
       <spotLight
-        position={[0, scale[1] * 0.7 + 0.8, 1.8]}
+        position={[0, scale[1] / 2 + 1.2, 2.0]}
         target-position={[0, 0, 0]}
-        intensity={active ? 3.4 : 1.8}
-        angle={0.7}
+        intensity={active ? 3.6 : 2.0}
+        angle={0.68}
         penumbra={0.8}
-        distance={6.0}
+        distance={6.5}
         color="#FFF5E4"
         decay={2}
       />
@@ -174,6 +179,26 @@ export function Gallery({
   const items = useMemo(() => {
     return ARTWORKS.map((artwork, i) => {
       const angle = (i / numItems) * Math.PI * 2
+      const aspect = artwork.aspectRatio || 0.75
+
+      // Dimensionamiento orgánico respetando el ratio nativo de la obra
+      let width: number
+      let height: number
+
+      if (aspect >= 1.2) {
+        // Formato horizontal (ej. Cantinflas, Amy Rocks, Divinos Amy)
+        height = 2.05
+        width = height * aspect
+      } else if (aspect >= 0.92) {
+        // Formato cuadrado (ej. Celia Cruz, Pink & Sparkles)
+        height = 2.3
+        width = height * aspect
+      } else {
+        // Formato vertical clásico (ej. Marilyn, James, Johnny)
+        height = 2.7
+        width = height * aspect
+      }
+
       return {
         position: [Math.sin(angle) * radius, 2.0, Math.cos(angle) * radius] as [number, number, number],
         rotation: [0, angle + Math.PI, 0] as [number, number, number],
@@ -181,26 +206,26 @@ export function Gallery({
         title: artwork.title,
         year: artwork.year,
         medium: artwork.medium,
-        scale: [2.2, 2.9, 1] as [number, number, number],
+        scale: [width, height, 1] as [number, number, number],
       }
     })
   }, [numItems, radius])
 
   return (
     <group ref={group} position={[0, 0, 0]}>
-      {/* ── MOTAS DE MICA EN EL AIRE (TRANQUILAS Y ORGÁNICAS) ── */}
+      {/* ── MOTAS DE MICA EN EL AIRE (ATMÓSFERA ORGÁNICA) ── */}
       {!reducedMotion && (
         <Sparkles
-          count={70}
-          scale={[35, 8, 35]}
-          size={1.6}
-          speed={0.15}
-          opacity={0.25}
+          count={65}
+          scale={[36, 8, 36]}
+          size={1.5}
+          speed={0.12}
+          opacity={0.22}
           color="#D8C395"
         />
       )}
 
-      {/* ── LAS 27 OBRAS CANÓNICAS COLGADAS EN ARMONÍA ── */}
+      {/* ── LAS 27 OBRAS CANÓNICAS EN SUS PROPORCIONES REALES ── */}
       {items.map((item, i) => (
         <GalleryItem
           key={i}

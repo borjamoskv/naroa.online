@@ -1,3 +1,4 @@
+import { useEffect, useCallback } from 'react'
 import { ARTWORKS } from '../artworks'
 import { sound } from '../utils/audio'
 
@@ -10,7 +11,7 @@ interface VideogameHUDProps {
 }
 
 /**
- * Capa de interfaz minimalista para el pabellón 3D.
+ * Capa de interfaz silenciosa y contemplativa para el pabellón 3D.
  * Principio: La obra es el centro absoluto; la web se desvanece en silencio.
  */
 export function VideogameHUD({
@@ -22,21 +23,57 @@ export function VideogameHUD({
 }: VideogameHUDProps) {
   const selectedArtwork = selectedIndex !== null ? ARTWORKS[selectedIndex] : null
 
-  const handlePrev = (e: React.MouseEvent) => {
-    e.stopPropagation()
+  const handlePrev = useCallback(() => {
     if (selectedIndex === null) return
     const prev = (selectedIndex - 1 + ARTWORKS.length) % ARTWORKS.length
     sound.playTick()
     onSelectArtwork(prev)
-  }
+  }, [selectedIndex, onSelectArtwork])
 
-  const handleNext = (e: React.MouseEvent) => {
-    e.stopPropagation()
+  const handleNext = useCallback(() => {
     if (selectedIndex === null) return
     const next = (selectedIndex + 1) % ARTWORKS.length
     sound.playTick()
     onSelectArtwork(next)
-  }
+  }, [selectedIndex, onSelectArtwork])
+
+  // Navegación fluida por teclado (← / → para recorrer la rotonda, ESC para salir, Espacio para lupa)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName)) return
+
+      if (e.key === 'ArrowRight') {
+        e.preventDefault()
+        if (selectedIndex === null) {
+          onSelectArtwork(0)
+        } else {
+          handleNext()
+        }
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault()
+        if (selectedIndex === null) {
+          onSelectArtwork(ARTWORKS.length - 1)
+        } else {
+          handlePrev()
+        }
+      } else if (e.key === 'Escape') {
+        e.preventDefault()
+        if (selectedIndex !== null) {
+          sound.playTick()
+          onSelectArtwork(null)
+        } else {
+          onExit()
+        }
+      } else if ((e.key === ' ' || e.key === 'Enter') && selectedIndex !== null) {
+        e.preventDefault()
+        sound.playOpen()
+        onInspectArtwork(selectedIndex)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [selectedIndex, handleNext, handlePrev, onSelectArtwork, onExit, onInspectArtwork])
 
   return (
     <div
@@ -107,13 +144,13 @@ export function VideogameHUD({
             pointerEvents: 'auto',
             alignSelf: 'center',
             marginBottom: '84px',
-            background: 'rgba(10, 11, 15, 0.85)',
+            background: 'rgba(10, 11, 15, 0.88)',
             border: '1px solid rgba(255, 255, 255, 0.1)',
             borderRadius: '16px',
             padding: '16px 24px',
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
-            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.7)',
+            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.75)',
             display: 'flex',
             flexDirection: 'column',
             gap: '8px',
@@ -122,7 +159,7 @@ export function VideogameHUD({
             animation: 'fadeIn 0.25s ease-out',
           }}
         >
-          {/* Título en tipografía serena */}
+          {/* Título */}
           <div
             style={{
               fontFamily: 'var(--font-serif, "Cinzel", Georgia, serif)',
@@ -158,8 +195,11 @@ export function VideogameHUD({
             }}
           >
             <button
-              onClick={handlePrev}
-              title="Obra anterior"
+              onClick={(e) => {
+                e.stopPropagation()
+                handlePrev()
+              }}
+              title="Obra anterior (←)"
               style={{
                 background: 'transparent',
                 border: 'none',
@@ -177,6 +217,7 @@ export function VideogameHUD({
                 sound.playOpen()
                 onInspectArtwork(selectedIndex)
               }}
+              title="Inspeccionar textura con macro 2.5x"
               style={{
                 background: 'rgba(255, 255, 255, 0.08)',
                 border: '1px solid rgba(255, 255, 255, 0.15)',
@@ -206,6 +247,7 @@ export function VideogameHUD({
                 sound.playTick()
                 onOpenCommission(selectedArtwork.title)
               }}
+              title="Solicitar encargo a medida"
               style={{
                 background: 'transparent',
                 border: '1px solid rgba(212, 175, 55, 0.35)',
@@ -223,8 +265,11 @@ export function VideogameHUD({
             </button>
 
             <button
-              onClick={handleNext}
-              title="Siguiente obra"
+              onClick={(e) => {
+                e.stopPropagation()
+                handleNext()
+              }}
+              title="Siguiente obra (→)"
               style={{
                 background: 'transparent',
                 border: 'none',
@@ -242,7 +287,7 @@ export function VideogameHUD({
                 sound.playTick()
                 onSelectArtwork(null)
               }}
-              title="Volver a la sala"
+              title="Volver a la sala general (ESC)"
               style={{
                 background: 'transparent',
                 border: 'none',
