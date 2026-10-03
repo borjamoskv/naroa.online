@@ -47,30 +47,50 @@ export function HauteDock({
           pointerEvents: 'none',
         }}
       >
-        {/* LOGO NAROA. + CONTADOR INTEGRADO */}
-        <div style={{ pointerEvents: 'auto', display: 'flex', alignItems: 'baseline', gap: '14px' }}>
+        {/* LOGO NAROA.ONLINE + SUBTÍTULO EXPERIMENTAL + CONTADOR */}
+        <div style={{ pointerEvents: 'auto', display: 'flex', alignItems: 'center', gap: '14px' }}>
           <a
-            href="#/"
+            href="#/lab"
             onClick={(e) => {
               e.preventDefault()
               sound.playTick()
               onSelectMode('horizon')
+              window.location.hash = '#/lab'
             }}
             style={{
-              fontFamily: 'var(--font-serif, "Cinzel", Georgia, serif)',
-              fontSize: '1.2rem',
-              fontWeight: 700,
-              color: '#FFFFFF',
               textDecoration: 'none',
-              letterSpacing: '0.16em',
               display: 'flex',
-              alignItems: 'center',
-              gap: '2px',
-              textShadow: '0 2px 10px rgba(0,0,0,0.8)',
+              flexDirection: 'column',
             }}
           >
-            <span>NAROA</span>
-            <span style={{ color: '#D4AF37' }}>.</span>
+            <div
+              style={{
+                fontFamily: 'var(--font-serif, "Cinzel", Georgia, serif)',
+                fontSize: '1.25rem',
+                fontWeight: 800,
+                color: '#FFFFFF',
+                letterSpacing: '0.14em',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '2px',
+                textShadow: '0 2px 10px rgba(0,0,0,0.8)',
+              }}
+            >
+              <span>NAROA</span>
+              <span style={{ color: '#D4AF37' }}>.ONLINE</span>
+            </div>
+            <span
+              style={{
+                fontFamily: 'var(--font-mono, monospace)',
+                fontSize: '0.58rem',
+                color: 'rgba(212, 175, 55, 0.75)',
+                letterSpacing: '0.18em',
+                textTransform: 'uppercase',
+                marginTop: '-2px',
+              }}
+            >
+              DIGITAL PLAYGROUND
+            </span>
           </a>
 
           {/* Micro-contador Curatorial */}
@@ -100,19 +120,46 @@ export function HauteDock({
           </div>
         </div>
 
-        {/* PALÍNDROMO AUTÉNTICO CENTRAL (WATERMARK FLOTANTE) */}
-        <div
-          style={{
-            fontFamily: 'var(--font-mono, monospace)',
-            fontSize: '0.68rem',
-            letterSpacing: '0.3em',
-            color: 'rgba(212, 175, 55, 0.6)',
-            textTransform: 'uppercase',
-            pointerEvents: 'none',
-          }}
-          className="desktop-only"
-        >
-          AORAN / NAROA · A NAROA LA ORAN A
+        {/* ENLACE CRUZADO CANÓNICO AL DOMINIO INSTITUCIONAL ("EL MUSEO") */}
+        <div style={{ pointerEvents: 'auto' }} className="desktop-only">
+          <a
+            href="https://naroagutierrezgil.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => sound.playTick()}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px',
+              background: 'rgba(5, 5, 8, 0.75)',
+              border: '1px solid rgba(212, 175, 55, 0.32)',
+              padding: '6px 16px',
+              borderRadius: '24px',
+              color: 'rgba(255, 255, 255, 0.85)',
+              fontFamily: 'var(--font-mono, monospace)',
+              fontSize: '0.7rem',
+              letterSpacing: '0.12em',
+              textDecoration: 'none',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              transition: 'all 0.25s ease',
+              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.5)',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = '#D4AF37'
+              e.currentTarget.style.color = '#D4AF37'
+              e.currentTarget.style.background = 'rgba(212, 175, 55, 0.12)'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.32)'
+              e.currentTarget.style.color = 'rgba(255, 255, 255, 0.85)'
+              e.currentTarget.style.background = 'rgba(5, 5, 8, 0.75)'
+            }}
+            title="Ir al dominio principal: Obra canónica, bio, exposiciones y prensa"
+          >
+            <span style={{ fontSize: '0.85rem' }}>🏛️</span>
+            <span>Obra y trayectoria / naroagutierrezgil.com ↗</span>
+          </a>
         </div>
 
         {/* BANDA SONORA "BOARDS OF BURGOS" (BORJA MOSKV) */}
@@ -188,11 +235,12 @@ export function HauteDock({
           whiteSpace: 'nowrap',
         }}
       >
-        {/* BOTÓN EXPOSICIÓN HORIZONTE */}
+        {/* BOTÓN LABORATORIO */}
         <button
           onClick={() => {
             sound.playTick()
             onSelectMode('horizon')
+            window.location.hash = '#/lab'
           }}
           style={{
             background: activeMode === 'horizon' ? 'rgba(212, 175, 55, 0.16)' : 'transparent',
@@ -208,14 +256,39 @@ export function HauteDock({
             transition: 'all 0.25s ease',
           }}
         >
-          HORIZONTE
+          LABORATORIO
         </button>
 
-        {/* BOTÓN ÍNDICE VISUAL */}
+        {/* BOTÓN PABELLÓN 3D EXPERIMENTS */}
+        <button
+          onClick={() => {
+            sound.playTick()
+            onSelectMode('3d')
+            window.location.hash = '#/experiments'
+          }}
+          style={{
+            background: activeMode === '3d' ? 'rgba(212, 175, 55, 0.16)' : 'transparent',
+            border: activeMode === '3d' ? '1px solid rgba(212, 175, 55, 0.5)' : '1px solid transparent',
+            color: activeMode === '3d' ? '#D4AF37' : 'rgba(255, 255, 255, 0.65)',
+            fontFamily: 'var(--font-mono, monospace)',
+            fontSize: '0.72rem',
+            fontWeight: activeMode === '3d' ? 700 : 500,
+            letterSpacing: '0.14em',
+            padding: '7px 14px',
+            borderRadius: '30px',
+            cursor: 'pointer',
+            transition: 'all 0.25s ease',
+          }}
+        >
+          3D EXPERIMENTS
+        </button>
+
+        {/* BOTÓN ARCHIVO CANÓNICO */}
         <button
           onClick={() => {
             sound.playTick()
             onOpenIndex()
+            window.location.hash = '#/archive'
           }}
           style={{
             background: 'transparent',
@@ -238,30 +311,38 @@ export function HauteDock({
             e.currentTarget.style.background = 'transparent'
           }}
         >
-          ÍNDICE ({totalArtworks})
+          ARCHIVO ({totalArtworks})
         </button>
 
-        {/* BOTÓN PABELLÓN 3D */}
+        {/* BOTÓN PROCESO / TALLER */}
         <button
           onClick={() => {
             sound.playTick()
-            onSelectMode('3d')
+            onOpenArtist()
+            window.location.hash = '#/process'
           }}
           style={{
-            background: activeMode === '3d' ? 'rgba(212, 175, 55, 0.16)' : 'transparent',
-            border: activeMode === '3d' ? '1px solid rgba(212, 175, 55, 0.5)' : '1px solid transparent',
-            color: activeMode === '3d' ? '#D4AF37' : 'rgba(255, 255, 255, 0.65)',
+            background: 'transparent',
+            border: '1px solid transparent',
+            color: 'rgba(255, 255, 255, 0.75)',
             fontFamily: 'var(--font-mono, monospace)',
             fontSize: '0.72rem',
-            fontWeight: activeMode === '3d' ? 700 : 500,
             letterSpacing: '0.14em',
             padding: '7px 14px',
             borderRadius: '30px',
             cursor: 'pointer',
             transition: 'all 0.25s ease',
           }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = '#D4AF37'
+            e.currentTarget.style.background = 'rgba(212, 175, 55, 0.14)'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = 'rgba(255, 255, 255, 0.75)'
+            e.currentTarget.style.background = 'transparent'
+          }}
         >
-          PABELLÓN 3D
+          PROCESO / TALLER
         </button>
 
         {/* BOTÓN ENCARGOS BESPOKE */}
@@ -341,12 +422,12 @@ export function HauteDock({
         {/* SEPARADOR SUTIL */}
         <div style={{ width: '1px', height: '14px', background: 'rgba(212, 175, 55, 0.25)', margin: '0 2px' }} />
 
-        {/* BOTÓN ARTISTA & ATELIER */}
-        <button
-          onClick={() => {
-            sound.playTick()
-            onOpenArtist()
-          }}
+        {/* ENLACE INSTITUCIONAL DIRECTO */}
+        <a
+          href="https://naroagutierrezgil.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => sound.playTick()}
           style={{
             background: 'transparent',
             border: '1px solid transparent',
@@ -356,6 +437,10 @@ export function HauteDock({
             letterSpacing: '0.14em',
             padding: '7px 14px',
             borderRadius: '30px',
+            textDecoration: 'none',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '4px',
             cursor: 'pointer',
             transition: 'all 0.25s ease',
           }}
@@ -368,8 +453,9 @@ export function HauteDock({
             e.currentTarget.style.background = 'transparent'
           }}
         >
-          ARTISTA & ATELIER ↗
-        </button>
+          <span>🏛️</span>
+          <span>EL MUSEO ↗</span>
+        </a>
       </nav>
     </>
   )

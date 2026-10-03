@@ -3,6 +3,49 @@
   "cleanUrls": true,
   "buildCommand": "./deploy.sh --build-only",
   "outputDirectory": ".deploy",
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.naroa.online"
+        }
+      ],
+      "destination": "https://naroa.online/$1",
+      "permanent": true
+    },
+    {
+      "source": "/lab",
+      "destination": "/#/lab",
+      "permanent": false
+    },
+    {
+      "source": "/experiments",
+      "destination": "/#/experiments",
+      "permanent": false
+    },
+    {
+      "source": "/games",
+      "destination": "/#/games",
+      "permanent": false
+    },
+    {
+      "source": "/archive",
+      "destination": "/#/archive",
+      "permanent": false
+    },
+    {
+      "source": "/process",
+      "destination": "/#/process",
+      "permanent": false
+    },
+    {
+      "source": "/3d",
+      "destination": "/#/experiments",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",

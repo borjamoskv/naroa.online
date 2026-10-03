@@ -76,11 +76,18 @@ cat > "$BUILD_DIR/_headers" << 'EOF'
 EOF
 
 cat > "$BUILD_DIR/_redirects" << 'EOF'
-# Aliases
-/3d / 302
-/galeria / 302
-/gallery / 302
-/sala-3d / 302
+# Redirecciones canónicas del Laboratorio Experimental
+/lab /#/lab 302
+/experiments /#/experiments 302
+/games /#/games 302
+/archive /#/archive 302
+/process /#/process 302
+
+# Aliases hacia rutas de laboratorio (301)
+/3d /#/experiments 301
+/sala-3d /#/experiments 301
+/galeria /#/archive 301
+/gallery /#/archive 301
 
 # SPA fallback para todas las rutas
 /* /index.html 200

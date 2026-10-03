@@ -64,9 +64,11 @@ export default function App() {
           setCurrentIndex(idx)
           setLoupeIndex(idx)
         }
-      } else if (hash === '#/3d' || hash === '#/museo' || hash === '#/espacio' || hash === '#/rotonda') {
+      } else if (hash === '#/experiments' || hash === '#/3d' || hash === '#/museo' || hash === '#/espacio' || hash === '#/rotonda') {
         setActiveMode('3d')
       } else if (
+        hash === '#/archive' ||
+        hash === '#/archivo' ||
         hash === '#/indice' ||
         hash === '#/catalogo' ||
         hash === '#/coleccion' ||
@@ -77,9 +79,12 @@ export default function App() {
       ) {
         setActiveMode('horizon')
         setIsIndexOpen(true)
-      } else if (hash === '#/mica' || hash === '#/chat' || hash === '#/asistente') {
+      } else if (hash === '#/games' || hash === '#/juegos' || hash === '#/mica' || hash === '#/chat' || hash === '#/asistente') {
         setIsMicaOpen(true)
       } else if (
+        hash === '#/process' ||
+        hash === '#/proceso' ||
+        hash === '#/taller' ||
         hash === '#/artista' ||
         hash === '#/atelier' ||
         hash === '#/contacto' ||
@@ -91,7 +96,7 @@ export default function App() {
         setIsArtistOpen(true)
       } else if (hash === '#/encargos' || hash === '#/commission' || hash === '#/bespoke') {
         setIsCommissionOpen(true)
-      } else if (hash === '#/home' || hash === '#/' || hash === '') {
+      } else if (hash === '#/lab' || hash === '#/laboratorio' || hash === '#/home' || hash === '#/' || hash === '') {
         setActiveMode('horizon')
         setIsIndexOpen(false)
         setIsArtistOpen(false)
