@@ -162,13 +162,15 @@ export function KineticHorizon({
   const [cursorOverArtwork, setCursorOverArtwork] = useState<number | null>(null)
 
   // Espaciado continuo armónico entre monolitos (compone obra hero central + alas laterales visibles)
-  const itemSpacing = Math.max(360, viewportWidth * 0.42)
+  const itemSpacing =
+    viewportWidth < 640 ? Math.max(280, viewportWidth * 0.82) : Math.max(380, viewportWidth * 0.42)
 
   // Motor de física inercial (Virtual Momentum Scroll Engine)
   const targetXRef = useRef(currentIndex * itemSpacing)
   const currentXRef = useRef(currentIndex * itemSpacing)
   const velocityRef = useRef(0)
   const isDraggingRef = useRef(false)
+  const hasDraggedRef = useRef(false)
   const dragStartXRef = useRef(0)
   const dragStartTargetXRef = useRef(0)
   const lastDragTimeRef = useRef(0)
@@ -316,6 +318,7 @@ export function KineticHorizon({
   const handlePointerDown = (e: React.PointerEvent) => {
     if (e.button !== 0) return
     isDraggingRef.current = true
+    hasDraggedRef.current = false
     setIsDragging(true)
     dragStartXRef.current = e.clientX
     dragStartTargetXRef.current = targetXRef.current
@@ -329,6 +332,11 @@ export function KineticHorizon({
 
     if (!isDraggingRef.current) return
 
+    const totalDiff = e.clientX - dragStartXRef.current
+    if (Math.abs(totalDiff) > 8) {
+      hasDraggedRef.current = true
+    }
+
     const now = performance.now()
     const dt = now - lastDragTimeRef.current
     const dx = e.clientX - lastDragXRef.current
@@ -340,7 +348,6 @@ export function KineticHorizon({
     lastDragXRef.current = e.clientX
     lastDragTimeRef.current = now
 
-    const totalDiff = e.clientX - dragStartXRef.current
     const maxX = (ARTWORKS.length - 1) * itemSpacing
 
     // Resistencia elástica sutil en los extremos

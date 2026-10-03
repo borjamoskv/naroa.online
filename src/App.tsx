@@ -11,6 +11,7 @@ import { ArtistManifesto } from './components/ArtistManifesto'
 import { CommissionCalculator } from './components/CommissionCalculator'
 import { HauteDock, type ActiveMode } from './components/HauteDock'
 import { VideogameHUD } from './components/VideogameHUD'
+import { MicaSystem } from './components/MicaSystem'
 
 // Carga diferida de WebGL para rendimiento sub-segundo
 const Scene = lazy(() => import('./components/Scene'))
@@ -30,6 +31,7 @@ export default function App() {
   const [isIndexOpen, setIsIndexOpen] = useState(false)
   const [isArtistOpen, setIsArtistOpen] = useState(false)
   const [isCommissionOpen, setIsCommissionOpen] = useState(false)
+  const [isMicaOpen, setIsMicaOpen] = useState(false)
 
   const [audioActive, setAudioActive] = useState<boolean>(sound.isEnabled())
   const [isWebGLMounted, setIsWebGLMounted] = useState(false)
@@ -68,7 +70,12 @@ export default function App() {
         setActiveMode('3d')
       } else if (hash === '#/indice' || hash === '#/catalogo' || hash === '#/coleccion' || hash === '#/obras') {
         setIsIndexOpen(true)
-      } else if (hash === '#/artista' || hash === '#/atelier' || hash === '#/contacto' || hash === '#/about') {
+      } else if (hash === '#/galeria' || hash === '#/gallery') {
+        setActiveMode('horizon')
+        setIsMicaOpen(true)
+      } else if (hash === '#/mica' || hash === '#/chat' || hash === '#/asistente') {
+        setIsMicaOpen(true)
+      } else if (hash === '#/artista' || hash === '#/atelier' || hash === '#/contacto' || hash === '#/about' || hash === '#/trayectoria') {
         setIsArtistOpen(true)
       } else if (hash === '#/encargos' || hash === '#/commission' || hash === '#/bespoke') {
         setIsCommissionOpen(true)
@@ -118,6 +125,8 @@ export default function App() {
         setIsIndexOpen((prev) => !prev)
       } else if (e.key === 'a' || e.key === 'A') {
         setIsArtistOpen((prev) => !prev)
+      } else if (e.key === 'm' || e.key === 'M') {
+        setIsMicaOpen((prev) => !prev)
       } else if (e.key === 's' || e.key === 'S') {
         const nextState = sound.toggleSound()
         setAudioActive(nextState)
@@ -170,6 +179,8 @@ export default function App() {
         onOpenIndex={() => setIsIndexOpen(true)}
         onOpenArtist={() => setIsArtistOpen(true)}
         onOpenCommission={() => setIsCommissionOpen(true)}
+        isMicaOpen={isMicaOpen}
+        onToggleMica={() => setIsMicaOpen((prev) => !prev)}
         audioActive={audioActive}
         toggleAudio={toggleAudio}
       />
@@ -217,6 +228,31 @@ export default function App() {
       <CommissionCalculator
         isOpen={isCommissionOpen}
         onClose={() => setIsCommissionOpen(false)}
+      />
+
+      {/* ASISTENTE CONVERSACIONAL SOTA: MICA SYSTEM v∞ */}
+      <MicaSystem
+        isOpen={isMicaOpen}
+        onToggle={() => setIsMicaOpen((prev) => !prev)}
+        onClose={() => setIsMicaOpen(false)}
+        onOpenCommission={() => {
+          setIsMicaOpen(false)
+          setIsCommissionOpen(true)
+        }}
+        onOpenArtwork={(idx) => {
+          setIsMicaOpen(false)
+          setCurrentIndex(idx)
+          setLoupeIndex(idx)
+        }}
+        onOpen3D={() => {
+          setIsMicaOpen(false)
+          setActiveMode('3d')
+          window.location.hash = '#/3d'
+        }}
+        onOpenIndex={() => {
+          setIsMicaOpen(false)
+          setIsIndexOpen(true)
+        }}
       />
 
       {/* HUD DE CONTROL PABELLÓN 3D */}

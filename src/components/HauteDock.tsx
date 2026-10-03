@@ -11,6 +11,8 @@ interface HauteDockProps {
   onOpenIndex: () => void
   onOpenArtist: () => void
   onOpenCommission: () => void
+  isMicaOpen?: boolean
+  onToggleMica?: () => void
   audioActive: boolean
   toggleAudio: () => void
 }
@@ -23,6 +25,8 @@ export function HauteDock({
   onOpenIndex,
   onOpenArtist,
   onOpenCommission,
+  isMicaOpen,
+  onToggleMica,
   audioActive,
   toggleAudio,
 }: HauteDockProps) {
@@ -291,6 +295,48 @@ export function HauteDock({
         >
           ⚡ ENCARGOS
         </button>
+
+        {/* BOTÓN ASISTENTE MICA SYSTEM */}
+        {onToggleMica && (
+          <button
+            onClick={() => {
+              sound.playTick()
+              onToggleMica()
+            }}
+            title="Abrir Asistente MICA SYSTEM v∞"
+            style={{
+              background: isMicaOpen ? '#D4AF37' : 'rgba(255, 255, 255, 0.06)',
+              border: isMicaOpen ? '1px solid #FFFFFF' : '1px solid rgba(212, 175, 55, 0.35)',
+              color: isMicaOpen ? '#000000' : '#D4AF37',
+              fontFamily: 'var(--font-mono, monospace)',
+              fontSize: '0.72rem',
+              fontWeight: 700,
+              letterSpacing: '0.14em',
+              padding: '7px 14px',
+              borderRadius: '30px',
+              cursor: 'pointer',
+              transition: 'all 0.25s ease',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+            }}
+            onMouseEnter={(e) => {
+              if (!isMicaOpen) {
+                e.currentTarget.style.background = 'rgba(212, 175, 55, 0.18)'
+                e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.6)'
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!isMicaOpen) {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.06)'
+                e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.35)'
+              }
+            }}
+          >
+            <span>💎</span>
+            <span>MICA</span>
+          </button>
+        )}
 
         {/* SEPARADOR SUTIL */}
         <div style={{ width: '1px', height: '14px', background: 'rgba(212, 175, 55, 0.25)', margin: '0 2px' }} />
