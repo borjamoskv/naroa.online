@@ -642,7 +642,7 @@ export function ImmersiveExhibition({ onInspectArtwork }: ImmersiveExhibitionPro
               e.currentTarget.style.color = 'rgba(255, 255, 255, 0.85)'
             }}
           >
-            VER CATÁLOGO (27) ↗
+            VER CATÁLOGO ({ARTWORKS.length}) ↗
           </a>
 
           <a

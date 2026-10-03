@@ -154,7 +154,7 @@ export default function App() {
       {/* Dock Minimalista Flotante Haute Joaillerie */}
       <HauteDock
         activeMode={activeMode}
-        currentIndex={currentIndex}
+        currentIndex={activeMode === '3d' && selected3DIndex !== null ? selected3DIndex : currentIndex}
         totalArtworks={ARTWORKS.length}
         onSelectMode={(mode) => {
           setActiveMode(mode)
@@ -200,7 +200,7 @@ export default function App() {
         }}
       />
 
-      {/* ÍNDICE VISUAL DE ALTA COSTURA (27 OBRAS CANÓNICAS) */}
+      {/* ÍNDICE VISUAL DE ALTA COSTURA (OBRAS CANÓNICAS) */}
       <VisualIndex
         isOpen={isIndexOpen}
         onClose={() => setIsIndexOpen(false)}

@@ -341,35 +341,41 @@ export function MicaSystem({
     // Intención: Galería / Catálogo
     if (q.includes('galeria') || q.includes('obra') || q.includes('catalogo') || q.includes('coleccion')) {
       return {
-        text: `🖼 La colección actual alberga 27 obras canónicas en catálogo: series "Rocks" (iconos con mica mineral), "DiviNos" (arquetipos pop en gran escala) y obras de autor en técnica mixta. ¿Te gustaría recorrer el índice visual o sumergirte en el museo 3D?`,
+        text: `🖼 La colección actual alberga ${ARTWORKS.length} obras canónicas en catálogo: series "Rocks" (iconos con mica mineral), "DiviNos" (arquetipos pop en gran escala), "Vaivenes" y piezas de autor sobre pizarra natural. ¿Te gustaría recorrer el índice visual o sumergirte en la rotonda 3D?`,
         actions: [
           {
-            label: '📚 Abrir Índice Visual (27 Obras)',
+            label: `📚 Abrir Índice Visual (${ARTWORKS.length} Obras)`,
             onClick: onOpenIndex,
             isPrimary: true,
           },
           {
-            label: '🏛 Entrar al Pabellón 3D',
+            label: '🏛 Entrar a la Rotonda 3D',
             onClick: onOpen3D,
           },
         ],
       }
     }
 
-    // Intención: Artista / Exposiciones
-    if (q.includes('exposici') || q.includes('quien es') || q.includes('trayectoria') || q.includes('naroa')) {
+    // Intención: Artista / Exposiciones / Redes
+    if (q.includes('exposici') || q.includes('quien es') || q.includes('trayectoria') || q.includes('naroa') || q.includes('facebook')) {
       return {
-        text: '👑 Naroa Gutiérrez Gil es artista plástica bilbaína con más de 15 años de trayectoria. Pionera en el uso de pizarra fósil y mica reflectante, ha participado en exposiciones como "DiviNos VaiVenes" en Politena (Sopela) e intervenciones con Walking Gallery Bilbao.',
+        text: '👑 Naroa Gutiérrez Gil es artista plástica bilbaína con más de 15 años de trayectoria. Pionera en el uso de pizarra fósil y mica mineral reflectante, ha protagonizado muestras como "DiviNos VaiVenes" en Politena Espacio de Arte (Bilbao), "Vaivenes" en Copper Deli y Bwall Collective.',
         actions: [
           {
-            label: 'Instagram de Naroa (@naroa_art) ↗',
+            label: 'Facebook Oficial (@naroa.artista.plastica) ↗',
             onClick: () => {
-              window.open('https://www.instagram.com/naroa_art/', '_blank')
+              window.open('https://www.facebook.com/naroa.artista.plastica', '_blank')
             },
             isPrimary: true,
           },
           {
-            label: '⚡ Encargar un Retrato',
+            label: 'Instagram (@naroa_art) ↗',
+            onClick: () => {
+              window.open('https://www.instagram.com/naroa_art/', '_blank')
+            },
+          },
+          {
+            label: '⚡ Encargar una Obra Bespoke',
             onClick: () => onOpenCommission(),
           },
         ],

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useCallback } from 'react'
 import { ARTWORKS } from '../artworks'
 import { sound } from '../utils/audio'
 
-// Paleta cromática atmosférica curada para cada una de las 27 obras canónicas
+// Paleta cromática atmosférica curada para cada una de las obras canónicas
 const ARTWORK_AURA_COLORS: Record<number, string> = {
   1: 'rgba(185, 28, 28, 0.35)', // Marilyn Rocks (Carmesí Veneciano)
   2: 'rgba(30, 27, 75, 0.45)', // Amy Rocks (Cobalto Medianoche & Mica)
@@ -31,117 +31,25 @@ const ARTWORK_AURA_COLORS: Record<number, string> = {
   25: 'rgba(133, 77, 14, 0.45)', // The Golden Couple (Pan de Oro Doble)
   26: 'rgba(190, 24, 93, 0.35)', // Pink and Sparkles (Neón Mineral)
   27: 'rgba(20, 83, 45, 0.38)', // Monster Dragon (Jade Salvaje & Obsidiana)
+  28: 'rgba(29, 78, 216, 0.40)', // Paul Rocks (Azul Cobalto & Lapislázuli)
+  29: 'rgba(217, 119, 6, 0.38)', // Summer Monroe (Ámbar Estival & Oro)
+  30: 'rgba(159, 18, 57, 0.45)', // La Famiglia (Carmesí Don Vito & Carbón)
+  31: 'rgba(180, 83, 9, 0.40)', // Hacer el Indio (Terracota & Pluma)
+  32: 'rgba(202, 138, 4, 0.42)', // Cantinflowers Kintsugi (Oro Kintsugi & Asfalto)
+  33: 'rgba(161, 98, 7, 0.38)', // Espejo del Alma (Ocre Introspectivo)
+  34: 'rgba(79, 70, 229, 0.40)', // DiviNos VaiVenes (Politena Sacro)
+  35: 'rgba(225, 29, 72, 0.36)', // Autorretrato (Pastel Vivo & Carne)
+  36: 'rgba(190, 18, 60, 0.44)', // Róisín (Tartán & Plumas Negras)
 }
 
 const ROMAN_NUMERALS = [
   'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X',
   'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII', 'XIX', 'XX',
-  'XXI', 'XXII', 'XXIII', 'XXIV', 'XXV', 'XXVI', 'XXVII'
+  'XXI', 'XXII', 'XXIII', 'XXIV', 'XXV', 'XXVI', 'XXVII',
+  'XXVIII', 'XXIX', 'XXX', 'XXXI', 'XXXII', 'XXXIII', 'XXXIV', 'XXXV', 'XXXVI'
 ]
 
-// Partículas etéreas de mica mineral en suspensión ambiental
-interface MicaParticle {
-  x: number
-  y: number
-  size: number
-  speedY: number
-  speedX: number
-  opacity: number
-  pulse: number
-  color: string
-}
 
-function AmbientMicaDust({ mousePos }: { mousePos: { x: number; y: number } }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
-    let animId: number
-    let width = (canvas.width = window.innerWidth)
-    let height = (canvas.height = window.innerHeight)
-
-    const handleResize = () => {
-      if (!canvas) return
-      width = canvas.width = window.innerWidth
-      height = canvas.height = window.innerHeight
-    }
-    window.addEventListener('resize', handleResize)
-
-    const particles: MicaParticle[] = Array.from({ length: 75 }, () => {
-      const rx = Math.random() * width
-      const ry = Math.random() * height
-      return {
-        x: rx,
-        y: ry,
-        size: Math.random() * 2.0 + 0.6,
-        speedY: -(Math.random() * 0.22 + 0.05),
-        speedX: (Math.random() - 0.5) * 0.10,
-        opacity: Math.random() * 0.45 + 0.15,
-        pulse: Math.random() * Math.PI * 2,
-        color: Math.random() > 0.4 ? 'rgba(212, 175, 55,' : 'rgba(255, 255, 255,',
-      }
-    })
-
-    const render = () => {
-      ctx.clearRect(0, 0, width, height)
-
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i]
-        p.y += p.speedY
-        p.x += p.speedX
-        p.pulse += 0.016
-
-        // Deflexión orgánica suave al aproximar el cursor
-        const dx = mousePos.x - p.x
-        const dy = mousePos.y - p.y
-        const dist = Math.sqrt(dx * dx + dy * dy)
-        if (dist < 140) {
-          const force = (140 - dist) / 140
-          p.x -= (dx / dist) * force * 0.8
-          p.y -= (dy / dist) * force * 0.8
-        }
-
-        if (p.y < -10) {
-          p.y = height + 10
-          p.x = Math.random() * width
-        }
-        if (p.x < -10) p.x = width + 10
-        if (p.x > width + 10) p.x = -10
-
-        const alpha = Math.max(0.08, Math.min(0.75, p.opacity + Math.sin(p.pulse) * 0.18))
-        ctx.fillStyle = `${p.color} ${alpha})`
-        ctx.beginPath()
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
-        ctx.fill()
-      }
-
-      animId = requestAnimationFrame(render)
-    }
-
-    render()
-
-    return () => {
-      cancelAnimationFrame(animId)
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [mousePos])
-
-  return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        position: 'absolute',
-        inset: 0,
-        pointerEvents: 'none',
-        zIndex: 2,
-      }}
-    />
-  )
-}
 
 interface KineticHorizonProps {
   currentIndex: number
@@ -419,8 +327,6 @@ export function KineticHorizon({
         }}
       />
 
-      {/* Polvo de Mica Mineral en Suspensión */}
-      <AmbientMicaDust mousePos={mouseCoord} />
 
       {/* Viñeta de Sala de Museo & Chiaroscuro */}
       <div
@@ -780,7 +686,7 @@ export function KineticHorizon({
         })}
       </div>
 
-      {/* LÍNEA DE SCRUBBER TÁCTIL GOLDEN (27 PUNTOS CANÓNICOS) */}
+      {/* LÍNEA DE SCRUBBER TÁCTIL GOLDEN (PUNTOS CANÓNICOS) */}
       <div
         style={{
           position: 'relative',
@@ -822,7 +728,7 @@ export function KineticHorizon({
             }}
           />
 
-          {/* Marcadores discretos de las 27 obras */}
+          {/* Marcadores discretos de las obras canónicas */}
           <div
             style={{
               position: 'absolute',

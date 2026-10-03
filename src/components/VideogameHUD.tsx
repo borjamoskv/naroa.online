@@ -91,56 +91,8 @@ export function VideogameHUD({
         padding: '24px clamp(20px, 4vw, 48px)',
       }}
     >
-      {/* ── 1. CABECERA: SILENCIO Y SALIDA DISCRETA ── */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          width: '100%',
-        }}
-      >
-        <div
-          style={{
-            fontFamily: 'var(--font-mono, monospace)',
-            fontSize: '0.68rem',
-            letterSpacing: '0.2em',
-            color: 'rgba(255, 255, 255, 0.45)',
-            textTransform: 'uppercase',
-          }}
-        >
-          {selectedIndex !== null
-            ? `ROTONDA · OBRA ${String(selectedIndex + 1).padStart(2, '0')} / ${String(ARTWORKS.length).padStart(2, '0')}`
-            : `ROTONDA · ${ARTWORKS.length} OBRAS`}
-        </div>
-
-        <button
-          onClick={() => {
-            sound.playTick()
-            onExit()
-          }}
-          style={{
-            pointerEvents: 'auto',
-            background: 'transparent',
-            border: 'none',
-            color: 'rgba(255, 255, 255, 0.55)',
-            fontFamily: 'var(--font-mono, monospace)',
-            fontSize: '0.72rem',
-            letterSpacing: '0.14em',
-            padding: '6px 12px',
-            cursor: 'pointer',
-            transition: 'color 0.25s ease',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.color = '#FFFFFF'
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.color = 'rgba(255, 255, 255, 0.55)'
-          }}
-        >
-          ← HORIZONTE
-        </button>
-      </div>
+      {/* Espacio superior para respetar el HauteDock cenital */}
+      <div style={{ height: '72px', pointerEvents: 'none' }} />
 
       {/* ── 2. CARTELA CURATORIAL DISCRETA AL ENFOCAR UNA OBRA ── */}
       {selectedArtwork && selectedIndex !== null ? (
@@ -164,6 +116,19 @@ export function VideogameHUD({
             animation: 'fadeIn 0.25s ease-out',
           }}
         >
+          {/* Micro-índice curatorial */}
+          <div
+            style={{
+              fontFamily: 'var(--font-mono, monospace)',
+              fontSize: '0.62rem',
+              letterSpacing: '0.22em',
+              color: 'rgba(212, 175, 55, 0.75)',
+              textTransform: 'uppercase',
+            }}
+          >
+            ROTONDA · OBRA {String(selectedIndex + 1).padStart(2, '0')} / {String(ARTWORKS.length).padStart(2, '0')}
+          </div>
+
           {/* Título */}
           <div
             style={{

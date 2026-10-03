@@ -340,5 +340,113 @@ export const ARTWORKS: Artwork[] = [
     medium: 'Ilustración Texturizada sobre Pizarra',
     description: 'Fantaseo figurativo con trazo agresivo y contornos neón.',
     sizeCategory: 'small'
+  },
+  {
+    id: 28,
+    slug: 'paul-rocks',
+    aspectRatio: 1.0,
+    url: '/assets/paul_newmum_1783824262669.webp',
+    title: 'Paul Rocks (Newman)',
+    href: '#obra-paul-rocks',
+    year: '2024',
+    medium: 'Acrílico y Óleo sobre Pizarra · Serie DiviNos',
+    description: 'Mirada azul cobalto de Paul Newman emergiendo con fuerza y veladuras minerales sobre esquisto volcánico.',
+    sizeCategory: 'colossal'
+  },
+  {
+    id: 29,
+    slug: 'summer-monroe',
+    aspectRatio: 1.0,
+    url: '/assets/summer_monroe_1783824308258.webp',
+    title: 'Summer Monroe',
+    href: '#obra-summer-monroe',
+    year: '2024',
+    medium: 'Acrílico, Gafas de Sol y Pan de Oro · Serie DiviNos',
+    description: 'Marilyn en clave estival, fusionando el mito hollywoodiense con destellos de mica dorada y gafas de sol en relieve.',
+    sizeCategory: 'large'
+  },
+  {
+    id: 30,
+    slug: 'la-famiglia',
+    aspectRatio: 1.0,
+    url: '/assets/la_famiglia_1783824320607.webp',
+    title: 'La Famiglia',
+    href: '#obra-la-famiglia',
+    year: '2024',
+    medium: 'Óleo, Grafito y Rosa Carmesí sobre Pizarra',
+    description: 'Marlon Brando como El Padrino; claroscuro dramático sobre piedra natural con la icónica rosa roja brotando del relieve mineral.',
+    sizeCategory: 'colossal'
+  },
+  {
+    id: 31,
+    slug: 'hacer-el-indio',
+    aspectRatio: 1.0,
+    url: '/assets/hacer_el_indio_1783824336337.webp',
+    title: 'Hacer el Indio',
+    href: '#obra-hacer-el-indio',
+    year: '2023',
+    medium: 'Técnica Mixta, Plumas y Pigmentos Ancestrales',
+    description: 'Fuerza totémica y comunión con la naturaleza en un retrato coronado por plumas y veladuras minerales.',
+    sizeCategory: 'large'
+  },
+  {
+    id: 32,
+    slug: 'cantinflas-kintsugi',
+    aspectRatio: 1.491,
+    url: '/assets/cantinflas-kintsugi.webp',
+    title: 'Cantinflowers Kintsugi',
+    href: '#obra-cantinflas-kintsugi',
+    year: '2024',
+    medium: 'Acrílico, Cola, Textura de Fractura y Pan de Oro',
+    description: 'El problema hecho trampolín: rasgado experimental sobre soporte rígido donde las grietas florecen en resina dorada kintsugi.',
+    sizeCategory: 'colossal'
+  },
+  {
+    id: 33,
+    slug: 'espejo-del-alma',
+    aspectRatio: 1.339,
+    url: '/assets/espejo-alma-piensa.webp',
+    title: 'Espejo del Alma',
+    href: '#obra-espejo-del-alma',
+    year: '2023',
+    medium: 'Óleo sobre Lienzo y Pizarra Natural',
+    description: 'Introspección y diálogo interior a través del juego de reflejos, luces y sombras en tonos cálidos y ocres minerales.',
+    sizeCategory: 'medium'
+  },
+  {
+    id: 34,
+    slug: 'divinos-vaivenes-politena',
+    aspectRatio: 1.0,
+    url: '/assets/exposicion-politena.webp',
+    title: 'DiviNos VaiVenes',
+    href: '#obra-divinos-vaivenes',
+    year: '2026',
+    medium: 'Obra Inaugural · Colección DiviNos & Vaivenes',
+    description: 'Pieza insignia que presidió la muestra plástica en Politena Espacio de Arte (Bilbao); conciliación de luces y tinieblas.',
+    sizeCategory: 'colossal'
+  },
+  {
+    id: 35,
+    slug: 'autorretrato-naroa',
+    aspectRatio: 0.771,
+    url: '/capitulos/img/autoretrato.webp',
+    title: 'Autorretrato (Naroa)',
+    href: '#obra-autorretrato-naroa',
+    year: '2025',
+    medium: 'Pastel y Lápiz sobre Papel Entonado',
+    description: 'La mirada que mira todas las miradas: sin pizarra ni oropel, la luz se descompone en rosas y amarillos sobre la piel.',
+    sizeCategory: 'large'
+  },
+  {
+    id: 36,
+    slug: 'roisin-tartan',
+    aspectRatio: 1.333,
+    url: '/carrusel/img/roisin-full.webp',
+    title: 'Róisín (Plumas & Tartán)',
+    href: '#obra-roisin-tartan',
+    year: '2023',
+    medium: 'Óleo, Tartán Escocés y Plumas Negras',
+    description: 'Retrato de mujer con labios fucsia sobre tartán escocés, con plumas negras desbordando el marco sobre pared carmesí.',
+    sizeCategory: 'colossal'
   }
 ]

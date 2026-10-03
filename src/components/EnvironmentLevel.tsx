@@ -17,12 +17,12 @@ export function EnvironmentLevel({ onResetView }: EnvironmentLevelProps = {}) {
       <mesh position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
         <planeGeometry args={[80, 80]} />
         <MeshReflectorMaterial
-          blur={[400, 200]}
-          resolution={1024}
+          blur={[150, 80]}
+          resolution={512}
           mirror={0.25}
           mixBlur={0.92}
-          mixStrength={18}
-          roughness={0.42}
+          mixStrength={14}
+          roughness={0.38}
           depthScale={1.0}
           minDepthThreshold={0.5}
           maxDepthThreshold={1.6}

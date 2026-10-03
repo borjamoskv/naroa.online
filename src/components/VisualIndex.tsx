@@ -67,7 +67,7 @@ export function VisualIndex({ isOpen, onClose, onSelectArtwork }: VisualIndexPro
               letterSpacing: '0.2em',
             }}
           >
-            27 OBRAS CANÓNICAS
+            {ARTWORKS.length} OBRAS CANÓNICAS
           </span>
         </div>
 

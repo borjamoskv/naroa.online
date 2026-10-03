@@ -154,40 +154,80 @@ export function ArtistManifesto({ isOpen, onClose }: ArtistManifestoProps) {
 
           {/* ACCESOS DIRECTOS SIN RUIDO COMERCIAL */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <a
-              href="https://www.instagram.com/naroa_art/"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => sound.playTick()}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                background: 'rgba(212, 175, 55, 0.15)',
-                border: '1px solid #D4AF37',
-                color: '#D4AF37',
-                padding: '12px 24px',
-                borderRadius: '30px',
-                fontSize: '0.8rem',
-                fontFamily: 'var(--font-mono, monospace)',
-                fontWeight: 700,
-                letterSpacing: '0.12em',
-                textDecoration: 'none',
-                transition: 'all 0.25s ease',
-                boxShadow: '0 0 20px rgba(212, 175, 55, 0.2)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = '#D4AF37'
-                e.currentTarget.style.color = '#000000'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(212, 175, 55, 0.15)'
-                e.currentTarget.style.color = '#D4AF37'
-              }}
-            >
-              INSTAGRAM (@naroa_art) ↗
-            </a>
+            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+              <a
+                href="https://www.facebook.com/naroa.artista.plastica"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => sound.playTick()}
+                style={{
+                  flex: 1,
+                  minWidth: '160px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  background: 'rgba(212, 175, 55, 0.15)',
+                  border: '1px solid #D4AF37',
+                  color: '#D4AF37',
+                  padding: '12px 18px',
+                  borderRadius: '30px',
+                  fontSize: '0.78rem',
+                  fontFamily: 'var(--font-mono, monospace)',
+                  fontWeight: 700,
+                  letterSpacing: '0.1em',
+                  textDecoration: 'none',
+                  transition: 'all 0.25s ease',
+                  boxShadow: '0 0 20px rgba(212, 175, 55, 0.2)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#D4AF37'
+                  e.currentTarget.style.color = '#000000'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(212, 175, 55, 0.15)'
+                  e.currentTarget.style.color = '#D4AF37'
+                }}
+              >
+                FACEBOOK OFICIAL ↗
+              </a>
+
+              <a
+                href="https://www.instagram.com/naroa_art/"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => sound.playTick()}
+                style={{
+                  flex: 1,
+                  minWidth: '160px',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.25)',
+                  color: '#FFFFFF',
+                  padding: '12px 18px',
+                  borderRadius: '30px',
+                  fontSize: '0.78rem',
+                  fontFamily: 'var(--font-mono, monospace)',
+                  fontWeight: 700,
+                  letterSpacing: '0.1em',
+                  textDecoration: 'none',
+                  transition: 'all 0.25s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = '#D4AF37'
+                  e.currentTarget.style.color = '#D4AF37'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.25)'
+                  e.currentTarget.style.color = '#FFFFFF'
+                }}
+              >
+                INSTAGRAM (@naroa_art) ↗
+              </a>
+            </div>
 
             <div style={{ display: 'flex', gap: '12px' }}>
               <a
