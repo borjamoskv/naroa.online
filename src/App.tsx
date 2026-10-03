@@ -64,19 +64,41 @@ export default function App() {
           setCurrentIndex(idx)
           setLoupeIndex(idx)
         }
-      } else if (hash === '#/3d' || hash === '#/museo' || hash === '#/espacio') {
+      } else if (hash === '#/3d' || hash === '#/museo' || hash === '#/espacio' || hash === '#/rotonda') {
         setActiveMode('3d')
-      } else if (hash === '#/indice' || hash === '#/catalogo' || hash === '#/coleccion' || hash === '#/obras') {
-        setIsIndexOpen(true)
-      } else if (hash === '#/galeria' || hash === '#/gallery') {
+      } else if (
+        hash === '#/indice' ||
+        hash === '#/catalogo' ||
+        hash === '#/coleccion' ||
+        hash === '#/obras' ||
+        hash === '#/galeria' ||
+        hash === '#/gallery' ||
+        hash === '#/destacada'
+      ) {
         setActiveMode('horizon')
-        setIsMicaOpen(true)
+        setIsIndexOpen(true)
       } else if (hash === '#/mica' || hash === '#/chat' || hash === '#/asistente') {
         setIsMicaOpen(true)
-      } else if (hash === '#/artista' || hash === '#/atelier' || hash === '#/contacto' || hash === '#/about' || hash === '#/trayectoria') {
+      } else if (
+        hash === '#/artista' ||
+        hash === '#/atelier' ||
+        hash === '#/contacto' ||
+        hash === '#/about' ||
+        hash === '#/trayectoria' ||
+        hash === '#/sobre-mi' ||
+        hash === '#/bio'
+      ) {
         setIsArtistOpen(true)
       } else if (hash === '#/encargos' || hash === '#/commission' || hash === '#/bespoke') {
         setIsCommissionOpen(true)
+      } else if (hash === '#/home' || hash === '#/' || hash === '') {
+        setActiveMode('horizon')
+        setIsIndexOpen(false)
+        setIsArtistOpen(false)
+        setIsCommissionOpen(false)
+        setIsMicaOpen(false)
+        setSelected3DIndex(null)
+        setLoupeIndex(null)
       } else {
         setActiveMode('horizon')
         setSelected3DIndex(null)

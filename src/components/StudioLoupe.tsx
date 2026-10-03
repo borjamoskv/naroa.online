@@ -57,11 +57,79 @@ export function StudioLoupe({ artworkIndex, onClose, onNavigate, onOpenCommissio
         setZoomLevelIndex((prev) => Math.min(prev + 1, ZOOM_LEVELS.length - 1))
       } else if (e.key === '-') {
         setZoomLevelIndex((prev) => Math.max(prev - 1, 0))
+      } else if (e.key === '1') {
+        setZoomLevelIndex(0)
+      } else if (e.key === '2') {
+        setZoomLevelIndex(1)
+      } else if (e.key === '3') {
+        setZoomLevelIndex(2)
+      } else if ((e.key === 'c' || e.key === 'C') && onOpenCommission && currentArtwork) {
+        sound.playOpen()
+        onOpenCommission(currentArtwork.title)
       }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isOpen, onClose, handleNext, handlePrev])
+  }, [isOpen, onClose, handleNext, handlePrev, onOpenCommission, currentArtwork])
+
+  const touchStartRef = useRef<{ x: number; y: number; time: number }>({ x: 0, y: 0, time: 0 })
+  const lastTapRef = useRef<number>(0)
+
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (e.touches.length === 1) {
+      const touch = e.touches[0]
+      touchStartRef.current = { x: touch.clientX, y: touch.clientY, time: performance.now() }
+
+      const container = imageContainerRef.current
+      if (container) {
+        const rect = container.getBoundingClientRect()
+        const x = Math.max(0, Math.min(100, ((touch.clientX - rect.left) / rect.width) * 100))
+        const y = Math.max(0, Math.min(100, ((touch.clientY - rect.top) / rect.height) * 100))
+        setLensOrigin({ x: Math.round(x), y: Math.round(y) })
+      }
+    }
+  }
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (e.touches.length === 1) {
+      const touch = e.touches[0]
+      const container = imageContainerRef.current
+      if (!container) return
+      const rect = container.getBoundingClientRect()
+      const x = Math.max(0, Math.min(100, ((touch.clientX - rect.left) / rect.width) * 100))
+      const y = Math.max(0, Math.min(100, ((touch.clientY - rect.top) / rect.height) * 100))
+      setLensOrigin({ x: Math.round(x), y: Math.round(y) })
+    }
+  }
+
+  const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+    const now = performance.now()
+    if (e.changedTouches.length === 1) {
+      const touch = e.changedTouches[0]
+      const dx = touch.clientX - touchStartRef.current.x
+      const dy = touch.clientY - touchStartRef.current.y
+      const dt = now - touchStartRef.current.time
+
+      // Detección de swipe horizontal fluido (si el desplazamiento > 60px y rápido)
+      if (Math.abs(dx) > 60 && Math.abs(dy) < 50 && dt < 400) {
+        if (dx < 0) {
+          handleNext()
+        } else {
+          handlePrev()
+        }
+        return
+      }
+
+      // Detección de doble toque (double tap) para ciclar zoom
+      if (Math.abs(dx) < 15 && Math.abs(dy) < 15) {
+        if (now - lastTapRef.current < 300) {
+          sound.playTick()
+          setZoomLevelIndex((prev) => (prev + 1) % ZOOM_LEVELS.length)
+        }
+        lastTapRef.current = now
+      }
+    }
+  }
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const container = imageContainerRef.current
@@ -268,6 +336,9 @@ export function StudioLoupe({ artworkIndex, onClose, onNavigate, onOpenCommissio
             <div
               ref={imageContainerRef}
               onMouseMove={handleMouseMove}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
               onWheel={handleWheel}
               onClick={(e) => {
                 e.stopPropagation()
