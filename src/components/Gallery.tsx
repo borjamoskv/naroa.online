@@ -117,8 +117,8 @@ function GalleryItem({
       {/* ── 5. PROYECTOR CENITAL DE GALERÍA (ILUMINACIÓN FÍSICA DE MUSEO) ── */}
       <pointLight
         position={[0, scale[1] / 2 + 0.9, 1.5]}
-        intensity={active ? 3.8 : 2.2}
-        distance={6.2}
+        intensity={isSelected ? 4.4 : hovered ? 3.4 : 1.8}
+        distance={6.8}
         decay={2}
         color="#FFF6E8"
       />

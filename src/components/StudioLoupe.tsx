@@ -406,6 +406,20 @@ export function StudioLoupe({ artworkIndex, onClose, onNavigate, onOpenCommissio
             }}
             onClick={(e) => e.stopPropagation()}
           >
+            {currentArtwork.kicker && (
+              <div
+                style={{
+                  fontFamily: 'var(--font-editorial, "Cormorant Garamond", Georgia, serif)',
+                  fontStyle: 'italic',
+                  fontSize: 'clamp(1rem, 2vw, 1.25rem)',
+                  color: 'rgba(212, 175, 55, 0.95)',
+                  letterSpacing: '0.04em',
+                  margin: '0 0 6px',
+                }}
+              >
+                «{currentArtwork.kicker}»
+              </div>
+            )}
             <h2
               style={{
                 fontFamily: 'var(--font-serif, "Cinzel", Georgia, serif)',
@@ -430,6 +444,22 @@ export function StudioLoupe({ artworkIndex, onClose, onNavigate, onOpenCommissio
             >
               {currentArtwork.year} · {currentArtwork.medium}
             </p>
+            {currentArtwork.quote && (
+              <p
+                style={{
+                  fontFamily: 'var(--font-editorial, "Cormorant Garamond", Georgia, serif)',
+                  fontStyle: 'italic',
+                  fontSize: 'clamp(0.9rem, 1.8vw, 1.05rem)',
+                  color: 'rgba(255, 255, 255, 0.72)',
+                  letterSpacing: '0.03em',
+                  maxWidth: '620px',
+                  margin: '8px auto 0',
+                  lineHeight: 1.45,
+                }}
+              >
+                "{currentArtwork.quote}"
+              </p>
+            )}
 
             {/* ACCIONES DE ALTA CONVERSIÓN */}
             <div

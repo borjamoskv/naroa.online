@@ -1,5 +1,7 @@
 export const PORTAL = 'https://naroa.online'
 
+export type ArtworkCategory = 'rocks' | 'divinos' | 'kintsugi' | 'drawing'
+
 export interface Artwork {
   id: number
   slug: string
@@ -12,11 +14,17 @@ export interface Artwork {
   sizeCategory?: 'colossal' | 'large' | 'medium' | 'small'
   aspectRatio?: number
   splatUrl?: string
+  kicker?: string
+  quote?: string
+  category?: ArtworkCategory
 }
 
 export const ARTWORKS: Artwork[] = [
   {
     id: 1,
+    category: 'rocks',
+    kicker: 'El icono cabe en una piedra rota',
+    quote: 'Norma Jeane sigue aquí, brillando en la oscuridad.',
     slug: 'marilyn-rocks',
     aspectRatio: 0.75,
     url: '/assets/marilyn-rocks--qPeLHxE.webp',
@@ -30,6 +38,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 2,
+    category: 'rocks',
+    kicker: 'El alma se tumba sobre la piedra',
+    quote: 'La piedra también sabe cantar cuando alguien la escucha.',
     slug: 'amy-rocks',
     aspectRatio: 1.309,
     url: '/assets/hq-amy-BRTriASV.webp',
@@ -43,6 +54,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 3,
+    category: 'rocks',
+    kicker: 'Rebelde en esquisto volcánico',
+    quote: 'El mito no envejece sobre la roca dura.',
     slug: 'james-rocks',
     aspectRatio: 0.75,
     url: '/assets/hq-james-CjsTrO7r.webp',
@@ -55,6 +69,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 4,
+    category: 'rocks',
+    kicker: 'El humo también sabe mirar',
+    quote: 'Hay rostros que solo aparecen cuando se apaga la luz.',
     slug: 'johnny-rocks',
     aspectRatio: 0.75,
     url: '/assets/hq-johnny-5ueL8eU0.webp',
@@ -67,6 +84,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 5,
+    category: 'divinos',
+    kicker: 'La reina del ritmo entre sobres de azúcar',
+    quote: 'La vida es un carnaval grabado en pan de oro.',
     slug: 'asucar-celia-cruz',
     aspectRatio: 1.005,
     url: '/assets/celia-cruz-cantinflowers-DO-SRKMB.webp',
@@ -79,6 +99,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 6,
+    category: 'divinos',
+    kicker: 'Antes del trono ya hubo un jardín',
+    quote: 'Todo profeta del rock fue primero un muchacho quieto.',
     slug: 'baroque-farrokh',
     aspectRatio: 1.234,
     url: '/assets/baroque-farrokh-mjg4ClA9.webp',
@@ -91,6 +114,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 7,
+    category: 'divinos',
+    kicker: 'Marilyn en gran escala mineral',
+    quote: 'La mirada dorada sobre el fondo de sombra.',
     slug: 'divinos-marilyn',
     aspectRatio: 0.75,
     url: '/assets/divinos-marilyn-By8KYPMI.webp',
@@ -103,6 +129,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 8,
+    category: 'divinos',
+    kicker: 'El claroscuro de un antihéroe',
+    quote: 'El grafito penetra donde la luz se detiene.',
     slug: 'divinos-johnny',
     aspectRatio: 0.75,
     url: '/assets/divinos-johnny-gl9M1ZKj.webp',
@@ -115,6 +144,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 9,
+    category: 'divinos',
+    kicker: 'Voz quebrada en piedra volcánica',
+    quote: 'Cada rugosidad de la piedra es un eco de voz.',
     slug: 'divinos-amy',
     aspectRatio: 1.333,
     url: '/assets/divinos-amy-Celol3XJ.webp',
@@ -127,6 +159,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 10,
+    category: 'rocks',
+    kicker: 'Mirada felina en la penumbra',
+    quote: 'La naturaleza salvaje no pide permiso para mirar.',
     slug: 'el-gran-dakari',
     aspectRatio: 0.749,
     url: '/assets/el-gran-dakari-C1tAWAhR.webp',
@@ -139,6 +174,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 11,
+    category: 'divinos',
+    kicker: 'La elegancia también puede ser eléctrica',
+    quote: 'El rayo no hiere: ilumina.',
     slug: 'audrey-hepburn',
     aspectRatio: 0.75,
     url: '/assets/audrey-hepburn-DbIBTtIp.webp',
@@ -151,6 +189,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 12,
+    category: 'rocks',
+    kicker: 'Misterio ancestral y pan de oro',
+    quote: 'El silencio oriental florece sobre la piedra.',
     slug: 'geisha',
     aspectRatio: 0.831,
     url: '/assets/geisha-MfRtKWdu.webp',
@@ -163,6 +204,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 13,
+    category: 'rocks',
+    kicker: 'La herida sagrada que se dora',
+    quote: 'El oro cura lo que el tiempo rompe.',
     slug: 'lagrimas-de-oro',
     aspectRatio: 0.747,
     url: '/assets/lagrimas-de-oro-DikHc-Tk.webp',
@@ -175,6 +219,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 14,
+    category: 'drawing',
+    kicker: 'Grafiti emocional y collage pop',
+    quote: 'Amar sin disculpa en colores primarios.',
     slug: 'love',
     aspectRatio: 0.75,
     url: '/assets/love-DA7L_L5F.webp',
@@ -187,6 +234,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 15,
+    category: 'drawing',
+    kicker: 'La pausa del pensamiento',
+    quote: 'La mente se detiene cuando el cuerpo escucha.',
     slug: 'la-pensadora',
     aspectRatio: 1.333,
     url: '/assets/la-pensadora-CFHSnMA0.webp',
@@ -199,6 +249,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 16,
+    category: 'kintsugi',
+    kicker: 'Lo importante se guarda en lata',
+    quote: 'Abrir la lata es abrir el recuerdo.',
     slug: 'amor-en-conserva',
     aspectRatio: 1.337,
     url: '/assets/amor-en-conserva-CMHRIKXx.webp',
@@ -211,6 +264,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 17,
+    category: 'kintsugi',
+    kicker: 'México entero cabe detrás de un gesto',
+    quote: 'Detrás de cada carcajada hay un país mirando.',
     slug: 'cantinflas-i',
     aspectRatio: 1.489,
     url: '/assets/cantinflas-0-D712oJYO.webp',
@@ -223,6 +279,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 18,
+    category: 'kintsugi',
+    kicker: 'Resignificar el desecho cotidiano',
+    quote: 'El arte rescata lo que el consumo descarta.',
     slug: 'dar-la-lata',
     aspectRatio: 0.75,
     url: '/assets/dar-la-lata-DxWlKgS-.webp',
@@ -235,6 +294,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 19,
+    category: 'rocks',
+    kicker: 'Fuego puro a 200 grados',
+    quote: "Don't stop me now grabado en piedra.",
     slug: 'mr-fahrenheit',
     aspectRatio: 1.234,
     url: '/assets/mr-fahrenheit-BzcoVisa.webp',
@@ -247,6 +309,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 20,
+    category: 'divinos',
+    kicker: 'Arquetipo pop y reverencia',
+    quote: 'Coronas invisibles sobre lienzos de calle.',
     slug: 'tedas-queen',
     aspectRatio: 0.75,
     url: '/assets/tedas-queen-GT9W8egT.webp',
@@ -259,6 +324,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 21,
+    category: 'kintsugi',
+    kicker: 'El descanso dentro de la lata',
+    quote: 'Un oasis diminuto en metal reciclado.',
     slug: 'hammock-in-tin',
     aspectRatio: 1.334,
     url: '/assets/hammock-in-tin-XD5nAoyg.webp',
@@ -271,6 +339,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 22,
+    category: 'kintsugi',
+    kicker: 'Ensamblaje marítimo y memoria',
+    quote: 'El mar encapsulado en hojalata.',
     slug: 'sardine-tin-collage',
     aspectRatio: 0.667,
     url: '/assets/sardine-tin-collage-Bo41LZ-o.webp',
@@ -283,6 +354,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 23,
+    category: 'kintsugi',
+    kicker: 'El secreto dentro de la madera',
+    quote: 'Cajas que custodian presencias.',
     slug: 'en-caja',
     aspectRatio: 0.748,
     url: '/assets/en-caja-CDdrJMsP.webp',
@@ -295,6 +369,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 24,
+    category: 'drawing',
+    kicker: 'Alas doradas sobre vuelo libre',
+    quote: 'El amor ligero que no pesa.',
     slug: 'soy-un-amor-y-tengo-alas',
     aspectRatio: 0.75,
     url: '/assets/soy-un-amor-y-tengo-alas-ItTo7aOd.webp',
@@ -307,6 +384,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 25,
+    category: 'rocks',
+    kicker: 'La unión sagrada en pan de oro',
+    quote: 'Dos almas que se encuentran en el relieve.',
     slug: 'the-golden-couple',
     aspectRatio: 1.334,
     url: '/assets/the-golden-couple-C9C95N75.webp',
@@ -319,6 +399,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 26,
+    category: 'divinos',
+    kicker: 'Energía neón y destellos minerales',
+    quote: 'El brillo como actitud irreverente.',
     slug: 'pink-and-sparkles',
     aspectRatio: 1.0,
     url: '/assets/pink-and-sparkles-c4K6RUzC.webp',
@@ -331,6 +414,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 27,
+    category: 'rocks',
+    kicker: 'Fuerza totémica y mitología',
+    quote: 'Criaturas que custodian la roca.',
     slug: 'monster-dragon',
     aspectRatio: 0.726,
     url: '/assets/monster-dragon-QQiqdImO.webp',
@@ -343,6 +429,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 28,
+    category: 'rocks',
+    kicker: 'La mirada azul que atraviesa el esquisto',
+    quote: 'Paul Newman emergiendo con fuerza y veladuras minerales.',
     slug: 'paul-rocks',
     aspectRatio: 1.0,
     url: '/assets/paul_newmum_1783824262669.webp',
@@ -355,6 +444,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 29,
+    category: 'divinos',
+    kicker: 'Marilyn en clave estival',
+    quote: 'Destellos de mica dorada y gafas en relieve.',
     slug: 'summer-monroe',
     aspectRatio: 1.0,
     url: '/assets/summer_monroe_1783824308258.webp',
@@ -367,6 +459,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 30,
+    category: 'rocks',
+    kicker: 'Don Vito y la rosa carmesí',
+    quote: 'Claroscuro dramático donde brota la flor del esquisto.',
     slug: 'la-famiglia',
     aspectRatio: 1.0,
     url: '/assets/la_famiglia_1783824320607.webp',
@@ -379,6 +474,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 31,
+    category: 'drawing',
+    kicker: 'Comunión totémica con la naturaleza',
+    quote: 'Fuerza ancestral coronada por plumas y pigmentos.',
     slug: 'hacer-el-indio',
     aspectRatio: 1.0,
     url: '/assets/hacer_el_indio_1783824336337.webp',
@@ -391,6 +489,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 32,
+    category: 'kintsugi',
+    kicker: 'El problema hecho trampolín',
+    quote: 'Las grietas florecen en resina dorada kintsugi.',
     slug: 'cantinflas-kintsugi',
     aspectRatio: 1.491,
     url: '/assets/cantinflas-kintsugi.webp',
@@ -403,6 +504,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 33,
+    category: 'rocks',
+    kicker: 'Diálogo interior y reflejo mineral',
+    quote: 'El alma se contempla en la penumbra del esquisto.',
     slug: 'espejo-del-alma',
     aspectRatio: 1.339,
     url: '/assets/espejo-alma-piensa.webp',
@@ -415,6 +519,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 34,
+    category: 'divinos',
+    kicker: 'Obra insignia en Politena Espacio de Arte',
+    quote: 'Conciliación de luces y tinieblas en el templo de Sopela.',
     slug: 'divinos-vaivenes-politena',
     aspectRatio: 1.0,
     url: '/assets/exposicion-politena.webp',
@@ -427,6 +534,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 35,
+    category: 'drawing',
+    kicker: 'La mirada que mira todas las miradas',
+    quote: 'Yo también soy lo que miro.',
     slug: 'autorretrato-naroa',
     aspectRatio: 0.771,
     url: '/capitulos/img/autoretrato.webp',
@@ -439,6 +549,9 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 36,
+    category: 'drawing',
+    kicker: 'Plumas negras desbordando el tartán escocés',
+    quote: 'Labios fucsia sobre pared carmesí: presencia sin concesiones.',
     slug: 'roisin-tartan',
     aspectRatio: 1.333,
     url: '/carrusel/img/roisin-full.webp',

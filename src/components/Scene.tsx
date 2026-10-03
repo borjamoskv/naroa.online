@@ -24,6 +24,32 @@ function CameraGlideController({ selectedIndex }: CameraGlideControllerProps) {
 
   const targetCamPos = useRef(new THREE.Vector3(0, 2.0, 7.0))
   const targetLookAt = useRef(new THREE.Vector3(0, 1.8, 0))
+  const lastInteractionRef = useRef<number>(0)
+
+  // Detección de inactividad para el modo contemplativo
+  useEffect(() => {
+    lastInteractionRef.current = Date.now()
+    const handleActivity = () => {
+      lastInteractionRef.current = Date.now()
+      if (controlsRef.current && controlsRef.current.autoRotate) {
+        controlsRef.current.autoRotate = false
+      }
+    }
+
+    window.addEventListener('pointermove', handleActivity, { passive: true })
+    window.addEventListener('pointerdown', handleActivity, { passive: true })
+    window.addEventListener('keydown', handleActivity, { passive: true })
+    window.addEventListener('wheel', handleActivity, { passive: true })
+    window.addEventListener('touchstart', handleActivity, { passive: true })
+
+    return () => {
+      window.removeEventListener('pointermove', handleActivity)
+      window.removeEventListener('pointerdown', handleActivity)
+      window.removeEventListener('keydown', handleActivity)
+      window.removeEventListener('wheel', handleActivity)
+      window.removeEventListener('touchstart', handleActivity)
+    }
+  }, [])
 
   useEffect(() => {
     if (selectedIndex !== null && ARTWORKS[selectedIndex]) {
@@ -63,6 +89,9 @@ function CameraGlideController({ selectedIndex }: CameraGlideControllerProps) {
 
   useFrame((_, delta) => {
     if (isTransitioningRef.current && controlsRef.current) {
+      if (controlsRef.current.autoRotate) {
+        controlsRef.current.autoRotate = false
+      }
       easing.damp3(camera.position, targetCamPos.current, 0.28, delta)
       easing.damp3(controlsRef.current.target, targetLookAt.current, 0.28, delta)
       controlsRef.current.update()
@@ -73,6 +102,16 @@ function CameraGlideController({ selectedIndex }: CameraGlideControllerProps) {
       ) {
         isTransitioningRef.current = false
       }
+    } else if (controlsRef.current && selectedIndex === null) {
+      // Si el visitante permanece inactivo > 10 segundos, activar rotación lenta contemplativa
+      const idleTime = lastInteractionRef.current > 0 ? Date.now() - lastInteractionRef.current : 0
+      if (idleTime > 10000) {
+        controlsRef.current.autoRotate = true
+        controlsRef.current.autoRotateSpeed = 0.35 // Velocidad majestuosa y orgánica
+      } else {
+        controlsRef.current.autoRotate = false
+      }
+      controlsRef.current.update()
     }
   })
 
@@ -88,6 +127,25 @@ function CameraGlideController({ selectedIndex }: CameraGlideControllerProps) {
       maxPolarAngle={Math.PI / 2 - 0.02}
       target={[0, 1.8, 0]}
     />
+  )
+}
+
+function RotundaLighting({ selectedIndex }: { selectedIndex: number | null }) {
+  const ambientRef = useRef<THREE.AmbientLight>(null)
+
+  useFrame((_, delta) => {
+    if (ambientRef.current) {
+      const targetIntensity = selectedIndex !== null ? 0.22 : 0.42
+      easing.damp(ambientRef.current, 'intensity', targetIntensity, 0.35, delta)
+    }
+  })
+
+  return (
+    <>
+      <directionalLight position={[12, 18, 12]} intensity={1.1} color="#FFF8EE" />
+      <ambientLight ref={ambientRef} intensity={0.4} color="#151720" />
+      <pointLight position={[0, 8, 0]} intensity={selectedIndex !== null ? 1.2 : 1.6} color="#FFE6C2" distance={24} />
+    </>
   )
 }
 
@@ -142,10 +200,8 @@ export default function Scene({
             onInspectArtwork={onInspectArtwork}
           />
 
-          {/* Iluminación de sala cálida y natural */}
-          <directionalLight position={[12, 18, 12]} intensity={1.1} color="#FFF8EE" />
-          <ambientLight intensity={0.4} color="#151720" />
-          <pointLight position={[0, 8, 0]} intensity={1.6} color="#FFE6C2" distance={24} />
+          {/* Iluminación de sala cálida y óptica teatral */}
+          <RotundaLighting selectedIndex={selectedIndex} />
 
           <Preload all />
         </Suspense>

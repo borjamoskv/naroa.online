@@ -10,7 +10,7 @@ import { VisualIndex } from './components/VisualIndex'
 import { ArtistManifesto } from './components/ArtistManifesto'
 import { CommissionCalculator } from './components/CommissionCalculator'
 import { HauteDock, type ActiveMode } from './components/HauteDock'
-import { VideogameHUD } from './components/VideogameHUD'
+import { RotundaOverlay } from './components/RotundaOverlay'
 import { MicaSystem } from './components/MicaSystem'
 
 // Carga diferida de WebGL para rendimiento sub-segundo
@@ -277,7 +277,7 @@ export default function App() {
 
       {/* CAPA CURATORIAL MINIMALISTA PABELLÓN 3D */}
       {isSceneVisible && (
-        <VideogameHUD
+        <RotundaOverlay
           onExit={() => {
             setSelected3DIndex(null)
             setActiveMode('horizon')

@@ -35,11 +35,11 @@ const SIZE_OPTIONS: OptionItem[] = [
 ]
 
 export function CommissionCalculator({ isOpen, onClose, initialPieceTitle }: CommissionCalculatorProps = {}) {
-  if (isOpen === false) return null
-
   const [subject, setSubject] = useState<string>('individual')
   const [medium, setMedium] = useState<string>('slate_mica')
   const [size, setSize] = useState<string>('medium')
+
+  if (isOpen === false) return null
 
   const selectedSubject = SUBJECT_OPTIONS.find((s) => s.id === subject) || SUBJECT_OPTIONS[0]
   const selectedMedium = MEDIUM_OPTIONS.find((m) => m.id === medium) || MEDIUM_OPTIONS[0]

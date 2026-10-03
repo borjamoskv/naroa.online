@@ -1,5 +1,6 @@
 import { MeshReflectorMaterial } from '@react-three/drei'
 import * as THREE from 'three'
+import { sound } from '../utils/audio'
 
 interface EnvironmentLevelProps {
   onResetView?: () => void
@@ -37,6 +38,7 @@ export function EnvironmentLevel({ onResetView }: EnvironmentLevelProps = {}) {
         onClick={(e) => {
           if (onResetView) {
             e.stopPropagation()
+            sound.playMineralResonance()
             onResetView()
           }
         }}

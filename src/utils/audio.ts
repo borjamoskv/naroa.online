@@ -337,6 +337,47 @@ class SoundEngine {
     }
   }
 
+  public playMineralResonance() {
+    if (!this.enabled) return
+    try {
+      this.initCtx()
+      if (!this.ctx) return
+
+      const now = this.ctx.currentTime
+
+      // Fundamental y armónico mineral cálido (110 Hz A2 + 220 Hz A3)
+      const osc1 = this.ctx.createOscillator()
+      const osc2 = this.ctx.createOscillator()
+      const filter = this.ctx.createBiquadFilter()
+      const gain = this.ctx.createGain()
+
+      osc1.type = 'sine'
+      osc1.frequency.setValueAtTime(110, now)
+
+      osc2.type = 'triangle'
+      osc2.frequency.setValueAtTime(220, now)
+
+      filter.type = 'lowpass'
+      filter.frequency.setValueAtTime(380, now)
+      filter.frequency.exponentialRampToValueAtTime(120, now + 1.6)
+
+      gain.gain.setValueAtTime(0.08, now)
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.8)
+
+      osc1.connect(filter)
+      osc2.connect(filter)
+      filter.connect(gain)
+      gain.connect(this.ctx.destination)
+
+      osc1.start(now)
+      osc2.start(now)
+      osc1.stop(now + 1.8)
+      osc2.stop(now + 1.8)
+    } catch {
+      // Ignore audio errors
+    }
+  }
+
   public playVictory() {
     if (!this.enabled) return
     try {
