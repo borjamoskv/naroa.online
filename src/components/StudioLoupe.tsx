@@ -7,13 +7,23 @@ interface StudioLoupeProps {
   artworkIndex: number | null
   onClose: () => void
   onNavigate: (index: number) => void
+  onOpenCommission?: () => void
 }
 
 const ZOOM_LEVELS = [1.0, 2.5, 4.0] as const
 
-export function StudioLoupe({ artworkIndex, onClose, onNavigate }: StudioLoupeProps) {
+const toSlug = (s: string) =>
+  s
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '')
+
+export function StudioLoupe({ artworkIndex, onClose, onNavigate, onOpenCommission }: StudioLoupeProps) {
   const [zoomLevelIndex, setZoomLevelIndex] = useState(1) // 2.5x default
   const [lensOrigin, setLensOrigin] = useState({ x: 50, y: 50 })
+  const [copied, setCopied] = useState(false)
   const imageContainerRef = useRef<HTMLDivElement>(null)
 
   const isOpen = artworkIndex !== null
@@ -349,6 +359,121 @@ export function StudioLoupe({ artworkIndex, onClose, onNavigate }: StudioLoupePr
             >
               {currentArtwork.year} · {currentArtwork.medium}
             </p>
+
+            {/* ACCIONES DE ALTA CONVERSIÓN */}
+            <div
+              style={{
+                display: 'flex',
+                gap: '12px',
+                marginTop: '14px',
+                flexWrap: 'wrap',
+                justifyContent: 'center',
+              }}
+            >
+              <a
+                href={`https://wa.me/34636060609?text=${encodeURIComponent(
+                  `Hola Naroa! Estoy inspeccionando la obra "${currentArtwork.title}" en la galería y deseo consultar disponibilidad o encargar una pieza personalizada similar sobre pizarra y mica mineral.`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => sound.playTick()}
+                style={{
+                  background: 'rgba(212, 175, 55, 0.2)',
+                  border: '1px solid rgba(212, 175, 55, 0.6)',
+                  color: '#D4AF37',
+                  padding: '8px 18px',
+                  borderRadius: '30px',
+                  fontSize: '0.74rem',
+                  fontFamily: 'var(--font-mono, monospace)',
+                  letterSpacing: '0.12em',
+                  textDecoration: 'none',
+                  fontWeight: 700,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  transition: 'all 0.25s ease',
+                  boxShadow: '0 0 15px rgba(212, 175, 55, 0.15)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#D4AF37'
+                  e.currentTarget.style.color = '#000000'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(212, 175, 55, 0.2)'
+                  e.currentTarget.style.color = '#D4AF37'
+                }}
+              >
+                ⚡ ENCARGAR PIEZA SIMILAR ↗
+              </a>
+
+              {onOpenCommission && (
+                <button
+                  onClick={() => {
+                    sound.playTick()
+                    onOpenCommission()
+                  }}
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid rgba(212, 175, 55, 0.4)',
+                    color: '#D4AF37',
+                    padding: '8px 16px',
+                    borderRadius: '30px',
+                    fontSize: '0.74rem',
+                    fontFamily: 'var(--font-mono, monospace)',
+                    letterSpacing: '0.12em',
+                    cursor: 'pointer',
+                    transition: 'all 0.25s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'rgba(212, 175, 55, 0.15)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'
+                  }}
+                >
+                  CONFIGURAR A MEDIDA ✎
+                </button>
+              )}
+
+              <button
+                onClick={() => {
+                  sound.playTick()
+                  const slug = currentArtwork.slug || toSlug(currentArtwork.title)
+                  const url = `${window.location.origin}/#obra-${slug}`
+                  if (navigator.clipboard) {
+                    navigator.clipboard.writeText(url)
+                    setCopied(true)
+                    setTimeout(() => setCopied(false), 2000)
+                  }
+                }}
+                style={{
+                  background: copied ? 'rgba(34, 197, 94, 0.15)' : 'rgba(255, 255, 255, 0.05)',
+                  border: copied ? '1px solid rgba(34, 197, 94, 0.5)' : '1px solid rgba(255, 255, 255, 0.2)',
+                  color: copied ? '#4ade80' : 'rgba(255, 255, 255, 0.75)',
+                  padding: '8px 16px',
+                  borderRadius: '30px',
+                  fontSize: '0.74rem',
+                  fontFamily: 'var(--font-mono, monospace)',
+                  letterSpacing: '0.12em',
+                  cursor: 'pointer',
+                  transition: 'all 0.25s ease',
+                }}
+                onMouseEnter={(e) => {
+                  if (!copied) {
+                    e.currentTarget.style.borderColor = '#D4AF37'
+                    e.currentTarget.style.color = '#D4AF37'
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!copied) {
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'
+                    e.currentTarget.style.color = 'rgba(255, 255, 255, 0.75)'
+                  }
+                }}
+              >
+                {copied ? '✓ ENLACE COPIADO' : 'COMPARTIR PIEZA'}
+              </button>
+            </div>
           </div>
         </motion.div>
       )}

@@ -191,6 +191,10 @@ export default function App() {
           setCurrentIndex(idx)
           setLoupeIndex(idx)
         }}
+        onOpenCommission={() => {
+          setLoupeIndex(null)
+          setIsCommissionOpen(true)
+        }}
       />
 
       {/* ÍNDICE VISUAL DE ALTA COSTURA (27 OBRAS CANÓNICAS) */}
