@@ -10,6 +10,7 @@ interface HauteDockProps {
   onSelectMode: (mode: ActiveMode) => void
   onOpenIndex: () => void
   onOpenArtist: () => void
+  onOpenCommission: () => void
   audioActive: boolean
   toggleAudio: () => void
 }
@@ -21,6 +22,7 @@ export function HauteDock({
   onSelectMode,
   onOpenIndex,
   onOpenArtist,
+  onOpenCommission,
   audioActive,
   toggleAudio,
 }: HauteDockProps) {
@@ -258,6 +260,38 @@ export function HauteDock({
           PABELLÓN 3D
         </button>
 
+        {/* BOTÓN ENCARGOS BESPOKE */}
+        <button
+          onClick={() => {
+            sound.playTick()
+            onOpenCommission()
+          }}
+          style={{
+            background: 'rgba(212, 175, 55, 0.16)',
+            border: '1px solid rgba(212, 175, 55, 0.45)',
+            color: '#D4AF37',
+            fontFamily: 'var(--font-mono, monospace)',
+            fontSize: '0.72rem',
+            fontWeight: 700,
+            letterSpacing: '0.14em',
+            padding: '7px 15px',
+            borderRadius: '30px',
+            cursor: 'pointer',
+            transition: 'all 0.25s ease',
+            boxShadow: '0 0 15px rgba(212, 175, 55, 0.15)',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = '#D4AF37'
+            e.currentTarget.style.color = '#000000'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'rgba(212, 175, 55, 0.16)'
+            e.currentTarget.style.color = '#D4AF37'
+          }}
+        >
+          ⚡ ENCARGOS
+        </button>
+
         {/* SEPARADOR SUTIL */}
         <div style={{ width: '1px', height: '14px', background: 'rgba(212, 175, 55, 0.25)', margin: '0 2px' }} />
 
@@ -270,7 +304,7 @@ export function HauteDock({
           style={{
             background: 'transparent',
             border: '1px solid transparent',
-            color: '#D4AF37',
+            color: 'rgba(255, 255, 255, 0.75)',
             fontFamily: 'var(--font-mono, monospace)',
             fontSize: '0.72rem',
             letterSpacing: '0.14em',
@@ -280,9 +314,11 @@ export function HauteDock({
             transition: 'all 0.25s ease',
           }}
           onMouseEnter={(e) => {
+            e.currentTarget.style.color = '#D4AF37'
             e.currentTarget.style.background = 'rgba(212, 175, 55, 0.14)'
           }}
           onMouseLeave={(e) => {
+            e.currentTarget.style.color = 'rgba(255, 255, 255, 0.75)'
             e.currentTarget.style.background = 'transparent'
           }}
         >

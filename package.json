@@ -17,6 +17,7 @@
     "@react-three/fiber": "^9.6.1",
     "@react-three/postprocessing": "^3.0.4",
     "@types/three": "^0.185.0",
+    "@vercel/analytics": "^2.0.1",
     "framer-motion": "^12.42.2",
     "maath": "^0.10.8",
     "postprocessing": "^6.39.4",

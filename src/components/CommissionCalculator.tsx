@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { motion } from 'framer-motion'
 import { sound } from '../utils/audio'
 
 interface OptionItem {
@@ -6,6 +7,11 @@ interface OptionItem {
   label: string
   sublabel: string
   code: string
+}
+
+interface CommissionCalculatorProps {
+  isOpen?: boolean
+  onClose?: () => void
 }
 
 const SUBJECT_OPTIONS: OptionItem[] = [
@@ -27,7 +33,9 @@ const SIZE_OPTIONS: OptionItem[] = [
   { id: 'small', label: 'Íntimo (30 × 40 cm)', sublabel: 'Colección de gabinete', code: '30×40' },
 ]
 
-export function CommissionCalculator() {
+export function CommissionCalculator({ isOpen, onClose }: CommissionCalculatorProps = {}) {
+  if (isOpen === false) return null
+
   const [subject, setSubject] = useState<string>('individual')
   const [medium, setMedium] = useState<string>('slate_mica')
   const [size, setSize] = useState<string>('medium')
@@ -48,8 +56,8 @@ export function CommissionCalculator() {
     `Encargo Bespoke - ${selectedSubject.label}`
   )}&body=${encodeURIComponent(summaryText)}`
 
-  return (
-    <div style={{ maxWidth: '1140px', margin: '0 auto', padding: '60px 24px 80px' }}>
+  const content = (
+    <div style={{ maxWidth: '1140px', margin: '0 auto', padding: onClose ? '20px 10px 40px' : '60px 24px 80px' }}>
       {/* Cabecera Atelier */}
       <header style={{ textAlign: 'center', marginBottom: '48px' }}>
         <span
@@ -432,4 +440,79 @@ export function CommissionCalculator() {
       </div>
     </div>
   )
+
+  if (onClose) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 600,
+          background: 'rgba(2, 2, 4, 0.96)',
+          backdropFilter: 'blur(30px)',
+          WebkitBackdropFilter: 'blur(30px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '20px',
+          boxSizing: 'border-box',
+          overflowY: 'auto',
+        }}
+        onClick={onClose}
+      >
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96, y: 16 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.96, y: 16 }}
+          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            position: 'relative',
+            maxWidth: '1100px',
+            width: '100%',
+            maxHeight: '92vh',
+            overflowY: 'auto',
+            background: 'rgba(6, 6, 10, 0.95)',
+            border: '1px solid rgba(212, 175, 55, 0.35)',
+            borderRadius: '24px',
+            padding: 'clamp(20px, 3.5vw, 40px)',
+            boxShadow: '0 30px 80px rgba(0, 0, 0, 0.95), 0 0 40px rgba(212, 175, 55, 0.1)',
+          }}
+        >
+          <button
+            onClick={() => {
+              sound.playClose()
+              onClose()
+            }}
+            style={{
+              position: 'absolute',
+              top: '20px',
+              right: '20px',
+              background: 'transparent',
+              border: 'none',
+              color: 'rgba(255, 255, 255, 0.5)',
+              fontSize: '1.4rem',
+              cursor: 'pointer',
+              padding: '8px',
+              lineHeight: 1,
+              zIndex: 10,
+              transition: 'color 0.2s ease',
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = '#D4AF37')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.5)')}
+            aria-label="Cerrar modal"
+          >
+            ✕
+          </button>
+          {content}
+        </motion.div>
+      </motion.div>
+    )
+  }
+
+  return content
 }

@@ -1,4 +1,5 @@
 import { Suspense, lazy, useState, useEffect, useCallback } from 'react'
+import { Analytics } from '@vercel/analytics/react'
 import { ARTWORKS } from './artworks'
 import { sound } from './utils/audio'
 import { ErrorBoundary } from './components/ErrorBoundary'
@@ -7,6 +8,7 @@ import { KineticHorizon } from './components/KineticHorizon'
 import { StudioLoupe } from './components/StudioLoupe'
 import { VisualIndex } from './components/VisualIndex'
 import { ArtistManifesto } from './components/ArtistManifesto'
+import { CommissionCalculator } from './components/CommissionCalculator'
 import { HauteDock, type ActiveMode } from './components/HauteDock'
 import { VideogameHUD } from './components/VideogameHUD'
 
@@ -27,6 +29,7 @@ export default function App() {
   const [loupeIndex, setLoupeIndex] = useState<number | null>(null)
   const [isIndexOpen, setIsIndexOpen] = useState(false)
   const [isArtistOpen, setIsArtistOpen] = useState(false)
+  const [isCommissionOpen, setIsCommissionOpen] = useState(false)
 
   const [audioActive, setAudioActive] = useState<boolean>(sound.isEnabled())
   const [isWebGLMounted, setIsWebGLMounted] = useState(false)
@@ -67,6 +70,8 @@ export default function App() {
         setIsIndexOpen(true)
       } else if (hash === '#/artista' || hash === '#/atelier' || hash === '#/contacto' || hash === '#/about') {
         setIsArtistOpen(true)
+      } else if (hash === '#/encargos' || hash === '#/commission' || hash === '#/bespoke') {
+        setIsCommissionOpen(true)
       } else {
         setActiveMode('horizon')
         setIs3DActive(false)
@@ -143,6 +148,9 @@ export default function App() {
 
   return (
     <div className={`app-shell ${activeMode === '3d' ? 'mode-3d-active' : ''}`}>
+      {/* Telemetría Vercel Web Analytics */}
+      <Analytics />
+
       {/* Cursor inercial de oro mineral */}
       <CustomCursor />
 
@@ -161,6 +169,7 @@ export default function App() {
         }}
         onOpenIndex={() => setIsIndexOpen(true)}
         onOpenArtist={() => setIsArtistOpen(true)}
+        onOpenCommission={() => setIsCommissionOpen(true)}
         audioActive={audioActive}
         toggleAudio={toggleAudio}
       />
@@ -198,6 +207,12 @@ export default function App() {
       <ArtistManifesto
         isOpen={isArtistOpen}
         onClose={() => setIsArtistOpen(false)}
+      />
+
+      {/* CALCULADORA / FORMULARIO INTERACTIVO DE ENCARGOS BESPOKE */}
+      <CommissionCalculator
+        isOpen={isCommissionOpen}
+        onClose={() => setIsCommissionOpen(false)}
       />
 
       {/* HUD DE CONTROL PABELLÓN 3D */}
