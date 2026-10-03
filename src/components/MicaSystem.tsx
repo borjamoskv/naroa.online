@@ -52,7 +52,7 @@ const normalizeText = (s: string) =>
 
 export function MicaSystem({
   isOpen,
-  onToggle,
+  onToggle: _onToggle,
   onClose,
   onOpenCommission,
   onOpenArtwork,
@@ -492,59 +492,6 @@ export function MicaSystem({
 
   return (
     <>
-      {/* TRIGGER ORB FLOTANTE EN ESQUINA INFERIOR DERECHA (ALTA COSTURA) */}
-      <motion.button
-        onClick={() => {
-          sound.playTick()
-          onToggle()
-        }}
-        whileHover={{ scale: 1.06 }}
-        whileTap={{ scale: 0.94 }}
-        aria-label="Abrir asistente MICA"
-        title="MICA SYSTEM v∞ · Curadora del Estudio"
-        style={{
-          position: 'fixed',
-          bottom: '26px',
-          right: 'clamp(16px, 3vw, 36px)',
-          zIndex: 160,
-          width: '54px',
-          height: '54px',
-          borderRadius: '18px',
-          background: isOpen
-            ? '#D4AF37'
-            : 'radial-gradient(circle at 30% 30%, rgba(212, 175, 55, 0.4), rgba(5, 5, 8, 0.96))',
-          border: '1px solid ' + (isOpen ? '#FFFFFF' : 'rgba(212, 175, 55, 0.55)'),
-          color: isOpen ? '#000000' : '#D4AF37',
-          cursor: 'pointer',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          boxShadow: isOpen
-            ? '0 0 32px rgba(212, 175, 55, 0.65), 0 10px 30px rgba(0,0,0,0.8)'
-            : '0 8px 32px rgba(0, 0, 0, 0.8), 0 0 20px rgba(212, 175, 55, 0.25)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          transition: 'background 0.3s ease, border-color 0.3s ease, color 0.3s ease',
-        }}
-      >
-        <span style={{ fontSize: isOpen ? '1.2rem' : '1.35rem', lineHeight: 1 }}>{isOpen ? '✕' : '💎'}</span>
-        {!isOpen && (
-          <span
-            style={{
-              fontFamily: 'var(--font-mono, monospace)',
-              fontSize: '0.55rem',
-              fontWeight: 800,
-              letterSpacing: '0.12em',
-              color: '#D4AF37',
-              marginTop: '2px',
-            }}
-          >
-            MICA
-          </span>
-        )}
-      </motion.button>
-
       {/* PANEL FLOTANTE DE ALTA COSTURA (MICA SYSTEM v∞) */}
       <AnimatePresence>
         {isOpen && (

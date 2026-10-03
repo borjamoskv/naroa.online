@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { useRef, useState, useMemo } from 'react'
-import { Image, Sparkles, useTexture, Text } from '@react-three/drei'
+import { Image, useTexture } from '@react-three/drei'
 import { ARTWORKS } from '../artworks'
 import { sound } from '../utils/audio'
 
@@ -35,8 +35,8 @@ function GalleryItem({
   position,
   scale,
   url,
-  title,
-  year,
+  title: _title,
+  year: _year,
   index,
   rotation,
   isSelected,
@@ -104,55 +104,15 @@ function GalleryItem({
         toneMapped={false}
       />
 
-      {/* ── 4. CARTELA FÍSICA DE MUSEO MINERAL ── */}
-      <group position={[0, -scale[1] / 2 - 0.24, 0.04]}>
-        {/* Bisel de bronce sutil */}
-        <mesh position={[0, 0, -0.005]}>
-          <planeGeometry args={[Math.min(scale[0] * 0.85, 2.0) + 0.02, 0.24]} />
-          <meshStandardMaterial
-            color={active ? '#a68c4a' : '#222019'}
-            roughness={0.5}
-            metalness={0.6}
-            side={THREE.DoubleSide}
-          />
-        </mesh>
-
-        {/* Placa de papel mineral */}
-        <mesh>
-          <planeGeometry args={[Math.min(scale[0] * 0.85, 2.0), 0.22]} />
-          <meshStandardMaterial
-            color={active ? '#12141c' : '#0b0c10'}
-            roughness={0.85}
-            metalness={0.15}
-            side={THREE.DoubleSide}
-          />
-        </mesh>
-
-        {/* Título */}
-        <Text
-          position={[0, 0.04, 0.01]}
-          fontSize={0.075}
-          color={active ? '#EAD6A6' : '#C8C6C0'}
-          anchorX="center"
-          anchorY="middle"
-          maxWidth={Math.min(scale[0] * 0.8, 1.9)}
-          letterSpacing={0.05}
-        >
-          {title.toUpperCase()}
-        </Text>
-
-        {/* Año y técnica */}
-        <Text
-          position={[0, -0.05, 0.01]}
-          fontSize={0.055}
-          color={active ? '#EAD6A6' : 'rgba(180, 160, 120, 0.75)'}
-          anchorX="center"
-          anchorY="middle"
-          letterSpacing={0.08}
-        >
-          {`${year} · PIZARRA, MICA Y PIGMENTOS`}
-        </Text>
-      </group>
+      {/* ── 4. ANCLAJE DE BRONCE ARQUITECTÓNICO ── */}
+      <mesh position={[0, -scale[1] / 2 - 0.05, 0.02]}>
+        <boxGeometry args={[Math.min(scale[0] * 0.5, 1.0), 0.008, 0.02]} />
+        <meshStandardMaterial
+          color={active ? '#C9A96E' : '#3A3832'}
+          roughness={0.4}
+          metalness={0.8}
+        />
+      </mesh>
 
       {/* ── 5. PROYECTOR CENITAL DE GALERÍA (ILUMINACIÓN FÍSICA DE MUSEO) ── */}
       <pointLight
@@ -177,7 +137,7 @@ export function Gallery({
   selectedIndex,
   onSelectArtwork,
   onInspectArtwork,
-  reducedMotion = false,
+  reducedMotion: _reducedMotion = false,
 }: GalleryProps) {
   const group = useRef<THREE.Group>(null)
 
@@ -221,19 +181,7 @@ export function Gallery({
 
   return (
     <group ref={group} position={[0, 0, 0]}>
-      {/* ── MOTAS DE MICA EN EL AIRE (ATMÓSFERA ORGÁNICA) ── */}
-      {!reducedMotion && (
-        <Sparkles
-          count={65}
-          scale={[36, 8, 36]}
-          size={1.5}
-          speed={0.12}
-          opacity={0.22}
-          color="#D8C395"
-        />
-      )}
-
-      {/* ── LAS 27 OBRAS CANÓNICAS EN SUS PROPORCIONES REALES ── */}
+      {/* ── OBRAS CANÓNICAS EN SUS PROPORCIONES REALES ── */}
       {items.map((item, i) => (
         <GalleryItem
           key={i}
