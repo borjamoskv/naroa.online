@@ -9,7 +9,7 @@ import { StudioLoupe } from './components/StudioLoupe'
 import { VisualIndex } from './components/VisualIndex'
 import { ArtistManifesto } from './components/ArtistManifesto'
 import { CommissionCalculator } from './components/CommissionCalculator'
-import { HauteDock, type ActiveMode } from './components/HauteDock'
+import { NavigationPill, type ActiveMode } from './components/NavigationPill'
 import { RotundaOverlay } from './components/RotundaOverlay'
 import { MicaSystem } from './components/MicaSystem'
 
@@ -178,8 +178,8 @@ export default function App() {
       {/* Cursor inercial de oro mineral */}
       <CustomCursor />
 
-      {/* Dock Minimalista Flotante Haute Joaillerie */}
-      <HauteDock
+      {/* Barra de Navegación Maestra SOTA Haute Joaillerie */}
+      <NavigationPill
         activeMode={activeMode}
         currentIndex={activeMode === '3d' && selected3DIndex !== null ? selected3DIndex : currentIndex}
         totalArtworks={ARTWORKS.length}

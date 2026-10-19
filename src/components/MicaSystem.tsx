@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { sound } from '../utils/audio'
 import { ARTWORKS, type Artwork } from '../artworks'
@@ -16,7 +16,8 @@ export interface MicaSystemProps {
 
 interface ChatAction {
   label: string
-  onClick: () => void
+  onClick?: () => void
+  actionPrompt?: string
   isPrimary?: boolean
 }
 
@@ -50,6 +51,70 @@ const normalizeText = (s: string) =>
     .replace(/[\u0300-\u036f]/g, '')
     .trim()
 
+function getInitialGreeting(
+  artwork: Artwork | null | undefined,
+  onOpenCommission: (title?: string) => void,
+  onOpen3D?: () => void
+): ChatMessage {
+  if (artwork) {
+    return {
+      id: 'greeting',
+      sender: 'mica',
+      fullText: `🎭 ¡Hola! Soy MICA. Veo que estás observando «${artwork.title}» (${artwork.year}).\n\nEn esta obra, Naroa combinó ${artwork.medium}. ¿Te gustaría encargar un retrato personalizado con esta misma técnica sobre pizarra, o explorar los destellos minerales en detalle?`,
+      displayedText: `🎭 ¡Hola! Soy MICA. Veo que estás observando «${artwork.title}» (${artwork.year}).\n\nEn esta obra, Naroa combinó ${artwork.medium}. ¿Te gustaría encargar un retrato personalizado con esta misma técnica sobre pizarra, o explorar los destellos minerales en detalle?`,
+      isStreaming: false,
+      artworkCard: {
+        artwork,
+        index: ARTWORKS.findIndex((a) => a.id === artwork.id),
+      },
+      actions: [
+        {
+          label: `⚡ Encargar similar a ${artwork.title}`,
+          onClick: () => onOpenCommission(artwork.title),
+          isPrimary: true,
+        },
+        {
+          label: '💎 Técnica de la Mica',
+          actionPrompt: '¿Qué es el "kintsugi vital" y la mica mineral?',
+        },
+        {
+          label: '🏛 Explorar Museo 3D',
+          onClick: onOpen3D,
+        },
+      ],
+      time: 'Ahora',
+    }
+  }
+  return {
+    id: 'greeting',
+    sender: 'mica',
+    fullText:
+      '🎭 ¿Y si tu rostro fuera arte? Soy MICA. Naroa pinta retratos que capturan lo invisible. Cuéntame qué imaginas o pregúntame sobre retratos, precios y la técnica de la mica mineral.',
+    displayedText:
+      '🎭 ¿Y si tu rostro fuera arte? Soy MICA. Naroa pinta retratos que capturan lo invisible. Cuéntame qué imaginas o pregúntame sobre retratos, precios y la técnica de la mica mineral.',
+    isStreaming: false,
+    actions: [
+      {
+        label: '⚡ Encargar un Retrato',
+        onClick: () => onOpenCommission(),
+        isPrimary: true,
+      },
+      {
+        label: '💎 ¿Qué es el kintsugi vital?',
+        actionPrompt: '¿Qué es el "kintsugi vital" y la mica mineral?',
+      },
+      {
+        label: '🏛 Explorar Museo 3D',
+        onClick: onOpen3D,
+      },
+    ],
+    time: 'Ahora',
+  }
+}
+
+const createUniqueId = (prefix: string) =>
+  `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`
+
 export function MicaSystem({
   isOpen,
   onToggle: _onToggle,
@@ -60,65 +125,19 @@ export function MicaSystem({
   onOpenIndex,
   currentArtwork,
 }: MicaSystemProps) {
-  // Saludo inicial enriquecido contextualmente
-  const initialGreeting = useMemo<ChatMessage>(() => {
-    if (currentArtwork) {
-      return {
-        id: 'greeting',
-        sender: 'mica',
-        fullText: `🎭 ¡Hola! Soy MICA. Veo que estás observando «${currentArtwork.title}» (${currentArtwork.year}).\n\nEn esta obra, Naroa combinó ${currentArtwork.medium}. ¿Te gustaría encargar un retrato personalizado con esta misma técnica sobre pizarra, o explorar los destellos minerales en detalle?`,
-        displayedText: `🎭 ¡Hola! Soy MICA. Veo que estás observando «${currentArtwork.title}» (${currentArtwork.year}).\n\nEn esta obra, Naroa combinó ${currentArtwork.medium}. ¿Te gustaría encargar un retrato personalizado con esta misma técnica sobre pizarra, o explorar los destellos minerales en detalle?`,
-        isStreaming: false,
-        artworkCard: {
-          artwork: currentArtwork,
-          index: ARTWORKS.findIndex((a) => a.id === currentArtwork.id),
-        },
-        actions: [
-          {
-            label: `⚡ Encargar similar a ${currentArtwork.title}`,
-            onClick: () => onOpenCommission(currentArtwork.title),
-            isPrimary: true,
-          },
-          {
-            label: '💎 Técnica de la Mica',
-            onClick: () => handleSendPrompt('¿Qué es el "kintsugi vital" y la mica mineral?'),
-          },
-          {
-            label: '🏛 Explorar Museo 3D',
-            onClick: onOpen3D,
-          },
-        ],
-        time: 'Ahora',
-      }
-    }
-    return {
-      id: 'greeting',
-      sender: 'mica',
-      fullText:
-        '🎭 ¿Y si tu rostro fuera arte? Soy MICA. Naroa pinta retratos que capturan lo invisible. Cuéntame qué imaginas o pregúntame sobre retratos, precios y la técnica de la mica mineral.',
-      displayedText:
-        '🎭 ¿Y si tu rostro fuera arte? Soy MICA. Naroa pinta retratos que capturan lo invisible. Cuéntame qué imaginas o pregúntame sobre retratos, precios y la técnica de la mica mineral.',
-      isStreaming: false,
-      actions: [
-        {
-          label: '⚡ Encargar un Retrato',
-          onClick: () => onOpenCommission(),
-          isPrimary: true,
-        },
-        {
-          label: '💎 ¿Qué es el kintsugi vital?',
-          onClick: () => handleSendPrompt('¿Qué es el "kintsugi vital" y la mica mineral?'),
-        },
-        {
-          label: '🏛 Explorar Museo 3D',
-          onClick: onOpen3D,
-        },
-      ],
-      time: 'Ahora',
-    }
-  }, [currentArtwork?.id])
+  const [messages, setMessages] = useState<ChatMessage[]>(() => [
+    getInitialGreeting(currentArtwork, onOpenCommission, onOpen3D),
+  ])
+  const [prevArtworkId, setPrevArtworkId] = useState(currentArtwork?.id)
 
-  const [messages, setMessages] = useState<ChatMessage[]>([initialGreeting])
+  // Patrón canónico de React para sincronizar estado ante cambio de props sin efecto en cascada
+  if (currentArtwork?.id !== prevArtworkId) {
+    setPrevArtworkId(currentArtwork?.id)
+    if (messages.length <= 1) {
+      setMessages([getInitialGreeting(currentArtwork, onOpenCommission, onOpen3D)])
+    }
+  }
+
   const [inputValue, setInputValue] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -389,11 +408,11 @@ export function MicaSystem({
         actions: [
           {
             label: '🎨 ¿Cómo encargar un retrato?',
-            onClick: () => handleSendPrompt('¿Cómo es el proceso para encargar un retrato?'),
+            actionPrompt: '¿Cómo es el proceso para encargar un retrato?',
           },
           {
             label: '💶 Tarifas y formatos',
-            onClick: () => handleSendPrompt('Tarifas y formatos orientativos'),
+            actionPrompt: 'Tarifas y formatos orientativos',
           },
         ],
       }
@@ -430,7 +449,7 @@ export function MicaSystem({
 
   const handleSendPrompt = (promptText: string) => {
     sound.playTick()
-    const userMsgId = String(Date.now())
+    const userMsgId = createUniqueId('usr')
     const userMsg: ChatMessage = {
       id: userMsgId,
       sender: 'user',
@@ -443,7 +462,7 @@ export function MicaSystem({
 
     setTimeout(() => {
       const response = generateMicaResponse(promptText)
-      const micaMsgId = String(Date.now() + 1)
+      const micaMsgId = createUniqueId('mica')
       const micaMsg: ChatMessage = {
         id: micaMsgId,
         sender: 'mica',
@@ -787,7 +806,11 @@ export function MicaSystem({
                             key={idx}
                             onClick={() => {
                               sound.playTick()
-                              act.onClick()
+                              if (act.actionPrompt) {
+                                handleSendPrompt(act.actionPrompt)
+                              } else if (act.onClick) {
+                                act.onClick()
+                              }
                             }}
                             style={{
                               background: act.isPrimary ? '#D4AF37' : 'rgba(255, 255, 255, 0.08)',

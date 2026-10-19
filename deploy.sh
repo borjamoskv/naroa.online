@@ -30,7 +30,6 @@ fail() { echo -e "${RED}[FATAL]${NC} $1"; exit 1; }
 
 # ── 1. Preflight ─────────────────────────────────────────────
 [ "$BRANCH" = "--build-only" ] || command -v wrangler >/dev/null 2>&1 || fail "wrangler no encontrado. Instala con: npm i -g wrangler"
-[ -d "live-site" ] || fail "Directorio live-site/ no encontrado"
 
 # ── 2. Construir Galería 3D / SPA (dist/) ──────────
 log "Construyendo SPA (Vite + React + Three.js)..."
@@ -38,7 +37,7 @@ export NODE_ENV=production
 npm run build || fail "Build de Vite falló"
 ok "Galería 3D compilada → dist/"
 
-# ── 6. Inyectar _headers y _redirects de CF Pages ───────────
+# ── 3. Inyectar _headers y _redirects de CF Pages ───────────
 log "Inyectando _headers y _redirects..."
 
 cat > "$BUILD_DIR/_headers" << 'EOF'
@@ -86,7 +85,7 @@ EOF
 
 ok "_headers y _redirects inyectados"
 
-# ── 7. Robots.txt (si no existe en live-site) ────────────────
+# ── 4. Robots.txt ───────────────────────────────────────────
 if [ ! -f "$BUILD_DIR/robots.txt" ]; then
   cat > "$BUILD_DIR/robots.txt" << 'EOF'
 User-agent: *
@@ -96,12 +95,18 @@ EOF
   ok "robots.txt creado"
 fi
 
-# ── 7b. Compilar El Museo Institucional (museum/) ───────────
+# ── 4.1 Sincronizar .deploy para Vercel (Classic Marilyn + MICA + NavFix + Configurador) ──
+rm -rf .deploy
+cp -r classic .deploy
+rm -rf .deploy/.vercel .deploy/.env*
+ok ".deploy sincronizado con classic/"
+
+# ── 5. Compilar El Museo Institucional (museum/) ───────────
 log "Compilando sitio institucional El Museo (naroagutierrezgil.com)..."
 python3 tools/build_museum_site.py || fail "Compilación de El Museo falló"
 ok "El Museo compilado → museum/ (6 rutas canónicas)"
 
-# ── 8. Deploy a Cloudflare Pages ─────────────────────────────
+# ── 6. Deploy a Cloudflare Pages ─────────────────────────────
 if [ "$BRANCH" = "--build-only" ]; then
   ok "Build completado en .deploy/ y museum/ (Modo --build-only)"
   exit 0
@@ -123,7 +128,7 @@ else
   ok "Deploy PRODUCCIÓN completado → https://naroagutierrezgil.com/ (El Museo) & https://naroa.online/ (El Sótano)"
 fi
 
-# ── 9. Purga de Caché Global en Cloudflare Edge ──────────────
+# ── 7. Purga de Caché Global en Cloudflare Edge ──────────────
 if [ -n "${CF_ZONE_ID:-}" ] && [ -n "${CF_AUTH_TOKEN:-}" ]; then
   log "Purgando caché global en Cloudflare Edge (Zone: naroagutierrezgil.com)..."
   curl -s -X POST "https://api.cloudflare.com/client/v4/zones/${CF_ZONE_ID}/purge_cache" \
@@ -133,14 +138,14 @@ if [ -n "${CF_ZONE_ID:-}" ] && [ -n "${CF_AUTH_TOKEN:-}" ]; then
   ok "Caché global de Cloudflare purgada"
 fi
 
-# ── 10. Despliegue Paralelo a Vercel ──────────────────────────
+# ── 8. Despliegue Paralelo a Vercel ──────────────────────────
 if command -v npx >/dev/null 2>&1; then
   log "Sincronizando espejo en Vercel Producción..."
   npx vercel --prod --yes > /dev/null 2>&1 || true
   ok "Mirror Vercel actualizado"
 fi
 
-# ── 11. Finalización ─────────────────────────────────────────
+# ── 9. Finalización ─────────────────────────────────────────
 ok "Despliegue finalizado exitosamente"
 
 echo ""

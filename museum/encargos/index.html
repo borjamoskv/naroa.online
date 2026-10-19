@@ -8,7 +8,7 @@
   <meta name="description" content="Proceso de encargo de retratos hiperrealistas en pizarra y óleo con Naroa Gutiérrez Gil desde Bilbao." />
   <meta property="og:title" content="Encargos Bespoke & Retratos Personalizados | Naroa Gutiérrez Gil" />
   <meta property="og:description" content="Proceso de encargo de retratos hiperrealistas en pizarra y óleo con Naroa Gutiérrez Gil desde Bilbao." />
-  <meta property="og:image" content="https://naroa.online/assets/naroa-portrait-DW8XfHYG.webp" />
+  <meta property="og:image" content="https://naroagutierrezgil.com/assets/naroa-portrait-DW8XfHYG.webp" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
@@ -63,101 +63,428 @@
       </div>
     </div>
 
-    <!-- TERMINAL INTERACTIVO HAUTE BESPOKE ESTIMATOR -->
-    <div class="bespoke-configurator-box">
-      <div style="text-align: center; margin-bottom: 32px;">
-        <p class="section-kicker">TERMINAL INTERACTIVO</p>
-        <h3 style="font-family: var(--font-serif); font-size: 1.8rem; margin-bottom: 8px;">DISEÑA TU PROYECTO A MEDIDA</h3>
-        <p style="color: var(--text-muted); font-size: 0.9rem; max-width: 560px; margin: 0 auto;">
-          Selecciona soporte, escala y metales nobles para generar una propuesta inmediata dirigida al taller de Bilbao.
-        </p>
+    <!-- ==========================================
+         CONFIGURADOR DE ENCARGOS + FAQ SEO BILBAO
+         ========================================== -->
+    <section id="encargos-configurador" class="naroa-commission-wrap">
+      <div class="naroa-commission-header">
+        <span class="naroa-badge">Estudio en Bilbao · Piezas Únicas</span>
+        <h2>Configura tu Retrato por Encargo</h2>
+        <p>No necesitas tenerlo todo claro. Elige la base que más te inspire y cuéntame la historia detrás del rostro.</p>
       </div>
 
-      <!-- SELECCIÓN 1: SOPORTE -->
-      <div class="config-step">
-        <label class="config-label">1. SELECCIONA EL SOPORTE MATERIAL</label>
-        <div class="config-options" data-group="support">
-          <button type="button" class="config-pill active" data-val="Pizarra Natural Fósil (Cantos Rústicos)">🪨 Pizarra Natural Fósil</button>
-          <button type="button" class="config-pill" data-val="Lienzo 3D Belga Gran Formato">🖼️ Lienzo 3D Belga</button>
-          <button type="button" class="config-pill" data-val="Hojalata & Metales Kintsugi">🥫 Metales Kintsugi</button>
+      <div class="naroa-config-grid">
+        <!-- Columna Izquierda: Selectores -->
+        <div class="naroa-steps">
+          
+          <!-- Paso 1: Soporte -->
+          <div class="naroa-step-group">
+            <label class="naroa-step-label">1. ¿Qué soporte te llama más?</label>
+            <div class="naroa-options" data-group="soporte">
+              <button type="button" class="naroa-chip active" data-value="Pizarra natural (acrílico sobre piedra)">
+                🪨 Pizarra Natural
+                <small>Textura milenaria</small>
+              </button>
+              <button type="button" class="naroa-chip" data-value="Lienzo (óleo / acrílico)">
+                🎨 Lienzo
+                <small>Óleo y acrílico</small>
+              </button>
+              <button type="button" class="naroa-chip" data-value="Mica mineral y Mixed Media">
+                ✨ Mica Mineral
+                <small>Brillo orgánico</small>
+              </button>
+              <button type="button" class="naroa-chip" data-value="Formato Lata (Tin Art / Amor en Conserva)">
+                🥫 En Conserva
+                <small>Tin Art único</small>
+              </button>
+              <button type="button" class="naroa-chip" data-value="Quiero que me asesores con el soporte">
+                💡 Déjame aconsejarte
+                <small>Lo vemos juntos</small>
+              </button>
+            </div>
+          </div>
+
+          <!-- Paso 2: Protagonista -->
+          <div class="naroa-step-group">
+            <label class="naroa-step-label">2. ¿A quién vamos a inmortalizar?</label>
+            <div class="naroa-options" data-group="sujeto">
+              <button type="button" class="naroa-chip active" data-value="un retrato individual">👤 Individual</button>
+              <button type="button" class="naroa-chip" data-value="un retrato de pareja o familia">👥 Pareja / Familia</button>
+              <button type="button" class="naroa-chip" data-value="un retrato homenaje muy especial">🕊️ Homenaje</button>
+              <button type="button" class="naroa-chip" data-value="un retrato de mascota / compañero de vida">🐾 Mascota</button>
+            </div>
+          </div>
+
+          <!-- Paso 3: Entrega -->
+          <div class="naroa-step-group">
+            <label class="naroa-step-label">3. ¿Dónde entregamos la obra?</label>
+            <div class="naroa-options" data-group="entrega">
+              <button type="button" class="naroa-chip active" data-value="recogida en mano en Bilbao">📍 En mano en Bilbao / Bizkaia</button>
+              <button type="button" class="naroa-chip" data-value="envío asegurado con certificado">📦 Envío asegurado (España / Internacional)</button>
+            </div>
+          </div>
+
+          <!-- Paso 4: Detalles opcionales -->
+          <div class="naroa-step-group">
+            <label class="naroa-step-label" for="naroa-custom-note">4. ¿Algún detalle o fecha especial? (Opcional)</label>
+            <input 
+              type="text" 
+              id="naroa-custom-note" 
+              class="naroa-input" 
+              placeholder="Ej: Es para un aniversario en junio, le encanta el estilo Pop..."
+            />
+          </div>
+        </div>
+
+        <!-- Columna Derecha: Vista previa del mensaje y Acción -->
+        <div class="naroa-preview-card">
+          <div class="naroa-preview-top">
+            <span class="naroa-preview-tag">Tu mensaje listo para enviar</span>
+            <textarea id="naroa-message-box" rows="6" readonly></textarea>
+          </div>
+
+          <div class="naroa-actions">
+            <a id="naroa-mailto-btn" href="#" class="naroa-btn naroa-btn-primary">
+              Enviar por Email →
+            </a>
+            <a id="naroa-wa-btn" href="#" target="_blank" rel="noopener noreferrer" class="naroa-btn" style="background: #25D366; color: #000; font-weight: 700;">
+              Enviar por WhatsApp 💬
+            </a>
+            <button type="button" id="naroa-ig-btn" class="naroa-btn naroa-btn-secondary">
+              Copiar idea y abrir Instagram (@naroagutierrezgil)
+            </button>
+            <p id="naroa-copy-toast" class="naroa-toast" aria-live="polite"></p>
+          </div>
+
+          <div class="naroa-trust-notes">
+            <span>✓ Boceto previo sin compromiso</span>
+            <span>✓ Fotos del proceso paso a paso</span>
+            <span>✓ Certificado de autenticidad</span>
+          </div>
         </div>
       </div>
 
-      <!-- SELECCIÓN 2: ESCALA / FORMATO -->
-      <div class="config-step">
-        <label class="config-label">2. ESCALA / DIMENSIÓN APROXIMADA</label>
-        <div class="config-options" data-group="size">
-          <button type="button" class="config-pill active" data-val="Íntimo (~40 × 30 cm)">Íntimo (~40 × 30 cm)</button>
-          <button type="button" class="config-pill" data-val="Galería (~80 × 60 cm)">Galería (~80 × 60 cm)</button>
-          <button type="button" class="config-pill" data-val="Monumental (~120 × 90 cm)">Monumental (~120 × 90 cm)</button>
-        </div>
-      </div>
+      <!-- Bloque FAQ para SEO Local ("Retratos Bilbao") -->
+      <div class="naroa-faq-block">
+        <h3>Preguntas frecuentes sobre retratos por encargo en Bilbao</h3>
+        
+        <details class="naroa-faq-item">
+          <summary>¿Qué tipo de fotografía necesito para encargar un retrato?</summary>
+          <p>No necesitas una sesión profesional. Basta con una o varias fotos donde se reconozca bien la expresión y la mirada. Si quieres unir en un mismo cuadro a personas de distintas fotos o restaurar un recuerdo antiguo, trabajamos el boceto previo hasta dar con la composición exacta.</p>
+        </details>
 
-      <!-- SELECCIÓN 3: PIGMENTOS Y METALES NOBLES -->
-      <div class="config-step">
-        <label class="config-label">3. METALES & PIGMENTOS MINERALES</label>
-        <div class="config-options" data-group="metal">
-          <button type="button" class="config-pill active" data-val="Pan de Oro 24K Fino">✨ Pan de Oro 24K Fino</button>
-          <button type="button" class="config-pill" data-val="Mica Mineral Iridiscente">💎 Mica Mineral Iridiscente</button>
-          <button type="button" class="config-pill" data-val="Hiperrealismo Clásico Óleo Puro">🎨 Óleo Clásico Puro</button>
-          <button type="button" class="config-pill" data-val="Fusión Mixta Kintsugi">⚡ Fusión Mixta Kintsugi</button>
-        </div>
-      </div>
+        <details class="naroa-faq-item">
+          <summary>¿Puedo ver o recoger el retrato en persona en Bilbao?</summary>
+          <p>Sí. Mi estudio está en Bilbao. Podemos comentar la obra, elegir juntos la laja de pizarra o el formato del lienzo y hacer la entrega en mano en Bilbao y Bizkaia. Si estás fuera, envío la obra protegida y asegurada a cualquier punto.</p>
+        </details>
 
-      <!-- RESUMEN EN TIEMPO REAL -->
-      <div class="config-summary-card">
-        <div style="font-family: var(--font-mono); font-size: 0.72rem; color: var(--gold); letter-spacing: 0.15em; margin-bottom: 6px;">RESUMEN DE CONFIGURACIÓN BESPOKE</div>
-        <div id="config-summary-text" style="font-family: var(--font-editorial); font-size: 1.25rem; font-style: italic; color: #FFFFFF; line-height: 1.4; margin-bottom: 24px;">
-          Retrato sobre Pizarra Natural Fósil (Cantos Rústicos) · Escala Íntimo (~40 × 30 cm) · Acabado Pan de Oro 24K Fino
-        </div>
-
-        <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
-          <a id="btn-config-wa" href="#" target="_blank" rel="noopener noreferrer" class="btn-primary" style="padding: 14px 28px;">
-            <span>💬</span>
-            <span>ENVIAR CONFIGURACIÓN POR WHATSAPP ➔</span>
-          </a>
-          <a id="btn-config-mail" href="#" class="btn-secondary" style="padding: 14px 28px;">
-            <span>✉</span>
-            <span>ENVIAR POR EMAIL</span>
-          </a>
-        </div>
+        <details class="naroa-faq-item">
+          <summary>¿Cuánto tiempo lleva pintar un retrato hiperrealista o Pop Art?</summary>
+          <p>Cada pieza se pinta a mano capa a capa respetando los tiempos de secado del óleo, el acrílico y los minerales. El plazo habitual oscila entre 3 y 6 semanas según el tamaño y el soporte elegido. Si tienes una fecha clave para un regalo, dímelo en el primer mensaje para planificarlo.</p>
+        </details>
       </div>
-    </div>
+    </section>
+
+    <!-- Datos Estructurados FAQPage para Google -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Qué tipo de fotografía necesito para encargar un retrato?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No necesitas una sesión profesional. Basta con una o varias fotos donde se reconozca bien la expresión y la mirada. También es posible combinar diferentes fotografías en un único boceto personalizado."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Puedo encargar y recoger el retrato en mano en Bilbao?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. El estudio de Naroa Gutiérrez Gil está en Bilbao, permitiendo asesoramiento sobre soportes como pizarra natural, mica o lienzo y entrega en mano en Bilbao y Bizkaia, además de envío asegurado al resto de España."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Cuánto tiempo se tarda en pintar un retrato por encargo?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "El proceso artesanal al óleo, acrílico o sobre piedra natural toma habitualmente entre 3 y 6 semanas, incluyendo el envío de fotografías del progreso y certificado de autenticidad."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <style>
+      .naroa-commission-wrap {
+        max-width: 1080px;
+        margin: 4rem auto;
+        padding: 2.5rem 1.5rem;
+        color: #f4f4f5;
+        font-family: inherit;
+      }
+      .naroa-commission-header {
+        text-align: center;
+        max-width: 680px;
+        margin: 0 auto 2.5rem;
+      }
+      .naroa-badge {
+        display: inline-block;
+        font-size: 0.78rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #d4af37;
+        border: 1px solid rgba(212, 175, 55, 0.35);
+        padding: 0.35rem 0.85rem;
+        border-radius: 999px;
+        margin-bottom: 0.8rem;
+      }
+      .naroa-commission-header h2 {
+        font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+        margin: 0.3rem 0 0.8rem;
+      }
+      .naroa-commission-header p {
+        color: #a1a1aa;
+        line-height: 1.6;
+      }
+      .naroa-config-grid {
+        display: grid;
+        grid-template-columns: 1.25fr 1fr;
+        gap: 2rem;
+        align-items: start;
+      }
+      @media (max-width: 840px) {
+        .naroa-config-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .naroa-step-group {
+        margin-bottom: 1.6rem;
+      }
+      .naroa-step-label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        font-size: 0.95rem;
+        color: #e4e4e7;
+      }
+      .naroa-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.65rem;
+      }
+      .naroa-chip {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #e4e4e7;
+        padding: 0.65rem 1rem;
+        border-radius: 12px;
+        cursor: pointer;
+        text-align: left;
+        transition: all 0.2s ease;
+        font-size: 0.9rem;
+      }
+      .naroa-chip small {
+        display: block;
+        font-size: 0.72rem;
+        color: #a1a1aa;
+        margin-top: 0.15rem;
+      }
+      .naroa-chip:hover {
+        border-color: rgba(212, 175, 55, 0.5);
+        background: rgba(255, 255, 255, 0.07);
+      }
+      .naroa-chip.active {
+        background: rgba(212, 175, 55, 0.14);
+        border-color: #d4af37;
+        color: #ffffff;
+      }
+      .naroa-input {
+        width: 100%;
+        padding: 0.85rem 1rem;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: rgba(255, 255, 255, 0.04);
+        color: #fff;
+        font-size: 0.92rem;
+        box-sizing: border-box;
+      }
+      .naroa-preview-card {
+        background: rgba(24, 24, 27, 0.85);
+        border: 1px solid rgba(212, 175, 55, 0.28);
+        border-radius: 16px;
+        padding: 1.5rem;
+        position: sticky;
+        top: 2rem;
+      }
+      .naroa-preview-tag {
+        display: block;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #d4af37;
+        margin-bottom: 0.6rem;
+      }
+      #naroa-message-box {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.35);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        color: #f4f4f5;
+        padding: 0.9rem;
+        font-size: 0.92rem;
+        line-height: 1.55;
+        resize: vertical;
+        box-sizing: border-box;
+        margin-bottom: 1rem;
+      }
+      .naroa-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.65rem;
+      }
+      .naroa-btn {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0.9rem 1.2rem;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-decoration: none;
+        cursor: pointer;
+        transition: transform 0.15s ease, opacity 0.2s ease;
+        border: none;
+      }
+      .naroa-btn-primary {
+        background: #d4af37;
+        color: #111113;
+      }
+      .naroa-btn-secondary {
+        background: rgba(255, 255, 255, 0.08);
+        color: #f4f4f5;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+      }
+      .naroa-btn:hover {
+        transform: translateY(-1px);
+      }
+      .naroa-toast {
+        font-size: 0.82rem;
+        color: #d4af37;
+        min-height: 1.2em;
+        margin: 0.2rem 0 0;
+        text-align: center;
+      }
+      .naroa-trust-notes {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        font-size: 0.78rem;
+        color: #a1a1aa;
+      }
+      .naroa-faq-block {
+        margin-top: 3.5rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .naroa-faq-block h3 {
+        font-size: 1.35rem;
+        margin-bottom: 1.2rem;
+      }
+      .naroa-faq-item {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 1rem 0;
+      }
+      .naroa-faq-item summary {
+        cursor: pointer;
+        font-weight: 600;
+        color: #f4f4f5;
+      }
+      .naroa-faq-item p {
+        margin: 0.75rem 0 0;
+        color: #a1a1aa;
+        line-height: 1.6;
+        font-size: 0.94rem;
+      }
+    </style>
 
     <script>
-      let selectedSupport = 'Pizarra Natural Fósil (Cantos Rústicos)';
-      let selectedSize = 'Íntimo (~40 × 30 cm)';
-      let selectedMetal = 'Pan de Oro 24K Fino';
+      (function () {
+        const state = {
+          soporte: "Pizarra natural (acrílico sobre piedra)",
+          sujeto: "un retrato individual",
+          entrega: "recogida en mano en Bilbao",
+          nota: ""
+        };
 
-      function updateConfigurator() {
-        const summary = document.getElementById('config-summary-text');
-        const btnWa = document.getElementById('btn-config-wa');
-        const btnMail = document.getElementById('btn-config-mail');
+        const msgBox = document.getElementById("naroa-message-box");
+        const mailBtn = document.getElementById("naroa-mailto-btn");
+        const waBtn = document.getElementById("naroa-wa-btn");
+        const igBtn = document.getElementById("naroa-ig-btn");
+        const noteInput = document.getElementById("naroa-custom-note");
+        const toast = document.getElementById("naroa-copy-toast");
 
-        summary.textContent = 'Retrato sobre ' + selectedSupport + ' · Escala ' + selectedSize + ' · Acabado ' + selectedMetal;
+        function updatePreview() {
+          const extra = state.nota.trim()
+            ? "\n\nDetalle adicional: " + state.nota.trim()
+            : "";
 
-        const text = 'Hola Naroa! He configurado un encargo bespoke en naroagutierrezgil.com:\n• Soporte: ' + selectedSupport + '\n• Escala: ' + selectedSize + '\n• Acabado: ' + selectedMetal + '\n¿Podemos hablar de plazos y propuesta económica?';
+          const text =
+            "¡Hola Naroa! Oye, tengo una idea para encargar " + state.sujeto + ".\n\n" +
+            "Me llama mucho el soporte de " + state.soporte + " y me gustaría valorar opciones con " + state.entrega + "." +
+            extra +
+            "\n\n¿Hablamos para ver cómo enfocar el boceto?";
 
-        btnWa.href = 'https://wa.me/34636060609?text=' + encodeURIComponent(text);
-        btnMail.href = 'mailto:naroa@naroa.eu?subject=' + encodeURIComponent('Consulta Encargo Bespoke: ' + selectedSupport) + '&body=' + encodeURIComponent(text);
-      }
+          if (msgBox) msgBox.value = text;
 
-      document.querySelectorAll('.config-options').forEach(group => {
-        const groupName = group.getAttribute('data-group');
-        group.querySelectorAll('.config-pill').forEach(pill => {
-          pill.addEventListener('click', () => {
-            group.querySelectorAll('.config-pill').forEach(p => p.classList.remove('active'));
-            pill.classList.add('active');
-            const val = pill.getAttribute('data-val');
-            if (groupName === 'support') selectedSupport = val;
-            if (groupName === 'size') selectedSize = val;
-            if (groupName === 'metal') selectedMetal = val;
-            updateConfigurator();
+          const subject = encodeURIComponent("Encargo de retrato — " + state.soporte);
+          const body = encodeURIComponent(text);
+          if (mailBtn) mailBtn.href = "mailto:naroa@naroa.eu?subject=" + subject + "&body=" + body;
+          if (waBtn) waBtn.href = "https://wa.me/34636060609?text=" + encodeURIComponent(text);
+        }
+
+        document.querySelectorAll(".naroa-options").forEach((groupEl) => {
+          const groupName = groupEl.getAttribute("data-group");
+          groupEl.querySelectorAll(".naroa-chip").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              groupEl.querySelectorAll(".naroa-chip").forEach((b) => b.classList.remove("active"));
+              btn.classList.add("active");
+              state[groupName] = btn.getAttribute("data-value");
+              updatePreview();
+            });
           });
         });
-      });
 
-      updateConfigurator();
+        if (noteInput) {
+          noteInput.addEventListener("input", (e) => {
+            state.nota = e.target.value;
+            updatePreview();
+          });
+        }
+
+        if (igBtn) {
+          igBtn.addEventListener("click", async () => {
+            try {
+              if (msgBox) await navigator.clipboard.writeText(msgBox.value);
+              if (toast) toast.textContent = "✓ Mensaje copiado. Pega tu idea en el chat de Instagram.";
+            } catch (_) {
+              if (toast) toast.textContent = "Abriendo Instagram (@naroagutierrezgil)...";
+            }
+            setTimeout(() => {
+              window.open("https://www.instagram.com/naroagutierrezgil/", "_blank", "noopener");
+            }, 450);
+          });
+        }
+
+        updatePreview();
+      })();
     </script>
   </main>
   <footer class="site-footer">
