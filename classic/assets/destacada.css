@@ -937,19 +937,106 @@ body.nav-open { overflow: hidden; }
   max-height: 100% !important;
 }
 
+/* ── Hero de Obra Principal (Amy): Cero Recortes & Flujo Natural ── */
+.gallery-hero {
+  min-height: auto !important;
+  height: auto !important;
+  padding: 4.5rem 1.5rem 2rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  overflow: visible !important;
+  background: transparent !important;
+}
+
 .gallery-hero__artwork {
-  background: #08080a;
-  border-radius: 16px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  position: relative !important;
+  width: auto !important;
+  max-width: 100% !important;
+  aspect-ratio: auto !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  border: none !important;
+  transform: none !important;
+}
+
+.gallery-hero__artwork:before,
+.gallery-hero__artwork:after {
+  display: none !important;
 }
 
 .gallery-hero__image {
-  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.95));
+  max-height: 75vh !important;
+  width: auto !important;
+  max-width: 92vw !important;
+  object-fit: contain !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  transform: none !important;
+  filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.95)) !important;
+  transition: transform 0.4s ease, filter 0.4s ease !important;
 }
+
+.gallery-hero__artwork:hover .gallery-hero__image {
+  transform: scale(1.015) !important;
+  filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 1)) drop-shadow(0 0 40px rgba(212, 175, 55, 0.25)) !important;
+}
+
+.gallery-hero__info {
+  position: relative !important;
+  bottom: auto !important;
+  left: auto !important;
+  transform: none !important;
+  margin-top: 1.5rem !important;
+  margin-bottom: 2rem !important;
+  text-align: center !important;
+  opacity: 1 !important;
+  animation: none !important;
+}
+
+.gallery-hero__title {
+  font-size: clamp(1.8rem, 4vw, 3rem) !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase !important;
+  color: #ffffff !important;
+  margin: 0 0 0.4rem 0 !important;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8) !important;
+}
+
+.gallery-hero__year {
+  font-family: var(--font-mono, monospace) !important;
+  font-size: 0.82rem !important;
+  letter-spacing: 0.22em !important;
+  color: #d4af37 !important;
+  text-transform: uppercase !important;
+  display: block !important;
+}
+
+/* Transición limpia y fluida hacia el catálogo */
+.gallery-section-header {
+  margin: 2rem auto 3rem !important;
+  text-align: center !important;
+  padding: 0 1rem !important;
+}
+
+.gallery-section-header__title {
+  display: none !important; /* Elimina el bloque tosco que decía Obra */
+}
+
+.gallery-section-header__line {
+  max-width: 140px !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.6), transparent) !important;
+  margin: 0 auto !important;
+}
+
 

@@ -42,3 +42,6 @@ assets-src/
 *.pem
 *.key
 .env*
+classic/assets/backup_pre4k/
+raw_artworks_facebook/
+
