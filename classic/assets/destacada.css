@@ -481,16 +481,30 @@ body.nav-open { overflow: hidden; }
   }
 }
 
+.gallery-massive__item {
+  position: relative;
+  background: #08080a;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
 .gallery-massive__img {
   width: 100% !important;
   height: 100% !important;
-  object-fit: cover !important;
+  object-fit: contain !important;
   display: block !important;
+  padding: 8px;
+  box-sizing: border-box;
+  filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.9));
   transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1) !important;
 }
 
 .gallery-massive__item:hover .gallery-massive__img {
-  transform: scale(1.08) !important;
+  transform: scale(1.035) !important;
 }
 
 .gallery-massive__overlay {
@@ -910,3 +924,32 @@ body.nav-open { overflow: hidden; }
   .encargo-float-bar { bottom: 1rem; right: 1rem; }
   .encargo-float__wa { font-size: 0.82rem; padding: 0.65rem 1.1rem; }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   FIDELIDAD MASTER 2K/4K — Obras Completas Sin Recorte
+   ══════════════════════════════════════════════════════════════ */
+.gallery-hero__image,
+.gallery-massive__img,
+.lightbox__img {
+  image-rendering: -webkit-optimize-contrast;
+  object-fit: contain !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+.gallery-hero__artwork {
+  background: #08080a;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.gallery-hero__image {
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.95));
+}
+
