@@ -95,6 +95,10 @@ EOF
   ok "robots.txt creado"
 fi
 
+# Build and validate the reviewed artwork catalogue before release.
+python3 tools/build_catalog.py || fail "Compilación del catálogo falló"
+python3 tools/check_catalog.py || fail "Validación del catálogo falló"
+
 # ── 4.1 Sincronizar .deploy para Vercel (Classic Marilyn + MICA + NavFix + Configurador) ──
 rm -rf .deploy
 cp -r classic .deploy

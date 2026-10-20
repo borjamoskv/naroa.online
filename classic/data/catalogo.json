@@ -1,0 +1,1364 @@
+{
+  "version": 1,
+  "reviewed": "2026-10-20",
+  "image_note": "Selección de fuentes locales anteriores al proceso 4K y copias de galerías públicas. Sin ampliación ni retoque en esta revisión.",
+  "projects": [
+    {
+      "slug": "amy-rocks",
+      "title": "Amy Rocks",
+      "category": "pizarra",
+      "technique": "Acrílico, lápices y rotuladores",
+      "support": "Plato de pizarra natural",
+      "story": "Amy Winehouse en blanco, negro y grises, con acentos rojos y dorados. La forma y el canto de la pizarra participan en el retrato.",
+      "images": [
+        {
+          "src": "/images/catalogo/amy-rocks-hq-01.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Vista completa",
+          "source": "https://www.facebook.com/media/set/?set=a.1571125317700217&type=3",
+          "sha256": "bfde5d2cb7307054f1d84df907bdc70879e4cbf03993b8f943f3fcaa919b9e9b",
+          "source_local": "raw_artworks_facebook/rocks/1571120934367322.jpg"
+        },
+        {
+          "src": "/images/catalogo/amy-rocks-hq-02.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Vista oblicua",
+          "source": "https://www.facebook.com/media/set/?set=a.1571125317700217&type=3",
+          "sha256": "1ac77c840ef4ded5818dbf70aff740b43c87e5d28ac38341e305ed7a21629aa2",
+          "source_local": "raw_artworks_facebook/rocks/1571120854367330.jpg"
+        },
+        {
+          "src": "/images/catalogo/amy-rocks-hq-03.jpg",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Detalle del soporte",
+          "source": "https://www.facebook.com/media/set/?set=a.1571125317700217&type=3",
+          "sha256": "29a00186ab77d4603ab8774241c9867b7d28276ec80184350fc82b712647c7cc",
+          "source_local": "raw_artworks_facebook/rocks/1571120761034006.jpg"
+        }
+      ],
+      "dimensions": "18 × 10 × 0,6 cm",
+      "series": "DiviNos",
+      "year": null,
+      "credit": null,
+      "selected": true,
+      "kind": "obra",
+      "source": "https://www.facebook.com/media/set/?set=a.1571125317700217&type=3"
+    },
+    {
+      "slug": "marilyn-rocks",
+      "title": "Marilyn Rocks",
+      "category": "pizarra",
+      "technique": "Técnica mixta con escamas de mica y esmalte con brillantina",
+      "support": "Plato de pizarra natural",
+      "story": "Marilyn Monroe sobre pizarra, con detalles dorados y escamas de mica encoladas. La luz revela la textura de los materiales añadidos.",
+      "images": [
+        {
+          "src": "/images/catalogo/marilyn-rocks-hq-01.webp",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Pieza completa sobre pizarra",
+          "source": "https://www.facebook.com/media/set/?set=a.1552149902931092&type=3",
+          "sha256": "203987738ce599a295eac22831a77aff873a81d44b3fbcc0856cedb42871e588",
+          "source_local": "classic/images/artworks/601340023_1552126202933462_7815927344957967258_n.webp"
+        },
+        {
+          "src": "/images/catalogo/marilyn-rocks-hq-02.webp",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Detalle lateral",
+          "source": "https://www.facebook.com/media/set/?set=a.1552149902931092&type=3",
+          "sha256": "ac74525705a3dc22c3ee3a202c496548b94b937c4a6c7464c4e88dac78ad49dc",
+          "source_local": "classic/images/artworks/600258291_1552125946266821_6847049145049928090_n.webp"
+        },
+        {
+          "src": "/images/catalogo/marilyn-rocks-03.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle del retrato",
+          "source": "https://www.facebook.com/media/set/?set=a.1552149902931092&type=3",
+          "sha256": "cc47bc2392186a2ab347c3df78f4d245304b2eb3f30df6e032168f2228de3073"
+        }
+      ],
+      "dimensions": "18 × 10 × 0,6 cm",
+      "series": "DiviNos",
+      "year": null,
+      "credit": null,
+      "selected": true,
+      "kind": "obra",
+      "source": "https://www.facebook.com/media/set/?set=a.1552149902931092&type=3"
+    },
+    {
+      "slug": "johnny-rocks",
+      "title": "Johnny Rocks",
+      "category": "pizarra",
+      "technique": "Acrílico, lápices y rotuladores",
+      "support": "Plato de pizarra natural",
+      "story": "Un retrato de Johnny Depp con contrastes en blanco y negro y detalles dorados y rojizos. Forma parte de DiviNos.",
+      "images": [
+        {
+          "src": "/images/catalogo/johnny-rocks-hq-01.webp",
+          "width": 1530,
+          "height": 2048,
+          "caption": "Pieza completa sobre pizarra",
+          "source": "https://www.facebook.com/media/set/?set=a.1562090265270389&type=3",
+          "sha256": "d850042bf41929f04ba385ec63c85b4b28d822104804dd2445ba06ec627914df",
+          "source_local": "classic/images/artworks/608211438_1562089535270462_2827127275272133326_n.webp"
+        },
+        {
+          "src": "/images/catalogo/johnny-rocks-hq-02.webp",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Detalle del retrato",
+          "source": "https://www.facebook.com/media/set/?set=a.1562090265270389&type=3",
+          "sha256": "7f044cfa7f86df93e3704cc3de8ee2fae586dfc965a0c61a5297c2103667e6bb",
+          "source_local": "classic/images/artworks/divinos-johnny-gl9M1ZKj.webp"
+        },
+        {
+          "src": "/images/catalogo/johnny-rocks-02.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Escala de la pieza junto a un rotulador",
+          "source": "https://www.facebook.com/media/set/?set=a.1562090265270389&type=3",
+          "sha256": "86da8011ecea1e2eff2c40f91362b6e1c11bc4ca31c1165386654b420828c7d5"
+        }
+      ],
+      "dimensions": "18 × 10 × 0,6 cm",
+      "series": "DiviNos",
+      "year": null,
+      "credit": null,
+      "selected": true,
+      "kind": "obra",
+      "source": "https://www.facebook.com/media/set/?set=a.1562090265270389&type=3"
+    },
+    {
+      "slug": "james-rocks",
+      "title": "James Rocks",
+      "category": "pizarra",
+      "technique": "Técnica mixta y pintura dimensional",
+      "support": "Plato de pizarra natural",
+      "story": "James Dean sobre un fondo de rojos y motivos dorados. La pintura dimensional negra añade relieve a la superficie.",
+      "images": [
+        {
+          "src": "/images/catalogo/james-rocks-hq-01.webp",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Pieza completa sobre pizarra",
+          "source": "https://www.facebook.com/media/set/?set=a.1543127323833350&type=3",
+          "sha256": "285bc25f922eb9fd577980eb9dd70349a7d87a7d3d955d5ec73d2dfae897ccbe",
+          "source_local": "classic/images/artworks/594972277_1543116283834454_8672784625256696657_n.webp"
+        },
+        {
+          "src": "/images/catalogo/james-rocks-hq-02.webp",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Detalle del retrato",
+          "source": "https://www.facebook.com/media/set/?set=a.1543127323833350&type=3",
+          "sha256": "8658a9175555f098799f2287f7186f6df06c66dc40a640050ccff695fc124f11",
+          "source_local": "classic/images/artworks/james-rocks-new.webp"
+        },
+        {
+          "src": "/images/catalogo/james-rocks-03.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Detalle del rostro",
+          "source": "https://www.facebook.com/media/set/?set=a.1543127323833350&type=3",
+          "sha256": "77def995752bb884f8221dbdce86a36e01a7ee2f9ecc5783063ba4c3b49a0dd4"
+        }
+      ],
+      "dimensions": "18 × 10 × 0,6 cm",
+      "series": "DiviNos",
+      "year": null,
+      "credit": null,
+      "selected": true,
+      "kind": "obra",
+      "source": "https://www.facebook.com/media/set/?set=a.1543127323833350&type=3"
+    },
+    {
+      "slug": "entre-tantas-flores-de-dia",
+      "title": "Entre Tantas Flores de Día",
+      "category": "collage",
+      "technique": "Ilustración reproducida e intervenida; collage textil y alambre",
+      "support": "Papel impreso sobre tela floral",
+      "story": "El retrato de Robe parte de un dibujo a lápices sobre poliéster. Tras escanearlo e imprimirlo a mayor tamaño, la imagen se recorta, retoca y combina con tela floral y una frase en alambre.",
+      "images": [
+        {
+          "src": "/images/catalogo/entre-tantas-flores-de-dia-hq-01.webp",
+          "width": 1528,
+          "height": 2048,
+          "caption": "Obra completa enmarcada",
+          "source": "https://www.facebook.com/media/set/?set=a.1577827357030013&type=3",
+          "sha256": "e419319adba02da28f3f51b0c414e6a053a9b4ba36265f16caa220487faab9c0",
+          "source_local": "classic/images/artworks/616198291_1577822413697174_3337151405885426240_n.webp"
+        },
+        {
+          "src": "/images/catalogo/entre-tantas-flores-de-dia-hq-02.webp",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Detalle del alambre",
+          "source": "https://www.facebook.com/media/set/?set=a.1577827357030013&type=3",
+          "sha256": "6897268c74336109a7d956c58b012ce1fbe1e3488721ffcbf2ded20df276d567",
+          "source_local": "classic/images/artworks/615932964_1577822457030503_2110397705300850911_n.webp"
+        },
+        {
+          "src": "/images/catalogo/entre-tantas-flores-de-dia-hq-03.webp",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Vista oblicua de las capas",
+          "source": "https://www.facebook.com/media/set/?set=a.1577827357030013&type=3",
+          "sha256": "d73b09ece6adaa370869476720b7ec0a0053fcd055fd4ea9961cf66ae02564b0",
+          "source_local": "classic/images/artworks/615438426_1577822580363824_2923463327956560352_n.webp"
+        }
+      ],
+      "dimensions": "Marco: 46 × 33 cm",
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": true,
+      "kind": "obra",
+      "source": "https://www.facebook.com/media/set/?set=a.1577827357030013&type=3"
+    },
+    {
+      "slug": "mario-moreno",
+      "title": "Mario Moreno",
+      "category": "collage",
+      "technique": "Acrílico, rotulador y collage textil",
+      "support": "Lienzo",
+      "story": "Mario Moreno aparece en blanco y negro, atravesado por pequeñas intervenciones textiles: seda roja en la corbata, vaquero negro y un retal de lienzo como pañuelo.",
+      "images": [
+        {
+          "src": "/images/catalogo/mario-moreno-hq-01.webp",
+          "width": 1564,
+          "height": 2048,
+          "caption": "Composición sin marco",
+          "source": "https://www.facebook.com/media/set/?set=a.1580369216775827&type=3",
+          "sha256": "b0d9bf3e15f70d86be46d394ef6e079070836f057d552eb42e21cd6f7c3f1bad",
+          "source_local": "classic/images/artworks/616822144_1580323063447109_589182952237233174_n.webp"
+        },
+        {
+          "src": "/images/catalogo/mario-moreno-04.jpg",
+          "width": 720,
+          "height": 884,
+          "caption": "Obra enmarcada",
+          "source": "https://www.facebook.com/media/set/?set=a.1580369216775827&type=3",
+          "sha256": "90c2c8346e796e898d345c1f394a3abb23d34331c8a47b8e7169f680a931ed03"
+        },
+        {
+          "src": "/images/catalogo/mario-moreno-03.jpg",
+          "width": 827,
+          "height": 480,
+          "caption": "Detalle de corbata, solapa y pañuelo",
+          "source": "https://www.facebook.com/media/set/?set=a.1580369216775827&type=3",
+          "sha256": "cc20bb2bb2550098124c34c4e494a32b5119209acf9fb690167e946c3a84484f"
+        }
+      ],
+      "dimensions": "Lienzo: 24 × 18 cm · Marco: 32 × 26 cm",
+      "series": "VaiVenes",
+      "year": null,
+      "credit": null,
+      "selected": true,
+      "kind": "obra",
+      "source": "https://www.facebook.com/media/set/?set=a.1580369216775827&type=3"
+    },
+    {
+      "slug": "rockagipsy",
+      "title": "RockaGipsy",
+      "category": "collage",
+      "technique": "Acrílico y collage textil",
+      "support": "Reverso de lienzo sin imprimar",
+      "story": "Camarón aparece sobre el reverso del lienzo, rodeado por papeles de lunares y tela decorada. La silueta superpuesta añade profundidad al retrato.",
+      "images": [
+        {
+          "src": "/images/catalogo/rockagipsy-hq-01.jpg",
+          "width": 1597,
+          "height": 2048,
+          "caption": "Obra completa enmarcada",
+          "source": "https://www.facebook.com/media/set/?set=a.989285339217554&type=3",
+          "sha256": "8d0838d38e761dfb22558e39e62533f72ede6d44d3ae94968c389a31617b96e1",
+          "source_local": "raw_artworks_facebook/divinos/989285142550907.jpg"
+        },
+        {
+          "src": "/images/catalogo/rockagipsy-hq-02.jpg",
+          "width": 1564,
+          "height": 2048,
+          "caption": "Composición y tejidos",
+          "source": "https://www.facebook.com/media/set/?set=a.989285339217554&type=3",
+          "sha256": "0a63851398217366ea94029e713feca4d75ce975fbb1dbeb50512161282fbccc",
+          "source_local": "raw_artworks_facebook/divinos/989285042550917.jpg"
+        },
+        {
+          "src": "/images/catalogo/rockagipsy-hq-03.jpg",
+          "width": 2048,
+          "height": 1532,
+          "caption": "Vista oblicua de las capas",
+          "source": "https://www.facebook.com/media/set/?set=a.989285339217554&type=3",
+          "sha256": "4078d5f9fc66c71782aaed0d5c55bcaef4aeb29da5c505265c95916decbb9618",
+          "source_local": "raw_artworks_facebook/divinos/989285149217573.jpg"
+        }
+      ],
+      "dimensions": "Marco: 37,5 × 29,5 cm",
+      "series": null,
+      "year": "2015",
+      "credit": "Fotografía de referencia: José Lamarca, según el texto de la artista.",
+      "selected": true,
+      "kind": "obra",
+      "source": "https://www.facebook.com/media/set/?set=a.989285339217554&type=3"
+    },
+    {
+      "slug": "amor-en-conserva",
+      "title": "Amor en Conserva",
+      "category": "objetos",
+      "technique": "Fotocollage por capas y ensamblaje",
+      "support": "Lata intervenida",
+      "story": "El retrato de Mary y Mala se construye con varias impresiones recortadas y montadas por capas. Flores, alambre y elementos de un collar acompañan la escena.",
+      "images": [
+        {
+          "src": "/images/catalogo/amor-en-conserva-hq-01.jpg",
+          "width": 2048,
+          "height": 1532,
+          "caption": "Conjunto completo",
+          "source": "https://www.facebook.com/media/set/?set=a.858798248932931&type=3",
+          "sha256": "fc52b02053bcb2781c8a3aa76042982fece154bb5e9eb0d52a9765282d6d06d8",
+          "source_local": "raw_artworks_facebook/enlatas/858772058935550.jpg"
+        },
+        {
+          "src": "/images/catalogo/amor-en-conserva-hq-02.jpg",
+          "width": 1532,
+          "height": 2048,
+          "caption": "Vista lateral y volumen",
+          "source": "https://www.facebook.com/media/set/?set=a.858798248932931&type=3",
+          "sha256": "3fddb7f16757a64c15d861d7c912946dee23d77f81f168cfad9b487ed6686ab8",
+          "source_local": "raw_artworks_facebook/enlatas/858772095602213.jpg"
+        },
+        {
+          "src": "/images/catalogo/amor-en-conserva-hq-03.jpg",
+          "width": 2048,
+          "height": 1532,
+          "caption": "Detalle de las capas",
+          "source": "https://www.facebook.com/media/set/?set=a.858798248932931&type=3",
+          "sha256": "6ae2c81999563d6b0a250c53ad01e44d9a880c99c4ecfc9b34ad6608ecde20f2",
+          "source_local": "raw_artworks_facebook/enlatas/858771938935562.jpg"
+        }
+      ],
+      "dimensions": null,
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": true,
+      "kind": "obra",
+      "source": "https://www.facebook.com/media/set/?set=a.858798248932931&type=3"
+    },
+    {
+      "slug": "hugo-box",
+      "title": "Hugo Box",
+      "category": "objetos",
+      "technique": "Fotocopia intervenida y collage",
+      "support": "Caja de madera",
+      "story": "Una caja de cumpleaños que transforma una fotografía en retrato con volumen. La toalla, la montura recortada y las láminas metalizadas rosas construyen los detalles de la tapa.",
+      "images": [
+        {
+          "src": "/images/catalogo/hugo-box-hq-01.webp",
+          "width": 1600,
+          "height": 1600,
+          "caption": "Vista de la tapa, recortada para web",
+          "source": "https://www.facebook.com/media/set/?set=a.1520934946052588&type=3",
+          "sha256": "a75751066d986d6bdcdbc759e2acb1467a38667716aa41fb05413be93d5a06f5",
+          "source_local": "classic/images/artworks/pink-and-sparkles-c4K6RUzC.webp"
+        },
+        {
+          "src": "/images/catalogo/hugo-box-02.jpg",
+          "width": 843,
+          "height": 631,
+          "caption": "Vista oblicua del relieve",
+          "source": "https://www.facebook.com/media/set/?set=a.1520934946052588&type=3",
+          "sha256": "93ff7b1ae48754510f8a1ef7afd4121e44f2a93a559a8acc4d90cbb16380cbe1"
+        },
+        {
+          "src": "/images/catalogo/hugo-box-03.jpg",
+          "width": 640,
+          "height": 856,
+          "caption": "Interior de la caja",
+          "source": "https://www.facebook.com/media/set/?set=a.1520934946052588&type=3",
+          "sha256": "7655811fa097b0681e49ef2bc0a61ea5145ac8da5321a10ecbfd427f91659a8d"
+        }
+      ],
+      "dimensions": null,
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": true,
+      "kind": "obra",
+      "source": "https://www.facebook.com/media/set/?set=a.1520934946052588&type=3"
+    },
+    {
+      "slug": "rara-avis",
+      "title": "Rara Avis",
+      "category": "collage",
+      "technique": "Pastel Conté y collage",
+      "support": "Papel y ensamblaje de materiales",
+      "story": "Un autorretrato frente al espejo que se expande en marcos, reflejos, cintas y una pluma de pavo real. El dibujo se convierte en una composición de capas, creada en el taller de Ana Rosa Arroyo en Basauri.",
+      "images": [
+        {
+          "src": "/images/catalogo/rara-avis-16.jpg",
+          "width": 640,
+          "height": 850,
+          "caption": "Ensamblaje completo",
+          "source": "https://www.facebook.com/media/set/?set=a.1696477745164973&type=3",
+          "sha256": "e8dda845cd8d1d473a2ccb57c4ec104bdf8a5d380ed5c9cb8277d2dd27e9c383"
+        },
+        {
+          "src": "/images/catalogo/rara-avis-01.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Dibujo a pastel, antes del ensamblaje",
+          "source": "https://www.facebook.com/media/set/?set=a.1696477745164973&type=3",
+          "sha256": "fd50493e6f1984efb24dd0894352bee929644f685084117ae629217204d486cc"
+        },
+        {
+          "src": "/images/catalogo/rara-avis-14.jpg",
+          "width": 640,
+          "height": 850,
+          "caption": "Detalle del marco y los reflejos",
+          "source": "https://www.facebook.com/media/set/?set=a.1696477745164973&type=3",
+          "sha256": "f0bf54115c1964492ad053400607e54cd3a32d090af880429fe1f64166c7007b"
+        }
+      ],
+      "dimensions": "50 × 35 cm",
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra",
+      "source": "https://www.facebook.com/media/set/?set=a.1696477745164973&type=3"
+    },
+    {
+      "slug": "infusion-de-berto",
+      "title": "Infusión de Berto",
+      "category": "objetos",
+      "technique": "Acrílico, lápices, rotuladores y collage",
+      "support": "Rodaja de fresno sin tratar",
+      "story": "Berto Romero, romero y una bolsita de infusión se encuentran en un mismo retrato. La corteza, los líquenes del fresno y los objetos añadidos prolongan el juego de palabras.",
+      "images": [
+        {
+          "src": "/images/catalogo/infusion-de-berto-02.jpg",
+          "width": 843,
+          "height": 843,
+          "caption": "Vista completa",
+          "source": "https://www.facebook.com/photo/?fbid=1112388250240595&set=a.1112397760239644",
+          "sha256": "b9d129021744f854bfee6f232d5c5d640adfdcfa6f8a92aedc1c1430849d4e42"
+        },
+        {
+          "src": "/images/catalogo/infusion-de-berto-05.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle de corteza y materiales",
+          "source": "https://www.facebook.com/photo/?fbid=1112388203573933&set=a.1112397760239644",
+          "sha256": "db6ccb1242e2ae89b412e2bfc6a633f3f1afdbed36c4181090764c4cf43693fa"
+        },
+        {
+          "src": "/images/catalogo/infusion-de-berto-04.jpg",
+          "width": 480,
+          "height": 885,
+          "caption": "Bolsita de infusión y romero",
+          "source": "https://www.facebook.com/photo/?fbid=1112388306907256&set=a.1112397760239644",
+          "sha256": "c914186a1d1ad334400c3b0980e68d258629a57030c3bd24a4fd0e011ac2a043"
+        }
+      ],
+      "dimensions": "18 cm de diámetro",
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra",
+      "source": "https://www.facebook.com/media/set/?set=a.1112397760239644&type=3"
+    },
+    {
+      "slug": "buena-fuente",
+      "title": "Buena Fuente",
+      "category": "objetos",
+      "technique": "Lápices, rotuladores, acrílico y collage",
+      "support": "Plato de madera sin tratar",
+      "story": "Un retrato colorista de Andreu Buenafuente con tipografía, una cabeza de tenedor y una etiqueta de pintura. El objeto cotidiano entra en la composición.",
+      "images": [
+        {
+          "src": "/images/catalogo/buena-fuente-02.jpg",
+          "width": 843,
+          "height": 843,
+          "caption": "Vista completa",
+          "source": "https://www.facebook.com/photo/?fbid=1111045863708167&set=a.1111052607040826",
+          "sha256": "b7e44499aa5ba9a41f4f1f8bb15201a294601823a38c9f8e4dc44ea0a47aff6b"
+        },
+        {
+          "src": "/images/catalogo/buena-fuente-03.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Detalle de tipografía",
+          "source": "https://www.facebook.com/photo/?fbid=1111045947041492&set=a.1111052607040826",
+          "sha256": "abd44ea0cac6569921ec2c294e0afc6917d9a7af288baf3f69f72135bb45b493"
+        },
+        {
+          "src": "/images/catalogo/buena-fuente-06.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle del collage y el tenedor",
+          "source": "https://www.facebook.com/photo/?fbid=1111045963708157&set=a.1111052607040826",
+          "sha256": "553b020feba107ea70b46c326168d35c994d6c515c72439b870d90c1682c1bb4"
+        }
+      ],
+      "dimensions": "18 cm de diámetro",
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra",
+      "source": "https://www.facebook.com/media/set/?set=a.1111052607040826&type=3"
+    },
+    {
+      "slug": "ajenjo-cam",
+      "title": "Ajenjo Cam",
+      "category": "objetos",
+      "technique": "Fotografías impresas, cartón y técnica mixta",
+      "support": "Caja de cerillas",
+      "story": "Un miniálbum desplegable que toma la forma de una cámara instantánea. Al abrirlo, la pequeña caja deja salir una secuencia de fotografías.",
+      "images": [
+        {
+          "src": "/images/catalogo/ajenjo-cam-01.jpg",
+          "width": 843,
+          "height": 631,
+          "caption": "Objeto cerrado",
+          "source": "https://www.facebook.com/photo/?fbid=1308591553953596&set=a.1308613517284733",
+          "sha256": "989402372c577020d760a00f56e27c73201a7c1d0269ad44b794fcb6b577fd27"
+        },
+        {
+          "src": "/images/catalogo/ajenjo-cam-03.jpg",
+          "width": 640,
+          "height": 856,
+          "caption": "Álbum desplegado en la mano",
+          "source": "https://www.facebook.com/photo/?fbid=1308591447286940&set=a.1308613517284733",
+          "sha256": "07d2a9d33f8f59380a44b24e90ce6ccd1177af48b7d71db2bc360ca39d23c1d2"
+        },
+        {
+          "src": "/images/catalogo/ajenjo-cam-04.jpg",
+          "width": 640,
+          "height": 856,
+          "caption": "Detalle del desplegable",
+          "source": "https://www.facebook.com/photo/?fbid=1308591627286922&set=a.1308613517284733",
+          "sha256": "c6ac9b45e09cdb82e2c07112d8289c36623f71f337b15ac38752eade79ab9e80"
+        }
+      ],
+      "dimensions": null,
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra",
+      "source": "https://www.facebook.com/media/set/?set=a.1308613517284733&type=3"
+    },
+    {
+      "slug": "beatriz-de-pandora",
+      "title": "Beatriz de Pandora",
+      "category": "objetos",
+      "technique": "Lápices de colores y collage textil",
+      "support": "Caja de madera",
+      "story": "El retrato de la tapa incorpora vaquero, encaje, cuerda y cinta en la gorra. El interior de la caja prolonga la composición con color y pequeños objetos de celebración.",
+      "images": [
+        {
+          "src": "/images/catalogo/beatriz-de-pandora-02.jpg",
+          "width": 843,
+          "height": 631,
+          "caption": "Retrato en la tapa",
+          "source": "https://www.facebook.com/photo/?fbid=1303450707801014&set=a.1303454654467286",
+          "sha256": "da39ed3e0271294699cf23a6088313809849bd0c5011067d42467db5a98c5784"
+        },
+        {
+          "src": "/images/catalogo/beatriz-de-pandora-05.jpg",
+          "width": 640,
+          "height": 856,
+          "caption": "Vista oblicua del collage",
+          "source": "https://www.facebook.com/photo/?fbid=1303450684467683&set=a.1303454654467286",
+          "sha256": "3a31f12fa9f35e8889150de99445c99e9ea9eafbbc351690db262960bf15b33d"
+        },
+        {
+          "src": "/images/catalogo/beatriz-de-pandora-03.jpg",
+          "width": 640,
+          "height": 856,
+          "caption": "Caja abierta",
+          "source": "https://www.facebook.com/photo/?fbid=1303450667801018&set=a.1303454654467286",
+          "sha256": "3a8aa038afa5cbf7cb699e7e93f60aeb089ab84d123cd0ef07a3f7f7c7f25697"
+        }
+      ],
+      "dimensions": "5 × 8 × 13 cm",
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra",
+      "source": "https://www.facebook.com/media/set/?set=a.1303454654467286&type=3"
+    },
+    {
+      "slug": "el-gato-que-es-kutxa",
+      "title": "El Gato que es Kutxa",
+      "category": "objetos",
+      "technique": "Fotocopia recortada, pintura y estampación",
+      "support": "Caja de madera",
+      "story": "Un gato emerge de una tapa pintada en rosa y turquesa. La imagen recortada se combina con huellas estampadas y un interior preparado para un regalo.",
+      "images": [
+        {
+          "src": "/images/catalogo/el-gato-que-es-kutxa-04.jpg",
+          "width": 843,
+          "height": 631,
+          "caption": "Tapa terminada",
+          "source": "https://www.facebook.com/photo/?fbid=1230043735141712&set=a.1230045515141534",
+          "sha256": "2559c0e0bca5ca3004749c1f08fe0ce6ba52b0ee5763b40c34e63a4042740d5a"
+        },
+        {
+          "src": "/images/catalogo/el-gato-que-es-kutxa-03.jpg",
+          "width": 843,
+          "height": 631,
+          "caption": "Proceso: fondo e imagen recortada",
+          "source": "https://www.facebook.com/photo/?fbid=1230043715141714&set=a.1230045515141534",
+          "sha256": "e7208ec6bc98f892062d0ede3df32e56df9f0d13e2b3815fd29c5a448246e755"
+        },
+        {
+          "src": "/images/catalogo/el-gato-que-es-kutxa-05.jpg",
+          "width": 640,
+          "height": 856,
+          "caption": "Interior de la caja",
+          "source": "https://www.facebook.com/photo/?fbid=1230043695141716&set=a.1230045515141534",
+          "sha256": "087f362ff6b783d1c071cb99871f1e3b1254afa8610d06a7134918e3b7f9a969"
+        }
+      ],
+      "dimensions": "4,7 × 8,3 × 8,3 cm",
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra",
+      "source": "https://www.facebook.com/media/set/?set=a.1230045515141534&type=3"
+    },
+    {
+      "slug": "me-parto-de-risa",
+      "title": "Me Parto (de risa)",
+      "category": "collage",
+      "technique": "Lápices de colores, papel rasgado y collage textil",
+      "support": "Papel sobre salvamanteles textil",
+      "story": "Luciano Mellera aparece en una composición que se rasga y recompone. Un envoltorio dorado ocupa la grieta: una referencia expresiva al kintsugi trasladada al collage.",
+      "images": [
+        {
+          "src": "/images/catalogo/me-parto-de-risa-01.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Obra enmarcada",
+          "source": "https://www.facebook.com/photo/?fbid=1225338215612264&set=a.1225348225611263",
+          "sha256": "49931ec1793b8b7128bd7441291e5a9702fc445e8be8ef933595810ca69cbf52"
+        },
+        {
+          "src": "/images/catalogo/me-parto-de-risa-04.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Vista oblicua del conjunto",
+          "source": "https://www.facebook.com/photo/?fbid=1225338352278917&set=a.1225348225611263",
+          "sha256": "030ae5fd57bf6fa726eb5ca370343e2d08694871d7078a17fcc58cd28453bebc"
+        },
+        {
+          "src": "/images/catalogo/me-parto-de-risa-05.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Detalle del retrato y los materiales",
+          "source": "https://www.facebook.com/photo/?fbid=1225338148945604&set=a.1225348225611263",
+          "sha256": "d25375b5032b6724ec264e5ca83ff41740746da6d1ab554073be6ab4854375d6"
+        }
+      ],
+      "dimensions": null,
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra",
+      "source": "https://www.facebook.com/media/set/?set=a.1225348225611263&type=3"
+    },
+    {
+      "slug": "red-red-wine",
+      "title": "Red Red Wine",
+      "category": "collage",
+      "technique": "Vino y lápiz magenta",
+      "support": "Papel de acuarela de 300 g/m²",
+      "story": "Un retrato experimental de Neil Diamond en el que el vino se convierte en material de dibujo. La pieza parte de la relación entre el músico y Red Red Wine.",
+      "images": [
+        {
+          "src": "/images/catalogo/red-red-wine-03.jpg",
+          "width": 843,
+          "height": 678,
+          "caption": "Obra enmarcada",
+          "source": "https://www.facebook.com/photo/?fbid=1069042114575209&set=a.1069042964575124",
+          "sha256": "f98706b4f8e9c343a22818884eca7d48a2df8bb682577069451fcce00ac4f571"
+        },
+        {
+          "src": "/images/catalogo/red-red-wine-04.jpg",
+          "width": 843,
+          "height": 506,
+          "caption": "Detalle de la composición",
+          "source": "https://www.facebook.com/photo/?fbid=1069042134575207&set=a.1069042964575124",
+          "sha256": "2ebcdf7c2c269daca96d19cb4a58c413bfe4f16284f4481124dd42d6d944a589"
+        }
+      ],
+      "dimensions": "Papel: A5",
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra",
+      "source": "https://www.facebook.com/media/set/?set=a.1069042964575124&type=3"
+    },
+    {
+      "slug": "i-remember-when-your-head-caught-flame",
+      "title": "I Remember when your Head caught Flame",
+      "category": "collage",
+      "technique": "Reproducción recortada, celofán y papeles",
+      "support": "Collage enmarcado",
+      "story": "Una reproducción de la obra Carole Lombard se transforma en un nuevo collage. Papeles fluorescentes, celofán naranja y pequeños fragmentos impresos construyen otra escena alrededor del retrato.",
+      "images": [
+        {
+          "src": "/images/catalogo/i-remember-when-your-head-caught-flame-03.jpg",
+          "width": 640,
+          "height": 841,
+          "caption": "Conjunto enmarcado",
+          "source": "https://www.facebook.com/photo/?fbid=1045376596941761&set=a.1045418860270868",
+          "sha256": "c9a079a7c2e1a2c8a631966feffd6aa5d4e590eaa9eb55fa1007b651039baa63"
+        },
+        {
+          "src": "/images/catalogo/i-remember-when-your-head-caught-flame-02.jpg",
+          "width": 640,
+          "height": 856,
+          "caption": "Detalle del collage",
+          "source": "https://www.facebook.com/photo/?fbid=1045376700275084&set=a.1045418860270868",
+          "sha256": "1bcea1c1d69c3a4b81bc1615d1114eb74d93c11d9a0e38b25ca64ce2e2425f48"
+        },
+        {
+          "src": "/images/catalogo/i-remember-when-your-head-caught-flame-05.jpg",
+          "width": 640,
+          "height": 856,
+          "caption": "Vista oblicua",
+          "source": "https://www.facebook.com/photo/?fbid=1045376566941764&set=a.1045418860270868",
+          "sha256": "8d4cd68c4a37242b5f6ec4c80974c347237e2d713e3282e90904dd7b279ff055"
+        }
+      ],
+      "dimensions": "Marco: 25 × 18 cm · Ventana: aproximadamente 7 × 11 cm",
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra",
+      "source": "https://www.facebook.com/media/set/?set=a.1045418860270868&type=3"
+    },
+    {
+      "slug": "julio-iglesias-como-un-reloj-suizo",
+      "title": "Julio Iglesias, como un Reloj Suizo",
+      "category": "objetos",
+      "technique": "Fotocollage articulado y ensamblaje",
+      "support": "Caja de reloj con compartimentos",
+      "story": "Un retrato tridimensional de Julio Iglesias que se puede accionar mediante hilos y tiradores. La caja contiene compartimentos y objetos que forman parte del relato.",
+      "images": [
+        {
+          "src": "/images/catalogo/julio-iglesias-como-un-reloj-suizo-01.jpg",
+          "width": 720,
+          "height": 867,
+          "caption": "Caja abierta con figura articulada",
+          "source": "https://www.facebook.com/photo/?fbid=991951138950974&set=a.991952032284218",
+          "sha256": "4d2da1707ee0c7392cc60d85fa1f1f321f954f7439d96df59b7d8b39151e46ec"
+        },
+        {
+          "src": "/images/catalogo/julio-iglesias-como-un-reloj-suizo-06.jpg",
+          "width": 843,
+          "height": 627,
+          "caption": "Caja cerrada",
+          "source": "https://www.facebook.com/photo/?fbid=991951335617621&set=a.991952032284218",
+          "sha256": "d2b5fcb41495be204ac2a417491b428a9ff6260aa09aa767243437eac7eb649a"
+        },
+        {
+          "src": "/images/catalogo/julio-iglesias-como-un-reloj-suizo-02.jpg",
+          "width": 843,
+          "height": 631,
+          "caption": "Compartimento con libro y cassette",
+          "source": "https://www.facebook.com/photo/?fbid=991951185617636&set=a.991952032284218",
+          "sha256": "954902abf5684104c38a0991e6805b0c9fa658ca4503f67e8626ec063b6f6374"
+        }
+      ],
+      "dimensions": null,
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra",
+      "source": "https://www.facebook.com/media/set/?set=a.991952032284218&type=3"
+    },
+    {
+      "slug": "saio-puzzle",
+      "title": "Saio Puzzle",
+      "category": "objetos",
+      "technique": "Rotuladores permanentes y acrílicos",
+      "support": "Puzzle para dibujar",
+      "story": "Un retrato que también se puede construir por piezas. Las juntas del puzzle atraviesan la imagen en blanco y negro y su fondo de color.",
+      "images": [
+        {
+          "src": "/images/catalogo/saio-puzzle-01.jpg",
+          "width": 843,
+          "height": 843,
+          "caption": "Puzzle completo",
+          "source": "https://www.facebook.com/photo/?fbid=890523279093761&set=a.890533279092761",
+          "sha256": "689d386d890ad04394a50d23fb114f58d5fbfd85ce0d2279dd996a6ff02a0056"
+        },
+        {
+          "src": "/images/catalogo/saio-puzzle-02.jpg",
+          "width": 843,
+          "height": 631,
+          "caption": "Detalle de las piezas",
+          "source": "https://www.facebook.com/photo/?fbid=890523115760444&set=a.890533279092761",
+          "sha256": "a97a617b9a03dfbf2f2c7052d5303bc414635d6730a78bb0a3da226513cc1a71"
+        },
+        {
+          "src": "/images/catalogo/saio-puzzle-04.jpg",
+          "width": 843,
+          "height": 631,
+          "caption": "Vista oblicua",
+          "source": "https://www.facebook.com/photo/?fbid=890523222427100&set=a.890533279092761",
+          "sha256": "b68d02d2e6905657f0bdc398d5d11490d7e791c826c28ad1ab930ff865b52a23"
+        }
+      ],
+      "dimensions": null,
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra",
+      "source": "https://www.facebook.com/media/set/?set=a.890533279092761&type=3"
+    },
+    {
+      "slug": "custom-jaio",
+      "title": "Custom Jaio",
+      "category": "collage",
+      "technique": "Acrílico, rotuladores, lápices y botones cosidos",
+      "support": "Vaquero negro en bastidor",
+      "story": "Un retrato sobre tela vaquera negra, preparada e intervenida con pintura y botones. El bastidor conserva su presencia como parte de la obra.",
+      "images": [
+        {
+          "src": "/images/catalogo/custom-jaio-06.jpg",
+          "width": 640,
+          "height": 856,
+          "caption": "Bastidor completo",
+          "source": "https://www.facebook.com/photo/?fbid=853517492794340&set=a.853524166127006",
+          "sha256": "b5701815a4ab59dc79400b378ea9a8d1d05f7f52c008d04c48288dd7995ff50a"
+        },
+        {
+          "src": "/images/catalogo/custom-jaio-03.jpg",
+          "width": 843,
+          "height": 631,
+          "caption": "Vista oblicua del retrato",
+          "source": "https://www.facebook.com/photo/?fbid=853517239461032&set=a.853524166127006",
+          "sha256": "308dc4f6961af9d683649fef6c6b3616a3ffd018e236838a884e6d852d1e3617"
+        },
+        {
+          "src": "/images/catalogo/custom-jaio-04.jpg",
+          "width": 843,
+          "height": 631,
+          "caption": "Detalle del tejido y los botones",
+          "source": "https://www.facebook.com/photo/?fbid=853517129461043&set=a.853524166127006",
+          "sha256": "51b883225db62db2bd99090da60d84ce17b419c0265f08eb59d5a5f5465a2981"
+        }
+      ],
+      "dimensions": "Bastidor: 17 cm de diámetro",
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra",
+      "source": "https://www.facebook.com/media/set/?set=a.853524166127006&type=3"
+    },
+    {
+      "slug": "13n",
+      "title": "13N",
+      "category": "objetos",
+      "technique": "Lápices, pastel, pan de oro, acrílico y collage",
+      "support": "Plato de madera con caja personalizada",
+      "story": "Un retrato doble sobre madera, acompañado de una caja intervenida. Letras de periódico, pan de oro y otros materiales conviven con el dibujo.",
+      "images": [
+        {
+          "src": "/images/catalogo/13n-05.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Plato completo",
+          "source": "https://www.facebook.com/photo/?fbid=819540819525341&set=a.819542002858556",
+          "sha256": "54791415a09a0648224683da36b79099d84d62d8871445a871ba2d8f746eb9be"
+        },
+        {
+          "src": "/images/catalogo/13n-02.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Detalle de la caja personalizada",
+          "source": "https://www.facebook.com/photo/?fbid=819540856192004&set=a.819542002858556",
+          "sha256": "f132da344ea1d2f2053f9d3d62241b316f068f3633a59a310a6a9ac5b84341ad"
+        },
+        {
+          "src": "/images/catalogo/13n-03.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle del collage",
+          "source": "https://www.facebook.com/photo/?fbid=819540689525354&set=a.819542002858556",
+          "sha256": "25ae9137ddd8101ab166e38e820f5f2df17954ae23b880e31bdbc42a7b367922"
+        }
+      ],
+      "dimensions": "Plato: 18 cm de diámetro",
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra",
+      "source": "https://www.facebook.com/media/set/?set=a.819542002858556&type=3"
+    },
+    {
+      "slug": "patxi-en-su-pino",
+      "title": "Patxi en su-pino",
+      "category": "objetos",
+      "technique": "Lápices de colores, pastel y acrílico",
+      "support": "Rodaja de pino sin tratar",
+      "story": "El retrato sigue las vetas de una rodaja de pino. La corteza conserva el contorno natural del soporte y convierte el juego del título en materia.",
+      "images": [
+        {
+          "src": "/images/catalogo/patxi-en-su-pino-06.jpg",
+          "width": 843,
+          "height": 631,
+          "caption": "Rodaja completa",
+          "source": "https://www.facebook.com/photo/?fbid=800361154776641&set=a.800361614776595",
+          "sha256": "dd1b23bbf50a69fb8e3a2fa4d70c756e4905b1087003cfabd18b2ecf0141b6f4"
+        },
+        {
+          "src": "/images/catalogo/patxi-en-su-pino-01.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Escala en las manos",
+          "source": "https://www.facebook.com/photo/?fbid=800360861443337&set=a.800361614776595",
+          "sha256": "fd07a7333ad95033ddcee5f417472eb35d08d2b169c68b45c1b7aa6c030f9f4d"
+        },
+        {
+          "src": "/images/catalogo/patxi-en-su-pino-03.jpg",
+          "width": 640,
+          "height": 856,
+          "caption": "Detalle del retrato",
+          "source": "https://www.facebook.com/photo/?fbid=800361234776633&set=a.800361614776595",
+          "sha256": "03c46c85737d796fd4843564d90b1f370ed7e4da7d9baebbb3a0fcbac82f5a43"
+        }
+      ],
+      "dimensions": null,
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra",
+      "source": "https://www.facebook.com/media/set/?set=a.800361614776595&type=3"
+    },
+    {
+      "slug": "el-luengo-y-el-mar",
+      "title": "El Luengo y el Mar",
+      "category": "objetos",
+      "technique": "Acrílico, rotuladores, grattage y collage con mica",
+      "support": "Concha de vieira",
+      "story": "Un retrato marino sobre una concha. Hebras de mandarina coloreadas evocan algas y coral; la mica plateada recuerda las escamas y el nácar.",
+      "images": [
+        {
+          "src": "/images/catalogo/el-luengo-y-el-mar-08.jpg",
+          "width": 843,
+          "height": 950,
+          "caption": "Concha completa",
+          "source": "https://www.facebook.com/photo/?fbid=790104415802315&set=a.790135652465858",
+          "sha256": "98e4824f32395b6d7e7173a4d49062d7ab3183045c401f80f3142f3f70ada8d0"
+        },
+        {
+          "src": "/images/catalogo/el-luengo-y-el-mar-11.jpg",
+          "width": 843,
+          "height": 631,
+          "caption": "Escala en la mano",
+          "source": "https://www.facebook.com/photo/?fbid=790104545802302&set=a.790135652465858",
+          "sha256": "916c8869a520de29a730e8850233c7a650538ce3e6616d7e91a9987267c4512e"
+        },
+        {
+          "src": "/images/catalogo/el-luengo-y-el-mar-09.jpg",
+          "width": 843,
+          "height": 662,
+          "caption": "Reverso de la concha",
+          "source": "https://www.facebook.com/photo/?fbid=790104342468989&set=a.790135652465858",
+          "sha256": "ba0735a9e048b266d08a952c66efb098614f2bcdb55f66c3903f6054717ff8c5"
+        }
+      ],
+      "dimensions": null,
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra",
+      "source": "https://www.facebook.com/media/set/?set=a.790135652465858&type=3"
+    },
+    {
+      "slug": "el-armigo-atomico",
+      "title": "El Armigo Atómico",
+      "category": "objetos",
+      "technique": "Lápices, acrílico, pastel y mica",
+      "support": "Plato de madera",
+      "story": "Un retrato humorístico que une un rostro realista y la figura de la Hormiga Atómica. La intervención continúa en el reverso del plato.",
+      "images": [
+        {
+          "src": "/images/catalogo/el-armigo-atomico-07.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Plato completo",
+          "source": "https://www.facebook.com/photo/?fbid=719141552898602&set=a.719159769563447",
+          "sha256": "652594d1323af7a8eb37cc6fd1875c651d945ad2eb40c085f92eefb3737eff4f"
+        },
+        {
+          "src": "/images/catalogo/el-armigo-atomico-05.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Reverso intervenido",
+          "source": "https://www.facebook.com/photo/?fbid=719141656231925&set=a.719159769563447",
+          "sha256": "03ba5fe5c30c0f8e73d174a935ab8da822697b5e557dc53423f4fe45c1b0307a"
+        },
+        {
+          "src": "/images/catalogo/el-armigo-atomico-02.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle del retrato",
+          "source": "https://www.facebook.com/photo/?fbid=719141599565264&set=a.719159769563447",
+          "sha256": "4ff54309990b15c4722cf34f310b87da2efb695e5d5f1af181c6965db7699f9f"
+        }
+      ],
+      "dimensions": "18 cm de diámetro",
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra",
+      "source": "https://www.facebook.com/media/set/?set=a.719159769563447&type=3"
+    },
+    {
+      "slug": "elene",
+      "title": "Elene",
+      "category": "objetos",
+      "technique": "Lápices, acrílico, pastel y flores añadidas",
+      "support": "Plato de madera",
+      "story": "Un retrato acompañado de rosas de papel y calas de goma EVA. Los elementos florales aportan volumen alrededor de la figura.",
+      "images": [
+        {
+          "src": "/images/catalogo/elene-06.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Plato completo",
+          "source": "https://www.facebook.com/photo/?fbid=688837762595648&set=a.688859365926821",
+          "sha256": "a71db7a405221a43caef8ede75c4ee7cddd06a66ef4246bc8e70f5f62017476b"
+        },
+        {
+          "src": "/images/catalogo/elene-03.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Vista oblicua y flores",
+          "source": "https://www.facebook.com/photo/?fbid=688837525929005&set=a.688859365926821",
+          "sha256": "bcfab59a68f39803eb1427b3724be2e2e4c352f34c72fc87b1342d736a6d713e"
+        },
+        {
+          "src": "/images/catalogo/elene-05.jpg",
+          "width": 843,
+          "height": 812,
+          "caption": "Detalle del rostro",
+          "source": "https://www.facebook.com/photo/?fbid=688837522595672&set=a.688859365926821",
+          "sha256": "9f8ca064333ec2520416b2c7b19f640590384bbd6a824d1509ab2e78b9e212a0"
+        }
+      ],
+      "dimensions": "18 cm de diámetro",
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra",
+      "source": "https://www.facebook.com/media/set/?set=a.688859365926821&type=3"
+    },
+    {
+      "slug": "dar-la-lata",
+      "title": "Dar la Lata",
+      "category": "objetos",
+      "technique": "Fotografías recortadas y ensamblaje",
+      "support": "Latas de conservas",
+      "story": "Dar la Lata reúne retratos tridimensionales realizados con fotografías y pequeñas latas. Cada recipiente se convierte en soporte, marco y escenario de una composición.",
+      "images": [
+        {
+          "src": "/images/catalogo/dar-la-lata-01.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Una de las composiciones de la serie",
+          "source": "https://www.facebook.com/photo/?fbid=606809387465153&set=a.606818890797536",
+          "sha256": "851793c74486fb77c0d24ed2e7ffd45128864005fa3859091b3590469e617bb8"
+        },
+        {
+          "src": "/images/catalogo/dar-la-lata-04.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Vista lateral del ensamblaje",
+          "source": "https://www.facebook.com/photo/?fbid=606809330798492&set=a.606818890797536",
+          "sha256": "54a599f7815236e5234c07de657dbe2d854c067b477eb0ba1d5c9cc1dd74987d"
+        },
+        {
+          "src": "/images/catalogo/dar-la-lata-02.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Reverso de la lata",
+          "source": "https://www.facebook.com/photo/?fbid=606809277465164&set=a.606818890797536",
+          "sha256": "1726811e7770422c1264332f9468fc180cc16c003b8ae7471614fb9e51bbea08"
+        }
+      ],
+      "dimensions": null,
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "serie",
+      "source": "https://www.facebook.com/media/set/?set=a.606818890797536&type=3"
+    },
+    {
+      "slug": "marian-de-miranda-luciendo-la-pantorrilla",
+      "title": "Marian de Miranda Luciendo la Pantorrilla",
+      "category": "collage",
+      "technique": "Dibujo, collage físico y composición digital",
+      "support": "Papel, materiales encontrados y archivo digital",
+      "story": "Proyecto PostalaK: el dibujo y el collage físico se escanean y combinan en variantes digitales. El retrato de Marian Puertas dialoga con la figura y el tocado de Carmen Miranda.",
+      "images": [
+        {
+          "src": "/images/catalogo/marian-de-miranda-luciendo-la-pantorrilla-05.jpg",
+          "width": 552,
+          "height": 828,
+          "caption": "Variante digital de la composición",
+          "source": "https://www.facebook.com/photo/?fbid=1087698559376231&set=a.1087704452708975",
+          "sha256": "2d7761657ef8a5d1f67ecd0db05d372c5af8f1e1f2bcc3ffcbd1f977475f43f1"
+        },
+        {
+          "src": "/images/catalogo/marian-de-miranda-luciendo-la-pantorrilla-06.jpg",
+          "width": 552,
+          "height": 828,
+          "caption": "Otra variante de PostalaK",
+          "source": "https://www.facebook.com/photo/?fbid=1087698802709540&set=a.1087704452708975",
+          "sha256": "2dee333ff68021fbd60fe85bcfa38c7a8a28c570421ea343cd4f27a3ed25687a"
+        }
+      ],
+      "dimensions": "Dibujo: 20 × 10 cm · Collage físico: 23 × 18 cm",
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "proyecto",
+      "source": "https://www.facebook.com/media/set/?set=a.1087704452708975&type=3"
+    },
+    {
+      "slug": "my-tiny-face",
+      "title": "My Tiny Face",
+      "category": "caracterizacion",
+      "technique": "Maquillaje tradicional y al agua",
+      "support": "Rostro",
+      "story": "Una ilusión de rostro pequeño creada sobre la cara parcialmente oculta. Los gestos y los accesorios completan la caracterización.",
+      "images": [
+        {
+          "src": "/images/catalogo/my-tiny-face-04.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Caracterización frontal",
+          "source": "https://www.facebook.com/photo/?fbid=1293289228817162&set=a.1293294798816605",
+          "sha256": "5bee2836447aaeeedea5cfb39fa47c60e8469e3358ddd9ee71d80cfa8da9de58"
+        },
+        {
+          "src": "/images/catalogo/my-tiny-face-02.jpg",
+          "width": 843,
+          "height": 858,
+          "caption": "Variante con gafas",
+          "source": "https://www.facebook.com/photo/?fbid=1293289238817161&set=a.1293294798816605",
+          "sha256": "6442538a754dc555332d3112c96e6fa9a2d5162967ce69a523b33452779f3781"
+        },
+        {
+          "src": "/images/catalogo/my-tiny-face-05.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Otra expresión del personaje",
+          "source": "https://www.facebook.com/photo/?fbid=1293289335483818&set=a.1293294798816605",
+          "sha256": "eae8d0490f38460e60022b4afb7b828e52b76bc113578bda2d6a745dba506f6e"
+        }
+      ],
+      "dimensions": null,
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "proyecto",
+      "source": "https://www.facebook.com/media/set/?set=a.1293294798816605&type=3"
+    },
+    {
+      "slug": "aaron",
+      "title": "Aaron",
+      "category": "caracterizacion",
+      "technique": "Maquillaje, vestuario y complementos",
+      "support": "Caracterización de Naroa",
+      "story": "Aaron es un anagrama de Naroa y el nombre de un personaje interpretado por la artista. Maquillaje, peinado y vestuario transforman su apariencia.",
+      "images": [
+        {
+          "src": "/images/catalogo/aaron-01.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Retrato del personaje",
+          "source": "https://www.facebook.com/photo/?fbid=1178663040279782&set=a.1178665556946197",
+          "sha256": "c9f4f8df029bfb318d79c39d7b66403c9d30464695fcf06c91e2d782ded0c1d8"
+        },
+        {
+          "src": "/images/catalogo/aaron-02.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Caracterización con accesorios",
+          "source": "https://www.facebook.com/photo/?fbid=1178663050279781&set=a.1178665556946197",
+          "sha256": "8b289956d3f8849bc195d0a094348f1dbe75e2faa9ff48dfa4430b1a7a410cd1"
+        },
+        {
+          "src": "/images/catalogo/aaron-03.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Vista de perfil",
+          "source": "https://www.facebook.com/photo/?fbid=1178663020279784&set=a.1178665556946197",
+          "sha256": "30fc50ebbd41714f85c30794b46317f95b9a1ea1d9206a1cbd397f1c7d4fcc53"
+        }
+      ],
+      "dimensions": null,
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "proyecto",
+      "source": "https://www.facebook.com/media/set/?set=a.1178665556946197&type=3"
+    },
+    {
+      "slug": "pajarraca-azul",
+      "title": "Pajarraca Azul",
+      "category": "caracterizacion",
+      "technique": "Máscara de cartón, plumas y maquillaje",
+      "support": "Máscara y rostro",
+      "story": "Una máscara de pájara creada para el Carnaval de Bilbao y Santutxu de 2024. El antifaz pintado, las plumas y el maquillaje construyen el personaje.",
+      "images": [
+        {
+          "src": "/images/catalogo/pajarraca-azul-02.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Máscara en uso",
+          "source": "https://www.facebook.com/photo/?fbid=1066295198183234&set=a.1066297131516374",
+          "sha256": "79c05a8a598532ce936aec4187620880deb8661be0c123b8c9facb93db4a8c20"
+        },
+        {
+          "src": "/images/catalogo/pajarraca-azul-04.jpg",
+          "width": 640,
+          "height": 856,
+          "caption": "Detalle de las plumas y el antifaz",
+          "source": "https://www.facebook.com/photo/?fbid=1066295321516555&set=a.1066297131516374",
+          "sha256": "1b3a443cb8e5f6f780379b06e7d77a8b3cb7998de0e12bbfff45ebeebe1f7c6b"
+        },
+        {
+          "src": "/images/catalogo/pajarraca-azul-05.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Caracterización y maquillaje",
+          "source": "https://www.facebook.com/photo/?fbid=1066295258183228&set=a.1066297131516374",
+          "sha256": "9f6998f54bcd4783db10262d2b074644c0502d0220b15de288794fc7a550a6d6"
+        }
+      ],
+      "dimensions": null,
+      "series": null,
+      "year": "2024",
+      "credit": null,
+      "selected": false,
+      "kind": "proyecto",
+      "source": "https://www.facebook.com/media/set/?set=a.1066297131516374&type=3"
+    },
+    {
+      "slug": "flying-dragon",
+      "title": "Flying Dragon",
+      "category": "caracterizacion",
+      "technique": "Maquillaje tradicional y al agua",
+      "support": "Rostro y vestuario",
+      "story": "Caracterización de dragón para los carnavales de Uribarri y Santutxu de 2023. El dibujo del rostro se combina con el disfraz.",
+      "images": [
+        {
+          "src": "/images/catalogo/flying-dragon-02.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Maquillaje y disfraz",
+          "source": "https://www.facebook.com/photo/?fbid=776919143787509&set=a.776919880454102",
+          "sha256": "91515f70f3af8c0d4c0cdb08f31765113b9f318ba8e758e6de22640bcb9dec39"
+        },
+        {
+          "src": "/images/catalogo/flying-dragon-03.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Vista lateral del maquillaje",
+          "source": "https://www.facebook.com/photo/?fbid=776919183787505&set=a.776919880454102",
+          "sha256": "1e7b1e19b0f2470dfbbd1834898711c960af88b81d3619d7c6297a03308936dd"
+        },
+        {
+          "src": "/images/catalogo/flying-dragon-05.jpg",
+          "width": 824,
+          "height": 565,
+          "caption": "Detalle de la frente",
+          "source": "https://www.facebook.com/photo/?fbid=776919220454168&set=a.776919880454102",
+          "sha256": "6c550a47d87c9234d64d67e174b4d210d44b5836e76d89f4dc72d966dab826fe"
+        }
+      ],
+      "dimensions": null,
+      "series": null,
+      "year": "2023",
+      "credit": null,
+      "selected": false,
+      "kind": "proyecto",
+      "source": "https://www.facebook.com/media/set/?set=a.776919880454102&type=3"
+    },
+    {
+      "slug": "monster-dragon",
+      "title": "Monster Dragon",
+      "category": "caracterizacion",
+      "technique": "Maquillaje tradicional y al agua",
+      "support": "Rostro y vestuario",
+      "story": "Un rostro de reptil acompañado de un disfraz kigurumi. Proyecto de caracterización realizado para el Carnaval de Bilbao de 2023.",
+      "images": [
+        {
+          "src": "/images/catalogo/monster-dragon-01.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Caracterización frontal",
+          "source": "https://www.facebook.com/photo/?fbid=765382121607878&set=a.765384181607672",
+          "sha256": "43402f1f1728a96efd8112a5eb59b2ea24e8fe6797831c483f54a5044253bab6"
+        },
+        {
+          "src": "/images/catalogo/monster-dragon-06.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Maquillaje y vestuario",
+          "source": "https://www.facebook.com/photo/?fbid=765382261607864&set=a.765384181607672",
+          "sha256": "879a2fcd9d0d6188d8f667f8e038a53ac21f453c414bc669dc608e723cd76a49"
+        },
+        {
+          "src": "/images/catalogo/monster-dragon-05.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Otra expresión del personaje",
+          "source": "https://www.facebook.com/photo/?fbid=765382171607873&set=a.765384181607672",
+          "sha256": "aa3d00a77207a7eab1c83767692ddf0240d266451f739771172d5401fe6dbb9c"
+        }
+      ],
+      "dimensions": null,
+      "series": null,
+      "year": "2023",
+      "credit": null,
+      "selected": false,
+      "kind": "proyecto",
+      "source": "https://www.facebook.com/media/set/?set=a.765384181607672&type=3"
+    }
+  ]
+}
