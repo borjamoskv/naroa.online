@@ -41,6 +41,6 @@ for p in ITEMS:
 <footer class="project-footer"><a href="/">Naroa Gutiérrez Gil</a><a href="mailto:naroa@naroa.eu">naroa@naroa.eu ↗</a><span>Bilbao · © 2026</span></footer>
 <dialog id="art-viewer" aria-label="Imagen ampliada"><div class="viewer-bar"><span id="viewer-counter" role="status"></span><button type="button" id="viewer-close">Cerrar ×</button></div><div class="viewer-stage"><button type="button" id="viewer-prev" aria-label="Imagen anterior">←</button><img id="viewer-image" alt=""><button type="button" id="viewer-next" aria-label="Imagen siguiente">→</button></div><p id="viewer-caption" aria-live="polite"></p></dialog></body></html>'''
     folder=ROOT/'obra'/p['slug'];folder.mkdir(parents=True,exist_ok=True);(folder/'index.html').write_text(page)
-urls=['https://naroa.online/', 'https://naroa.online/trayectoria/']+[f'https://naroa.online/obra/{p["slug"]}/' for p in ITEMS]
+urls=['https://naroa.online/', 'https://naroa.online/trayectoria/', 'https://naroa.online/sobre-mi/']+[f'https://naroa.online/obra/{p["slug"]}/' for p in ITEMS]
 (ROOT/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join(f'  <url><loc>{u}</loc><lastmod>{DATA["reviewed"]}</lastmod></url>\n' for u in urls)+'</urlset>\n')
 print(f'Built {len(ITEMS)} project pages, home catalogue and sitemap.')
