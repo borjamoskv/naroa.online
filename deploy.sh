@@ -99,7 +99,9 @@ fi
 python3 tools/build_about.py || fail "Compilación de Sobre mí falló"
 python3 tools/build_trajectory.py
 python3 tools/build_catalog.py || fail "Compilación del catálogo falló"
+python3 tools/build_seo.py || fail "Compilación del SEO local falló"
 python3 tools/check_catalog.py || fail "Validación del catálogo falló"
+python3 tools/check_seo.py || fail "Validación del SEO local falló"
 
 # ── 4.1 Sincronizar .deploy para Vercel (Classic Marilyn + MICA + NavFix + Configurador) ──
 rm -rf .deploy

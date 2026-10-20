@@ -42,5 +42,12 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/landing-bilbao",
+      "destination": "/retratos-por-encargo-bilbao/",
+      "permanent": true
+    }
   ]
 }
