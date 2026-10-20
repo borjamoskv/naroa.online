@@ -96,6 +96,7 @@ EOF
 fi
 
 # Build and validate the reviewed artwork catalogue before release.
+python3 tools/build_trajectory.py
 python3 tools/build_catalog.py || fail "Compilación del catálogo falló"
 python3 tools/check_catalog.py || fail "Validación del catálogo falló"
 
