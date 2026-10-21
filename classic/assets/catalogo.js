@@ -33,29 +33,113 @@
   const dialog = document.getElementById('art-viewer');
   if (!dialog || typeof dialog.showModal !== 'function') return;
   const links = [...document.querySelectorAll('.project-photo')];
+  if (!links.length) return;
   const photo = document.getElementById('viewer-image');
-  let current = 0, trigger, previousOverflow;
-  function show(index) {
-    current = (index + links.length) % links.length;
-    photo.src = links[current].dataset.image;
-    photo.alt = links[current].dataset.caption;
-    document.getElementById('viewer-caption').textContent = photo.alt;
-    document.getElementById('viewer-counter').textContent = `${current + 1} / ${links.length}`;
+  const caption = document.getElementById('viewer-caption');
+  const counter = document.getElementById('viewer-counter');
+  const close = document.getElementById('viewer-close');
+  const previous = document.getElementById('viewer-prev');
+  const next = document.getElementById('viewer-next');
+  const stage = dialog.querySelector('.viewer-stage');
+  const information = document.createElement('button');
+  information.type = 'button';
+  information.className = 'viewer-information';
+  information.textContent = 'Sobre esta imagen';
+  information.setAttribute('aria-controls', 'viewer-caption');
+  information.setAttribute('aria-expanded', 'false');
+  close.before(information);
+  caption.hidden = true;
+  photo.decoding = 'async';
+  photo.draggable = false;
+  previous.hidden = next.hidden = links.length < 2;
+  dialog.classList.add('art-viewer--immersive');
+  let current = 0, trigger, previousOverflow, touch, preloadTimer;
+  const warmed = new Set();
+
+  function preloadNeighbours() {
+    clearTimeout(preloadTimer);
+    const connection = navigator.connection;
+    if (!dialog.open || links.length < 2 || connection?.saveData || /(^|-)2g$/.test(connection?.effectiveType || '')) return;
+    // Only warm adjacent originals after the selected photograph has loaded.
+    preloadTimer = setTimeout(() => {
+      if (!dialog.open) return;
+      [1, -1].forEach(offset => {
+        const src = links[(current + offset + links.length) % links.length].dataset.image;
+        if (warmed.has(src)) return;
+        warmed.add(src);
+        const neighbour = new Image();
+        neighbour.decoding = 'async';
+        neighbour.fetchPriority = 'low';
+        neighbour.src = src;
+      });
+    }, 350);
   }
+
+  function show(index) {
+    clearTimeout(preloadTimer);
+    current = (index + links.length) % links.length;
+    photo.alt = links[current].dataset.caption;
+    caption.textContent = photo.alt;
+    counter.textContent = `${current + 1} / ${links.length}`;
+    stage.setAttribute('aria-busy', 'true');
+    photo.src = links[current].dataset.image;
+    warmed.add(links[current].dataset.image);
+  }
+  photo.addEventListener('load', () => {
+    stage.setAttribute('aria-busy', 'false');
+    preloadNeighbours();
+  });
+  photo.addEventListener('error', () => stage.setAttribute('aria-busy', 'false'));
+  information.addEventListener('click', () => {
+    caption.hidden = !caption.hidden;
+    information.setAttribute('aria-expanded', String(!caption.hidden));
+    dialog.classList.toggle('viewer-has-caption', !caption.hidden);
+  });
   links.forEach((link, index) => link.addEventListener('click', event => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
     trigger = link;
     previousOverflow = document.body.style.overflow;
-    show(index); dialog.showModal(); document.body.style.overflow = 'hidden';
-    document.getElementById('viewer-close').focus();
+    caption.hidden = true;
+    information.setAttribute('aria-expanded', 'false');
+    dialog.classList.remove('viewer-has-caption');
+    show(index);
+    dialog.showModal();
+    document.body.style.overflow = 'hidden';
+    close.focus({preventScroll: true});
+    if (photo.complete && photo.naturalWidth) {
+      stage.setAttribute('aria-busy', 'false');
+      preloadNeighbours();
+    }
   }));
-  document.getElementById('viewer-prev').addEventListener('click', () => show(current - 1));
-  document.getElementById('viewer-next').addEventListener('click', () => show(current + 1));
-  document.getElementById('viewer-close').addEventListener('click', () => dialog.close());
-  dialog.addEventListener('click', event => {if (event.target === dialog) dialog.close();});
+  previous.addEventListener('click', () => show(current - 1));
+  next.addEventListener('click', () => show(current + 1));
+  close.addEventListener('click', () => dialog.close());
   dialog.addEventListener('keydown', event => {
     if (event.key === 'ArrowLeft') {event.preventDefault(); show(current - 1);}
     if (event.key === 'ArrowRight') {event.preventDefault(); show(current + 1);}
   });
-  dialog.addEventListener('close', () => {document.body.style.overflow = previousOverflow || ''; trigger?.focus();});
+  stage.addEventListener('touchstart', event => {
+    touch = event.touches.length === 1 && !(window.visualViewport?.scale > 1.01) && !event.target.closest('button')
+      ? {x: event.touches[0].clientX, y: event.touches[0].clientY, time: Date.now()}
+      : null;
+  }, {passive: true});
+  stage.addEventListener('touchmove', event => {
+    if (event.touches.length !== 1) touch = null;
+  }, {passive: true});
+  stage.addEventListener('touchend', event => {
+    if (!touch || event.changedTouches.length !== 1 || links.length < 2 || window.visualViewport?.scale > 1.01) return;
+    const dx = event.changedTouches[0].clientX - touch.x;
+    const dy = event.changedTouches[0].clientY - touch.y;
+    const intentional = Date.now() - touch.time < 800 && Math.abs(dx) > 65 && Math.abs(dx) > Math.abs(dy) * 1.8;
+    touch = null;
+    if (intentional) show(current + (dx < 0 ? 1 : -1));
+  }, {passive: true});
+  stage.addEventListener('touchcancel', () => {touch = null;}, {passive: true});
+  dialog.addEventListener('close', () => {
+    clearTimeout(preloadTimer);
+    touch = null;
+    document.body.style.overflow = previousOverflow || '';
+    trigger?.focus({preventScroll: true});
+  });
 })();

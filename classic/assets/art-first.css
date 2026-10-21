@@ -1,0 +1,54 @@
+/* The photographs set the rhythm. Navigation stays outside the artwork. */
+html { scroll-padding-top: 76px; }
+body { background: #080808; }
+body, a, button { cursor: auto; }
+a, button, summary { cursor: pointer; }
+.view--premium-dark::before, .scroll-progress-container { display: none; }
+#main-nav { position: sticky; top: 0; height: 64px; background: #111211; transform: none; transition: transform .2s ease; }
+#main-nav::after { display: none; }
+#main-nav.nav--quiet { transform: translateY(-110%); }
+#main-nav:focus-within, #main-nav:has([aria-expanded="true"]) { transform: none; }
+#main-nav .nav__inner { width: 100%; padding: 0 3vw; gap: 24px; border: 0; border-bottom: 1px solid #2b2c27; border-radius: 0; background: #111211; box-shadow: none; backdrop-filter: none; }
+#main-nav .nav__logo { font-size: 19px; letter-spacing: .08em; font-weight: 500; transform: none; color: #f1eee6; }
+#main-nav .nav__links { gap: 14px; }
+#main-nav .nav__link { color: #c2c1b9; min-height: 44px; padding: 10px 5px; font-size: 12px; font-weight: 400; border: 0; border-radius: 0; background: none; box-shadow: none; backdrop-filter: none; transform: none; }
+#main-nav .nav__link:hover, #main-nav .nav__link[aria-current] { color: #fff; text-decoration: underline; text-underline-offset: 6px; }
+#main-nav .nav__toggle { display: none; }
+#view-home { min-height: 0; border: 0; }
+.home-art { margin: 0; }
+.home-art .project-photo { display: block; min-height: 0; padding: 0; background: #080808; }
+.home-art img { display: block; width: 100%; height: auto; max-height: none; filter: none; transform: none; animation: none; opacity: 1; }
+.home-art figcaption { display: flex; justify-content: space-between; gap: 24px; align-items: center; padding: 18px 3vw; color: #c2c1b9; font-size: 12px; line-height: 1.7; }
+.home-art figcaption p { margin: 0; font: inherit; }
+.home-art figcaption span { color: #8f9088; }
+.home-art__links { display: flex; gap: 24px; align-items: center; }
+.home-art__links a { display: inline-flex; align-items: center; min-height: 44px; color: #f1eee6; text-decoration: none; border-bottom: 1px solid #45463d; white-space: nowrap; }
+.home-art__links a:hover { border-color: #e5cf9f; }
+#view-destacada { scroll-margin-top: 12px; }
+.editorial-catalog .catalog-intro h1 { font: 400 clamp(36px, 5vw, 64px)/1.05 Outfit, sans-serif; letter-spacing: -.04em; }
+.editorial-catalog .catalog-intro { margin-bottom: 40px; }
+.editorial-catalog .catalog-intro > p { font-size: 13px; line-height: 1.8; }
+.catalog-explore { margin: 0 5vw; border-top: 1px solid var(--catalog-line); }
+.catalog-explore summary { min-height: 56px; padding: 16px 0; color: var(--catalog-text); font-size: 13px; }
+.editorial-catalog .catalog-explore .catalog-toolbar { margin: 0!important; padding: 10px 0 26px; border: 0; }
+.editorial-catalog .catalog-count { margin-top: 10px!important; margin-bottom: 28px!important; }
+.catalog-explore summary:focus-visible { outline: 2px solid #e5cf9f; outline-offset: 4px; }
+@media (max-width: 640px) {
+  #main-nav { height: 58px; }
+  #main-nav .nav__inner { padding: 0 20px; }
+  #main-nav .nav__toggle { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; padding: 10px; gap: 5px; background: none; border: 0; border-radius: 0; box-shadow: none; }
+  #main-nav .nav__toggle span { width: 24px; height: 1px; margin: 0; background: #eee; }
+  #main-nav .nav__toggle--open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  #main-nav .nav__toggle--open span:nth-child(2) { opacity: 0; }
+  #main-nav .nav__toggle--open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+  #main-nav .nav__links { display: none; position: absolute; top: 58px; left: 0; right: 0; width: 100%; height: auto; padding: 12px 20px 20px; flex-direction: column; align-items: stretch; gap: 0; background: #111211; border: 0; border-bottom: 1px solid #45463d; border-radius: 0; transform: none; opacity: 1; visibility: visible; box-shadow: none; }
+  #main-nav .nav__links--open { display: flex; }
+  #main-nav .nav__link { width: 100%; min-height: 48px; font-size: 15px; }
+  .home-art figcaption { align-items: flex-start; flex-direction: column; gap: 8px; padding: 16px 20px 24px; }
+  .home-art__links { width: 100%; justify-content: space-between; gap: 16px; }
+  .editorial-catalog .catalog-intro > p { max-width: 34em; }
+  #view-destacada.editorial-catalog { padding-top: 44px!important; }
+}
+@media (prefers-reduced-motion: reduce) { #main-nav { transition: none; } }
+
+::-webkit-scrollbar-thumb { background: #56574f; }
