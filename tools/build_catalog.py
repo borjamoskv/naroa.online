@@ -70,5 +70,3 @@ print(f'Built {len(ITEMS)} project pages, home catalogue and sitemap.')
 import runpy
 runpy.run_path(str(ROOT.parent/"tools/build_vaivenes.py"))
 
-# The same published entrance is retained by future catalogue rebuilds.
-runpy.run_path(str(ROOT.parent/"tools/build_hero.py"))
