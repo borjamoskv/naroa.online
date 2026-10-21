@@ -30,7 +30,7 @@
       const outside=(desired===0&&rect.top>=0)||(desired===distance-lead&&rect.bottom<height*.75);
       if(seek||outside){displayed=desired;velocity=0;}
       // An analytical critically damped spring remains stable at any refresh rate.
-      const before=displayed,omega=1/72,offset=displayed-desired;
+      const before=displayed,omega=1/(width<=760?68:90),offset=displayed-desired;
       const impulse=velocity+omega*offset,decay=Math.exp(-omega*dt);
       displayed=clamp(desired+(offset+impulse*dt)*decay,0,distance-lead);
       velocity=(velocity-omega*impulse*dt)*decay;
@@ -59,6 +59,7 @@
         const local=clamp(-rect.top,0,distance);
         const eyeTravel=local<=lead?local:travel+lead;
         window.NaroaVaivenesEyes?.reveal(figure,clamp((eyeTravel-i*width)/Math.max(1,lead),0,1));
+        window.NaroaColourScroll?.reveal(image,clamp((eyeTravel-i*width)/Math.max(1,lead),0,1));
         const caption=figure.querySelector('figcaption');
         caption.style.transform=`translate3d(${(depth*Math.min(32,width*.025)-livePointerX*3).toFixed(2)}px,0,0)`;
         caption.style.opacity=figure.classList.contains('vaivenes-caption-open')?'1':String(.25+.75*(1-Math.abs(depth)));
@@ -98,7 +99,7 @@
     document.querySelectorAll('.series-index a').forEach(link=>link.addEventListener('click',event=>{
       const index=figures.findIndex(figure=>'#'+figure.id===link.getAttribute('href'));if(enabled&&index>=0){event.preventDefault();go(index);history.replaceState(null,'',link.getAttribute('href'));}
     }));
-    addEventListener('resize',()=>{if(enabled)measure();},{passive:true});document.addEventListener('visibilitychange',schedule);document.addEventListener('naroa:motionchange',update);update();
+    addEventListener('resize',()=>{if(enabled)measure();},{passive:true});document.addEventListener('visibilitychange',schedule);document.addEventListener('naroa:motionchange',update);document.addEventListener('naroa:colour-ready',schedule);update();
     const initial=figures.findIndex(figure=>'#'+figure.id===location.hash);if(enabled&&initial>=0)requestAnimationFrame(()=>go(initial));
   }
   const page=document.querySelector('.series-page #series-main');

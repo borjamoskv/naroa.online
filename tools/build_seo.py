@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Local portrait SEO from real content; run after the three page builders."""
 import json,re
+from PIL import Image
 from pathlib import Path
 from html import escape as e
 from urllib.parse import quote
@@ -22,7 +23,16 @@ def meta(s,title,description,image=None):
   pat=r'<meta\b[^>]*\b'+attr+'="'+re.escape(key)+r'"[^>]*>'
   s=re.sub(pat,lambda _:tag,s,count=1) if re.search(pat,s) else s.replace('</head>',tag+'\n</head>')
  for key,val,prop in [('description',description,False),('robots','index, follow, max-image-preview:large',False),('og:title',title,True),('og:description',description,True),('twitter:title',title,False),('twitter:description',description,False)]:tag(key,val,prop)
- if image:tag('og:image',BASE+image,True);tag('twitter:image',BASE+image,False)
+ if image:
+  tag('og:image',BASE+image,True);tag('twitter:image',BASE+image,False)
+  with Image.open(ROOT/image.lstrip('/')) as asset:
+   width,height=asset.size
+   mime=Image.MIME[asset.format]
+  for key,value in [('og:image:secure_url',BASE+image),('og:image:width',str(width)),('og:image:height',str(height)),('og:image:type',mime),('og:image:alt','Naroa Gutiérrez Gil · Johnny Rocks, Marilyn Rocks y Entre Tantas Flores de Día' if '/social/' in image else title)]:tag(key,value,True)
+  tag('twitter:image:alt','Naroa Gutiérrez Gil · Johnny Rocks, Marilyn Rocks y Entre Tantas Flores de Día' if '/social/' in image else title)
+ tag('og:site_name','Naroa Gutiérrez Gil',True);tag('og:locale','es_ES',True)
+ tag('twitter:card','summary_large_image')
+
  return s
 # The portrait service page answers a different intent from the artist's portfolio.
 cover=next(p for p in projects if p['slug']=='marilyn-rocks')['images'][0]
@@ -38,13 +48,13 @@ page=f'''<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="
 <section class="local-section"><p class="local-kicker">Cómo consultar un encargo</p><div><h2>Empezamos<br>con tu idea.</h2><ol class="local-steps"><li><h3>Cuenta a quién quieres retratar</h3><p>Explica para quién sería la obra y si hay una ocasión o una fecha que debamos tener en cuenta. Puedes enviar una fotografía como referencia.</p></li><li><h3>Comparte el formato que imaginas</h3><p>Si te atrae una técnica o un proyecto del archivo, incluye su enlace. Si aún no lo tienes claro, puedes pedir orientación sobre las posibilidades.</p></li><li><h3>Consulta la propuesta</h3><p>Antes de encargar la pieza, acuerda con Naroa los materiales, las medidas, el presupuesto y el plazo disponible para tu proyecto.</p></li></ol></div></section>
 <section class="local-section"><p class="local-kicker">Preguntas sobre retratos</p><div class="local-faq"><h2>Antes de escribir.</h2><details><summary>¿Se puede partir de una fotografía?</summary><p>Puedes enviar una fotografía para estudiar la idea. Naroa te indicará si la referencia sirve y qué información adicional necesita.</p></details><details><summary>¿Cuánto cuesta un retrato por encargo?</summary><p>Solicita una propuesta para tu idea. Conviene concretar tamaño, técnica, soporte y complejidad antes de acordar el presupuesto.</p></details><details><summary>¿Puedo encargar un retrato para regalar?</summary><p>Puedes plantear un retrato o un objeto personalizado como regalo. Cuenta para quién sería y la fecha que tienes en mente, y consulta las posibilidades con Naroa.</p></details><details><summary>¿Cuánto tarda y cómo se entrega?</summary><p>El plazo y la forma de entrega se acuerdan para cada proyecto. Si necesitas una fecha concreta o un envío, indícalo en el primer mensaje.</p></details></div></section>
 <section id="consulta" class="local-consult"><p class="local-kicker">Contacto · Bilbao</p><h2>Tu retrato empieza<br>con una conversación.</h2><p>Escribe a Naroa Gutiérrez Gil y cuéntale tu idea, el formato que imaginas y cualquier fecha importante.</p><a class="local-cta" href="{email}">Consultar un retrato por email ↗</a><p><a href="mailto:naroa@naroa.eu">naroa@naroa.eu</a></p><a href="/#/destacada">Explorar los retratos y proyectos →</a></section></main><footer class="career-footer"><a href="/">Naroa Gutiérrez Gil · Retratista en Bilbao</a><a href="/sobre-mi/">Sobre mí</a><a href="/trayectoria/">Trayectoria</a><span>© 2026</span></footer></body></html>'''
-page=meta(page,title,desc,cover['src']);folder=ROOT/SLUG;folder.mkdir(exist_ok=True);(folder/'index.html').write_text(page.replace('</head>', '<link rel="stylesheet" href="/assets/handwriting.css?v=20261021-child-v1"><link rel="stylesheet" href="/assets/studio-refinement.css?v=20261021-studio-v1"></head>'))
+page=meta(page,title,desc,cover['src']);folder=ROOT/SLUG;folder.mkdir(exist_ok=True);(folder/'index.html').write_text(page.replace('</head>', '<link rel="stylesheet" href="/assets/handwriting.css?v=20261021-child-v1"><link rel="stylesheet" href="/assets/studio-refinement.css?v=20261021-quiet-v4"></head>'))
 # Keep local context within the existing introduction, without an extra SEO panel.
 p=ROOT/'index.html';s=p.read_text();s=re.sub(r'\s*<h1 class="catalog-visually-hidden">.*?</h1>','',s,count=1)
 s=re.sub(r'<!-- local-seo:start -->[\s\S]*?<!-- local-seo:end -->','',s)
 s=s.replace('<h1 id="catalog-title">Obra</h1>','<h2 id="catalog-title">Obra</h2>') if 'id="home-title"' in s else s.replace('<h2 id="catalog-title">Obra</h2>','<h1 id="catalog-title">Obra</h1>')
 s=s.replace('Retratos sobre pizarra, collages, objetos que se abren y rostros que se transforman. Entra en cada proyecto para descubrir sus materiales y sus detalles.','Retratos sobre pizarra, collages y objetos que se transforman. Descubre la obra de Naroa Gutiérrez Gil, artista y retratista en Bilbao, y los detalles de cada proyecto.')
-s=meta(s,'Naroa Gutiérrez Gil · Retratista en Bilbao','Naroa Gutiérrez Gil, artista y retratista en Bilbao. Descubre retratos en pizarra, dibujo, pintura y collage, y consulta un retrato por encargo.',cover['src'])
+s=meta(s,'Naroa Gutiérrez Gil · Retratista en Bilbao','Naroa Gutiérrez Gil, artista y retratista en Bilbao. Descubre retratos en pizarra, dibujo, pintura y collage, y consulta un retrato por encargo.','/images/social/naroa-obras-compartir-v2.jpg')
 s=re.sub(r'<script type="application/ld\+json"(?: id="seo-schema")?>[\s\S]*?</script>',lambda _:schema({'@context':'https://schema.org','@graph':[artist,{'@type':'WebSite','@id':BASE+'/#website','url':BASE+'/','name':'Naroa Gutiérrez Gil','inLanguage':'es','publisher':{'@id':artist['@id']}},{'@type':'WebPage','@id':BASE+'/#webpage','url':BASE+'/','name':'Naroa Gutiérrez Gil · Retratista en Bilbao','inLanguage':'es','about':{'@id':artist['@id']}}]}),s,count=1)
 s=s.replace('content="https://naroagutierrezgil.com"','content="https://naroagutierrezgil.com/"')
 if '/assets/seo-local.css' not in s:s=s.replace('</head>','<link rel="stylesheet" href="/assets/seo-local.css">\n</head>')
@@ -88,4 +98,11 @@ for path,imgs in pages:
  for src in imgs:
   im=ET.SubElement(u,'{'+IMG+'}image');ET.SubElement(im,'{'+IMG+'}loc').text=BASE+src
 ET.indent(tree);ET.ElementTree(tree).write(ROOT/'sitemap.xml',encoding='utf-8',xml_declaration=True)
+# Optional colour/monochrome presentation uses the same original photo bytes.
+for path,_ in pages:
+ page_file=ROOT/path.lstrip('/')/'index.html' if path!='/' else ROOT/'index.html'
+ html=page_file.read_text()
+ asset='<script defer src="/assets/colour-cycle.js?v=20261021-scroll-colour-v3"></script>'
+ if '/assets/colour-cycle.js' not in html:html=html.replace('</head>',asset+'</head>')
+ page_file.write_text(html)
 print(f'Built local portrait service page; updated metadata, links and image sitemap for {len(pages)} pages.')

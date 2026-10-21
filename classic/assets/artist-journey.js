@@ -38,7 +38,7 @@
   stage.append(track, controls);
   journey.append(stage);
   let enabled = false, scheduled = 0, width = 0, height = 0, zoomDistance = 0, leadHold = 0, travel = 0, imagesStarted = false;
-  let zoom = 0, horizontal = 0, lastTick = 0;
+  let zoom = 0, horizontal = 0, lastTick = 0, horizontalVelocity = 0;
   const clamp = value => Math.max(0, Math.min(1, value));
   const ease = value => { value = clamp(value); return value * value * (3 - 2 * value); };
 
@@ -71,11 +71,19 @@
     const wantedZoom=clamp(distance / zoomDistance);
     const wantedHorizontal=Math.max(0, Math.min(travel, distance - zoomDistance - leadHold));
     const dt=Math.min(40,Math.max(8,time-lastTick||16));lastTick=time;
-    const blend=1-Math.exp(-dt/75);
-    if(distance===0||Math.abs(wantedHorizontal-horizontal)>width*1.6){zoom=wantedZoom;horizontal=wantedHorizontal;}
-    else {zoom+=(wantedZoom-zoom)*blend;horizontal+=(wantedHorizontal-horizontal)*blend;}
+    const blend=1-Math.exp(-dt/85);
+    if(distance===0||Math.abs(wantedHorizontal-horizontal)>width*1.6){
+      zoom=wantedZoom;horizontal=wantedHorizontal;horizontalVelocity=0;
+    } else {
+      zoom+=(wantedZoom-zoom)*blend;
+      // Critically damped movement settles gently without bouncing past the artwork.
+      const omega=1/(width<=760?68:90),offset=horizontal-wantedHorizontal;
+      const impulse=horizontalVelocity+omega*offset,decay=Math.exp(-omega*dt);
+      horizontal=Math.max(0,Math.min(travel,wantedHorizontal+(offset+impulse*dt)*decay));
+      horizontalVelocity=(horizontalVelocity-omega*impulse*dt)*decay;
+    }
     if(Math.abs(wantedZoom-zoom)<.0004)zoom=wantedZoom;
-    if(Math.abs(wantedHorizontal-horizontal)<.15)horizontal=wantedHorizontal;
+    if(Math.abs(wantedHorizontal-horizontal)<.15&&Math.abs(horizontalVelocity)<.03){horizontal=wantedHorizontal;horizontalVelocity=0;}
     if (zoom > .15 && !imagesStarted) {
       works.forEach(work => { work.querySelector('img').loading = 'eager'; });
       imagesStarted = true;
@@ -99,8 +107,9 @@
     panes.forEach((pane, i) => {
       const depth = Math.max(-1, Math.min(1, (i * width - horizontal) / Math.max(1, width)));
       pane.style.setProperty('--pane-drift', `${(depth * Math.min(32, width * .035)).toFixed(2)}px`);
+      window.NaroaColourScroll?.reveal(pane.querySelector('img'), clamp(1 - depth / .55));
     });
-    if(Math.abs(wantedZoom-zoom)>.0004||Math.abs(wantedHorizontal-horizontal)>.15)schedule();
+    if(Math.abs(wantedZoom-zoom)>.0004||Math.abs(wantedHorizontal-horizontal)>.15||Math.abs(horizontalVelocity)>.03)schedule();
   }
 
   function schedule() { if (!scheduled && enabled) scheduled = requestAnimationFrame(render); }
@@ -161,5 +170,6 @@
   window.addEventListener('resize', () => { if (enabled) { measure(); schedule(); } }, {passive: true});
   document.addEventListener('visibilitychange', schedule);
   document.addEventListener('naroa:motionchange', update);
+  document.addEventListener('naroa:colour-ready', schedule);
   update();
 })();

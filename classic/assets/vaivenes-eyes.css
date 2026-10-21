@@ -1,7 +1,3 @@
-.vaivenes-iris-photo { position:relative; }
-.vaivenes-iris-photo > img { filter:grayscale(1); }
-.vaivenes-irises { position:absolute; display:block; max-width:none; pointer-events:none; overflow:hidden; z-index:2; opacity:0; }
-.vaivenes-irises image[data-tone="original"] { filter:saturate(1.15); }
-.vaivenes-irises image[data-tone="amber"] { filter:sepia(.9) saturate(3.2); }
-.vaivenes-irises image[data-tone="red"] { filter:sepia(1) saturate(5) hue-rotate(315deg); }
-@media print { .vaivenes-iris-photo > img { filter:none; } .vaivenes-irises { display:none; } }
+/* Never overlay tinted or duplicated irises on the original artwork. */
+.vaivenes-irises,.eye-paint-scene,.naroa-painting-arm { display:none !important; }
+.vaivenes-iris-photo > img { filter:none !important; }
