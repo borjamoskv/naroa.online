@@ -103,3 +103,8 @@ html[data-brush-enabled="false"] .brush-scene { display: none; }
   .brush-controls { padding: 4px 20px; font-size: 11px; gap: 12px; }
   .brush-toggle { padding: 8px 12px; }
 }
+
+.brush-frame__bristle-one { stroke: #faf0cf; stroke-width: .65; opacity: .74; }
+.brush-frame__bristle-two { stroke: #6d4e27; stroke-width: .8; opacity: .55; }
+.brush-wet-paint { fill: #f2d28c; opacity: 0; }
+.painting-brush { will-change: transform; }

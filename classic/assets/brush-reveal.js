@@ -10,7 +10,7 @@
     wrapper.append(image);
   });
   const targets = [...document.querySelectorAll('.editorial-catalog .catalog-card__image, .project-photo, .brush-series-image')];
-  if (!targets.length || !('IntersectionObserver' in window) || !('ResizeObserver' in window)) return;
+  if ((!targets.length && !document.querySelector('.artist-profile')) || !('IntersectionObserver' in window) || !('ResizeObserver' in window)) return;
 
   const SVG = 'http://www.w3.org/2000/svg';
   const clamp = (value, low = 0, high = 1) => Math.min(high, Math.max(low, value));
@@ -34,7 +34,7 @@
     const controls = document.createElement('div');
     controls.className = 'brush-controls';
     const label = document.createElement('p');
-    label.textContent = 'Una pincelada al bajar';
+    label.textContent = 'Arte en movimiento';
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'brush-toggle';
@@ -70,11 +70,13 @@
     scene.className = 'brush-scene';
     scene.setAttribute('aria-hidden', 'true');
     const frame = svgElement('svg', {class: 'brush-frame', focusable: 'false'});
-    const paths = ['shadow', 'body', 'grain'].map(part => {
+    const paths = ['shadow', 'body', 'grain', 'bristle-one', 'bristle-two'].map(part => {
       const path = svgElement('path', {class: `brush-frame__${part}`, pathLength: '1'});
       frame.append(path);
       return path;
     });
+    const dab = svgElement('ellipse', {class: 'brush-wet-paint', rx: '9', ry: '4'});
+    frame.append(dab);
     const brush = svgElement('svg', {class: 'painting-brush', viewBox: '0 0 36 96', focusable: 'false'});
     // Small traditional flat brush: wood, ferrule, individual bristles and a loaded tip.
     const id = `paint-wood-${index}`;
@@ -82,7 +84,7 @@
     scene.append(frame, brush);
     target.classList.add('brush-reveal-target');
     target.append(scene);
-    const state = {target, scene, frame, paths, brush, progress: 0, width: 0, height: 0, inset: 0};
+    const state = {target, scene, frame, paths, brush, dab, progress: 0, width: 0, height: 0, inset: 0};
     states.set(target, state);
     return state;
   }
@@ -94,23 +96,25 @@
     const i = state.inset;
     const right = Math.max(i, width - i), bottom = Math.max(i, height - i);
     // Slightly uneven lines suggest a loaded brush without changing the photograph.
-    const d = `M${i} ${i + 1}L${width * .38} ${i - .7}L${right} ${i + .3}L${right - .8} ${height * .48}L${right} ${bottom}L${width * .46} ${bottom - .9}L${i} ${bottom}L${i + .8} ${height * .43}Z`;
+    const r = Math.min(30, width * .045, height * .045);
+    const d = `M${i+r} ${i}C${width*.4} ${i-1.5} ${width*.7} ${i+1.4} ${right-r} ${i}Q${right} ${i} ${right} ${i+r}C${right-1.8} ${height*.4} ${right+1} ${height*.7} ${right} ${bottom-r}Q${right} ${bottom} ${right-r} ${bottom}C${width*.6} ${bottom+1.4} ${width*.3} ${bottom-1.8} ${i+r} ${bottom}Q${i} ${bottom} ${i} ${bottom-r}C${i+1.6} ${height*.6} ${i-1} ${height*.3} ${i} ${i+r}Q${i} ${i} ${i+r} ${i}`;
     state.frame.setAttribute('viewBox', `0 0 ${width} ${height}`);
     state.paths.forEach(path => path.setAttribute('d', d));
     state.paths[0].setAttribute('transform', 'translate(1.3 1.3)');
     state.paths[2].setAttribute('transform', 'translate(-.8 -.8)');
+    state.paths[3].setAttribute('transform', 'translate(2.4 2.4)');
+    state.paths[4].setAttribute('transform', 'translate(-2.2 -2.2)');
+    state.length = state.paths[1].getTotalLength();
   }
 
   function pointOnFrame(state, progress) {
-    const i = state.inset;
-    const w = Math.max(1, state.width - i * 2), h = Math.max(1, state.height - i * 2);
-    let distance = progress * (w + h) * 2;
-    if (distance < w) return {x: i + distance, y: i, angle: 180};
-    distance -= w;
-    if (distance < h) return {x: i + w, y: i + distance, angle: 270};
-    distance -= h;
-    if (distance < w) return {x: i + w - distance, y: i + h, angle: 360};
-    return {x: i, y: i + h - (distance - w), angle: 450};
+    const path = state.paths[1];
+    const distance = progress * state.length;
+    const point = path.getPointAtLength(distance);
+    const before = path.getPointAtLength(Math.max(0, distance - 2));
+    const after = path.getPointAtLength(Math.min(state.length, distance + 2));
+    const tangent = Math.atan2(after.y - before.y, after.x - before.x) * 180 / Math.PI;
+    return {x: point.x, y: point.y, angle: tangent + 180};
   }
 
   function scrollProgress(state, rect, viewport) {
@@ -137,7 +141,7 @@
     scheduled = 0;
     if (!enabled || document.hidden) return;
     const viewport = window.innerHeight;
-    const travel = clamp((window.scrollY - lastY) * .05, -3, 3);
+    const travel = clamp((window.scrollY - lastY) * .08, -7, 7);
     lastY = window.scrollY;
     const reads = [];
     // Read geometry together, then write, avoiding a layout cycle for each artwork.
@@ -157,6 +161,10 @@
       const scale = rect.width <= 640 ? 1.18 : 1.7;
       const tipY = rect.top + point.y;
       const visible = p > .002 && p < .997 && tipY > 10 && tipY < viewport - 10 && progress >= p - .002;
+      state.dab.setAttribute('cx', point.x);
+      state.dab.setAttribute('cy', point.y);
+      state.dab.style.opacity = visible ? '.8' : '0';
+      state.dab.setAttribute('transform', `rotate(${point.angle} ${point.x} ${point.y})`);
       state.brush.style.opacity = visible ? String(Math.min(1, p * 35, (1 - p) * 35)) : '0';
       state.brush.style.transform = `translate(${(point.x - 18).toFixed(2)}px, ${(point.y - 88).toFixed(2)}px) rotate(${point.angle + travel}deg) scale(${scale})`;
       if (p >= .997) {
@@ -218,11 +226,12 @@
   function updateMotion() {
     document.documentElement.dataset.brushEnabled = String(enabled);
     buttons.forEach(button => {
-      button.textContent = enabled ? 'Pausar brocha' : 'Activar brocha';
+      button.textContent = enabled ? 'Pausar efectos' : 'Activar efectos';
       button.setAttribute('aria-pressed', String(enabled));
     });
     if (enabled) enable();
     else disable();
+    document.dispatchEvent(new CustomEvent('naroa:motionchange', {detail: {enabled}}));
   }
 
   motion.addEventListener('change', () => {

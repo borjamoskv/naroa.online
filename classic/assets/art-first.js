@@ -1,4 +1,4 @@
-/* Native scrolling and a quiet header; photographs have no animation or filters. */
+/* An artwork-led entrance, with optional scroll depth and native navigation. */
 (() => {
   'use strict';
   const nav = document.getElementById('main-nav');
@@ -51,7 +51,7 @@
     navigate(hash, true);
   }));
   window.addEventListener('hashchange', () => navigate(location.hash));
-  if (routes[location.hash]) navigate(location.hash);
+
   // Show a complete portrait on narrow screens, and the three works together on desktop.
   const portraitScreen = window.matchMedia('(max-width: 640px)');
   const homePhoto = document.getElementById('home-art-photo');
@@ -72,4 +72,60 @@
     event.preventDefault();
     document.getElementById('home-art-photo').click();
   });
+  // Three strips of the original photograph form a shallow, moving collage.
+  // The intact original remains the accessible enlargement and static fallback.
+  const hero = document.getElementById('view-home');
+  const heroFigure = hero.querySelector('.home-art');
+  const layers = document.createElement('div');
+  layers.className = 'hero-depth-layers';
+  layers.setAttribute('aria-hidden', 'true');
+  for (let index = 0; index < 3; index++) {
+    const panel = document.createElement('div');
+    panel.className = `hero-depth-panel hero-depth-panel--${index + 1}`;
+    const photo = document.createElement('img');
+    photo.src = '/images/artworks/naroa-portrait-new.webp';
+    photo.alt = '';
+    photo.decoding = 'async';
+    panel.append(photo);
+    layers.append(panel);
+  }
+  homePhoto.append(layers);
+  let heroFrame = 0;
+  let pointerX = 0, pointerY = 0;
+  function renderHero() {
+    heroFrame = 0;
+    const enabled = document.documentElement.dataset.brushEnabled === 'true';
+    const wasEnabled = hero.classList.contains('hero-depth-on');
+    if (wasEnabled !== enabled) {
+      const before = hero.getBoundingClientRect();
+      hero.classList.toggle('hero-depth-on', enabled);
+      // Keep the visitor on the same artwork when toggling effects from the catalogue.
+      if (before.bottom <= 0) window.scrollBy({top: hero.offsetHeight - before.height, behavior: 'instant'});
+    }
+    if (!enabled) return;
+    const rect = hero.getBoundingClientRect();
+    const viewport = window.innerHeight;
+    if (rect.bottom < 0 || rect.top > viewport) return;
+    const distance = Math.max(1, hero.offsetHeight - heroFigure.offsetHeight);
+    const progress = Math.max(0, Math.min(1, -rect.top / distance));
+    hero.style.setProperty('--hero-p', progress.toFixed(4));
+    hero.style.setProperty('--hero-x', pointerX.toFixed(3));
+    hero.style.setProperty('--hero-y', pointerY.toFixed(3));
+  }
+  function scheduleHero() {
+    if (!heroFrame) heroFrame = requestAnimationFrame(renderHero);
+  }
+  hero.addEventListener('pointermove', event => {
+    if (event.pointerType !== 'mouse') return;
+    const bounds = heroFigure.getBoundingClientRect();
+    pointerX = Math.max(-1, Math.min(1, (event.clientX / bounds.width - .5) * 2));
+    pointerY = Math.max(-1, Math.min(1, ((event.clientY - bounds.top) / bounds.height - .5) * 2));
+    scheduleHero();
+  }, {passive: true});
+  hero.addEventListener('pointerleave', () => { pointerX = pointerY = 0; scheduleHero(); });
+  window.addEventListener('scroll', scheduleHero, {passive: true});
+  window.addEventListener('resize', scheduleHero, {passive: true});
+  document.addEventListener('naroa:motionchange', scheduleHero);
+  scheduleHero();
+  requestAnimationFrame(() => { if (routes[location.hash]) navigate(location.hash); });
 })();

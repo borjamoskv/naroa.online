@@ -1,0 +1,29 @@
+#view-about { overflow: clip; }
+.artist-page { overflow-x: clip; overflow-y: visible; }
+.artist-journey { position: relative; background: #101110; }
+.artist-journey__stage { position: sticky; top: 0; height: 100svh; overflow: clip; background: #101110; }
+.artist-journey__stage > .artist-hero { position: absolute; inset: 0; z-index: 2; height: 100%; min-height: 0; max-height: none; margin: 0; }
+.artist-journey__stage > .artist-hero > img { will-change: transform; }
+.artist-journey__track { display: flex; height: 100%; width: 100%; will-change: transform; visibility: hidden; opacity: 0; }
+.artist-journey__pane { flex: 0 0 100%; width: 100%; height: 100%; min-width: 0; box-sizing: border-box; }
+.artist-journey__track > .artist-quote { display: flex; flex-direction: column; justify-content: center; padding: 10vh 8vw; }
+.artist-journey__track > .artist-quote blockquote { font-size: clamp(42px,6.8vw,100px); max-width: 1100px; }
+.artist-journey__track > .artist-wide { display: flex; flex-direction: column; margin: 0; padding: 20px 0 68px; }
+.artist-journey__track > .artist-wide > a { display: flex; align-items: center; justify-content: center; min-height: 0; flex: 1; }
+.artist-journey__track > .artist-wide img { width: 100%; height: 100%; max-height: calc(100svh - 150px); object-fit: contain; }
+.artist-journey__track > .artist-wide figcaption { padding: 12px 5vw; }
+.artist-journey__controls { position: absolute; z-index: 3; bottom: 0; left: 0; right: 0; display: flex; gap: 20px; align-items: center; padding: 10px 5vw; background: #101110f5; color: #d8c79f; visibility: hidden; opacity: 0; font: 12px/1.5 Inter,sans-serif; }
+.artist-journey__controls span { margin-right: auto; }
+.artist-journey__controls button { min-height: 44px; border: 0; border-bottom: 1px solid #8c7850; background: none; padding: 5px 0; color: #f3eee2; font: inherit; cursor: pointer; }
+.artist-journey__controls button:focus-visible { outline: 2px solid #e3c493; outline-offset: 4px; }
+@media(max-width:760px) {
+  .artist-journey__track > .artist-quote { padding: 50px 7vw 90px; }
+  .artist-journey__track > .artist-quote blockquote { font-size: clamp(38px,10vw,64px); }
+  .artist-journey__controls { gap: 15px; padding: 8px 5vw; font-size: 10px; }
+  .artist-journey__track > .artist-wide img { max-height: calc(100svh - 185px); }
+}
+
+/* Let the photograph fill the screen; keyboard focus brings navigation back. */
+.artist-page .career-nav { transition: transform .18s ease; }
+body.artist-journey-active .career-nav:not(:focus-within),
+body.artist-journey-active #main-nav:not(:focus-within) { transform: translateY(-110%); }
