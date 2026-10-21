@@ -53,17 +53,13 @@ a, button, summary { cursor: pointer; }
 
 ::-webkit-scrollbar-thumb { background: #56574f; }
 
-/* Depth belongs to the complete artwork, never to a cropped or enlarged copy. */
+/* Move the original artwork and the lettering as separate planes. */
 html[data-brush-enabled="true"] #view-home.studio-hero .home-art {
-  transform: perspective(1400px) translate3d(var(--studio-sway,0px),var(--studio-drift,0px),0) rotateY(var(--studio-tilt,0deg));
+  transform:translate3d(var(--studio-sway,0px),var(--studio-drift,0px),0) rotateX(var(--studio-lean,0deg)) rotateY(var(--studio-tilt,0deg)) rotateZ(var(--studio-roll,0deg));
 }
 html[data-brush-enabled="true"] #view-home.studio-hero .studio-hero__copy {
-  transform: translate3d(0,var(--studio-copy-drift,0px),0);
+  transform:translate3d(var(--studio-copy-sway,0px),var(--studio-copy-drift,0px),0);
 }
 #view-home.studio-hero .studio-hero__enter span { transition:transform .3s ease; }
 #view-home.studio-hero .studio-hero__enter:is(:hover,:focus-visible) span { transform:translate(5px,5px); }
-@media(max-width:760px) {
- html[data-brush-enabled="true"] #view-home.studio-hero .home-art { transform:translate3d(0,calc(var(--studio-drift,0px) * .45),0); }
- html[data-brush-enabled="true"] #view-home.studio-hero .studio-hero__copy { transform:none; }
-}
 @media(prefers-reduced-motion:reduce) { #view-home.studio-hero .studio-hero__enter span { transition:none; } }

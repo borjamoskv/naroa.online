@@ -53,27 +53,48 @@
   window.addEventListener('hashchange', () => navigate(location.hash));
 
   const hero = document.getElementById('view-home');
-  let heroFrame = 0, drift = 0, pointerX = 0, pointerY = 0, liveX = 0, liveY = 0, lastHeroTime = 0;
+  let heroFrame = 0, pointerX = 0, pointerY = 0, lastHeroTime = 0;
+  const depth = {value:0, velocity:0};
+  const horizontal = {value:0, velocity:0};
+  const vertical = {value:0, velocity:0};
   const clamp = n => Math.max(-1, Math.min(1, n));
+  // A damped spring gives each plane weight, without a continuous animation loop.
+  function advance(spring, target, dt) {
+    spring.velocity += ((target - spring.value) * 130 - spring.velocity * 23) * dt;
+    spring.value += spring.velocity * dt;
+    const moving = Math.abs(target - spring.value) > .0004 || Math.abs(spring.velocity) > .003;
+    if (!moving) { spring.value = target; spring.velocity = 0; }
+    return moving;
+  }
   function renderHero(time) {
     heroFrame = 0;
+    if (document.hidden) { lastHeroTime = 0; return; }
     // The explicit control can opt into motion even when the system reduces it.
     const on = document.documentElement.dataset.brushEnabled === 'true';
     const box = hero.getBoundingClientRect();
+    const visible = box.bottom > 0 && box.top < innerHeight;
     const target = on ? Math.max(0, Math.min(1, -box.top / Math.max(1, box.height))) : 0;
-    const dt = Math.min(40, Math.max(8, time - lastHeroTime || 16));
+    const dt = Math.min(32, Math.max(8, time - lastHeroTime || 16)) / 1000;
     lastHeroTime = time;
-    const blend = 1 - Math.exp(-dt / 95);
-    drift += (target - drift) * blend;
-    liveX += ((on ? pointerX : 0) - liveX) * blend;
-    liveY += ((on ? pointerY : 0) - liveY) * blend;
-    if (!on) drift = liveX = liveY = 0;
-    hero.style.setProperty('--studio-drift', `${(-drift * 62 + liveY * 7).toFixed(2)}px`);
-    hero.style.setProperty('--studio-sway', `${(liveX * 9).toFixed(2)}px`);
-    hero.style.setProperty('--studio-copy-drift', `${(drift * 28 - liveY * 3).toFixed(2)}px`);
-    hero.style.setProperty('--studio-tilt', `${(liveX * .35).toFixed(3)}deg`);
-    if (on && box.bottom > 0 && box.top < innerHeight &&
-      (Math.abs(target - drift) > .0005 || Math.abs(pointerX - liveX) > .002 || Math.abs(pointerY - liveY) > .002)) scheduleHero();
+    let moving = false;
+    if (on && visible) {
+      // Evaluate all three springs on every frame, even when one is already moving.
+      const changes = [advance(depth, target, dt), advance(horizontal, pointerX, dt), advance(vertical, pointerY, dt)];
+      moving = changes.some(Boolean);
+    } else {
+      depth.value = target; horizontal.value = vertical.value = 0;
+      depth.velocity = horizontal.velocity = vertical.velocity = 0;
+    }
+    const amount = innerWidth <= 760 ? .45 : 1;
+    const drift = depth.value, x = horizontal.value, y = vertical.value;
+    hero.style.setProperty('--studio-drift', `${((-drift * 110 + y * 12) * amount).toFixed(2)}px`);
+    hero.style.setProperty('--studio-sway', `${(x * 18 * amount).toFixed(2)}px`);
+    hero.style.setProperty('--studio-copy-drift', `${((drift * 42 - y * 6) * amount).toFixed(2)}px`);
+    hero.style.setProperty('--studio-copy-sway', `${(-x * 7 * amount).toFixed(2)}px`);
+    hero.style.setProperty('--studio-tilt', `${(x * 2.4 * amount).toFixed(3)}deg`);
+    hero.style.setProperty('--studio-lean', `${(-y * 1.8 * amount).toFixed(3)}deg`);
+    hero.style.setProperty('--studio-roll', `${(x * .45 * amount).toFixed(3)}deg`);
+    if (moving) scheduleHero();
   }
   function scheduleHero() { if (!heroFrame) heroFrame = requestAnimationFrame(renderHero); }
   hero.addEventListener('pointermove', event => {
@@ -87,7 +108,11 @@
   addEventListener('scroll', scheduleHero, {passive:true});
   addEventListener('resize', scheduleHero, {passive:true});
   document.addEventListener('naroa:motionchange', scheduleHero);
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) scheduleHero(); });
+  document.addEventListener('visibilitychange', () => {
+    lastHeroTime = 0;
+    if (document.hidden) { cancelAnimationFrame(heroFrame); heroFrame = 0; }
+    else scheduleHero();
+  });
   scheduleHero();
   requestAnimationFrame(() => { if (routes[location.hash]) navigate(location.hash); });
 })();
