@@ -8,7 +8,7 @@
     const count = document.getElementById('catalog-count');
     const empty = document.getElementById('catalog-empty');
     const normalize = value => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-    let filter = 'seleccion';
+    let filter = 'todo';
     function render() {
       const words = normalize(search.value.trim()).split(/\s+/).filter(Boolean);
       let visible = 0;

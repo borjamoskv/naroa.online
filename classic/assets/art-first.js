@@ -92,7 +92,8 @@
   homePhoto.append(layers);
   let heroFrame = 0;
   let pointerX = 0, pointerY = 0;
-  function renderHero() {
+  let liveP = 0, liveX = 0, liveY = 0, lastHeroTick = 0;
+  function renderHero(time) {
     heroFrame = 0;
     const enabled = document.documentElement.dataset.brushEnabled === 'true';
     const wasEnabled = hero.classList.contains('hero-depth-on');
@@ -102,15 +103,23 @@
       // Keep the visitor on the same artwork when toggling effects from the catalogue.
       if (before.bottom <= 0) window.scrollBy({top: hero.offsetHeight - before.height, behavior: 'instant'});
     }
-    if (!enabled) return;
+    if (!enabled || document.hidden) return;
     const rect = hero.getBoundingClientRect();
     const viewport = window.innerHeight;
     if (rect.bottom < 0 || rect.top > viewport) return;
     const distance = Math.max(1, hero.offsetHeight - heroFigure.offsetHeight);
     const progress = Math.max(0, Math.min(1, -rect.top / distance));
-    hero.style.setProperty('--hero-p', progress.toFixed(4));
-    hero.style.setProperty('--hero-x', pointerX.toFixed(3));
-    hero.style.setProperty('--hero-y', pointerY.toFixed(3));
+    const dt = Math.min(40, Math.max(8, time - lastHeroTick || 16));
+    lastHeroTick = time;
+    const blend = 1 - Math.exp(-dt / 85);
+    const desired = progress * progress * (3 - 2 * progress);
+    liveP += (desired - liveP) * blend;
+    liveX += (pointerX - liveX) * blend;
+    liveY += (pointerY - liveY) * blend;
+    hero.style.setProperty('--hero-p', liveP.toFixed(4));
+    hero.style.setProperty('--hero-x', liveX.toFixed(3));
+    hero.style.setProperty('--hero-y', liveY.toFixed(3));
+    if (Math.abs(desired-liveP) > .0004 || Math.abs(pointerX-liveX) > .002 || Math.abs(pointerY-liveY) > .002) scheduleHero();
   }
   function scheduleHero() {
     if (!heroFrame) heroFrame = requestAnimationFrame(renderHero);

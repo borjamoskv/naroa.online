@@ -5,7 +5,7 @@ from html.parser import HTMLParser
 from urllib.parse import urlsplit,unquote
 import json,re
 from xml.etree import ElementTree as ET
-R=Path(__file__).resolve().parents[1]/'classic';BASE='https://naroa.online'
+R=Path(__file__).resolve().parents[1]/'classic';BASE='https://naroagutierrezgil.com'
 class Page(HTMLParser):
  def __init__(self):super().__init__();self.h1=0;self.ids=[];self.meta={};self.canon=[];self.links=[];self.images=[];self.title='';self.in_title=False;self.script=None;self.schemas=[]
  def handle_starttag(self,t,a):

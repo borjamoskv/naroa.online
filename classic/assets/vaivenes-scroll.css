@@ -1,0 +1,39 @@
+/* One photograph occupies each viewport. Scroll stays native and vertical. */
+#view-destacada { overflow:clip; }
+.vaivenes-scroll { position:relative; width:100%; background:#0c0b0b; }
+.vaivenes-scroll__stage { position:sticky; top:0; height:100svh; overflow:clip; background:#0c0b0b; }
+.vaivenes-scroll__track { display:flex; height:100%; width:100%; will-change:transform; }
+.vaivenes-scroll__track > .series-work { position:relative; margin:0; width:100%; height:100%; flex:0 0 100%; min-width:0; background:#0c0b0b; }
+.vaivenes-scroll__track .project-photo { display:flex; width:100%; height:100%; padding:0; margin:0; min-height:0; align-items:center; justify-content:center; background:none; }
+.vaivenes-scroll__track .project-photo img { display:block; width:100%; height:100%; max-height:none; object-fit:contain; padding:0; margin:0; }
+.vaivenes-scroll__track .project-photo > span { display:none; }
+.vaivenes-scroll__track .series-work figcaption { position:absolute; left:5vw; bottom:64px; display:flex; gap:14px; align-items:baseline; max-width:min(75vw,700px); margin:0; padding:8px 13px; background:#0c0b0bd9; color:#f4eedf; }
+.vaivenes-scroll__track .series-work figcaption > span { color:#f1df51; font:italic 15px/1 Georgia,serif; }
+.vaivenes-scroll__track .series-work h2 { font:italic 400 clamp(22px,3vw,38px)/1.15 Georgia,serif; letter-spacing:-.035em; margin:0; color:#f4eedf; }
+.vaivenes-scroll__track .series-work:not(.vaivenes-caption-open) figcaption p,
+.vaivenes-scroll__track .series-work:not(.vaivenes-caption-open) figcaption a { display:none; }
+.vaivenes-scroll__track .series-work.vaivenes-caption-open figcaption { bottom:65px; max-height:60svh; overflow:auto; }
+.vaivenes-scroll__track .series-work.vaivenes-caption-open p { margin:12px 0 0; color:#ddd3c4; font:14px/1.7 Inter,sans-serif; }
+.vaivenes-scroll__label { position:absolute; top:22px; left:5vw; margin:0; padding:4px 9px; font:italic 26px/1.2 Georgia,serif; color:#ff71a5; background:#0c0b0bd9; transform:rotate(-3deg); pointer-events:none; }
+.vaivenes-scroll__controls { position:absolute; z-index:3; bottom:0; left:0; right:0; display:flex; gap:20px; align-items:center; min-height:58px; padding:6px 5vw; background:#0c0b0bed; font:12px/1.5 Inter,sans-serif; color:#d6cec0; }
+.vaivenes-scroll__controls > span { margin-right:auto; }
+.vaivenes-scroll__controls button { min-height:44px; border:0; padding:4px 0; background:none; color:#f1df51; font:inherit; cursor:pointer; }
+.vaivenes-scroll__controls button:disabled { opacity:.3; cursor:default; }
+.vaivenes-scroll__controls button:focus-visible { outline:2px solid #ff71a5; outline-offset:4px; }
+.series-entry.vaivenes-host-inline { margin-left:calc(-1 * clamp(22px,5vw,88px)); margin-right:calc(-1 * clamp(22px,5vw,88px)); }
+.series-entry.vaivenes-host-active > a { display:none; }
+.vaivenes-host-active > .series-intro { padding-top:35px; }
+@media(max-width:640px) {
+ .vaivenes-scroll__controls { gap:14px; flex-wrap:wrap; padding:5px 6vw; font-size:11px; }
+ .vaivenes-scroll__controls > span { flex-basis:100%; padding-top:3px; font-size:10px; }
+ .vaivenes-scroll__controls button { min-height:35px; }
+ .vaivenes-scroll__track .series-work figcaption { bottom:85px; left:4vw; max-width:88vw; }
+ .vaivenes-scroll__track .series-work.vaivenes-caption-open figcaption { bottom:85px; }
+ .vaivenes-scroll__label { font-size:22px; }
+}
+@media print { .vaivenes-scroll { height:auto !important; } .vaivenes-scroll__stage { position:static; height:auto; overflow:visible; } .vaivenes-scroll__track { display:block; transform:none !important; } .vaivenes-scroll__track .series-work { height:auto; page-break-inside:avoid; } .vaivenes-scroll__track .project-photo { height:auto; } .vaivenes-scroll__controls,.vaivenes-scroll__label { display:none; } }
+
+.vaivenes-scroll__track .series-work:not(.vaivenes-caption-open) figcaption,.vaivenes-scroll__label { background:none; text-shadow:0 2px 5px #000; }
+
+.vaivenes-scroll__track .project-photo { box-sizing:border-box; padding:12px 2vw; }
+.vaivenes-scroll__track .project-photo img { transform-origin:center; backface-visibility:hidden; }

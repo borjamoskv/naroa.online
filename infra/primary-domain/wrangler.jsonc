@@ -1,0 +1,9 @@
+{
+  "name": "naroagutierrezgil-301-redirect",
+  "main": "worker.mjs",
+  "account_id": "f7a07e28840345f91a5b6ddf2642d499",
+  "compatibility_date": "2026-10-21",
+  "workers_dev": false,
+  "routes": [{"pattern": "*naroagutierrezgil.com/*", "zone_id": "889deaf777a0e05c89ae15e9d12120c3"}],
+  "observability": {"enabled": true, "head_sampling_rate": 1}
+}
