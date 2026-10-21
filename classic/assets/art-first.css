@@ -116,3 +116,14 @@ a, button, summary { cursor: pointer; }
   .hero-depth-on .home-art figcaption { padding: 42px 20px 18px; gap: 10px; }
   .hero-depth-on .home-art figcaption > p { font-size: 22px; }
 }
+
+/* The colour reveal travels with the same photographic layer as each iris. */
+.hero-depth-on .eye-paint-scene {
+  transform:rotateX(calc(var(--hero-y) * -1.2deg)) rotateY(calc(var(--hero-x) * 1.8deg));
+  transform-origin:center;
+}
+.hero-depth-eye { transform-box:view-box; }
+.hero-depth-eye--1 { transform:translate3d(calc(var(--hero-p) * -56px + var(--hero-x) * -7px),calc(var(--hero-p) * -92px + var(--hero-y) * -10px),0) rotate(calc(var(--hero-p) * -1.8deg)); transform-origin:17% 50%; }
+.hero-depth-eye--2 { transform:translate3d(calc(var(--hero-x) * 4px),calc(var(--hero-p) * 20px + var(--hero-y) * 7px),0); }
+.hero-depth-eye--3 { transform:translate3d(calc(var(--hero-p) * 56px + var(--hero-x) * 8px),calc(var(--hero-p) * -62px + var(--hero-y) * -5px),0) rotate(calc(var(--hero-p) * 1.8deg)); transform-origin:83% 50%; }
+@media(max-width:640px){ .hero-depth-on .eye-paint-scene { transform:translateY(calc(var(--hero-p) * -22px)); } }

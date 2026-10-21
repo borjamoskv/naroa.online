@@ -62,13 +62,18 @@
     const file = (image.currentSrc || image.src).split('/').pop().split('?')[0];
     const points = portraits[file];
     if (file !== state.source) {
-      state.eyes.forEach(eye => {eye.paint.remove();eye.clip.remove();});
+      state.eyes.forEach(eye => {eye.paint.remove();eye.clip.remove();eye.group?.remove();});
       state.eyes = []; state.maximum = clamp(Number(remembered[file]) || 0); state.source = file;
       if (points) points.forEach((point,i) => {
         const clip = svg('clipPath',{id:`iris-clip-${state.index}-${i}`});
         const iris = svg('ellipse');clip.append(iris);state.defs.append(clip);
         const paint = svg('image',{href:image.currentSrc || image.src,preserveAspectRatio:'none','clip-path':`url(#iris-clip-${state.index}-${i})`});
-        scene.append(paint);state.eyes.push({point,paint,clip,iris});
+        let group=null;
+        if(file==='naroa-portrait-new.webp'){
+          group=svg('g',{class:`hero-depth-eye hero-depth-eye--${Math.floor(i/2)+1}`});
+          group.append(paint);scene.append(group);
+        }else scene.append(paint);
+        state.eyes.push({point,paint,clip,iris,group});
       });
     }
     if (!points || !image.naturalWidth) return null;
@@ -126,7 +131,12 @@
       const portion=walking*state.eyes.length;
       const eye=state.eyes[Math.min(state.eyes.length-1,Math.floor(portion))];
       const t=portion%1;
-      const tip={x:frame.left+eye.x-eye.rx+eye.rx*2*t,y:frame.top+eye.y+Math.sin(t*Math.PI*2)*eye.ry*.25};
+      let tip={x:frame.left+eye.x-eye.rx+eye.rx*2*t,y:frame.top+eye.y+Math.sin(t*Math.PI*2)*eye.ry*.25};
+      const screenMatrix=eye.paint.getScreenCTM?.();
+      if(screenMatrix){
+        const aligned=new DOMPoint(eye.x-eye.rx+eye.rx*2*t,eye.y+Math.sin(t*Math.PI*2)*eye.ry*.25).matrixTransform(screenMatrix);
+        tip={x:aligned.x,y:aligned.y};
+      }
       if (tip.y<70 || tip.y>innerHeight-60) continue;
       if (!candidate || Math.abs(tip.y-innerHeight*.5)<candidate.distance) candidate={tip,contact,distance:Math.abs(tip.y-innerHeight*.5)};
     }
