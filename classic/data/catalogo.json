@@ -395,29 +395,28 @@
       "story": "Una caja de cumpleaños que transforma una fotografía en retrato con volumen. La toalla, la montura recortada y las láminas metalizadas rosas construyen los detalles de la tapa.",
       "images": [
         {
-          "src": "/images/catalogo/hugo-box-hq-01.webp",
-          "width": 1600,
-          "height": 1600,
-          "caption": "Vista de la tapa, recortada para web",
-          "source": "https://www.facebook.com/media/set/?set=a.1520934946052588&type=3",
-          "sha256": "a75751066d986d6bdcdbc759e2acb1467a38667716aa41fb05413be93d5a06f5",
-          "source_local": "classic/images/artworks/pink-and-sparkles-c4K6RUzC.webp"
+          "src": "/images/catalogo/hugo-box-frontal-2048.jpg",
+          "width": 2048,
+          "height": 2048,
+          "caption": "Vista frontal de la tapa completa",
+          "source": "https://www.facebook.com/photo/?fbid=1520931519386264&set=a.1520934946052588",
+          "sha256": "811c1136687ef99c32a687d222b36615f8d7c3973e00694505ca912439f8498a"
         },
         {
-          "src": "/images/catalogo/hugo-box-02.jpg",
-          "width": 843,
-          "height": 631,
+          "src": "/images/catalogo/hugo-box-relieve-2048.jpg",
+          "width": 2048,
+          "height": 1532,
           "caption": "Vista oblicua del relieve",
-          "source": "https://www.facebook.com/media/set/?set=a.1520934946052588&type=3",
-          "sha256": "93ff7b1ae48754510f8a1ef7afd4121e44f2a93a559a8acc4d90cbb16380cbe1"
+          "source": "https://www.facebook.com/photo/?fbid=1520931656052917&set=a.1520934946052588",
+          "sha256": "e4958b05f5a870f312575f30d38585ff778fc3002f1e57f9afb27d0811c59ca8"
         },
         {
-          "src": "/images/catalogo/hugo-box-03.jpg",
-          "width": 640,
-          "height": 856,
+          "src": "/images/catalogo/hugo-box-interior-2048.jpg",
+          "width": 1532,
+          "height": 2048,
           "caption": "Interior de la caja",
-          "source": "https://www.facebook.com/media/set/?set=a.1520934946052588&type=3",
-          "sha256": "7655811fa097b0681e49ef2bc0a61ea5145ac8da5321a10ecbfd427f91659a8d"
+          "source": "https://www.facebook.com/photo/?fbid=1520931496052933&set=a.1520934946052588",
+          "sha256": "37d7bd92478c9e7d9666613696dddaac7846707320b5191cc300681d3023c8e5"
         }
       ],
       "dimensions": null,
