@@ -1,4 +1,4 @@
-/* Native vertical scrolling advances the eight full-screen photographs. */
+/* Native scroll moves through the series and reveals only its irises. */
 (() => {
   'use strict';
   const clamp=(n,low,high)=>Math.max(low,Math.min(high,n));
@@ -6,7 +6,7 @@
   function gallery(host, figures, insertionPoint, inline=false) {
     if(figures.length<2)return;
     const markers=figures.map(figure=>{const marker=document.createComment('Vaivenes original position');figure.before(marker);return marker;});
-    const wrap=document.createElement('section');wrap.className='vaivenes-scroll';wrap.setAttribute('aria-label','Vaivenes: recorrido por las ocho obras');
+    const wrap=document.createElement('section');wrap.className='vaivenes-scroll';wrap.setAttribute('aria-label','Vaivenes: obras, dibujos y detalles');
     const stage=document.createElement('div');stage.className='vaivenes-scroll__stage';
     const track=document.createElement('div');track.className='vaivenes-scroll__track';
     const label=document.createElement('p');label.className='vaivenes-scroll__label';label.textContent='Vaivenes';
@@ -17,22 +17,22 @@
     const details=document.createElement('button');details.type='button';details.textContent='Sobre la obra';details.setAttribute('aria-expanded','false');
     const leave=document.createElement('button');leave.type='button';leave.textContent='Seguir ↓';
     footer.append(hint,previous,next,details,leave);stage.append(track,label,footer);wrap.append(stage);
-    let enabled=false,scheduled=0,width=0,height=0,distance=0,current=0,near=false,displayed=NaN,lastTick=0,velocity=0,pointerX=0,pointerY=0,livePointerX=0,livePointerY=0;
+    let enabled=false,scheduled=0,width=0,height=0,distance=0,lead=0,current=0,near=false,displayed=NaN,lastTick=0,velocity=0,pointerX=0,pointerY=0,livePointerX=0,livePointerY=0;
     const id=++serial;
-    figures.forEach((figure,i)=>{figure.querySelector('figcaption').id=`vaivenes-caption-${id}-${i}`;});
-    function measure(){width=stage.clientWidth;height=innerHeight;distance=(figures.length-1)*width;wrap.style.height=`${height+distance}px`;schedule();}
+    figures.forEach((figure,i)=>{window.NaroaVaivenesEyes?.attach(figure);figure.querySelector('figcaption').id=`vaivenes-caption-${id}-${i}`;});
+    function measure(){width=stage.clientWidth;height=innerHeight;lead=width*.55;distance=(figures.length-1)*width+lead;wrap.style.height=`${height+distance}px`;schedule();}
     function render(time){
       scheduled=0;if(!enabled||document.hidden)return;
       const rect=wrap.getBoundingClientRect();if(rect.top>height||rect.bottom<0)return;
-      const desired=clamp(-rect.top,0,distance);
+      const desired=clamp(-rect.top-lead,0,distance-lead);
       const dt=Math.min(40,Math.max(8,time-lastTick||16));lastTick=time;
       const seek=!Number.isFinite(displayed)||Math.abs(desired-displayed)>width*1.6;
-      const outside=(desired===0&&rect.top>=0)||(desired===distance&&rect.bottom<height*.75);
+      const outside=(desired===0&&rect.top>=0)||(desired===distance-lead&&rect.bottom<height*.75);
       if(seek||outside){displayed=desired;velocity=0;}
       // An analytical critically damped spring remains stable at any refresh rate.
       const before=displayed,omega=1/72,offset=displayed-desired;
       const impulse=velocity+omega*offset,decay=Math.exp(-omega*dt);
-      displayed=clamp(desired+(offset+impulse*dt)*decay,0,distance);
+      displayed=clamp(desired+(offset+impulse*dt)*decay,0,distance-lead);
       velocity=(velocity-omega*impulse*dt)*decay;
       if((desired-before>0&&displayed>desired)||(desired-before<0&&displayed<desired)){
         displayed=desired;velocity=0;
@@ -56,6 +56,9 @@
         const shift=depth*Math.min(22,width*.018)+livePointerX*5;
         const tilt=clamp(velocity*.09+livePointerX*.12,-.25,.25);
         image.style.transform=`translate3d(${shift.toFixed(2)}px,${(-Math.min(3,Math.abs(velocity))+livePointerY*3).toFixed(2)}px,0) rotate(${tilt.toFixed(3)}deg)`;
+        const local=clamp(-rect.top,0,distance);
+        const eyeTravel=local<=lead?local:travel+lead;
+        window.NaroaVaivenesEyes?.reveal(figure,clamp((eyeTravel-i*width)/Math.max(1,lead),0,1));
         const caption=figure.querySelector('figcaption');
         caption.style.transform=`translate3d(${(depth*Math.min(32,width*.025)-livePointerX*3).toFixed(2)}px,0,0)`;
         caption.style.opacity=figure.classList.contains('vaivenes-caption-open')?'1':String(.25+.75*(1-Math.abs(depth)));
@@ -63,7 +66,7 @@
       if(Math.abs(desired-displayed)>.15||Math.abs(velocity)>.03||Math.abs(pointerX-livePointerX)>.002||Math.abs(pointerY-livePointerY)>.002)schedule();
     }
     function schedule(){if(!scheduled&&enabled&&near)scheduled=requestAnimationFrame(render);}
-    function go(index){if(!enabled)return;const top=scrollY+wrap.getBoundingClientRect().top;scrollTo({top:top+clamp(index,0,figures.length-1)*width,behavior:'smooth'});}
+    function go(index){if(!enabled)return;const top=scrollY+wrap.getBoundingClientRect().top;scrollTo({top:top+lead+clamp(index,0,figures.length-1)*width,behavior:'smooth'});}
     stage.addEventListener('pointermove',event=>{
       if(event.pointerType!=='mouse')return;
       const box=stage.getBoundingClientRect();
@@ -88,7 +91,7 @@
         measure();intersection.observe(wrap);addEventListener('scroll',schedule,{passive:true});
       }else{
         cancelAnimationFrame(scheduled);scheduled=0;intersection.disconnect();removeEventListener('scroll',schedule);
-        figures.forEach((figure,i)=>{markers[i].after(figure);figure.classList.remove('vaivenes-caption-open');figure.querySelector('img').style.transform='';figure.querySelector('figcaption').style.transform='';figure.querySelector('figcaption').style.opacity='';});wrap.remove();host.classList.remove('vaivenes-host-active','vaivenes-host-inline');
+        figures.forEach((figure,i)=>{markers[i].after(figure);figure.classList.remove('vaivenes-caption-open');figure.querySelector('img').style.transform='';window.NaroaVaivenesEyes?.reveal(figure,0);figure.querySelector('figcaption').style.transform='';figure.querySelector('figcaption').style.opacity='';});wrap.remove();host.classList.remove('vaivenes-host-active','vaivenes-host-inline');
       }
     }
     // Keep direct links to individual works meaningful inside the pinned sequence.
@@ -108,7 +111,7 @@
       try{
         const response=await fetch('/data/vaivenes.json');if(!response.ok)return;const data=await response.json();
         const figures=data.images.map((work,i)=>{
-          const figure=document.createElement('figure');figure.className='series-work';figure.id=`home-vaivenes-${work.slug}`;
+          const figure=document.createElement('figure');figure.className='series-work';figure.id=`home-vaivenes-${work.slug}`;figure.dataset.irises=JSON.stringify(work.irises||[]);figure.dataset.eyeTone=work.eye_tone||'original';
           const image=document.createElement('img');image.src=work.src;image.width=work.width;image.height=work.height;image.alt=work.title+' · '+work.caption;image.loading='lazy';image.decoding='async';
           const photo=document.createElement('div');photo.className='project-photo';photo.append(image);
           const caption=document.createElement('figcaption'),number=document.createElement('span'),copy=document.createElement('div'),title=document.createElement('h2'),text=document.createElement('p'),source=document.createElement('a');

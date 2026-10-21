@@ -49,6 +49,7 @@
   arm.src = '/assets/naroa-brazo-pincel-v1.webp';arm.draggable = false;
   document.body.append(arm);
   document.querySelectorAll('.project-photo, .catalog-card__image').forEach((target,index) => {
+    if (target.closest('.series-work')) return;
     const image = target.querySelector('img');
     if (!image) return;
     const scene = svg('svg', {class:'eye-paint-scene', 'aria-hidden':'true',focusable:'false'});

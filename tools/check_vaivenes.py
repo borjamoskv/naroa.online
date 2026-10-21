@@ -5,7 +5,8 @@ from pathlib import Path
 from html.parser import HTMLParser
 from PIL import Image
 R=Path(__file__).resolve().parents[1]/'classic'
-d=json.loads((R/'data/vaivenes.json').read_text());items=d['images'];assert len(items)==8
+d=json.loads((R/'data/vaivenes.json').read_text());items=d['images'];assert len(items)==11
+assert len({i['work_slug'] for i in items})==8
 assert len({i['slug'] for i in items})==len(items)
 assert len({i['sha256'] for i in items})==len(items)
 class Page(HTMLParser):
@@ -21,9 +22,10 @@ for im in items:
  with Image.open(f) as photo:assert photo.size==(im['width'],im['height'])
  assert max(im['width'],im['height'])>=1200 and min(im['width'],im['height'])>=1000
  assert im['slug']=='pippilotta' or (max(im['width'],im['height'])>=1600 and min(im['width'],im['height'])>=1200)
+ assert im['irises'] and all(len(eye)==4 and all(0<value<1 for value in eye) for eye in im['irises'])
  assert im['source'].startswith('https://');assert im['slug'] in p.ids and im['slug'] in p.nav
  if im.get('stage')=='dibujo':assert 'Dibujo del retrato' in im['caption']
 assert all(a in p.ids for a in p.nav)
 assert sum(i.get('fetchpriority')=='high' for i in p.images)==1
 assert sum(i.get('loading')=='lazy' for i in p.images)==len(items)-1
-print(f'OK: {len(items)} Vaivenes works; source hashes, actual resolution, process labels, anchors and lazy loading verified.')
+print(f'OK: 8 Vaivenes works, {len(items)} images; source hashes, actual resolution, process labels, anchors and lazy loading verified.')
