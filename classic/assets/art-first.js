@@ -52,89 +52,42 @@
   }));
   window.addEventListener('hashchange', () => navigate(location.hash));
 
-  // Show a complete portrait on narrow screens, and the three works together on desktop.
-  const portraitScreen = window.matchMedia('(max-width: 640px)');
-  const homePhoto = document.getElementById('home-art-photo');
-  const homeOpen = document.getElementById('home-art-open');
-  function setHomeArtwork() {
-    const src = portraitScreen.matches ? '/images/catalogo/marilyn-rocks-hq-01.webp' : '/images/artworks/naroa-portrait-new.webp';
-    const caption = portraitScreen.matches ? 'DiviNos · Marilyn Rocks. Retrato sobre pizarra.' : 'DiviNos · Marilyn Rocks, Johnny Rocks y James Rocks. Retratos sobre pizarra.';
-    homePhoto.href = homeOpen.href = src;
-    homePhoto.dataset.image = src;
-    homePhoto.dataset.caption = caption;
-    homePhoto.querySelector('img').alt = caption;
-  }
-  setHomeArtwork();
-  portraitScreen.addEventListener('change', setHomeArtwork);
-  // Let the caption offer the same enlargement as the photograph itself.
-  document.getElementById('home-art-open')?.addEventListener('click', event => {
-    if (typeof document.getElementById('art-viewer')?.showModal !== 'function') return;
-    event.preventDefault();
-    document.getElementById('home-art-photo').click();
-  });
-  // Three strips of the original photograph form a shallow, moving collage.
-  // The intact original remains the accessible enlargement and static fallback.
   const hero = document.getElementById('view-home');
-  const heroFigure = hero.querySelector('.home-art');
-  const layers = document.createElement('div');
-  layers.className = 'hero-depth-layers';
-  layers.setAttribute('aria-hidden', 'true');
-  for (let index = 0; index < 3; index++) {
-    const panel = document.createElement('div');
-    panel.className = `hero-depth-panel hero-depth-panel--${index + 1}`;
-    const photo = document.createElement('img');
-    photo.src = '/images/artworks/naroa-portrait-new.webp';
-    photo.alt = '';
-    photo.decoding = 'async';
-    panel.append(photo);
-    layers.append(panel);
-  }
-  homePhoto.append(layers);
-  let heroFrame = 0;
-  let pointerX = 0, pointerY = 0;
-  let liveP = 0, liveX = 0, liveY = 0, lastHeroTick = 0;
+  let heroFrame = 0, drift = 0, pointerX = 0, pointerY = 0, liveX = 0, liveY = 0, lastHeroTime = 0;
+  const clamp = n => Math.max(-1, Math.min(1, n));
   function renderHero(time) {
     heroFrame = 0;
-    const enabled = document.documentElement.dataset.brushEnabled === 'true';
-    const wasEnabled = hero.classList.contains('hero-depth-on');
-    if (wasEnabled !== enabled) {
-      const before = hero.getBoundingClientRect();
-      hero.classList.toggle('hero-depth-on', enabled);
-      // Keep the visitor on the same artwork when toggling effects from the catalogue.
-      if (before.bottom <= 0) window.scrollBy({top: hero.offsetHeight - before.height, behavior: 'instant'});
-    }
-    if (!enabled || document.hidden) return;
-    const rect = hero.getBoundingClientRect();
-    const viewport = window.innerHeight;
-    if (rect.bottom < 0 || rect.top > viewport) return;
-    const distance = Math.max(1, hero.offsetHeight - heroFigure.offsetHeight);
-    const progress = Math.max(0, Math.min(1, -rect.top / distance));
-    const dt = Math.min(40, Math.max(8, time - lastHeroTick || 16));
-    lastHeroTick = time;
-    const blend = 1 - Math.exp(-dt / 85);
-    const desired = progress * progress * (3 - 2 * progress);
-    liveP += (desired - liveP) * blend;
-    liveX += (pointerX - liveX) * blend;
-    liveY += (pointerY - liveY) * blend;
-    hero.style.setProperty('--hero-p', liveP.toFixed(4));
-    hero.style.setProperty('--hero-x', liveX.toFixed(3));
-    hero.style.setProperty('--hero-y', liveY.toFixed(3));
-    if (Math.abs(desired-liveP) > .0004 || Math.abs(pointerX-liveX) > .002 || Math.abs(pointerY-liveY) > .002) scheduleHero();
+    // The explicit control can opt into motion even when the system reduces it.
+    const on = document.documentElement.dataset.brushEnabled === 'true';
+    const box = hero.getBoundingClientRect();
+    const target = on ? Math.max(0, Math.min(1, -box.top / Math.max(1, box.height))) : 0;
+    const dt = Math.min(40, Math.max(8, time - lastHeroTime || 16));
+    lastHeroTime = time;
+    const blend = 1 - Math.exp(-dt / 95);
+    drift += (target - drift) * blend;
+    liveX += ((on ? pointerX : 0) - liveX) * blend;
+    liveY += ((on ? pointerY : 0) - liveY) * blend;
+    if (!on) drift = liveX = liveY = 0;
+    hero.style.setProperty('--studio-drift', `${(-drift * 62 + liveY * 7).toFixed(2)}px`);
+    hero.style.setProperty('--studio-sway', `${(liveX * 9).toFixed(2)}px`);
+    hero.style.setProperty('--studio-copy-drift', `${(drift * 28 - liveY * 3).toFixed(2)}px`);
+    hero.style.setProperty('--studio-tilt', `${(liveX * .35).toFixed(3)}deg`);
+    if (on && box.bottom > 0 && box.top < innerHeight &&
+      (Math.abs(target - drift) > .0005 || Math.abs(pointerX - liveX) > .002 || Math.abs(pointerY - liveY) > .002)) scheduleHero();
   }
-  function scheduleHero() {
-    if (!heroFrame) heroFrame = requestAnimationFrame(renderHero);
-  }
+  function scheduleHero() { if (!heroFrame) heroFrame = requestAnimationFrame(renderHero); }
   hero.addEventListener('pointermove', event => {
     if (event.pointerType !== 'mouse') return;
-    const bounds = heroFigure.getBoundingClientRect();
-    pointerX = Math.max(-1, Math.min(1, (event.clientX / bounds.width - .5) * 2));
-    pointerY = Math.max(-1, Math.min(1, ((event.clientY - bounds.top) / bounds.height - .5) * 2));
+    const box = hero.getBoundingClientRect();
+    pointerX = clamp((event.clientX - box.left) / box.width * 2 - 1);
+    pointerY = clamp((event.clientY - box.top) / box.height * 2 - 1);
     scheduleHero();
-  }, {passive: true});
+  }, {passive:true});
   hero.addEventListener('pointerleave', () => { pointerX = pointerY = 0; scheduleHero(); });
-  window.addEventListener('scroll', scheduleHero, {passive: true});
-  window.addEventListener('resize', scheduleHero, {passive: true});
+  addEventListener('scroll', scheduleHero, {passive:true});
+  addEventListener('resize', scheduleHero, {passive:true});
   document.addEventListener('naroa:motionchange', scheduleHero);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) scheduleHero(); });
   scheduleHero();
   requestAnimationFrame(() => { if (routes[location.hash]) navigate(location.hash); });
 })();

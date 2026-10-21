@@ -53,77 +53,17 @@ a, button, summary { cursor: pointer; }
 
 ::-webkit-scrollbar-thumb { background: #56574f; }
 
-/* The original triptych becomes a shallow collage as the visitor scrolls. */
-.hero-depth-layers { display: none; }
-#view-home.hero-depth-on {
-  position: relative;
-  min-height: 160svh;
-  overflow: clip;
-  background: #15130f;
-  --hero-p: 0;
-  --hero-x: 0;
-  --hero-y: 0;
+/* Depth belongs to the complete artwork, never to a cropped or enlarged copy. */
+html[data-brush-enabled="true"] #view-home.studio-hero .home-art {
+  transform: perspective(1400px) translate3d(var(--studio-sway,0px),var(--studio-drift,0px),0) rotateY(var(--studio-tilt,0deg));
 }
-.hero-depth-on .home-art { position: sticky; top: 0; perspective: 1500px; }
-.hero-depth-on .home-art .project-photo { isolation: isolate; background: #15130f; }
-.hero-depth-on .home-art picture { opacity: 0; }
-.hero-depth-on .hero-depth-layers {
-  display: block;
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  transform: rotateX(calc(var(--hero-y) * -1.2deg)) rotateY(calc(var(--hero-x) * 1.8deg));
-  transform-origin: center;
+html[data-brush-enabled="true"] #view-home.studio-hero .studio-hero__copy {
+  transform: translate3d(0,var(--studio-copy-drift,0px),0);
 }
-.hero-depth-panel { position: absolute; inset: 0; will-change: transform; }
-.hero-depth-panel img { width: 100%; height: 100%; object-fit: contain; }
-.hero-depth-panel--1 {
-  clip-path: polygon(0 0,33.6% 0,32.5% 100%,0 100%);
-  transform: translate3d(calc(var(--hero-p) * -56px + var(--hero-x) * -7px),calc(var(--hero-p) * -92px + var(--hero-y) * -10px),0) rotate(calc(var(--hero-p) * -1.8deg));
-  transform-origin: 17% 50%;
+#view-home.studio-hero .studio-hero__enter span { transition:transform .3s ease; }
+#view-home.studio-hero .studio-hero__enter:is(:hover,:focus-visible) span { transform:translate(5px,5px); }
+@media(max-width:760px) {
+ html[data-brush-enabled="true"] #view-home.studio-hero .home-art { transform:translate3d(0,calc(var(--studio-drift,0px) * .45),0); }
+ html[data-brush-enabled="true"] #view-home.studio-hero .studio-hero__copy { transform:none; }
 }
-.hero-depth-panel--2 {
-  clip-path: polygon(33.6% 0,66% 0,66.7% 100%,32.5% 100%);
-  transform: translate3d(calc(var(--hero-x) * 4px),calc(var(--hero-p) * 20px + var(--hero-y) * 7px),0);
-}
-.hero-depth-panel--3 {
-  clip-path: polygon(66% 0,100% 0,100% 100%,66.7% 100%);
-  transform: translate3d(calc(var(--hero-p) * 56px + var(--hero-x) * 8px),calc(var(--hero-p) * -62px + var(--hero-y) * -5px),0) rotate(calc(var(--hero-p) * 1.8deg));
-  transform-origin: 83% 50%;
-}
-.hero-depth-on .home-art figcaption {
-  position: absolute;
-  z-index: 5;
-  left: 0; right: 0; bottom: 0;
-  padding: 48px 3vw 20px;
-  background: linear-gradient(transparent 0%, #080808c9 52%, #080808f5 100%);
-  color: #f2eee3;
-}
-.hero-depth-on .home-art figcaption > p { font: 400 28px/1.2 Outfit,sans-serif; }
-.hero-depth-on .home-art figcaption > p span { display: block; font: 400 11px/1.8 Inter,sans-serif; margin-top: 5px; color: #e5dcca; }
-.hero-depth-on .home-art__links {
-  transform: translateY(calc(var(--hero-p) * -12px));
-}
-@media (max-width:640px) {
-  #view-home.hero-depth-on { min-height: 120svh; }
-  .hero-depth-on .hero-depth-layers { display: none; }
-  .hero-depth-on .home-art picture {
-    display: block;
-    opacity: 1;
-    transform: translateY(calc(var(--hero-p) * -22px));
-  }
-  .hero-depth-on .home-art figcaption { padding: 42px 20px 18px; gap: 10px; }
-  .hero-depth-on .home-art figcaption > p { font-size: 22px; }
-}
-
-/* The colour reveal travels with the same photographic layer as each iris. */
-.hero-depth-on .eye-paint-scene {
-  transform:rotateX(calc(var(--hero-y) * -1.2deg)) rotateY(calc(var(--hero-x) * 1.8deg));
-  transform-origin:center;
-}
-.hero-depth-eye { transform-box:view-box; }
-.hero-depth-eye--1 { transform:translate3d(calc(var(--hero-p) * -56px + var(--hero-x) * -7px),calc(var(--hero-p) * -92px + var(--hero-y) * -10px),0) rotate(calc(var(--hero-p) * -1.8deg)); transform-origin:17% 50%; }
-.hero-depth-eye--2 { transform:translate3d(calc(var(--hero-x) * 4px),calc(var(--hero-p) * 20px + var(--hero-y) * 7px),0); }
-.hero-depth-eye--3 { transform:translate3d(calc(var(--hero-p) * 56px + var(--hero-x) * 8px),calc(var(--hero-p) * -62px + var(--hero-y) * -5px),0) rotate(calc(var(--hero-p) * 1.8deg)); transform-origin:83% 50%; }
-@media(max-width:640px){ .hero-depth-on .eye-paint-scene { transform:translateY(calc(var(--hero-p) * -22px)); } }
+@media(prefers-reduced-motion:reduce) { #view-home.studio-hero .studio-hero__enter span { transition:none; } }

@@ -1,0 +1,101 @@
+/* Ink, handwriting and whole artworks. Each section has room to breathe. */
+:root { color-scheme:dark; }
+body { color:#f4eedf; background:#0c0b0b; }
+body a { color:inherit; }
+body a:focus-visible,body button:focus-visible,body summary:focus-visible { outline:2px solid #ff71a5; outline-offset:6px; }
+#main-nav .nav__logo { font-family:'Schoolbell',cursive; font-size:29px; letter-spacing:0; }
+#main-nav .nav__link { font-family:'Schoolbell',cursive; font-size:19px; }
+.brush-controls { justify-content:flex-end; background:#0c0b0b; padding:0 5vw; min-height:38px; }
+.brush-controls > p { display:none; }
+.brush-controls .brush-toggle { min-height:36px; color:#b6ada1; font-size:11px; }
+#view-home.studio-hero { display:grid !important; grid-template-columns:1fr 1.15fr; align-items:center; gap:4vw; padding:15px 5vw 50px; min-height:calc(100svh - 102px); background:#0c0b0b; overflow:visible; }
+.studio-hero__copy { position:relative; z-index:3; padding:15px 0 35px; }
+.studio-hero__copy .artist-kicker { margin:0 0 24px; color:#ff71a5; }
+html body .studio-hero h1 { margin:0 0 35px; line-height:.9; letter-spacing:-.025em; color:#f4eedf; }
+.studio-hero h1 span { display:block; }
+.studio-hero h1 span:first-child { font-size:clamp(112px,13.4vw,230px); transform:rotate(-3deg); transform-origin:left bottom; }
+.studio-hero h1 span:last-child { margin-top:22px; font-size:clamp(29px,3.5vw,56px); letter-spacing:.015em; }
+.studio-hero__statement { margin:0 0 20px; font:400 clamp(34px,4.6vw,74px)/1.1 'Schoolbell',cursive; color:#f1df51; transform:rotate(-1deg); }
+.studio-hero__intro { margin:0 0 25px; font:15px/1.8 Inter,Arial,sans-serif; color:#c7bfb3; }
+.studio-hero__enter { display:inline-flex; align-items:center; gap:25px; min-height:48px; font:25px/1.2 'Schoolbell',cursive; color:#ff7167; text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:8px; }
+.studio-hero__enter span { display:inline-block; font:34px/1 Georgia,serif; }
+.studio-hero .home-art { margin:0; min-width:0; transform:translateY(var(--studio-drift,0px)); }
+.studio-hero .home-art .project-photo { background:none; }
+.studio-hero .home-art img { display:block; width:100%; height:clamp(430px,75svh,920px); max-height:none; object-fit:contain; }
+.studio-hero .home-art figcaption { display:flex; align-items:baseline; justify-content:space-between; gap:20px; padding:18px 0 0; font:12px/1.6 Inter,Arial,sans-serif; }
+.studio-hero .home-art figcaption p { font:20px/1.4 'Schoolbell',cursive; color:#f4eedf; }
+.studio-hero .home-art figcaption p span { display:block; margin-top:3px; font:11px/1.6 Inter,Arial,sans-serif; color:#b6ada1; }
+.studio-hero .home-art figcaption a { min-height:44px; padding:8px 0; color:#c7bfb3; text-decoration:underline; text-underline-offset:5px; }
+.editorial-catalog .catalog-intro { grid-template-columns:.8fr 1fr; padding-top:25px; }
+.editorial-catalog .catalog-intro h2 { font-size:clamp(65px,9vw,140px); }
+.editorial-catalog .catalog-intro > p { font-size:16px; max-width:540px; }
+.series-entry > a { margin:0 5vw 35px; padding:15px 0; }
+.series-entry > a > div { padding:0; }
+.series-entry > a h2 { font-size:clamp(64px,10vw,150px); color:#ff71a5; transform:rotate(-2deg); transform-origin:left; }
+.series-entry > a strong { color:#f1df51; border:0; text-decoration:underline; text-underline-offset:6px; }
+.catalog-other-works { display:flex; flex-wrap:wrap; gap:10px 24px; margin:25px 5vw; font:12px/1.8 Inter,Arial,sans-serif; color:#a99f92; }
+.catalog-other-works a { color:#c7bfb3; text-underline-offset:5px; }
+.editorial-catalog .catalog-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:80px 5vw; padding:15px 5vw 60px; }
+.editorial-catalog .catalog-card { min-width:0; }
+.editorial-catalog .catalog-card:nth-child(even) { padding-top:75px; }
+.editorial-catalog .catalog-card__image { display:flex; align-items:center; height:clamp(300px,43vw,680px); min-height:0; background:none; padding:0; }
+.editorial-catalog .catalog-card__image img { width:100%; height:100%; max-height:none; object-fit:contain; }
+.editorial-catalog .catalog-card__meta,.editorial-catalog .catalog-card h3,.editorial-catalog .catalog-card p { margin-left:0; margin-right:0; }
+.editorial-catalog .catalog-card h3 { margin-top:12px; font-size:clamp(28px,3.2vw,48px); }
+.editorial-catalog .catalog-card__meta { color:#ff71a5; font-size:10px; line-height:1.5; }
+.editorial-catalog .catalog-card p { color:#b6ada1; }
+.editorial-catalog .catalog-card a:hover h3 { color:#f1df51; }
+.editorial-catalog .catalog-footnote { margin-bottom:45px; }
+#view-about .artist-hero { height:80svh; min-height:550px; max-height:900px; background:#0c0b0b; }
+#view-about .artist-hero > img { width:100%; height:100%; object-fit:contain; }
+#view-about .artist-hero__shade { background:linear-gradient(transparent 65%,#0c0b0be6); }
+#view-about .artist-opening { padding-bottom:25px; }
+#view-about .artist-quote { padding-top:30px; padding-bottom:35px; }
+.artist-profile-link { margin:0; padding:0 7vw 90px; }
+.artist-profile-link a { display:inline-flex; align-items:center; min-height:48px; font:27px/1.5 'Schoolbell',cursive; color:#6acbd4; text-underline-offset:8px; }
+.notebook .notebook-intro h2,.notebook .notebook-intro h3 { letter-spacing:0; }
+.notebook-notes { gap:50px 7vw; margin-top:65px; }
+.notebook-entry--note:first-child { grid-column:auto; margin:0; max-width:none; }
+.notebook-entry--note:nth-child(3) { margin-top:0; }
+.notebook-entry--note:first-child .notebook-post-title,.notebook-entry--note .notebook-post-title { font-size:clamp(27px,3vw,42px); }
+.notebook-summary { line-height:1.8; }
+.notebook-footer { margin-top:60px; }
+.career-home { padding:90px 7vw 110px; }
+.career-home h2 { font-size:clamp(52px,7vw,110px); margin:20px 0 28px; color:#f4eedf; }
+.career-home > p:not(.artist-kicker) { max-width:560px; font:17px/1.8 Inter,Arial,sans-serif; color:#c7bfb3; }
+.career-home a { display:inline-block; min-height:48px; margin-top:20px; font:27px/1.5 'Schoolbell',cursive; color:#f1df51; text-underline-offset:8px; }
+.contacto__titulo { max-width:100%; }
+.footer { padding:28px 7vw; color:#b6ada1; font:12px/1.8 Inter,Arial,sans-serif; }
+@media(min-width:1600px) { #view-home.studio-hero { padding-left:max(6vw,calc((100vw - 1600px)/2)); padding-right:max(6vw,calc((100vw - 1600px)/2)); } }
+@media(max-width:760px) {
+ #view-home.studio-hero { grid-template-columns:1fr; gap:0; padding:0 6vw 40px; min-height:0; }
+ .studio-hero__copy { padding:12px 0 24px; }
+ .studio-hero__copy .artist-kicker { margin-bottom:14px; font-size:17px; }
+ .studio-hero h1 span:first-child { font-size:clamp(110px,26vw,180px); }
+ .studio-hero h1 span:last-child { margin-top:17px; font-size:32px; }
+ html body .studio-hero h1 { margin-bottom:24px; }
+ .studio-hero__statement { font-size:42px; margin-bottom:16px; }
+ .studio-hero__statement br { display:none; }
+ .studio-hero__intro { font-size:14px; margin-bottom:15px; }
+ .studio-hero__enter { font-size:24px; }
+ .studio-hero .home-art img { height:auto; max-height:80svh; }
+ .studio-hero .home-art figcaption { gap:15px; padding-top:15px; }
+ .studio-hero .home-art figcaption a { max-width:135px; font-size:11px; }
+ .editorial-catalog .catalog-intro { grid-template-columns:1fr; }
+ .editorial-catalog .catalog-intro > p { font-size:15px; }
+ .editorial-catalog .catalog-grid { grid-template-columns:1fr; gap:55px; padding:10px 6vw 40px; }
+ .editorial-catalog .catalog-card:nth-child(even) { padding-top:0; }
+ .editorial-catalog .catalog-card__image { height:auto; }
+ .editorial-catalog .catalog-card__image img { height:auto; max-height:85svh; }
+ .editorial-catalog .catalog-card h3 { font-size:34px; }
+ .catalog-other-works { flex-direction:column; gap:8px; margin:22px 6vw; }
+ #view-about .artist-hero { min-height:0; height:75svh; }
+ .artist-profile-link { padding:0 6vw 60px; }
+ .artist-profile-link a { font-size:24px; }
+ .notebook-notes { grid-template-columns:1fr; gap:38px; }
+ .notebook-entry--note:first-child { margin:0; }
+ .career-home { padding:65px 6vw; }
+ .career-home a { font-size:24px; }
+ .contacto__titulo { font-size:clamp(62px,16vw,95px); }
+}
+@media(prefers-reduced-motion:reduce) { .studio-hero .home-art { transform:none; } }

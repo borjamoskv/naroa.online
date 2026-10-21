@@ -6,7 +6,6 @@
   // Normalized coordinates measured against each source photograph, not its frame.
   const portraits = {
     'amy-rocks-hq-01.jpg': [[.396,.470,.012,.014], [.513,.424,.012,.015]],
-    'marilyn-rocks-hq-01.webp': [[.416,.264,.013,.007], [.563,.268,.013,.007]],
     'johnny-rocks-hq-01.webp': [[.378,.451,.017,.010], [.576,.462,.016,.009]],
     'james-rocks-hq-01.webp': [[.420,.346,.013,.006], [.560,.334,.013,.006]],
     'naroa-portrait-new.webp': [[.110,.261,.006,.007], [.171,.271,.006,.007], [.438,.446,.008,.011], [.524,.456,.008,.010], [.798,.355,.005,.007], [.861,.332,.005,.007]]
@@ -14,7 +13,10 @@
   let choice = null;
   try { choice = sessionStorage.getItem('naroa-brush-motion'); } catch (_) {}
   const query = new URLSearchParams(location.search).get('brocha');
-  if (query === '1' || query === '0') choice = query === '1' ? 'on' : 'off';
+  if (query === '1' || query === '0') {
+    choice = query === '1' ? 'on' : 'off';
+    try { sessionStorage.setItem('naroa-brush-motion',choice); } catch (_) {}
+  }
   let enabled = choice ? choice === 'on' : !motion.matches;
   const buttons = [], states = [], active = new Set();
   let remembered = {};
@@ -43,7 +45,7 @@
     if (after) host.after(bar); else host.prepend(bar);
   }
   control(document.querySelector('main'));
-  control(document.querySelector('.catalog-intro'),true);
+
   const arm = document.createElement('img');
   arm.className = 'naroa-painting-arm';arm.alt = '';arm.setAttribute('aria-hidden','true');
   arm.src = '/assets/naroa-brazo-pincel-v1.webp';arm.draggable = false;
@@ -52,6 +54,8 @@
     if (target.closest('.series-work')) return;
     const image = target.querySelector('img');
     if (!image) return;
+    const file = (image.currentSrc || image.src).split('/').pop().split('?')[0];
+    if (!portraits[file]) return;
     const scene = svg('svg', {class:'eye-paint-scene', 'aria-hidden':'true',focusable:'false'});
     const defs = svg('defs');
     scene.append(defs);target.append(scene);target.classList.add('eye-paint-target');
@@ -66,6 +70,8 @@
       state.eyes.forEach(eye => {eye.paint.remove();eye.clip.remove();eye.group?.remove();});
       state.eyes = []; state.maximum = clamp(Number(remembered[file]) || 0); state.source = file;
       if (points) points.forEach((point,i) => {
+        // Marilyn stays exactly as photographed, including in the opening triptych.
+        if (file === 'naroa-portrait-new.webp' && i < 2) return;
         const clip = svg('clipPath',{id:`iris-clip-${state.index}-${i}`});
         const iris = svg('ellipse');clip.append(iris);state.defs.append(clip);
         const paint = svg('image',{href:image.currentSrc || image.src,preserveAspectRatio:'none','clip-path':`url(#iris-clip-${state.index}-${i})`});
@@ -122,7 +128,7 @@
       state.scene.dataset.brushMode=contact?'painting':'lifted';
       state.eyes.forEach((eye,i)=>{
         const amount=clamp(state.maximum*state.eyes.length-i);
-        const red = state.source.startsWith('james-rocks') || state.source.startsWith('marilyn-rocks');
+        const red = state.source.startsWith('james-rocks');
         eye.paint.style.filter = `grayscale(${1-amount}) sepia(${red ? amount*.85 : 0}) saturate(${1+amount*(red ? 3 : .35)}) hue-rotate(${red ? -42*amount : 0}deg)`;
         eye.paint.dataset.revealed = amount.toFixed(4);
       });
@@ -163,6 +169,8 @@
     arm.style.top=`${armPose.y-width*(1024/1536)*.29-lift}px`;
     arm.style.transform=contact?'rotate(0deg)':'rotate(-5deg)';
     arm.dataset.brushMode=contact?'painting':'lifted';arm.style.opacity=String(Math.max(0,opacity));
+    // Finish approaching and lifting the brush even after scrolling has stopped.
+    if (Math.abs(tip.x-armPose.x)>.15 || Math.abs(tip.y-armPose.y)>.15 || time-armPose.start<100 || time<liftUntil) schedule();
   }
   function schedule() {if (!scheduled && enabled) scheduled=requestAnimationFrame(render);}
   const observer=new IntersectionObserver(entries=>{

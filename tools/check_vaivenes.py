@@ -5,7 +5,7 @@ from pathlib import Path
 from html.parser import HTMLParser
 from PIL import Image
 R=Path(__file__).resolve().parents[1]/'classic'
-d=json.loads((R/'data/vaivenes.json').read_text());items=d['images'];assert len(items)==11
+d=json.loads((R/'data/vaivenes.json').read_text());items=d['images'];assert len(items)==8
 assert len({i['work_slug'] for i in items})==8
 assert len({i['slug'] for i in items})==len(items)
 assert len({i['sha256'] for i in items})==len(items)

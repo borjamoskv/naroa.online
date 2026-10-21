@@ -53,29 +53,6 @@
       "eye_tone": "amber"
     },
     {
-      "slug": "roisin-dibujo",
-      "work_slug": "roisin",
-      "title": "Róisín · dibujo",
-      "src": "/images/catalogo/vaivenes-roisin-dibujo.jpg",
-      "width": 2048,
-      "height": 1536,
-      "caption": "Dibujo del retrato de Róisín, antes del collage con plumas y tejido. Imagen encontrada en el archivo local de la serie.",
-      "stage": "dibujo",
-      "source": "https://naroagutierrez.wordpress.com/2020/09/20/vaivenes-en-el-haika-de-sodupe/",
-      "membership_source": "https://naroagutierrez.wordpress.com/2020/09/20/vaivenes-en-el-haika-de-sodupe/",
-      "source_local": "live-site/sala-3d/carrusel/img/src/107590796_4093189104089104_8579394152081488805_n.jpg",
-      "sha256": "d0755371e6809490b13fc300fe8ba953f7f497e0006ccf5bd7dd804cfcd1cb82",
-      "irises": [
-        [
-          0.567,
-          0.406,
-          0.008,
-          0.005
-        ]
-      ],
-      "eye_tone": "amber"
-    },
-    {
       "slug": "mr-fahrenheit",
       "title": "Mr. Fahrenheit",
       "src": "/images/catalogo/vaivenes-mr-fahrenheit.jpg",
@@ -164,35 +141,6 @@
       "eye_tone": "red"
     },
     {
-      "slug": "cantinflowers-detalle",
-      "work_slug": "cantinflowers",
-      "title": "Cantinflowers · detalle",
-      "src": "/images/catalogo/vaivenes-cantinflowers-detalle.jpg",
-      "width": 2000,
-      "height": 1500,
-      "caption": "Detalle del rostro de Cantinflowers. La fotografía conserva las marcas y texturas de la obra original.",
-      "stage": "detalle",
-      "source": "https://naroagutierrez.wordpress.com/2026/01/15/divinos-vaivenes-muestra-plastica-en-politena-espacio-de-arte/",
-      "membership_source": "https://naroagutierrez.wordpress.com/2026/01/15/divinos-vaivenes-muestra-plastica-en-politena-espacio-de-arte/",
-      "source_local": "raw_artworks_facebook/obras/3914037668670916.jpg",
-      "sha256": "eb20a936d88a611e314f4f5b5a7baaaf940f4ed466fef2ea3422b159b0861ede",
-      "irises": [
-        [
-          0.195,
-          0.328,
-          0.025,
-          0.027
-        ],
-        [
-          0.53,
-          0.334,
-          0.025,
-          0.025
-        ]
-      ],
-      "eye_tone": "red"
-    },
-    {
       "src": "/images/catalogo/mario-moreno-hq-01.webp",
       "width": 1564,
       "height": 2048,
@@ -221,35 +169,6 @@
         ]
       ],
       "eye_tone": "red"
-    },
-    {
-      "slug": "pippilotta-dibujo",
-      "work_slug": "pippilotta",
-      "title": "Pippilotta · dibujo",
-      "src": "/images/catalogo/vaivenes-pippilotta-dibujo.jpg",
-      "width": 1641,
-      "height": 1231,
-      "caption": "Dibujo del retrato de Pippilotta junto a su mono, antes de añadir las cartas y el marco.",
-      "stage": "dibujo",
-      "source": "https://naroagutierrez.wordpress.com/2022/03/22/repoker-de-reinas-vaivenes-en-siarte/",
-      "membership_source": "https://www.facebook.com/naroa.artista.plastica/videos/170643291011818/",
-      "source_local": "live-site/sala-3d/carrusel/img/src/pipi.jpg",
-      "sha256": "8057f3bfe1821d29d33c7b39ad0bc7ceb4cb994adac096c0be414cb779746eeb",
-      "irises": [
-        [
-          0.336,
-          0.382,
-          0.011,
-          0.007
-        ],
-        [
-          0.455,
-          0.339,
-          0.012,
-          0.007
-        ]
-      ],
-      "eye_tone": "original"
     },
     {
       "slug": "pippilotta",
@@ -349,5 +268,5 @@
     }
   ],
   "reviewed": "2026-10-21",
-  "selection_note": "Ocho obras y once imágenes: se añaden los dibujos previos de Róisín y Pippilotta y un detalle de Cantinflowers, diferenciados de las composiciones completas."
+  "selection_note": "Ocho obras distintas, una imagen de cada una. Los procesos y detalles se conservan en el archivo sin repetirlos en el recorrido."
 }

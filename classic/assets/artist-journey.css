@@ -27,3 +27,28 @@
 .artist-page .career-nav { transition: transform .18s ease; }
 body.artist-journey-active .career-nav:not(:focus-within),
 body.artist-journey-active #main-nav:not(:focus-within) { transform: translateY(-110%); }
+
+/* Scope the pinned portrait above the static introduction's editorial styles. */
+.artist-profile--journey .artist-journey__stage > .artist-hero,
+#view-about .artist-profile--journey .artist-journey__stage > .artist-hero {
+ height:100%; min-height:0; max-height:none;
+}
+.artist-profile--journey .artist-journey__stage > .artist-hero > img,
+#view-about .artist-profile--journey .artist-journey__stage > .artist-hero > img {
+ object-fit:cover; object-position:50% 34%; backface-visibility:hidden;
+}
+.artist-journey__track > .artist-wide > a,
+.artist-journey__track > .artist-quote > blockquote {
+ transform:translate3d(var(--pane-drift,0px),0,0);
+}
+.artist-journey__controls::before {
+ content:""; position:absolute; top:0; left:0; width:100%; height:2px;
+ background:#ff71a5; transform:scaleX(var(--journey-progress,0)); transform-origin:left;
+}
+.artist-journey__controls button:disabled { opacity:.3; cursor:default; }
+@media(max-width:760px) {
+ .artist-profile--journey .artist-journey__stage > .artist-hero > img,
+ #view-about .artist-profile--journey .artist-journey__stage > .artist-hero > img { object-position:50% 30%; }
+ .artist-journey__controls { gap:14px; flex-wrap:wrap; }
+ .artist-journey__controls > span { flex-basis:100%; }
+}

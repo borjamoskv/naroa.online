@@ -8,7 +8,7 @@ def render_notebook(level=3):
  def entry(post,featured=False):
   date=f'<time datetime="{e(post["date"])}">{e(post["date_label"])}</time>'
   photo=''
-  if post.get('image'):
+  if featured and post.get('image'):
    im=post['image'];photo=f'<a class="notebook-photo" href="{e(post["url"])}" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true"><img src="{e(im["src"])}" width="{im["width"]}" height="{im["height"]}" alt="{e(im["alt"])}" loading="lazy" decoding="async"></a>'
   return f'''<article class="notebook-entry {'notebook-entry--feature' if featured else 'notebook-entry--note'}">{photo}<div class="notebook-entry__text"><p class="notebook-meta"><span>{e(post['category'])}</span>{date}</p><h{level+1} class="notebook-post-title"><a href="{e(post['url'])}" target="_blank" rel="noopener noreferrer">{e(post['title'])}</a></h{level+1}><p class="notebook-summary">{e(post['summary'])}</p><a class="notebook-read" href="{e(post['url'])}" target="_blank" rel="noopener noreferrer">Leer la historia <span aria-hidden="true">↗</span><span class="notebook-visually-hidden">: {e(post['title'])}</span></a></div></article>'''
  featured=next(post for post in data['posts'] if post.get('featured'))

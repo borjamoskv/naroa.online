@@ -25,13 +25,16 @@
   controls.className = 'artist-journey__controls';
   const status = document.createElement('span');
   status.textContent = 'Sigue bajando →';
+  const previous = document.createElement('button');
+  previous.type = 'button';
+  previous.textContent = '← Anterior';
   const next = document.createElement('button');
   next.type = 'button';
   next.textContent = 'Siguiente →';
   const skip = document.createElement('button');
   skip.type = 'button';
   skip.textContent = 'Continuar ↓';
-  controls.append(status, next, skip);
+  controls.append(status, previous, next, skip);
   stage.append(track, controls);
   journey.append(stage);
   let enabled = false, scheduled = 0, width = 0, height = 0, zoomDistance = 0, leadHold = 0, travel = 0, imagesStarted = false;
@@ -47,10 +50,12 @@
     travel = width * (panes.length - 1);
     journey.style.height = `${height + zoomDistance + leadHold + travel}px`;
     // Account for object-fit:cover and the portrait's existing object-position.
-    const scale = Math.max(width / 2201, height / 3468);
-    const renderedWidth = 2201 * scale, renderedHeight = 3468 * scale;
+    const sourceWidth = photo.naturalWidth || 2201, sourceHeight = photo.naturalHeight || 3468;
+    const scale = Math.max(width / sourceWidth, height / sourceHeight);
+    const renderedWidth = sourceWidth * scale, renderedHeight = sourceHeight * scale;
     const x = (width - renderedWidth) * .5 + renderedWidth * .459;
-    const y = (height - renderedHeight) * (width <= 760 ? .30 : .34) + renderedHeight * .391;
+    const position = getComputedStyle(photo).objectPosition.split(' ').map(parseFloat);
+    const y = (height - renderedHeight) * ((position[1] || 34) / 100) + renderedHeight * .391;
     photo.style.transformOrigin = `${x}px ${y}px`;
     stage.style.setProperty('--eye-x', `${width * .5 - x}px`);
     stage.style.setProperty('--eye-y', `${height * .5 - y}px`);
@@ -76,7 +81,8 @@
       imagesStarted = true;
     }
     const amount = ease(zoom);
-    photo.style.transform = `translate(${(parseFloat(stage.style.getPropertyValue('--eye-x')) * amount).toFixed(2)}px,${(parseFloat(stage.style.getPropertyValue('--eye-y')) * amount).toFixed(2)}px) scale(${(1 + amount * 7.5).toFixed(4)})`;
+    const magnification = Math.exp(Math.log(8.5) * amount);
+    photo.style.transform = `translate(${(parseFloat(stage.style.getPropertyValue('--eye-x')) * amount).toFixed(2)}px,${(parseFloat(stage.style.getPropertyValue('--eye-y')) * amount).toFixed(2)}px) scale(${magnification.toFixed(4)})`;
     portrait.style.opacity = String(1 - ease((zoom - .78) / .22));
     portrait.style.pointerEvents = zoom < .98 ? '' : 'none';
     portrait.querySelector('.artist-hero__text').style.opacity = String(1 - ease(zoom * 3));
@@ -86,7 +92,14 @@
     track.style.visibility = zoom > .78 ? 'visible' : 'hidden';
     controls.style.opacity = zoom > .97 ? '1' : '0';
     controls.style.visibility = zoom > .97 ? 'visible' : 'hidden';
-    status.textContent = `${Math.min(panes.length, Math.round(horizontal / width) + 1)} / ${panes.length} · Sigue bajando →`;
+    const index = Math.min(panes.length - 1, Math.round(horizontal / width));
+    status.textContent = `${index + 1} / ${panes.length} · Sigue bajando →`;
+    previous.disabled = index === 0;
+    stage.style.setProperty('--journey-progress', String(horizontal / Math.max(1, travel)));
+    panes.forEach((pane, i) => {
+      const depth = Math.max(-1, Math.min(1, (i * width - horizontal) / Math.max(1, width)));
+      pane.style.setProperty('--pane-drift', `${(depth * Math.min(32, width * .035)).toFixed(2)}px`);
+    });
     if(Math.abs(wantedZoom-zoom)>.0004||Math.abs(wantedHorizontal-horizontal)>.15)schedule();
   }
 
@@ -95,6 +108,7 @@
     const top = window.scrollY + journey.getBoundingClientRect().top;
     window.scrollTo({top: top + zoomDistance + leadHold + Math.min(panes.length - 1, index) * width, behavior: 'smooth'});
   }
+  previous.addEventListener('click', () => goTo(Math.max(0, Math.round(horizontal / width) - 1)));
   next.addEventListener('click', () => {
     const index = Math.round(horizontal / width);
     if (index < panes.length - 1) goTo(index + 1);
@@ -102,6 +116,12 @@
   });
   skip.addEventListener('click', () => {
     window.scrollTo({top: window.scrollY + journey.getBoundingClientRect().bottom, behavior: 'smooth'});
+  });
+  stage.addEventListener('keydown', event => {
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+    if (event.target.closest('input,textarea,select')) return;
+    event.preventDefault();
+    goTo(Math.max(0, Math.round(horizontal / width) + (event.key === 'ArrowRight' ? 1 : -1)));
   });
   track.addEventListener('focusin', event => {
     const index = panes.findIndex(pane => pane.contains(event.target));
@@ -126,6 +146,7 @@
       originals.forEach((element, index) => {
         markers[index].after(element);
         element.classList.remove('artist-journey__pane');
+        element.style.removeProperty('--pane-drift');
       });
       journey.remove();
       profile.classList.remove('artist-profile--journey');
@@ -136,6 +157,7 @@
       photo.style.transform = photo.style.transformOrigin = '';
     }
   }
+  photo.addEventListener('load', () => { if (enabled) { measure(); schedule(); } });
   window.addEventListener('resize', () => { if (enabled) { measure(); schedule(); } }, {passive: true});
   document.addEventListener('visibilitychange', schedule);
   document.addEventListener('naroa:motionchange', update);

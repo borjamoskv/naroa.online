@@ -25,11 +25,13 @@
   const posts = data.posts?.filter(p => safeURL(p.URL) && p.title && !Number.isNaN(Date.parse(p.date))).slice(0, 6);
   if (!posts?.length) throw new Error('No public posts');
   const level = Number(section.querySelector('[id="artist-notebook-title"]').tagName.slice(1)) + 1;
+  const seenImages = new Set();
   const entries = posts.map((post, index) => {
    const title = plain(post.title), url = safeURL(post.URL);
    const article = node('article', `notebook-entry notebook-entry--${index ? 'note' : 'feature'}`);
    const src = safeURL(post.featured_image, true);
-   if (src) {
+   if (index === 0 && src && !seenImages.has(src.split('?')[0])) {
+    seenImages.add(src.split('?')[0]);
     const a = link('notebook-photo', url); a.tabIndex = -1; a.setAttribute('aria-hidden', 'true');
     const img = node('img', ''); img.src = src; img.alt = title; img.loading = 'lazy'; img.decoding = 'async';
     const attachment = Object.values(post.attachments || {}).find(item => item.URL === src);
@@ -55,7 +57,8 @@
   pending = true;
   try {
    let data;
-   for (const endpoint of ['/api/blog', upstream]) {
+   const endpoints = ['localhost','127.0.0.1','::1'].includes(location.hostname) ? [upstream] : ['/api/blog', upstream];
+   for (const endpoint of endpoints) {
     try {
      const response = await fetch(endpoint, {signal:AbortSignal.timeout(8000), credentials:'omit'});
      if (!response.ok) throw new Error('WordPress unavailable');
