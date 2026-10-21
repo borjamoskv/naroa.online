@@ -14,12 +14,6 @@
   closed.decoding = 'async';
   layer.append(closed);
   photo.after(layer);
-  const button = document.createElement('button');
-  button.type = 'button';
-  button.className = 'artist-wink-button';
-  button.textContent = 'Un guiño 😉';
-  button.setAttribute('aria-label', 'Hacer que Naroa guiñe un ojo');
-  portrait.append(button);
   let animation = null, lastWink = -Infinity;
   const enabled = () => document.documentElement.dataset.brushEnabled === 'true';
   function measure() {
@@ -48,11 +42,10 @@
     animation = null;
   }
   function update() {
-    button.hidden = !enabled();
     if (!enabled()) animation?.cancel();
     measure();
   }
-  button.addEventListener('click', wink);
+  photo.addEventListener('pointerup', event => { if (event.pointerType === 'touch') wink(); });
   photo.addEventListener('pointerenter', wink);
   new ResizeObserver(measure).observe(portrait);
   new MutationObserver(mirror).observe(photo, {attributes: true, attributeFilter: ['style']});

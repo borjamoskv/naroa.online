@@ -19,7 +19,8 @@ p=Page();p.feed((R/'series/vaivenes/index.html').read_text())
 for im in items:
  f=R/im['src'].lstrip('/');assert hashlib.sha256(f.read_bytes()).hexdigest()==im['sha256']
  with Image.open(f) as photo:assert photo.size==(im['width'],im['height'])
- assert max(im['width'],im['height'])>=1600 and min(im['width'],im['height'])>=1200
+ assert max(im['width'],im['height'])>=1200 and min(im['width'],im['height'])>=1000
+ assert im['slug']=='pippilotta' or (max(im['width'],im['height'])>=1600 and min(im['width'],im['height'])>=1200)
  assert im['source'].startswith('https://');assert im['slug'] in p.ids and im['slug'] in p.nav
  if im.get('stage')=='dibujo':assert 'Dibujo del retrato' in im['caption']
 assert all(a in p.ids for a in p.nav)

@@ -11,6 +11,24 @@ export default {
       incoming.hostname = primary;
       return Response.redirect(incoming.href, 308);
     }
+    if (incoming.pathname === '/api/blog') {
+      if (!['GET', 'HEAD'].includes(request.method)) return new Response('Method not allowed', {status:405, headers:{Allow:'GET, HEAD'}});
+      try {
+        const upstream = await fetch('https://public-api.wordpress.com/rest/v1.1/sites/naroagutierrez.wordpress.com/posts/?number=6&fields=ID,date,modified,title,URL,excerpt,featured_image,attachments', {
+          signal:AbortSignal.timeout(8000), cf:{cacheEverything:true, cacheTtl:300}
+        });
+        if (!upstream.ok) throw new Error('WordPress unavailable');
+        const data = await upstream.json();
+        if (!Array.isArray(data.posts)) throw new Error('Invalid WordPress response');
+        return new Response(request.method === 'HEAD' ? null : JSON.stringify(data), {headers:{
+          'Content-Type':'application/json; charset=utf-8',
+          'Cache-Control':'public, max-age=300, stale-while-revalidate=600',
+          'X-Content-Type-Options':'nosniff'
+        }});
+      } catch (_) {
+        return new Response('{"error":"WordPress unavailable"}', {status:502, headers:{'Content-Type':'application/json', 'Cache-Control':'no-store'}});
+      }
+    }
     const origin = new URL(incoming);
     origin.hostname = 'naroaonline.vercel.app';
     try {

@@ -1,6 +1,6 @@
 .eye-paint-target { position:relative; }
 .eye-paint-scene { position:absolute; inset:0; width:100%; height:100%; z-index:2; pointer-events:none; overflow:hidden; opacity:1; }
-.naroa-painting-arm { position:fixed; z-index:45; max-width:none !important; height:auto !important; pointer-events:none; user-select:none; opacity:0; transform-origin:3% 29%; transition:opacity .16s ease,transform .22s ease; filter:drop-shadow(0 2px 2px #0003); }
+.naroa-painting-arm { position:fixed; z-index:45; max-width:none !important; height:auto !important; pointer-events:none; user-select:none; opacity:0; transform-origin:3% 29%; transition:opacity .1s ease,transform .16s ease,filter .2s ease; filter:drop-shadow(0 2px 2px #0003); }
 .naroa-painting-arm[data-brush-mode="lifted"] { filter:drop-shadow(-8px 12px 5px #0005); }
 html[data-brush-enabled="false"] .eye-paint-scene,html[data-brush-enabled="false"] .naroa-painting-arm { display:none; }
 .brush-controls { display:flex; justify-content:space-between; align-items:center; gap:16px; padding:4px 3vw; min-height:52px; background:#111211; color:#c2c1b9; border-bottom:1px solid #36352e; font:400 12px/1.4 Inter,sans-serif; }

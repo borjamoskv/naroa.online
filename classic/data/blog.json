@@ -1,0 +1,103 @@
+{
+  "source": "https://naroagutierrez.wordpress.com/",
+  "api": "https://public-api.wordpress.com/rest/v1.1/sites/naroagutierrez.wordpress.com/posts/?number=6&fields=ID,date,modified,title,URL,excerpt,featured_image",
+  "synced": "2026-10-21T14:44:27.534959+00:00",
+  "posts": [
+    {
+      "id": 3055,
+      "title": "Bwall Collective en el Dock: brotes de alma y manos",
+      "url": "https://naroagutierrez.wordpress.com/2026/06/01/bwall-collective-en-el-dock-brotes-de-alma-y-manos/",
+      "date": "2026-06-01",
+      "date_label": "1 de junio de 2026",
+      "category": "Del cuaderno de Naroa",
+      "summary": "Lo ha vuelto a hacer. La comisaria Olatz Arrese nos ha embarcado en una nueva exposición colectiva organizada por la asociación Bwall Collective, cuyo objetivo es dar…",
+      "featured": true,
+      "image": {
+        "src": "https://naroagutierrez.wordpress.com/wp-content/uploads/2026/05/whatsapp-image-2026-05-27-at-15.00.32.jpeg",
+        "width": 1080,
+        "height": 1080,
+        "alt": "Bwall Collective en el Dock: brotes de alma y manos"
+      }
+    },
+    {
+      "id": 2995,
+      "title": "Autorretratos: Mujeres a través del Espejo",
+      "url": "https://naroagutierrez.wordpress.com/2026/05/14/autorretratos-mujeres-a-traves-del-espejo/",
+      "date": "2026-05-14",
+      "date_label": "14 de mayo de 2026",
+      "category": "Del cuaderno de Naroa",
+      "summary": "“…Hay una contradicción entre el deseo inhibido de querer desarrollar las habilidades artísticas y la creencia errónea y popular de necesitar un superpoder llamado Don…",
+      "featured": false,
+      "image": {
+        "src": "https://naroagutierrez.wordpress.com/wp-content/uploads/2026/05/autorretratos-marienea-png.png",
+        "width": 1542,
+        "height": 2048,
+        "alt": "Autorretratos: Mujeres a través del Espejo"
+      }
+    },
+    {
+      "id": 2917,
+      "title": "Muestra «DiviNos VaiVenes» en Politena, espacio de arte",
+      "url": "https://naroagutierrez.wordpress.com/2026/01/15/divinos-vaivenes-muestra-plastica-en-politena-espacio-de-arte/",
+      "date": "2026-01-15",
+      "date_label": "15 de enero de 2026",
+      "category": "Del cuaderno de Naroa",
+      "summary": "El 2026 quiero que sea un año de abrazos: abrazar a seres queridos, acoger a nuevos amigos y conciliar a mis luces y tinieblas, para que de ellas emerjan mágicas…",
+      "featured": false,
+      "image": {
+        "src": "https://naroagutierrez.wordpress.com/wp-content/uploads/2026/01/6-foto-100-auto.jpg",
+        "width": 1080,
+        "height": 1338,
+        "alt": "Muestra «DiviNos VaiVenes» en Politena, espacio de arte"
+      }
+    },
+    {
+      "id": 2809,
+      "title": "25 Mayo 2025: Azoka en Lataska, Sopela",
+      "url": "https://naroagutierrez.wordpress.com/2025/05/22/25-mayo-2025-azoka-en-lataska-sopela/",
+      "date": "2025-05-22",
+      "date_label": "22 de mayo de 2025",
+      "category": "Del cuaderno de Naroa",
+      "summary": "Domingueras, domingueros… ¡estamos de enhorabuena! El próximo domingo 25 de Mayo volvemos a celebrar el arte con aroma costero y sabor a hogar, arropados en esta ocasión…",
+      "featured": false,
+      "image": {
+        "src": "https://naroagutierrez.wordpress.com/wp-content/uploads/2025/05/0-aazoka-en-lataska.png",
+        "width": 1016,
+        "height": 1422,
+        "alt": "25 Mayo 2025: Azoka en Lataska, Sopela"
+      }
+    },
+    {
+      "id": 2712,
+      "title": "Udaberriko Jaia 2025: Market en Sopelana, 18 de Mayo",
+      "url": "https://naroagutierrez.wordpress.com/2025/05/09/udaberriko-jaia-2025-market-en-sopelana-18-de-mayo/",
+      "date": "2025-05-09",
+      "date_label": "9 de mayo de 2025",
+      "category": "Del cuaderno de Naroa",
+      "summary": "Este año Amalur acunó un poco más de la cuenta a la primavera, así que esta quiso quedarse un poco más en su regazo. Pero parece que ya asoma y estamos aquí para…",
+      "featured": false,
+      "image": {
+        "src": "https://naroagutierrez.wordpress.com/wp-content/uploads/2025/05/uda-ber-riko-jaia-25-c.jpg",
+        "width": 1965,
+        "height": 2048,
+        "alt": "Udaberriko Jaia 2025: Market en Sopelana, 18 de Mayo"
+      }
+    },
+    {
+      "id": 2619,
+      "title": "El ReCreo, Espacio de Creación para recreArte",
+      "url": "https://naroagutierrez.wordpress.com/2024/01/12/el-recreo-espacio-de-creacion-para-recrearte/",
+      "date": "2024-01-12",
+      "date_label": "12 de enero de 2024",
+      "category": "Del cuaderno de Naroa",
+      "summary": "Vivimos en una sociedad plagada de reglas, prohibiciones, condiciones… cosas que debemos o no debemos hacer. Nuestra existencia transcurre en un contexto que nos asfixia…",
+      "featured": false,
+      "image": {
+        "src": "https://naroagutierrez.wordpress.com/wp-content/uploads/2024/01/el-recreo5.jpg",
+        "width": 1587,
+        "height": 2245,
+        "alt": "El ReCreo, Espacio de Creación para recreArte"
+      }
+    }
+  ]
+}

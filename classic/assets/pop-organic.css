@@ -13,7 +13,6 @@ body { background:var(--pop-ink); }
 html .brush-controls { border:0; background:var(--pop-ink); color:#c9c0b4; }
 html .brush-toggle { border:0; border-radius:0; padding:8px 0; color:var(--pop-paper); text-decoration:underline; text-decoration-color:var(--pop-red); text-underline-offset:6px; }
 .brush-toggle:hover { background:none; color:var(--pop-yellow); }
-.artist-wink-button { border:0; border-radius:0; background:#0c0b0bba; color:var(--pop-yellow); font-family:Georgia,serif; font-style:italic; }
 .artist-quote blockquote,.artist-contact p { color:var(--pop-pink); }
 .artist-links a,.artist-trajectory,.local-inline-link a { color:var(--pop-blue); }
 #view-contacto { background:var(--pop-ink); padding:0; overflow:hidden; }

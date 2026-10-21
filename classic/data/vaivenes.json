@@ -99,16 +99,22 @@
     {
       "slug": "pippilotta",
       "title": "Pippilotta",
-      "src": "/images/catalogo/vaivenes-pippilotta.jpg",
-      "width": 1641,
-      "height": 1231,
-      "caption": "Dibujo del retrato: Pippi Calzaslargas junto a su mono. La composición de Pippi aparece en la documentación de Repóker de Reinas, una muestra de Vaivenes.",
-      "stage": "dibujo",
-      "source": "https://siarte.com/2022-03-25-siarte-exposicion-pintura-collage-arte-naroa-gutierrez.php",
+      "src": "/images/catalogo/vaivenes-pippilotta-completa.png",
+      "width": 1200,
+      "height": 1006,
+      "caption": "Pippi Calzaslargas y su mono, con cartas, fondo de cuadros rojos y marco dorado. Imagen de la obra terminada conservada en el archivo de la publicación Repóker de Reinas.",
+      "stage": "obra",
+      "source": "https://naroagutierrez.wordpress.com/2022/03/22/repoker-de-reinas-vaivenes-en-siarte/",
       "membership_source": "https://www.facebook.com/naroa.artista.plastica/videos/170643291011818/",
       "source_local": "live-site/sala-3d/carrusel/img/src/pipi.jpg",
-      "original": "https://siarte.com/2022-03-25-siarte-exposicion-pintura-collage-arte-naroa-gutierrez.php",
-      "sha256": "8057f3bfe1821d29d33c7b39ad0bc7ceb4cb994adac096c0be414cb779746eeb"
+      "original": "https://naroagutierrez.wordpress.com/wp-content/uploads/2022/03/pipi-marco-png-1200x1000-2.png",
+      "sha256": "43b2480b9e2ab8e5160b91d05c2e32d6079e4b7932005088c672250db7bea1d7",
+      "process_image": {
+        "src": "/images/catalogo/vaivenes-pippilotta.jpg",
+        "width": 1641,
+        "height": 1231,
+        "sha256": "8057f3bfe1821d29d33c7b39ad0bc7ceb4cb994adac096c0be414cb779746eeb"
+      }
     },
     {
       "slug": "rosetta",
@@ -140,5 +146,5 @@
     }
   ],
   "reviewed": "2026-10-21",
-  "selection_note": "Ocho obras representadas. Pippilotta, Rosetta y Dustin se muestran mediante versiones dibujadas de los retratos; Audrey mediante un detalle. No se atribuyen a estas imágenes las características de una fotografía de la obra completa."
+  "selection_note": "Ocho obras representadas: Rosetta y Dustin mediante dibujos en blanco y negro; Audrey mediante un detalle. Pippilotta se muestra terminada, con cartas y marco, junto a las obras con color de la selección."
 }

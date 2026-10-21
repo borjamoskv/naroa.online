@@ -35,7 +35,7 @@
   stage.append(track, controls);
   journey.append(stage);
   let enabled = false, scheduled = 0, width = 0, height = 0, zoomDistance = 0, leadHold = 0, travel = 0, imagesStarted = false;
-  let zoom = 0, horizontal = 0;
+  let zoom = 0, horizontal = 0, lastTick = 0;
   const clamp = value => Math.max(0, Math.min(1, value));
   const ease = value => { value = clamp(value); return value * value * (3 - 2 * value); };
 
@@ -56,15 +56,21 @@
     stage.style.setProperty('--eye-y', `${height * .5 - y}px`);
   }
 
-  function render() {
+  function render(time) {
     scheduled = 0;
     if (!enabled || document.hidden) return;
     const rect = journey.getBoundingClientRect();
     document.body.classList.toggle('artist-journey-active', rect.top <= 0 && rect.bottom >= height);
     if (rect.bottom < 0 || rect.top > height) return;
     const distance = Math.max(0, -rect.top);
-    zoom = clamp(distance / zoomDistance);
-    horizontal = Math.max(0, Math.min(travel, distance - zoomDistance - leadHold));
+    const wantedZoom=clamp(distance / zoomDistance);
+    const wantedHorizontal=Math.max(0, Math.min(travel, distance - zoomDistance - leadHold));
+    const dt=Math.min(40,Math.max(8,time-lastTick||16));lastTick=time;
+    const blend=1-Math.exp(-dt/75);
+    if(distance===0||Math.abs(wantedHorizontal-horizontal)>width*1.6){zoom=wantedZoom;horizontal=wantedHorizontal;}
+    else {zoom+=(wantedZoom-zoom)*blend;horizontal+=(wantedHorizontal-horizontal)*blend;}
+    if(Math.abs(wantedZoom-zoom)<.0004)zoom=wantedZoom;
+    if(Math.abs(wantedHorizontal-horizontal)<.15)horizontal=wantedHorizontal;
     if (zoom > .15 && !imagesStarted) {
       works.forEach(work => { work.querySelector('img').loading = 'eager'; });
       imagesStarted = true;
@@ -81,6 +87,7 @@
     controls.style.opacity = zoom > .97 ? '1' : '0';
     controls.style.visibility = zoom > .97 ? 'visible' : 'hidden';
     status.textContent = `${Math.min(panes.length, Math.round(horizontal / width) + 1)} / ${panes.length} · Sigue bajando →`;
+    if(Math.abs(wantedZoom-zoom)>.0004||Math.abs(wantedHorizontal-horizontal)>.15)schedule();
   }
 
   function schedule() { if (!scheduled && enabled) scheduled = requestAnimationFrame(render); }

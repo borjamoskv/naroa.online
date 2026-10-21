@@ -17,7 +17,7 @@
     const details=document.createElement('button');details.type='button';details.textContent='Sobre la obra';details.setAttribute('aria-expanded','false');
     const leave=document.createElement('button');leave.type='button';leave.textContent='Seguir ↓';
     footer.append(hint,previous,next,details,leave);stage.append(track,label,footer);wrap.append(stage);
-    let enabled=false,scheduled=0,width=0,height=0,distance=0,current=0,near=false,displayed=NaN,lastTick=0,velocity=0;
+    let enabled=false,scheduled=0,width=0,height=0,distance=0,current=0,near=false,displayed=NaN,lastTick=0,velocity=0,pointerX=0,pointerY=0,livePointerX=0,livePointerY=0;
     const id=++serial;
     figures.forEach((figure,i)=>{figure.querySelector('figcaption').id=`vaivenes-caption-${id}-${i}`;});
     function measure(){width=stage.clientWidth;height=innerHeight;distance=(figures.length-1)*width;wrap.style.height=`${height+distance}px`;schedule();}
@@ -26,10 +26,22 @@
       const rect=wrap.getBoundingClientRect();if(rect.top>height||rect.bottom<0)return;
       const desired=clamp(-rect.top,0,distance);
       const dt=Math.min(40,Math.max(8,time-lastTick||16));lastTick=time;
-      if(!Number.isFinite(displayed)||desired===0||desired===distance||Math.abs(desired-displayed)>width*1.6)displayed=desired;
-      const step=(desired-displayed)*(1-Math.exp(-dt/65));
-      displayed+=step;velocity=velocity*.65+(step/dt)*.35;
-      const travel=Math.abs(desired-displayed)<.15?desired:displayed;
+      const seek=!Number.isFinite(displayed)||Math.abs(desired-displayed)>width*1.6;
+      const outside=(desired===0&&rect.top>=0)||(desired===distance&&rect.bottom<height*.75);
+      if(seek||outside){displayed=desired;velocity=0;}
+      // An analytical critically damped spring remains stable at any refresh rate.
+      const before=displayed,omega=1/72,offset=displayed-desired;
+      const impulse=velocity+omega*offset,decay=Math.exp(-omega*dt);
+      displayed=clamp(desired+(offset+impulse*dt)*decay,0,distance);
+      velocity=(velocity-omega*impulse*dt)*decay;
+      if((desired-before>0&&displayed>desired)||(desired-before<0&&displayed<desired)){
+        displayed=desired;velocity=0;
+      }
+      if(Math.abs(desired-displayed)<.15&&Math.abs(velocity)<.03){displayed=desired;velocity=0;}
+      const pointerBlend=1-Math.exp(-dt/110);
+      livePointerX+=(pointerX-livePointerX)*pointerBlend;
+      livePointerY+=(pointerY-livePointerY)*pointerBlend;
+      const travel=displayed;
       const index=clamp(Math.round(travel/Math.max(1,width)),0,figures.length-1);
       if(index!==current){figures[current].classList.remove('vaivenes-caption-open');details.setAttribute('aria-expanded','false');current=index;}
       track.style.transform=`translate3d(${-travel}px,0,0)`;
@@ -41,15 +53,24 @@
         const image=figure.querySelector('img');
         if(Math.abs(i-current)<=1)image.loading='eager';
         const depth=clamp((i*width-travel)/Math.max(1,width),-1,1);
-        const shift=depth*Math.min(22,width*.018);
-        const tilt=clamp(velocity*.12,-.25,.25);
-        image.style.transform=`translate3d(${shift.toFixed(2)}px,${(-Math.min(4,Math.abs(velocity))).toFixed(2)}px,0) rotate(${tilt.toFixed(3)}deg)`;
-        figure.querySelector('figcaption').style.transform=`translate3d(${(depth*Math.min(32,width*.025)).toFixed(2)}px,0,0)`;
+        const shift=depth*Math.min(22,width*.018)+livePointerX*5;
+        const tilt=clamp(velocity*.09+livePointerX*.12,-.25,.25);
+        image.style.transform=`translate3d(${shift.toFixed(2)}px,${(-Math.min(3,Math.abs(velocity))+livePointerY*3).toFixed(2)}px,0) rotate(${tilt.toFixed(3)}deg)`;
+        const caption=figure.querySelector('figcaption');
+        caption.style.transform=`translate3d(${(depth*Math.min(32,width*.025)-livePointerX*3).toFixed(2)}px,0,0)`;
+        caption.style.opacity=figure.classList.contains('vaivenes-caption-open')?'1':String(.25+.75*(1-Math.abs(depth)));
       });
-      if(Math.abs(desired-displayed)>.15||Math.abs(velocity)>.03)schedule();
+      if(Math.abs(desired-displayed)>.15||Math.abs(velocity)>.03||Math.abs(pointerX-livePointerX)>.002||Math.abs(pointerY-livePointerY)>.002)schedule();
     }
     function schedule(){if(!scheduled&&enabled&&near)scheduled=requestAnimationFrame(render);}
     function go(index){if(!enabled)return;const top=scrollY+wrap.getBoundingClientRect().top;scrollTo({top:top+clamp(index,0,figures.length-1)*width,behavior:'smooth'});}
+    stage.addEventListener('pointermove',event=>{
+      if(event.pointerType!=='mouse')return;
+      const box=stage.getBoundingClientRect();
+      pointerX=clamp((event.clientX-box.left)/Math.max(1,box.width)*2-1,-1,1);
+      pointerY=clamp((event.clientY-box.top)/Math.max(1,box.height)*2-1,-1,1);schedule();
+    },{passive:true});
+    stage.addEventListener('pointerleave',()=>{pointerX=pointerY=0;schedule();});
     previous.addEventListener('click',()=>go(current-1));next.addEventListener('click',()=>go(current+1));
     leave.addEventListener('click',()=>scrollTo({top:scrollY+wrap.getBoundingClientRect().bottom,behavior:'smooth'}));
     details.addEventListener('click',()=>{const open=figures[current].classList.toggle('vaivenes-caption-open');details.setAttribute('aria-expanded',String(open));});
@@ -63,10 +84,11 @@
       if(enabled){
         insertionPoint.after(wrap);figures.forEach(figure=>track.append(figure));host.classList.add('vaivenes-host-active');
         if(inline)host.classList.add('vaivenes-host-inline');
+        displayed=NaN;velocity=0;pointerX=pointerY=livePointerX=livePointerY=0;
         measure();intersection.observe(wrap);addEventListener('scroll',schedule,{passive:true});
       }else{
         cancelAnimationFrame(scheduled);scheduled=0;intersection.disconnect();removeEventListener('scroll',schedule);
-        figures.forEach((figure,i)=>{markers[i].after(figure);figure.classList.remove('vaivenes-caption-open');figure.querySelector('img').style.transform='';figure.querySelector('figcaption').style.transform='';});wrap.remove();host.classList.remove('vaivenes-host-active','vaivenes-host-inline');
+        figures.forEach((figure,i)=>{markers[i].after(figure);figure.classList.remove('vaivenes-caption-open');figure.querySelector('img').style.transform='';figure.querySelector('figcaption').style.transform='';figure.querySelector('figcaption').style.opacity='';});wrap.remove();host.classList.remove('vaivenes-host-active','vaivenes-host-inline');
       }
     }
     // Keep direct links to individual works meaningful inside the pinned sequence.

@@ -22,7 +22,7 @@
   let lastSaved = 0;
   function saveColour() { try { sessionStorage.setItem('naroa-eye-colour-v1',JSON.stringify(remembered)); } catch (_) {} }
   addEventListener('pagehide',saveColour);
-  let scheduled = 0, lastY = scrollY, direction = 1, lastTime = performance.now(), lastArm = null;
+  let scheduled = 0, lastY = scrollY, direction = 1, lastTime = performance.now(), lastArm = null, armPose = null, armKey = null, liftUntil = 0;
   const SVG = 'http://www.w3.org/2000/svg';
   const svg = (name, attrs={}) => {
     const element = document.createElementNS(SVG,name);
@@ -138,20 +138,30 @@
         tip={x:aligned.x,y:aligned.y};
       }
       if (tip.y<70 || tip.y>innerHeight-60) continue;
-      if (!candidate || Math.abs(tip.y-innerHeight*.5)<candidate.distance) candidate={tip,contact,distance:Math.abs(tip.y-innerHeight*.5)};
+      if (!candidate || Math.abs(tip.y-innerHeight*.5)<candidate.distance) candidate={tip,contact,key:state.source+':'+Math.floor(portion),distance:Math.abs(tip.y-innerHeight*.5)};
     }
-    if (candidate) lastArm={tip:candidate.tip,until:time+280};
+    if (candidate) {
+      if(armKey!==null&&candidate.key!==armKey)liftUntil=time+160;
+      armKey=candidate.key;
+      lastArm={tip:candidate.tip,until:time+340};
+    }
     else if (lastArm && time<lastArm.until) {candidate={tip:lastArm.tip,contact:false};schedule();}
-    else {arm.style.opacity='0';lastArm=null;return;}
-    const {tip,contact}=candidate;
+    else {arm.style.opacity='0';lastArm=null;armPose=null;armKey=null;return;}
+    const {tip}=candidate;
+    const contact=candidate.contact&&time>=liftUntil;
+    if(!armPose)armPose={x:tip.x+Math.min(120,innerWidth*.18),y:tip.y+12,start:time};
+    const follow=1-Math.exp(-elapsed/48);
+    armPose.x+=(tip.x-armPose.x)*follow;armPose.y+=(tip.y-armPose.y)*follow;
+    const retreat=candidate.contact?0:clamp((time-(lastArm.until-340))/340);
+    const opacity=Math.min(1,(time-armPose.start)/100)*(1-retreat);
     // Sprite tip is at (3%,29%); its forearm continues beyond the right edge.
     const lift=contact?0:18;
     const width=(innerWidth-tip.x+30)/.97;
     arm.style.width=`${width}px`;
-    arm.style.left=`${tip.x-width*.03+lift}px`;
-    arm.style.top=`${tip.y-width*(1024/1536)*.29-lift}px`;
+    arm.style.left=`${armPose.x-width*.03+lift+retreat*width*.23}px`;
+    arm.style.top=`${armPose.y-width*(1024/1536)*.29-lift}px`;
     arm.style.transform=contact?'rotate(0deg)':'rotate(-5deg)';
-    arm.dataset.brushMode=contact?'painting':'lifted';arm.style.opacity='1';
+    arm.dataset.brushMode=contact?'painting':'lifted';arm.style.opacity=String(Math.max(0,opacity));
   }
   function schedule() {if (!scheduled && enabled) scheduled=requestAnimationFrame(render);}
   const observer=new IntersectionObserver(entries=>{
