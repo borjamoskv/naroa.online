@@ -2,7 +2,14 @@
 (() => {
   'use strict';
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const targets = [...document.querySelectorAll('.editorial-catalog .catalog-card__image, .project-photo')];
+  // Give the series invitation its own image frame, keeping the caption outside it.
+  document.querySelectorAll('.series-entry > a > img').forEach(image => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'brush-series-image';
+    image.before(wrapper);
+    wrapper.append(image);
+  });
+  const targets = [...document.querySelectorAll('.editorial-catalog .catalog-card__image, .project-photo, .brush-series-image')];
   if (!targets.length || !('IntersectionObserver' in window) || !('ResizeObserver' in window)) return;
 
   const SVG = 'http://www.w3.org/2000/svg';
@@ -12,6 +19,45 @@
   let scheduled = 0;
   let listening = false;
   let lastY = window.scrollY;
+  let explicitChoice = null;
+  try { explicitChoice = sessionStorage.getItem('naroa-brush-motion'); } catch (_) {}
+  const requested = new URLSearchParams(window.location.search).get('brocha');
+  if (requested === '1' || requested === '0') {
+    explicitChoice = requested === '1' ? 'on' : 'off';
+    try { sessionStorage.setItem('naroa-brush-motion', explicitChoice); } catch (_) {}
+  }
+  let enabled = explicitChoice ? explicitChoice === 'on' : !motion.matches;
+  const buttons = [];
+
+  function addControl(host, after = false) {
+    if (!host) return;
+    const controls = document.createElement('div');
+    controls.className = 'brush-controls';
+    const label = document.createElement('p');
+    label.textContent = 'Una pincelada al bajar';
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'brush-toggle';
+    button.addEventListener('click', () => {
+      enabled = !enabled;
+      explicitChoice = enabled ? 'on' : 'off';
+      try { sessionStorage.setItem('naroa-brush-motion', explicitChoice); } catch (_) {}
+      if (enabled) states.forEach(state => {
+        state.progress = 0;
+        state.scene.classList.remove('brush-scene--complete');
+        state.paths.forEach(path => { path.style.strokeDashoffset = '1'; });
+      });
+      updateMotion();
+    });
+    buttons.push(button);
+    controls.append(label, button);
+    if (after) host.after(controls);
+    else host.prepend(controls);
+  }
+
+  addControl(document.querySelector('main'));
+  addControl(document.querySelector('.catalog-intro'), true);
+
 
   function svgElement(name, attributes = {}) {
     const element = document.createElementNS(SVG, name);
@@ -44,7 +90,7 @@
   function measure(state, width, height) {
     state.width = width;
     state.height = height;
-    state.inset = width <= 640 ? 8 : 13;
+    state.inset = width <= 640 ? 12 : 20;
     const i = state.inset;
     const right = Math.max(i, width - i), bottom = Math.max(i, height - i);
     // Slightly uneven lines suggest a loaded brush without changing the photograph.
@@ -89,7 +135,7 @@
 
   function render() {
     scheduled = 0;
-    if (motion.matches || document.hidden) return;
+    if (!enabled || document.hidden) return;
     const viewport = window.innerHeight;
     const travel = clamp((window.scrollY - lastY) * .05, -3, 3);
     lastY = window.scrollY;
@@ -108,7 +154,7 @@
       // A separate fine edge has a few pixels of depth; the artwork stays still.
       state.paths[2].setAttribute('transform', `translate(-.8 ${(-.8 + (progress - .5) * 3).toFixed(2)})`);
       const point = pointOnFrame(state, p);
-      const scale = rect.width <= 640 ? .72 : 1;
+      const scale = rect.width <= 640 ? 1.18 : 1.7;
       const tipY = rect.top + point.y;
       const visible = p > .002 && p < .997 && tipY > 10 && tipY < viewport - 10 && progress >= p - .002;
       state.brush.style.opacity = visible ? String(Math.min(1, p * 35, (1 - p) * 35)) : '0';
@@ -123,7 +169,7 @@
   }
 
   function schedule() {
-    if (!scheduled && !motion.matches && !document.hidden) scheduled = requestAnimationFrame(render);
+    if (!scheduled && enabled && !document.hidden) scheduled = requestAnimationFrame(render);
   }
 
   const observer = new IntersectionObserver(entries => {
@@ -141,7 +187,7 @@
   const resizeObserver = new ResizeObserver(() => schedule());
 
   function enable() {
-    if (motion.matches || listening) return;
+    if (!enabled || listening) return;
     listening = true;
     lastY = window.scrollY;
     targets.forEach((target, index) => {
@@ -169,6 +215,21 @@
     states.forEach(state => { state.brush.style.opacity = '0'; });
   }
 
-  motion.addEventListener('change', () => motion.matches ? disable() : enable());
-  enable();
+  function updateMotion() {
+    document.documentElement.dataset.brushEnabled = String(enabled);
+    buttons.forEach(button => {
+      button.textContent = enabled ? 'Pausar brocha' : 'Activar brocha';
+      button.setAttribute('aria-pressed', String(enabled));
+    });
+    if (enabled) enable();
+    else disable();
+  }
+
+  motion.addEventListener('change', () => {
+    if (explicitChoice === null) {
+      enabled = !motion.matches;
+      updateMotion();
+    }
+  });
+  updateMotion();
 })();
