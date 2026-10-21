@@ -81,6 +81,8 @@ NS='http://www.sitemaps.org/schemas/sitemap/0.9';IMG='http://www.google.com/sche
 ET.register_namespace('',NS);ET.register_namespace('image',IMG)
 tree=ET.Element('{'+NS+'}urlset')
 pages=[('/',[x['images'][0]['src'] for x in projects if x['selected']]),('/sobre-mi/',['/images/sobre-mi/naroa-monoculo.jpg','/images/sobre-mi/rara-avis.jpg']),('/trayectoria/',['/images/trayectoria/cantinflowers.jpg']),('/'+SLUG+'/',[cover['src'],hugo['src']])]+[('/obra/'+x['slug']+'/',[im['src'] for im in x['images']]) for x in projects]
+series=json.loads((ROOT/'data/vaivenes.json').read_text())
+pages.append(('/series/vaivenes/',[im['src'] for im in series['images']]))
 for path,imgs in pages:
  u=ET.SubElement(tree,'{'+NS+'}url');ET.SubElement(u,'{'+NS+'}loc').text=BASE+path;ET.SubElement(u,'{'+NS+'}lastmod').text=DAY
  for src in imgs:

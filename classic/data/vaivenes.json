@@ -1,0 +1,54 @@
+{
+  "sources": [
+    {
+      "title": "Vaivenes · Copper Deli Museo · 2019",
+      "url": "https://naroagutierrez.wordpress.com/2019/11/25/vaivenes-en-el-copper-deli-museo/"
+    },
+    {
+      "title": "Vaivenes · Haika · 2020",
+      "url": "https://naroagutierrez.wordpress.com/2020/09/20/vaivenes-en-el-haika-de-sodupe/"
+    },
+    {
+      "title": "Repóker de Reinas · Siarte · 2022",
+      "url": "https://naroagutierrez.wordpress.com/2022/03/22/repoker-de-reinas-vaivenes-en-siarte/"
+    },
+    {
+      "title": "DiviNos VaiVenes · Politena · 2026",
+      "url": "https://naroagutierrez.wordpress.com/2026/01/15/divinos-vaivenes-muestra-plastica-en-politena-espacio-de-arte/"
+    }
+  ],
+  "images": [
+    {
+      "title": "Róisín",
+      "src": "/images/catalogo/roisin-original-4160.jpg",
+      "width": 4160,
+      "height": 3120,
+      "caption": "El retrato se encuentra con las plumas, el tejido y los adornos. Fotografía publicada por Naroa en su relato de Vaivenes en Haika.",
+      "source": "https://naroagutierrez.wordpress.com/2020/09/20/vaivenes-en-el-haika-de-sodupe/",
+      "original": "https://naroagutierrez.wordpress.com/wp-content/uploads/2020/09/roisin.jpg",
+      "sha256": "f096f99f38d6b7da7913be35521dd0680ca979f0f5e43c12907bbca140c31651"
+    },
+    {
+      "title": "Cantinflowers",
+      "src": "/images/trayectoria/cantinflowers.jpg",
+      "width": 3656,
+      "height": 2456,
+      "caption": "Pintura y collage en torno a Mario Moreno. Una obra que Naroa recupera al presentar el encuentro entre DiviNos y Vaivenes en 2026.",
+      "source": "https://naroagutierrez.wordpress.com/2026/01/15/divinos-vaivenes-muestra-plastica-en-politena-espacio-de-arte/",
+      "original": "https://naroagutierrez.wordpress.com/wp-content/uploads/2026/01/1-2.jpg",
+      "sha256": "17689d7324a4a39ba4a12b65e97eea0b87a816fb20bc552330d9901e63f34d65"
+    },
+    {
+      "src": "/images/catalogo/mario-moreno-hq-01.webp",
+      "width": 1564,
+      "height": 2048,
+      "caption": "El rostro en blanco y negro convive con la corbata roja y las intervenciones textiles.",
+      "source": "https://www.facebook.com/media/set/?set=a.1580369216775827&type=3",
+      "sha256": "b0d9bf3e15f70d86be46d394ef6e079070836f057d552eb42e21cd6f7c3f1bad",
+      "source_local": "classic/images/artworks/616822144_1580323063447109_589182952237233174_n.webp",
+      "title": "Mario Moreno",
+      "link": "/obra/mario-moreno/",
+      "original": "https://www.facebook.com/media/set/?set=a.1580369216775827&type=3"
+    }
+  ]
+}

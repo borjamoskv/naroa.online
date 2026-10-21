@@ -25,7 +25,7 @@ class Page(HTMLParser):
   if t=='title':self.in_title=False
   if t=='script' and self.script is not None:self.schemas.append(json.loads(self.script));self.script=None
 sitemap=ET.parse(R/'sitemap.xml');ns={'s':'http://www.sitemaps.org/schemas/sitemap/0.9','i':'http://www.google.com/schemas/sitemap-image/1.1'}
-urls=[u.text for u in sitemap.findall('s:url/s:loc',ns)];assert len(urls)==37 and len(set(urls))==37
+urls=[u.text for u in sitemap.findall('s:url/s:loc',ns)];assert len(urls)==38 and len(set(urls))==38
 pages={};titles=[]
 for u in urls:
  path=urlsplit(u).path;f=R/path.lstrip('/')/'index.html' if path!='/' else R/'index.html'
@@ -50,4 +50,4 @@ assert not any(x.get('@type') in ['LocalBusiness','AggregateRating'] for x in sc
 assert not (R/'landing-bilbao.html').exists()
 for file in [R/'vercel.json',R.parent/'vercel.json']:
  d=json.loads(file.read_text());assert any(x['source']=='/landing-bilbao' and x['permanent'] for x in d['redirects'])
-print('OK: 37 unique indexable URLs; titles, descriptions, canonical URLs, H1s, JSON-LD, internal links, image sitemap and legacy redirect verified.')
+print('OK: 38 unique indexable URLs; titles, descriptions, canonical URLs, H1s, JSON-LD, internal links, image sitemap and legacy redirect verified.')

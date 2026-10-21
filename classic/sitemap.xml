@@ -481,4 +481,17 @@
       <image:loc>https://naroa.online/images/catalogo/monster-dragon-05.jpg</image:loc>
     </image:image>
   </url>
+  <url>
+    <loc>https://naroa.online/series/vaivenes/</loc>
+    <lastmod>2026-10-21</lastmod>
+    <image:image>
+      <image:loc>https://naroa.online/images/catalogo/roisin-original-4160.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://naroa.online/images/trayectoria/cantinflowers.jpg</image:loc>
+    </image:image>
+    <image:image>
+      <image:loc>https://naroa.online/images/catalogo/mario-moreno-hq-01.webp</image:loc>
+    </image:image>
+  </url>
 </urlset>

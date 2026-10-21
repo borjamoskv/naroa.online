@@ -37,7 +37,7 @@ def card(p):
 filters=[('seleccion','Selección'),('todo','Todos los proyectos'),('pizarra','Pizarra'),('collage','Collage'),('objetos','Objetos'),('caracterizacion','Caracterización')]
 catalog=f'''<section id="view-destacada" class="view view--destacada editorial-catalog" aria-labelledby="catalog-title">
 <div class="catalog-intro"><div><p class="eyebrow">Naroa Gutiérrez Gil</p><h2 id="catalog-title">Obra</h2></div><p>Retratos sobre pizarra, collages, objetos que se abren y rostros que se transforman. Entra en cada proyecto para descubrir sus materiales y sus detalles.</p></div>
-<div class="catalog-toolbar"><div class="catalog-filters" role="group" aria-label="Filtrar proyectos">{''.join(f'<button type="button" data-filter="{key}" aria-pressed="{str(key=="todo").lower()}">{label}</button>' for key,label in filters)}</div><label class="catalog-search">Buscar proyecto<input id="catalog-search" type="search" placeholder="Título, material o retratado…" autocomplete="off"></label></div>
+<div class="series-entry"><a href="/series/vaivenes/"><img src="/images/catalogo/roisin-original-4160.jpg" width="4160" height="3120" alt="Róisín: retrato con plumas, tejido y adornos de la serie Vaivenes" loading="lazy" decoding="async"><div><span>Una serie de Naroa</span><h2>Vaivenes</h2><p>Rostros conocidos. Emociones propias.</p><strong>Descubrir la serie →</strong></div></a></div><div class="catalog-toolbar"><div class="catalog-filters" role="group" aria-label="Filtrar proyectos">{''.join(f'<button type="button" data-filter="{key}" aria-pressed="{str(key=="todo").lower()}">{label}</button>' for key,label in filters)}</div><label class="catalog-search">Buscar proyecto<input id="catalog-search" type="search" placeholder="Título, material o retratado…" autocomplete="off"></label></div>
 <p id="catalog-count" class="catalog-count" role="status" aria-live="polite">{len(ITEMS)} proyectos</p><div class="catalog-grid">{''.join(card(p) for p in ITEMS)}</div><div id="catalog-empty" hidden><p>No hay proyectos que coincidan con tu búsqueda.</p><button type="button" id="catalog-reset">Ver todos los proyectos</button></div>
 <div class="catalog-footnote"><span>Una obra, varias miradas.</span><p>Las fotografías de conjunto, detalle y proceso se reúnen en una misma ficha.</p></div></section>'''
 index=(ROOT/'index.html').read_text()
@@ -64,3 +64,7 @@ for p in ITEMS:
 urls=['https://naroa.online/', 'https://naroa.online/trayectoria/', 'https://naroa.online/sobre-mi/']+[f'https://naroa.online/obra/{p["slug"]}/' for p in ITEMS]
 (ROOT/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join(f'  <url><loc>{u}</loc><lastmod>{DATA["reviewed"]}</lastmod></url>\n' for u in urls)+'</urlset>\n')
 print(f'Built {len(ITEMS)} project pages, home catalogue and sitemap.')
+
+# Keep the series page in the standard catalogue build.
+import runpy
+runpy.run_path(str(ROOT.parent/"tools/build_vaivenes.py"))
