@@ -1,0 +1,272 @@
+{
+  "sources": [
+    {
+      "title": "Vaivenes · Copper Deli Museo · 2019",
+      "url": "https://naroagutierrez.wordpress.com/2019/11/25/vaivenes-en-el-copper-deli-museo/"
+    },
+    {
+      "title": "Vaivenes · Haika · 2020",
+      "url": "https://naroagutierrez.wordpress.com/2020/09/20/vaivenes-en-el-haika-de-sodupe/"
+    },
+    {
+      "title": "Repóker de Reinas · Siarte · 2022",
+      "url": "https://naroagutierrez.wordpress.com/2022/03/22/repoker-de-reinas-vaivenes-en-siarte/"
+    },
+    {
+      "title": "DiviNos VaiVenes · Politena · 2026",
+      "url": "https://naroagutierrez.wordpress.com/2026/01/15/divinos-vaivenes-muestra-plastica-en-politena-espacio-de-arte/"
+    },
+    {
+      "title": "Naroa presenta Vaivenes: Farrokh, Pippilotta, Rosetta, Róisín y Dustin",
+      "url": "https://www.facebook.com/naroa.artista.plastica/videos/170643291011818/"
+    },
+    {
+      "title": "Publicaciones de la exposición Vaivenes · Copper Deli Museo",
+      "url": "https://www.facebook.com/events/1258399667701249/?active_tab=discussion"
+    },
+    {
+      "title": "Repóker de Reinas · Documentación de Siarte",
+      "url": "https://siarte.com/2022-03-25-siarte-exposicion-pintura-collage-arte-naroa-gutierrez.php"
+    }
+  ],
+  "images": [
+    {
+      "title": "Róisín",
+      "src": "/images/catalogo/roisin-original-4160.jpg",
+      "width": 4160,
+      "height": 3120,
+      "caption": "El retrato se encuentra con las plumas, el tejido y los adornos. Fotografía publicada por Naroa en su relato de Vaivenes en Haika.",
+      "source": "https://naroagutierrez.wordpress.com/2020/09/20/vaivenes-en-el-haika-de-sodupe/",
+      "original": "https://naroagutierrez.wordpress.com/wp-content/uploads/2020/09/roisin.jpg",
+      "sha256": "f096f99f38d6b7da7913be35521dd0680ca979f0f5e43c12907bbca140c31651",
+      "slug": "roisin",
+      "stage": "obra",
+      "work_slug": "roisin",
+      "irises": [
+        [
+          0.652,
+          0.47,
+          0.007,
+          0.0055
+        ]
+      ],
+      "eye_tone": "amber"
+    },
+    {
+      "slug": "mr-fahrenheit",
+      "title": "Mr. Fahrenheit",
+      "src": "/images/catalogo/vaivenes-mr-fahrenheit.jpg",
+      "width": 1905,
+      "height": 1545,
+      "caption": "Retrato de Freddie Mercury. El dibujo a lápices de colores se combina con distintas capas de papel, recortes de periódico y una corona de roscón de Reyes.",
+      "stage": "obra",
+      "source": "https://www.facebook.com/media/set/?set=a.3432575976817090&type=3",
+      "membership_source": "https://www.facebook.com/naroa.artista.plastica/videos/170643291011818/",
+      "source_local": "raw_artworks_facebook/tributos/3432576583483696.jpg",
+      "original": "https://www.facebook.com/media/set/?set=a.3432575976817090&type=3",
+      "sha256": "3f2561c4f1948a8adc05a0bcdab6bdd2b11607475e3d820fc71ca43e7e580871",
+      "work_slug": "mr-fahrenheit",
+      "irises": [
+        [
+          0.543,
+          0.366,
+          0.009,
+          0.011
+        ],
+        [
+          0.633,
+          0.369,
+          0.0075,
+          0.01
+        ]
+      ],
+      "eye_tone": "amber"
+    },
+    {
+      "slug": "audreys-lightning",
+      "title": "Audrey’s Lightning",
+      "src": "/images/catalogo/vaivenes-audreys-lightning.webp",
+      "width": 1536,
+      "height": 2048,
+      "caption": "Detalle del retrato de Audrey Hepburn: el rayo sobre su ojo hace un guiño a David Bowie. La pieza combina pintura y collage y fue presentada en Vaivenes en el Copper Deli Museo.",
+      "stage": "detalle",
+      "source": "https://www.facebook.com/media/set/?set=a.3546942118713808&type=3",
+      "membership_source": "https://www.facebook.com/events/1258399667701249/?active_tab=discussion",
+      "source_local": "live-site/sala-3d/capitulos/img/audrey.webp",
+      "original": "https://www.facebook.com/media/set/?set=a.3546942118713808&type=3",
+      "sha256": "db78e90d5426abb9df6613064ce71171dd2be9099ce02603472f72d0529dd76b",
+      "work_slug": "audreys-lightning",
+      "irises": [
+        [
+          0.409,
+          0.379,
+          0.015,
+          0.012
+        ],
+        [
+          0.637,
+          0.378,
+          0.014,
+          0.013
+        ]
+      ],
+      "eye_tone": "amber"
+    },
+    {
+      "title": "Cantinflowers",
+      "src": "/images/trayectoria/cantinflowers.jpg",
+      "width": 3656,
+      "height": 2456,
+      "caption": "Pintura y collage en torno a Mario Moreno. Una obra que Naroa recupera al presentar el encuentro entre DiviNos y Vaivenes en 2026.",
+      "source": "https://naroagutierrez.wordpress.com/2026/01/15/divinos-vaivenes-muestra-plastica-en-politena-espacio-de-arte/",
+      "original": "https://naroagutierrez.wordpress.com/wp-content/uploads/2026/01/1-2.jpg",
+      "sha256": "17689d7324a4a39ba4a12b65e97eea0b87a816fb20bc552330d9901e63f34d65",
+      "slug": "cantinflowers",
+      "stage": "obra",
+      "work_slug": "cantinflowers",
+      "irises": [
+        [
+          0.312,
+          0.367,
+          0.01,
+          0.009
+        ],
+        [
+          0.426,
+          0.367,
+          0.01,
+          0.009
+        ]
+      ],
+      "eye_tone": "red"
+    },
+    {
+      "src": "/images/catalogo/mario-moreno-hq-01.webp",
+      "width": 1564,
+      "height": 2048,
+      "caption": "El rostro en blanco y negro convive con la corbata roja y las intervenciones textiles.",
+      "source": "https://www.facebook.com/media/set/?set=a.1580369216775827&type=3",
+      "sha256": "b0d9bf3e15f70d86be46d394ef6e079070836f057d552eb42e21cd6f7c3f1bad",
+      "source_local": "classic/images/artworks/616822144_1580323063447109_589182952237233174_n.webp",
+      "title": "Mario Moreno",
+      "link": "/obra/mario-moreno/",
+      "original": "https://www.facebook.com/media/set/?set=a.1580369216775827&type=3",
+      "slug": "mario-moreno",
+      "stage": "obra",
+      "work_slug": "mario-moreno",
+      "irises": [
+        [
+          0.318,
+          0.332,
+          0.013,
+          0.007
+        ],
+        [
+          0.498,
+          0.332,
+          0.014,
+          0.008
+        ]
+      ],
+      "eye_tone": "red"
+    },
+    {
+      "slug": "pippilotta",
+      "title": "Pippilotta",
+      "src": "/images/catalogo/vaivenes-pippilotta-completa.png",
+      "width": 1200,
+      "height": 1006,
+      "caption": "Pippi Calzaslargas y su mono, con cartas, fondo de cuadros rojos y marco dorado. Imagen de la obra terminada conservada en el archivo de la publicación Repóker de Reinas.",
+      "stage": "obra",
+      "source": "https://naroagutierrez.wordpress.com/2022/03/22/repoker-de-reinas-vaivenes-en-siarte/",
+      "membership_source": "https://www.facebook.com/naroa.artista.plastica/videos/170643291011818/",
+      "source_local": "live-site/sala-3d/carrusel/img/src/pipi.jpg",
+      "original": "https://naroagutierrez.wordpress.com/wp-content/uploads/2022/03/pipi-marco-png-1200x1000-2.png",
+      "sha256": "43b2480b9e2ab8e5160b91d05c2e32d6079e4b7932005088c672250db7bea1d7",
+      "process_image": {
+        "src": "/images/catalogo/vaivenes-pippilotta.jpg",
+        "width": 1641,
+        "height": 1231,
+        "sha256": "8057f3bfe1821d29d33c7b39ad0bc7ceb4cb994adac096c0be414cb779746eeb"
+      },
+      "work_slug": "pippilotta",
+      "irises": [
+        [
+          0.371,
+          0.476,
+          0.01,
+          0.0055
+        ],
+        [
+          0.455,
+          0.446,
+          0.01,
+          0.0055
+        ]
+      ],
+      "eye_tone": "original"
+    },
+    {
+      "slug": "rosetta",
+      "title": "Rosetta",
+      "src": "/images/catalogo/vaivenes-rosetta.jpg",
+      "width": 1880,
+      "height": 1410,
+      "caption": "Dibujo del retrato de la guitarrista Sister Rosetta Tharpe. Naroa la incluye entre las figuras de Vaivenes por su vínculo con el movimiento del rock and roll.",
+      "stage": "dibujo",
+      "source": "https://www.facebook.com/naroa.artista.plastica/videos/170643291011818/",
+      "membership_source": "https://www.facebook.com/naroa.artista.plastica/videos/170643291011818/",
+      "source_local": "live-site/sala-3d/carrusel/img/src/107606755_4088663064541708_490817533121466606_n.jpg",
+      "original": "https://www.facebook.com/naroa.artista.plastica/videos/170643291011818/",
+      "sha256": "b358b6720ac2cf022b90110d315b10a6a8ebf32c8f82e27c3c7a80ee2a907ba6",
+      "work_slug": "rosetta",
+      "irises": [
+        [
+          0.324,
+          0.236,
+          0.004,
+          0.002
+        ],
+        [
+          0.384,
+          0.23,
+          0.004,
+          0.002
+        ]
+      ],
+      "eye_tone": "amber"
+    },
+    {
+      "slug": "dustin",
+      "title": "Dustin",
+      "src": "/images/catalogo/vaivenes-dustin.jpg",
+      "width": 1839,
+      "height": 1379,
+      "caption": "Dibujo del retrato de Dustin Hoffman en El Graduado. Naroa relaciona esta figura de Vaivenes con la elección entre dejarse llevar y nadar contra la corriente.",
+      "stage": "dibujo",
+      "source": "https://www.facebook.com/naroa.artista.plastica/videos/170643291011818/",
+      "membership_source": "https://www.facebook.com/naroa.artista.plastica/videos/170643291011818/",
+      "source_local": "live-site/sala-3d/carrusel/img/src/107742658_4097484643659550_3561547213104938734_n.jpg",
+      "original": "https://www.facebook.com/naroa.artista.plastica/videos/170643291011818/",
+      "sha256": "058c80f442e8c5d8cd8f71c8c3c6be2ed2f53a12c2f0ad3928ad5a95d7c78362",
+      "work_slug": "dustin",
+      "irises": [
+        [
+          0.475,
+          0.316,
+          0.007,
+          0.006
+        ],
+        [
+          0.582,
+          0.316,
+          0.009,
+          0.007
+        ]
+      ],
+      "eye_tone": "amber"
+    }
+  ],
+  "reviewed": "2026-10-21",
+  "selection_note": "Ocho obras distintas, una imagen de cada una. Los procesos y detalles se conservan en el archivo sin repetirlos en el recorrido."
+}

@@ -1,0 +1,3 @@
+/* Never overlay tinted or duplicated irises on the original artwork. */
+.vaivenes-irises,.eye-paint-scene,.naroa-painting-arm { display:none !important; }
+.vaivenes-iris-photo > img { filter:none !important; }

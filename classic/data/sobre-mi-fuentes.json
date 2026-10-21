@@ -1,0 +1,67 @@
+{
+  "reviewed": "2026-10-21",
+  "sources": [
+    {
+      "id": "rostros",
+      "title": "Iconos Pop · Naroa sobre el retrato",
+      "url": "https://naroagutierrez.wordpress.com/2020/09/27/iconos-pop-muestra-colectiva-de-retratos/",
+      "supports": "Atracción por los rostros y cita sobre reconocerse en los demás."
+    },
+    {
+      "id": "materiales",
+      "title": "Madera, Papel y Tijera",
+      "url": "https://naroagutierrez.wordpress.com/2017/04/02/madera-papel-y-tijera-en-ambigu/",
+      "supports": "Experimentación con soportes, collage y elementos reciclados."
+    },
+    {
+      "id": "recreo",
+      "title": "El ReCreo · Espacio de creación",
+      "url": "https://naroagutierrez.wordpress.com/2024/01/12/el-recreo-espacio-de-creacion-para-recrearte/",
+      "supports": "Acompañamiento respetuoso y juego creativo multigeneracional; se presenta como proyecto documentado en 2024, sin anunciar horarios actuales."
+    },
+    {
+      "id": "autorretrato",
+      "title": "Autorretratos: Mujeres a través del Espejo",
+      "url": "https://naroagutierrez.wordpress.com/2026/05/14/autorretratos-mujeres-a-traves-del-espejo/",
+      "supports": "Taller cursado en 2025 con Ana Rosa Arroyo; Rara Avis, pastel y collage; imagen original de 4080 × 3072."
+    },
+    {
+      "id": "walking",
+      "title": "Walking Gallery · Por Amor al Arte",
+      "url": "https://naroagutierrez.wordpress.com/2022/10/04/walking-gallery-bilbao-octubre-2022-por-amor-al-arte/",
+      "supports": "Convocatoria de Naroa para compartir creaciones en las calles de Bilbao."
+    },
+    {
+      "id": "pizarra",
+      "title": "DiviNos VaiVenes",
+      "url": "https://naroagutierrez.wordpress.com/2026/01/15/divinos-vaivenes-muestra-plastica-en-politena-espacio-de-arte/",
+      "supports": "Pizarra, mica y retrato; Vaivenes y reutilización de materiales."
+    },
+    {
+      "id": "retrato",
+      "title": "Espejos del Alma · Archivo de la artista",
+      "url": "https://naroagutierrez.wordpress.com/2015/05/24/espejos-del-alma-en-el-colegio-de-abogados-de-bilbao/",
+      "supports": "Retrato con chistera y monóculo, imagen original de 2201 × 3468; identidad del fotógrafo no confirmada."
+    },
+    {
+      "id": "prensa",
+      "title": "Colonias de Arte de Portugalete · 2024",
+      "url": "https://www.enportugalete.com/articulo/actualidad/colonias-arte-portugalete-volveran-centrarse-sostenibilidad/20240515102022016891.html",
+      "supports": "Faceta de acompañamiento creativo y coordinación de Walking Gallery en Bilbao."
+    }
+  ],
+  "quote": {
+    "text": "Me encontré a mí en los demás",
+    "source": "rostros"
+  },
+  "images": [
+    {
+      "src": "/images/sobre-mi/naroa-monoculo.jpg",
+      "original": "https://naroagutierrez.wordpress.com/wp-content/uploads/2015/05/img_3297-copiar22.jpg"
+    },
+    {
+      "src": "/images/sobre-mi/rara-avis.jpg",
+      "original": "https://naroagutierrez.wordpress.com/wp-content/uploads/2026/05/img_20251127_124943-1.jpg"
+    }
+  ]
+}

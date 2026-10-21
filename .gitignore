@@ -44,4 +44,8 @@ assets-src/
 .env*
 classic/assets/backup_pre4k/
 raw_artworks_facebook/
+classic/images/social/*.png
+tools/experimental/
+
+
 

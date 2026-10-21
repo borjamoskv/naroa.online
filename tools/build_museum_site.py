@@ -63,7 +63,7 @@ def get_header(active_nav=''):
       </a>
       <nav>
         <ul class="nav-menu">
-{links_html}          <li><a href="https://naroa.online" target="_blank" rel="noopener noreferrer" class="nav-btn-lab">LAB / naroa.online ↗</a></li>
+{links_html}          <li><a href="https://naroagutierrezgil.com" target="_blank" rel="noopener noreferrer" class="nav-btn-lab">LAB / naroa.online ↗</a></li>
         </ul>
       </nav>
     </div>
@@ -80,7 +80,7 @@ def get_footer():
         <a href="/contacto/">Contacto</a>
         <a href="https://www.instagram.com/naroa_art/" target="_blank" rel="noopener noreferrer">Instagram</a>
         <a href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer">Facebook</a>
-        <a href="https://naroa.online" target="_blank" rel="noopener noreferrer" style="color: var(--gold);">naroa.online ↗</a>
+        <a href="https://naroagutierrezgil.com" target="_blank" rel="noopener noreferrer" style="color: var(--gold);">naroa.online ↗</a>
       </div>
     </div>
   </footer>"""
@@ -192,7 +192,7 @@ obra_content = f"""    <section class="section-header">
               <span>💬</span>
               <span>CONSULTAR DISPONIBILIDAD EN WHATSAPP ↗</span>
             </a>
-            <a href="https://naroa.online/#/lab" target="_blank" rel="noopener noreferrer" class="btn-secondary">
+            <a href="https://naroagutierrezgil.com/#/lab" target="_blank" rel="noopener noreferrer" class="btn-secondary">
               <span>🔬</span>
               <span>INSPECCIONAR EN LAB 3D ↗</span>
             </a>
@@ -324,7 +324,7 @@ obra_content = f"""    <section class="section-header">
       <p class="section-kicker">EXPERIENCIA INMERSIVA</p>
       <h3 class="lab-callout-title">¿QUIERES VER ESTAS OBRAS EN 3D?</h3>
       <p class="lab-callout-text">Visita el pabellón interactivo WebGL a 60fps con la banda sonora procedural <em>Boards of Burgos</em> en el laboratorio experimental.</p>
-      <a href="https://naroa.online/#/experiments" target="_blank" rel="noopener noreferrer" class="btn-primary">
+      <a href="https://naroagutierrezgil.com/#/experiments" target="_blank" rel="noopener noreferrer" class="btn-primary">
         <span>🏛️</span>
         <span>ABRIR PABELLÓN 3D EN NAROA.ONLINE ↗</span>
       </a>
@@ -432,7 +432,7 @@ bio_content = """    <section class="hero-editorial">
       <p class="section-kicker">PROCESO EN VIVO & EXPERIMENTOS</p>
       <h3 class="lab-callout-title">EXPLORA EL LABORATORIO DIGITAL</h3>
       <p class="lab-callout-text">Accede a las pruebas de texturas interactivas, lupa de alta resolución y shaders WebGL en naroa.online.</p>
-      <a href="https://naroa.online/#/process" target="_blank" rel="noopener noreferrer" class="btn-primary">
+      <a href="https://naroagutierrezgil.com/#/process" target="_blank" rel="noopener noreferrer" class="btn-primary">
         <span>🔬</span>
         <span>VER PROCESO DE TALLER EN NAROA.ONLINE ↗</span>
       </a>

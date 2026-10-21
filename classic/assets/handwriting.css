@@ -1,0 +1,24 @@
+@font-face { font-family:'Schoolbell'; src:url('/assets/fonts/Schoolbell-Regular.ttf') format('truetype'); font-weight:400; font-style:normal; font-display:swap; }
+/* A child's notebook for titles; retain the reading face for longer passages. */
+html body h1,html body h2,html body h3,html body h4,
+html body .notebook .notebook-post-title,
+html body .notebook .notebook-intro h2,html body .notebook .notebook-intro h3,
+html body .contacto__titulo,html body .artist-quote blockquote,
+html body .artist-contact p,html body .notebook-footer > p,
+html body .contacto__firma,html body .momento__when,
+html body .encargo__headline,html body .contacto .contacto__cta {
+ font-family:'Schoolbell','Comic Sans MS',cursive;
+ font-weight:400; font-style:normal; letter-spacing:0; line-height:1.12;
+ text-transform:none; font-synthesis:none;
+}
+html body .nav__link,html body .eyebrow,html body .artist-kicker,
+html body .notebook-meta > span,html body .notebook .notebook-read,
+html body .notebook-footer > a:first-of-type,html body .dato__label,
+html body .catalog-filters button,html body .series-stage {
+ font-family:'Schoolbell','Comic Sans MS',cursive;
+ font-weight:400; font-style:normal; letter-spacing:.015em; text-transform:none;
+}
+html body .nav__link { font-size:20px; }
+html body .eyebrow,html body .artist-kicker,html body .dato__label { font-size:19px; }
+html body .catalog-filters button { font-size:18px; }
+html body .notebook-post-title { overflow-wrap:anywhere; }

@@ -1,0 +1,56 @@
+/* An open studio notebook: photographs and writing, with room between them. */
+.artist-notebook.notebook { padding:95px 6vw 85px; background:#100e0e; color:#f4eedf; }
+.notebook-intro { max-width:1050px; margin-bottom:65px; }
+.notebook-intro .artist-kicker { color:#ff71a5; letter-spacing:.04em; }
+.notebook .notebook-intro h2,.notebook .notebook-intro h3 { font:italic 400 clamp(44px,7vw,105px)/1.06 Georgia,serif; letter-spacing:-.065em; margin:0 0 24px; color:#f4eedf; }
+.notebook-intro h2 span,.notebook-intro h3 span { color:#ff5548; }
+.notebook-intro > p:last-child { color:#c9c0b3; font:16px/1.8 Inter,Arial,sans-serif; }
+.notebook-entry--feature { display:grid; grid-template-columns:1.25fr 1fr; align-items:center; gap:5vw; }
+.notebook-photo { display:block; color:inherit; text-decoration:none; padding:10px; }
+.notebook-photo img { display:block; width:100%; height:auto; max-width:none; object-fit:contain; box-shadow:8px 12px 20px #0004; }
+.notebook-entry--feature .notebook-photo { transform:rotate(-1.1deg); }
+.notebook-meta { display:flex; flex-wrap:wrap; gap:8px 18px; align-items:baseline; margin:0 0 20px; font:11px/1.6 Inter,Arial,sans-serif; color:#b8ae9f; }
+.notebook-meta > span { color:#f1df51; font:italic 18px/1.3 Georgia,serif; }
+.notebook .notebook-post-title { font:400 clamp(27px,3.3vw,49px)/1.16 Georgia,serif; margin:0 0 23px; letter-spacing:-.045em; text-transform:none; color:#f4eedf; }
+.notebook-post-title a { color:inherit; text-decoration:none; }
+.notebook-post-title a:hover { color:#ff71a5; }
+.notebook-summary { color:#c9c0b3; font:15px/1.9 Inter,Arial,sans-serif; max-width:620px; margin:0 0 22px; }
+.notebook .notebook-read { display:inline-flex; gap:12px; align-items:center; min-height:44px; font:italic 21px/1.4 Georgia,serif; color:#ff7167; text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:7px; }
+.notebook-notes { display:grid; grid-template-columns:1fr 1fr; gap:65px 7vw; margin-top:90px; align-items:start; }
+.notebook-entry--note:first-child { grid-column:1/-1; max-width:800px; margin:0 4vw 0 17vw; }
+.notebook-entry--note:first-child .notebook-post-title { font-size:clamp(30px,4.2vw,60px); }
+.notebook-entry--note:nth-child(3) { margin-top:110px; }
+.notebook-entry--note .notebook-photo { margin-bottom:30px; }
+.notebook-entry--note:nth-child(2) .notebook-photo { transform:rotate(1.1deg); }
+.notebook-entry--note:nth-child(3) .notebook-photo { transform:rotate(-.9deg); }
+.notebook-entry--note .notebook-post-title { font-size:clamp(27px,2.8vw,39px); }
+.notebook-entry--note:nth-child(3) .notebook-meta > span { color:#6acbd4; }
+.notebook-footer { margin:95px 0 0 8vw; padding:0; }
+.notebook-footer > p { max-width:780px; color:#ff71a5; font:italic 400 clamp(31px,4.7vw,66px)/1.14 Georgia,serif; letter-spacing:-.045em; margin:0 0 30px; transform:rotate(-1.4deg); }
+.notebook-footer > a { display:block; width:fit-content; min-height:44px; padding:8px 0; color:#f1df51; font:italic clamp(20px,2.5vw,30px)/1.4 Georgia,serif; text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:7px; }
+.notebook-footer > a:last-child { color:#6acbd4; font:15px/1.7 Inter,Arial,sans-serif; margin-top:12px; }
+.notebook :focus-visible { outline:2px solid #f1df51; outline-offset:6px; }
+@media(max-width:760px) {
+ .artist-notebook.notebook { padding:65px 6vw 60px; }
+ .notebook-intro { margin-bottom:35px; }
+ .notebook-entry--feature { grid-template-columns:1fr; gap:28px; }
+ .notebook .notebook-post-title { font-size:32px; }
+ .notebook-notes { grid-template-columns:1fr; gap:55px; margin-top:60px; }
+ .notebook-entry--note:first-child { margin:0 0 0 4vw; }
+ .notebook-entry--note:nth-child(3) { margin-top:0; }
+ .notebook-photo { padding:5px; }
+ .notebook-entry--note .notebook-photo { margin-bottom:25px; }
+ .notebook-footer { margin:65px 0 0; }
+ .notebook-meta { margin-bottom:14px; }
+}
+@supports(animation-timeline:view()) {
+ @media(prefers-reduced-motion:no-preference) {
+  .notebook-photo img { animation:notebook-drift linear both; animation-timeline:view(); animation-range:entry 0% exit 100%; }
+ }
+}
+@keyframes notebook-drift { from { transform:translateY(10px); } to { transform:translateY(-10px); } }
+@media(prefers-reduced-motion:reduce) { .notebook-photo img { animation:none; } }
+@media print { .notebook-entry--feature,.notebook-notes { display:block; } .notebook-entry { break-inside:avoid; margin:30px 0 !important; } .notebook-photo { transform:none !important; } }
+
+.notebook-visually-hidden { position:absolute !important; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+html[data-brush-enabled="false"] .notebook-photo img { animation:none; }

@@ -1,86 +1,402 @@
 {
+  "reviewed": "2026-10-20",
+  "scope": "Selección documentada; no es un inventario exhaustivo. Las fechas corresponden a las muestras, no a la publicación de las entradas.",
   "exhibitions": [
     {
-      "id": "espejos-del-alma-2024",
-      "title": "Espejos del Alma",
-      "subtitle": "Retrospectiva Emocional",
-      "location": "Galería Vanguardia, Bilbao",
-      "year": 2024,
-      "month": "Noviembre",
-      "day": 15,
-      "type": "solo",
-      "description": "Una inmersión profunda en la psique humana a través de 15 retratos de gran formato. La exposición explora cómo la mirada construye identidad.",
-      "image": "images/artworks/espejos-del-alma.webp",
-      "url": "#/galeria"
-    },
-    {
-      "id": "identity-fragments-2024",
-      "title": "Identity Fragments",
-      "subtitle": "Colectiva Contemporánea",
-      "location": "Espacio Oculto, Madrid",
-      "year": 2024,
-      "month": "Mayo",
-      "day": 22,
+      "id": "3055",
+      "title": "Bwall Collective",
+      "date": "2026-06-04",
+      "dateLabel": "Junio de 2026 · inauguración el 4",
+      "location": "Dock · Bilbao",
       "type": "group",
-      "description": "Participación con la obra 'Fragmentación IV' en una muestra sobre la identidad digital y física en la era moderna.",
-      "image": "images/artworks/kintsugi-gold-1.webp",
-      "url": "https://espaciooculto.madrid"
+      "description": "Participación en la muestra colectiva comisariada por Olatz Arrese, junto a otras creadoras visuales del entorno de Bilbao.",
+      "endDate": null,
+      "year": 2026,
+      "sources": [
+        {
+          "label": "Relato de Naroa",
+          "url": "https://naroagutierrez.wordpress.com/2026/06/01/bwall-collective-en-el-dock-brotes-de-alma-y-manos/"
+        },
+        {
+          "label": "Crónica en DEIA",
+          "url": "https://www.deia.eus/bizkaia/vida-social/2026/06/05/bwall-collective-inaugura-exposicion-ocho-11159371.html"
+        }
+      ],
+      "published": "2026-06-01"
     },
     {
-      "id": "pop-icons-2023",
-      "title": "POP Culture Icons",
-      "subtitle": "Virtual Exhibition",
-      "location": "Artsy Online",
-      "year": 2023,
-      "month": "Septiembre",
-      "type": "online",
-      "description": "Muestra digital curada seleccionando las mejores reinterpretaciones del pop art actual. Naroa presentó su serie 'Neon Dreams'.",
-      "url": "https://artsy.net"
-    },
-    {
-      "id": "retratos-vivos-2022",
-      "title": "Retratos Vivos",
-      "location": "Kursaala, Donostia",
-      "year": 2022,
-      "month": "Febrero",
-      "type": "solo",
-      "description": "Primera gran exposición individual presentando la técnica de hiperrealismo con texturas mixtas. Un éxito de crítica local."
-    },
-    {
-      "id": "emergentes-2021",
-      "title": "Artistas Emergentes Euskadi",
-      "location": "Sala Rekalde, Bilbao",
-      "year": 2021,
-      "month": "Julio",
+      "id": "2995",
+      "title": "Autorretratos: Mujeres a través del Espejo",
+      "date": "2026-04-27",
+      "dateLabel": "27 de abril — 8 de junio de 2026",
+      "location": "Marienea · Basauri",
       "type": "group",
-      "description": "Seleccionada como una de las 10 artistas revelación del año. Obra expuesta: 'La Mirada Ausente'."
+      "description": "Participa con Rara Avis en la muestra surgida del taller de autorretrato de Ana Rosa Arroyo. El proyecto se presentó primero en Mujeres en la Diversidad, desde diciembre de 2025, y después en Marienea.",
+      "endDate": "2026-06-08",
+      "year": 2026,
+      "sources": [
+        {
+          "label": "Relato de Naroa",
+          "url": "https://naroagutierrez.wordpress.com/2026/05/14/autorretratos-mujeres-a-traves-del-espejo/"
+        }
+      ],
+      "published": "2026-05-14",
+      "artwork": "/obra/rara-avis/"
     },
     {
-      "id": "art-market-2020",
-      "title": "Bilbao Art Market",
-      "location": "Ensanche, Bilbao",
-      "year": 2020,
-      "month": "Diciembre",
+      "id": "2917",
+      "title": "DiviNos VaiVenes",
+      "date": "2026-01-30",
+      "dateLabel": "30 de enero de 2026 · inauguración",
+      "location": "Politena, espacio de arte · Bilbao",
+      "type": "solo",
+      "description": "Encuentro entre los retratos de DiviNos y los collages de Vaivenes. La pizarra, las texturas y los materiales reutilizados enlazan iconos del cine, la música y la televisión.",
+      "endDate": null,
+      "year": 2026,
+      "sources": [
+        {
+          "label": "Relato de Naroa",
+          "url": "https://naroagutierrez.wordpress.com/2026/01/15/divinos-vaivenes-muestra-plastica-en-politena-espacio-de-arte/"
+        }
+      ],
+      "published": "2026-01-15"
+    },
+    {
+      "id": "2809",
+      "title": "Azoka de arte y artesanía",
+      "date": "2025-05-25",
+      "dateLabel": "25 de mayo de 2025",
+      "location": "Lataska · Sopela",
       "type": "market",
-      "description": "Stand propio en la feria de arte navideña, con venta directa de obra pequeña y láminas limitadas."
+      "description": "Presentación de obra y reproducciones: cuatro iconos sobre pizarra, AmazOna y las versiones de día y de noche de Entre Tantas Flores.",
+      "endDate": null,
+      "year": 2025,
+      "sources": [
+        {
+          "label": "Relato de Naroa",
+          "url": "https://naroagutierrez.wordpress.com/2025/05/22/25-mayo-2025-azoka-en-lataska-sopela/"
+        }
+      ],
+      "published": "2025-05-22"
     },
     {
-      "id": "mujeres-creadoras-2019",
-      "title": "Mujeres Creadoras",
-      "location": "Casa de Cultura de Getxo",
+      "id": "2712",
+      "title": "Udaberriko Jaia",
+      "date": "2025-05-18",
+      "dateLabel": "18 de mayo de 2025",
+      "location": "Sopela",
+      "type": "market",
+      "description": "Participación en el mercado de arte y artesanía de la fiesta de primavera.",
+      "endDate": null,
+      "year": 2025,
+      "sources": [
+        {
+          "label": "Relato de Naroa",
+          "url": "https://naroagutierrez.wordpress.com/2025/05/09/udaberriko-jaia-2025-market-en-sopelana-18-de-mayo/"
+        }
+      ],
+      "published": "2025-05-09"
+    },
+    {
+      "id": "2569",
+      "title": "Emakumeen arteaN",
+      "date": "2022-12-20",
+      "dateLabel": "20 de diciembre de 2022 · inauguración",
+      "location": "Harilka elkartea · Bilbao",
+      "type": "group",
+      "description": "Muestra multidisciplinar de mujeres creadoras reunidas en torno a la sororidad y la participación cultural.",
+      "endDate": null,
+      "year": 2022,
+      "sources": [
+        {
+          "label": "Relato de Naroa",
+          "url": "https://naroagutierrez.wordpress.com/2022/12/16/muestra-colectiva-emakumeen-artean/"
+        }
+      ],
+      "published": "2022-12-16"
+    },
+    {
+      "id": "2458",
+      "title": "Bwall Collective «GIRLS»",
+      "date": "2022-11-12",
+      "dateLabel": "Noviembre de 2022 · inauguración el 12",
+      "location": "Dock · Bilbao",
+      "type": "group",
+      "description": "Obra visual en una exposición colectiva que reunió también música, poesía y performance.",
+      "endDate": null,
+      "year": 2022,
+      "sources": [
+        {
+          "label": "Relato de Naroa",
+          "url": "https://naroagutierrez.wordpress.com/2022/11/06/expo-bwall-collective-girls-en-el-dock/"
+        }
+      ],
+      "published": "2022-11-06"
+    },
+    {
+      "id": "2423",
+      "title": "Walking Gallery · Por Amor al Arte",
+      "date": "2022-10-23",
+      "dateLabel": "23 de octubre de 2022",
+      "location": "Calles de Bilbao",
+      "type": "street",
+      "description": "Convocatoria abierta para pasear con obras por la ciudad, desde el entorno del Museo de Bellas Artes hasta el Casco Viejo. Una forma de compartir el arte fuera de la sala de exposiciones.",
+      "endDate": null,
+      "year": 2022,
+      "sources": [
+        {
+          "label": "Relato de Naroa",
+          "url": "https://naroagutierrez.wordpress.com/2022/10/04/walking-gallery-bilbao-octubre-2022-por-amor-al-arte/"
+        }
+      ],
+      "published": "2022-10-04"
+    },
+    {
+      "id": "2359",
+      "title": "Repóker de Reinas · Vaivenes",
+      "date": "2022-04-04",
+      "dateLabel": "4 — 29 de abril de 2022",
+      "location": "Siarte Leku · Bilbao",
+      "type": "solo",
+      "description": "Selección de cinco retratos de Vaivenes: figuras reconocibles que dan forma a emociones y experiencias personales.",
+      "endDate": "2022-04-29",
+      "year": 2022,
+      "sources": [
+        {
+          "label": "Relato de Naroa",
+          "url": "https://naroagutierrez.wordpress.com/2022/03/22/repoker-de-reinas-vaivenes-en-siarte/"
+        }
+      ],
+      "published": "2022-03-22"
+    },
+    {
+      "id": "2254",
+      "title": "Iconos Pop",
+      "date": "2020-10-02",
+      "dateLabel": "2 — 28 de octubre de 2020",
+      "location": "Casa de Cultura Clara Campoamor · Barakaldo",
+      "type": "group",
+      "description": "Retratos en distintas técnicas junto a Vanessa Gredilla Espiña, Carmen Ortiz de Urbina y Piedad Ortiz de Urbina.",
+      "endDate": "2020-10-28",
+      "year": 2020,
+      "sources": [
+        {
+          "label": "Relato de Naroa",
+          "url": "https://naroagutierrez.wordpress.com/2020/09/27/iconos-pop-muestra-colectiva-de-retratos/"
+        }
+      ],
+      "published": "2020-09-27"
+    },
+    {
+      "id": "2204",
+      "title": "Vaivenes",
+      "date": "2020-09-30",
+      "dateLabel": "30 de septiembre — 27 de octubre de 2020",
+      "location": "Haika · Sodupe",
+      "type": "solo",
+      "description": "Muestra individual que utiliza figuras de la música, el cine, la literatura y la televisión para explorar estados emocionales.",
+      "endDate": "2020-10-27",
+      "year": 2020,
+      "sources": [
+        {
+          "label": "Relato de Naroa",
+          "url": "https://naroagutierrez.wordpress.com/2020/09/20/vaivenes-en-el-haika-de-sodupe/"
+        }
+      ],
+      "published": "2020-09-20"
+    },
+    {
+      "id": "2127",
+      "title": "Vaivenes",
+      "date": "2019-11-28",
+      "dateLabel": "28 de noviembre de 2019 · inauguración",
+      "location": "Copper Deli Museo · Bilbao",
+      "type": "solo",
+      "description": "La exposición reúne nuevos rostros y composiciones nacidas de los contrastes de la experiencia cotidiana.",
+      "endDate": null,
       "year": 2019,
-      "month": "Marzo",
-      "type": "group",
-      "description": "Exposición colectiva celebrando el mes de la mujer. Participación con tríptico sobre la maternidad."
+      "sources": [
+        {
+          "label": "Relato de Naroa",
+          "url": "https://naroagutierrez.wordpress.com/2019/11/25/vaivenes-en-el-copper-deli-museo/"
+        }
+      ],
+      "published": "2019-11-25"
     },
     {
-      "id": "bbaa-final-2018",
-      "title": "Grado BBAA Final Show",
-      "location": "UPV/EHU Leoia",
-      "year": 2018,
-      "month": "Junio",
+      "id": "2056",
+      "title": "360°",
+      "date": "2018-06-28",
+      "dateLabel": "28 de junio — 31 de julio de 2018",
+      "location": "Baserri Antzoki · Derio",
       "type": "group",
-      "description": "Exposición de fin de grado. Presentación del proyecto 'Génesis de la Forma'."
+      "description": "Colectiva multidisciplinar comisariada por Germán de los Ríos, con fotografía, pintura, escultura y poesía visual.",
+      "endDate": "2018-07-31",
+      "year": 2018,
+      "sources": [
+        {
+          "label": "Relato de Naroa",
+          "url": "https://naroagutierrez.wordpress.com/2018/06/27/exposicion-colectiva-multidisciplinar-360/"
+        }
+      ],
+      "published": "2018-06-27"
+    },
+    {
+      "id": "1895",
+      "title": "Personas",
+      "date": "2017-09-05",
+      "dateLabel": "5 — 24 de septiembre de 2017",
+      "location": "Sarean · Bilbao",
+      "type": "group",
+      "description": "Participación en la muestra comisariada por Txema Agiriano, centrada en la convivencia, la diferencia y los vínculos entre las personas.",
+      "endDate": "2017-09-24",
+      "year": 2017,
+      "sources": [
+        {
+          "label": "Relato de Naroa",
+          "url": "https://naroagutierrez.wordpress.com/2017/09/05/exposicion-colectiva-personas-en-sarean/"
+        },
+        {
+          "label": "Ficha de Sarean",
+          "url": "https://sarean.info/events/exposicion-personas/"
+        }
+      ],
+      "published": "2017-09-05"
+    },
+    {
+      "id": "1356",
+      "title": "Sácame los Colores",
+      "date": "2016-12",
+      "dateLabel": "Diciembre de 2016",
+      "location": "Tegobi · Bilbao",
+      "type": "solo",
+      "description": "Una colección de retratos que explora el rostro a través de un color intenso y expresivo.",
+      "endDate": null,
+      "year": 2016,
+      "sources": [
+        {
+          "label": "Relato de Naroa",
+          "url": "https://naroagutierrez.wordpress.com/2016/11/30/sacame-los-colores-en-tegobi/"
+        }
+      ],
+      "published": "2016-11-30"
+    },
+    {
+      "id": "414",
+      "title": "Espejos del Alma",
+      "date": "2015-05-28",
+      "dateLabel": "28 de mayo — 24 de julio de 2015",
+      "location": "Colegio de Abogados · Bilbao",
+      "type": "solo",
+      "description": "Pinturas sobre lienzo y platos de madera: una investigación del rostro como lugar de reconocimiento entre quien mira y quien es mirado.",
+      "endDate": "2015-07-24",
+      "year": 2015,
+      "sources": [
+        {
+          "label": "Relato de Naroa",
+          "url": "https://naroagutierrez.wordpress.com/2015/05/24/espejos-del-alma-en-el-colegio-de-abogados-de-bilbao/"
+        }
+      ],
+      "published": "2015-05-24"
+    },
+    {
+      "id": "395",
+      "title": "Walking Gallery · Bilbao Art District",
+      "date": "2015-05-16",
+      "dateLabel": "16 de mayo de 2015",
+      "location": "Calles de Bilbao · salida desde Galería Kalao",
+      "type": "street",
+      "description": "Encuentro abierto de artistas que transportan y muestran sus creaciones durante un recorrido urbano.",
+      "endDate": null,
+      "year": 2015,
+      "sources": [
+        {
+          "label": "Relato de Naroa",
+          "url": "https://naroagutierrez.wordpress.com/2015/05/10/walking-gallery-bilbao-art-district-2015/"
+        }
+      ],
+      "published": "2015-05-10"
+    },
+    {
+      "id": "195",
+      "title": "Espejos del Alma",
+      "date": "2014-07",
+      "dateLabel": "Julio — 31 de agosto de 2014",
+      "location": "Torre Salazar · Portugalete",
+      "type": "solo",
+      "description": "La muestra ocupa la casa-torre con pinturas sobre lienzo y trabajos sobre madera. La inauguración se celebró el 17 de julio.",
+      "endDate": "2014-08-31",
+      "year": 2014,
+      "sources": [
+        {
+          "label": "Relato de Naroa",
+          "url": "https://naroagutierrez.wordpress.com/2014/07/10/la-muestra-espejos-del-alma-visita-la-portugaluja-torre-salazar/"
+        }
+      ],
+      "published": "2014-07-10"
+    },
+    {
+      "id": "3",
+      "title": "La Bolsa y la Vida",
+      "date": "2013-05-20",
+      "dateLabel": "20 de mayo de 2013 · inauguración",
+      "location": "Spazio Grossi · Bilbao",
+      "type": "solo",
+      "description": "Exposición anunciada por la artista en su archivo personal.",
+      "endDate": null,
+      "year": 2013,
+      "sources": [
+        {
+          "label": "Relato de Naroa",
+          "url": "https://naroagutierrez.wordpress.com/2013/05/20/la-bolsa-y-la-vida/"
+        }
+      ],
+      "published": "2013-05-20"
+    },
+    {
+      "id": "gaztebulegoa-2011",
+      "title": "Exposición de pintura",
+      "date": "2011-09",
+      "dateLabel": "Septiembre de 2011 · hasta el día 30",
+      "location": "Gaztebulegoa · Barakaldo",
+      "type": "solo",
+      "description": "La agenda cultural local recoge una exposición de pintura de Naroa Gutiérrez Gil.",
+      "endDate": "2011-09-30",
+      "year": 2011,
+      "sources": [
+        {
+          "label": "Referencia de prensa",
+          "url": "https://www.barakaldodigital.com/2011/09/agenda-recital-acustico-de-porco.html"
+        }
+      ],
+      "published": null
+    },
+    {
+      "id": "hegoak-2010",
+      "title": "Espejos del Alma",
+      "date": "2010-03",
+      "dateLabel": "Marzo de 2010 · hasta el día 31",
+      "location": "Hegoak · Bilbao",
+      "type": "solo",
+      "description": "La agenda de GARA documenta la muestra de Naroa bajo este título. Es la referencia más antigua incluida en esta selección.",
+      "endDate": "2010-03-31",
+      "year": 2010,
+      "sources": [
+        {
+          "label": "Referencia de prensa",
+          "url": "https://gara.naiz.eus/paperezkoa/20100305/186538/eu/Agenda"
+        }
+      ],
+      "published": null
     }
-  ]
+  ],
+  "hero": {
+    "src": "/images/trayectoria/cantinflowers.jpg",
+    "width": 3656,
+    "height": 2456,
+    "alt": "Cantinflowers: retrato de Cantinflas rodeado de formas y colores vivos",
+    "caption": "Cantinflowers · Imagen publicada por Naroa en el relato de DiviNos VaiVenes, 2026.",
+    "source": "https://naroagutierrez.wordpress.com/2026/01/15/divinos-vaivenes-muestra-plastica-en-politena-espacio-de-arte/",
+    "original": "https://naroagutierrez.wordpress.com/wp-content/uploads/2026/01/1-2.jpg"
+  }
 }

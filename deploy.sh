@@ -90,10 +90,18 @@ if [ ! -f "$BUILD_DIR/robots.txt" ]; then
   cat > "$BUILD_DIR/robots.txt" << 'EOF'
 User-agent: *
 Allow: /
-Sitemap: https://naroa.online/sitemap.xml
+Sitemap: https://naroagutierrezgil.com/sitemap.xml
 EOF
   ok "robots.txt creado"
 fi
+
+# Build and validate the reviewed artwork catalogue before release.
+python3 tools/build_about.py || fail "Compilación de Sobre mí falló"
+python3 tools/build_trajectory.py
+python3 tools/build_catalog.py || fail "Compilación del catálogo falló"
+python3 tools/build_seo.py || fail "Compilación del SEO local falló"
+python3 tools/check_catalog.py || fail "Validación del catálogo falló"
+python3 tools/check_seo.py || fail "Validación del SEO local falló"
 
 # ── 4.1 Sincronizar .deploy para Vercel (Classic Marilyn + MICA + NavFix + Configurador) ──
 rm -rf .deploy
