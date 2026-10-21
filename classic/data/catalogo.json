@@ -437,12 +437,13 @@
       "story": "Un autorretrato frente al espejo que se expande en marcos, reflejos, cintas y una pluma de pavo real. El dibujo se convierte en una composición de capas, creada en el taller de Ana Rosa Arroyo en Basauri.",
       "images": [
         {
-          "src": "/images/catalogo/rara-avis-16.jpg",
-          "width": 640,
-          "height": 850,
-          "caption": "Ensamblaje completo",
-          "source": "https://www.facebook.com/media/set/?set=a.1696477745164973&type=3",
-          "sha256": "e8dda845cd8d1d473a2ccb57c4ec104bdf8a5d380ed5c9cb8277d2dd27e9c383"
+          "src": "/images/catalogo/rara-avis-original-4080.jpg",
+          "width": 4080,
+          "height": 3072,
+          "caption": "Ensamblaje completo: autorretrato, marcos y collage",
+          "source": "https://naroagutierrez.wordpress.com/2026/05/14/autorretratos-mujeres-a-traves-del-espejo/",
+          "sha256": "5933c4a68a815973e918dee4bf0246a6376c9d334acdf93cf6ecbce37f106484",
+          "source_local": "classic/images/sobre-mi/rara-avis.jpg"
         },
         {
           "src": "/images/catalogo/rara-avis-01.jpg",
