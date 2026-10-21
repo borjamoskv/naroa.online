@@ -11,6 +11,25 @@ LABELS = {'pizarra': 'Pizarra · DiviNos', 'collage': 'Dibujo y collage', 'objet
 def image(p, i=0, eager=False):
     im=p['images'][i]
     return f'<img src="{esc(im["src"])}" alt="{esc(p["title"] + " — " + im["caption"])}" width="{im["width"]}" height="{im["height"]}" loading="{"eager" if eager else "lazy"}" decoding="async"{ " fetchpriority=\"high\"" if eager else ""}>'
+def editorial_page(page, p, facts, email):
+    presentation=p.get('editorial')
+    if not presentation:
+        return page
+    figures=[]
+    order=presentation['image_order']
+    for position, index in enumerate(order):
+        im=p['images'][index]
+        caption=presentation['captions'][position]
+        figures.append(f'<figure><a class="project-photo" href="{esc(im["src"])}" data-image="{esc(im["src"])}" data-caption="{esc(p["title"]+" — "+caption)}" aria-label="Ampliar: {esc(caption)}">{image(p,index,position==0)}<span aria-hidden="true">Ampliar ↗</span></a><figcaption><span>{position+1:02d} / {len(order):02d}</span> {esc(caption)}</figcaption></figure>')
+    info=f'<section class="project-info" aria-labelledby="artwork-title"><p class="eyebrow">{esc(LABELS[p["category"]])}</p><h1 id="artwork-title">{esc(p["title"])}</h1><p class="project-story">{esc(p["story"])}</p><dl>{"".join(f"<div><dt>{key}</dt><dd>{esc(value)}</dd></div>" for key,value in facts if value)}</dl>'
+    if p['credit']:
+        info+=f'<p class="project-credit">{esc(p["credit"])}</p>'
+    info+=f'<a class="project-source" href="{esc(p["source"])}" target="_blank" rel="noopener noreferrer">Ver publicación de la artista ↗</a></section>'
+    closing=f'<section class="project-invitation" aria-labelledby="invitation-title"><p class="eyebrow">Una idea propia</p><h2 id="invitation-title">¿Y si empezamos por tu idea?</h2><p>Cuéntale a Naroa a quién te gustaría retratar y qué tienes en mente.</p><div class="project-invitation__actions"><a class="editorial-button" href="{esc(email)}">Cuéntame tu idea ↗</a><a class="editorial-link" href="/retratos-por-encargo-bilbao/">Retratos por encargo ↗</a></div></section>'
+    content='<div class="project-editorial">'+figures[0]+info+'<div class="project-details">'+''.join(figures[1:])+'</div>'+closing+'</div>'
+    page=re.sub(r'<div class="project-layout">[\s\S]*?(?=<section class="project-related">)',lambda _:content,page,count=1)
+    return page.replace('<body class="project-page">','<body class="project-page project-page--editorial">').replace('/assets/catalogo.css"','/assets/catalogo.css?v=20261021-editorial"')
+
 def card(p):
     search=' '.join(str(p.get(k) or '') for k in ['title','category','technique','support','series','story'])
     return f'''<article class="catalog-card" data-category="{p['category']}" data-selected="{str(p['selected']).lower()}" data-search="{esc(search)}">
@@ -40,6 +59,7 @@ for p in ITEMS:
 <section class="project-related"><p class="eyebrow">Sigue explorando</p><h2>Otros proyectos</h2><div class="catalog-grid">{''.join(card(q) for q in related)}</div></section></main>
 <footer class="project-footer"><a href="/">Naroa Gutiérrez Gil</a><a href="mailto:naroa@naroa.eu">naroa@naroa.eu ↗</a><span>Bilbao · © 2026</span></footer>
 <dialog id="art-viewer" aria-label="Imagen ampliada"><div class="viewer-bar"><span id="viewer-counter" role="status"></span><button type="button" id="viewer-close">Cerrar ×</button></div><div class="viewer-stage"><button type="button" id="viewer-prev" aria-label="Imagen anterior">←</button><img id="viewer-image" alt=""><button type="button" id="viewer-next" aria-label="Imagen siguiente">→</button></div><p id="viewer-caption" aria-live="polite"></p></dialog></body></html>'''
+    page=editorial_page(page,p,facts,email)
     folder=ROOT/'obra'/p['slug'];folder.mkdir(parents=True,exist_ok=True);(folder/'index.html').write_text(page)
 urls=['https://naroa.online/', 'https://naroa.online/trayectoria/', 'https://naroa.online/sobre-mi/']+[f'https://naroa.online/obra/{p["slug"]}/' for p in ITEMS]
 (ROOT/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join(f'  <url><loc>{u}</loc><lastmod>{DATA["reviewed"]}</lastmod></url>\n' for u in urls)+'</urlset>\n')

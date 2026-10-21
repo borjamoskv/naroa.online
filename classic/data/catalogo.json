@@ -45,7 +45,19 @@
       "credit": null,
       "selected": true,
       "kind": "obra",
-      "source": "https://www.facebook.com/media/set/?set=a.1571125317700217&type=3"
+      "source": "https://www.facebook.com/media/set/?set=a.1571125317700217&type=3",
+      "editorial": {
+        "image_order": [
+          0,
+          2,
+          1
+        ],
+        "captions": [
+          "El retrato completo: blanco, negro y grises sobre pizarra natural.",
+          "El canto y la superficie de la pizarra forman parte de la pieza.",
+          "La vista oblicua permite apreciar el grosor del soporte."
+        ]
+      }
     },
     {
       "slug": "marilyn-rocks",
@@ -218,7 +230,19 @@
       "credit": null,
       "selected": true,
       "kind": "obra",
-      "source": "https://www.facebook.com/media/set/?set=a.1577827357030013&type=3"
+      "source": "https://www.facebook.com/media/set/?set=a.1577827357030013&type=3",
+      "editorial": {
+        "image_order": [
+          0,
+          1,
+          2
+        ],
+        "captions": [
+          "El retrato de Robe, la tela floral y el alambre, reunidos en la obra enmarcada.",
+          "El alambre dibuja una frase sobre la composición.",
+          "La vista oblicua muestra cómo se superponen el retrato y la tela."
+        ]
+      }
     },
     {
       "slug": "mario-moreno",
@@ -348,7 +372,19 @@
       "credit": null,
       "selected": true,
       "kind": "obra",
-      "source": "https://www.facebook.com/media/set/?set=a.858798248932931&type=3"
+      "source": "https://www.facebook.com/media/set/?set=a.858798248932931&type=3",
+      "editorial": {
+        "image_order": [
+          0,
+          2,
+          1
+        ],
+        "captions": [
+          "El conjunto completo: un retrato construido dentro de una lata intervenida.",
+          "Las impresiones recortadas se superponen para construir el retrato.",
+          "La vista lateral permite ver la separación entre las capas."
+        ]
+      }
     },
     {
       "slug": "hugo-box",
