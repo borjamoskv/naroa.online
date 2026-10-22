@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:site": "python3 tools/build_immersive_site.py",
+    "test:site": "python3 tools/check_immersive_site.py && node tools/test_immersive_dom.cjs",
     "lint": "oxlint",
     "test": "oxlint && tsc -b",
     "preview": "vite preview",
@@ -31,6 +33,7 @@
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.3",
+    "jsdom": "26.1.0",
     "oxlint": "^1.71.0",
     "three-stdlib": "^2.36.1",
     "typescript": "~6.0.2",

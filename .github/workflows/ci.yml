@@ -32,3 +32,16 @@ jobs:
       - name: Build project
         run: pnpm run build
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install portfolio image tools
+        run: python -m pip install -r tools/requirements-immersive.txt
+
+      - name: Build complete immersive portfolio
+        run: pnpm run build:site
+
+      - name: Validate portfolio routes and interactions
+        run: pnpm run test:site
+

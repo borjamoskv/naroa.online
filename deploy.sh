@@ -95,28 +95,17 @@ EOF
   ok "robots.txt creado"
 fi
 
-# Build and validate the reviewed artwork catalogue before release.
-python3 tools/build_about.py || fail "Compilación de Sobre mí falló"
-python3 tools/build_trajectory.py
-python3 tools/build_catalog.py || fail "Compilación del catálogo falló"
-python3 tools/build_seo.py || fail "Compilación del SEO local falló"
-python3 tools/check_catalog.py || fail "Validación del catálogo falló"
-python3 tools/check_seo.py || fail "Validación del SEO local falló"
-
-# ── 4.1 Sincronizar .deploy para Vercel (Classic Marilyn + MICA + NavFix + Configurador) ──
-rm -rf .deploy
-cp -r classic .deploy
-rm -rf .deploy/.vercel .deploy/.env*
-ok ".deploy sincronizado con classic/"
-
-# ── 5. Compilar El Museo Institucional (museum/) ───────────
-log "Compilando sitio institucional El Museo (naroagutierrezgil.com)..."
-python3 tools/build_museum_site.py || fail "Compilación de El Museo falló"
-ok "El Museo compilado → museum/ (6 rutas canónicas)"
+# Build the approved immersive design directly from reviewed source data.
+# Original catalogue, photographs and legacy generators are preserved.
+log "Compilando portfolio inmersivo completo..."
+python3 tools/build_immersive_site.py || fail "Compilación del portfolio falló"
+python3 tools/check_immersive_site.py || fail "Validación del portfolio falló"
+node tools/test_immersive_dom.cjs || fail "Validación de interacciones falló"
+ok "Portfolio completo compilado → .deploy/"
 
 # ── 6. Deploy a Cloudflare Pages ─────────────────────────────
 if [ "$BRANCH" = "--build-only" ]; then
-  ok "Build completado en .deploy/ y museum/ (Modo --build-only)"
+  ok "Build completado en .deploy/ y dist/ (Modo --build-only)"
   exit 0
 fi
 
@@ -126,13 +115,13 @@ fi
 
 log "Desplegando EL MUSEO → CF Pages proyecto ${BOLD}naroagutierrezgil-com${NC}..."
 if [ "$BRANCH" = "--preview" ]; then
-  wrangler pages deploy museum --project-name "naroagutierrezgil-com" --branch preview --commit-dirty=true
+  wrangler pages deploy .deploy --project-name "naroagutierrezgil-com" --branch preview --commit-dirty=true
   wrangler pages deploy "$BUILD_DIR" --project-name "naroaonline" --branch preview --commit-dirty=true
   ok "Deploy PREVIEW completado"
 else
-  wrangler pages deploy museum --project-name "naroagutierrezgil-com" --branch production --commit-dirty=true || true
+  wrangler pages deploy .deploy --project-name "naroagutierrezgil-com" --branch production --commit-dirty=true
   log "Desplegando EL SÓTANO / LAB → CF Pages proyecto ${BOLD}naroaonline${NC}..."
-  wrangler pages deploy "$BUILD_DIR" --project-name "naroaonline" --branch production --commit-dirty=true || true
+  wrangler pages deploy "$BUILD_DIR" --project-name "naroaonline" --branch production --commit-dirty=true
   ok "Deploy PRODUCCIÓN completado → https://naroagutierrezgil.com/ (El Museo) & https://naroa.online/ (El Sótano)"
 fi
 
