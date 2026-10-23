@@ -33,8 +33,12 @@ pages, aliases, sitemap and a 404 page. Optimized derivatives and client assets
 use content-based filenames. Original public image paths remain available.
 
 The exhibition loads the current artwork and its neighbours rather than eagerly
-decoding all 40 photographs. Scroll movement is continuous and bounded to one
-work per gesture. Alternating diagonal and lateral reveals, deeper image
+decoding all 40 photographs. Scroll uses the browser’s native vertical movement and inertia. A sticky
+full-screen stage follows real document scroll position, with no wheel
+prevention, gesture lock, forced settling or separate animation loop.
+Nearby arrow navigation scrolls smoothly; direct catalogue selections jump
+to the selected artwork. Touch, browser zoom, Page Down and the scrollbar
+remain native. Alternating diagonal and lateral reveals, deeper image
 movement and a transient oversized title follow actual scroll progress.
 Editorial sections reveal once as they enter the viewport; menus and images
 respond to interaction. Reduced-motion preferences disable these enhancements. Arrow controls, keyboard navigation, a complete-image view

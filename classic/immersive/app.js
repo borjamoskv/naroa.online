@@ -56,11 +56,12 @@
     const scenes = $$('.art-scene', stage), images = scenes.map(s => $('img', s));
     const kineticTitle = $('[data-kinetic-title]', stage), caption = $('[data-art-copy]', stage);
     const state = { index: Number(stage.dataset.initial) || 0, fit: false, quiet: false, photo: 0 };
-    const motion = { position: state.index, target: state.index, desired: state.index, frame: null, last: 0, save: false, request: 0 };
-    const gesture = { active: false, base: state.index, sign: 0, last: 0, timer: null, delta: 0, locked: false };
+    const motion = { position: state.index, desired: state.index, frame: null, request: 0, navigation: null };
+    const track = stage.closest('.art-scroll'), geometry = { top: 0, step: 1 };
+    document.documentElement.classList.add('gallery-scroll');
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     const pan = { x: 0, y: 0, tx: 0, ty: 0, frame: null };
     const pendingImages = new Map();
-    let touch = null;
     const focals = { 'rara-avis': '56% 42%', 'amor-en-conserva': '50% 54%', 'entre-tantas-flores-de-dia': '50% 36%', 'johnny-rocks': '50% 42%', 'rockagipsy': '50% 43%', 'hugo-box': '50% 38%' };
     const mobileFocals = { 'rara-avis': '61% 40%', 'amor-en-conserva': '48% 54%' };
     function focusPictures() { works.forEach((p, i) => scenes[i].style.setProperty('--position', (innerWidth < 760 && mobileFocals[p.slug]) || focals[p.slug] || '50% 44%')); }
@@ -147,64 +148,66 @@
         }
       });
       const transitioning = !still && fraction > .001 && fraction < .999;
-      kineticTitle.textContent = transitioning ? works[base + 1].title : '';
+      const nextTitle = transitioning ? works[base + 1].title : '';
+      if (kineticTitle.textContent !== nextTitle) kineticTitle.textContent = nextTitle;
       kineticTitle.style.opacity = transitioning ? (Math.sin(fraction * Math.PI) * .46).toFixed(3) : '0';
       kineticTitle.style.transform = `translate3d(${((fraction - .5) * -12).toFixed(3)}%,${((fraction - .5) * -12).toFixed(3)}vh,0)`;
-      caption.style.opacity = transitioning ? Math.pow(Math.abs(fraction - .5) * 2, .6).toFixed(3) : '1';
+      caption.style.opacity = transitioning ? (.45 + .55 * Math.pow(Math.abs(fraction - .5) * 2, .6)).toFixed(3) : '1';
       caption.style.transform = transitioning ? `translateY(${((fraction < .5 ? -fraction : 1 - fraction) * 44).toFixed(3)}px)` : '';
       stage.classList.toggle('is-travelling', transitioning);
       stage.style.setProperty('--progress', (position * 100).toFixed(3) + '%');
     }
-    function draw(time) {
-      const dt = motion.last ? clamp(time - motion.last, 1, 48) : 16; motion.last = time;
-      motion.position += (motion.target - motion.position) * (1 - Math.exp(-dt / (gesture.active ? 75 : 135)));
-      if (Math.abs(motion.target - motion.position) < .001) motion.position = motion.target;
-      const index = clamp(Math.round(motion.position), 0, works.length - 1);
-      if (index !== state.index) { state.index = index; metadata(); }
-      render();
-      if (motion.position !== motion.target) motion.frame = requestAnimationFrame(draw);
-      else { motion.frame = null; motion.last = 0; if (motion.save && Number.isInteger(motion.target)) { motion.save = false; saveRoute(); } }
-    }
-    function animate(target, save = true) {
-      motion.desired = clamp(target, 0, works.length - 1); motion.save = motion.save || save;
-      const request = ++motion.request, desired = motion.desired;
-      Promise.all([ensureImage(Math.floor(desired)), ensureImage(Math.ceil(desired))]).then(() => {
-        if (request !== motion.request) return;
-        motion.target = desired;
-        if (reduced.matches || Math.abs(desired - motion.position) > 1.15) {
-          if (!reduced.matches) $('.art-layers', stage).animate?.([{ opacity: .25, transform: 'scale(1.07)' }, { opacity: 1, transform: 'scale(1)' }], { duration: 650, easing: 'cubic-bezier(.16,1,.3,1)' });
-          if (motion.frame !== null) cancelAnimationFrame(motion.frame); motion.frame = null; motion.last = 0; motion.position = desired; state.index = Math.round(desired); metadata(); render();
-          if (motion.save && Number.isInteger(desired)) { motion.save = false; saveRoute(); } return;
-        }
-        if (motion.frame === null) motion.frame = requestAnimationFrame(draw);
-      });
-    }
-    function cancelGesture() { if (gesture.timer !== null) clearTimeout(gesture.timer); gesture.timer = null; gesture.active = false; gesture.locked = false; gesture.delta = 0; touch = null; }
-    function pause(save = true) {
-      cancelGesture(); motion.request++; if (motion.frame !== null) cancelAnimationFrame(motion.frame); motion.frame = null; motion.last = 0; motion.position = motion.target = motion.desired = state.index;
-      render(); if (save && motion.save) saveRoute(); motion.save = false;
+    function measure() {
+      const bounds = track.getBoundingClientRect(), height = stage.getBoundingClientRect().height || innerHeight;
+      geometry.top = bounds.top + scrollY;
+      geometry.step = (bounds.height - height) / Math.max(1, works.length - 1) || height * .75;
     }
     function leaveFit() { if (state.fit) { state.fit = false; images[state.index].src = works[state.index].cover; } }
+    function syncScroll() {
+      motion.frame = null;
+      if (document.querySelector('dialog[open]')) return;
+      const position = clamp((scrollY - geometry.top) / geometry.step, 0, works.length - 1);
+      const request = ++motion.request;
+      motion.desired = position;
+      if (motion.navigation !== null && Math.abs(position - motion.navigation) < .002) motion.navigation = null;
+      if (Math.abs(position - motion.position) > .002) { leaveFit(); resetPan(); }
+      Promise.all([ensureImage(Math.floor(position)), ensureImage(Math.ceil(position))]).then(() => {
+        if (request !== motion.request || document.querySelector('dialog[open]')) return;
+        motion.position = position;
+        const index = clamp(Math.round(position), 0, works.length - 1);
+        if (index !== state.index) { state.index = index; metadata(); saveRoute(); }
+        else stage.classList.toggle('is-fit', state.fit);
+        render();
+      });
+    }
+    function scheduleScroll() { if (motion.frame === null) motion.frame = requestAnimationFrame(syncScroll); }
+    function moveTo(index, smooth = false) {
+      window.scrollTo({ top: geometry.top + index * geometry.step, behavior: smooth && !reduced.matches ? 'smooth' : 'auto' });
+      scheduleScroll();
+    }
+    function pause() {
+      motion.request++;
+      motion.navigation = null;
+      if (motion.frame !== null) cancelAnimationFrame(motion.frame);
+      motion.frame = null;
+      moveTo(state.index);
+      motion.position = motion.desired = state.index;
+      render();
+    }
     function change(next) {
       if (document.querySelector('dialog[open]') || next < 0 || next >= works.length) return;
-      cancelGesture(); leaveFit(); resetPan(); metadata(); animate(next);
+      leaveFit(); resetPan(); metadata();
+      motion.navigation = next;
+      // Nearby controls use the browser's smooth scroll; catalogue jumps go directly there.
+      moveTo(next, Math.abs(next - motion.position) <= 2);
     }
-    function startGesture(sign) { gesture.active = true; gesture.base = state.index; gesture.sign = sign; gesture.delta = 0; gesture.locked = false; leaveFit(); resetPan(); metadata(); }
-    function finishGesture() { if (!gesture.active) return; gesture.active = false; gesture.timer = null; const distance = (motion.desired - gesture.base) * gesture.sign; animate(clamp(distance > .08 ? gesture.base + gesture.sign : gesture.base, 0, works.length - 1)); }
-    stage.addEventListener('wheel', e => {
-      if (document.querySelector('dialog[open]') || e.ctrlKey || e.deltaY === 0 || Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
-      const sign = e.deltaY > 0 ? 1 : -1, last = works.length - 1;
-      if ((sign < 0 && motion.position < .002 && motion.desired < .002) || (sign > 0 && motion.position > last - .002 && motion.desired > last - .002)) return;
-      e.preventDefault(); const now = Date.now();
-      if (!gesture.active || now - gesture.last > 170 || sign !== gesture.sign) startGesture(sign);
-      gesture.last = now; clearTimeout(gesture.timer);
-      const delta = clamp(e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 600 : 1), -240, 240); gesture.delta += delta;
-      if (reduced.matches) { if (!gesture.locked && Math.abs(gesture.delta) > 55) { gesture.locked = true; animate(clamp(gesture.base + sign, 0, last)); } }
-      else animate(clamp(motion.desired + delta / 360, clamp(gesture.base + Math.min(sign, 0), 0, last), clamp(gesture.base + Math.max(sign, 0), 0, last)));
-      gesture.timer = setTimeout(finishGesture, 170);
-    }, { passive: false });
+    addEventListener('scroll', scheduleScroll, { passive: true });
+    // Preserve native inertia, browser zoom, touch scrolling and scroll-bar navigation.
+    const interruptNavigation = () => { motion.navigation = null; };
+    addEventListener('wheel', interruptNavigation, { passive: true });
+    addEventListener('touchstart', interruptNavigation, { passive: true });
     $$('[data-select]', stage).forEach(b => b.addEventListener('click', () => change(Number(b.dataset.select))));
-    $('[data-prev]', stage).addEventListener('click', () => change(Math.round(motion.desired) - 1)); $('[data-next]', stage).addEventListener('click', () => change(Math.round(motion.desired) + 1));
+    $('[data-prev]', stage).addEventListener('click', () => change(Math.round(motion.navigation ?? motion.desired) - 1)); $('[data-next]', stage).addEventListener('click', () => change(Math.round(motion.navigation ?? motion.desired) + 1));
     $('[data-fit]', stage).addEventListener('click', () => { pause(); state.fit = !state.fit; images[state.index].src = state.fit ? works[state.index].photos[0].src : works[state.index].cover; resetPan(); metadata(); render(); });
     $('[data-open-story]', stage).addEventListener('click', () => openDialog('#story-dialog'));
     function showPhoto() {
@@ -219,28 +222,27 @@
     function quiet(value) { state.quiet = value; metadata(); (value ? $('[data-restore]', stage) : $('[data-quiet]')).focus(); }
     $('[data-quiet]').addEventListener('click', () => quiet(true)); $('[data-restore]', stage).addEventListener('click', () => quiet(false));
     document.addEventListener('keydown', e => {
-      if (document.querySelector('dialog[open]')) return;
+      if (document.querySelector('dialog[open]') || e.target.closest?.('input,textarea,select,[contenteditable=true]')) return;
       if (e.key === 'Escape' && state.quiet) { e.preventDefault(); quiet(false); return; }
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); change(Math.round(motion.desired) + 1); }
-      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); change(Math.round(motion.desired) - 1); }
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); change(Math.round(motion.navigation ?? motion.desired) + 1); }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); change(Math.round(motion.navigation ?? motion.desired) - 1); }
     });
-    stage.addEventListener('touchstart', e => { if (e.target.closest('button,a') || document.querySelector('dialog[open]')) { touch = null; return; } touch = { x: e.changedTouches[0].clientX, y: e.changedTouches[0].clientY, position: motion.position }; }, { passive: true });
-    stage.addEventListener('touchmove', e => {
-      if (!touch) return; const dy = touch.y - e.changedTouches[0].clientY, dx = touch.x - e.changedTouches[0].clientX;
-      if (Math.abs(dy) < 10 || Math.abs(dy) < Math.abs(dx) * 1.2) return;
-      const sign = dy > 0 ? 1 : -1; if (!gesture.active || gesture.sign !== sign) startGesture(sign);
-      if (!reduced.matches) animate(clamp(touch.position + dy / 360, clamp(gesture.base + Math.min(sign, 0), 0, works.length - 1), clamp(gesture.base + Math.max(sign, 0), 0, works.length - 1)));
-    }, { passive: true });
-    stage.addEventListener('touchend', e => { if (!touch) return; const dy = touch.y - e.changedTouches[0].clientY, dx = touch.x - e.changedTouches[0].clientX; touch = null; if (reduced.matches && Math.abs(dy) > 50 && Math.abs(dy) > Math.abs(dx) * 1.2) change(state.index + (dy > 0 ? 1 : -1)); else if (gesture.active) finishGesture(); }, { passive: true });
-    stage.addEventListener('touchcancel', () => { touch = null; if (gesture.active) finishGesture(); }, { passive: true });
     function drawPan() { pan.x += (pan.tx - pan.x) * .1; pan.y += (pan.ty - pan.y) * .1; if (Math.abs(pan.tx - pan.x) < .03 && Math.abs(pan.ty - pan.y) < .03) { pan.x = pan.tx; pan.y = pan.ty; pan.frame = null; } else pan.frame = requestAnimationFrame(drawPan); stage.style.setProperty('--pan-x', pan.x.toFixed(2) + 'px'); stage.style.setProperty('--pan-y', pan.y.toFixed(2) + 'px'); }
     function resetPan() { if (pan.frame !== null) cancelAnimationFrame(pan.frame); pan.x = pan.y = pan.tx = pan.ty = 0; pan.frame = null; stage.style.setProperty('--pan-x', '0px'); stage.style.setProperty('--pan-y', '0px'); }
     stage.addEventListener('pointermove', e => { if (e.pointerType !== 'mouse' || state.fit || reduced.matches || document.querySelector('dialog[open]')) return; const r = stage.getBoundingClientRect(); if (!r.width || !r.height) return; pan.tx = ((e.clientX - r.left) / r.width - .5) * -22; pan.ty = ((e.clientY - r.top) / r.height - .5) * -18; if (pan.frame === null) pan.frame = requestAnimationFrame(drawPan); });
     stage.addEventListener('pointerleave', () => { pan.tx = pan.ty = 0; if (pan.frame === null && !reduced.matches) pan.frame = requestAnimationFrame(drawPan); });
     reduced.addEventListener('change', () => { resetPan(); pause(); if (reduced.matches) $('.art-layers', stage).getAnimations?.().forEach(animation => animation.cancel()); });
-    addEventListener('resize', focusPictures, { passive: true });
+    addEventListener('resize', () => {
+      const position = clamp((scrollY - geometry.top) / geometry.step, 0, works.length - 1);
+      const oldStep = geometry.step, oldTop = geometry.top;
+      focusPictures(); measure();
+      // Mobile toolbar changes must not cancel the user's native scrolling.
+      if (Math.abs(oldStep - geometry.step) > .5 || Math.abs(oldTop - geometry.top) > .5) moveTo(position);
+      else scheduleScroll();
+    }, { passive: true });
+    addEventListener('pageshow', scheduleScroll, { passive: true });
     gallery = { pause, has: slug => works.some(w => w.slug === slug), select: slug => change(works.findIndex(w => w.slug === slug)) };
-    metadata(); render();
+    measure(); metadata(); render(); moveTo(state.index);
   }
 
   const years = $$('[data-year]'), events = $$('[data-exhibition-year]');

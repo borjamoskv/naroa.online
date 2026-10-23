@@ -10,7 +10,7 @@ const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 function create(route = '/', reduce = false) {
   const file = path.join(output, route, 'index.html');
-  let clock = 1000, time = 0, id = 0;
+  let time = 0, id = 0;
   const observers = [];
   const callbacks = new Map(), native = new VirtualConsole();
   native.on('jsdomError', error => errors.push(error.message));
@@ -25,7 +25,7 @@ function create(route = '/', reduce = false) {
         observe(target) { this.targets.add(target); }
         unobserve(target) { this.targets.delete(target); }
       };
-      w.Date.now = () => clock;
+      w.scrollTo = options => { w.scrollY = options.top; w.pageYOffset = options.top; w.dispatchEvent(new w.Event('scroll')); };
       Object.defineProperty(w.HTMLElement.prototype, 'inert', {
         get() { return this.hasAttribute('inert'); }, set(value) { this.toggleAttribute('inert', value); }
       });
@@ -41,6 +41,13 @@ function create(route = '/', reduce = false) {
     }
   });
   const w = dom.window, document = w.document;
+  const track = document.querySelector('.art-scroll'), stage = document.querySelector('[data-gallery]');
+  const step = w.innerHeight * .75;
+  if (track) {
+    const height = w.innerHeight + Number(track.style.getPropertyValue('--steps')) * step;
+    track.getBoundingClientRect = () => ({ top: -w.scrollY, bottom: height - w.scrollY, height, width: 1024, left: 0, right: 1024 });
+    stage.getBoundingClientRect = () => ({ top: 0, bottom: w.innerHeight, height: w.innerHeight, width: 1024, left: 0, right: 1024 });
+  }
   const scripts = Array.from(document.querySelectorAll('script[src]')).map(s => new URL(s.src).pathname);
   scripts.forEach(src => w.eval(fs.readFileSync(path.join(output, src), 'utf8')));
   const find = selector => document.querySelector(selector);
@@ -55,12 +62,11 @@ function create(route = '/', reduce = false) {
     assert.ok(frames < 250, 'Animation must settle');
   }
   function wheel(deltaY, options = {}) {
-    clock += 30;
     const event = new w.WheelEvent('wheel', { deltaY, bubbles: true, cancelable: true, ...options });
     find('[data-gallery]').dispatchEvent(event); return event;
   }
   const key = value => document.dispatchEvent(new w.KeyboardEvent('keydown', { key: value, bubbles: true, cancelable: true }));
-  return { dom, w, document, find, click, flush, wheel, key, observers, gap: () => { clock += 200; } };
+  return { dom, w, document, find, click, flush, wheel, key, observers, step, scroll: index => w.scrollTo({top:index * step}) };
 }
 
 (async () => {
@@ -70,25 +76,31 @@ function create(route = '/', reduce = false) {
   assert.equal(ui.find('[data-art-title]').textContent, 'Marilyn Rocks');
   assert.ok(ui.document.querySelectorAll('.art-scene img[src]').length <= 3, 'Do not eagerly decode the complete catalogue');
   const originalTransform = ui.find('.art-scene img').style.transform;
-  ui.wheel(100); await ui.flush();
+  assert.equal(ui.wheel(100).defaultPrevented, false, 'Do not hijack native wheel scrolling');
+  assert.equal(ui.wheel(-100, { ctrlKey: true }).defaultPrevented, false, 'Preserve browser zoom');
+  ui.scroll(.28); await ui.flush();
   assert.notEqual(ui.find('.art-scene img').style.transform, originalTransform);
   assert.equal(ui.find('[data-art-title]').textContent, 'Marilyn Rocks');
   assert.equal(ui.find('[data-scene="1"]').style.visibility, 'visible');
   assert.match(ui.find('[data-scene="1"]').style.clipPath, /^polygon\(0 [\d.]+%,100% [\d.]+%,100% 100%,0 100%\)$/);
   assert.equal(ui.find('[data-kinetic-title]').textContent, 'Rara Avis');
-  assert.ok(Number(ui.find('[data-kinetic-title]').style.opacity) > 0, 'A transient title follows the transition');
-  assert.ok(Number(ui.find('[data-art-copy]').style.opacity) < 1, 'Artwork captions separate from image movement');
-  await wait(190); await ui.flush();
+  assert.ok(Number(ui.find('[data-art-copy]').style.opacity) >= .45, 'Captions remain legible if scrolling stops mid-transition');
+  const stoppedTransform = ui.find('.art-scene img').style.transform;
+  await wait(220); await ui.flush();
+  assert.equal(ui.find('.art-scene img').style.transform, stoppedTransform, 'Stopping the scroll must not force another movement');
+  assert.equal(ui.find('[data-art-title]').textContent, 'Marilyn Rocks');
+  ui.scroll(1); await ui.flush();
   assert.equal(ui.find('[data-art-title]').textContent, 'Rara Avis');
-  assert.equal(ui.find('[data-kinetic-title]').textContent, '', 'Transient text clears when the work settles');
+  assert.equal(ui.find('[data-kinetic-title]').textContent, '');
   assert.equal(ui.find('[data-art-copy]').style.opacity, '1');
-  ui.gap();
-  ui.wheel(100); await ui.flush();
+  ui.scroll(1.28); await ui.flush();
   assert.match(ui.find('[data-scene="2"]').style.clipPath, /^polygon\([\d.]+% 0,100% 0,100% 100%,[\d.]+% 100%\)$/);
-  assert.match(ui.find('[data-scene="2"] img').style.transform, /^translate3d\([\d.]+%,0,0\)/, 'The next work enters laterally');
-  for (let i = 0; i < 11; i++) { ui.wheel(100); await ui.flush(); }
-  assert.equal(ui.find('[data-art-title]').textContent, 'Amor en Conserva', 'One gesture must not skip several works');
-  await wait(190); await ui.flush();
+  ui.scroll(6.2); await ui.flush();
+  assert.equal(ui.find('[data-art-title]').textContent, works[6].title, 'Fast native scrolling can traverse several works without a gesture lock');
+  ui.scroll(3.1); await ui.flush();
+  assert.equal(ui.find('[data-art-title]').textContent, works[3].title, 'Reversing scroll follows the new position immediately');
+  ui.scroll(7.3); ui.w.dispatchEvent(new ui.w.Event('resize')); await ui.flush();
+  assert.equal(ui.w.scrollY, 7.3 * ui.step, 'A resize with unchanged geometry must not jump back to the last decoded frame');
   ui.click('[data-select="0"]'); await ui.flush();
   for (let i = 0; i < works.length; i++) {
     if (i) { ui.click('[data-next]'); await ui.flush(); }
@@ -132,6 +144,11 @@ function create(route = '/', reduce = false) {
   ui.key('Escape'); assert.equal(ui.document.body.classList.contains('is-quiet'), false);
   ui.dom.window.close();
 
+  const deepLink = create('/obra/amy-rocks/'); await deepLink.flush();
+  assert.equal(deepLink.find('[data-art-title]').textContent, 'Amy Rocks');
+  assert.equal(deepLink.w.scrollY, 3 * deepLink.step, 'Direct artwork URLs start at the correct document position');
+  deepLink.dom.window.close();
+
   const series = create('/series/vaivenes/'); await series.flush();
   assert.equal(series.document.querySelectorAll('.art-scene').length, 8);
   series.click('[data-next]'); await series.flush();
@@ -155,5 +172,5 @@ function create(route = '/', reduce = false) {
     page.dom.window.close();
   }
   assert.equal(manifest.projects, 40); assert.deepEqual(errors, []);
-  console.log('PASS: all 40 artwork flows, alternating scroll reveals, kinetic titles, gesture limits, 3-image loading bound, search/filters, details/photos, quiet mode, reduced motion, Vaivenes and editorial reveals.');
+  console.log('PASS: all 40 artwork flows, alternating scroll reveals, kinetic titles, native scroll, free inertia, direct links, 3-image loading bound, search/filters, details/photos, quiet mode, reduced motion, Vaivenes and editorial reveals.');
 })().catch(error => { console.error(error); process.exitCode = 1; });
