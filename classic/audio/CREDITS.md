@@ -29,3 +29,14 @@ fundido. No se atribuye la grabación ni la composición a la artista retratada.
 
 El sonido se carga después de pulsar Sonido y se escucha únicamente al desplazarse,
 con una breve cola que se desvanece al parar.
+
+## Caja de música
+
+Motivo melódico original de cuatro frases en re menor, preparado para esta web.
+El scroll recorre sus notas y silencios en ambos sentidos. No reproduce una canción
+externa ni avanza por temporizador.
+
+Timbre original por síntesis modal de una lámina metálica afinada en re5 (587,33 Hz),
+con un ataque breve derivado de las grabaciones CC0 indicadas arriba.
+La muestra se genera con `tools/compose_musicbox.py`; la melodía se interpreta
+en el navegador con alturas afinadas y desciende una octava dentro del iris.

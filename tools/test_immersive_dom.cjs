@@ -86,7 +86,7 @@ function create(route = '/', reduce = false, viewport = { width: 1024, height: 7
 
 // Mock only the browser audio/network boundary; exercise real click, camera and lifecycle code.
 function audioBoundary() {
-  const audio = { contexts: [], requests: [], starts: [], failed: false, denied: false, now: 0 };
+  const audio = { contexts: [], requests: [], starts: [], notes: [], sources: [], failed: false, denied: false, now: 0 };
   const timers = new Map(); let timerId = 0;
   audio.setTimeout = (callback, delay) => { const id = ++timerId; timers.set(id, { callback, at: audio.now + delay }); return id; };
   audio.clearTimeout = id => timers.delete(id);
@@ -121,14 +121,17 @@ function audioBoundary() {
     async resume() { if (audio.denied) throw Error('Playback denied'); this.state = 'running'; }
     async suspend() { this.state = 'suspended'; }
     async close() { this.state = 'closed'; }
-    async decodeAudioData() { return { duration: 66 }; }
+    async decodeAudioData(data) { return { duration: data.url.includes('caja-musica') ? 2.4 : 66, url: data.url }; }
     createGain() { const node = { gain: parameter(1), connect() {}, disconnect() {} }; this.gains.push(node); return node; }
     createBiquadFilter() { const node = { frequency: parameter(0), Q: parameter(0), connect() {} }; this.filters.push(node); return node; }
     createStereoPanner() { const node = { pan: parameter(0), connect() {} }; this.panners.push(node); return node; }
     createBufferSource() {
       const context = this;
-      return { playbackRate: parameter(1), connect() {}, disconnect() {},
-        start(at, offset) { this.startAt = at; this.offset = offset; audio.starts.push(this); },
+      return { playbackRate: parameter(1), connect(node) { this.target = node; }, disconnect() {},
+        start(at, offset) {
+          this.startAt = at; this.offset = offset; audio.sources.push(this);
+          (this.buffer.url.includes('caja-musica') ? audio.notes : audio.starts).push(this);
+        },
         stop(at = context.currentTime) {
           this.stopAt = at; audio.clearTimeout(this.endTimer);
           this.endTimer = audio.setTimeout(() => this.onended?.(), Math.max(0, (at - context.currentTime) * 1000));
@@ -136,7 +139,7 @@ function audioBoundary() {
       };
     }
   };
-  audio.fetch = async src => { audio.requests.push(src); return { ok: !audio.failed, arrayBuffer: async () => new ArrayBuffer(4) }; };
+  audio.fetch = async src => { audio.requests.push(src); return { ok: !audio.failed, arrayBuffer: async () => Object.assign(new ArrayBuffer(4), { url: src }) }; };
   return audio;
 }
 
@@ -462,7 +465,7 @@ async function eyeMatch(ui, base, points) {
   assert.equal(music.find('[data-sound]').disabled, true, 'Loading cannot create duplicate sound engines');
   await music.flush();
   const ctx = audio.contexts[0];
-  assert.equal(audio.requests.length, 2); assert.equal(audio.starts.length, 0, 'Enabling sound never starts a background track');
+  assert.equal(audio.requests.length, 3); assert.equal(audio.sources.length, 0, 'Enabling sound never starts a background track');
   assert.equal(ctx.state, 'suspended'); assert.equal(ctx.gains[0].gain.value, 0);
   assert.equal(music.find('[data-sound]').getAttribute('aria-pressed'), 'true');
   assert.equal(music.find('[data-sound]').dataset.state, 'ready');
@@ -474,6 +477,8 @@ async function eyeMatch(ui, base, points) {
   const field = ctx.gains[1].gain.value, iris = ctx.gains[2].gain.value, clarity = ctx.filters[0].frequency.value;
   music.w.scrollTo({ top: 20 }); await music.flush();
   assert.equal(audio.starts.length, 2, 'A real scroll excites a pair of short field fragments');
+  assert.equal(audio.notes.length, 1, 'The same scroll plays the first tuned music-box note');
+  assert.ok(Math.abs(audio.notes[0].playbackRate.value - 1) < .00003, 'The melody starts on D5 as the camera begins its approach');
   const gentleGain = ctx.gains[0].gain.value, gentleRate = audio.starts[0].playbackRate.value;
   assert.ok(gentleGain > 0); assert.equal(ctx.state, 'running');
   assert.equal(music.find('[data-sound-status]').hidden, true);
@@ -490,6 +495,7 @@ async function eyeMatch(ui, base, points) {
   assert.ok(ctx.gains[1].gain.value < field && ctx.gains[2].gain.value > iris, 'The iris changes the concrete texture mix');
   assert.ok(ctx.filters[0].frequency.value < clarity, 'The deeper camera closes the field recording filter');
   assert.ok(ctx.filters[1].frequency.value <= 500, 'Inside the iris the complete soundscape becomes low and enclosed');
+  assert.equal(audio.notes[0].playbackRate.value, .5, 'An active music-box note moves down one octave inside the iris');
   assert.ok(audio.starts[5].playbackRate.value < clearRate * .65, 'The concrete layer falls substantially in pitch inside the iris');
   assert.ok(ctx.gains[3].gain.value < .1 && ctx.gains[4].gain.value > .9, 'The iris narrows the field to a central mono core');
   assert.equal(ctx.gains[4].channelCount, 1);
@@ -501,12 +507,13 @@ async function eyeMatch(ui, base, points) {
   assert.ok(ctx.panners[0].pan.value < 0, 'Reversing scroll changes the stereo direction');
   assert.ok(Math.abs(ctx.gains[1].gain.value - field) < 1e-12 && Math.abs(ctx.gains[2].gain.value - iris) < 1e-12, 'Reversing the camera restores the open-eye mix');
   assert.ok(ctx.filters[1].frequency.value >= 9000 && ctx.gains[3].gain.value === 1 && ctx.gains[4].gain.value === 0, 'Exiting the eye restores clarity and the stereo field');
+  assert.equal(audio.notes[0].playbackRate.value, 1, 'The music-box register opens again when the camera leaves the iris');
   for (const source of audio.starts) {
     assert.equal(source.loop, false, 'No source is a constantly looping track');
     assert.ok(source.stopAt - source.startAt <= .85 && source.stopAt > source.startAt, 'Each fragment has a finite short lifetime');
     assert.ok(source.offset >= 0 && source.offset < 66);
   }
-  const windowCurve = ctx.gains[5].gain.curve;
+  const windowCurve = audio.starts[0].target.gain.curve;
   assert.equal(windowCurve[0], 0); assert.equal(windowCurve[windowCurve.length - 1], 0, 'Fragment edges taper to silence');
   const countBeforeDenseInput = audio.starts.length;
   for (let i = 1; i <= 20; i++) { audio.advance(1); music.w.scrollTo({ top: i }); }
@@ -514,7 +521,7 @@ async function eyeMatch(ui, base, points) {
   assert.equal(audio.starts.length, countBeforeDenseInput, 'Dense scroll events cannot flood the audio graph');
   for (let i = 1; i <= 50; i++) {
     audio.advance(40); music.w.scrollTo({ top: 20 + i * 4 }); await music.flush();
-    assert.ok(audio.starts.filter(source => source.stopAt > ctx.currentTime).length <= 20, 'Sustained scrolling keeps the number of active fragments bounded');
+    assert.ok(audio.sources.filter(source => source.stopAt > ctx.currentTime).length <= 20, 'Sustained scrolling keeps notes and nature fragments bounded together');
   }
   const sustainedCount = audio.starts.length;
   audio.advance(181); await music.flush();
@@ -530,9 +537,11 @@ async function eyeMatch(ui, base, points) {
   audio.advance(600); await music.flush(); assert.equal(ctx.state, 'suspended');
   assert.equal(ctx.gains[0].gain.value, 0, 'The final pause is exact silence');
   const restingCount = audio.starts.length;
+  const restingNotes = audio.notes.length;
   audio.advance(5000); await music.flush();
   assert.equal(audio.starts.length, restingCount, 'No timer or camera depth keeps producing music while idle');
-  assert.equal(restingCount, sustainedCount + 2);
+  assert.equal(audio.notes.length, restingNotes, 'The melody does not advance during silence');
+  assert.ok(restingCount >= sustainedCount && restingCount <= sustainedCount + 2);
   music.w.scrollTo({ top: 100 });
   music.document.hidden = true; music.document.dispatchEvent(new music.w.Event('visibilitychange')); await music.flush();
   assert.equal(ctx.state, 'suspended'); assert.equal(ctx.gains[0].gain.value, 0);
@@ -543,7 +552,7 @@ async function eyeMatch(ui, base, points) {
   music.w.scrollTo({ top: 200 }); await music.flush();
   assert.equal(audio.starts.length, restingCount, 'Disabled sound ignores movement');
   music.click('[data-sound]'); await music.flush();
-  assert.equal(audio.requests.length, 2); assert.equal(audio.starts.length, restingCount, 'Reactivation reuses the material and stays silent');
+  assert.equal(audio.requests.length, 3); assert.equal(audio.starts.length, restingCount, 'Reactivation reuses the material and stays silent');
   music.w.dispatchEvent(new music.w.Event('pagehide')); await music.flush();
   music.w.dispatchEvent(new music.w.Event('pageshow')); await music.flush();
   assert.equal(ctx.state, 'suspended', 'Restoring a cached page does not start idle audio');
@@ -562,6 +571,24 @@ async function eyeMatch(ui, base, points) {
   assert.ok(galleryContext.filters[1].frequency.value > 8500 && galleryContext.gains[3].gain.value > .99, 'Leaving through Rocka opens brightness and stereo before the full framing returns');
   assert.ok(galleryAudio.starts[5].playbackRate.value > innerRate * 1.7, 'The next eye opens the pitch along with its framing');
   reactiveGallery.click('[data-sound]'); galleryAudio.advance(600); reactiveGallery.dom.window.close();
+  const boxAudio = audioBoundary();
+  const box = create('/contacto/', false, { width: 1024, height: 768 }, boxAudio); await box.flush();
+  box.click('[data-sound]'); await box.flush();
+  for (let i = 0; i < 8; i++) { boxAudio.advance(250); box.w.scrollTo({ top: (i + 1) * 300 }); await box.flush(); }
+  const played = boxAudio.notes.map(source => 74 + 12 * Math.log2(source.playbackRate.value));
+  assert.deepEqual(played.map(Math.round), [74,77,81,77,76,74,69], 'Scroll plays a coherent, tuned seven-note phrase followed by a rest');
+  assert.ok(played.every(note => Math.abs(note - Math.round(note)) < 1e-6), 'Movement speed never detunes the melody');
+  assert.ok(boxAudio.notes.every(source => !source.loop && source.stopAt > source.startAt && source.stopAt - source.startAt <= 1.51), 'Every bell has a finite, tapered lifetime');
+  boxAudio.advance(250); box.w.scrollTo({ top: 2100 }); await box.flush();
+  assert.equal(Math.round(74 + 12 * Math.log2(boxAudio.notes.at(-1).playbackRate.value)), 69, 'Reverse scroll walks back to the note before the rest');
+  boxAudio.advance(250); box.w.scrollTo({ top: 1800 }); await box.flush();
+  assert.equal(Math.round(74 + 12 * Math.log2(boxAudio.notes.at(-1).playbackRate.value)), 74, 'Reverse scroll continues through the melodic phrase');
+  const noteCount = boxAudio.notes.length;
+  for (let i = 0; i < 10; i++) { boxAudio.advance(5); box.w.scrollTo({ top: 1800 + (i + 1) * 20 }); await box.flush(); }
+  assert.equal(boxAudio.notes.length, noteCount, 'Dense scroll events cannot turn the melody into a note flood');
+  boxAudio.advance(5000); await box.flush();
+  assert.equal(boxAudio.notes.length, noteCount); assert.equal(boxAudio.contexts[0].gains[0].gain.value, 0);
+  box.click('[data-sound]'); boxAudio.advance(600); box.dom.window.close();
   const failingAudio = audioBoundary(); failingAudio.failed = true;
   const retryMusic = create('/', true, { width: 1024, height: 768 }, failingAudio); await retryMusic.flush();
   retryMusic.click('[data-sound]'); await retryMusic.flush();

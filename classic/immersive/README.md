@@ -85,7 +85,18 @@ continues to use `dist/`. The Cloudflare and Vercel project identities are kept.
 
 ## Optional soundscape
 
-The Sonido button enables a reactive ambient / musique concrète instrument using
+The Sonido button enables a reactive music box over quiet nature textures.
+An original four-phrase D-minor melody advances one step with each accepted
+scroll pulse, reverses with the scroll direction and includes rests. Note spacing
+responds to movement speed without detuning the melody. The sampled metallic
+tine is modal synthesis with a small strike from the credited nature recording;
+`tools/compose_musicbox.py` creates its 2.4-second D5 sample. It is loaded only
+after opt-in, along with the two nature beds. Notes move down an octave inside an
+iris and recover their register on exit, sharing the existing stereo/mono
+transition and exact-silence release. Notes and texture fragments share a bounded
+voice budget; no timer advances the melody while the visitor is still.
+
+The nature texture uses a reactive ambient / musique concrète instrument using
 CC0 field recordings of birds, river and wind by Thimras. Sources, licence and
 editing are documented in `classic/audio/CREDITS.md`, also linked from the site
 menu. Two 66-second source beds (about 2.1 MB combined) supply the material; they
