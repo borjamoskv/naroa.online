@@ -94,8 +94,13 @@ explicit opt-in, which leaves the instrument silent until the next real scroll.
 Actual displacement triggers short, Hann-windowed fragments with a 90 ms minimum
 spacing and a bounded voice count. Scroll speed controls gain and playback rate,
 direction controls gentle stereo placement, and the shared camera depth controls
-the blend and filtering of the field and concrete textures. Stopping scroll fades
-the sound and suspends processing; enabling sound or returning to a visible tab
+the blend and filtering of the field and concrete textures. Inside an iris, shared low-pass filtering, lower fragment pitch and a central
+mono core create a much deeper sound. Opening the next eye restores brightness,
+pitch and the original stereo field; active fragments glide with the same camera
+progress. Signed displacement thresholds suppress tiny alternating tremors.
+Stopping scroll releases the current level along a raised-cosine curve to exact
+zero, with a longer decay inside the iris. New movement cancels that release
+without a delayed cut. Processing suspends only after the tail; enabling sound or returning to a visible tab
 never starts an idle background. Hidden pages stop all voices. There is no wheel
 interception or permanent audio animation loop. Errors leave a retryable control;
 reduced motion remains independent of explicit sound activation. The finished

@@ -4,7 +4,10 @@ Ambient y música concreta: aves, río y viento, con texturas ralentizadas,
 resonancias, ecos y un fondo armónico discreto. Dos archivos de 66 segundos
 aportan el material: fragmentos breves se disparan solo al desplazarse por la web.
 La velocidad, el sentido del scroll y la profundidad del iris transforman el sonido;
-al detenerse, se desvanece. Los archivos no se reproducen como un fondo continuo.
+Dentro del iris, el tono desciende y el sonido se recoge en el centro; al salir,
+recupera claridad y amplitud estéreo. Al detenerse, una cola suave llega al silencio
+completo; los temblores mínimos no la interrumpen. Los archivos no se reproducen
+como un fondo continuo.
 
 Grabaciones de naturaleza: **Thimras, “Park ambiences”**, 25 de julio de 2022.
 Grabadas en un parque público de Adelaide, Australia.

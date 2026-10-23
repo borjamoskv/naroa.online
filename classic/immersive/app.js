@@ -236,7 +236,7 @@
             : `translate3d(0,${((1 - progress) * 12).toFixed(3)}%,0) scale(${(1.10 + (1 - progress) * .18).toFixed(5)})`;
         }
       });
-      soundscape?.depth(eyeMatch && !still ? Math.sin(progress * Math.PI) : 0);
+      soundscape?.depth(eyeMatch && !still ? fraction < .5 ? ease(fraction * 2) : 1 - ease((fraction - .5) * 2) : 0);
       const transitioning = !still && fraction > .001 && fraction < .999;
       const nextTitle = transitioning ? works[base + 1].title : '';
       if (kineticTitle.textContent !== nextTitle) kineticTitle.textContent = nextTitle;

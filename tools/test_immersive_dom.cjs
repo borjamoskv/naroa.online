@@ -99,7 +99,22 @@ function audioBoundary() {
     }
     assert.fail('Audio timers must settle without a polling loop');
   };
-  const parameter = value => ({ value, cancelScheduledValues() {}, setValueAtTime(v) { this.value = v; }, setTargetAtTime(v) { this.value = v; }, setValueCurveAtTime(curve) { this.curve = curve; } });
+  const parameter = value => {
+    const scheduled = new Set();
+    const later = (callback, at) => {
+      if (at <= audio.now / 1000) { callback(); return; }
+      const id = audio.setTimeout(() => { scheduled.delete(id); callback(); }, at * 1000 - audio.now); scheduled.add(id);
+    };
+    return { value,
+      cancelScheduledValues() { scheduled.forEach(audio.clearTimeout); scheduled.clear(); },
+      setValueAtTime(v, at = audio.now / 1000) { later(() => { this.value = v; }, at); },
+      setTargetAtTime(v) { this.value = v; },
+      setValueCurveAtTime(curve, at, duration) {
+        this.curve = curve; this.curveDuration = duration; this.value = curve[0];
+        later(() => { this.value = curve[curve.length - 1]; }, at + duration);
+      }
+    };
+  };
   audio.Context = class {
     constructor() { this.state = 'suspended'; this.gains = []; this.filters = []; this.panners = []; audio.contexts.push(this); }
     get currentTime() { return audio.now / 1000; }
@@ -453,6 +468,9 @@ async function eyeMatch(ui, base, points) {
   assert.equal(music.find('[data-sound]').dataset.state, 'ready');
   audio.advance(1000); await music.flush();
   assert.equal(audio.starts.length, 0, 'Standing still produces no sound');
+  for (let i = 0; i < 20; i++) { audio.advance(30); music.w.scrollTo({ top: i % 2 }); await music.flush(); }
+  assert.equal(audio.starts.length, 0, 'Tiny alternating scroll tremors preserve silence');
+  assert.equal(ctx.state, 'suspended', 'Tremors do not wake audio processing');
   const field = ctx.gains[1].gain.value, iris = ctx.gains[2].gain.value, clarity = ctx.filters[0].frequency.value;
   music.w.scrollTo({ top: 20 }); await music.flush();
   assert.equal(audio.starts.length, 2, 'A real scroll excites a pair of short field fragments');
@@ -463,21 +481,32 @@ async function eyeMatch(ui, base, points) {
   music.w.dispatchEvent(new music.w.Event('scroll')); await music.flush();
   assert.equal(audio.starts.length, startsBeforeNoop, 'A scroll event without displacement is silent');
   audio.advance(100);
-  music.w.scrollTo({ top: 844 * 2.8 * .64 }); await music.flush();
+  music.w.scrollTo({ top: 120 }); await music.flush();
   assert.ok(ctx.gains[0].gain.value > gentleGain, 'Faster scrolling increases sound intensity');
-  assert.ok(audio.starts[2].playbackRate.value > gentleRate, 'Scroll speed changes the field playback rate');
+  assert.ok(audio.starts[2].playbackRate.value > gentleRate, 'Scroll speed changes playback rate at the same camera depth');
+  const clearRate = audio.starts[3].playbackRate.value;
+  audio.advance(100);
+  music.w.scrollTo({ top: 844 * 2.8 * .64 }); await music.flush();
   assert.ok(ctx.gains[1].gain.value < field && ctx.gains[2].gain.value > iris, 'The iris changes the concrete texture mix');
   assert.ok(ctx.filters[0].frequency.value < clarity, 'The deeper camera closes the field recording filter');
+  assert.ok(ctx.filters[1].frequency.value <= 500, 'Inside the iris the complete soundscape becomes low and enclosed');
+  assert.ok(audio.starts[5].playbackRate.value < clearRate * .65, 'The concrete layer falls substantially in pitch inside the iris');
+  assert.ok(ctx.gains[3].gain.value < .1 && ctx.gains[4].gain.value > .9, 'The iris narrows the field to a central mono core');
+  assert.equal(ctx.gains[4].channelCount, 1);
   assert.ok(ctx.panners[0].pan.value > 0);
+  audio.advance(181); await music.flush();
+  const deepRelease = ctx.gains[0].gain.curveDuration;
+  assert.ok(deepRelease > .4, 'The deepest silence receives a soft, longer decay');
   audio.advance(100); music.w.scrollTo({ top: 0 }); await music.flush();
   assert.ok(ctx.panners[0].pan.value < 0, 'Reversing scroll changes the stereo direction');
-  assert.equal(ctx.gains[1].gain.value, field); assert.equal(ctx.gains[2].gain.value, iris);
+  assert.ok(Math.abs(ctx.gains[1].gain.value - field) < 1e-12 && Math.abs(ctx.gains[2].gain.value - iris) < 1e-12, 'Reversing the camera restores the open-eye mix');
+  assert.ok(ctx.filters[1].frequency.value >= 9000 && ctx.gains[3].gain.value === 1 && ctx.gains[4].gain.value === 0, 'Exiting the eye restores clarity and the stereo field');
   for (const source of audio.starts) {
     assert.equal(source.loop, false, 'No source is a constantly looping track');
-    assert.ok(source.stopAt - source.startAt <= .73 && source.stopAt > source.startAt, 'Each fragment has a finite short lifetime');
+    assert.ok(source.stopAt - source.startAt <= .85 && source.stopAt > source.startAt, 'Each fragment has a finite short lifetime');
     assert.ok(source.offset >= 0 && source.offset < 66);
   }
-  const windowCurve = ctx.gains[3].gain.curve;
+  const windowCurve = ctx.gains[5].gain.curve;
   assert.equal(windowCurve[0], 0); assert.equal(windowCurve[windowCurve.length - 1], 0, 'Fragment edges taper to silence');
   const countBeforeDenseInput = audio.starts.length;
   for (let i = 1; i <= 20; i++) { audio.advance(1); music.w.scrollTo({ top: i }); }
@@ -488,14 +517,22 @@ async function eyeMatch(ui, base, points) {
     assert.ok(audio.starts.filter(source => source.stopAt > ctx.currentTime).length <= 20, 'Sustained scrolling keeps the number of active fragments bounded');
   }
   const sustainedCount = audio.starts.length;
-  audio.advance(161); await music.flush();
-  assert.equal(ctx.gains[0].gain.value, 0, 'Stopping scroll releases the sound to silence');
+  audio.advance(181); await music.flush();
+  const release = ctx.gains[0].gain.curve;
+  assert.ok(release[0] > 0 && release[63] === 0, 'Silence starts from the current level and reaches an exact zero');
+  assert.ok(release[1] > release[0] * .995 && release[62] < release[0] * .005, 'The release has soft edges');
+  assert.ok(ctx.gains[0].gain.curveDuration < deepRelease, 'An open eye returns to silence sooner than the deep iris');
   assert.equal(music.find('[data-sound]').dataset.state, 'ready');
+  audio.advance(100); music.w.scrollTo({ top: 260 }); await music.flush();
+  assert.ok(ctx.gains[0].gain.value > 0, 'Movement can interrupt a fading silence smoothly');
+  audio.advance(200); await music.flush();
+  assert.ok(ctx.gains[0].gain.value > 0, 'A cancelled release cannot cut off a resumed gesture');
   audio.advance(600); await music.flush(); assert.equal(ctx.state, 'suspended');
+  assert.equal(ctx.gains[0].gain.value, 0, 'The final pause is exact silence');
   const restingCount = audio.starts.length;
   audio.advance(5000); await music.flush();
   assert.equal(audio.starts.length, restingCount, 'No timer or camera depth keeps producing music while idle');
-  assert.equal(restingCount, sustainedCount);
+  assert.equal(restingCount, sustainedCount + 2);
   music.w.scrollTo({ top: 100 });
   music.document.hidden = true; music.document.dispatchEvent(new music.w.Event('visibilitychange')); await music.flush();
   assert.equal(ctx.state, 'suspended'); assert.equal(ctx.gains[0].gain.value, 0);
@@ -517,6 +554,13 @@ async function eyeMatch(ui, base, points) {
   assert.equal(galleryAudio.starts.length, 0, 'A direct artwork URL starts silent');
   reactiveGallery.scroll(6.1); await reactiveGallery.flush();
   assert.equal(galleryAudio.starts.length, 2, 'The artwork gallery reacts to actual native scrolling too');
+  const galleryContext = galleryAudio.contexts[0];
+  galleryAudio.advance(100); reactiveGallery.scroll(5.5); await reactiveGallery.flush();
+  assert.ok(galleryContext.filters[1].frequency.value <= 500 && galleryContext.gains[4].gain.value > .9, 'Johnny-to-Rocka iris closes the sound at the camera peak');
+  const innerRate = galleryAudio.starts[3].playbackRate.value;
+  galleryAudio.advance(100); reactiveGallery.scroll(5.93); await reactiveGallery.flush();
+  assert.ok(galleryContext.filters[1].frequency.value > 8500 && galleryContext.gains[3].gain.value > .99, 'Leaving through Rocka opens brightness and stereo before the full framing returns');
+  assert.ok(galleryAudio.starts[5].playbackRate.value > innerRate * 1.7, 'The next eye opens the pitch along with its framing');
   reactiveGallery.click('[data-sound]'); galleryAudio.advance(600); reactiveGallery.dom.window.close();
   const failingAudio = audioBoundary(); failingAudio.failed = true;
   const retryMusic = create('/', true, { width: 1024, height: 768 }, failingAudio); await retryMusic.flush();
