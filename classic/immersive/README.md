@@ -49,8 +49,13 @@ The artist profile adds a sticky, native portrait sequence and a continuous
 moves into Naroa’s monocle eye after her brief photographic wink, dissolves into
 the eye of her Rara Avis self-portrait and opens into its full-screen framing.
 Both pupils share a camera axis and a rendered iris diameter throughout the
-crossfade. A small common push carries the match forward; quintic easing and
-logarithmic zoom keep the approach and reveal continuous. Coordinates account
+crossfade. A single logarithmic camera-distance curve keeps advancing throughout
+the dissolve. The iris grows beyond the viewport, reaching at least 2.4 times its
+short side and covering its diagonal after the match; a quintic turn then opens the next portrait with continuous
+velocity and acceleration. The same camera pass drives Naroa and the eight
+subsequent eye matches, with no frozen close-up or reset between photographs.
+Artwork captions and controls fade away during each eye pass and return as the
+next framing opens. Coordinates account
 for each image’s cover crop, including mobile framing. High-resolution source
 derivatives support the close-up. The artwork link appears only at the end;
 its invisible state is inert. Slow image loading cannot dissolve to a blank

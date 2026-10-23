@@ -382,6 +382,20 @@
       const ty = y + (g.height * .46 - y) * focus - box.top - zoom * point.y * box.height + offset;
       element.style.transform = reduced.matches ? '' : `translate3d(${tx.toFixed(3)}px,${ty.toFixed(3)}px,0) scale(${zoom.toFixed(5)})`;
     }
+    function eyePass(from, target, fromBox, targetBox, fromEye, targetEye, progress) {
+      const start = fromEye.iris * fromBox.width, finish = targetEye.iris * targetBox.width;
+      // One camera distance drives both photographs. Keep pushing through the
+      // dissolve; the deepest point arrives afterwards, with a C2 turn into the reveal.
+      const deep = Math.max(Math.min(geometry.width, geometry.height) * 2.4, Math.hypot(geometry.width, geometry.height) * 1.2);
+      const approach = smooth(progress / .64), reveal = smooth((progress - .64) / .32);
+      const diameter = Math.exp(progress <= .64
+        ? Math.log(start) + Math.log(deep / start) * approach
+        : Math.log(deep) + Math.log(finish / deep) * reveal);
+      const focus = smooth(progress / .34) * (1 - reveal);
+      pose(from, fromBox, fromEye, Math.max(1, diameter / start), focus);
+      pose(target, targetBox, targetEye, Math.max(1, diameter / finish), focus);
+      return smooth((progress - .44) / .14);
+    }
     function showCaption(index, opacity) {
       const work = works[index]; current = index;
       if (captionIndex !== index) {
@@ -413,12 +427,7 @@
       const eyeMatch = pair && fromEye && toEye;
       hero.dataset.transition = eyeMatch ? 'eyes' : pair ? 'depth' : 'still';
       if (eyeMatch) {
-        const enter = smooth((fraction - .04) / .38), leave = smooth((fraction - .60) / .34);
-        const diameter = Math.min(g.width, g.height) * .42, breath = 1 + smooth((fraction - .40) / .20) * .04;
-        const close = (point, box) => Math.max(1, diameter / (point.iris * box.width));
-        pose(outgoing, g.boxes[base], fromEye, Math.pow(close(fromEye, g.boxes[base]), enter) * breath, enter);
-        pose(target, g.boxes[incoming], toEye, Math.pow(close(toEye, g.boxes[incoming]) * breath, 1 - leave), 1 - leave);
-        target.style.opacity = smooth((fraction - .44) / .14).toFixed(4);
+        target.style.opacity = eyePass(outgoing, target, g.boxes[base], g.boxes[incoming], fromEye, toEye, fraction).toFixed(4);
       } else {
         const progress = smooth(fraction), centre = { x: .5, y: .5 };
         pose(outgoing, g.boxes[base], centre, 1 + progress * .12, 0, -g.height * .05 * progress);
@@ -428,7 +437,8 @@
         }
       }
       if (pair) target.style.zIndex = '2';
-      const opacity = pair ? .4 + .6 * Math.pow(Math.abs(fraction - .5) * 2, .6) : 1;
+      const opacity = eyeMatch ? 1 - smooth(fraction / .22) + smooth((fraction - .84) / .12)
+        : pair ? .4 + .6 * Math.pow(Math.abs(fraction - .5) * 2, .6) : 1;
       showCaption(Math.round(position), opacity);
       plane.style.visibility = 'hidden'; plane.setAttribute('aria-hidden', 'true');
       copy.style.opacity = cue.style.opacity = '0'; cue.tabIndex = -1; cue.style.pointerEvents = 'none';
@@ -445,14 +455,9 @@
       ensureScene(0);
       active.clear(); active.add(0);
       scenes.forEach((scene, i) => { if (i) { scene.style.visibility = 'hidden'; scene.setAttribute('aria-hidden', 'true'); scene.classList.remove('is-visible'); } });
-      const approach = smooth(progress / .42), departure = smooth((progress - .60) / .32);
-      const artEye = eyes['rara-avis'], irisSize = Math.min(g.width, g.height) * .72;
-      const breath = 1 + smooth((progress - .40) / .20) * .06;
-      const portraitZoom = Math.max(1, irisSize / (g.portrait.width * eye.iris));
-      const artZoom = Math.max(1, irisSize / (g.art.width * artEye.iris));
-      pose(plane, g.portrait, eye, Math.pow(portraitZoom, approach) * breath, smooth(progress / .34));
-      pose(artwork, g.art, artEye, Math.pow(artZoom * breath, 1 - departure), 1 - departure);
-      const mix = ready(0) ? smooth((progress - .44) / .14) : 0;
+      const approach = smooth(progress / .42);
+      const blend = eyePass(plane, artwork, g.portrait, g.art, eye, eyes['rara-avis'], progress);
+      const mix = ready(0) ? blend : 0;
       artwork.style.opacity = mix.toFixed(4); artwork.style.zIndex = '1';
       artwork.style.visibility = mix > 0 ? 'visible' : 'hidden'; artwork.classList.toggle('is-visible', mix > 0);
       artwork.setAttribute('aria-hidden', String(mix < .5));

@@ -219,6 +219,7 @@ async function eyeMatch(ui, base, points) {
     assert.notEqual(plane.style.transform, initial, 'The portrait moves into its monocle eye');
     assert.equal(Number(wink.getAttribute('opacity')), 1, 'The existing photographic wink remains in the approach');
     const closed = wink.getAttribute('opacity');
+    let previousIris = 0;
     for (const progress of [.46, .51, .56]) {
       await scrollPortrait(progress);
       const source = readPose(plane, [571 / 1248, 766 / 1966], .032), target = readPose(artwork, [.685, .417], .025);
@@ -226,8 +227,28 @@ async function eyeMatch(ui, base, points) {
       assert.ok(Math.abs(source.x - viewport.width * .5) < .03 && Math.abs(source.y - viewport.height * .46) < .03, 'Naroa pupil stays on the camera axis');
       assert.ok(Math.abs(source.x - target.x) < .03 && Math.abs(source.y - target.y) < .03, 'Both pupils coincide throughout the dissolve, including on mobile');
       assert.ok(Math.abs(source.iris - target.iris) < .03, 'Matched iris sizes prevent a jump between the two eyes');
+      assert.ok(source.iris > Math.min(viewport.width, viewport.height) * 1.2, 'The camera reaches inside the iris rather than stopping at an eye close-up');
+      assert.ok(source.iris > previousIris * 1.1, 'The same camera keeps advancing significantly throughout the dissolve');
+      previousIris = source.iris;
       assert.equal(Number(wink.getAttribute('opacity')), 0, 'The eye reopens before the match');
     }
+    // Measure the rendered camera, including on both sides of the blend boundaries.
+    for (const progress of [.44, .51, .58]) {
+      const distances = [];
+      for (const delta of [-.001, 0, .001]) {
+        await scrollPortrait(progress + delta);
+        distances.push(Math.log(readPose(artwork, [.685, .417], .025).iris));
+      }
+      const before = distances[1] - distances[0], after = distances[2] - distances[1];
+      assert.ok(before > 0 && after > 0, 'The camera does not stop or reverse at the eye handover');
+      assert.ok(Math.abs(before - after) / Math.max(before, after) < .04, 'Camera velocity stays continuous across the eye handover');
+    }
+    await scrollPortrait(.64);
+    const deepest = readPose(artwork, [.685, .417], .025);
+    assert.ok(deepest.iris > Math.min(viewport.width, viewport.height) * 2, 'The deepest iris framing arrives after the dissolve');
+    await scrollPortrait(.65);
+    const turning = readPose(artwork, [.685, .417], .025);
+    assert.ok(turning.iris < deepest.iris && turning.iris > deepest.iris * .995, 'The camera eases gently into its outward movement');
     await scrollPortrait(.51);
     assert.equal(Number(artwork.style.opacity), .5, 'The eye match dissolves through both photographs');
     const matching = [plane.style.transform, artwork.style.transform];
@@ -274,9 +295,22 @@ async function eyeMatch(ui, base, points) {
       [ .678, .439, .025 ], [ .420, .345, .025 ], [ .487, .406, .029 ]
     ];
     for (let i = 0; i < checkpoints.length - 1; i++) {
+      let previousDiameter = 0;
+      for (const fraction of [.46, .51, .56]) {
+        await travel(i + fraction);
+        const from = readPose(scenes[i], checkpoints[i], checkpoints[i][2]);
+        const to = readPose(scenes[i + 1], checkpoints[i + 1], checkpoints[i + 1][2]);
+        assert.ok(Math.abs(from.x - to.x) < .03 && Math.abs(from.y - to.y) < .03, 'Every eye pair shares its camera axis throughout the blend');
+        assert.ok(Math.abs(from.iris - to.iris) < .03, 'Every eye pair shares its camera distance throughout the blend');
+        assert.ok(to.iris > Math.min(viewport.width, viewport.height) * 1.2, 'Every eye match enters the iris deeply');
+        assert.ok(to.iris > previousDiameter * 1.1, 'Every eye match keeps moving forward during the dissolve');
+        previousDiameter = to.iris;
+      }
       await travel(i + .51);
       assert.equal(portrait.find('[data-eye-portrait]').dataset.transition, 'eyes');
       assert.equal(Number(scenes[i + 1].style.opacity), .5, 'Eye dissolve ' + i);
+      assert.equal(artCopy.style.opacity, '0', 'Captions leave the iris unobstructed during the camera pass');
+      assert.equal(artCopy.inert, true, 'Hidden camera-pass controls cannot receive keyboard focus');
       const from = readPose(scenes[i], checkpoints[i], checkpoints[i][2]);
       const to = readPose(scenes[i + 1], checkpoints[i + 1], checkpoints[i + 1][2]);
       assert.ok(Math.abs(from.x - to.x) < .03 && Math.abs(from.y - to.y) < .03, 'Additional eye pairs keep their pupils together');
@@ -340,5 +374,5 @@ async function eyeMatch(ui, base, points) {
     page.dom.window.close();
   }
   assert.equal(manifest.projects, 40); assert.deepEqual(errors, []);
-  console.log('PASS: all 40 artwork flows, feathered depth transitions, 3 eye-to-eye pairs and mobile pupil alignment, kinetic titles, native scroll, free inertia, direct links, 3-image loading bound, search/filters, details/photos, quiet mode, reduced motion, Vaivenes, editorial reveals and responsive Naroa-to-Rara Avis pupil/iris alignment, photographic wink, continuous reveal/reverse, image-load guard, seamless continuation through all 40 works, 8 additional eye matches, bounded loading, embedded catalogue navigation and reduced motion.');
+  console.log('PASS: all 40 artwork flows, feathered depth transitions, 3 gallery eye pairs, kinetic titles, native scroll, free inertia, direct links, 3-image loading bound, search/filters, details/photos, quiet mode, reduced motion, Vaivenes, editorial reveals, responsive Naroa-to-Rara Avis pupil/iris alignment, photographic wink, cinematic deep-iris camera with continuous forward velocity across the blend, eased outward turn, reversible reveal, image-load guard, seamless continuation through all 40 works, 8 additional deep eye matches and embedded catalogue navigation.');
 })().catch(error => { console.error(error); process.exitCode = 1; });
