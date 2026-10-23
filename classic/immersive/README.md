@@ -36,6 +36,11 @@ The exhibition loads the current artwork and its neighbours rather than eagerly
 decoding all 40 photographs. Scroll uses the browser’s native vertical movement and inertia. A sticky
 full-screen stage follows real document scroll position, with no wheel
 prevention, gesture lock, forced settling or separate animation loop.
+Each work has 110svh of native scroll travel, giving transitions more room.
+Only the visible pair receives animation style updates and compositor hints.
+Depth movement remains inside the scaled image bounds, so masked reveals cannot
+expose its edges. Opening and closing panels preserves the exact fractional
+scroll position; vertical keyboard scrolling stays native.
 Nearby arrow navigation scrolls smoothly; direct catalogue selections jump
 to the selected artwork. Touch, browser zoom, Page Down and the scrollbar
 remain native. Feathered diagonal and lateral reveals use smooth endpoint easing, deeper
@@ -77,6 +82,22 @@ for the menu, catalogue, artwork details and photo viewer.
 `deploy.sh --build-only` assembles the immersive portfolio and the existing React
 laboratory. The public portfolio deployment uses `.deploy/`; the laboratory
 continues to use `dist/`. The Cloudflare and Vercel project identities are kept.
+
+## Optional soundscape
+
+The Sonido button adds ambient / musique concrète using CC0 field recordings of
+birds, river and wind by Thimras. Sources, licence and editing are documented in
+`classic/audio/CREDITS.md`, also linked from the site menu. The two local MP3
+layers are 66-second loops (about 2.1 MB combined), prepared with
+`tools/compose_nature_soundscape.py`; the normal site build copies the finished
+audio without requiring DSP dependencies. Web Audio is initialized and the two
+files fetched only after the visitor presses Sonido. Playback fades in quietly;
+entering an iris blends toward slowed, resonant nature textures and filters the
+clearer field recording. The same reversible camera progress drives this mix.
+Muting fades out and suspends the context. Hidden pages suspend playback; visible
+pages resume only if the visitor had enabled it. A new document starts silent.
+Loading and playback errors leave a retryable control. Reduced motion remains
+independent: sound is available on explicit request without enabling animation.
 
 ## Wink animation asset
 

@@ -6,6 +6,7 @@
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
+  const soundscape = window.NAROA_SOUND;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   // Enable enhancements only after JavaScript has successfully initialized.
   document.documentElement.classList.add('has-motion');
@@ -45,10 +46,14 @@
   search.addEventListener('input', filterIndex);
   filters.forEach(b => b.addEventListener('click', () => { filter = b.dataset.filter; filterIndex(); }));
   $('[data-reset-index]').addEventListener('click', () => { search.value = ''; filter = 'all'; filterIndex(); search.focus(); });
-  indexItems.forEach(a => a.addEventListener('click', e => {
-    if (!gallery || !gallery.has(a.dataset.work) || e.metaKey || e.ctrlKey || e.shiftKey) return;
-    e.preventDefault(); $('#index-dialog').close(); gallery.select(a.dataset.work);
-  }));
+  indexItems.forEach(a => {
+    a.href = '/obra/' + encodeURIComponent(a.dataset.work) + '/#fotos';
+    a.addEventListener('click', e => {
+      if (!gallery || !gallery.has(a.dataset.work) || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      e.preventDefault(); $('#index-dialog').close();
+      (gallery.inspect || gallery.select)(a.dataset.work);
+    });
+  });
 
   const stage = $('[data-gallery]');
   if (stage) {
@@ -62,6 +67,49 @@
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     const pan = { x: 0, y: 0, tx: 0, ty: 0, frame: null };
     const pendingImages = new Map();
+    const paintedScenes = new Set(scenes.map((_, index) => index));
+    const photosDialog = $('#photos-dialog');
+    const createGalleryElement = (tag, className, text) => {
+      const element = document.createElement(tag);
+      if (className) element.className = className;
+      if (text !== undefined) element.textContent = text;
+      return element;
+    };
+    const galleryTrigger = createGalleryElement('button', 'art-gallery-trigger');
+    galleryTrigger.type = 'button';
+    galleryTrigger.setAttribute('aria-haspopup', 'dialog');
+    galleryTrigger.setAttribute('aria-controls', 'work-gallery-dialog');
+    $('.art-layers', stage).after(galleryTrigger);
+    const workGallery = createGalleryElement('dialog', 'work-gallery-dialog');
+    workGallery.id = 'work-gallery-dialog';
+    workGallery.setAttribute('aria-labelledby', 'work-gallery-title');
+    workGallery.setAttribute('aria-describedby', 'work-gallery-meta');
+    const galleryHeader = createGalleryElement('div', 'work-gallery-header');
+    const galleryClose = createGalleryElement('button', '', 'Cerrar ×');
+    galleryClose.type = 'button'; galleryClose.autofocus = true;
+    galleryHeader.append(createGalleryElement('p', 'eyebrow', 'La obra, de cerca'), galleryClose);
+    const galleryIntro = createGalleryElement('div', 'work-gallery-intro');
+    const galleryTitle = createGalleryElement('h2'); galleryTitle.id = 'work-gallery-title';
+    const galleryMeta = createGalleryElement('p');
+    galleryMeta.id = 'work-gallery-meta'; galleryMeta.dataset.workGalleryMeta = '';
+    galleryIntro.append(galleryTitle, galleryMeta);
+    const galleryGrid = createGalleryElement('div', 'work-gallery-grid');
+    workGallery.append(galleryHeader, galleryIntro, galleryGrid,
+      createGalleryElement('p', 'work-gallery-footer', 'Pulsa una imagen para ampliarla'));
+    document.body.append(workGallery);
+    let galleryReturnFocus = null, photoReturnFocus = null;
+    galleryClose.addEventListener('click', () => workGallery.close());
+    workGallery.addEventListener('click', event => {
+      if (event.target !== workGallery) return;
+      const bounds = workGallery.getBoundingClientRect();
+      if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) workGallery.close();
+    });
+    workGallery.addEventListener('close', () => {
+      if (photosDialog.open) photosDialog.close();
+      if (!document.querySelector('dialog[open]') && galleryReturnFocus?.isConnected) galleryReturnFocus.focus({ preventScroll: true });
+      galleryReturnFocus = null;
+      scheduleScroll();
+    });
     const focals = { 'rara-avis': '56% 42%', 'amor-en-conserva': '50% 54%', 'entre-tantas-flores-de-dia': '50% 36%', 'johnny-rocks': '50% 42%', 'rockagipsy': '50% 43%', 'hugo-box': '50% 38%' };
     const mobileFocals = { 'rara-avis': '61% 40%', 'amor-en-conserva': '48% 54%' };
     // Pupil centres measured on the unaltered cover photographs, in source-image coordinates.
@@ -123,7 +171,9 @@
       stage.classList.toggle('is-fit', state.fit); document.body.classList.toggle('is-quiet', state.quiet);
       $('[data-restore]', stage).hidden = !state.quiet;
       const fit = $('[data-fit]', stage); fit.setAttribute('aria-pressed', String(state.fit)); fit.textContent = state.fit ? 'Volver a la inmersión ↙' : 'Ver imagen completa ↗';
-      $('[data-open-photos]', stage).textContent = p.photos.length > 1 ? 'Otras miradas ↗' : 'Ver fotografía ↗';
+      $('[data-open-photos]', stage).textContent = `Ver ${p.photos.length} ${p.photos.length === 1 ? 'fotografía' : 'fotografías'} ↗`;
+      galleryTrigger.setAttribute('aria-label', p.photos.length === 1 ? `Ver la fotografía de ${p.title}` : `Ver las ${p.photos.length} fotografías de ${p.title}`);
+      galleryTrigger.dataset.work = p.slug;
       $$('.site-nav,.art-index,.art-bottom').forEach(el => { el.inert = state.quiet; });
       $('#story-title').textContent = p.title; $('[data-story-category]').textContent = p.label; $('[data-story]').textContent = p.story;
       const facts = $('[data-facts]'); facts.replaceChildren();
@@ -155,11 +205,16 @@
       const eyeMatch = !still && !!eyeLinks[works[base].slug] && eyeLinks[works[base].slug] === works[base + 1]?.slug;
       const edge = (1 - progress) * 100, feather = Math.sin(progress * Math.PI) * 14;
       stage.dataset.transition = still ? 'still' : eyeMatch ? 'eyes' : 'depth';
-      scenes.forEach((scene, index) => {
-        const visible = still ? index === state.index : index === base || (fraction > .0001 && index === base + 1);
-        scene.style.visibility = visible ? 'visible' : 'hidden'; scene.style.zIndex = index === base + 1 ? '2' : '1';
-        scene.style.willChange = visible ? 'opacity,mask-image' : 'auto'; images[index].style.willChange = visible ? 'transform' : 'auto';
-        if (!visible) return;
+      const visible = new Set(still ? [state.index] : fraction > .0001 ? [base, base + 1] : [base]);
+      paintedScenes.forEach(index => {
+        if (visible.has(index)) return;
+        scenes[index].style.visibility = 'hidden'; scenes[index].style.willChange = images[index].style.willChange = 'auto';
+      });
+      paintedScenes.clear();
+      visible.forEach(index => {
+        const scene = scenes[index]; paintedScenes.add(index);
+        scene.style.visibility = 'visible'; scene.style.zIndex = index === base + 1 ? '2' : '1';
+        scene.style.willChange = 'opacity,mask-image'; images[index].style.willChange = 'transform';
         scene.style.clipPath = 'inset(0)'; scene.style.opacity = '1';
         scene.style.maskImage = scene.style.webkitMaskImage = 'none';
         images[index].style.transformOrigin = '50% 50%';
@@ -171,16 +226,17 @@
         }
         if (index === base) {
           images[index].style.transform = sideways
-            ? `translate3d(${(-progress * 20).toFixed(3)}%,0,0) scale(${(1.10 + progress * .24).toFixed(5)})`
-            : `translate3d(0,${(-progress * 38).toFixed(3)}%,0) scale(${(1.10 + progress * .24).toFixed(5)})`;
+            ? `translate3d(${(-progress * 9).toFixed(3)}%,0,0) scale(${(1.10 + progress * .24).toFixed(5)})`
+            : `translate3d(0,${(-progress * 9).toFixed(3)}%,0) scale(${(1.10 + progress * .24).toFixed(5)})`;
         } else {
           const mask = `linear-gradient(${sideways ? 110 : 170}deg,transparent ${(edge - feather).toFixed(3)}%,#000 ${(edge + feather).toFixed(3)}%)`;
           scene.style.maskImage = scene.style.webkitMaskImage = mask;
           images[index].style.transform = sideways
-            ? `translate3d(${((1 - progress) * 28).toFixed(3)}%,0,0) scale(${(1.10 + (1 - progress) * .18).toFixed(5)})`
-            : `translate3d(0,${((1 - progress) * 44).toFixed(3)}%,0) scale(${(1.10 + (1 - progress) * .18).toFixed(5)})`;
+            ? `translate3d(${((1 - progress) * 12).toFixed(3)}%,0,0) scale(${(1.10 + (1 - progress) * .18).toFixed(5)})`
+            : `translate3d(0,${((1 - progress) * 12).toFixed(3)}%,0) scale(${(1.10 + (1 - progress) * .18).toFixed(5)})`;
         }
       });
+      soundscape?.depth(eyeMatch && !still ? Math.sin(progress * Math.PI) : 0);
       const transitioning = !still && fraction > .001 && fraction < .999;
       const nextTitle = transitioning ? works[base + 1].title : '';
       if (kineticTitle.textContent !== nextTitle) kineticTitle.textContent = nextTitle;
@@ -195,7 +251,7 @@
       const bounds = track.getBoundingClientRect(), viewport = stage.getBoundingClientRect(), height = viewport.height || innerHeight;
       geometry.width = viewport.width || innerWidth; geometry.height = height;
       geometry.top = bounds.top + scrollY;
-      geometry.step = (bounds.height - height) / Math.max(1, works.length - 1) || height * .75;
+      geometry.step = (bounds.height - height) / Math.max(1, works.length - 1) || height * 1.1;
     }
     function leaveFit() { if (state.fit) { state.fit = false; images[state.index].src = works[state.index].cover; } }
     function syncScroll() {
@@ -225,8 +281,6 @@
       motion.navigation = null;
       if (motion.frame !== null) cancelAnimationFrame(motion.frame);
       motion.frame = null;
-      moveTo(state.index);
-      motion.position = motion.desired = state.index;
       render();
     }
     function change(next) {
@@ -246,21 +300,104 @@
     $('[data-fit]', stage).addEventListener('click', () => { pause(); state.fit = !state.fit; images[state.index].src = state.fit ? works[state.index].photos[0].src : works[state.index].cover; resetPan(); metadata(); render(); });
     $('[data-open-story]', stage).addEventListener('click', () => openDialog('#story-dialog'));
     function showPhoto() {
-      const p = works[state.index], photo = p.photos[state.photo]; $('#photos-heading').textContent = p.title; $('[data-photo-image]').src = photo.src; $('[data-photo-image]').alt = p.title + ' — ' + photo.caption;
-      $('[data-photo-caption]').textContent = `${String(state.photo + 1).padStart(2, '0')} / ${String(p.photos.length).padStart(2, '0')} · ${photo.caption}`;
-      $('[data-photo-prev]').disabled = state.photo === 0; $('[data-photo-next]').disabled = state.photo === p.photos.length - 1;
+      const p = works[state.index];
+      state.photo = clamp(state.photo, 0, p.photos.length - 1);
+      const photo = p.photos[state.photo], image = $('[data-photo-image]', photosDialog);
+      $('#photos-heading').textContent = p.title;
+      $('[data-close-dialog]', photosDialog).textContent = 'Volver a las fotos ↙';
+      image.width = photo.width; image.height = photo.height;
+      image.src = photo.original || photo.src;
+      image.alt = p.title + ' — ' + photo.caption;
+      image.style.gridColumn = p.photos.length === 1 ? '1 / -1' : '';
+      const description = $('[data-photo-caption]', photosDialog);
+      description.setAttribute('aria-atomic', 'true');
+      description.textContent = `${String(state.photo + 1).padStart(2, '0')} / ${String(p.photos.length).padStart(2, '0')} · ${photo.caption}`;
+      const previous = $('[data-photo-prev]', photosDialog), next = $('[data-photo-next]', photosDialog);
+      previous.hidden = next.hidden = p.photos.length < 2;
+      previous.disabled = state.photo === 0; next.disabled = state.photo === p.photos.length - 1;
+    }
+    function openWorkGallery(trigger = galleryTrigger) {
+      const p = works[state.index];
+      if (workGallery.open || !p.photos.length) return;
+      galleryReturnFocus = trigger;
+      state.photo = 0;
+      workGallery.dataset.work = p.slug;
+      galleryTitle.textContent = p.title;
+      galleryMeta.textContent = `${p.label} · ${p.photos.length} ${p.photos.length === 1 ? 'fotografía' : 'fotografías'}`;
+      galleryGrid.dataset.count = String(p.photos.length);
+      const figures = p.photos.map((photo, index) => {
+        const figure = createGalleryElement('figure', 'work-gallery-figure');
+        const link = createGalleryElement('a', 'work-gallery-image');
+        link.href = photo.original || photo.src;
+        link.setAttribute('aria-label', `Ampliar ${p.title}: ${photo.caption}`);
+        link.setAttribute('aria-haspopup', 'dialog');
+        link.setAttribute('aria-controls', 'photos-dialog');
+        const image = createGalleryElement('img');
+        image.width = photo.width; image.height = photo.height;
+        image.alt = p.title + ' — ' + photo.caption;
+        image.decoding = 'async'; image.loading = index === 0 ? 'eager' : 'lazy';
+        image.src = photo.src || photo.original;
+        image.addEventListener('error', () => {
+          if (photo.original && image.getAttribute('src') !== photo.original) image.src = photo.original;
+        }, { once: true });
+        link.append(image);
+        const openPhoto = event => {
+          if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+          event.preventDefault();
+          state.photo = index; photoReturnFocus = event.currentTarget;
+          showPhoto(); openDialog('#photos-dialog');
+        };
+        link.addEventListener('click', openPhoto);
+        const expand = createGalleryElement('a', 'work-gallery-expand', 'Ampliar ↗');
+        expand.href = link.href;
+        expand.setAttribute('aria-label', link.getAttribute('aria-label'));
+        expand.setAttribute('aria-haspopup', 'dialog');
+        expand.setAttribute('aria-controls', 'photos-dialog');
+        expand.addEventListener('click', openPhoto);
+        const description = createGalleryElement('figcaption');
+        description.append(
+          createGalleryElement('span', 'work-gallery-number', `${String(index + 1).padStart(2, '0')} / ${String(p.photos.length).padStart(2, '0')}`),
+          createGalleryElement('span', '', photo.caption), expand);
+        figure.append(link, description);
+        return figure;
+      });
+      galleryGrid.replaceChildren(...figures);
+      openDialog('#work-gallery-dialog');
+      workGallery.scrollTop = 0;
+    }
+    function inspect(slug) {
+      const index = works.findIndex(work => work.slug === slug);
+      if (index < 0) return;
+      // Commit an index jump before opening the dialog; an older decode cannot
+      // overwrite the selection while syncScroll is waiting for an image.
+      motion.request++;
+      if (motion.frame !== null) cancelAnimationFrame(motion.frame);
+      motion.frame = null; motion.navigation = null;
+      leaveFit(); resetPan();
+      state.index = index; state.photo = 0;
+      motion.position = motion.desired = index;
+      metadata(); saveRoute(); render(); moveTo(index);
+      openWorkGallery(galleryTrigger);
     }
     function photoStep(d) { state.photo = clamp(state.photo + d, 0, works[state.index].photos.length - 1); showPhoto(); }
-    $('[data-open-photos]', stage).addEventListener('click', () => { state.photo = 0; showPhoto(); openDialog('#photos-dialog'); });
+    galleryTrigger.addEventListener('click', () => openWorkGallery(galleryTrigger));
+    $('[data-open-photos]', stage).addEventListener('click', event => openWorkGallery(event.currentTarget));
     $('[data-photo-prev]').addEventListener('click', () => photoStep(-1)); $('[data-photo-next]').addEventListener('click', () => photoStep(1));
-    $('#photos-dialog').addEventListener('keydown', e => { if (e.key === 'ArrowRight') { e.preventDefault(); photoStep(1); } if (e.key === 'ArrowLeft') { e.preventDefault(); photoStep(-1); } });
+    photosDialog.addEventListener('keydown', event => {
+      if (event.key === 'ArrowRight') { event.preventDefault(); photoStep(1); }
+      if (event.key === 'ArrowLeft') { event.preventDefault(); photoStep(-1); }
+    });
+    photosDialog.addEventListener('close', () => {
+      if (workGallery.open && photoReturnFocus?.isConnected) photoReturnFocus.focus({ preventScroll: true });
+      photoReturnFocus = null;
+    });
     function quiet(value) { state.quiet = value; metadata(); (value ? $('[data-restore]', stage) : $('[data-quiet]')).focus(); }
     $('[data-quiet]').addEventListener('click', () => quiet(true)); $('[data-restore]', stage).addEventListener('click', () => quiet(false));
     document.addEventListener('keydown', e => {
       if (document.querySelector('dialog[open]') || e.target.closest?.('input,textarea,select,[contenteditable=true]')) return;
       if (e.key === 'Escape' && state.quiet) { e.preventDefault(); quiet(false); return; }
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); change(Math.round(motion.navigation ?? motion.desired) + 1); }
-      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); change(Math.round(motion.navigation ?? motion.desired) - 1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); change(Math.round(motion.navigation ?? motion.desired) + 1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); change(Math.round(motion.navigation ?? motion.desired) - 1); }
     });
     function drawPan() { pan.x += (pan.tx - pan.x) * .1; pan.y += (pan.ty - pan.y) * .1; if (Math.abs(pan.tx - pan.x) < .03 && Math.abs(pan.ty - pan.y) < .03) { pan.x = pan.tx; pan.y = pan.ty; pan.frame = null; } else pan.frame = requestAnimationFrame(drawPan); stage.style.setProperty('--pan-x', pan.x.toFixed(2) + 'px'); stage.style.setProperty('--pan-y', pan.y.toFixed(2) + 'px'); }
     function resetPan() { if (pan.frame !== null) cancelAnimationFrame(pan.frame); pan.x = pan.y = pan.tx = pan.ty = 0; pan.frame = null; stage.style.setProperty('--pan-x', '0px'); stage.style.setProperty('--pan-y', '0px'); }
@@ -276,8 +413,13 @@
       else scheduleScroll();
     }, { passive: true });
     addEventListener('pageshow', scheduleScroll, { passive: true });
-    gallery = { pause, has: slug => works.some(w => w.slug === slug), select: slug => change(works.findIndex(w => w.slug === slug)) };
+    $$('dialog').forEach(dialog => dialog.addEventListener('close', scheduleScroll));
+    gallery = { pause, inspect, has: slug => works.some(w => w.slug === slug), select: slug => change(works.findIndex(w => w.slug === slug)) };
     measure(); metadata(); render(); moveTo(state.index);
+    if (location.hash === '#fotos') openWorkGallery(galleryTrigger);
+    addEventListener('hashchange', () => {
+      if (location.hash === '#fotos' && !workGallery.open && !document.querySelector('dialog[open]')) openWorkGallery(galleryTrigger);
+    });
   }
 
   const years = $$('[data-year]'), events = $$('[data-exhibition-year]');
@@ -392,6 +534,7 @@
         ? Math.log(start) + Math.log(deep / start) * approach
         : Math.log(deep) + Math.log(finish / deep) * reveal);
       const focus = smooth(progress / .34) * (1 - reveal);
+      soundscape?.depth(approach * (1 - reveal));
       pose(from, fromBox, fromEye, Math.max(1, diameter / start), focus);
       pose(target, targetBox, targetEye, Math.max(1, diameter / finish), focus);
       return smooth((progress - .44) / .14);
@@ -437,6 +580,7 @@
         }
       }
       if (pair) target.style.zIndex = '2';
+      if (!eyeMatch) soundscape?.depth(0);
       const opacity = eyeMatch ? 1 - smooth(fraction / .22) + smooth((fraction - .84) / .12)
         : pair ? .4 + .6 * Math.pow(Math.abs(fraction - .5) * 2, .6) : 1;
       showCaption(Math.round(position), opacity);

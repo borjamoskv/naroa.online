@@ -8,7 +8,7 @@ const manifest = JSON.parse(fs.readFileSync(path.join(output, 'immersive/build-m
 const errors = [];
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-function create(route = '/', reduce = false, viewport = { width: 1024, height: 768 }) {
+function create(route = '/', reduce = false, viewport = { width: 1024, height: 768 }, audio = null) {
   const file = path.join(output, route, 'index.html');
   let time = 0, id = 0;
   const observers = [];
@@ -20,6 +20,10 @@ function create(route = '/', reduce = false, viewport = { width: 1024, height: 7
       Object.defineProperty(w, 'innerWidth', { value: viewport.width, configurable: true });
       Object.defineProperty(w, 'innerHeight', { value: viewport.height, configurable: true });
       w.matchMedia = () => ({ matches: reduce, addEventListener() {} });
+      if (audio) {
+        w.AudioContext = audio.Context; w.fetch = audio.fetch;
+        Object.defineProperty(w.document, 'hidden', { value: false, configurable: true, writable: true });
+      }
       w.requestAnimationFrame = callback => { const token = ++id; callbacks.set(token, callback); return token; };
       w.cancelAnimationFrame = token => callbacks.delete(token);
       w.IntersectionObserver = class {
@@ -45,7 +49,7 @@ function create(route = '/', reduce = false, viewport = { width: 1024, height: 7
   });
   const w = dom.window, document = w.document;
   const track = document.querySelector('.art-scroll'), stage = document.querySelector('[data-gallery]');
-  const step = w.innerHeight * .75;
+  const step = w.innerHeight * 1.1;
   if (track) {
     const height = w.innerHeight + Number(track.style.getPropertyValue('--steps')) * step;
     track.getBoundingClientRect = () => ({ top: -w.scrollY, bottom: height - w.scrollY, height, width: viewport.width, left: 0, right: viewport.width });
@@ -76,6 +80,24 @@ function create(route = '/', reduce = false, viewport = { width: 1024, height: 7
   }
   const key = value => document.dispatchEvent(new w.KeyboardEvent('keydown', { key: value, bubbles: true, cancelable: true }));
   return { dom, w, document, find, click, flush, wheel, key, observers, step, scroll: index => w.scrollTo({top:index * step}) };
+}
+
+// Mock only the browser audio/network boundary; exercise real click, camera and lifecycle code.
+function audioBoundary() {
+  const audio = { contexts: [], requests: [], starts: [], failed: false, denied: false };
+  const parameter = value => ({ value, cancelScheduledValues() {}, setValueAtTime(v) { this.value = v; }, setTargetAtTime(v) { this.value = v; } });
+  audio.Context = class {
+    constructor() { this.state = 'suspended'; this.currentTime = 10; this.gains = []; this.filters = []; audio.contexts.push(this); }
+    async resume() { if (audio.denied) throw Error('Playback denied'); this.state = 'running'; }
+    async suspend() { this.state = 'suspended'; }
+    async close() { this.state = 'closed'; }
+    async decodeAudioData() { return { duration: 66 }; }
+    createGain() { const node = { gain: parameter(1), connect() {} }; this.gains.push(node); return node; }
+    createBiquadFilter() { const node = { frequency: parameter(0), Q: parameter(0), connect() {} }; this.filters.push(node); return node; }
+    createBufferSource() { return { connect() {}, start() { audio.starts.push(this); } }; }
+  };
+  audio.fetch = async src => { audio.requests.push(src); return { ok: !audio.failed, arrayBuffer: async () => new ArrayBuffer(4) }; };
+  return audio;
 }
 
 async function eyeMatch(ui, base, points) {
@@ -129,6 +151,29 @@ async function eyeMatch(ui, base, points) {
   ui.scroll(1.28); await ui.flush();
   assert.match(ui.find('[data-scene="2"]').style.maskImage, /^linear-gradient\(110deg,/);
   assert.equal(ui.find('[data-gallery]').dataset.transition, 'depth');
+  assert.equal(ui.key('ArrowDown'), true, 'Vertical keyboard scrolling remains native throughout the gallery');
+  assert.equal(ui.key('ArrowUp'), true);
+  const heldPosition = ui.w.scrollY, heldPose = ui.find('[data-scene="1"] img').style.transform;
+  ui.click('[data-open-menu]'); await ui.flush();
+  assert.equal(ui.w.scrollY, heldPosition, 'Opening a panel preserves the exact scroll position');
+  assert.equal(ui.find('[data-scene="1"] img').style.transform, heldPose, 'Opening a panel preserves the camera pose');
+  ui.click('#menu-dialog [data-close-dialog]'); await ui.flush();
+  assert.equal(ui.w.scrollY, heldPosition, 'Closing a panel does not snap to an artwork');
+  const distantWrites = [];
+  const distantObserver = new ui.w.MutationObserver(records => distantWrites.push(...records));
+  distantObserver.observe(ui.find('[data-scene="37"]'), { attributes: true, attributeFilter: ['style'] });
+  for (const fraction of [.01, .2, .5, .8, .99]) {
+    ui.scroll(1 + fraction); await ui.flush();
+    for (const index of [1, 2]) {
+      const image = ui.find(`[data-scene="${index}"] img`);
+      const pose = /translate3d\(([-\d.]+)%?,([-\d.]+)%?,0\) scale\(([\d.]+)\)/.exec(image.style.transform);
+      assert.ok(pose);
+      const [, x, y, scale] = pose.map(Number), margin = (scale - 1) * 50;
+      assert.ok(Math.abs(x) <= margin && Math.abs(y) <= margin, 'Parallax stays inside its overscan throughout the reveal');
+    }
+    assert.ok(ui.document.querySelectorAll('.art-scene[style*="will-change: opacity"]').length <= 2, 'Only the visible pair receives compositor hints');
+  }
+  distantObserver.disconnect(); assert.equal(distantWrites.length, 0, 'Scrolling does not rewrite styles on distant artwork layers');
   ui.scroll(6.2); await ui.flush();
   assert.equal(ui.find('[data-art-title]').textContent, works[6].title, 'Fast native scrolling can traverse several works without a gesture lock');
   ui.scroll(3.1); await ui.flush();
@@ -166,15 +211,21 @@ async function eyeMatch(ui, base, points) {
   ui.click('[data-filter="all"]');
   ui.click('.index-work[data-work="marilyn-rocks"]'); await ui.flush();
   assert.equal(ui.find('[data-art-title]').textContent, 'Marilyn Rocks');
+  assert.equal(ui.find('#work-gallery-dialog').open, true, 'The existing artwork photo overview is preserved');
+  assert.equal(ui.document.querySelectorAll('.work-gallery-figure').length, works[0].photos.length);
+  ui.click('.work-gallery-header button'); await ui.flush();
   ui.click('[data-fit]'); assert.equal(ui.find('[data-gallery]').classList.contains('is-fit'), true);
   assert.ok(ui.find('[data-scene="0"] img').src.endsWith(works[0].photos[0].src));
   ui.click('[data-fit]');
   ui.click('[data-open-photos]');
+  assert.equal(ui.find('#work-gallery-dialog').open, true);
+  ui.click('.work-gallery-image');
   assert.equal(ui.find('#photos-dialog').open, true);
   assert.ok(ui.find('[data-photo-caption]').textContent.includes('01 / 03'));
   ui.click('[data-photo-next]');
   assert.ok(ui.find('[data-photo-caption]').textContent.includes('02 / 03'));
   ui.click('#photos-dialog [data-close-dialog]');
+  ui.click('.work-gallery-header button'); await ui.flush();
   ui.click('[data-quiet]'); assert.equal(ui.document.body.classList.contains('is-quiet'), true);
   ui.key('ArrowRight'); await ui.flush(); assert.equal(ui.find('[data-art-title]').textContent, 'Rara Avis');
   ui.key('Escape'); assert.equal(ui.document.body.classList.contains('is-quiet'), false);
@@ -362,6 +413,52 @@ async function eyeMatch(ui, base, points) {
   assert.equal(Number(stillPortrait.find('[data-portrait-wink]').getAttribute('opacity')), 0);
   assert.equal(stillPortrait.find('.page-hero-copy').style.opacity, '1');
   stillPortrait.dom.window.close();
+
+  const audio = audioBoundary(), music = create('/sobre-mi/', false, { width: 390, height: 844 }, audio);
+  await music.flush();
+  assert.equal(audio.contexts.length, 0, 'No audio context is created before a visitor gesture');
+  assert.equal(audio.requests.length, 0, 'No sound files are downloaded before opt-in');
+  assert.equal(music.find('[data-sound]').getAttribute('aria-pressed'), 'false');
+  music.click('[data-sound]');
+  assert.equal(music.find('[data-sound]').disabled, true, 'Loading cannot create duplicate sound engines');
+  await music.flush();
+  assert.equal(audio.requests.length, 2); assert.equal(audio.starts.length, 2);
+  assert.ok(audio.starts.every(source => source.loop), 'Both sound layers loop without a playback timer');
+  assert.equal(music.find('[data-sound]').getAttribute('aria-pressed'), 'true');
+  assert.equal(music.find('[data-sound-status]').hidden, true);
+  const ctx = audio.contexts[0], field = ctx.gains[1].gain.value, iris = ctx.gains[2].gain.value, clarity = ctx.filters[0].frequency.value;
+  music.w.scrollTo({ top: 844 * 2.8 * .64 }); await music.flush();
+  assert.ok(ctx.gains[1].gain.value < field && ctx.gains[2].gain.value > iris, 'Entering the iris blends from field ambience to concrete textures');
+  assert.ok(ctx.filters[0].frequency.value < clarity, 'The deeper camera closes the field recording filter');
+  music.w.scrollTo({ top: 0 }); await music.flush();
+  assert.equal(ctx.gains[1].gain.value, field); assert.equal(ctx.gains[2].gain.value, iris, 'Reverse scroll restores the sound mix');
+  music.document.hidden = true; music.document.dispatchEvent(new music.w.Event('visibilitychange')); await music.flush();
+  assert.equal(ctx.state, 'suspended', 'A hidden tab stops audio processing');
+  music.document.hidden = false; music.document.dispatchEvent(new music.w.Event('visibilitychange')); await music.flush();
+  assert.equal(ctx.state, 'running', 'Returning resumes an explicitly enabled soundscape');
+  music.click('[data-sound]'); await wait(430); await music.flush();
+  assert.equal(ctx.state, 'suspended'); assert.equal(ctx.gains[0].gain.value, 0);
+  music.document.dispatchEvent(new music.w.Event('visibilitychange')); await music.flush();
+  assert.equal(ctx.state, 'suspended', 'A muted soundscape stays muted when returning');
+  music.click('[data-sound]'); await music.flush();
+  assert.equal(audio.requests.length, 2); assert.equal(audio.starts.length, 2, 'Reactivation reuses the same two layers');
+  music.w.dispatchEvent(new music.w.Event('pagehide')); await music.flush(); assert.equal(ctx.state, 'suspended');
+  music.w.dispatchEvent(new music.w.Event('pageshow')); await music.flush(); assert.equal(ctx.state, 'running');
+  music.click('[data-sound]'); music.dom.window.close();
+  const failingAudio = audioBoundary(); failingAudio.failed = true;
+  const retryMusic = create('/', true, { width: 1024, height: 768 }, failingAudio); await retryMusic.flush();
+  retryMusic.click('[data-sound]'); await retryMusic.flush();
+  assert.equal(retryMusic.find('[data-sound]').getAttribute('aria-pressed'), 'false');
+  assert.equal(retryMusic.find('[data-sound]').disabled, false); assert.equal(retryMusic.find('[data-sound-status]').hidden, false);
+  failingAudio.failed = false; retryMusic.click('[data-sound]'); await retryMusic.flush();
+  assert.equal(retryMusic.find('[data-sound]').getAttribute('aria-pressed'), 'true', 'A failed load can be retried, including with reduced motion');
+  retryMusic.click('[data-sound]'); retryMusic.dom.window.close();
+  const denied = audioBoundary(); denied.denied = true;
+  const deniedMusic = create('/', false, { width: 1024, height: 768 }, denied); await deniedMusic.flush();
+  deniedMusic.click('[data-sound]'); await deniedMusic.flush();
+  assert.equal(deniedMusic.find('[data-sound]').getAttribute('aria-pressed'), 'false');
+  assert.equal(denied.requests.length, 0, 'Blocked playback does not start downloading audio');
+  assert.equal(deniedMusic.find('[data-sound]').disabled, false); deniedMusic.dom.window.close();
 
   for (const route of ['/sobre-mi/', '/trayectoria/', '/cuaderno/', '/retratos-por-encargo-bilbao/', '/contacto/']) {
     const page = create(route); await page.flush(); page.click('[data-open-menu]'); assert.equal(page.find('#menu-dialog').open, true); page.click('#menu-dialog [data-close-dialog]');
