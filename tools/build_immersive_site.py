@@ -144,7 +144,7 @@ def build(output):
     # Only the artist portrait gets this native, pinned scroll sequence. The
     # decorative eyelid is a feathered photographic animation layer; the
     # original photograph remains untouched and is the no-JS fallback.
-    about = f'''<div class="portrait-scroll" data-portrait-scroll>
+    about = f'''<div class="portrait-scroll" data-portrait-scroll style="--portrait-steps:39">
 <section class="page-hero portrait-hero" data-eye-portrait>
 <div class="portrait-frame"><div class="portrait-plane" data-portrait-plane>
 <img src="{portrait}" width="2201" height="3468" alt="Naroa Gutiérrez Gil con chistera y un monóculo ante un ojo" fetchpriority="high">
@@ -155,7 +155,8 @@ def build(output):
 <div class="portrait-artwork" data-portrait-artwork aria-hidden="true"><img src="{portal_work}" width="4080" height="3072" alt="Rara Avis, autorretrato de Naroa a pastel y collage" decoding="async"></div></div>
 <div class="page-hero-shade"></div>
 <div class="page-hero-copy"><p class="eyebrow">La artista · Bilbao</p><h1>Naroa<br><span>Gutiérrez Gil.</span></h1><p class="hero-lead">Rostros, materia y ganas de jugar.</p></div>
-<div class="portrait-work-copy" data-portrait-work-copy inert><p class="eyebrow">Del rostro al autorretrato</p><h2>Rara Avis.</h2><a class="text-link" href="/obra/rara-avis/">Explorar la obra ↗</a></div>
+<div class="portrait-work-copy" data-portrait-work-copy inert><p class="eyebrow" data-portrait-label>Del rostro al autorretrato · 01 / 40</p><h2 data-portrait-title>Rara Avis</h2><a class="text-link" data-portrait-link href="/obra/rara-avis/">Explorar la obra ↗</a></div>
+<nav class="portrait-travel-controls" data-portrait-controls aria-label="Continuar por las obras" inert><a href="#contenido">Biografía ↓</a><button type="button" data-portrait-prev aria-label="Obra anterior" disabled>←</button><button type="button" data-portrait-next aria-label="Obra siguiente">→</button></nav>
 <a class="hero-down" href="#contenido" aria-label="Seguir leyendo">↓</a>
 </section></div>'''
     about += '''<article id="contenido" class="editorial"><section class="chapter"><p class="eyebrow">La mirada</p><div><h2>Mirar a los demás.<br><span>Encontrarse en ellos.</span></h2><p class="lead">Naroa Gutiérrez Gil trabaja con rostros. Los dibuja, los pinta y los reconstruye con papeles, texturas y objetos. En cada retrato hay también una pregunta por quien lo mira.</p><p>En sus textos, crear y conocerse aparecen una y otra vez de la mano. Las figuras del cine, la música o la televisión son el punto de partida para hablar de emociones, de identidad y de aquello que reconocemos en otras personas.</p></div></section><blockquote>«Me encontré a mí en los demás».<cite>Naroa · <a href="https://naroagutierrez.wordpress.com/2020/09/27/iconos-pop-muestra-colectiva-de-retratos/" target="_blank" rel="noopener noreferrer">Iconos Pop, 2020 ↗</a></cite></blockquote><section class="chapter"><p class="eyebrow">01 · La materia</p><div><h2>Lo que cuenta<br>cada material.</h2><p>Una pizarra, un plato de madera, un recorte o una lata pueden convertirse en parte del retrato. El soporte aporta significado: la pintura convive con las huellas, las capas y las posibilidades de cada objeto.</p><p>En Vaivenes, el collage y los materiales reutilizados dan forma a vivencias y estados de ánimo. En DiviNos, los rostros sobre pizarra incorporan pintura, lápices de colores y mica.</p><a class="text-link" href="/series/vaivenes/">Descubrir Vaivenes ↗</a></div></section>'''

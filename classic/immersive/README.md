@@ -44,7 +44,8 @@ opposing image movement and a transient oversized title. Three selected pairs
 pupil positions, align both eyes at the same viewport point and dissolve into
 the next portrait before opening its framing. Coordinates account for each
 image’s cover crop and responsive focal position. Photographs are unmodified.
-The artist profile adds a sticky, native 380svh portrait sequence. The camera
+The artist profile adds a sticky, native portrait sequence and a continuous
+40-work exhibition. The camera
 moves into Naroa’s monocle eye after her brief photographic wink, dissolves into
 the eye of her Rara Avis self-portrait and opens into its full-screen framing.
 Both pupils share a camera axis and a rendered iris diameter throughout the
@@ -54,8 +55,15 @@ for each image’s cover crop, including mobile framing. High-resolution source
 derivatives support the close-up. The artwork link appears only at the end;
 its invisible state is inert. Slow image loading cannot dissolve to a blank
 frame. There is no timer, wheel interception or route change. Scrolling back
-retraces the whole sequence. Reduced motion collapses it to the original static
-portrait, and the biography shortcut remains available.
+retraces the whole sequence. The same Rara Avis element starts the exhibition at the exact same framing;
+there is no stage hand-off, page navigation or reset. Eight further eye matches
+join Rara Avis, Marilyn, Amy, Johnny, RockaGipsy, Berto, Buena Fuente, James and
+Elene. The other works use continuous depth dissolves with matching endpoint
+poses. All 40 reviewed works appear exactly once, with the current title, count,
+artwork link, native arrow navigation and a direct biography shortcut. The index
+selects a work within the same artist-page scroll. Only the current image and its
+neighbours are retained; an undecoded pair keeps the last painted frame visible.
+Reduced motion collapses the sequence to the original static portrait.
 Editorial sections reveal once as they enter the viewport; menus and images
 respond to interaction. Reduced-motion preferences disable these enhancements. Arrow controls, keyboard navigation, a complete-image view
 and a reduced-motion alternative remain available. Native dialogs manage focus

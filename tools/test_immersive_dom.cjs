@@ -53,7 +53,7 @@ function create(route = '/', reduce = false, viewport = { width: 1024, height: 7
   }
   const portraitTrack = document.querySelector('[data-portrait-scroll]');
   if (portraitTrack) {
-    const height = w.innerHeight * (reduce ? 1 : 3.8);
+    const height = w.innerHeight * (reduce ? 1 : 3.8 + Number(portraitTrack.style.getPropertyValue('--portrait-steps')) * 1.1);
     portraitTrack.getBoundingClientRect = () => ({ top: -w.scrollY, bottom: height - w.scrollY, height, width: w.innerWidth, left: 0, right: w.innerWidth });
     document.querySelector('[data-eye-portrait]').getBoundingClientRect = () => ({ top: 0, bottom: w.innerHeight, height: w.innerHeight, width: w.innerWidth, left: 0, right: w.innerWidth });
   }
@@ -66,7 +66,7 @@ function create(route = '/', reduce = false, viewport = { width: 1024, height: 7
     let frames = 0;
     while (callbacks.size && frames++ < 250) {
       time += 16; const next = Array.from(callbacks.values()); callbacks.clear(); next.forEach(callback => callback(time));
-      await Promise.resolve();
+      await new Promise(resolve => setImmediate(resolve));
     }
     assert.ok(frames < 250, 'Animation must settle');
   }
@@ -262,6 +262,61 @@ async function eyeMatch(ui, base, points) {
     assert.equal(portrait.find('.page-hero-copy').style.opacity, '1');
     assert.equal(artCopy.inert, true, 'An invisible artwork link cannot receive keyboard focus');
     assert.equal(portrait.find('.hero-down').getAttribute('href'), '#contenido', 'The biography remains directly reachable');
+    const scenes = Array.from(portrait.document.querySelectorAll('[data-portrait-scene]'));
+    assert.equal(scenes.length, 40, 'The artist page continues through the complete catalogue');
+    const travel = async position => { portrait.w.scrollTo({ top: viewport.height * (2.8 + position * 1.1) }); await portrait.flush(); };
+    await scrollPortrait(.9999); const lastPortalFrame = [artwork.style.transform, artwork.style.opacity];
+    await travel(0);
+    assert.deepEqual([artwork.style.transform, artwork.style.opacity], lastPortalFrame, 'The portal and exhibition share exactly the same Rara Avis element and camera pose');
+    const checkpoints = [
+      [ .685, .417, .025 ], [ .635, .392, .030 ], [ .512, .424, .018 ],
+      [ .583, .459, .028 ], [ .545, .402, .018 ], [ .469, .463, .020 ],
+      [ .678, .439, .025 ], [ .420, .345, .025 ], [ .487, .406, .029 ]
+    ];
+    for (let i = 0; i < checkpoints.length - 1; i++) {
+      await travel(i + .51);
+      assert.equal(portrait.find('[data-eye-portrait]').dataset.transition, 'eyes');
+      assert.equal(Number(scenes[i + 1].style.opacity), .5, 'Eye dissolve ' + i);
+      const from = readPose(scenes[i], checkpoints[i], checkpoints[i][2]);
+      const to = readPose(scenes[i + 1], checkpoints[i + 1], checkpoints[i + 1][2]);
+      assert.ok(Math.abs(from.x - to.x) < .03 && Math.abs(from.y - to.y) < .03, 'Additional eye pairs keep their pupils together');
+      assert.ok(Math.abs(from.iris - to.iris) < .03, 'Additional eye pairs keep matching iris diameters');
+      const saved = scenes[i + 1].style.transform;
+      await travel(i + .9); await travel(i + .51);
+      assert.equal(scenes[i + 1].style.transform, saved, 'Each eye transition reverses along the same path');
+    }
+    await travel(8.5);
+    assert.equal(portrait.find('[data-eye-portrait]').dataset.transition, 'depth', 'Works without a measured eye continue through a depth dissolve');
+    assert.equal(Number(scenes[9].style.opacity), .5);
+    const visited = new Set();
+    for (let i = 0; i < scenes.length; i++) {
+      await travel(i);
+      const slug = scenes[i].dataset.work, work = portrait.w.NAROA_CATALOG.projects.find(p => p.slug === slug);
+      assert.ok(work); visited.add(slug);
+      assert.equal(portrait.find('[data-portrait-title]').textContent, work.title);
+      assert.equal(portrait.find('[data-portrait-link]').getAttribute('href'), '/obra/' + slug + '/');
+      assert.equal(scenes[i].style.visibility, 'visible');
+      assert.equal(scenes[i].style.opacity, '1');
+      assert.ok(portrait.document.querySelectorAll('[data-portrait-scene] img[src]').length <= 3, 'Continuation loads only the current photograph and its neighbours');
+      assert.equal(portrait.w.location.pathname, '/sobre-mi/', 'No route navigation interrupts the exhibition');
+    }
+    assert.equal(visited.size, 40); assert.equal(portrait.find('[data-portrait-next]').disabled, true);
+    assert.equal(portrait.find('[data-portrait-controls] a').getAttribute('href'), '#contenido', 'Biography remains available throughout the exhibition');
+    await travel(0);
+    assert.equal(portrait.find('[data-portrait-prev]').disabled, true);
+    assert.equal(portrait.key('ArrowDown'), true, 'Vertical keyboard scrolling stays native');
+    assert.ok(portrait.document.documentElement.classList.contains('portrait-scroll-native'), 'Biography and distant index jumps use direct native scrolling');
+    portrait.click('[data-portrait-next]'); await portrait.flush();
+    assert.equal(portrait.find('[data-eye-portrait]').dataset.work, 'marilyn-rocks');
+    await travel(2.51); const positionBeforeDialog = portrait.w.scrollY;
+    portrait.click('[data-open-menu]'); await portrait.flush();
+    assert.equal(portrait.w.scrollY, positionBeforeDialog, 'Opening a menu does not snap a transition to an artwork');
+    portrait.click('#menu-dialog [data-close-dialog]'); await portrait.flush();
+    portrait.click('[data-open-index]'); portrait.click('.index-work[data-work="amy-rocks"]'); await portrait.flush();
+    assert.equal(portrait.find('[data-eye-portrait]').dataset.work, 'amy-rocks', 'Catalogue selections join the same continuous artist-page scroll');
+    assert.equal(portrait.w.location.pathname, '/sobre-mi/');
+    await travel(0); await scrollPortrait(0);
+    assert.equal(plane.style.transform, initial, 'Scrolling back through the entire exhibition restores Naroa');
     portrait.dom.window.close();
   }
   const stillPortrait = create('/sobre-mi/', true); await stillPortrait.flush();
@@ -285,5 +340,5 @@ async function eyeMatch(ui, base, points) {
     page.dom.window.close();
   }
   assert.equal(manifest.projects, 40); assert.deepEqual(errors, []);
-  console.log('PASS: all 40 artwork flows, feathered depth transitions, 3 eye-to-eye pairs and mobile pupil alignment, kinetic titles, native scroll, free inertia, direct links, 3-image loading bound, search/filters, details/photos, quiet mode, reduced motion, Vaivenes, editorial reveals and responsive Naroa-to-Rara Avis pupil/iris alignment, photographic wink, continuous reveal/reverse, image-load guard and reduced motion.');
+  console.log('PASS: all 40 artwork flows, feathered depth transitions, 3 eye-to-eye pairs and mobile pupil alignment, kinetic titles, native scroll, free inertia, direct links, 3-image loading bound, search/filters, details/photos, quiet mode, reduced motion, Vaivenes, editorial reveals and responsive Naroa-to-Rara Avis pupil/iris alignment, photographic wink, continuous reveal/reverse, image-load guard, seamless continuation through all 40 works, 8 additional eye matches, bounded loading, embedded catalogue navigation and reduced motion.');
 })().catch(error => { console.error(error); process.exitCode = 1; });

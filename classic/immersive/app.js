@@ -289,16 +289,73 @@
   }));
   const portraitTrack = $('[data-portrait-scroll]');
   if (portraitTrack) {
+    document.documentElement.classList.add('portrait-scroll-native');
     const hero = $('[data-eye-portrait]', portraitTrack), plane = $('[data-portrait-plane]', hero);
     const photograph = $('img', plane), copy = $('.page-hero-copy', hero), shade = $('.page-hero-shade', hero);
-    const artwork = $('[data-portrait-artwork]', hero), artImage = $('img', artwork), artCopy = $('[data-portrait-work-copy]', hero);
+    const artwork = $('[data-portrait-artwork]', hero), artCopy = $('[data-portrait-work-copy]', hero);
+    const controls = $('[data-portrait-controls]', hero), previous = $('[data-portrait-prev]', hero), next = $('[data-portrait-next]', hero);
     const cue = $('.hero-down', hero), wink = $('[data-portrait-wink]', hero);
-    // Pupil positions and iris diameters on the unmodified source images.
     const eye = { x: 571 / 1248, y: 766 / 1966, iris: .032 };
-    const artEye = { x: .685, y: .417, iris: .025 };
-    // Zero acceleration at each endpoint keeps approach, dissolve and reveal joined.
+    const eyes = {
+      'rara-avis': { x: .685, y: .417, iris: .025 },
+      'marilyn-rocks': { x: .635, y: .392, iris: .030 },
+      'amy-rocks': { x: .512, y: .424, iris: .018 },
+      'johnny-rocks': { x: .583, y: .459, iris: .028 },
+      'rockagipsy': { x: .545, y: .402, iris: .018 },
+      'infusion-de-berto': { x: .469, y: .463, iris: .020 },
+      'buena-fuente': { x: .678, y: .439, iris: .025 },
+      'james-rocks': { x: .420, y: .345, iris: .025 },
+      'elene': { x: .487, y: .406, iris: .029 }
+    };
+    const opening = Object.keys(eyes);
+    const works = [...opening.map(slug => catalogue.projects.find(p => p.slug === slug)), ...catalogue.projects.filter(p => !opening.includes(p.slug))];
+    // The very same Rara Avis element opens the portal and starts the exhibition.
+    // There is no second stage, document navigation or image swap at the join.
+    const scenes = works.map((work, index) => {
+      const scene = index ? document.createElement('div') : artwork;
+      const photo = work.photos.find(p => p.src === work.cover) || work.photos[0];
+      const img = index ? document.createElement('img') : $('img', scene);
+      scene.classList.add('portrait-artwork'); scene.dataset.portraitScene = String(index); scene.dataset.work = work.slug;
+      scene.setAttribute('aria-hidden', 'true');
+      if (index) {
+        img.width = photo.width; img.height = photo.height;
+        img.alt = work.title + ' — ' + work.label; img.decoding = 'async'; img.draggable = false;
+        img.dataset.src = work.cover; scene.append(img); $('.portrait-frame', hero).append(scene);
+      } else img.dataset.src = img.getAttribute('src');
+      return scene;
+    });
+    const images = scenes.map(scene => $('img', scene)), decoded = new Set(), pending = new Map(), failed = new Set();
     const smooth = value => { const t = clamp(value, 0, 1); return t * t * t * (t * (t * 6 - 15) + 10); };
-    let frame = null, geometry = null, artReady = false;
+    let frame = null, geometry = null, current = 0, captionIndex = -1;
+    const active = new Set([0]);
+    function ready(index) { return decoded.has(index) && images[index]?.complete && !!images[index]?.naturalWidth; }
+    function ensureScene(index) {
+      const img = images[index]; if (!img || ready(index) || failed.has(index)) return Promise.resolve();
+      if (pending.has(index)) return pending.get(index);
+      if (!img.getAttribute('src')) img.src = img.dataset.src;
+      const source = img.getAttribute('src');
+      const job = Promise.resolve().then(async () => {
+        try {
+          if (img.decode) await img.decode();
+          else if (!img.complete) await new Promise(resolve => {
+            img.addEventListener('load', resolve, { once: true }); img.addEventListener('error', resolve, { once: true });
+          });
+          if (img.getAttribute('src') === source && img.complete && img.naturalWidth) decoded.add(index);
+        } catch { if (img.getAttribute('src') === source) failed.add(index); }
+      }).finally(() => {
+        if (pending.get(index) === job) pending.delete(index);
+        schedulePortrait();
+      });
+      pending.set(index, job); return job;
+    }
+    function releaseDistant(base) {
+      images.forEach((img, i) => {
+        if (Math.abs(i - base) > 1 && !active.has(i) && img.hasAttribute('src')) {
+          img.removeAttribute('src'); decoded.delete(i); pending.delete(i); failed.delete(i);
+        }
+      });
+      [base - 1, base, base + 1].forEach(i => { ensureScene(i); });
+    }
     function measurePortrait() {
       const rect = hero.getBoundingClientRect();
       const width = rect.width || innerWidth, height = rect.height || innerHeight;
@@ -306,8 +363,12 @@
         const imageWidth = Math.max(width, height * aspect), imageHeight = imageWidth / aspect;
         return { width: imageWidth, height: imageHeight, left: (width - imageWidth) * x, top: (height - imageHeight) * y };
       };
-      geometry = { width, height, portrait: cover(2201 / 3468, .5, .29), art: cover(4080 / 3072, width <= 760 ? .72 : .5, .42) };
-      [[plane, geometry.portrait], [artwork, geometry.art]].forEach(([element, box]) => {
+      const boxes = works.map((work, i) => {
+        const aspect = Number(images[i].getAttribute('width')) / Number(images[i].getAttribute('height'));
+        return cover(aspect, i === 0 && width <= 760 ? .72 : .5, .42);
+      });
+      geometry = { width, height, portrait: cover(2201 / 3468, .5, .29), art: boxes[0], boxes };
+      [[plane, geometry.portrait], ...scenes.map((scene, i) => [scene, boxes[i]])].forEach(([element, box]) => {
         Object.assign(element.style, reduced.matches
           ? { width: '', height: '', left: '', top: '' }
           : { width: `${box.width}px`, height: `${box.height}px`, left: `${box.left}px`, top: `${box.top}px` });
@@ -315,64 +376,115 @@
       plane.classList.toggle('is-measured', !reduced.matches);
       schedulePortrait();
     }
-    function pose(element, box, point, zoom, focus) {
+    function pose(element, box, point, zoom, focus, offset = 0) {
       const g = geometry, x = box.left + point.x * box.width, y = box.top + point.y * box.height;
       const tx = x + (g.width * .5 - x) * focus - box.left - zoom * point.x * box.width;
-      const ty = y + (g.height * .46 - y) * focus - box.top - zoom * point.y * box.height;
+      const ty = y + (g.height * .46 - y) * focus - box.top - zoom * point.y * box.height + offset;
       element.style.transform = reduced.matches ? '' : `translate3d(${tx.toFixed(3)}px,${ty.toFixed(3)}px,0) scale(${zoom.toFixed(5)})`;
+    }
+    function showCaption(index, opacity) {
+      const work = works[index]; current = index;
+      if (captionIndex !== index) {
+        $('[data-portrait-title]', hero).textContent = work.title;
+        $('[data-portrait-label]', hero).textContent = `${index ? work.label : 'Del rostro al autorretrato'} · ${String(index + 1).padStart(2, '0')} / ${works.length}`;
+        $('[data-portrait-link]', hero).href = '/obra/' + work.slug + '/';
+        previous.disabled = index === 0; next.disabled = index === works.length - 1;
+        hero.dataset.work = work.slug; captionIndex = index;
+      }
+      [artCopy, controls].forEach(element => {
+        element.style.opacity = opacity.toFixed(3); element.style.visibility = opacity > 0 ? 'visible' : 'hidden'; element.inert = opacity < .2;
+      });
+      artCopy.style.transform = reduced.matches ? '' : `translate3d(0,${((1 - opacity) * 24).toFixed(2)}px,0)`;
+    }
+    function renderExhibition(position) {
+      const g = geometry, base = Math.floor(position), fraction = position - base;
+      const incoming = Math.min(base + 1, works.length - 1), pair = fraction > 0 && incoming !== base;
+      ensureScene(base); if (pair) ensureScene(incoming);
+      // Wait for the requested pair while retaining the last painted pair.
+      // Scroll remains native even when several works are skipped quickly.
+      if (!ready(base) || pair && !ready(incoming)) return;
+      active.clear(); active.add(base); if (pair) active.add(incoming);
+      scenes.forEach((scene, i) => {
+        const visible = active.has(i); scene.style.visibility = visible ? 'visible' : 'hidden'; scene.classList.toggle('is-visible', visible);
+        scene.setAttribute('aria-hidden', String(i !== Math.round(position)));
+      });
+      const outgoing = scenes[base], target = scenes[incoming], fromEye = eyes[works[base].slug], toEye = eyes[works[incoming].slug];
+      outgoing.style.opacity = '1'; outgoing.style.zIndex = '1';
+      const eyeMatch = pair && fromEye && toEye;
+      hero.dataset.transition = eyeMatch ? 'eyes' : pair ? 'depth' : 'still';
+      if (eyeMatch) {
+        const enter = smooth((fraction - .04) / .38), leave = smooth((fraction - .60) / .34);
+        const diameter = Math.min(g.width, g.height) * .42, breath = 1 + smooth((fraction - .40) / .20) * .04;
+        const close = (point, box) => Math.max(1, diameter / (point.iris * box.width));
+        pose(outgoing, g.boxes[base], fromEye, Math.pow(close(fromEye, g.boxes[base]), enter) * breath, enter);
+        pose(target, g.boxes[incoming], toEye, Math.pow(close(toEye, g.boxes[incoming]) * breath, 1 - leave), 1 - leave);
+        target.style.opacity = smooth((fraction - .44) / .14).toFixed(4);
+      } else {
+        const progress = smooth(fraction), centre = { x: .5, y: .5 };
+        pose(outgoing, g.boxes[base], centre, 1 + progress * .12, 0, -g.height * .05 * progress);
+        if (pair) {
+          pose(target, g.boxes[incoming], centre, 1 + (1 - progress) * .12, 0, g.height * .05 * (1 - progress));
+          target.style.opacity = smooth((fraction - .10) / .80).toFixed(4);
+        }
+      }
+      if (pair) target.style.zIndex = '2';
+      const opacity = pair ? .4 + .6 * Math.pow(Math.abs(fraction - .5) * 2, .6) : 1;
+      showCaption(Math.round(position), opacity);
+      plane.style.visibility = 'hidden'; plane.setAttribute('aria-hidden', 'true');
+      copy.style.opacity = cue.style.opacity = '0'; cue.tabIndex = -1; cue.style.pointerEvents = 'none';
+      shade.style.opacity = '.75';
+      releaseDistant(base);
     }
     function renderPortrait() {
       frame = null;
-      const rect = portraitTrack.getBoundingClientRect(), g = geometry;
-      if (!g) return;
-      const progress = reduced.matches ? 0 : clamp(-rect.top / Math.max(1, rect.height - g.height), 0, 1);
+      const g = geometry; if (!g || document.querySelector('dialog[open]')) return;
+      const travel = Math.max(0, -portraitTrack.getBoundingClientRect().top);
+      const progress = reduced.matches ? 0 : clamp(travel / (g.height * 2.8), 0, 1);
+      const position = reduced.matches ? 0 : clamp((travel - g.height * 2.8) / (g.height * 1.1), 0, works.length - 1);
+      if (!reduced.matches && travel >= g.height * 2.8) { renderExhibition(position); return; }
+      ensureScene(0);
+      active.clear(); active.add(0);
+      scenes.forEach((scene, i) => { if (i) { scene.style.visibility = 'hidden'; scene.setAttribute('aria-hidden', 'true'); scene.classList.remove('is-visible'); } });
       const approach = smooth(progress / .42), departure = smooth((progress - .60) / .32);
-      // During the dissolve both pupils share a centre AND a rendered iris size.
-      // A tiny shared push carries the camera through the match without a stop.
-      const irisSize = Math.min(g.width, g.height) * .72;
+      const artEye = eyes['rara-avis'], irisSize = Math.min(g.width, g.height) * .72;
       const breath = 1 + smooth((progress - .40) / .20) * .06;
       const portraitZoom = Math.max(1, irisSize / (g.portrait.width * eye.iris));
       const artZoom = Math.max(1, irisSize / (g.art.width * artEye.iris));
       pose(plane, g.portrait, eye, Math.pow(portraitZoom, approach) * breath, smooth(progress / .34));
       pose(artwork, g.art, artEye, Math.pow(artZoom * breath, 1 - departure), 1 - departure);
-      // Never fade into an image that has not decoded yet on a slow connection.
-      const mix = artReady && artImage.complete && artImage.naturalWidth ? smooth((progress - .44) / .14) : 0;
-      artwork.style.opacity = mix.toFixed(4);
-      artwork.style.visibility = mix > 0 ? 'visible' : 'hidden';
+      const mix = ready(0) ? smooth((progress - .44) / .14) : 0;
+      artwork.style.opacity = mix.toFixed(4); artwork.style.zIndex = '1';
+      artwork.style.visibility = mix > 0 ? 'visible' : 'hidden'; artwork.classList.toggle('is-visible', mix > 0);
       artwork.setAttribute('aria-hidden', String(mix < .5));
-      plane.style.visibility = mix === 1 ? 'hidden' : 'visible';
-      plane.setAttribute('aria-hidden', String(mix >= .5));
+      plane.style.visibility = mix === 1 ? 'hidden' : 'visible'; plane.setAttribute('aria-hidden', String(mix >= .5));
       const closure = smooth((progress - .20) / .027) * (1 - smooth((progress - .235) / .035));
       wink.setAttribute('opacity', closure.toFixed(4));
       const visibility = 1 - smooth(progress / .13);
       copy.style.opacity = visibility.toFixed(3);
       copy.style.transform = reduced.matches ? '' : `translate3d(0,${(-smooth(progress / .18) * 80).toFixed(2)}px,0)`;
-      cue.style.opacity = visibility.toFixed(3);
-      cue.style.pointerEvents = visibility < .1 ? 'none' : '';
-      cue.tabIndex = visibility < .1 ? -1 : 0;
+      cue.style.opacity = visibility.toFixed(3); cue.style.pointerEvents = visibility < .1 ? 'none' : ''; cue.tabIndex = visibility < .1 ? -1 : 0;
       const reveal = mix * smooth((progress - .84) / .10);
-      artCopy.style.opacity = reveal.toFixed(3);
-      artCopy.style.visibility = reveal > 0 ? 'visible' : 'hidden';
-      artCopy.style.transform = reduced.matches ? '' : `translate3d(0,${((1 - reveal) * 24).toFixed(2)}px,0)`;
-      artCopy.inert = reveal < .2;
-      shade.style.opacity = (1 - approach * .90 + reveal * .65).toFixed(3);
+      showCaption(0, reveal); shade.style.opacity = (1 - approach * .90 + reveal * .65).toFixed(3);
+      hero.dataset.transition = 'portrait';
+      if (!reduced.matches) releaseDistant(0);
     }
     function schedulePortrait() { if (frame === null) frame = requestAnimationFrame(renderPortrait); }
-    addEventListener('scroll', schedulePortrait, { passive: true });
-    addEventListener('resize', measurePortrait, { passive: true });
-    addEventListener('pageshow', measurePortrait, { passive: true });
-    reduced.addEventListener('change', measurePortrait);
-    photograph.addEventListener('load', measurePortrait);
-    async function prepareArtwork() {
-      try {
-        if (artImage.decode) await artImage.decode();
-        artReady = artImage.complete && !!artImage.naturalWidth;
-        schedulePortrait();
-      } catch { artReady = false; }
+    function goTo(index) {
+      if (index < 0 || index >= works.length || reduced.matches) return;
+      const top = portraitTrack.getBoundingClientRect().top + scrollY;
+      window.scrollTo({ top: top + geometry.height * (2.8 + index * 1.1), behavior: Math.abs(index - current) <= 1 ? 'smooth' : 'auto' });
     }
-    artImage.addEventListener('load', () => { measurePortrait(); prepareArtwork(); });
-    prepareArtwork();
-    measurePortrait();
+    previous.addEventListener('click', () => goTo(current - 1)); next.addEventListener('click', () => goTo(current + 1));
+    document.addEventListener('keydown', event => {
+      if (reduced.matches || document.querySelector('dialog[open]') || artCopy.inert || event.target.closest?.('input,textarea,select,[contenteditable=true]')) return;
+      if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { event.preventDefault(); goTo(current + (event.key === 'ArrowRight' ? 1 : -1)); }
+    });
+    gallery = { pause() {}, has: slug => !reduced.matches && works.some(work => work.slug === slug), select: slug => goTo(works.findIndex(work => work.slug === slug)) };
+    addEventListener('scroll', schedulePortrait, { passive: true }); addEventListener('resize', measurePortrait, { passive: true });
+    addEventListener('pageshow', measurePortrait, { passive: true }); reduced.addEventListener('change', measurePortrait);
+    photograph.addEventListener('load', measurePortrait);
+    $$('dialog').forEach(dialog => dialog.addEventListener('close', schedulePortrait));
+    ensureScene(0); measurePortrait();
   }
   if (!stage) {
     const sections = $$('[data-parallax]'); let frame = null;
