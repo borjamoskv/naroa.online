@@ -291,51 +291,71 @@
   if (portraitTrack) {
     const hero = $('[data-eye-portrait]', portraitTrack), plane = $('[data-portrait-plane]', hero);
     const photograph = $('img', plane), copy = $('.page-hero-copy', hero), shade = $('.page-hero-shade', hero);
+    const artwork = $('[data-portrait-artwork]', hero), artImage = $('img', artwork), artCopy = $('[data-portrait-work-copy]', hero);
     const cue = $('.hero-down', hero), wink = $('[data-portrait-wink]', hero);
-    // Measured on the source portrait, in the same coordinate space as the lid.
-    const eye = { x: 575 / 1248, y: 769 / 1966 };
-    const smooth = value => { const t = clamp(value, 0, 1); return t * t * (3 - 2 * t); };
-    let frame = null, geometry = null;
+    // Pupil positions and iris diameters on the unmodified source images.
+    const eye = { x: 571 / 1248, y: 766 / 1966, iris: .032 };
+    const artEye = { x: .685, y: .417, iris: .025 };
+    // Zero acceleration at each endpoint keeps approach, dissolve and reveal joined.
+    const smooth = value => { const t = clamp(value, 0, 1); return t * t * t * (t * (t * 6 - 15) + 10); };
+    let frame = null, geometry = null, artReady = false;
     function measurePortrait() {
       const rect = hero.getBoundingClientRect();
       const width = rect.width || innerWidth, height = rect.height || innerHeight;
-      const aspect = 2201 / 3468, imageWidth = Math.max(width, height * aspect), imageHeight = imageWidth / aspect;
-      geometry = { width, height, imageWidth, imageHeight, left: (width - imageWidth) * .5, top: (height - imageHeight) * .29 };
-      // Geometry belongs to the photograph rather than the viewport, so a
-      // mobile cover crop cannot separate the wink from the photographed eye.
-      if (reduced.matches) {
-        plane.style.width = plane.style.height = plane.style.left = plane.style.top = '';
-        plane.classList.remove('is-measured');
-      } else {
-        Object.assign(plane.style, { width: `${imageWidth}px`, height: `${imageHeight}px`, left: `${geometry.left}px`, top: `${geometry.top}px` });
-        plane.classList.add('is-measured');
-      }
+      const cover = (aspect, x, y) => {
+        const imageWidth = Math.max(width, height * aspect), imageHeight = imageWidth / aspect;
+        return { width: imageWidth, height: imageHeight, left: (width - imageWidth) * x, top: (height - imageHeight) * y };
+      };
+      geometry = { width, height, portrait: cover(2201 / 3468, .5, .29), art: cover(4080 / 3072, width <= 760 ? .72 : .5, .42) };
+      [[plane, geometry.portrait], [artwork, geometry.art]].forEach(([element, box]) => {
+        Object.assign(element.style, reduced.matches
+          ? { width: '', height: '', left: '', top: '' }
+          : { width: `${box.width}px`, height: `${box.height}px`, left: `${box.left}px`, top: `${box.top}px` });
+      });
+      plane.classList.toggle('is-measured', !reduced.matches);
       schedulePortrait();
+    }
+    function pose(element, box, point, zoom, focus) {
+      const g = geometry, x = box.left + point.x * box.width, y = box.top + point.y * box.height;
+      const tx = x + (g.width * .5 - x) * focus - box.left - zoom * point.x * box.width;
+      const ty = y + (g.height * .46 - y) * focus - box.top - zoom * point.y * box.height;
+      element.style.transform = reduced.matches ? '' : `translate3d(${tx.toFixed(3)}px,${ty.toFixed(3)}px,0) scale(${zoom.toFixed(5)})`;
     }
     function renderPortrait() {
       frame = null;
       const rect = portraitTrack.getBoundingClientRect(), g = geometry;
       if (!g) return;
-      const progress = clamp(-rect.top / Math.max(1, rect.height - g.height), 0, 1);
-      const zoom = smooth((progress - .025) / .78), scale = 1 + zoom * 4.2;
-      const focus = smooth(progress / .62);
-      const startX = g.left + eye.x * g.imageWidth, startY = g.top + eye.y * g.imageHeight;
-      const targetX = startX + (g.width * .5 - startX) * focus;
-      const targetY = startY + (g.height * .46 - startY) * focus;
-      const tx = targetX - g.left - scale * eye.x * g.imageWidth;
-      const ty = targetY - g.top - scale * eye.y * g.imageHeight;
-      plane.style.transform = reduced.matches ? '' : `translate3d(${tx.toFixed(3)}px,${ty.toFixed(3)}px,0) scale(${scale.toFixed(5)})`;
-      // A short, reversible wink: close, hold briefly, reopen. No timer keeps
-      // running when the visitor stops, changes direction or opens a menu.
-      const closure = reduced.matches ? 0 : smooth((progress - .52) / .07) * (1 - smooth((progress - .61) / .085));
+      const progress = reduced.matches ? 0 : clamp(-rect.top / Math.max(1, rect.height - g.height), 0, 1);
+      const approach = smooth(progress / .42), departure = smooth((progress - .60) / .32);
+      // During the dissolve both pupils share a centre AND a rendered iris size.
+      // A tiny shared push carries the camera through the match without a stop.
+      const irisSize = Math.min(g.width, g.height) * .72;
+      const breath = 1 + smooth((progress - .40) / .20) * .06;
+      const portraitZoom = Math.max(1, irisSize / (g.portrait.width * eye.iris));
+      const artZoom = Math.max(1, irisSize / (g.art.width * artEye.iris));
+      pose(plane, g.portrait, eye, Math.pow(portraitZoom, approach) * breath, smooth(progress / .34));
+      pose(artwork, g.art, artEye, Math.pow(artZoom * breath, 1 - departure), 1 - departure);
+      // Never fade into an image that has not decoded yet on a slow connection.
+      const mix = artReady && artImage.complete && artImage.naturalWidth ? smooth((progress - .44) / .14) : 0;
+      artwork.style.opacity = mix.toFixed(4);
+      artwork.style.visibility = mix > 0 ? 'visible' : 'hidden';
+      artwork.setAttribute('aria-hidden', String(mix < .5));
+      plane.style.visibility = mix === 1 ? 'hidden' : 'visible';
+      plane.setAttribute('aria-hidden', String(mix >= .5));
+      const closure = smooth((progress - .20) / .027) * (1 - smooth((progress - .235) / .035));
       wink.setAttribute('opacity', closure.toFixed(4));
-      const visibility = reduced.matches ? 1 : 1 - smooth(progress / .25);
+      const visibility = 1 - smooth(progress / .13);
       copy.style.opacity = visibility.toFixed(3);
-      copy.style.transform = reduced.matches ? '' : `translate3d(0,${(-smooth(progress / .35) * 80).toFixed(2)}px,0)`;
+      copy.style.transform = reduced.matches ? '' : `translate3d(0,${(-smooth(progress / .18) * 80).toFixed(2)}px,0)`;
       cue.style.opacity = visibility.toFixed(3);
       cue.style.pointerEvents = visibility < .1 ? 'none' : '';
       cue.tabIndex = visibility < .1 ? -1 : 0;
-      shade.style.opacity = reduced.matches ? '1' : (1 - zoom * .72).toFixed(3);
+      const reveal = mix * smooth((progress - .84) / .10);
+      artCopy.style.opacity = reveal.toFixed(3);
+      artCopy.style.visibility = reveal > 0 ? 'visible' : 'hidden';
+      artCopy.style.transform = reduced.matches ? '' : `translate3d(0,${((1 - reveal) * 24).toFixed(2)}px,0)`;
+      artCopy.inert = reveal < .2;
+      shade.style.opacity = (1 - approach * .90 + reveal * .65).toFixed(3);
     }
     function schedulePortrait() { if (frame === null) frame = requestAnimationFrame(renderPortrait); }
     addEventListener('scroll', schedulePortrait, { passive: true });
@@ -343,6 +363,15 @@
     addEventListener('pageshow', measurePortrait, { passive: true });
     reduced.addEventListener('change', measurePortrait);
     photograph.addEventListener('load', measurePortrait);
+    async function prepareArtwork() {
+      try {
+        if (artImage.decode) await artImage.decode();
+        artReady = artImage.complete && !!artImage.naturalWidth;
+        schedulePortrait();
+      } catch { artReady = false; }
+    }
+    artImage.addEventListener('load', () => { measurePortrait(); prepareArtwork(); });
+    prepareArtwork();
     measurePortrait();
   }
   if (!stage) {

@@ -44,12 +44,18 @@ opposing image movement and a transient oversized title. Three selected pairs
 pupil positions, align both eyes at the same viewport point and dissolve into
 the next portrait before opening its framing. Coordinates account for each
 image’s cover crop and responsive focal position. Photographs are unmodified.
-The artist profile adds a sticky, native 240svh portrait sequence. Scroll zooms
-5.2× into the monocle eye, with a brief reversible wink made from a feathered
-photographic eyelid layer. The eye stays registered to the
-source image across desktop and mobile cover crops. There is no timer, wheel
-interception or edited source photograph. The biography shortcut remains
-available, and reduced motion collapses the sequence to a static portrait.
+The artist profile adds a sticky, native 380svh portrait sequence. The camera
+moves into Naroa’s monocle eye after her brief photographic wink, dissolves into
+the eye of her Rara Avis self-portrait and opens into its full-screen framing.
+Both pupils share a camera axis and a rendered iris diameter throughout the
+crossfade. A small common push carries the match forward; quintic easing and
+logarithmic zoom keep the approach and reveal continuous. Coordinates account
+for each image’s cover crop, including mobile framing. High-resolution source
+derivatives support the close-up. The artwork link appears only at the end;
+its invisible state is inert. Slow image loading cannot dissolve to a blank
+frame. There is no timer, wheel interception or route change. Scrolling back
+retraces the whole sequence. Reduced motion collapses it to the original static
+portrait, and the biography shortcut remains available.
 Editorial sections reveal once as they enter the viewport; menus and images
 respond to interaction. Reduced-motion preferences disable these enhancements. Arrow controls, keyboard navigation, a complete-image view
 and a reduced-motion alternative remain available. Native dialogs manage focus
