@@ -11,7 +11,7 @@ tracked=$(git ls-files)
 envs=$(echo "$tracked" | grep -iE '(^|/)\.env($|\.)' | grep -viE '\.(example|template|sample)$' || true)
 [ -n "$envs" ] && red ".env trackeado(s):
 $(echo "$envs" | sed 's/^/    /')" || grn "sin .env trackeados"
-echo "$tracked" | grep -qiE '(^|/)\.gitignore$' && grn ".gitignore presente" || red "falta .gitignore"
+grep -qiE '(^|/)\.gitignore$' <<< "$tracked" && grn ".gitignore presente" || red "falta .gitignore"
 keys=$(echo "$tracked" | grep -iE '\.pem$|\.key$|(^|/)id_rsa|\.p12$|\.pfx$|\.pkcs12$|\.keystore$|(^|/)\.pypirc$' | grep -viE '\.(example|template|sample)$' || true)
 [ -n "$keys" ] && red "posible material de clave trackeado:
 $(echo "$keys" | sed 's/^/    /')" || grn "sin ficheros de clave trackeados"

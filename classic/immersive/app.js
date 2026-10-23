@@ -287,6 +287,64 @@
     years.forEach(b => b.setAttribute('aria-pressed', String(b === button)));
     $('.career-count').textContent = `${count} ${count === 1 ? 'encuentro documentado' : 'encuentros documentados'}`;
   }));
+  const portraitTrack = $('[data-portrait-scroll]');
+  if (portraitTrack) {
+    const hero = $('[data-eye-portrait]', portraitTrack), plane = $('[data-portrait-plane]', hero);
+    const photograph = $('img', plane), copy = $('.page-hero-copy', hero), shade = $('.page-hero-shade', hero);
+    const cue = $('.hero-down', hero), wink = $('[data-portrait-wink]', hero);
+    // Measured on the source portrait, in the same coordinate space as the lid.
+    const eye = { x: 575 / 1248, y: 769 / 1966 };
+    const smooth = value => { const t = clamp(value, 0, 1); return t * t * (3 - 2 * t); };
+    let frame = null, geometry = null;
+    function measurePortrait() {
+      const rect = hero.getBoundingClientRect();
+      const width = rect.width || innerWidth, height = rect.height || innerHeight;
+      const aspect = 2201 / 3468, imageWidth = Math.max(width, height * aspect), imageHeight = imageWidth / aspect;
+      geometry = { width, height, imageWidth, imageHeight, left: (width - imageWidth) * .5, top: (height - imageHeight) * .29 };
+      // Geometry belongs to the photograph rather than the viewport, so a
+      // mobile cover crop cannot separate the wink from the photographed eye.
+      if (reduced.matches) {
+        plane.style.width = plane.style.height = plane.style.left = plane.style.top = '';
+        plane.classList.remove('is-measured');
+      } else {
+        Object.assign(plane.style, { width: `${imageWidth}px`, height: `${imageHeight}px`, left: `${geometry.left}px`, top: `${geometry.top}px` });
+        plane.classList.add('is-measured');
+      }
+      schedulePortrait();
+    }
+    function renderPortrait() {
+      frame = null;
+      const rect = portraitTrack.getBoundingClientRect(), g = geometry;
+      if (!g) return;
+      const progress = clamp(-rect.top / Math.max(1, rect.height - g.height), 0, 1);
+      const zoom = smooth((progress - .025) / .78), scale = 1 + zoom * 4.2;
+      const focus = smooth(progress / .62);
+      const startX = g.left + eye.x * g.imageWidth, startY = g.top + eye.y * g.imageHeight;
+      const targetX = startX + (g.width * .5 - startX) * focus;
+      const targetY = startY + (g.height * .46 - startY) * focus;
+      const tx = targetX - g.left - scale * eye.x * g.imageWidth;
+      const ty = targetY - g.top - scale * eye.y * g.imageHeight;
+      plane.style.transform = reduced.matches ? '' : `translate3d(${tx.toFixed(3)}px,${ty.toFixed(3)}px,0) scale(${scale.toFixed(5)})`;
+      // A short, reversible wink: close, hold briefly, reopen. No timer keeps
+      // running when the visitor stops, changes direction or opens a menu.
+      const closure = reduced.matches ? 0 : smooth((progress - .52) / .07) * (1 - smooth((progress - .61) / .085));
+      wink.setAttribute('opacity', closure.toFixed(4));
+      const visibility = reduced.matches ? 1 : 1 - smooth(progress / .25);
+      copy.style.opacity = visibility.toFixed(3);
+      copy.style.transform = reduced.matches ? '' : `translate3d(0,${(-smooth(progress / .35) * 80).toFixed(2)}px,0)`;
+      cue.style.opacity = visibility.toFixed(3);
+      cue.style.pointerEvents = visibility < .1 ? 'none' : '';
+      cue.tabIndex = visibility < .1 ? -1 : 0;
+      shade.style.opacity = reduced.matches ? '1' : (1 - zoom * .72).toFixed(3);
+    }
+    function schedulePortrait() { if (frame === null) frame = requestAnimationFrame(renderPortrait); }
+    addEventListener('scroll', schedulePortrait, { passive: true });
+    addEventListener('resize', measurePortrait, { passive: true });
+    addEventListener('pageshow', measurePortrait, { passive: true });
+    reduced.addEventListener('change', measurePortrait);
+    photograph.addEventListener('load', measurePortrait);
+    measurePortrait();
+  }
   if (!stage) {
     const sections = $$('[data-parallax]'); let frame = null;
     function pageParallax() {

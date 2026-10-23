@@ -48,7 +48,8 @@ def build(output):
         if not source.is_file():
             raise FileNotFoundError(f"Reviewed image missing: {src}")
         digest = hashlib.sha256(source.read_bytes()).hexdigest()[:12]
-        name = f"{source.stem}-{digest}-{'thumb' if thumb else 'view'}.webp"
+        variant = "thumb" if thumb else "view" if limit == 1800 else f"view-{limit}"
+        name = f"{source.stem}-{digest}-{variant}.webp"
         dest = media / name
         jobs[dest] = (source, limit, 72 if thumb else 80)
         originals.add(src)
@@ -77,7 +78,8 @@ def build(output):
         original_order.setdefault(im.get("work_slug", im.get("slug")), len(catalogue["projects"]) + i)
     projects.sort(key=lambda p: (0, first[p["slug"]]) if p["slug"] in first else (1, original_order[p["slug"]]))
     assert len(projects) == len(known)
-    portrait = derivative("/images/sobre-mi/naroa-monoculo.jpg")
+    portrait = derivative("/images/sobre-mi/naroa-monoculo.jpg", 3468)
+    portrait_wink = derivative("/images/sobre-mi/naroa-monoculo-guino.png")
     cantinflowers = derivative("/images/trayectoria/cantinflowers.jpg")
     content = {"projects": projects, "reviewed": catalogue["reviewed"], "labels": LABELS}
     assets = {}
@@ -137,7 +139,21 @@ def build(output):
     for i, p in enumerate(projects):
         gallery(f"/obra/{p['slug']}/", i)
     gallery("/series/vaivenes/", 0, "Vaivenes", "Vaivenes")
-    about = hero(portrait, "La artista · Bilbao", "Naroa<br><span>Gutiérrez Gil.</span>", "Rostros, materia y ganas de jugar.", alt="Naroa Gutiérrez Gil con chistera y un monóculo ante un ojo", position="50% 29%")
+    # Only the artist portrait gets this native, pinned scroll sequence. The
+    # decorative eyelid is a feathered photographic animation layer; the
+    # original photograph remains untouched and is the no-JS fallback.
+    about = f'''<div class="portrait-scroll" data-portrait-scroll>
+<section class="page-hero portrait-hero" data-eye-portrait>
+<div class="portrait-frame"><div class="portrait-plane" data-portrait-plane>
+<img src="{portrait}" width="2201" height="3468" alt="Naroa Gutiérrez Gil con chistera y un monóculo ante un ojo" fetchpriority="high">
+<svg class="portrait-wink" viewBox="0 0 1248 1966" aria-hidden="true" focusable="false">
+<defs><radialGradient id="portrait-wink-feather"><stop offset=".66" stop-color="white"/><stop offset="1" stop-color="black"/></radialGradient>
+<mask id="portrait-wink-mask" maskUnits="userSpaceOnUse" x="480" y="712" width="190" height="132"><ellipse cx="575" cy="778" rx="89" ry="62" fill="url(#portrait-wink-feather)"/></mask></defs>
+<g data-portrait-wink opacity="0" mask="url(#portrait-wink-mask)"><image href="{portrait_wink}" width="1248" height="1966" preserveAspectRatio="none"/></g></svg></div></div>
+<div class="page-hero-shade"></div>
+<div class="page-hero-copy"><p class="eyebrow">La artista · Bilbao</p><h1>Naroa<br><span>Gutiérrez Gil.</span></h1><p class="hero-lead">Rostros, materia y ganas de jugar.</p></div>
+<a class="hero-down" href="#contenido" aria-label="Seguir leyendo">↓</a>
+</section></div>'''
     about += '''<article id="contenido" class="editorial"><section class="chapter"><p class="eyebrow">La mirada</p><div><h2>Mirar a los demás.<br><span>Encontrarse en ellos.</span></h2><p class="lead">Naroa Gutiérrez Gil trabaja con rostros. Los dibuja, los pinta y los reconstruye con papeles, texturas y objetos. En cada retrato hay también una pregunta por quien lo mira.</p><p>En sus textos, crear y conocerse aparecen una y otra vez de la mano. Las figuras del cine, la música o la televisión son el punto de partida para hablar de emociones, de identidad y de aquello que reconocemos en otras personas.</p></div></section><blockquote>«Me encontré a mí en los demás».<cite>Naroa · <a href="https://naroagutierrez.wordpress.com/2020/09/27/iconos-pop-muestra-colectiva-de-retratos/" target="_blank" rel="noopener noreferrer">Iconos Pop, 2020 ↗</a></cite></blockquote><section class="chapter"><p class="eyebrow">01 · La materia</p><div><h2>Lo que cuenta<br>cada material.</h2><p>Una pizarra, un plato de madera, un recorte o una lata pueden convertirse en parte del retrato. El soporte aporta significado: la pintura convive con las huellas, las capas y las posibilidades de cada objeto.</p><p>En Vaivenes, el collage y los materiales reutilizados dan forma a vivencias y estados de ánimo. En DiviNos, los rostros sobre pizarra incorporan pintura, lápices de colores y mica.</p><a class="text-link" href="/series/vaivenes/">Descubrir Vaivenes ↗</a></div></section>'''
     amor = next(p for p in projects if p["slug"] == "amor-en-conserva")
     rara = next(p for p in projects if p["slug"] == "rara-avis")

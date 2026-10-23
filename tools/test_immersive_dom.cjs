@@ -51,6 +51,12 @@ function create(route = '/', reduce = false, viewport = { width: 1024, height: 7
     track.getBoundingClientRect = () => ({ top: -w.scrollY, bottom: height - w.scrollY, height, width: viewport.width, left: 0, right: viewport.width });
     stage.getBoundingClientRect = () => ({ top: 0, bottom: w.innerHeight, height: w.innerHeight, width: viewport.width, left: 0, right: viewport.width });
   }
+  const portraitTrack = document.querySelector('[data-portrait-scroll]');
+  if (portraitTrack) {
+    const height = w.innerHeight * (reduce ? 1 : 2.4);
+    portraitTrack.getBoundingClientRect = () => ({ top: -w.scrollY, bottom: height - w.scrollY, height, width: w.innerWidth, left: 0, right: w.innerWidth });
+    document.querySelector('[data-eye-portrait]').getBoundingClientRect = () => ({ top: 0, bottom: w.innerHeight, height: w.innerHeight, width: w.innerWidth, left: 0, right: w.innerWidth });
+  }
   const scripts = Array.from(document.querySelectorAll('script[src]')).map(s => new URL(s.src).pathname);
   scripts.forEach(src => w.eval(fs.readFileSync(path.join(output, src), 'utf8')));
   const find = selector => document.querySelector(selector);
@@ -194,6 +200,48 @@ async function eyeMatch(ui, base, points) {
   assert.equal(reduced.find('[data-kinetic-title]').textContent, '');
   assert.equal(reduced.find('[data-art-copy]').style.opacity, '1'); reduced.dom.window.close();
 
+  for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 }]) {
+    const portrait = create('/sobre-mi/', false, viewport); await portrait.flush();
+    const plane = portrait.find('[data-portrait-plane]'), wink = portrait.find('[data-portrait-wink]');
+    const initial = plane.style.transform;
+    const wheel = new portrait.w.WheelEvent('wheel', { deltaY: 150, bubbles: true, cancelable: true });
+    portrait.find('[data-eye-portrait]').dispatchEvent(wheel);
+    assert.equal(wheel.defaultPrevented, false, 'Artist portrait preserves native scrolling');
+    const scrollPortrait = async progress => { portrait.w.scrollTo({ top: progress * viewport.height * 1.4 }); await portrait.flush(); };
+    await scrollPortrait(.6);
+    assert.notEqual(plane.style.transform, initial, 'The portrait moves into its monocle eye');
+    assert.equal(Number(wink.getAttribute('opacity')), 1, 'The wink closes during the approach');
+    const closed = wink.getAttribute('opacity');
+    await scrollPortrait(.9);
+    assert.equal(Number(wink.getAttribute('opacity')), 0, 'The eye opens again before the biography');
+    const pose = /translate3d\(([-\d.]+)px,([-\d.]+)px,0\) scale\(([\d.]+)\)/.exec(plane.style.transform);
+    const [, tx, ty, scale] = pose.map(Number);
+    assert.ok(scale > 5, 'The final framing has a pronounced eye close-up');
+    const pupilX = parseFloat(plane.style.left) + tx + scale * 575 / 1248 * parseFloat(plane.style.width);
+    const pupilY = parseFloat(plane.style.top) + ty + scale * 769 / 1966 * parseFloat(plane.style.height);
+    assert.ok(Math.abs(pupilX - viewport.width * .5) < .03, 'The pupil is centred despite the responsive cover crop');
+    assert.ok(Math.abs(pupilY - viewport.height * .46) < .03, 'The pupil remains below the navigation');
+    assert.equal(portrait.find('.page-hero-copy').style.opacity, '0', 'Portrait text makes room for the eye');
+    const stopped = plane.style.transform; await wait(50); await portrait.flush();
+    assert.equal(plane.style.transform, stopped, 'The portrait stops when native scroll stops');
+    await scrollPortrait(.6);
+    assert.equal(wink.getAttribute('opacity'), closed, 'The wink reverses with scroll');
+    portrait.click('[data-open-menu]'); assert.equal(portrait.find('#menu-dialog').open, true);
+    portrait.click('#menu-dialog [data-close-dialog]');
+    await scrollPortrait(0);
+    assert.equal(plane.style.transform, initial, 'Returning to the beginning restores the full portrait');
+    assert.equal(portrait.find('.page-hero-copy').style.opacity, '1');
+    assert.equal(portrait.find('.hero-down').getAttribute('href'), '#contenido', 'The biography is directly reachable');
+    portrait.dom.window.close();
+  }
+  const stillPortrait = create('/sobre-mi/', true); await stillPortrait.flush();
+  stillPortrait.w.scrollTo({ top: 600 }); await stillPortrait.flush();
+  assert.equal(stillPortrait.find('[data-portrait-plane]').style.transform, '');
+  assert.equal(stillPortrait.find('[data-portrait-plane]').classList.contains('is-measured'), false);
+  assert.equal(Number(stillPortrait.find('[data-portrait-wink]').getAttribute('opacity')), 0);
+  assert.equal(stillPortrait.find('.page-hero-copy').style.opacity, '1');
+  stillPortrait.dom.window.close();
+
   for (const route of ['/sobre-mi/', '/trayectoria/', '/cuaderno/', '/retratos-por-encargo-bilbao/', '/contacto/']) {
     const page = create(route); await page.flush(); page.click('[data-open-menu]'); assert.equal(page.find('#menu-dialog').open, true); page.click('#menu-dialog [data-close-dialog]');
     const reveals = Array.from(page.document.querySelectorAll('.motion-reveal'));
@@ -205,5 +253,5 @@ async function eyeMatch(ui, base, points) {
     page.dom.window.close();
   }
   assert.equal(manifest.projects, 40); assert.deepEqual(errors, []);
-  console.log('PASS: all 40 artwork flows, feathered depth transitions, 3 eye-to-eye pairs and mobile pupil alignment, kinetic titles, native scroll, free inertia, direct links, 3-image loading bound, search/filters, details/photos, quiet mode, reduced motion, Vaivenes and editorial reveals.');
+  console.log('PASS: all 40 artwork flows, feathered depth transitions, 3 eye-to-eye pairs and mobile pupil alignment, kinetic titles, native scroll, free inertia, direct links, 3-image loading bound, search/filters, details/photos, quiet mode, reduced motion, Vaivenes, editorial reveals and responsive scroll-linked monocle zoom/wink with reduced motion.');
 })().catch(error => { console.error(error); process.exitCode = 1; });

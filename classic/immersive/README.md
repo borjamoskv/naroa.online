@@ -44,6 +44,12 @@ opposing image movement and a transient oversized title. Three selected pairs
 pupil positions, align both eyes at the same viewport point and dissolve into
 the next portrait before opening its framing. Coordinates account for each
 image’s cover crop and responsive focal position. Photographs are unmodified.
+The artist profile adds a sticky, native 240svh portrait sequence. Scroll zooms
+5.2× into the monocle eye, with a brief reversible wink made from a feathered
+photographic eyelid layer. The eye stays registered to the
+source image across desktop and mobile cover crops. There is no timer, wheel
+interception or edited source photograph. The biography shortcut remains
+available, and reduced motion collapses the sequence to a static portrait.
 Editorial sections reveal once as they enter the viewport; menus and images
 respond to interaction. Reduced-motion preferences disable these enhancements. Arrow controls, keyboard navigation, a complete-image view
 and a reduced-motion alternative remain available. Native dialogs manage focus
@@ -52,3 +58,13 @@ for the menu, catalogue, artwork details and photo viewer.
 `deploy.sh --build-only` assembles the immersive portfolio and the existing React
 laboratory. The public portfolio deployment uses `.deploy/`; the laboratory
 continues to use `dist/`. The Cloudflare and Vercel project identities are kept.
+
+## Wink animation asset
+
+The built-in ImageGen tool produced `classic/images/sobre-mi/naroa-monoculo-guino.png`
+as an animation variant of the original portrait. The site blends only a small,
+feathered region around the monocle eye; the original remains the base image.
+
+Final prompt (built-in tool, not CLI):
+
+> Use case: identity-preserve. Edit target: the supplied black-and-white photograph of Naroa wearing a top hat and a painted monocle. Asset type: a single matching animation frame for an existing website portrait. Change ONLY the eye inside the painted monocle (the eye on the LEFT SIDE OF THE IMAGE): make that eye fully closed in a natural, playful wink, with a realistic closed upper eyelid and eyelashes. The other eye stays open exactly as photographed. Preserve the exact pixel framing, aspect ratio, face location, facial identity, neutral mouth, lighting, grain, monochrome tones, top hat, hair, hand, paintbrush, painted monocle, chain, signs and background. No camera movement, no crop, no face reshaping, no retouching or beautification. The closed eyelid must look photographic, not drawn or graphic. Return the full photograph at its original composition with only that single eyelid closed. This will be blended over the existing photo to create a short scroll-driven wink, so the monocle and eye corners must remain in exactly the same positions.
