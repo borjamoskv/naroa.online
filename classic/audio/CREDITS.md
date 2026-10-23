@@ -1,8 +1,10 @@
 # Paisaje sonoro de Naroa
 
 Ambient y música concreta: aves, río y viento, con texturas ralentizadas,
-resonancias, ecos y un fondo armónico discreto. Dos capas de 66 segundos
-se mezclan gradualmente al acercarse la cámara al iris.
+resonancias, ecos y un fondo armónico discreto. Dos archivos de 66 segundos
+aportan el material: fragmentos breves se disparan solo al desplazarse por la web.
+La velocidad, el sentido del scroll y la profundidad del iris transforman el sonido;
+al detenerse, se desvanece. Los archivos no se reproducen como un fondo continuo.
 
 Grabaciones de naturaleza: **Thimras, “Park ambiences”**, 25 de julio de 2022.
 Grabadas en un parque público de Adelaide, Australia.
@@ -22,4 +24,5 @@ Edición para esta web, 23 de octubre de 2026: extractos entre los segundos 12
 y 84, filtrado, mezcla, ralentización, ecos, síntesis armónica y uniones con
 fundido. No se atribuye la grabación ni la composición a la artista retratada.
 
-El sonido se carga y reproduce únicamente después de pulsar Sonido.
+El sonido se carga después de pulsar Sonido y se escucha únicamente al desplazarse,
+con una breve cola que se desvanece al parar.

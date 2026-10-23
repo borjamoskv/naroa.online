@@ -22,6 +22,8 @@ function create(route = '/', reduce = false, viewport = { width: 1024, height: 7
       w.matchMedia = () => ({ matches: reduce, addEventListener() {} });
       if (audio) {
         w.AudioContext = audio.Context; w.fetch = audio.fetch;
+        w.performance.now = () => audio.now;
+        w.setTimeout = audio.setTimeout; w.clearTimeout = audio.clearTimeout;
         Object.defineProperty(w.document, 'hidden', { value: false, configurable: true, writable: true });
       }
       w.requestAnimationFrame = callback => { const token = ++id; callbacks.set(token, callback); return token; };
@@ -84,17 +86,40 @@ function create(route = '/', reduce = false, viewport = { width: 1024, height: 7
 
 // Mock only the browser audio/network boundary; exercise real click, camera and lifecycle code.
 function audioBoundary() {
-  const audio = { contexts: [], requests: [], starts: [], failed: false, denied: false };
-  const parameter = value => ({ value, cancelScheduledValues() {}, setValueAtTime(v) { this.value = v; }, setTargetAtTime(v) { this.value = v; } });
+  const audio = { contexts: [], requests: [], starts: [], failed: false, denied: false, now: 0 };
+  const timers = new Map(); let timerId = 0;
+  audio.setTimeout = (callback, delay) => { const id = ++timerId; timers.set(id, { callback, at: audio.now + delay }); return id; };
+  audio.clearTimeout = id => timers.delete(id);
+  audio.advance = elapsed => {
+    const end = audio.now + elapsed;
+    for (let count = 0; count < 1000; count++) {
+      const next = [...timers].filter(([, task]) => task.at <= end).sort((a, b) => a[1].at - b[1].at)[0];
+      if (!next) { audio.now = end; return; }
+      audio.now = next[1].at; timers.delete(next[0]); next[1].callback();
+    }
+    assert.fail('Audio timers must settle without a polling loop');
+  };
+  const parameter = value => ({ value, cancelScheduledValues() {}, setValueAtTime(v) { this.value = v; }, setTargetAtTime(v) { this.value = v; }, setValueCurveAtTime(curve) { this.curve = curve; } });
   audio.Context = class {
-    constructor() { this.state = 'suspended'; this.currentTime = 10; this.gains = []; this.filters = []; audio.contexts.push(this); }
+    constructor() { this.state = 'suspended'; this.gains = []; this.filters = []; this.panners = []; audio.contexts.push(this); }
+    get currentTime() { return audio.now / 1000; }
     async resume() { if (audio.denied) throw Error('Playback denied'); this.state = 'running'; }
     async suspend() { this.state = 'suspended'; }
     async close() { this.state = 'closed'; }
     async decodeAudioData() { return { duration: 66 }; }
-    createGain() { const node = { gain: parameter(1), connect() {} }; this.gains.push(node); return node; }
+    createGain() { const node = { gain: parameter(1), connect() {}, disconnect() {} }; this.gains.push(node); return node; }
     createBiquadFilter() { const node = { frequency: parameter(0), Q: parameter(0), connect() {} }; this.filters.push(node); return node; }
-    createBufferSource() { return { connect() {}, start() { audio.starts.push(this); } }; }
+    createStereoPanner() { const node = { pan: parameter(0), connect() {} }; this.panners.push(node); return node; }
+    createBufferSource() {
+      const context = this;
+      return { playbackRate: parameter(1), connect() {}, disconnect() {},
+        start(at, offset) { this.startAt = at; this.offset = offset; audio.starts.push(this); },
+        stop(at = context.currentTime) {
+          this.stopAt = at; audio.clearTimeout(this.endTimer);
+          this.endTimer = audio.setTimeout(() => this.onended?.(), Math.max(0, (at - context.currentTime) * 1000));
+        }
+      };
+    }
   };
   audio.fetch = async src => { audio.requests.push(src); return { ok: !audio.failed, arrayBuffer: async () => new ArrayBuffer(4) }; };
   return audio;
@@ -418,33 +443,81 @@ async function eyeMatch(ui, base, points) {
   await music.flush();
   assert.equal(audio.contexts.length, 0, 'No audio context is created before a visitor gesture');
   assert.equal(audio.requests.length, 0, 'No sound files are downloaded before opt-in');
-  assert.equal(music.find('[data-sound]').getAttribute('aria-pressed'), 'false');
   music.click('[data-sound]');
   assert.equal(music.find('[data-sound]').disabled, true, 'Loading cannot create duplicate sound engines');
   await music.flush();
-  assert.equal(audio.requests.length, 2); assert.equal(audio.starts.length, 2);
-  assert.ok(audio.starts.every(source => source.loop), 'Both sound layers loop without a playback timer');
-  assert.equal(music.find('[data-sound]').getAttribute('aria-pressed'), 'true');
-  assert.equal(music.find('[data-sound-status]').hidden, true);
-  const ctx = audio.contexts[0], field = ctx.gains[1].gain.value, iris = ctx.gains[2].gain.value, clarity = ctx.filters[0].frequency.value;
-  music.w.scrollTo({ top: 844 * 2.8 * .64 }); await music.flush();
-  assert.ok(ctx.gains[1].gain.value < field && ctx.gains[2].gain.value > iris, 'Entering the iris blends from field ambience to concrete textures');
-  assert.ok(ctx.filters[0].frequency.value < clarity, 'The deeper camera closes the field recording filter');
-  music.w.scrollTo({ top: 0 }); await music.flush();
-  assert.equal(ctx.gains[1].gain.value, field); assert.equal(ctx.gains[2].gain.value, iris, 'Reverse scroll restores the sound mix');
-  music.document.hidden = true; music.document.dispatchEvent(new music.w.Event('visibilitychange')); await music.flush();
-  assert.equal(ctx.state, 'suspended', 'A hidden tab stops audio processing');
-  music.document.hidden = false; music.document.dispatchEvent(new music.w.Event('visibilitychange')); await music.flush();
-  assert.equal(ctx.state, 'running', 'Returning resumes an explicitly enabled soundscape');
-  music.click('[data-sound]'); await wait(430); await music.flush();
+  const ctx = audio.contexts[0];
+  assert.equal(audio.requests.length, 2); assert.equal(audio.starts.length, 0, 'Enabling sound never starts a background track');
   assert.equal(ctx.state, 'suspended'); assert.equal(ctx.gains[0].gain.value, 0);
-  music.document.dispatchEvent(new music.w.Event('visibilitychange')); await music.flush();
-  assert.equal(ctx.state, 'suspended', 'A muted soundscape stays muted when returning');
+  assert.equal(music.find('[data-sound]').getAttribute('aria-pressed'), 'true');
+  assert.equal(music.find('[data-sound]').dataset.state, 'ready');
+  audio.advance(1000); await music.flush();
+  assert.equal(audio.starts.length, 0, 'Standing still produces no sound');
+  const field = ctx.gains[1].gain.value, iris = ctx.gains[2].gain.value, clarity = ctx.filters[0].frequency.value;
+  music.w.scrollTo({ top: 20 }); await music.flush();
+  assert.equal(audio.starts.length, 2, 'A real scroll excites a pair of short field fragments');
+  const gentleGain = ctx.gains[0].gain.value, gentleRate = audio.starts[0].playbackRate.value;
+  assert.ok(gentleGain > 0); assert.equal(ctx.state, 'running');
+  assert.equal(music.find('[data-sound-status]').hidden, true);
+  const startsBeforeNoop = audio.starts.length;
+  music.w.dispatchEvent(new music.w.Event('scroll')); await music.flush();
+  assert.equal(audio.starts.length, startsBeforeNoop, 'A scroll event without displacement is silent');
+  audio.advance(100);
+  music.w.scrollTo({ top: 844 * 2.8 * .64 }); await music.flush();
+  assert.ok(ctx.gains[0].gain.value > gentleGain, 'Faster scrolling increases sound intensity');
+  assert.ok(audio.starts[2].playbackRate.value > gentleRate, 'Scroll speed changes the field playback rate');
+  assert.ok(ctx.gains[1].gain.value < field && ctx.gains[2].gain.value > iris, 'The iris changes the concrete texture mix');
+  assert.ok(ctx.filters[0].frequency.value < clarity, 'The deeper camera closes the field recording filter');
+  assert.ok(ctx.panners[0].pan.value > 0);
+  audio.advance(100); music.w.scrollTo({ top: 0 }); await music.flush();
+  assert.ok(ctx.panners[0].pan.value < 0, 'Reversing scroll changes the stereo direction');
+  assert.equal(ctx.gains[1].gain.value, field); assert.equal(ctx.gains[2].gain.value, iris);
+  for (const source of audio.starts) {
+    assert.equal(source.loop, false, 'No source is a constantly looping track');
+    assert.ok(source.stopAt - source.startAt <= .73 && source.stopAt > source.startAt, 'Each fragment has a finite short lifetime');
+    assert.ok(source.offset >= 0 && source.offset < 66);
+  }
+  const windowCurve = ctx.gains[3].gain.curve;
+  assert.equal(windowCurve[0], 0); assert.equal(windowCurve[windowCurve.length - 1], 0, 'Fragment edges taper to silence');
+  const countBeforeDenseInput = audio.starts.length;
+  for (let i = 1; i <= 20; i++) { audio.advance(1); music.w.scrollTo({ top: i }); }
+  await music.flush();
+  assert.equal(audio.starts.length, countBeforeDenseInput, 'Dense scroll events cannot flood the audio graph');
+  for (let i = 1; i <= 50; i++) {
+    audio.advance(40); music.w.scrollTo({ top: 20 + i * 4 }); await music.flush();
+    assert.ok(audio.starts.filter(source => source.stopAt > ctx.currentTime).length <= 20, 'Sustained scrolling keeps the number of active fragments bounded');
+  }
+  const sustainedCount = audio.starts.length;
+  audio.advance(161); await music.flush();
+  assert.equal(ctx.gains[0].gain.value, 0, 'Stopping scroll releases the sound to silence');
+  assert.equal(music.find('[data-sound]').dataset.state, 'ready');
+  audio.advance(600); await music.flush(); assert.equal(ctx.state, 'suspended');
+  const restingCount = audio.starts.length;
+  audio.advance(5000); await music.flush();
+  assert.equal(audio.starts.length, restingCount, 'No timer or camera depth keeps producing music while idle');
+  assert.equal(restingCount, sustainedCount);
+  music.w.scrollTo({ top: 100 });
+  music.document.hidden = true; music.document.dispatchEvent(new music.w.Event('visibilitychange')); await music.flush();
+  assert.equal(ctx.state, 'suspended'); assert.equal(ctx.gains[0].gain.value, 0);
+  assert.equal(audio.starts.length, restingCount, 'Hiding while a context is waking cannot start a stale fragment');
+  music.document.hidden = false; music.document.dispatchEvent(new music.w.Event('visibilitychange')); await music.flush();
+  assert.equal(ctx.state, 'suspended', 'Returning to the tab waits for new movement');
+  music.click('[data-sound]'); audio.advance(600); await music.flush();
+  music.w.scrollTo({ top: 200 }); await music.flush();
+  assert.equal(audio.starts.length, restingCount, 'Disabled sound ignores movement');
   music.click('[data-sound]'); await music.flush();
-  assert.equal(audio.requests.length, 2); assert.equal(audio.starts.length, 2, 'Reactivation reuses the same two layers');
-  music.w.dispatchEvent(new music.w.Event('pagehide')); await music.flush(); assert.equal(ctx.state, 'suspended');
-  music.w.dispatchEvent(new music.w.Event('pageshow')); await music.flush(); assert.equal(ctx.state, 'running');
-  music.click('[data-sound]'); music.dom.window.close();
+  assert.equal(audio.requests.length, 2); assert.equal(audio.starts.length, restingCount, 'Reactivation reuses the material and stays silent');
+  music.w.dispatchEvent(new music.w.Event('pagehide')); await music.flush();
+  music.w.dispatchEvent(new music.w.Event('pageshow')); await music.flush();
+  assert.equal(ctx.state, 'suspended', 'Restoring a cached page does not start idle audio');
+  music.click('[data-sound]'); audio.advance(600); music.dom.window.close();
+  const galleryAudio = audioBoundary();
+  const reactiveGallery = create('/obra/rockagipsy/', false, { width: 1024, height: 768 }, galleryAudio); await reactiveGallery.flush();
+  reactiveGallery.click('[data-sound]'); await reactiveGallery.flush();
+  assert.equal(galleryAudio.starts.length, 0, 'A direct artwork URL starts silent');
+  reactiveGallery.scroll(6.1); await reactiveGallery.flush();
+  assert.equal(galleryAudio.starts.length, 2, 'The artwork gallery reacts to actual native scrolling too');
+  reactiveGallery.click('[data-sound]'); galleryAudio.advance(600); reactiveGallery.dom.window.close();
   const failingAudio = audioBoundary(); failingAudio.failed = true;
   const retryMusic = create('/', true, { width: 1024, height: 768 }, failingAudio); await retryMusic.flush();
   retryMusic.click('[data-sound]'); await retryMusic.flush();
@@ -452,7 +525,7 @@ async function eyeMatch(ui, base, points) {
   assert.equal(retryMusic.find('[data-sound]').disabled, false); assert.equal(retryMusic.find('[data-sound-status]').hidden, false);
   failingAudio.failed = false; retryMusic.click('[data-sound]'); await retryMusic.flush();
   assert.equal(retryMusic.find('[data-sound]').getAttribute('aria-pressed'), 'true', 'A failed load can be retried, including with reduced motion');
-  retryMusic.click('[data-sound]'); retryMusic.dom.window.close();
+  retryMusic.click('[data-sound]'); failingAudio.advance(600); retryMusic.dom.window.close();
   const denied = audioBoundary(); denied.denied = true;
   const deniedMusic = create('/', false, { width: 1024, height: 768 }, denied); await deniedMusic.flush();
   deniedMusic.click('[data-sound]'); await deniedMusic.flush();
@@ -471,5 +544,5 @@ async function eyeMatch(ui, base, points) {
     page.dom.window.close();
   }
   assert.equal(manifest.projects, 40); assert.deepEqual(errors, []);
-  console.log('PASS: all 40 artwork flows, feathered depth transitions, 3 gallery eye pairs, kinetic titles, native scroll, free inertia, direct links, 3-image loading bound, search/filters, details/photos, quiet mode, reduced motion, Vaivenes, editorial reveals, responsive Naroa-to-Rara Avis pupil/iris alignment, photographic wink, cinematic deep-iris camera with continuous forward velocity across the blend, eased outward turn, reversible reveal, image-load guard, seamless continuation through all 40 works, 8 additional deep eye matches and embedded catalogue navigation.');
+  console.log('PASS: all 40 artwork flows, feathered depth transitions, 3 gallery eye pairs, kinetic titles, native scroll, free inertia, direct links, 3-image loading bound, search/filters, details/photos, quiet mode, reduced motion, Vaivenes, editorial reveals, responsive Naroa-to-Rara Avis pupil/iris alignment, photographic wink, cinematic deep-iris camera with continuous forward velocity across the blend, eased outward turn, reversible reveal, image-load guard, seamless continuation through all 40 works, 8 additional deep eye matches embedded catalogue navigation, opt-in reactive sound fragments, speed and direction response, bounded voices, silence at rest and safe audio lifecycle.');
 })().catch(error => { console.error(error); process.exitCode = 1; });

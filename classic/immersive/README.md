@@ -85,19 +85,22 @@ continues to use `dist/`. The Cloudflare and Vercel project identities are kept.
 
 ## Optional soundscape
 
-The Sonido button adds ambient / musique concrète using CC0 field recordings of
-birds, river and wind by Thimras. Sources, licence and editing are documented in
-`classic/audio/CREDITS.md`, also linked from the site menu. The two local MP3
-layers are 66-second loops (about 2.1 MB combined), prepared with
-`tools/compose_nature_soundscape.py`; the normal site build copies the finished
-audio without requiring DSP dependencies. Web Audio is initialized and the two
-files fetched only after the visitor presses Sonido. Playback fades in quietly;
-entering an iris blends toward slowed, resonant nature textures and filters the
-clearer field recording. The same reversible camera progress drives this mix.
-Muting fades out and suspends the context. Hidden pages suspend playback; visible
-pages resume only if the visitor had enabled it. A new document starts silent.
-Loading and playback errors leave a retryable control. Reduced motion remains
-independent: sound is available on explicit request without enabling animation.
+The Sonido button enables a reactive ambient / musique concrète instrument using
+CC0 field recordings of birds, river and wind by Thimras. Sources, licence and
+editing are documented in `classic/audio/CREDITS.md`, also linked from the site
+menu. Two 66-second source beds (about 2.1 MB combined) supply the material; they
+are never played as a continuous loop. Web Audio and the files load only after
+explicit opt-in, which leaves the instrument silent until the next real scroll.
+Actual displacement triggers short, Hann-windowed fragments with a 90 ms minimum
+spacing and a bounded voice count. Scroll speed controls gain and playback rate,
+direction controls gentle stereo placement, and the shared camera depth controls
+the blend and filtering of the field and concrete textures. Stopping scroll fades
+the sound and suspends processing; enabling sound or returning to a visible tab
+never starts an idle background. Hidden pages stop all voices. There is no wheel
+interception or permanent audio animation loop. Errors leave a retryable control;
+reduced motion remains independent of explicit sound activation. The finished
+source audio is prepared with `tools/compose_nature_soundscape.py`; the normal
+site build requires no DSP dependencies.
 
 ## Wink animation asset
 
