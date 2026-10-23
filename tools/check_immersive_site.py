@@ -60,7 +60,7 @@ def check(output):
     reviewed = json.loads((REPO / "classic/data/catalogo.json").read_text())["projects"]
     series = json.loads((REPO / "classic/data/vaivenes.json").read_text())["images"]
     expected = {p["slug"] for p in reviewed} | {p.get("work_slug", p.get("slug")) for p in series}
-    assert manifest["projects"] == len(expected) == 40
+    assert manifest["projects"] == len(expected)
     assert set("/obra/" + slug + "/" for slug in expected).issubset(manifest["canonical_routes"])
     checked_refs = set()
     for route in manifest["canonical_routes"]:
@@ -74,7 +74,7 @@ def check(output):
         assert page.json_blocks and page.json_blocks[0].get("@type"), file
         if page.gallery:
             assert int(page.gallery["data-initial"]) < len(page.scenes), file
-            assert len(page.scenes) == (8 if route == "/series/vaivenes/" else 40), (file, len(page.scenes))
+            assert len(page.scenes) == (8 if route == "/series/vaivenes/" else len(expected)), (file, len(page.scenes))
         for image in page.images:
             assert image.get("alt"), (file, "image without alternative text")
         for ref in page.refs:

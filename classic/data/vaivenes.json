@@ -50,7 +50,35 @@
           0.0055
         ]
       ],
-      "eye_tone": "amber"
+      "eye_tone": "amber",
+      "images": [
+        {
+          "src": "/images/catalogo/roisin-original-4160.jpg",
+          "width": 4160,
+          "height": 3120,
+          "sha256": "f096f99f38d6b7da7913be35521dd0680ca979f0f5e43c12907bbca140c31651",
+          "source": "https://naroagutierrez.wordpress.com/2020/09/20/vaivenes-en-el-haika-de-sodupe/",
+          "caption": "Róisín, obra completa con plumas, tejido y adornos."
+        },
+        {
+          "src": "/images/catalogo/roisin-dibujo-original.png",
+          "width": 1585,
+          "height": 1189,
+          "caption": "El dibujo de Róisín antes de incorporar el collage.",
+          "source": null,
+          "sha256": "6959ebc6a63402a7055a04c0e2d8a7886b960947444d48ee62d44c1297023500",
+          "source_local": "/var/folders/r_/hw1ds2nj49zffr6r4m_81r5h0000gn/T/codex-clipboard-67919ec2-e8c8-45a6-b46c-891a7cdc3d91.png"
+        },
+        {
+          "src": "/images/catalogo/roisin-otra-vista.png",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Otra vista de la obra terminada y sus materiales.",
+          "source": null,
+          "sha256": "bcff88e3ca2f636a96c8d1018cb581ccdacc1512b859cc7a936add9f9a3bd653",
+          "source_local": "/var/folders/r_/hw1ds2nj49zffr6r4m_81r5h0000gn/T/codex-clipboard-b1d81a42-155d-4477-b932-f7fe27cff933.png"
+        }
+      ]
     },
     {
       "slug": "mr-fahrenheit",
@@ -172,17 +200,17 @@
     },
     {
       "slug": "pippilotta",
-      "title": "Pippilotta",
-      "src": "/images/catalogo/vaivenes-pippilotta-completa.png",
-      "width": 1200,
-      "height": 1006,
-      "caption": "Pippi Calzaslargas y su mono, con cartas, fondo de cuadros rojos y marco dorado. Imagen de la obra terminada conservada en el archivo de la publicación Repóker de Reinas.",
+      "title": "Loving Långstrump",
+      "src": "/images/catalogo/loving-langstrump-completa.png",
+      "width": 1858,
+      "height": 1512,
+      "caption": "Retrato de Inger Nilsson como Pippilotta Viktualia Rullgardina Krusmynta Efraimsdotter Långstrump —Pippi Calzaslargas— y su mono, el Señor Nilsson. El dibujo se integra en un collage de cuadros, corazones y pequeños envoltorios.",
       "stage": "obra",
       "source": "https://naroagutierrez.wordpress.com/2022/03/22/repoker-de-reinas-vaivenes-en-siarte/",
       "membership_source": "https://www.facebook.com/naroa.artista.plastica/videos/170643291011818/",
       "source_local": "live-site/sala-3d/carrusel/img/src/pipi.jpg",
       "original": "https://naroagutierrez.wordpress.com/wp-content/uploads/2022/03/pipi-marco-png-1200x1000-2.png",
-      "sha256": "43b2480b9e2ab8e5160b91d05c2e32d6079e4b7932005088c672250db7bea1d7",
+      "sha256": "bb0c8e99471451b3ac6644f88ee552f6bb5a56784ad35f0f44214e72afe85b6a",
       "process_image": {
         "src": "/images/catalogo/vaivenes-pippilotta.jpg",
         "width": 1641,
@@ -192,79 +220,228 @@
       "work_slug": "pippilotta",
       "irises": [
         [
-          0.371,
-          0.476,
-          0.01,
-          0.0055
+          0.43,
+          0.43,
+          0.009,
+          0.006
         ],
         [
-          0.455,
-          0.446,
-          0.01,
-          0.0055
+          0.519,
+          0.397,
+          0.009,
+          0.006
         ]
       ],
-      "eye_tone": "original"
+      "eye_tone": "original",
+      "technique": "Técnica mixta",
+      "support": "Marco con passepartout",
+      "dimensions": "50 × 40 cm",
+      "images": [
+        {
+          "src": "/images/catalogo/loving-langstrump-completa.png",
+          "width": 1858,
+          "height": 1512,
+          "caption": "Loving Långstrump: collage terminado con corazones y fondo de cuadros.",
+          "source": null,
+          "sha256": "bb0c8e99471451b3ac6644f88ee552f6bb5a56784ad35f0f44214e72afe85b6a",
+          "source_local": "/var/folders/r_/hw1ds2nj49zffr6r4m_81r5h0000gn/T/codex-clipboard-7ab51268-0525-40eb-9ac5-a51b5ce79de2.png"
+        },
+        {
+          "src": "/images/catalogo/loving-langstrump-dibujo.png",
+          "width": 1641,
+          "height": 1231,
+          "caption": "El dibujo de Pippi y el Señor Nilsson, antes del collage.",
+          "source": null,
+          "sha256": "954e7bf0ac209e7d4effa1dae8f275388aada6d3378367ad2ed9b4fc592a0859",
+          "source_local": "/var/folders/r_/hw1ds2nj49zffr6r4m_81r5h0000gn/T/codex-clipboard-71693676-47d8-410b-b087-dec4ea329a4c.png"
+        },
+        {
+          "src": "/images/catalogo/vaivenes-pippilotta-completa.png",
+          "width": 1200,
+          "height": 1006,
+          "sha256": "43b2480b9e2ab8e5160b91d05c2e32d6079e4b7932005088c672250db7bea1d7",
+          "source": "https://naroagutierrez.wordpress.com/2022/03/22/repoker-de-reinas-vaivenes-en-siarte/",
+          "caption": "Otra versión de la composición, conservada en el archivo de Repóker de Reinas."
+        }
+      ]
     },
     {
       "slug": "rosetta",
-      "title": "Rosetta",
-      "src": "/images/catalogo/vaivenes-rosetta.jpg",
-      "width": 1880,
-      "height": 1410,
-      "caption": "Dibujo del retrato de la guitarrista Sister Rosetta Tharpe. Naroa la incluye entre las figuras de Vaivenes por su vínculo con el movimiento del rock and roll.",
-      "stage": "dibujo",
+      "title": "Rosetta no es de piedra",
+      "src": "/images/catalogo/rosetta-no-es-de-piedra.png",
+      "width": 1830,
+      "height": 1480,
+      "caption": "Retrato de Sister Rosetta Tharpe, la abuela del rock & roll. El dibujo con lápices de colores pasa por el escáner y vuelve al soporte físico para convivir con capas de collage. El papel de seda, los recortes y el hilo de las cuerdas crean un arcoíris alrededor de su guitarra.",
+      "stage": "obra",
       "source": "https://www.facebook.com/naroa.artista.plastica/videos/170643291011818/",
       "membership_source": "https://www.facebook.com/naroa.artista.plastica/videos/170643291011818/",
       "source_local": "live-site/sala-3d/carrusel/img/src/107606755_4088663064541708_490817533121466606_n.jpg",
       "original": "https://www.facebook.com/naroa.artista.plastica/videos/170643291011818/",
-      "sha256": "b358b6720ac2cf022b90110d315b10a6a8ebf32c8f82e27c3c7a80ee2a907ba6",
+      "sha256": "dc8cf29352ed1d7791bce5af049d2209535a7e8704fb990f0e2f3a7eea9bfa88",
       "work_slug": "rosetta",
       "irises": [
         [
-          0.324,
-          0.236,
-          0.004,
-          0.002
+          0.421,
+          0.315,
+          0.006,
+          0.003
         ],
         [
-          0.384,
-          0.23,
-          0.004,
-          0.002
+          0.468,
+          0.312,
+          0.006,
+          0.003
         ]
       ],
-      "eye_tone": "amber"
+      "eye_tone": "amber",
+      "technique": "Lápices de colores Art & Graphic de Faber-Castell y collage",
+      "support": "Marco con passepartout",
+      "dimensions": "50 × 40 cm",
+      "materials": "Papel de seda, recortes de papeles impresos e hilo grueso.",
+      "images": [
+        {
+          "src": "/images/catalogo/rosetta-no-es-de-piedra.png",
+          "width": 1830,
+          "height": 1480,
+          "caption": "La obra terminada: Sister Rosetta Tharpe entre casetes, pájaros y cuerdas de arcoíris.",
+          "source": null,
+          "sha256": "dc8cf29352ed1d7791bce5af049d2209535a7e8704fb990f0e2f3a7eea9bfa88",
+          "source_local": "/var/folders/r_/hw1ds2nj49zffr6r4m_81r5h0000gn/T/codex-clipboard-20a2b4b5-ea78-4ba7-a47f-ebd8a780851d.png"
+        },
+        {
+          "src": "/images/catalogo/vaivenes-rosetta.jpg",
+          "width": 1880,
+          "height": 1410,
+          "sha256": "b358b6720ac2cf022b90110d315b10a6a8ebf32c8f82e27c3c7a80ee2a907ba6",
+          "source": "https://www.facebook.com/naroa.artista.plastica/videos/170643291011818/",
+          "caption": "Dibujo inicial del retrato de Sister Rosetta Tharpe.",
+          "irises": [
+            [
+              0.324,
+              0.236,
+              0.004,
+              0.002
+            ],
+            [
+              0.384,
+              0.23,
+              0.004,
+              0.002
+            ]
+          ]
+        }
+      ],
+      "process_image": {
+        "src": "/images/catalogo/vaivenes-rosetta.jpg",
+        "width": 1880,
+        "height": 1410,
+        "sha256": "b358b6720ac2cf022b90110d315b10a6a8ebf32c8f82e27c3c7a80ee2a907ba6",
+        "source": "https://www.facebook.com/naroa.artista.plastica/videos/170643291011818/",
+        "caption": "Dibujo inicial del retrato de Sister Rosetta Tharpe.",
+        "irises": [
+          [
+            0.324,
+            0.236,
+            0.004,
+            0.002
+          ],
+          [
+            0.384,
+            0.23,
+            0.004,
+            0.002
+          ]
+        ]
+      }
     },
     {
       "slug": "dustin",
-      "title": "Dustin",
-      "src": "/images/catalogo/vaivenes-dustin.jpg",
-      "width": 1839,
-      "height": 1379,
-      "caption": "Dibujo del retrato de Dustin Hoffman en El Graduado. Naroa relaciona esta figura de Vaivenes con la elección entre dejarse llevar y nadar contra la corriente.",
-      "stage": "dibujo",
-      "source": "https://www.facebook.com/naroa.artista.plastica/videos/170643291011818/",
+      "title": "Hello Darkness My Old Friend",
+      "src": "/images/catalogo/hello-darkness-my-old-friend.png",
+      "width": 1866,
+      "height": 1511,
+      "caption": "Dustin Hoffman en El Graduado. El collage recoge alusiones a la película para hablar de las expectativas, el plástico y las oscilaciones del mundo interior. La figura dibujada se escanea, se imprime y se combina con materiales cotidianos de distintas texturas.",
+      "stage": "obra",
+      "source": "https://www.facebook.com/photo/?fbid=4310882318986447&set=a.4310847965656549",
       "membership_source": "https://www.facebook.com/naroa.artista.plastica/videos/170643291011818/",
       "source_local": "live-site/sala-3d/carrusel/img/src/107742658_4097484643659550_3561547213104938734_n.jpg",
       "original": "https://www.facebook.com/naroa.artista.plastica/videos/170643291011818/",
-      "sha256": "058c80f442e8c5d8cd8f71c8c3c6be2ed2f53a12c2f0ad3928ad5a95d7c78362",
+      "sha256": "bf2d129d5bb3d37572635c3f22609a3fc0695a1ac09bc0b903aa88713c883edf",
       "work_slug": "dustin",
       "irises": [
         [
-          0.475,
-          0.316,
-          0.007,
+          0.47,
+          0.374,
+          0.008,
           0.006
         ],
         [
-          0.582,
-          0.316,
+          0.553,
+          0.375,
           0.009,
-          0.007
+          0.006
         ]
       ],
-      "eye_tone": "amber"
+      "eye_tone": "amber",
+      "technique": "Lápices de colores Art & Graphic de Faber-Castell y collage",
+      "support": "Marco con passepartout",
+      "dimensions": "50 × 40 cm",
+      "materials": "Papel de pared antiguo, plástico de burbujas, envoltorios, celofán, cerillas, pieza de puzle, goma eva, acetato impreso, poliespán y pajitas.",
+      "images": [
+        {
+          "src": "/images/catalogo/hello-darkness-my-old-friend.png",
+          "width": 1866,
+          "height": 1511,
+          "caption": "La obra terminada: el retrato, el vaso y los materiales del collage.",
+          "source": "https://www.facebook.com/photo/?fbid=4310882318986447&set=a.4310847965656549",
+          "sha256": "bf2d129d5bb3d37572635c3f22609a3fc0695a1ac09bc0b903aa88713c883edf",
+          "source_local": "/var/folders/r_/hw1ds2nj49zffr6r4m_81r5h0000gn/T/codex-clipboard-1f4b45b5-ed78-47ac-9158-62d982297c2b.png"
+        },
+        {
+          "src": "/images/catalogo/vaivenes-dustin.jpg",
+          "width": 1839,
+          "height": 1379,
+          "sha256": "058c80f442e8c5d8cd8f71c8c3c6be2ed2f53a12c2f0ad3928ad5a95d7c78362",
+          "source": "https://www.facebook.com/naroa.artista.plastica/videos/170643291011818/",
+          "caption": "Dibujo inicial de Dustin Hoffman en El Graduado.",
+          "irises": [
+            [
+              0.475,
+              0.316,
+              0.007,
+              0.006
+            ],
+            [
+              0.582,
+              0.316,
+              0.009,
+              0.007
+            ]
+          ]
+        }
+      ],
+      "process_image": {
+        "src": "/images/catalogo/vaivenes-dustin.jpg",
+        "width": 1839,
+        "height": 1379,
+        "sha256": "058c80f442e8c5d8cd8f71c8c3c6be2ed2f53a12c2f0ad3928ad5a95d7c78362",
+        "source": "https://www.facebook.com/naroa.artista.plastica/videos/170643291011818/",
+        "caption": "Dibujo inicial de Dustin Hoffman en El Graduado.",
+        "irises": [
+          [
+            0.475,
+            0.316,
+            0.007,
+            0.006
+          ],
+          [
+            0.582,
+            0.316,
+            0.009,
+            0.007
+          ]
+        ]
+      }
     }
   ],
   "reviewed": "2026-10-21",

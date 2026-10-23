@@ -67,6 +67,55 @@
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     const pan = { x: 0, y: 0, tx: 0, ty: 0, frame: null };
     const pendingImages = new Map();
+    const puzzles = new Map();
+    const svgNode = (name, attrs = {}) => {
+      const node = document.createElementNS('http://www.w3.org/2000/svg', name);
+      Object.entries(attrs).forEach(([key, value]) => node.setAttribute(key, String(value)));
+      return node;
+    };
+    function puzzleScene(index) {
+      if (puzzles.has(index)) return puzzles.get(index);
+      const svg = svgNode('svg', { viewBox: '-120 -120 1240 1240', 'aria-hidden': 'true', focusable: 'false', class: 'puzzle-camera' });
+      const defs = svgNode('defs'), picture = svgNode('image', { id: `puzzle-photo-${index}`, width: 1000, height: 1000, preserveAspectRatio: 'none', href: works[index].cover });
+      defs.append(picture); svg.append(defs);
+      const pieces = [];
+      // Adjacent edges share one curve, traversed in the opposite direction.
+      const edge = (x, y, dx, dy, tab) => {
+        const point = (t, n = 0) => `${(x + dx * t - dy * n).toFixed(3)},${(y + dy * t + dx * n).toFixed(3)}`;
+        return tab ? `L${point(.35)} C${point(.46)} ${point(.31, tab * .16)} ${point(.5, tab * .16)} C${point(.69, tab * .16)} ${point(.54)} ${point(.65)} L${point(1)}` : `L${point(1)}`;
+      };
+      for (let row = 0; row < 5; row++) for (let col = 0; col < 5; col++) {
+        const n = row * 5 + col, x = col * 200, y = row * 200;
+        const h = r => r === 0 || r === 5 ? 0 : (r + col) % 2 ? 1 : -1;
+        const v = c => c === 0 || c === 5 ? 0 : (row + c) % 2 ? -1 : 1;
+        const path = `M${x},${y}` + edge(x, y, 200, 0, h(row)) + edge(x + 200, y, 0, 200, v(col + 1)) + edge(x + 200, y + 200, -200, 0, -h(row + 1)) + edge(x, y + 200, 0, -200, -v(col)) + 'Z';
+        const clip = svgNode('clipPath', { id: `puzzle-cut-${index}-${n}`, clipPathUnits: 'userSpaceOnUse' });
+        clip.append(svgNode('path', { d: path })); defs.append(clip);
+        const group = svgNode('g', { 'data-puzzle-piece': n });
+        group.append(svgNode('use', { href: `#puzzle-photo-${index}`, 'clip-path': `url(#puzzle-cut-${index}-${n})` }));
+        svg.append(group);
+        const destination = (n * 7 + 9) % 25;
+        pieces.push({ group, cx: x + 100, cy: y + 100, dx: (destination % 5 - col) * 155 + Math.sin(n * 2.4) * 65, dy: (Math.floor(destination / 5) - row) * 155, turn: (n % 7 - 3) * 12, arc: Math.sin(n * 1.7) * 100 });
+      }
+      const puzzle = { svg, picture, pieces };
+      $('.art-pan', scenes[index]).append(svg); scenes[index].classList.add('is-puzzle');
+      puzzles.set(index, puzzle); return puzzle;
+    }
+    function drawPuzzle(index, fraction, still) {
+      const puzzle = puzzleScene(index);
+      puzzle.picture.setAttribute('href', works[index].cover);
+      const phase = clamp(fraction / .78, 0, 1);
+      const scatter = still ? 0 : Math.pow(Math.sin(phase * Math.PI), 2);
+      const amount = scatter < 1e-8 ? 0 : scatter;
+      puzzle.svg.dataset.scatter = amount.toFixed(4);
+      puzzle.svg.style.visibility = still ? 'hidden' : 'visible';
+      scenes[index].classList.toggle('puzzle-still', still);
+      puzzle.pieces.forEach(({ group, cx, cy, dx, dy, turn, arc }) => {
+        const a = amount, lift = Math.sin(phase * Math.PI * 2) * a;
+        group.setAttribute('transform', `translate(${(dx * a).toFixed(3)} ${(dy * a + arc * lift).toFixed(3)}) rotate(${(turn * a).toFixed(3)} ${cx} ${cy})`);
+      });
+      return puzzle;
+    }
     const paintedScenes = new Set(scenes.map((_, index) => index));
     const photosDialog = $('#photos-dialog');
     const createGalleryElement = (tag, className, text) => {
@@ -111,7 +160,7 @@
       scheduleScroll();
     });
     const focals = { 'rara-avis': '56% 42%', 'amor-en-conserva': '50% 54%', 'entre-tantas-flores-de-dia': '50% 36%', 'johnny-rocks': '50% 42%', 'rockagipsy': '50% 43%', 'hugo-box': '50% 38%' };
-    const mobileFocals = { 'rara-avis': '61% 40%', 'amor-en-conserva': '48% 54%' };
+    const mobileFocals = { 'rara-avis': '61% 40%', 'amor-en-conserva': '48% 54%', 'denbora-nora-zoaz': '18% 45%', 'el-hombre-que-susurraba-a-las-estrellas': '74% 44%' };
     // Pupil centres measured on the unaltered cover photographs, in source-image coordinates.
     const eyes = {
       'marilyn-rocks': { x: .635, y: .392, span: .067 },
@@ -157,6 +206,7 @@
       images.forEach((img, i) => {
         if (Math.abs(i - state.index) > 1 && img.hasAttribute('src')) {
           img.removeAttribute('src'); pendingImages.delete(i);
+          puzzles.get(i)?.picture.removeAttribute('href');
         }
       });
       [state.index - 1, state.index, state.index + 1].forEach(i => { ensureImage(i); });
@@ -177,13 +227,14 @@
       $$('.site-nav,.art-index,.art-bottom').forEach(el => { el.inert = state.quiet; });
       $('#story-title').textContent = p.title; $('[data-story-category]').textContent = p.label; $('[data-story]').textContent = p.story;
       const facts = $('[data-facts]'); facts.replaceChildren();
-      [['Técnica', p.technique], ['Soporte', p.support], ['Medidas', p.dimensions], ['Serie', p.series], ['Año', p.year]].forEach(([label, value]) => {
+      [['Técnica', p.technique], ['Soporte', p.support], ['Medidas', p.dimensions], ['Materiales', p.materials], ['Serie', p.series], ['Año', p.year]].forEach(([label, value]) => {
         if (!value) return;
         const row = document.createElement('div'), dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = label; dd.textContent = value; row.append(dt, dd); facts.append(row);
       });
       const credit = $('[data-credit]'); credit.textContent = p.credit || ''; credit.hidden = !p.credit;
       $('[data-art-email]').href = 'mailto:naroa@naroa.eu?subject=' + encodeURIComponent('Consulta sobre ' + p.title);
-      $('[data-art-source]').href = p.source;
+      const source = $('[data-art-source]'); source.hidden = !p.source;
+      if (p.source) source.href = p.source; else source.removeAttribute('href');
       scenes.forEach((s, i) => { s.setAttribute('aria-hidden', String(i !== state.index)); s.classList.toggle('is-current', i === state.index); });
       preloadNeighbours();
     }
@@ -201,10 +252,11 @@
     function render() {
       const position = clamp(motion.position, 0, works.length - 1), base = Math.floor(position), fraction = position - base;
       const still = state.fit || reduced.matches, progress = ease(fraction);
+      const puzzlePass = !still && works[base].interaction === 'puzzle';
       const sideways = (base + 1) % 2 === 0;
       const eyeMatch = !still && !!eyeLinks[works[base].slug] && eyeLinks[works[base].slug] === works[base + 1]?.slug;
       const edge = (1 - progress) * 100, feather = Math.sin(progress * Math.PI) * 14;
-      stage.dataset.transition = still ? 'still' : eyeMatch ? 'eyes' : 'depth';
+      stage.dataset.transition = still ? 'still' : puzzlePass ? 'puzzle' : eyeMatch ? 'eyes' : 'depth';
       const visible = new Set(still ? [state.index] : fraction > .0001 ? [base, base + 1] : [base]);
       paintedScenes.forEach(index => {
         if (visible.has(index)) return;
@@ -218,7 +270,14 @@
         scene.style.clipPath = 'inset(0)'; scene.style.opacity = '1';
         scene.style.maskImage = scene.style.webkitMaskImage = 'none';
         images[index].style.transformOrigin = '50% 50%';
+          if (works[index].interaction === 'puzzle' && (!still || puzzles.has(index))) drawPuzzle(index, index === base ? fraction : 0, still);
         if (still) { images[index].style.transform = ''; return; }
+          if (puzzlePass) {
+            const exit = ease((fraction - .80) / .20);
+            scene.style.opacity = (index === base ? 1 - exit : exit).toFixed(4);
+            images[index].style.transform = `scale(${(1.1 + (1 - exit) * .12).toFixed(5)})`;
+            return;
+          }
         if (eyeMatch) {
           eyePose(index, index === base ? ease(fraction * 2) : 1 - ease((fraction - .5) * 2));
           if (index === base + 1) scene.style.opacity = ease((fraction - .40) / .20).toFixed(4);
@@ -240,7 +299,7 @@
       const transitioning = !still && fraction > .001 && fraction < .999;
       const nextTitle = transitioning ? works[base + 1].title : '';
       if (kineticTitle.textContent !== nextTitle) kineticTitle.textContent = nextTitle;
-      kineticTitle.style.opacity = transitioning && !eyeMatch ? (Math.sin(progress * Math.PI) * .32).toFixed(3) : '0';
+      kineticTitle.style.opacity = transitioning && !eyeMatch && !puzzlePass ? (Math.sin(progress * Math.PI) * .32).toFixed(3) : '0';
       kineticTitle.style.transform = `translate3d(${((progress - .5) * -14).toFixed(3)}%,${((progress - .5) * -16).toFixed(3)}vh,0)`;
       caption.style.opacity = transitioning ? (.45 + .55 * Math.pow(Math.abs(fraction - .5) * 2, .6)).toFixed(3) : '1';
       caption.style.transform = transitioning ? `translateY(${(-Math.sin(fraction * Math.PI * 2) * 10).toFixed(3)}px)` : '';
@@ -265,7 +324,8 @@
       Promise.all([ensureImage(Math.floor(position)), ensureImage(Math.ceil(position))]).then(() => {
         if (request !== motion.request || document.querySelector('dialog[open]')) return;
         motion.position = position;
-        const index = clamp(Math.round(position), 0, works.length - 1);
+        const base = Math.floor(position);
+        const index = !reduced.matches && works[base].interaction === 'puzzle' && position - base < .9 ? base : clamp(Math.round(position), 0, works.length - 1);
         if (index !== state.index) { state.index = index; metadata(); saveRoute(); }
         else stage.classList.toggle('is-fit', state.fit);
         render();

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "reviewed": "2026-10-21",
+  "reviewed": "2026-10-24",
   "image_note": "Fotografías contrastadas con originales locales y del archivo público de la artista. Sustituciones conservadas sin ampliación, filtros ni retoque; procedencia y huella registradas por imagen.",
   "projects": [
     {
@@ -839,6 +839,15 @@
       "story": "Un retrato que también se puede construir por piezas. Las juntas del puzzle atraviesan la imagen en blanco y negro y su fondo de color.",
       "images": [
         {
+          "src": "/images/catalogo/saio-puzzle-original-2048.png",
+          "width": 2048,
+          "height": 2047,
+          "caption": "El puzle completo, con el retrato y sus piezas encajadas.",
+          "source": null,
+          "sha256": "7800a05027f4c26a742b0b8761c8caed8d8ebcd1e0e1c8273bb904a9de01c734",
+          "source_local": "/var/folders/r_/hw1ds2nj49zffr6r4m_81r5h0000gn/T/codex-clipboard-bf59393a-5474-45f4-bb78-845e63d14f30.png"
+        },
+        {
           "src": "/images/catalogo/saio-puzzle-original-01-2048.jpg",
           "width": 2048,
           "height": 2047,
@@ -869,7 +878,8 @@
       "credit": null,
       "selected": false,
       "kind": "obra",
-      "source": "https://www.facebook.com/media/set/?set=a.890533279092761&type=3"
+      "source": "https://www.facebook.com/media/set/?set=a.890533279092761&type=3",
+      "interaction": "puzzle"
     },
     {
       "slug": "custom-jaio",
@@ -1395,6 +1405,825 @@
       "selected": false,
       "kind": "proyecto",
       "source": "https://www.facebook.com/media/set/?set=a.765384181607672&type=3"
+    },
+    {
+      "slug": "la-llorona",
+      "title": "La Llorona",
+      "category": "collage",
+      "technique": "Pintura acrílica y collage",
+      "support": "Lienzo",
+      "story": "Retrato de Chavela Vargas en el que un ojo de sal rosa, las lágrimas y las flores revelan parte del simbolismo de la obra. «No sé qué tienen las flores, llorona, las flores del campo santo; que cuando las mueve el viento, llorona, parecen que están llorando».",
+      "images": [
+        {
+          "src": "/images/catalogo/la-llorona-frontal.jpg",
+          "width": 1297,
+          "height": 960,
+          "caption": "La composición completa: Chavela Vargas y los ojos de sal rosa.",
+          "source": null,
+          "sha256": "535ea3a9ebd4e1a51ee1d72f4aee33d3ac1efcbeaa8c74cdf2bcc9727365b432",
+          "source_local": "/Users/borjafernandezangulo/Downloads/786467990_1782401706572576_4478636774858911346_n-2.jpg"
+        },
+        {
+          "src": "/images/catalogo/la-llorona-materia.jpg",
+          "width": 1280,
+          "height": 960,
+          "caption": "Vista rasante del lienzo: volumen, fucsia y textura.",
+          "source": null,
+          "sha256": "91dfd53649622d1d76c189044dc3e1d5ad3e33f51cadaeb5f9f45a635c376968",
+          "source_local": "/Users/borjafernandezangulo/Downloads/785979160_1782404613238952_4878989123181257927_n.jpg"
+        },
+        {
+          "src": "/images/catalogo/la-llorona-lienzo.jpg",
+          "width": 1205,
+          "height": 565,
+          "caption": "Otra perspectiva del lienzo y sus materiales.",
+          "source": null,
+          "sha256": "54a8dc942b3c70369bd0e92112f05a13e0fff2222a1825ddb16e3ec71af5c150",
+          "source_local": "/Users/borjafernandezangulo/Downloads/786493002_1782404639905616_110270408239704901_n.jpg"
+        }
+      ],
+      "source": null,
+      "dimensions": "20 × 30 × 3,5 cm",
+      "materials": "Pintura acrílica, sal rosa, cubiertas de auriculares fucsias, hembrillas antiguas, pétalos negros, lentejuelas de colores con forma de corazón, eslabones de cadenas, pequeña pieza textil, recorte de rosa impresa plastificada, celo de doble cara deteriorado por el tiempo, pegamento y látex líquido.",
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra"
+    },
+    {
+      "slug": "pablo",
+      "title": "Pablo",
+      "category": "collage",
+      "technique": "Lápices de colores Art & Graphic de Faber-Castell",
+      "support": "Papel poliéster",
+      "story": "El gran Pablo, admiración total. Retrato en el que el dibujo del rostro convive con el color de la camisa.",
+      "images": [
+        {
+          "src": "/images/catalogo/pablo-original.png",
+          "width": 1362,
+          "height": 1835,
+          "caption": "Retrato completo de Pablo.",
+          "source": null,
+          "sha256": "af0af17eaacd9ecb7e8ba6469faee701a630325bc82012d7344d17b40e1ed1e3",
+          "source_local": "/var/folders/r_/hw1ds2nj49zffr6r4m_81r5h0000gn/T/codex-clipboard-d3143f7e-3d45-40cf-8f9a-303ef03fe39a.png"
+        }
+      ],
+      "source": null,
+      "dimensions": null,
+      "materials": null,
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra"
+    },
+    {
+      "slug": "euskolander-no-hay-mas-que-uno",
+      "title": "Euskolander no hay más que uno",
+      "category": "collage",
+      "technique": "Lápiz de color negro, bolígrafo y collage",
+      "support": "Papel poliéster e impresión en papel de 350 g/m²",
+      "story": "Del trazo al recorte: retrato dibujado con lápiz de color negro y bolígrafo sobre poliéster, diluido con alcohol en algunas zonas. Tras escanearlo e imprimirlo, Naroa vuelve a dibujar sus rasgos con lápiz Art & Graphic de Faber-Castell y recorta la silueta.",
+      "images": [
+        {
+          "src": "/images/catalogo/euskolander-original.png",
+          "width": 1280,
+          "height": 1808,
+          "caption": "La obra completa, sobre un fondo de estrellas rojas y blancas.",
+          "source": null,
+          "sha256": "ec2d2f834d1f5d07158148d076c76853bf5ab0acf771410a7144b6a7ee2d605f",
+          "source_local": "/var/folders/r_/hw1ds2nj49zffr6r4m_81r5h0000gn/T/codex-clipboard-495bed4b-7ee7-4518-813f-7529339d013c.png"
+        }
+      ],
+      "source": null,
+      "dimensions": null,
+      "materials": null,
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra"
+    },
+    {
+      "slug": "idoia-arkatz-bihotz",
+      "title": "Idoia, Arkatz & Bihotz",
+      "category": "collage",
+      "technique": "Grafito, rotulador acrílico y collage de washi tapes",
+      "support": "Papel de 80 g/m²",
+      "story": "Un retrato que combina una figura en grises con pequeños acentos de color. Las cintas decoradas intervienen la composición y acompañan el gesto de la retratada.",
+      "images": [
+        {
+          "src": "/images/catalogo/idoia-arkatz-bihotz.png",
+          "width": 1190,
+          "height": 1704,
+          "caption": "Retrato completo con los detalles de color de las pulseras y las cintas.",
+          "source": "https://www.facebook.com/photo/?fbid=4310884678986211&set=a.4310847965656549",
+          "sha256": "5bb78ff52aa1f652b8fe2af94166e427eed1e933ece4117775106a357f0b7866",
+          "source_local": "/var/folders/r_/hw1ds2nj49zffr6r4m_81r5h0000gn/T/codex-clipboard-a61dde8c-5642-4218-9587-df0c47424f65.png"
+        }
+      ],
+      "source": "https://www.facebook.com/photo/?fbid=4310884678986211&set=a.4310847965656549",
+      "dimensions": null,
+      "materials": null,
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra"
+    },
+    {
+      "slug": "little-adi",
+      "title": "Little Adi",
+      "category": "collage",
+      "technique": "Grafito, lápices de colores y collage",
+      "support": "Papel de 80 g/m² recortado sobre papel de seda decorado",
+      "story": "La figura dibujada se recorta y superpone al fondo. El gris del retrato deja paso al verde de la pala y al contraste entre el naranja y los lunares fucsias.",
+      "images": [
+        {
+          "src": "/images/catalogo/little-adi-completa.png",
+          "width": 1164,
+          "height": 1586,
+          "caption": "Composición completa sin marco.",
+          "source": "https://www.facebook.com/photo/?fbid=4310881775653168&set=a.4310847965656549",
+          "sha256": "0a90eadba4d018800011517e93499f867732539fb76d593587a57790a161b350",
+          "source_local": "/var/folders/r_/hw1ds2nj49zffr6r4m_81r5h0000gn/T/codex-clipboard-52791ffc-2ec2-417e-a5d0-698c4af9926d.png"
+        },
+        {
+          "src": "/images/catalogo/little-adi-marco.png",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Presentación de la obra en su marco ornamental blanco.",
+          "source": "https://www.facebook.com/photo/?fbid=4310881775653168&set=a.4310847965656549",
+          "sha256": "97cf4247e3fab8d65498fd98e10efc0342ee3ba100885b87fe55823980a3dc00",
+          "source_local": "/var/folders/r_/hw1ds2nj49zffr6r4m_81r5h0000gn/T/codex-clipboard-1f8b45b9-90d0-44c6-a053-daf673852ede.png"
+        }
+      ],
+      "source": "https://www.facebook.com/photo/?fbid=4310881775653168&set=a.4310847965656549",
+      "dimensions": null,
+      "materials": null,
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra"
+    },
+    {
+      "slug": "lauralore",
+      "title": "LauraLore",
+      "category": "collage",
+      "technique": "Lápiz de color negro y collage",
+      "support": "Papel de 350 g/m² en marco de profundidad",
+      "story": "El retrato dibujado se combina con fragmentos de cerámica decorada y elementos vegetales. La composición fue realizada como regalo de cumpleaños y juega con la idea del eguzkilore.",
+      "images": [
+        {
+          "src": "/images/catalogo/lauralore-01.jpg",
+          "width": 600,
+          "height": 800,
+          "caption": "Obra completa.",
+          "source": "https://www.facebook.com/photo/?fbid=666366311509460&set=a.666379298174828",
+          "sha256": "e90123f9f60689ea91d06808cd12c65cb1d9f5be7b785cf0096c0102eaf6c2fc",
+          "source_local": "work/naroa-artwork-intake/666379298174828-03.jpg"
+        },
+        {
+          "src": "/images/catalogo/lauralore-02.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Detalle o perspectiva 1 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=666366511509440&set=a.666379298174828",
+          "sha256": "8cdd6abdab5f4a8534b9635e6a365d779d496c3b3ad0c3985a8a5a903725d999",
+          "source_local": "work/naroa-artwork-intake/666379298174828-01.jpg"
+        },
+        {
+          "src": "/images/catalogo/lauralore-03.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Detalle o perspectiva 2 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=666366318176126&set=a.666379298174828",
+          "sha256": "1836a394733383a9600eced5d098ae456169b2a7006a5e32e4e9f63baf2e0f7d",
+          "source_local": "work/naroa-artwork-intake/666379298174828-02.jpg"
+        },
+        {
+          "src": "/images/catalogo/lauralore-04.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 3 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=666366374842787&set=a.666379298174828",
+          "sha256": "751a3e36f9b272a3e5ff2841d1e80afede3e5e44de2b44156b6309cf7d856e82",
+          "source_local": "work/naroa-artwork-intake/666379298174828-04.jpg"
+        },
+        {
+          "src": "/images/catalogo/lauralore-05.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Detalle o perspectiva 4 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=666366418176116&set=a.666379298174828",
+          "sha256": "a51d758d45f4e7cf7ce0795e70f5e6f64f7144a71756d4f293d84c9e1c4a24c4",
+          "source_local": "work/naroa-artwork-intake/666379298174828-06.jpg"
+        },
+        {
+          "src": "/images/catalogo/lauralore-06.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 5 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=666366518176106&set=a.666379298174828",
+          "sha256": "1fd153e473d85d7c03a8680423737d12e48631d45be67ce25222a5dd75bac852",
+          "source_local": "work/naroa-artwork-intake/666379298174828-07.jpg"
+        }
+      ],
+      "source": "https://www.facebook.com/media/set/?set=a.666379298174828&type=3",
+      "dimensions": "50 × 40 cm",
+      "materials": null,
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra"
+    },
+    {
+      "slug": "can-dy-queen",
+      "title": "Can-dy Queen",
+      "category": "objetos",
+      "technique": "Fotografía por capas y ensamblaje",
+      "support": "Lata de conservas intervenida",
+      "story": "Retrato en relieve de Olatz, rodeado de colores y dulces. La lata incorpora patas de alambre, gominolas, papeles y una corona hecha con materiales cotidianos. Las capas de la fotografía aportan profundidad.",
+      "images": [
+        {
+          "src": "/images/catalogo/can-dy-queen-01.jpg",
+          "width": 1500,
+          "height": 2000,
+          "caption": "Obra completa.",
+          "source": "https://www.facebook.com/photo/?fbid=504441384368621&set=a.504443464368413",
+          "sha256": "3cb0740291f42b15d5951368c52a76f51af17b213b4d56e1b96ba7e77fc29ece",
+          "source_local": "work/naroa-artwork-intake/504443464368413-cover.jpg"
+        },
+        {
+          "src": "/images/catalogo/can-dy-queen-02.jpg",
+          "width": 720,
+          "height": 906,
+          "caption": "Detalle o perspectiva 1 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=504441444368615&set=a.504443464368413",
+          "sha256": "e0604fa776b7adbc3881bf8385e3a07d74fae06bdb853f84302de1460fcf6bbb",
+          "source_local": "work/naroa-artwork-intake/504443464368413-02.jpg"
+        },
+        {
+          "src": "/images/catalogo/can-dy-queen-03.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Detalle o perspectiva 2 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=504441437701949&set=a.504443464368413",
+          "sha256": "d0de7ba2af37fbd91da22ab9ff1a6e806cd4fc3bc37afa21d2764b42e7511cf2",
+          "source_local": "work/naroa-artwork-intake/504443464368413-03.jpg"
+        },
+        {
+          "src": "/images/catalogo/can-dy-queen-04.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Detalle o perspectiva 3 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=504441511035275&set=a.504443464368413",
+          "sha256": "01db830434ba38f3b8032de0c5b50f289ce770f99a90cc8b5da68a8829195d91",
+          "source_local": "work/naroa-artwork-intake/504443464368413-04.jpg"
+        },
+        {
+          "src": "/images/catalogo/can-dy-queen-05.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Detalle o perspectiva 4 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=504441551035271&set=a.504443464368413",
+          "sha256": "165381ee71aebe7b167254d701f6e704ff146b539a0dcdb23f435923acca50c1",
+          "source_local": "work/naroa-artwork-intake/504443464368413-06.jpg"
+        },
+        {
+          "src": "/images/catalogo/can-dy-queen-06.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 5 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=504441361035290&set=a.504443464368413",
+          "sha256": "161ea23ac0d38603473c5ea375bd6c5d3c79fcdc5eccc0c0864b0a046f8938e9",
+          "source_local": "work/naroa-artwork-intake/504443464368413-08.jpg"
+        }
+      ],
+      "source": "https://www.facebook.com/media/set/?set=a.504443464368413&type=3",
+      "dimensions": null,
+      "materials": null,
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra"
+    },
+    {
+      "slug": "el-hombre-que-susurraba-a-las-estrellas",
+      "title": "El hombre que susurraba a las estrellas",
+      "category": "collage",
+      "technique": "Bolígrafo negro y collage",
+      "support": "Papel poliéster e impresión de 350 g/m²",
+      "story": "David Bowie aparece entre estrellas y un rayo de color. El dibujo se transforma mediante el escaneado, la impresión y el recorte; el tejido vaquero y los papeles metalizados añaden diferentes superficies.",
+      "images": [
+        {
+          "src": "/images/catalogo/el-hombre-que-susurraba-a-las-estrellas-01.jpg",
+          "width": 2048,
+          "height": 1533,
+          "caption": "Obra completa.",
+          "source": "https://www.facebook.com/photo/?fbid=613835193429239&set=a.613837923428966",
+          "sha256": "a5111c684526fc6fde242250af695c6c36eec74de28eef864788bb7fb3be6add",
+          "source_local": "work/naroa-artwork-intake/613837923428966-cover.jpg"
+        },
+        {
+          "src": "/images/catalogo/el-hombre-que-susurraba-a-las-estrellas-02.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 1 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=613834790095946&set=a.613837923428966",
+          "sha256": "ad7ec829fbc7ee536095914668219651b898888798528a050566ea20ca74edcc",
+          "source_local": "work/naroa-artwork-intake/613837923428966-02.jpg"
+        },
+        {
+          "src": "/images/catalogo/el-hombre-que-susurraba-a-las-estrellas-03.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Detalle o perspectiva 2 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=613834940095931&set=a.613837923428966",
+          "sha256": "b08afc50012e102d6dbe55455329d9ac45eb915e090197a92dd9be827a58020c",
+          "source_local": "work/naroa-artwork-intake/613837923428966-03.jpg"
+        },
+        {
+          "src": "/images/catalogo/el-hombre-que-susurraba-a-las-estrellas-04.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 3 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=613835110095914&set=a.613837923428966",
+          "sha256": "6d2187c05d24d02d2f8f0471ed89a037a877a96d97ecebf6310c9ba084551f5c",
+          "source_local": "work/naroa-artwork-intake/613837923428966-04.jpg"
+        },
+        {
+          "src": "/images/catalogo/el-hombre-que-susurraba-a-las-estrellas-05.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 4 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=613834903429268&set=a.613837923428966",
+          "sha256": "3f98bec37bef7746cfca0ee52f838963f2565fb4c31597b81401a77c408500f6",
+          "source_local": "work/naroa-artwork-intake/613837923428966-05.jpg"
+        },
+        {
+          "src": "/images/catalogo/el-hombre-que-susurraba-a-las-estrellas-06.jpg",
+          "width": 640,
+          "height": 856,
+          "caption": "Detalle o perspectiva 5 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=613834740095951&set=a.613837923428966",
+          "sha256": "7a258b8b338e081d30d6ee5545609d5f856422cff5c203c2a40c69ce2fc9363e",
+          "source_local": "work/naroa-artwork-intake/613837923428966-08.jpg"
+        }
+      ],
+      "source": "https://www.facebook.com/media/set/?set=a.613837923428966&type=3",
+      "dimensions": "A3",
+      "materials": null,
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra"
+    },
+    {
+      "slug": "olinga-a-la-naranja",
+      "title": "Olinga a la Naranja",
+      "category": "collage",
+      "technique": "Lápices de colores y collage",
+      "support": "Marco con passepartout",
+      "story": "La figura dibujada se recorta y se integra en un fondo hecho con envoltorios de naranjas. Papel de seda, cuerda bicolor y celofán rosa prolongan el color más allá del retrato.",
+      "images": [
+        {
+          "src": "/images/catalogo/olinga-a-la-naranja-01.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Obra completa.",
+          "source": "https://www.facebook.com/photo/?fbid=3502565673151453&set=a.3502565189818168",
+          "sha256": "c8d7fb49311ba5e3a86841a9a3c7f393823ca978524a649ccaa2cccb50ae0317",
+          "source_local": "work/naroa-artwork-intake/3502565189818168-cover.jpg"
+        },
+        {
+          "src": "/images/catalogo/olinga-a-la-naranja-02.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Detalle o perspectiva 1 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=3502565546484799&set=a.3502565189818168",
+          "sha256": "82873d60ef465a8403f9136bbd6ef5e9b7b5a24c6ae49c9681aea4ebdab5c54c",
+          "source_local": "work/naroa-artwork-intake/3502565189818168-02.jpg"
+        },
+        {
+          "src": "/images/catalogo/olinga-a-la-naranja-03.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Detalle o perspectiva 2 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=3502565689818118&set=a.3502565189818168",
+          "sha256": "ad336e694c52c5468979b2fe66c392c612c253c45a56a49368e02c5f3f08c350",
+          "source_local": "work/naroa-artwork-intake/3502565189818168-03.jpg"
+        },
+        {
+          "src": "/images/catalogo/olinga-a-la-naranja-04.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 3 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=3502566166484737&set=a.3502565189818168",
+          "sha256": "322e65f15acc685e774d65d19137afe88c641a2f5586942a095c57fea455275d",
+          "source_local": "work/naroa-artwork-intake/3502565189818168-05.jpg"
+        },
+        {
+          "src": "/images/catalogo/olinga-a-la-naranja-05.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 4 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=3502566196484734&set=a.3502565189818168",
+          "sha256": "5bb9f4ca6aaa5f26f337f508883ad1aefac3739f849064685c9cb921f9e23333",
+          "source_local": "work/naroa-artwork-intake/3502565189818168-06.jpg"
+        },
+        {
+          "src": "/images/catalogo/olinga-a-la-naranja-06.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 5 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=3502566456484708&set=a.3502565189818168",
+          "sha256": "3025633436eb1e3b727bfb673f20ca7ff1976df00847bf8cf9d4665e0c1f4b39",
+          "source_local": "work/naroa-artwork-intake/3502565189818168-08.jpg"
+        }
+      ],
+      "source": "https://www.facebook.com/media/set/?set=a.3502565189818168&type=3",
+      "dimensions": "45 × 55 cm",
+      "materials": null,
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra"
+    },
+    {
+      "slug": "i-got-you-babe",
+      "title": "I Got You Babe",
+      "category": "objetos",
+      "technique": "Pintura y ensamblaje",
+      "support": "Reloj de pared de bambú",
+      "story": "Un autorretrato colectivo del confinamiento realizado en abril de 2020. El rostro de Bill Murray y la referencia a Atrapado en el tiempo expresan la repetición de los días. La maquinaria desmontada del reloj pasa a formar parte de la superficie de la obra.",
+      "images": [
+        {
+          "src": "/images/catalogo/i-got-you-babe-01.jpg",
+          "width": 1874,
+          "height": 1405,
+          "caption": "Obra completa.",
+          "source": "https://www.facebook.com/photo/?fbid=4820372858037388&set=a.4820384624702878",
+          "sha256": "c2da0b046b4fa8117d36c20524638743554e2007dacf98e83dc98a55ab02bcef",
+          "source_local": "work/naroa-artwork-intake/4820384624702878-cover.jpg"
+        },
+        {
+          "src": "/images/catalogo/i-got-you-babe-02.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 1 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=4820373288037345&set=a.4820384624702878",
+          "sha256": "3c8e6e26c52f6931876f1b350bb3cb69b9ef689e43132a2a2567a7368283b338",
+          "source_local": "work/naroa-artwork-intake/4820384624702878-01.jpg"
+        },
+        {
+          "src": "/images/catalogo/i-got-you-babe-03.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 2 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=4820373011370706&set=a.4820384624702878",
+          "sha256": "55b5e2fda3b1494f042a813f4c6519840e1f458a4f0e192e36b9de53f38169fd",
+          "source_local": "work/naroa-artwork-intake/4820384624702878-02.jpg"
+        },
+        {
+          "src": "/images/catalogo/i-got-you-babe-04.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Detalle o perspectiva 3 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=4820372998037374&set=a.4820384624702878",
+          "sha256": "c7806cbbddec03b3b7f6aa07287922c3ecc66f0362ccd41d22755283d246f6f4",
+          "source_local": "work/naroa-artwork-intake/4820384624702878-03.jpg"
+        },
+        {
+          "src": "/images/catalogo/i-got-you-babe-05.jpg",
+          "width": 837,
+          "height": 640,
+          "caption": "Detalle o perspectiva 4 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=4820372561370751&set=a.4820384624702878",
+          "sha256": "47bdb92b929aee8a13ecbd347c627cad43a3797e20e911f36a1aa84b83d94ab3",
+          "source_local": "work/naroa-artwork-intake/4820384624702878-04.jpg"
+        },
+        {
+          "src": "/images/catalogo/i-got-you-babe-06.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 5 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=4820372864704054&set=a.4820384624702878",
+          "sha256": "08975db8e0eff581dfe1f205f9c86f35a3440a4b1294c253d42277f95ece02fb",
+          "source_local": "work/naroa-artwork-intake/4820384624702878-08.jpg"
+        }
+      ],
+      "source": "https://www.facebook.com/media/set/?set=a.4820384624702878&type=3",
+      "dimensions": null,
+      "materials": null,
+      "series": null,
+      "year": 2020,
+      "credit": null,
+      "selected": false,
+      "kind": "obra"
+    },
+    {
+      "slug": "jose-manuel-ezquerra",
+      "title": "Jose Manuel Ezquerra: t’abla con su mirada",
+      "category": "objetos",
+      "technique": "Lápices Art & Graphic, rotuladores Uni-Posca, permanentes y acrílico",
+      "support": "Tabla de cocina de madera sin tratar",
+      "story": "Un retrato lleno de trazos de color sobre una tabla de cocina. El dibujo y la pintura dejan visible la presencia cotidiana del soporte.",
+      "images": [
+        {
+          "src": "/images/catalogo/jose-manuel-ezquerra-01.jpg",
+          "width": 1585,
+          "height": 2048,
+          "caption": "Obra completa.",
+          "source": "https://www.facebook.com/photo/?fbid=773329519408429&set=a.773327879408593",
+          "sha256": "cb0d94ce2e348e6370d34c0aff95edd7bffa15f8751b2d341d4c84024338f66f",
+          "source_local": "work/naroa-artwork-intake/773327879408593-cover.jpg"
+        },
+        {
+          "src": "/images/catalogo/jose-manuel-ezquerra-02.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Detalle o perspectiva 1 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=773329689408412&set=a.773327879408593",
+          "sha256": "722ae579a29d3daa2aea1edf2314e7ee92f016586237958ac3ff47628a43a925",
+          "source_local": "work/naroa-artwork-intake/773327879408593-01.jpg"
+        },
+        {
+          "src": "/images/catalogo/jose-manuel-ezquerra-03.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 2 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=773329616075086&set=a.773327879408593",
+          "sha256": "3fcfcecfee93cf95ef930e49d0a90163d9f2e32ea6850a458a2f9d51a3ca397e",
+          "source_local": "work/naroa-artwork-intake/773327879408593-02.jpg"
+        },
+        {
+          "src": "/images/catalogo/jose-manuel-ezquerra-04.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 3 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=773330449408336&set=a.773327879408593",
+          "sha256": "35aecc9e94c885fda479e1750d41c98bc34db71fb2986cb236509fa37b71aa62",
+          "source_local": "work/naroa-artwork-intake/773327879408593-08.jpg"
+        },
+        {
+          "src": "/images/catalogo/jose-manuel-ezquerra-05.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Detalle o perspectiva 4 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=773330786074969&set=a.773327879408593",
+          "sha256": "ff5ddb7839cdcdecfdc70c395e8f77939e4d94c69d385f518879d7ddd0568f47",
+          "source_local": "work/naroa-artwork-intake/773327879408593-12.jpg"
+        },
+        {
+          "src": "/images/catalogo/jose-manuel-ezquerra-06.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 5 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=773331369408244&set=a.773327879408593",
+          "sha256": "44b86060ab5051e6d0fb93ad6619a72cefc65ae1d94db26554eee500a88ec120",
+          "source_local": "work/naroa-artwork-intake/773327879408593-18.jpg"
+        }
+      ],
+      "source": "https://www.facebook.com/media/set/?set=a.773327879408593&type=3",
+      "dimensions": "25 × 35 cm",
+      "materials": null,
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra"
+    },
+    {
+      "slug": "billy-saw",
+      "title": "Billy Saw",
+      "category": "caracterizacion",
+      "technique": "Caracterización",
+      "support": "Rostro",
+      "story": "Caracterización presentada para los carnavales de 2016: una transformación que explora el rostro como soporte artístico.",
+      "images": [
+        {
+          "src": "/images/catalogo/billy-saw-01.jpg",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Obra completa.",
+          "source": "https://www.facebook.com/photo/?fbid=1026561340751911&set=a.1026561114085267",
+          "sha256": "dbdc860c5ff1cb8af4d0d4d06aea43ad853ede392bf2df4e0db0cb9f88aa0f38",
+          "source_local": "work/naroa-artwork-intake/1026561114085267-cover.jpg"
+        },
+        {
+          "src": "/images/catalogo/billy-saw-02.jpg",
+          "width": 590,
+          "height": 836,
+          "caption": "Detalle o perspectiva 1 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=1026561157418596&set=a.1026561114085267",
+          "sha256": "ce5bd48d6809b4ed80a484079dca03927f6b8a855e628c6a65d9762943e120e5",
+          "source_local": "work/naroa-artwork-intake/1026561114085267-01.jpg"
+        },
+        {
+          "src": "/images/catalogo/billy-saw-03.jpg",
+          "width": 590,
+          "height": 845,
+          "caption": "Detalle o perspectiva 2 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=1026561164085262&set=a.1026561114085267",
+          "sha256": "eee8a657913b62b5b0847c4dda65412f972b82c4134764280e68fee883a76b69",
+          "source_local": "work/naroa-artwork-intake/1026561114085267-02.jpg"
+        },
+        {
+          "src": "/images/catalogo/billy-saw-04.jpg",
+          "width": 640,
+          "height": 865,
+          "caption": "Detalle o perspectiva 3 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=1026561227418589&set=a.1026561114085267",
+          "sha256": "b3138c81871c3ce80794aa3eda71fbdc376ff0e8b83ca6e7ab5f86cda6dd6601",
+          "source_local": "work/naroa-artwork-intake/1026561114085267-04.jpg"
+        },
+        {
+          "src": "/images/catalogo/billy-saw-05.jpg",
+          "width": 600,
+          "height": 820,
+          "caption": "Detalle o perspectiva 4 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=1026561267418585&set=a.1026561114085267",
+          "sha256": "ee33484525af22654d7fd8d6f33d8ba87485b15ff48e5bff0cd5fe7a10e6e4ac",
+          "source_local": "work/naroa-artwork-intake/1026561114085267-06.jpg"
+        },
+        {
+          "src": "/images/catalogo/billy-saw-06.jpg",
+          "width": 640,
+          "height": 871,
+          "caption": "Detalle o perspectiva 5 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=1026561307418581&set=a.1026561114085267",
+          "sha256": "97630e8629327827ef4021c94e3a0a03ed8cd7f8773fae1e34094f6646a934ca",
+          "source_local": "work/naroa-artwork-intake/1026561114085267-07.jpg"
+        }
+      ],
+      "source": "https://www.facebook.com/media/set/?set=a.1026561114085267&type=3",
+      "dimensions": null,
+      "materials": null,
+      "series": null,
+      "year": 2016,
+      "credit": null,
+      "selected": false,
+      "kind": "caracterizacion"
+    },
+    {
+      "slug": "out-por-los-pelos",
+      "title": "OUT (por los pelos)",
+      "category": "collage",
+      "technique": "Lápices de colores y collage",
+      "support": "Marco con passepartout intervenido",
+      "story": "Andre Agassi en Roland Garros de 1990. El marco se convierte en pista: fieltro, redes y cabellos acompañan el retrato. El recorte del passepartout y las gotas de látex prolongan la tensión de la escena.",
+      "images": [
+        {
+          "src": "/images/catalogo/out-por-los-pelos-01.jpg",
+          "width": 1356,
+          "height": 1684,
+          "caption": "Obra completa.",
+          "source": "https://www.facebook.com/photo/?fbid=4622931041114905&set=a.4622940807780595",
+          "sha256": "64f6fd12a965e429b105d98b5a60aa1a8b0fff403d2460fe5af5cdb1723825ae",
+          "source_local": "work/naroa-artwork-intake/4622940807780595-cover.jpg"
+        },
+        {
+          "src": "/images/catalogo/out-por-los-pelos-02.jpg",
+          "width": 832,
+          "height": 403,
+          "caption": "Detalle o perspectiva 1 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=4622931557781520&set=a.4622940807780595",
+          "sha256": "fc8db39ee7f1e130e8087d32103f54edd79027e07f2bad8ad398a19d9ba6b99f",
+          "source_local": "work/naroa-artwork-intake/4622940807780595-02.jpg"
+        },
+        {
+          "src": "/images/catalogo/out-por-los-pelos-03.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 2 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=4622931247781551&set=a.4622940807780595",
+          "sha256": "b3f4c213e2391b067d79f900abfc39a5d9e258ce949000b3d3549eafef0079aa",
+          "source_local": "work/naroa-artwork-intake/4622940807780595-03.jpg"
+        },
+        {
+          "src": "/images/catalogo/out-por-los-pelos-04.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 3 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=4622931291114880&set=a.4622940807780595",
+          "sha256": "46c3b98d9cec3593f7c3f49da8e641e2e69aa78cbf7b22b91703f92dc0ac75cf",
+          "source_local": "work/naroa-artwork-intake/4622940807780595-04.jpg"
+        },
+        {
+          "src": "/images/catalogo/out-por-los-pelos-05.jpg",
+          "width": 843,
+          "height": 637,
+          "caption": "Detalle o perspectiva 4 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=4622931734448169&set=a.4622940807780595",
+          "sha256": "8880e559af285c6e8296af10e7f28a7cb42008b836eca61c64936dadcc27b27e",
+          "source_local": "work/naroa-artwork-intake/4622940807780595-06.jpg"
+        },
+        {
+          "src": "/images/catalogo/out-por-los-pelos-06.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 5 de la obra.",
+          "source": "https://www.facebook.com/photo/?fbid=4622931831114826&set=a.4622940807780595",
+          "sha256": "5a1eab03024eb306d5bda401735937f11a852df97b719573b33918f0b991240e",
+          "source_local": "work/naroa-artwork-intake/4622940807780595-08.jpg"
+        }
+      ],
+      "source": "https://www.facebook.com/media/set/?set=a.4622940807780595&type=3",
+      "dimensions": "50 × 40 cm",
+      "materials": null,
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra"
+    },
+    {
+      "slug": "the-munsters",
+      "title": "The Munsters",
+      "category": "collage",
+      "technique": "Rotuladores de tinta, permanentes y acrílicos; frottage con grafito",
+      "support": "Papel con marco impreso",
+      "story": "Una colección de cuatro retratos sobre un fondo de frottage. El dibujo, los contrastes de tinta y los marcos impresos reúnen a la familia Munster.",
+      "images": [
+        {
+          "src": "/images/catalogo/the-munsters-01.jpg",
+          "width": 1452,
+          "height": 2048,
+          "caption": "Lily Munster.",
+          "source": "https://www.facebook.com/photo/?fbid=956358734438839&set=a.956358597772186",
+          "sha256": "000d318e67d1545bb6c117860b40ef68681138792f9526d5b0ec897e61a5627f",
+          "source_local": "work/naroa-artwork-intake/956358597772186-cover.jpg"
+        },
+        {
+          "src": "/images/catalogo/the-munsters-02.jpg",
+          "width": 590,
+          "height": 826,
+          "caption": "Herman Munster.",
+          "source": "https://www.facebook.com/photo/?fbid=956358884438824&set=a.956358597772186",
+          "sha256": "3c51035361d744d101c1a38888520cdef70e289e14dccbeb98c554af24df677a",
+          "source_local": "work/naroa-artwork-intake/956358597772186-02.jpg"
+        },
+        {
+          "src": "/images/catalogo/the-munsters-03.jpg",
+          "width": 590,
+          "height": 827,
+          "caption": "Eddie Munster.",
+          "source": "https://www.facebook.com/photo/?fbid=956358754438837&set=a.956358597772186",
+          "sha256": "47c29f12a28bc0e0dcc820aed62a053887d18b75b23cf6a5ade7da9df3c7cb62",
+          "source_local": "work/naroa-artwork-intake/956358597772186-03.jpg"
+        },
+        {
+          "src": "/images/catalogo/the-munsters-04.jpg",
+          "width": 590,
+          "height": 837,
+          "caption": "El abuelo Munster.",
+          "source": "https://www.facebook.com/photo/?fbid=956358727772173&set=a.956358597772186",
+          "sha256": "782e5e581de224803d8dadf0b798d86a327efb5c176308456a45f7605383664a",
+          "source_local": "work/naroa-artwork-intake/956358597772186-04.jpg"
+        }
+      ],
+      "source": "https://www.facebook.com/media/set/?set=a.956358597772186&type=3",
+      "dimensions": "A4",
+      "materials": null,
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra"
+    },
+    {
+      "slug": "denbora-nora-zoaz",
+      "title": "Denbora Nora Zoaz Eder Galant Hori?",
+      "category": "collage",
+      "technique": "Pintura acrílica y collage",
+      "support": "Lienzo",
+      "story": "Un rostro contempla el paso del tiempo entre hojas de calendario recortadas como vegetales y turnos de espera. Los tonos cálidos y los distintos barnices acompañan una reflexión sobre el afecto por la vida y la manera de habitar los días.",
+      "images": [
+        {
+          "src": "/images/catalogo/denbora-nora-zoaz.jpg",
+          "width": 2048,
+          "height": 1366,
+          "caption": "El rostro y el collage de hojas de calendario.",
+          "source": "https://www.facebook.com/naroa.artista.plastica/posts/pfbid02Lr4MnfMkwrdmxN4GewwY8WLAwvRRKT1oajaVkLJXWsM4mCg7dzWFoXa3af67YKKyl",
+          "sha256": "8ec25e352e263a6fe81f41a2451899bd68c53eb9a896c262e5c484abffb408cd",
+          "source_local": "work/naroa-artwork-intake/post-0-0.jpg"
+        }
+      ],
+      "source": "https://www.facebook.com/naroa.artista.plastica/posts/pfbid02Lr4MnfMkwrdmxN4GewwY8WLAwvRRKT1oajaVkLJXWsM4mCg7dzWFoXa3af67YKKyl",
+      "dimensions": "54 × 81 cm",
+      "materials": "Hojas de calendario impresas, pintura acrílica y barnices mate y brillante.",
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": false,
+      "kind": "obra"
     }
   ]
 }

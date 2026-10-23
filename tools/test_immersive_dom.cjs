@@ -165,7 +165,42 @@ async function eyeMatch(ui, base, points) {
 (async () => {
   const ui = create(); await ui.flush();
   const works = ui.w.NAROA_CATALOG.projects;
-  assert.equal(works.length, 40);
+  assert.equal(works.length, manifest.projects);
+  for (const slug of ['la-llorona', 'pablo', 'euskolander-no-hay-mas-que-uno', 'idoia-arkatz-bihotz', 'little-adi', 'lauralore', 'can-dy-queen', 'el-hombre-que-susurraba-a-las-estrellas', 'olinga-a-la-naranja', 'i-got-you-babe', 'jose-manuel-ezquerra', 'billy-saw', 'out-por-los-pelos', 'the-munsters', 'denbora-nora-zoaz']) {
+    assert.equal(works.filter(p => p.slug === slug).length, 1, 'Every supplied artwork has one stable route');
+  }
+  assert.equal(works.find(p => p.slug === 'la-llorona').photos.length, 3);
+  assert.ok(works.find(p => p.slug === 'la-llorona').materials.includes('sal rosa'));
+  for (const slug of ['rosetta', 'dustin', 'pippilotta', 'roisin']) {
+    const work = works.find(p => p.slug === slug);
+    assert.equal(work.stage, 'obra'); assert.ok(work.photos.length >= 2, 'Completed works retain their process drawing');
+  }
+  const puzzle = create('/obra/saio-puzzle/'); await puzzle.flush();
+  const puzzleIndex = works.findIndex(p => p.slug === 'saio-puzzle');
+  const pieces = () => Array.from(puzzle.document.querySelectorAll('[data-puzzle-piece]'));
+  assert.equal(pieces().length, 25);
+  const assembled = pieces().map(p => p.getAttribute('transform'));
+  puzzle.scroll(puzzleIndex + .39); await puzzle.flush();
+  const scattered = pieces().map(p => p.getAttribute('transform'));
+  assert.notDeepEqual(scattered, assembled, 'Native scroll mixes the pieces');
+  assert.equal(puzzle.find('[data-gallery]').dataset.transition, 'puzzle');
+  puzzle.scroll(puzzleIndex + .78); await puzzle.flush();
+  assert.deepEqual(pieces().map(p => p.getAttribute('transform')), assembled, 'The pieces reassemble before leaving the work');
+  assert.equal(puzzle.find('[data-art-title]').textContent, 'Saio Puzzle');
+  puzzle.scroll(puzzleIndex + .39); await puzzle.flush();
+  assert.deepEqual(pieces().map(p => p.getAttribute('transform')), scattered, 'Reverse scroll follows exactly the same piece paths');
+  puzzle.scroll(puzzleIndex); await puzzle.flush();
+  assert.deepEqual(pieces().map(p => p.getAttribute('transform')), assembled);
+  puzzle.click('[data-fit]'); assert.ok(puzzle.find('.is-puzzle').classList.contains('puzzle-still'));
+  puzzle.dom.window.close();
+  const stillPuzzle = create('/obra/saio-puzzle/', true); await stillPuzzle.flush();
+  assert.equal(stillPuzzle.document.querySelectorAll('[data-puzzle-piece]').length, 0, 'Reduced motion shows the intact photograph');
+  stillPuzzle.dom.window.close();
+  const llorona = create('/obra/la-llorona/'); await llorona.flush();
+  llorona.click('[data-open-story]');
+  assert.equal(llorona.find('[data-art-source]').hidden, true, 'An attachment without a public URL does not produce a fabricated source link');
+  assert.ok(llorona.find('[data-facts]').textContent.includes('sal rosa'));
+  llorona.dom.window.close();
   assert.equal(ui.find('[data-art-title]').textContent, 'Marilyn Rocks');
   assert.ok(ui.document.querySelectorAll('.art-scene img[src]').length <= 3, 'Do not eagerly decode the complete catalogue');
   const originalTransform = ui.find('.art-scene img').style.transform;
@@ -378,7 +413,7 @@ async function eyeMatch(ui, base, points) {
     assert.equal(artCopy.inert, true, 'An invisible artwork link cannot receive keyboard focus');
     assert.equal(portrait.find('.hero-down').getAttribute('href'), '#contenido', 'The biography remains directly reachable');
     const scenes = Array.from(portrait.document.querySelectorAll('[data-portrait-scene]'));
-    assert.equal(scenes.length, 40, 'The artist page continues through the complete catalogue');
+    assert.equal(scenes.length, manifest.projects, 'The artist page continues through the complete catalogue');
     const travel = async position => { portrait.w.scrollTo({ top: viewport.height * (2.8 + position * 1.1) }); await portrait.flush(); };
     await scrollPortrait(.9999); const lastPortalFrame = [artwork.style.transform, artwork.style.opacity];
     await travel(0);
@@ -428,7 +463,7 @@ async function eyeMatch(ui, base, points) {
       assert.ok(portrait.document.querySelectorAll('[data-portrait-scene] img[src]').length <= 3, 'Continuation loads only the current photograph and its neighbours');
       assert.equal(portrait.w.location.pathname, '/sobre-mi/', 'No route navigation interrupts the exhibition');
     }
-    assert.equal(visited.size, 40); assert.equal(portrait.find('[data-portrait-next]').disabled, true);
+    assert.equal(visited.size, manifest.projects); assert.equal(portrait.find('[data-portrait-next]').disabled, true);
     assert.equal(portrait.find('[data-portrait-controls] a').getAttribute('href'), '#contenido', 'Biography remains available throughout the exhibition');
     await travel(0);
     assert.equal(portrait.find('[data-portrait-prev]').disabled, true);
@@ -614,6 +649,6 @@ async function eyeMatch(ui, base, points) {
     if (route === '/cuaderno/') assert.equal(page.document.querySelectorAll('.notebook-posts article').length, 6);
     page.dom.window.close();
   }
-  assert.equal(manifest.projects, 40); assert.deepEqual(errors, []);
-  console.log('PASS: all 40 artwork flows, feathered depth transitions, 3 gallery eye pairs, kinetic titles, native scroll, free inertia, direct links, 3-image loading bound, search/filters, details/photos, quiet mode, reduced motion, Vaivenes, editorial reveals, responsive Naroa-to-Rara Avis pupil/iris alignment, photographic wink, cinematic deep-iris camera with continuous forward velocity across the blend, eased outward turn, reversible reveal, image-load guard, seamless continuation through all 40 works, 8 additional deep eye matches embedded catalogue navigation, opt-in reactive sound fragments, speed and direction response, bounded voices, silence at rest and safe audio lifecycle.');
+  assert.equal(manifest.projects, 55); assert.deepEqual(errors, []);
+  console.log('PASS: all 55 artwork flows, feathered depth transitions, 3 gallery eye pairs, kinetic titles, native scroll, free inertia, direct links, 3-image loading bound, search/filters, details/photos, quiet mode, reduced motion, Vaivenes, editorial reveals, responsive Naroa-to-Rara Avis pupil/iris alignment, photographic wink, cinematic deep-iris camera with continuous forward velocity across the blend, eased outward turn, reversible reveal, image-load guard, seamless continuation through all 55 works, 8 additional deep eye matches embedded catalogue navigation, opt-in reactive sound fragments, speed and direction response, bounded voices, silence at rest and safe audio lifecycle.');
 })().catch(error => { console.error(error); process.exitCode = 1; });
