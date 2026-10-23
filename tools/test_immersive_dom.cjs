@@ -8,7 +8,7 @@ const manifest = JSON.parse(fs.readFileSync(path.join(output, 'immersive/build-m
 const errors = [];
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-function create(route = '/', reduce = false) {
+function create(route = '/', reduce = false, viewport = { width: 1024, height: 768 }) {
   const file = path.join(output, route, 'index.html');
   let time = 0, id = 0;
   const observers = [];
@@ -17,6 +17,8 @@ function create(route = '/', reduce = false) {
   const dom = new JSDOM(fs.readFileSync(file, 'utf8'), {
     runScripts: 'outside-only', url: 'https://portfolio.test' + route, virtualConsole: native,
     beforeParse(w) {
+      Object.defineProperty(w, 'innerWidth', { value: viewport.width, configurable: true });
+      Object.defineProperty(w, 'innerHeight', { value: viewport.height, configurable: true });
       w.matchMedia = () => ({ matches: reduce, addEventListener() {} });
       w.requestAnimationFrame = callback => { const token = ++id; callbacks.set(token, callback); return token; };
       w.cancelAnimationFrame = token => callbacks.delete(token);
@@ -31,6 +33,7 @@ function create(route = '/', reduce = false) {
       });
       Object.defineProperty(w.HTMLImageElement.prototype, 'complete', { get: () => true });
       Object.defineProperty(w.HTMLImageElement.prototype, 'naturalWidth', { get: () => 1000 });
+      Object.defineProperty(w.HTMLImageElement.prototype, 'naturalHeight', { get: () => 1000 });
       w.HTMLDialogElement.prototype.showModal = function () {
         this.returnFocus = w.document.activeElement; this.setAttribute('open', '');
         this.querySelector('button,input,a')?.focus();
@@ -45,8 +48,8 @@ function create(route = '/', reduce = false) {
   const step = w.innerHeight * .75;
   if (track) {
     const height = w.innerHeight + Number(track.style.getPropertyValue('--steps')) * step;
-    track.getBoundingClientRect = () => ({ top: -w.scrollY, bottom: height - w.scrollY, height, width: 1024, left: 0, right: 1024 });
-    stage.getBoundingClientRect = () => ({ top: 0, bottom: w.innerHeight, height: w.innerHeight, width: 1024, left: 0, right: 1024 });
+    track.getBoundingClientRect = () => ({ top: -w.scrollY, bottom: height - w.scrollY, height, width: viewport.width, left: 0, right: viewport.width });
+    stage.getBoundingClientRect = () => ({ top: 0, bottom: w.innerHeight, height: w.innerHeight, width: viewport.width, left: 0, right: viewport.width });
   }
   const scripts = Array.from(document.querySelectorAll('script[src]')).map(s => new URL(s.src).pathname);
   scripts.forEach(src => w.eval(fs.readFileSync(path.join(output, src), 'utf8')));
@@ -69,6 +72,25 @@ function create(route = '/', reduce = false) {
   return { dom, w, document, find, click, flush, wheel, key, observers, step, scroll: index => w.scrollTo({top:index * step}) };
 }
 
+async function eyeMatch(ui, base, points) {
+  ui.scroll(base + .5); await ui.flush();
+  assert.equal(ui.find('[data-gallery]').dataset.transition, 'eyes');
+  assert.equal(Number(ui.find(`[data-scene="${base + 1}"]`).style.opacity), .5);
+  const width = ui.w.innerWidth + 20, height = ui.w.innerHeight + 20, cover = Math.max(width, height);
+  points.forEach((point, offset) => {
+    const scene = ui.find(`[data-scene="${base + offset}"]`), img = scene.querySelector('img');
+    const pose = /translate3d\(([-\d.]+)px,([-\d.]+)px,0\) scale\(([\d.]+)\)/.exec(img.style.transform);
+    assert.ok(pose, 'Eye transitions use a measurable image-space transform');
+    const [, tx, ty, scale] = pose.map(Number);
+    assert.ok(scale >= 2.6, 'The transition visibly moves into the eye');
+    const focus = scene.style.getPropertyValue('--position').split(' ').map(v => parseFloat(v) / 100);
+    const x = (width - cover) * focus[0] + point[0] * cover;
+    const y = (height - cover) * focus[1] + point[1] * cover;
+    assert.ok(Math.abs(-10 + tx + scale * x - ui.w.innerWidth * .5) < .03, 'Both pupils meet at the same horizontal viewport point');
+    assert.ok(Math.abs(-10 + ty + scale * y - ui.w.innerHeight * .42) < .03, 'Both pupils meet at the same vertical viewport point');
+  });
+}
+
 (async () => {
   const ui = create(); await ui.flush();
   const works = ui.w.NAROA_CATALOG.projects;
@@ -82,25 +104,33 @@ function create(route = '/', reduce = false) {
   assert.notEqual(ui.find('.art-scene img').style.transform, originalTransform);
   assert.equal(ui.find('[data-art-title]').textContent, 'Marilyn Rocks');
   assert.equal(ui.find('[data-scene="1"]').style.visibility, 'visible');
-  assert.match(ui.find('[data-scene="1"]').style.clipPath, /^polygon\(0 [\d.]+%,100% [\d.]+%,100% 100%,0 100%\)$/);
+  assert.equal(ui.find('[data-gallery]').dataset.transition, 'eyes');
+  assert.equal(ui.find('[data-scene="1"]').style.maskImage, 'none');
   assert.equal(ui.find('[data-kinetic-title]').textContent, 'Rara Avis');
   assert.ok(Number(ui.find('[data-art-copy]').style.opacity) >= .45, 'Captions remain legible if scrolling stops mid-transition');
   const stoppedTransform = ui.find('.art-scene img').style.transform;
   await wait(220); await ui.flush();
   assert.equal(ui.find('.art-scene img').style.transform, stoppedTransform, 'Stopping the scroll must not force another movement');
   assert.equal(ui.find('[data-art-title]').textContent, 'Marilyn Rocks');
+  await eyeMatch(ui, 0, [[.635,.392],[.683,.417]]);
+  ui.scroll(.49); await ui.flush(); const before = parseFloat(ui.find('[data-art-copy]').style.transform.slice(11));
+  ui.scroll(.51); await ui.flush(); const after = parseFloat(ui.find('[data-art-copy]').style.transform.slice(11));
+  assert.ok(Math.abs(after - before) < 3, 'Caption movement remains continuous when the title changes');
   ui.scroll(1); await ui.flush();
   assert.equal(ui.find('[data-art-title]').textContent, 'Rara Avis');
   assert.equal(ui.find('[data-kinetic-title]').textContent, '');
   assert.equal(ui.find('[data-art-copy]').style.opacity, '1');
   ui.scroll(1.28); await ui.flush();
-  assert.match(ui.find('[data-scene="2"]').style.clipPath, /^polygon\([\d.]+% 0,100% 0,100% 100%,[\d.]+% 100%\)$/);
+  assert.match(ui.find('[data-scene="2"]').style.maskImage, /^linear-gradient\(110deg,/);
+  assert.equal(ui.find('[data-gallery]').dataset.transition, 'depth');
   ui.scroll(6.2); await ui.flush();
   assert.equal(ui.find('[data-art-title]').textContent, works[6].title, 'Fast native scrolling can traverse several works without a gesture lock');
   ui.scroll(3.1); await ui.flush();
   assert.equal(ui.find('[data-art-title]').textContent, works[3].title, 'Reversing scroll follows the new position immediately');
   ui.scroll(7.3); ui.w.dispatchEvent(new ui.w.Event('resize')); await ui.flush();
   assert.equal(ui.w.scrollY, 7.3 * ui.step, 'A resize with unchanged geometry must not jump back to the last decoded frame');
+  await eyeMatch(ui, 5, [[.583,.459],[.545,.402]]);
+  await eyeMatch(ui, 10, [[.469,.463],[.678,.439]]);
   ui.click('[data-select="0"]'); await ui.flush();
   for (let i = 0; i < works.length; i++) {
     if (i) { ui.click('[data-next]'); await ui.flush(); }
@@ -144,6 +174,9 @@ function create(route = '/', reduce = false) {
   ui.key('Escape'); assert.equal(ui.document.body.classList.contains('is-quiet'), false);
   ui.dom.window.close();
 
+  const mobile = create('/', false, { width: 390, height: 844 }); await mobile.flush();
+  await eyeMatch(mobile, 0, [[.635,.392],[.683,.417]]); mobile.dom.window.close();
+
   const deepLink = create('/obra/amy-rocks/'); await deepLink.flush();
   assert.equal(deepLink.find('[data-art-title]').textContent, 'Amy Rocks');
   assert.equal(deepLink.w.scrollY, 3 * deepLink.step, 'Direct artwork URLs start at the correct document position');
@@ -172,5 +205,5 @@ function create(route = '/', reduce = false) {
     page.dom.window.close();
   }
   assert.equal(manifest.projects, 40); assert.deepEqual(errors, []);
-  console.log('PASS: all 40 artwork flows, alternating scroll reveals, kinetic titles, native scroll, free inertia, direct links, 3-image loading bound, search/filters, details/photos, quiet mode, reduced motion, Vaivenes and editorial reveals.');
+  console.log('PASS: all 40 artwork flows, feathered depth transitions, 3 eye-to-eye pairs and mobile pupil alignment, kinetic titles, native scroll, free inertia, direct links, 3-image loading bound, search/filters, details/photos, quiet mode, reduced motion, Vaivenes and editorial reveals.');
 })().catch(error => { console.error(error); process.exitCode = 1; });

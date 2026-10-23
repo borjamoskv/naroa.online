@@ -57,13 +57,40 @@
     const kineticTitle = $('[data-kinetic-title]', stage), caption = $('[data-art-copy]', stage);
     const state = { index: Number(stage.dataset.initial) || 0, fit: false, quiet: false, photo: 0 };
     const motion = { position: state.index, desired: state.index, frame: null, request: 0, navigation: null };
-    const track = stage.closest('.art-scroll'), geometry = { top: 0, step: 1 };
+    const track = stage.closest('.art-scroll'), geometry = { top: 0, step: 1, width: 0, height: 0 };
     document.documentElement.classList.add('gallery-scroll');
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     const pan = { x: 0, y: 0, tx: 0, ty: 0, frame: null };
     const pendingImages = new Map();
     const focals = { 'rara-avis': '56% 42%', 'amor-en-conserva': '50% 54%', 'entre-tantas-flores-de-dia': '50% 36%', 'johnny-rocks': '50% 42%', 'rockagipsy': '50% 43%', 'hugo-box': '50% 38%' };
     const mobileFocals = { 'rara-avis': '61% 40%', 'amor-en-conserva': '48% 54%' };
+    // Pupil centres measured on the unaltered cover photographs, in source-image coordinates.
+    const eyes = {
+      'marilyn-rocks': { x: .635, y: .392, span: .067 },
+      'rara-avis': { x: .683, y: .417, span: .049 },
+      'johnny-rocks': { x: .583, y: .459, span: .066 },
+      'rockagipsy': { x: .545, y: .402, span: .037 },
+      'infusion-de-berto': { x: .469, y: .463, span: .043 },
+      'buena-fuente': { x: .678, y: .439, span: .050 }
+    };
+    const eyeLinks = { 'marilyn-rocks': 'rara-avis', 'johnny-rocks': 'rockagipsy', 'infusion-de-berto': 'buena-fuente' };
+    const ease = value => { const t = clamp(value, 0, 1); return t * t * (3 - 2 * t); };
+    function eyePose(index, amount) {
+      const eye = eyes[works[index].slug], img = images[index];
+      const width = geometry.width + 20, height = geometry.height + 20;
+      const naturalWidth = img.naturalWidth || 1000, naturalHeight = img.naturalHeight || 1000;
+      const cover = Math.max(width / naturalWidth, height / naturalHeight);
+      const pictureWidth = naturalWidth * cover, pictureHeight = naturalHeight * cover;
+      const focus = scenes[index].style.getPropertyValue('--position').split(' ').map(v => parseFloat(v) / 100);
+      const x = (width - pictureWidth) * focus[0] + eye.x * pictureWidth;
+      const y = (height - pictureHeight) * focus[1] + eye.y * pictureHeight;
+      const closeup = clamp(clamp(geometry.width * .18, 140, 280) / (eye.span * pictureWidth), 2.6, 6);
+      const zoom = 1.10 + (closeup - 1.10) * amount;
+      const tx = -(zoom - 1) * width / 2 * (1 - amount) + (geometry.width * .5 + 10 - x * zoom) * amount;
+      const ty = -(zoom - 1) * height / 2 * (1 - amount) + (geometry.height * .42 + 10 - y * zoom) * amount;
+      img.style.transformOrigin = '0px 0px';
+      img.style.transform = `translate3d(${tx.toFixed(3)}px,${ty.toFixed(3)}px,0) scale(${zoom.toFixed(5)})`;
+    }
     function focusPictures() { works.forEach((p, i) => scenes[i].style.setProperty('--position', (innerWidth < 760 && mobileFocals[p.slug]) || focals[p.slug] || '50% 44%')); }
     focusPictures();
     function ensureImage(i) {
@@ -123,42 +150,50 @@
     }
     function render() {
       const position = clamp(motion.position, 0, works.length - 1), base = Math.floor(position), fraction = position - base;
-      const still = state.fit || reduced.matches;
+      const still = state.fit || reduced.matches, progress = ease(fraction);
       const sideways = (base + 1) % 2 === 0;
-      const edge = (1 - fraction) * 100, slant = Math.sin(fraction * Math.PI) * 9;
-      const near = clamp(edge - slant, 0, 100).toFixed(3), far = clamp(edge + slant, 0, 100).toFixed(3);
-      scenes.forEach((s, i) => {
-        const visible = still ? i === state.index : i === base || (fraction > .0001 && i === base + 1);
-        s.style.visibility = visible ? 'visible' : 'hidden'; s.style.zIndex = i === base + 1 ? '2' : '1';
-        s.style.willChange = visible ? 'clip-path' : 'auto'; images[i].style.willChange = visible ? 'transform' : 'auto';
+      const eyeMatch = !still && !!eyeLinks[works[base].slug] && eyeLinks[works[base].slug] === works[base + 1]?.slug;
+      const edge = (1 - progress) * 100, feather = Math.sin(progress * Math.PI) * 14;
+      stage.dataset.transition = still ? 'still' : eyeMatch ? 'eyes' : 'depth';
+      scenes.forEach((scene, index) => {
+        const visible = still ? index === state.index : index === base || (fraction > .0001 && index === base + 1);
+        scene.style.visibility = visible ? 'visible' : 'hidden'; scene.style.zIndex = index === base + 1 ? '2' : '1';
+        scene.style.willChange = visible ? 'opacity,mask-image' : 'auto'; images[index].style.willChange = visible ? 'transform' : 'auto';
         if (!visible) return;
-        if (still) { s.style.clipPath = 'inset(0)'; images[i].style.transform = ''; return; }
-        if (i === base) {
-          s.style.clipPath = 'inset(0)';
-          images[i].style.transform = sideways
-            ? `translate3d(${(-fraction * 14).toFixed(3)}%,0,0) scale(${(1.08 + fraction * .18).toFixed(4)})`
-            : `translate3d(0,${(-fraction * 34).toFixed(3)}%,0) scale(${(1.08 + fraction * .18).toFixed(4)})`;
+        scene.style.clipPath = 'inset(0)'; scene.style.opacity = '1';
+        scene.style.maskImage = scene.style.webkitMaskImage = 'none';
+        images[index].style.transformOrigin = '50% 50%';
+        if (still) { images[index].style.transform = ''; return; }
+        if (eyeMatch) {
+          eyePose(index, index === base ? ease(fraction * 2) : 1 - ease((fraction - .5) * 2));
+          if (index === base + 1) scene.style.opacity = ease((fraction - .40) / .20).toFixed(4);
+          return;
+        }
+        if (index === base) {
+          images[index].style.transform = sideways
+            ? `translate3d(${(-progress * 20).toFixed(3)}%,0,0) scale(${(1.10 + progress * .24).toFixed(5)})`
+            : `translate3d(0,${(-progress * 38).toFixed(3)}%,0) scale(${(1.10 + progress * .24).toFixed(5)})`;
         } else {
-          s.style.clipPath = sideways
-            ? `polygon(${near}% 0,100% 0,100% 100%,${far}% 100%)`
-            : `polygon(0 ${far}%,100% ${near}%,100% 100%,0 100%)`;
-          images[i].style.transform = sideways
-            ? `translate3d(${((1 - fraction) * 22).toFixed(3)}%,0,0) scale(${(1.08 + (1 - fraction) * .12).toFixed(4)})`
-            : `translate3d(0,${((1 - fraction) * 34).toFixed(3)}%,0) scale(${(1.08 + (1 - fraction) * .12).toFixed(4)})`;
+          const mask = `linear-gradient(${sideways ? 110 : 170}deg,transparent ${(edge - feather).toFixed(3)}%,#000 ${(edge + feather).toFixed(3)}%)`;
+          scene.style.maskImage = scene.style.webkitMaskImage = mask;
+          images[index].style.transform = sideways
+            ? `translate3d(${((1 - progress) * 28).toFixed(3)}%,0,0) scale(${(1.10 + (1 - progress) * .18).toFixed(5)})`
+            : `translate3d(0,${((1 - progress) * 44).toFixed(3)}%,0) scale(${(1.10 + (1 - progress) * .18).toFixed(5)})`;
         }
       });
       const transitioning = !still && fraction > .001 && fraction < .999;
       const nextTitle = transitioning ? works[base + 1].title : '';
       if (kineticTitle.textContent !== nextTitle) kineticTitle.textContent = nextTitle;
-      kineticTitle.style.opacity = transitioning ? (Math.sin(fraction * Math.PI) * .46).toFixed(3) : '0';
-      kineticTitle.style.transform = `translate3d(${((fraction - .5) * -12).toFixed(3)}%,${((fraction - .5) * -12).toFixed(3)}vh,0)`;
+      kineticTitle.style.opacity = transitioning && !eyeMatch ? (Math.sin(progress * Math.PI) * .32).toFixed(3) : '0';
+      kineticTitle.style.transform = `translate3d(${((progress - .5) * -14).toFixed(3)}%,${((progress - .5) * -16).toFixed(3)}vh,0)`;
       caption.style.opacity = transitioning ? (.45 + .55 * Math.pow(Math.abs(fraction - .5) * 2, .6)).toFixed(3) : '1';
-      caption.style.transform = transitioning ? `translateY(${((fraction < .5 ? -fraction : 1 - fraction) * 44).toFixed(3)}px)` : '';
+      caption.style.transform = transitioning ? `translateY(${(-Math.sin(fraction * Math.PI * 2) * 10).toFixed(3)}px)` : '';
       stage.classList.toggle('is-travelling', transitioning);
       stage.style.setProperty('--progress', (position * 100).toFixed(3) + '%');
     }
     function measure() {
-      const bounds = track.getBoundingClientRect(), height = stage.getBoundingClientRect().height || innerHeight;
+      const bounds = track.getBoundingClientRect(), viewport = stage.getBoundingClientRect(), height = viewport.height || innerHeight;
+      geometry.width = viewport.width || innerWidth; geometry.height = height;
       geometry.top = bounds.top + scrollY;
       geometry.step = (bounds.height - height) / Math.max(1, works.length - 1) || height * .75;
     }
@@ -229,7 +264,7 @@
     });
     function drawPan() { pan.x += (pan.tx - pan.x) * .1; pan.y += (pan.ty - pan.y) * .1; if (Math.abs(pan.tx - pan.x) < .03 && Math.abs(pan.ty - pan.y) < .03) { pan.x = pan.tx; pan.y = pan.ty; pan.frame = null; } else pan.frame = requestAnimationFrame(drawPan); stage.style.setProperty('--pan-x', pan.x.toFixed(2) + 'px'); stage.style.setProperty('--pan-y', pan.y.toFixed(2) + 'px'); }
     function resetPan() { if (pan.frame !== null) cancelAnimationFrame(pan.frame); pan.x = pan.y = pan.tx = pan.ty = 0; pan.frame = null; stage.style.setProperty('--pan-x', '0px'); stage.style.setProperty('--pan-y', '0px'); }
-    stage.addEventListener('pointermove', e => { if (e.pointerType !== 'mouse' || state.fit || reduced.matches || document.querySelector('dialog[open]')) return; const r = stage.getBoundingClientRect(); if (!r.width || !r.height) return; pan.tx = ((e.clientX - r.left) / r.width - .5) * -22; pan.ty = ((e.clientY - r.top) / r.height - .5) * -18; if (pan.frame === null) pan.frame = requestAnimationFrame(drawPan); });
+    stage.addEventListener('pointermove', e => { if (e.pointerType !== 'mouse' || state.fit || reduced.matches || stage.dataset.transition === 'eyes' && stage.classList.contains('is-travelling') || document.querySelector('dialog[open]')) return; const r = stage.getBoundingClientRect(); if (!r.width || !r.height) return; pan.tx = ((e.clientX - r.left) / r.width - .5) * -28; pan.ty = ((e.clientY - r.top) / r.height - .5) * -24; if (pan.frame === null) pan.frame = requestAnimationFrame(drawPan); });
     stage.addEventListener('pointerleave', () => { pan.tx = pan.ty = 0; if (pan.frame === null && !reduced.matches) pan.frame = requestAnimationFrame(drawPan); });
     reduced.addEventListener('change', () => { resetPan(); pause(); if (reduced.matches) $('.art-layers', stage).getAnimations?.().forEach(animation => animation.cancel()); });
     addEventListener('resize', () => {

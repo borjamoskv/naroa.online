@@ -38,8 +38,12 @@ full-screen stage follows real document scroll position, with no wheel
 prevention, gesture lock, forced settling or separate animation loop.
 Nearby arrow navigation scrolls smoothly; direct catalogue selections jump
 to the selected artwork. Touch, browser zoom, Page Down and the scrollbar
-remain native. Alternating diagonal and lateral reveals, deeper image
-movement and a transient oversized title follow actual scroll progress.
+remain native. Feathered diagonal and lateral reveals use smooth endpoint easing, deeper
+opposing image movement and a transient oversized title. Three selected pairs
+(Marilyn/Rara Avis, Johnny/RockaGipsy and Berto/Buenafuente) zoom into measured
+pupil positions, align both eyes at the same viewport point and dissolve into
+the next portrait before opening its framing. Coordinates account for each
+image’s cover crop and responsive focal position. Photographs are unmodified.
 Editorial sections reveal once as they enter the viewport; menus and images
 respond to interaction. Reduced-motion preferences disable these enhancements. Arrow controls, keyboard navigation, a complete-image view
 and a reduced-motion alternative remain available. Native dialogs manage focus
