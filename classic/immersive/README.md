@@ -34,7 +34,10 @@ use content-based filenames. Original public image paths remain available.
 
 The exhibition loads the current artwork and its neighbours rather than eagerly
 decoding all 40 photographs. Scroll movement is continuous and bounded to one
-work per gesture. Arrow controls, keyboard navigation, a complete-image view
+work per gesture. Alternating diagonal and lateral reveals, deeper image
+movement and a transient oversized title follow actual scroll progress.
+Editorial sections reveal once as they enter the viewport; menus and images
+respond to interaction. Reduced-motion preferences disable these enhancements. Arrow controls, keyboard navigation, a complete-image view
 and a reduced-motion alternative remain available. Native dialogs manage focus
 for the menu, catalogue, artwork details and photo viewer.
 

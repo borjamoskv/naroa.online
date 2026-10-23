@@ -11,6 +11,7 @@ const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 function create(route = '/', reduce = false) {
   const file = path.join(output, route, 'index.html');
   let clock = 1000, time = 0, id = 0;
+  const observers = [];
   const callbacks = new Map(), native = new VirtualConsole();
   native.on('jsdomError', error => errors.push(error.message));
   const dom = new JSDOM(fs.readFileSync(file, 'utf8'), {
@@ -19,6 +20,11 @@ function create(route = '/', reduce = false) {
       w.matchMedia = () => ({ matches: reduce, addEventListener() {} });
       w.requestAnimationFrame = callback => { const token = ++id; callbacks.set(token, callback); return token; };
       w.cancelAnimationFrame = token => callbacks.delete(token);
+      w.IntersectionObserver = class {
+        constructor(callback) { this.callback = callback; this.targets = new Set(); observers.push(this); }
+        observe(target) { this.targets.add(target); }
+        unobserve(target) { this.targets.delete(target); }
+      };
       w.Date.now = () => clock;
       Object.defineProperty(w.HTMLElement.prototype, 'inert', {
         get() { return this.hasAttribute('inert'); }, set(value) { this.toggleAttribute('inert', value); }
@@ -54,7 +60,7 @@ function create(route = '/', reduce = false) {
     find('[data-gallery]').dispatchEvent(event); return event;
   }
   const key = value => document.dispatchEvent(new w.KeyboardEvent('keydown', { key: value, bubbles: true, cancelable: true }));
-  return { dom, w, document, find, click, flush, wheel, key, gap: () => { clock += 200; } };
+  return { dom, w, document, find, click, flush, wheel, key, observers, gap: () => { clock += 200; } };
 }
 
 (async () => {
@@ -68,11 +74,19 @@ function create(route = '/', reduce = false) {
   assert.notEqual(ui.find('.art-scene img').style.transform, originalTransform);
   assert.equal(ui.find('[data-art-title]').textContent, 'Marilyn Rocks');
   assert.equal(ui.find('[data-scene="1"]').style.visibility, 'visible');
-  assert.match(ui.find('[data-scene="1"]').style.clipPath, /inset\([\d.]+%/);
+  assert.match(ui.find('[data-scene="1"]').style.clipPath, /^polygon\(0 [\d.]+%,100% [\d.]+%,100% 100%,0 100%\)$/);
+  assert.equal(ui.find('[data-kinetic-title]').textContent, 'Rara Avis');
+  assert.ok(Number(ui.find('[data-kinetic-title]').style.opacity) > 0, 'A transient title follows the transition');
+  assert.ok(Number(ui.find('[data-art-copy]').style.opacity) < 1, 'Artwork captions separate from image movement');
   await wait(190); await ui.flush();
   assert.equal(ui.find('[data-art-title]').textContent, 'Rara Avis');
+  assert.equal(ui.find('[data-kinetic-title]').textContent, '', 'Transient text clears when the work settles');
+  assert.equal(ui.find('[data-art-copy]').style.opacity, '1');
   ui.gap();
-  for (let i = 0; i < 12; i++) { ui.wheel(100); await ui.flush(); }
+  ui.wheel(100); await ui.flush();
+  assert.match(ui.find('[data-scene="2"]').style.clipPath, /^polygon\([\d.]+% 0,100% 0,100% 100%,[\d.]+% 100%\)$/);
+  assert.match(ui.find('[data-scene="2"] img').style.transform, /^translate3d\([\d.]+%,0,0\)/, 'The next work enters laterally');
+  for (let i = 0; i < 11; i++) { ui.wheel(100); await ui.flush(); }
   assert.equal(ui.find('[data-art-title]').textContent, 'Amor en Conserva', 'One gesture must not skip several works');
   await wait(190); await ui.flush();
   ui.click('[data-select="0"]'); await ui.flush();
@@ -126,14 +140,20 @@ function create(route = '/', reduce = false) {
   const reduced = create('/', true); await reduced.flush();
   reduced.click('[data-next]'); await reduced.flush();
   assert.equal(reduced.find('[data-art-title]').textContent, 'Rara Avis');
-  assert.equal(reduced.find('[data-scene="1"] img').style.transform, ''); reduced.dom.window.close();
+  assert.equal(reduced.find('[data-scene="1"] img').style.transform, '');
+  assert.equal(reduced.find('[data-kinetic-title]').textContent, '');
+  assert.equal(reduced.find('[data-art-copy]').style.opacity, '1'); reduced.dom.window.close();
 
   for (const route of ['/sobre-mi/', '/trayectoria/', '/cuaderno/', '/retratos-por-encargo-bilbao/', '/contacto/']) {
     const page = create(route); await page.flush(); page.click('[data-open-menu]'); assert.equal(page.find('#menu-dialog').open, true); page.click('#menu-dialog [data-close-dialog]');
+    const reveals = Array.from(page.document.querySelectorAll('.motion-reveal'));
+    assert.ok(reveals.length, 'Editorial content participates in viewport reveals');
+    page.observers.forEach(observer => observer.callback(Array.from(observer.targets, target => ({ target, isIntersecting: true }))));
+    assert.ok(reveals.every(el => el.classList.contains('is-revealed')), 'Visible editorial content is revealed');
     if (route === '/trayectoria/') { page.click('[data-year="2026"]'); assert.equal(page.document.querySelectorAll('[data-exhibition-year]:not([hidden])').length, 3); }
     if (route === '/cuaderno/') assert.equal(page.document.querySelectorAll('.notebook-posts article').length, 6);
     page.dom.window.close();
   }
   assert.equal(manifest.projects, 40); assert.deepEqual(errors, []);
-  console.log('PASS: all 40 artwork flows, continuous scroll, gesture limits, 3-image loading bound, search/filters, details/photos, quiet mode, reduced motion, Vaivenes and all editorial pages.');
+  console.log('PASS: all 40 artwork flows, alternating scroll reveals, kinetic titles, gesture limits, 3-image loading bound, search/filters, details/photos, quiet mode, reduced motion, Vaivenes and editorial reveals.');
 })().catch(error => { console.error(error); process.exitCode = 1; });

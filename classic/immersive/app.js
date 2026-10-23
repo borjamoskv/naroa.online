@@ -7,6 +7,8 @@
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  // Enable enhancements only after JavaScript has successfully initialized.
+  document.documentElement.classList.add('has-motion');
   const legacy = { '#/destacada': '/obra/', '#/about': '/sobre-mi/', '#/trayectoria': '/trayectoria/', '#/blog': '/cuaderno/', '#/contacto': '/contacto/' };
   if (location.pathname === '/' && legacy[location.hash]) { location.replace(legacy[location.hash]); return; }
   let gallery = null;
@@ -52,6 +54,7 @@
   if (stage) {
     const works = catalogue.projects.filter(p => stage.dataset.subset !== 'Vaivenes' || p.series === 'Vaivenes');
     const scenes = $$('.art-scene', stage), images = scenes.map(s => $('img', s));
+    const kineticTitle = $('[data-kinetic-title]', stage), caption = $('[data-art-copy]', stage);
     const state = { index: Number(stage.dataset.initial) || 0, fit: false, quiet: false, photo: 0 };
     const motion = { position: state.index, target: state.index, desired: state.index, frame: null, last: 0, save: false, request: 0 };
     const gesture = { active: false, base: state.index, sign: 0, last: 0, timer: null, delta: 0, locked: false };
@@ -120,15 +123,36 @@
     function render() {
       const position = clamp(motion.position, 0, works.length - 1), base = Math.floor(position), fraction = position - base;
       const still = state.fit || reduced.matches;
+      const sideways = (base + 1) % 2 === 0;
+      const edge = (1 - fraction) * 100, slant = Math.sin(fraction * Math.PI) * 9;
+      const near = clamp(edge - slant, 0, 100).toFixed(3), far = clamp(edge + slant, 0, 100).toFixed(3);
       scenes.forEach((s, i) => {
         const visible = still ? i === state.index : i === base || (fraction > .0001 && i === base + 1);
         s.style.visibility = visible ? 'visible' : 'hidden'; s.style.zIndex = i === base + 1 ? '2' : '1';
         s.style.willChange = visible ? 'clip-path' : 'auto'; images[i].style.willChange = visible ? 'transform' : 'auto';
         if (!visible) return;
         if (still) { s.style.clipPath = 'inset(0)'; images[i].style.transform = ''; return; }
-        if (i === base) { s.style.clipPath = 'inset(0)'; images[i].style.transform = `translate3d(0,${(-fraction * 28).toFixed(3)}%,0) scale(${(1.065 + fraction * .12).toFixed(4)})`; }
-        else { s.style.clipPath = `inset(${((1 - fraction) * 100).toFixed(3)}% 0 0 0)`; images[i].style.transform = `translate3d(0,${((1 - fraction) * 28).toFixed(3)}%,0) scale(${(1.065 + (1 - fraction) * .09).toFixed(4)})`; }
+        if (i === base) {
+          s.style.clipPath = 'inset(0)';
+          images[i].style.transform = sideways
+            ? `translate3d(${(-fraction * 14).toFixed(3)}%,0,0) scale(${(1.08 + fraction * .18).toFixed(4)})`
+            : `translate3d(0,${(-fraction * 34).toFixed(3)}%,0) scale(${(1.08 + fraction * .18).toFixed(4)})`;
+        } else {
+          s.style.clipPath = sideways
+            ? `polygon(${near}% 0,100% 0,100% 100%,${far}% 100%)`
+            : `polygon(0 ${far}%,100% ${near}%,100% 100%,0 100%)`;
+          images[i].style.transform = sideways
+            ? `translate3d(${((1 - fraction) * 22).toFixed(3)}%,0,0) scale(${(1.08 + (1 - fraction) * .12).toFixed(4)})`
+            : `translate3d(0,${((1 - fraction) * 34).toFixed(3)}%,0) scale(${(1.08 + (1 - fraction) * .12).toFixed(4)})`;
+        }
       });
+      const transitioning = !still && fraction > .001 && fraction < .999;
+      kineticTitle.textContent = transitioning ? works[base + 1].title : '';
+      kineticTitle.style.opacity = transitioning ? (Math.sin(fraction * Math.PI) * .46).toFixed(3) : '0';
+      kineticTitle.style.transform = `translate3d(${((fraction - .5) * -12).toFixed(3)}%,${((fraction - .5) * -12).toFixed(3)}vh,0)`;
+      caption.style.opacity = transitioning ? Math.pow(Math.abs(fraction - .5) * 2, .6).toFixed(3) : '1';
+      caption.style.transform = transitioning ? `translateY(${((fraction < .5 ? -fraction : 1 - fraction) * 44).toFixed(3)}px)` : '';
+      stage.classList.toggle('is-travelling', transitioning);
       stage.style.setProperty('--progress', (position * 100).toFixed(3) + '%');
     }
     function draw(time) {
@@ -148,6 +172,7 @@
         if (request !== motion.request) return;
         motion.target = desired;
         if (reduced.matches || Math.abs(desired - motion.position) > 1.15) {
+          if (!reduced.matches) $('.art-layers', stage).animate?.([{ opacity: .25, transform: 'scale(1.07)' }, { opacity: 1, transform: 'scale(1)' }], { duration: 650, easing: 'cubic-bezier(.16,1,.3,1)' });
           if (motion.frame !== null) cancelAnimationFrame(motion.frame); motion.frame = null; motion.last = 0; motion.position = desired; state.index = Math.round(desired); metadata(); render();
           if (motion.save && Number.isInteger(desired)) { motion.save = false; saveRoute(); } return;
         }
@@ -210,9 +235,9 @@
     stage.addEventListener('touchcancel', () => { touch = null; if (gesture.active) finishGesture(); }, { passive: true });
     function drawPan() { pan.x += (pan.tx - pan.x) * .1; pan.y += (pan.ty - pan.y) * .1; if (Math.abs(pan.tx - pan.x) < .03 && Math.abs(pan.ty - pan.y) < .03) { pan.x = pan.tx; pan.y = pan.ty; pan.frame = null; } else pan.frame = requestAnimationFrame(drawPan); stage.style.setProperty('--pan-x', pan.x.toFixed(2) + 'px'); stage.style.setProperty('--pan-y', pan.y.toFixed(2) + 'px'); }
     function resetPan() { if (pan.frame !== null) cancelAnimationFrame(pan.frame); pan.x = pan.y = pan.tx = pan.ty = 0; pan.frame = null; stage.style.setProperty('--pan-x', '0px'); stage.style.setProperty('--pan-y', '0px'); }
-    stage.addEventListener('pointermove', e => { if (e.pointerType !== 'mouse' || state.fit || reduced.matches || document.querySelector('dialog[open]')) return; const r = stage.getBoundingClientRect(); if (!r.width || !r.height) return; pan.tx = ((e.clientX - r.left) / r.width - .5) * -7; pan.ty = ((e.clientY - r.top) / r.height - .5) * -7; if (pan.frame === null) pan.frame = requestAnimationFrame(drawPan); });
+    stage.addEventListener('pointermove', e => { if (e.pointerType !== 'mouse' || state.fit || reduced.matches || document.querySelector('dialog[open]')) return; const r = stage.getBoundingClientRect(); if (!r.width || !r.height) return; pan.tx = ((e.clientX - r.left) / r.width - .5) * -22; pan.ty = ((e.clientY - r.top) / r.height - .5) * -18; if (pan.frame === null) pan.frame = requestAnimationFrame(drawPan); });
     stage.addEventListener('pointerleave', () => { pan.tx = pan.ty = 0; if (pan.frame === null && !reduced.matches) pan.frame = requestAnimationFrame(drawPan); });
-    reduced.addEventListener('change', () => { resetPan(); pause(); });
+    reduced.addEventListener('change', () => { resetPan(); pause(); if (reduced.matches) $('.art-layers', stage).getAnimations?.().forEach(animation => animation.cancel()); });
     addEventListener('resize', focusPictures, { passive: true });
     gallery = { pause, has: slug => works.some(w => w.slug === slug), select: slug => change(works.findIndex(w => w.slug === slug)) };
     metadata(); render();
@@ -235,12 +260,37 @@
         const target = $('.page-hero-image', section) || (section.matches('.contact-background') ? section : $('img', section));
         if (!target) return;
         const progress = clamp((vh - r.top) / (vh + r.height), 0, 1);
-        target.style.transform = reduced.matches ? '' : `translate3d(0,${((progress - .5) * Math.min(vh, r.height) * .25).toFixed(2)}px,0)`;
+        const strength = section.matches('.contact-background') ? .28 : .36;
+        target.style.transform = reduced.matches ? '' : `translate3d(0,${((progress - .5) * Math.min(vh, r.height) * strength).toFixed(2)}px,0) scale(1.06)`;
+        const copy = $('.page-hero-copy', section);
+        if (copy) {
+          const exit = clamp(-r.top / vh, 0, 1);
+          copy.style.transform = reduced.matches ? '' : `translate3d(0,${(-exit * 100).toFixed(2)}px,0)`;
+          copy.style.opacity = reduced.matches ? '1' : (1 - exit * .75).toFixed(3);
+        }
       });
       $('.site-nav').classList.toggle('is-scrolled', scrollY > vh * .72);
     }
     const schedule = () => { if (frame === null) frame = requestAnimationFrame(pageParallax); };
     addEventListener('scroll', schedule, { passive: true }); addEventListener('resize', schedule, { passive: true }); reduced.addEventListener('change', schedule); schedule();
   }
+  const reveals = $$('.chapter>div,.chapter>.eyebrow,.section-opening,.editorial blockquote,.timeline-entry,.notebook-posts article,.commission-steps article,.closing,.contact-details');
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(entries => entries.forEach(entry => {
+      if (entry.isIntersecting) { entry.target.classList.add('is-revealed'); observer.unobserve(entry.target); }
+    }), { threshold: .08, rootMargin: '0px 0px -24px 0px' });
+    reveals.forEach(el => { el.classList.add('motion-reveal'); observer.observe(el); });
+    reduced.addEventListener('change', () => { if (reduced.matches) reveals.forEach(el => el.classList.add('is-revealed')); });
+  }
+  $$('.art-arrows button,.hero-down,.art-story-link,.text-link').forEach(el => {
+    el.addEventListener('pointermove', e => {
+      if (e.pointerType !== 'mouse' || reduced.matches || el.disabled) return;
+      const r = el.getBoundingClientRect();
+      el.style.setProperty('--magnet-x', clamp((e.clientX - r.left - r.width / 2) * .16, -7, 7).toFixed(2) + 'px');
+      el.style.setProperty('--magnet-y', clamp((e.clientY - r.top - r.height / 2) * .16, -7, 7).toFixed(2) + 'px');
+    });
+    const clear = () => { el.style.setProperty('--magnet-x', '0px'); el.style.setProperty('--magnet-y', '0px'); };
+    el.addEventListener('pointerleave', clear); el.addEventListener('blur', clear); reduced.addEventListener('change', clear);
+  });
   if (location.hash === '#indice') openDialog('#index-dialog');
 })();
