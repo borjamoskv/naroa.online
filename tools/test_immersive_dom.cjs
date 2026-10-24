@@ -219,7 +219,7 @@ async function eyeMatch(ui, base, points) {
   assert.ok(llorona.find('[data-facts]').textContent.includes('sal rosa'));
   llorona.dom.window.close();
   assert.equal(ui.journey.entries.length, manifest.projects);
-  assert.deepEqual(Array.from(ui.w.NAROA_CATALOG.journey.scenes, e => e.mode).join(' '), 'E H V Z V E H H V Z E V H H V Z H V Z P V H Z V H Z V H Z V H H Z E Z V H Z H Z Z V Z H Z H V Z H V Z H V Z V Z H V H Z H H Z H F H Z V H V Z Z V');
+  assert.deepEqual(Array.from(ui.w.NAROA_CATALOG.journey.scenes, e => e.mode).join(' '), 'E H V Z V E H Z V Z E V H H V Z H V Z P V H Z V H Z V H Z V H H Z E Z V H Z H Z Z V Z H Z H V Z H V Z H V Z V Z H V H Z H H Z H F H Z V H V Z Z V');
   const modes = { E: 'eyes', H: 'horizontal', V: 'vertical', Z: 'zoom', P: 'puzzle' };
   let horizontalDirection = -1, inHorizontal = false;
   for (let index = 0; index < works.length; index++) {
@@ -462,6 +462,13 @@ async function eyeMatch(ui, base, points) {
   assert.ok(midOpacity < 0.95 && midOpacity > 0.05, 'Róisín transitions smoothly from B&W into color');
   ui.w.scrollTo({ top: roisinEntry.transitionStart * ui.w.innerHeight }); await ui.flush();
   assert.equal(parseFloat(roisinBw.style.opacity), 0, 'Róisín blooms fully into full-color collage');
+  const hugoIdx = works.findIndex(p => p.slug === 'hugo-box');
+  const hugoEntry = ui.journey.entries[hugoIdx];
+  assert.equal(hugoEntry.mode, 'Z', 'Hugo Box transitions into James Rocks via zoom');
+  ui.w.scrollTo({ top: (hugoEntry.start + hugoEntry.hold * 0.5) * ui.w.innerHeight }); await ui.flush();
+  const hugoScene = ui.find(`[data-scene="${hugoIdx}"]`);
+  const hugoImg = hugoScene.querySelector('img');
+  assert.ok(hugoImg.style.transformOrigin.includes('47.8%'), 'Hugo Box zoom origin is centered on the pink metallic lens');
   ui.dom.window.close();
 
   const mobile = create('/', false, { width: 390, height: 844 }); await mobile.flush();

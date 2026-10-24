@@ -392,7 +392,7 @@
       galleryReturnFocus = null;
       scheduleScroll();
     });
-    const focals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '56% 42%', 'amor-en-conserva': '50% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'johnny-rocks': '50% 42%', 'rockagipsy': '50% 43%', 'hugo-box': '50% 38%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '54% 44%', 'lauralore': '46% 44%', 'izei': '48% 42%', 'the-love-boat': '50% 44%', 'marian-de-miranda': '66% 36%', 'la-famiglia': '50% 40%', 'smile-and-the-world-smiles-back': '50% 50%', 'luis-and-sis': '50% 45%', 'de-color': '50% 45%', 'el-reencuentro': '50% 45%', 'papitxulo': '50% 40%', 'starchild': '50% 40%', 'las-rosalias': '50% 50%', 'baroque-farrokh': '50% 38%', 'el-gran-dakari': '50% 42%', 'audrey-hepburn': '50% 36%', 'geisha': '50% 38%', 'lagrimas-de-oro': '50% 38%', 'the-golden-couple': '50% 40%', 'pink-and-sparkles': '50% 45%', 'love': '50% 44%' };
+    const focals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '56% 42%', 'amor-en-conserva': '50% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'johnny-rocks': '50% 42%', 'rockagipsy': '50% 43%', 'hugo-box': '47.8% 42.7%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '54% 44%', 'lauralore': '46% 44%', 'izei': '48% 42%', 'the-love-boat': '50% 44%', 'marian-de-miranda': '66% 36%', 'la-famiglia': '50% 40%', 'smile-and-the-world-smiles-back': '50% 50%', 'luis-and-sis': '50% 45%', 'de-color': '50% 45%', 'el-reencuentro': '50% 45%', 'papitxulo': '50% 40%', 'starchild': '50% 40%', 'las-rosalias': '50% 50%', 'baroque-farrokh': '50% 38%', 'el-gran-dakari': '50% 42%', 'audrey-hepburn': '50% 36%', 'geisha': '50% 38%', 'lagrimas-de-oro': '50% 38%', 'the-golden-couple': '50% 40%', 'pink-and-sparkles': '50% 45%', 'love': '50% 44%' };
     const mobileFocals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '61% 40%', 'amor-en-conserva': '48% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'denbora-nora-zoaz': '18% 45%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '56% 44%', 'lauralore': '48% 44%', 'izei': '48% 42%', 'the-love-boat': '50% 44%', 'marian-de-miranda': '66% 36%', 'la-famiglia': '50% 40%', 'smile-and-the-world-smiles-back': '50% 50%', 'luis-and-sis': '50% 45%', 'de-color': '50% 45%', 'el-reencuentro': '50% 45%', 'papitxulo': '50% 40%', 'starchild': '50% 40%', 'las-rosalias': '50% 50%', 'baroque-farrokh': '50% 38%', 'el-gran-dakari': '50% 42%', 'audrey-hepburn': '50% 36%', 'geisha': '50% 38%', 'lagrimas-de-oro': '50% 38%', 'the-golden-couple': '50% 40%', 'pink-and-sparkles': '50% 45%', 'love': '50% 44%' };
     // Pupil centres measured on the unaltered cover photographs, in source-image coordinates.
     const eyes = {
@@ -618,6 +618,7 @@
           : works[index].slug === 'i-got-you-babe' ? '38% 46%'
           : works[index].slug === 'jose-manuel-ezquerra' ? '62% 42%'
           : works[index].slug === 'roisin' ? '61.1% 58.6%'
+          : works[index].slug === 'hugo-box' ? '47.8% 42.7%'
           : '50% 50%';
         if (works[index].interaction === 'puzzle' && (!still || puzzles.has(index))) drawPuzzle(index, outgoing && transition ? fraction : 0, still);
         if (works[index].slug === 'custom-jaio' && !state.fit) {
@@ -659,6 +660,10 @@
             image.style.transformOrigin = '61.1% 58.6%';
             const roisinZoom = 1.08 + smooth(pose.explore) * 0.16;
             image.style.transform = `scale(${roisinZoom.toFixed(5)})`;
+          } else if (works[index].slug === 'hugo-box') {
+            image.style.transformOrigin = '47.8% 42.7%';
+            const hugoZoom = 1.08 + smooth(pose.explore) * 0.45;
+            image.style.transform = `scale(${hugoZoom.toFixed(5)})`;
           } else {
             image.style.transform = `translate3d(0,${(-smooth(pose.explore) * 3).toFixed(3)}%,0) scale(1.08000)`;
           }
@@ -705,11 +710,20 @@
           const close = outgoing ? smooth(fraction / .65) : 1 - smooth((fraction - .35) / .65);
           const isBowie = works[index].slug === 'el-hombre-que-susurraba-a-las-estrellas';
           const isBillToEzquerra = (works[base].slug === 'i-got-you-babe' && works[incoming].slug === 'jose-manuel-ezquerra');
+          const isHugoToJames = (works[base]?.slug === 'hugo-box' && works[incoming]?.slug === 'james-rocks');
           let maxScale = 1.65;
-          if (isBowie) maxScale = 2.45;
-          else if (isBillToEzquerra) maxScale = 2.65;
+          if (isHugoToJames) {
+            maxScale = outgoing ? 48.0 : 2.10;
+          } else if (isBowie) {
+            maxScale = 2.45;
+          } else if (isBillToEzquerra) {
+            maxScale = 2.65;
+          }
           image.style.transform = `scale(${Math.exp(Math.log(1.08) + Math.log(maxScale / 1.08) * close).toFixed(5)})`;
           if (!outgoing) scene.style.opacity = smooth((fraction - .40) / .20).toFixed(4);
+          if (outgoing && isHugoToJames) {
+            scene.style.opacity = fraction >= 0.50 ? smooth((0.75 - fraction) / 0.25).toFixed(4) : '1';
+          }
         } else if (mode === 'P') {
           const exit = smooth((fraction - .80) / .20);
           if (!outgoing) scene.style.opacity = exit.toFixed(4);
@@ -876,7 +890,7 @@
       if (works[state.index]?.slug === 'dustin' && !transition) {
         cue.textContent = 'La última nota ya es silencio · Volver al origen ↺';
       } else {
-        cue.textContent = still ? reduced.matches ? 'Activa los efectos para ver el viaje ↓' : 'Desplázate para recorrer ↕' : !transition ? phase === 'explore' ? 'Explora la superficie ↓' : 'Una pausa para mirar · sigue ↓' : ({ E: 'Entra en la mirada ↓', H: 'Atravesar · sigue bajando ↓', V: 'Déjate llevar ↓', Z: 'Acércate ↓', P: 'Mezclar y volver a unir ↓' })[mode];
+        cue.textContent = still ? reduced.matches ? 'Activa los efectos para ver el viaje ↓' : 'Desplázate para recorrer ↕' : !transition ? phase === 'explore' ? 'Explora la superficie ↓' : 'Una pausa para mirar · sigue ↓' : ({ E: 'Entra en la mirada ↓', H: 'Atravesar · sigue bajando ↓', V: 'Déjate llevar ↓', Z: (transition && works[base]?.slug === 'hugo-box') ? 'Entra en la lente rosa ↓' : 'Acércate ↓', P: 'Mezclar y volver a unir ↓' })[mode];
       }
       stage.classList.toggle('is-travelling', transition);
       stage.style.setProperty('--progress', (pose.distance / journey.total * (works.length - 1) * 100).toFixed(3) + '%');

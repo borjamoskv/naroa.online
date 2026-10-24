@@ -55,9 +55,9 @@
     },
     {
       "slug": "hugo-box",
-      "mode": "H",
+      "mode": "Z",
       "hold": 25,
-      "explore": 0
+      "explore": 35
     },
     {
       "slug": "james-rocks",
