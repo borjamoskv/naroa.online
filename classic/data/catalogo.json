@@ -2224,6 +2224,195 @@
       "credit": null,
       "selected": false,
       "kind": "obra"
+    },
+    {
+      "slug": "asucar-celia-cruz",
+      "title": "Asúcar (Celia Cruz)",
+      "category": "collage",
+      "technique": "Acrílico y collage (sobres de azúcar y envoltorios)",
+      "support": "Lienzo 3D",
+      "story": "Retrato vibrante de Celia Cruz en gran formato, integrando un collage de sobres de azúcar reales y colores saturados que homenajean el Sugar Blues.",
+      "images": [
+        {
+          "src": "/images/catalogo/asucar-celia-cruz-01.webp",
+          "width": 2000,
+          "height": 1990,
+          "caption": "Celia Cruz y el collage de sobres de azúcar",
+          "source": "https://www.facebook.com/naroa.artista.plastica",
+          "sha256": "b18bf5a668dd8950c4ad82597ffc1d7634676451e08ce918074d6c41b80c107e",
+          "source_local": "classic/images/artworks/celia-cruz-cantinflowers-DO-SRKMB.webp"
+        }
+      ],
+      "source": "https://www.facebook.com/naroa.artista.plastica",
+      "dimensions": "80 × 80 cm",
+      "materials": "Acrílico, sobres de azúcar de colección, mica y barniz brillante.",
+      "series": "DiviNos",
+      "year": 2020,
+      "credit": null,
+      "selected": false,
+      "kind": "obra"
+    },
+    {
+      "slug": "baroque-farrokh",
+      "title": "Baroque Farrokh",
+      "category": "collage",
+      "technique": "Técnica mixta y collage ornamental",
+      "support": "Tabla con marco barroco intervenido",
+      "story": "Tributo a Farrokh Bulsara (Freddie Mercury) en clave barroca. El ornamento clásico se fusiona con la energía escénica del líder de Queen en un juego de dorados y contrastes.",
+      "images": [
+        {
+          "src": "/images/catalogo/baroque-farrokh-01.webp",
+          "width": 1024,
+          "height": 830,
+          "caption": "Freddie Mercury en marco barroco",
+          "source": "https://www.facebook.com/naroa.artista.plastica",
+          "sha256": "88d967e7e56eb600fcddad1f7823e595015b3cba1473db2f654b0d87fa0a94aa",
+          "source_local": "classic/images/artworks/baroque-farrokh-mjg4ClA9.webp"
+        }
+      ],
+      "source": "https://www.facebook.com/naroa.artista.plastica",
+      "dimensions": "50 × 40 cm",
+      "materials": "Pintura acrílica, pan de oro, collage textil y barnices.",
+      "series": "Tributos Musicales",
+      "year": 2021,
+      "credit": null,
+      "selected": false,
+      "kind": "obra"
+    },
+    {
+      "slug": "the-golden-couple",
+      "title": "The Golden Couple",
+      "category": "collage",
+      "technique": "Collage textil, pan de oro y acrílico",
+      "support": "Madera noble intervenida",
+      "story": "Dos figuras entrelazadas en tonos dorados y texturas de tapicería. Una celebración del encuentro y la complicidad a través de relieves luminosos y materiales recuperados.",
+      "images": [
+        {
+          "src": "/images/catalogo/the-golden-couple-01.webp",
+          "width": 843,
+          "height": 632,
+          "caption": "The Golden Couple, encuentro en oro y textura",
+          "source": "https://www.facebook.com/naroa.artista.plastica",
+          "sha256": "1b1a3d2b2161947b1968853b49e1be494a3dfb12eefc91c3b1ea0db8a6dc5950",
+          "source_local": "classic/images/artworks/the-golden-couple-C9C95N75.webp"
+        }
+      ],
+      "source": "https://www.facebook.com/naroa.artista.plastica",
+      "dimensions": "45 × 35 cm",
+      "materials": "Pan de oro, retales textiles, acrílico y cera.",
+      "series": "Serie Dorada",
+      "year": 2021,
+      "credit": null,
+      "selected": false,
+      "kind": "obra"
+    },
+    {
+      "slug": "lagrimas-de-oro",
+      "title": "Lágrimas de Oro",
+      "category": "collage",
+      "technique": "Acrílico, mica y técnica kintsugi dorada",
+      "support": "Tabla de madera",
+      "story": "Inspirada en la filosofía japonesa del Kintsugi, donde las cicatrices y quiebras se realzan con oro en lugar de ocultarse. El llanto transformado en materia preciosa y resiliente.",
+      "images": [
+        {
+          "src": "/images/catalogo/lagrimas-de-oro-01.webp",
+          "width": 1195,
+          "height": 1600,
+          "caption": "Lágrimas de Oro, resiliencia y Kintsugi",
+          "source": "https://www.facebook.com/naroa.artista.plastica",
+          "sha256": "61fa5125f3c3167195804368532f50c1825708892d2427a15998a6ec7b494635",
+          "source_local": "classic/images/artworks/lagrimas-de-oro-DikHc-Tk.webp"
+        }
+      ],
+      "source": "https://www.facebook.com/naroa.artista.plastica",
+      "dimensions": "60 × 45 cm",
+      "materials": "Pigmentos dorados, resina, escamas de mica y óleo.",
+      "series": "Serie Dorada",
+      "year": 2020,
+      "credit": null,
+      "selected": false,
+      "kind": "obra"
+    },
+    {
+      "slug": "love",
+      "title": "LoVe",
+      "category": "collage",
+      "technique": "Collage tipográfico, acrílico y objetos",
+      "support": "Lienzo rígido",
+      "story": "Composición pop vibrante en torno a la palabra LOVE, integrando recortes, texturas de periódicos antiguos y juegos de color que dialogan con el arte urbano.",
+      "images": [
+        {
+          "src": "/images/catalogo/love-01.webp",
+          "width": 1200,
+          "height": 1600,
+          "caption": "LoVe en tipografía y materia pop",
+          "source": "https://www.facebook.com/naroa.artista.plastica",
+          "sha256": "3eb4ad82f6c6f66aa8d451eb8d77a80b0051187428807d91d1ea34293f06443c",
+          "source_local": "classic/images/artworks/love-DA7L_L5F.webp"
+        }
+      ],
+      "source": "https://www.facebook.com/naroa.artista.plastica",
+      "dimensions": "70 × 50 cm",
+      "materials": "Papel impreso vintage, spray, acrílico y mica.",
+      "series": "Amor",
+      "year": 2019,
+      "credit": null,
+      "selected": false,
+      "kind": "obra"
+    },
+    {
+      "slug": "soy-un-amor-y-tengo-alas",
+      "title": "Soy un Amor y Tengo Alas",
+      "category": "collage",
+      "technique": "Dibujo a lápiz, alas de pluma textil y collage",
+      "support": "Tabla con marco recuperado",
+      "story": "Una figura alada que reivindica la ternura y la libertad de volar. Los tonos pasteles y las texturas suaves de plumas aportan una atmósfera onírica y ligera.",
+      "images": [
+        {
+          "src": "/images/catalogo/soy-un-amor-y-tengo-alas-01.webp",
+          "width": 640,
+          "height": 853,
+          "caption": "Figura alada y mensaje de ternura",
+          "source": "https://www.facebook.com/naroa.artista.plastica",
+          "sha256": "a5213c99418deef214197779f90fec90098df1b539fa95dbb03cf3121d5162a0",
+          "source_local": "classic/images/artworks/soy-un-amor-y-tengo-alas-ItTo7aOd.webp"
+        }
+      ],
+      "source": "https://www.facebook.com/naroa.artista.plastica",
+      "dimensions": "40 × 30 cm",
+      "materials": "Plumas textiles, grafito, pastel y acuarela.",
+      "series": "Amor",
+      "year": 2019,
+      "credit": null,
+      "selected": false,
+      "kind": "obra"
+    },
+    {
+      "slug": "tedas-queen",
+      "title": "Tedás Queen",
+      "category": "objetos",
+      "technique": "Ensamblaje de latas de té, collage y pintura",
+      "support": "Lata metálica de té intervenida",
+      "story": "Juego de palabras entre el té y Queen. Una lata de té inglesa convertida en pequeña capilla pop que alberga el retrato de la reina y guiños a la banda británica.",
+      "images": [
+        {
+          "src": "/images/catalogo/tedas-queen-01.webp",
+          "width": 640,
+          "height": 853,
+          "caption": "Lata de té intervenida con homenaje a Queen",
+          "source": "https://www.facebook.com/naroa.artista.plastica",
+          "sha256": "201a203d4bad23e32a6889240360a8f8e0dca671c6ee377c8e99818b2c4d9bc2",
+          "source_local": "classic/images/artworks/tedas-queen-GT9W8egT.webp"
+        }
+      ],
+      "source": "https://www.facebook.com/naroa.artista.plastica",
+      "dimensions": "18 × 12 × 8 cm",
+      "materials": "Lata metálica serigrafiada, collage, acrílico y barniz.",
+      "series": "Tributos Musicales",
+      "year": 2022,
+      "credit": null,
+      "selected": false,
+      "kind": "obra"
     }
   ]
 }

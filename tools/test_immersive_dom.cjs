@@ -208,8 +208,8 @@ async function eyeMatch(ui, base, points) {
   assert.equal(llorona.find('[data-art-source]').hidden, true, 'An attachment without a public URL does not produce a fabricated source link');
   assert.ok(llorona.find('[data-facts]').textContent.includes('sal rosa'));
   llorona.dom.window.close();
-  assert.equal(ui.journey.entries.length, 55);
-  assert.deepEqual(Array.from(ui.w.NAROA_CATALOG.journey.scenes, e => e.mode).join(' '), 'E H V Z V E H H V Z E V H H V Z H V Z P V H Z V H Z V H Z V H H Z H Z V H Z H Z Z V Z H Z H V Z H Z H H Z H F');
+  assert.equal(ui.journey.entries.length, works.length);
+  assert.deepEqual(Array.from(ui.w.NAROA_CATALOG.journey.scenes, e => e.mode).join(' '), 'E H V Z V E H H V Z E V H H V Z H V Z P V H Z V H Z V H Z V H H Z H Z V H Z H Z Z V Z H Z H V Z H Z H V H Z H H Z H H Z H F');
   const modes = { E: 'eyes', H: 'horizontal', V: 'vertical', Z: 'zoom', P: 'puzzle' };
   let horizontalDirection = -1, inHorizontal = false;
   for (let index = 0; index < works.length; index++) {
@@ -717,7 +717,7 @@ async function eyeMatch(ui, base, points) {
   assert.equal(reactiveGallery.w.NAROA_SOUND.lastUtterance, 'Just For One Day', 'Arriving at Denbora triggers Just For One Day in an elderly voice');
   const dustinIndex = works.findIndex(w => w.slug === 'dustin');
   galleryAudio.advance(150); reactiveGallery.scroll(dustinIndex); await reactiveGallery.flush();
-  assert.equal(reactiveGallery.w.NAROA_SOUND.lastUtterance, 'Hello darkness, my old friend', 'Arriving at final work 55/55 triggers Sound of Silence finale');
+  assert.equal(reactiveGallery.w.NAROA_SOUND.lastUtterance, 'Hello darkness, my old friend', `Arriving at final work ${works.length}/${works.length} triggers Sound of Silence finale`);
   const ajenjoIndex = works.findIndex(w => w.slug === 'ajenjo-cam');
   galleryAudio.advance(150); reactiveGallery.scroll(ajenjoIndex - 1 + .50); await reactiveGallery.flush();
   const flashLevel = Number(reactiveGallery.find('.art-stage').style.getPropertyValue('--camera-flash') || 0);
