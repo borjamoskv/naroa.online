@@ -391,6 +391,77 @@
       } catch {}
     }
   }
+  let lastPuzzleSlug = '', lastClockSlug = '';
+  function playPuzzleSnap() {
+    lastPuzzleSlug = 'saio-puzzle';
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      try { navigator.vibrate([12, 10, 18]); } catch {}
+    }
+    if (!context || !engine || context.state !== 'running') return;
+    try {
+      const now = context.currentTime + 0.002;
+      const target = engine.compressor || engine.master;
+      const sampleRate = context.sampleRate || 44100;
+      [0.00, 0.016].forEach((offset, idx) => {
+        const len = Math.round(sampleRate * 0.035);
+        const buf = context.createBuffer(1, len, sampleRate);
+        const data = buf.getChannelData(0);
+        for (let i = 0; i < len; i++) {
+          const t = i / len;
+          data[i] = (Math.random() * 2 - 1) * Math.exp(-t * (idx === 0 ? 12 : 9));
+        }
+        const src = context.createBufferSource();
+        src.buffer = buf;
+        const filter = context.createBiquadFilter ? context.createBiquadFilter() : null;
+        if (filter) {
+          filter.type = 'bandpass';
+          filter.frequency.value = idx === 0 ? 2100 : 2850;
+          filter.Q.value = 4.2;
+        }
+        const gain = context.createGain();
+        gain.gain.setValueAtTime(0.01, now + offset);
+        gain.gain.linearRampToValueAtTime(idx === 0 ? 0.42 : 0.65, now + offset + 0.003);
+        if (gain.gain.exponentialRampToValueAtTime) {
+          gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.032);
+        }
+        src.connect(filter || gain);
+        if (filter) filter.connect(gain);
+        gain.connect(target);
+        src.start(now + offset);
+      });
+    } catch {}
+  }
+  function playSwissClock() {
+    lastClockSlug = 'julio-iglesias-como-un-reloj-suizo';
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      try { navigator.vibrate([8, 240, 6]); } catch {}
+    }
+    if (!context || !engine || context.state !== 'running') return;
+    try {
+      const now = context.currentTime + 0.002;
+      const target = engine.compressor || engine.master;
+      [
+        { offset: 0.00, freq: 3400, vol: 0.45 },
+        { offset: 0.26, freq: 2750, vol: 0.38 }
+      ].forEach(({ offset, freq, vol }) => {
+        if (typeof context.createOscillator === 'function') {
+          const osc = context.createOscillator();
+          const gain = context.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + offset);
+          gain.gain.setValueAtTime(0.001, now + offset);
+          gain.gain.linearRampToValueAtTime(vol, now + offset + 0.002);
+          if (gain.gain.exponentialRampToValueAtTime) {
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + offset + 0.022);
+          }
+          osc.connect(gain);
+          gain.connect(target);
+          osc.start(now + offset);
+          osc.stop(now + offset + 0.025);
+        }
+      });
+    } catch {}
+  }
   function playCameraFlash() {
     if (!context || !engine || context.state !== 'running') return;
     try {
@@ -789,11 +860,19 @@
     speakDeltoya() {
       speakDeltoya();
     },
+    puzzleSnap() {
+      playPuzzleSnap();
+    },
+    swissClock() {
+      playSwissClock();
+    },
     get lastUtterance() { return lastUtterance; },
     get lastFlashSlug() { return lastFlashSlug; },
     get lastPunchSlug() { return lastPunchSlug; },
     get lastShakerSlug() { return lastShakerSlug; },
-    get lastDeltoyaSlug() { return lastDeltoyaSlug; }
+    get lastDeltoyaSlug() { return lastDeltoyaSlug; },
+    get lastPuzzleSlug() { return lastPuzzleSlug; },
+    get lastClockSlug() { return lastClockSlug; }
   });
   paint();
 })();

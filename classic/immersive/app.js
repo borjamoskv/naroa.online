@@ -331,6 +331,13 @@
         stage.classList.remove('has-deltoya-pulse');
       }, 700);
     }
+    let puzzleVisited = false, clockVisited = false;
+    function firePuzzleSnap() {
+      soundscape?.puzzleSnap?.();
+    }
+    function fireSwissClock() {
+      soundscape?.swissClock?.();
+    }
     function focusPictures() { works.forEach((p, i) => scenes[i].style.setProperty('--position', (innerWidth < 760 && mobileFocals[p.slug]) || focals[p.slug] || '50% 44%')); }
     focusPictures();
     function ensureImage(i) {
@@ -540,6 +547,22 @@
         }
       } else {
         deltoyaVisited = false;
+      }
+      if (works[base].slug === 'saio-puzzle' || works[incoming].slug === 'saio-puzzle') {
+        if (!puzzleVisited && (works[state.index].slug === 'saio-puzzle' || (transition && works[incoming].slug === 'saio-puzzle' && fraction >= 0.70))) {
+          puzzleVisited = true;
+          firePuzzleSnap();
+        }
+      } else {
+        puzzleVisited = false;
+      }
+      if (works[base].slug === 'julio-iglesias-como-un-reloj-suizo' || works[incoming].slug === 'julio-iglesias-como-un-reloj-suizo') {
+        if (!clockVisited && (works[state.index].slug === 'julio-iglesias-como-un-reloj-suizo' || (transition && works[incoming].slug === 'julio-iglesias-como-un-reloj-suizo' && fraction >= 0.35))) {
+          clockVisited = true;
+          fireSwissClock();
+        }
+      } else {
+        clockVisited = false;
       }
       const isPunchPair = (works[base].slug === 'i-got-you-babe' && works[incoming].slug === 'jose-manuel-ezquerra') ||
                           (works[base].slug === 'jose-manuel-ezquerra' && works[incoming].slug === 'i-got-you-babe');
