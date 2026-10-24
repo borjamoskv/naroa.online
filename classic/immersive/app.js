@@ -2385,7 +2385,6 @@
     const images = scenes.map(scene => $('img', scene)), decoded = new Set(), pending = new Map(), failed = new Set();
     const smooth = value => { const t = clamp(value, 0, 1); return t * t * t * (t * (t * 6 - 15) + 10); };
     let frame = null, geometry = null, current = 0, captionIndex = -1;
-    let portraitTravelCurrent = 0, portraitTravelTarget = 0, portraitLastTime = 0;
     let interactiveWinkTimer = null, interactiveWinkVal = 0, hasWinkedOnScroll = false;
     function triggerInteractiveWink() {
       const travel = Math.max(0, -portraitTrack.getBoundingClientRect().top);
@@ -2466,7 +2465,6 @@
         return cover(aspect, i === 0 && width <= 760 ? .72 : .5, .42);
       });
       geometry = { width, height, portrait: cover(2201 / 3468, .5, .29), art: boxes[0], boxes };
-      portraitTravelCurrent = portraitTravelTarget = Math.max(0, -portraitTrack.getBoundingClientRect().top);
       [[plane, geometry.portrait], ...scenes.map((scene, i) => [scene, boxes[i]])].forEach(([element, box]) => {
         Object.assign(element.style, reduced.matches
           ? { width: '', height: '', left: '', top: '' }
@@ -2548,31 +2546,13 @@
       shade.style.opacity = '.75';
       releaseDistant(base);
     }
-    function renderPortrait(now = performance.now()) {
+    function renderPortrait() {
       frame = null;
       const g = geometry; if (!g || document.querySelector('dialog[open]')) return;
-      portraitTravelTarget = Math.max(0, -portraitTrack.getBoundingClientRect().top);
-      const dt = portraitLastTime > 0 ? clamp((now - portraitLastTime) / 16.6667, 0.5, 2.2) : 1;
-      portraitLastTime = now;
-      const deltaTravel = portraitTravelTarget - portraitTravelCurrent;
-      if (reduced.matches || Math.abs(deltaTravel) < 0.15) {
-        portraitTravelCurrent = portraitTravelTarget;
-        portraitLastTime = 0;
-      } else {
-        const baseAlpha = clamp(0.17 + Math.abs(deltaTravel / Math.max(1, g.height)) * 0.05, 0.17, 0.22);
-        const alpha = 1 - Math.pow(1 - baseAlpha, dt);
-        portraitTravelCurrent += deltaTravel * alpha;
-      }
-      const travel = portraitTravelCurrent;
+      const travel = Math.max(0, -portraitTrack.getBoundingClientRect().top);
       const progress = reduced.matches ? 0 : clamp(travel / (g.height * 2.8), 0, 1);
       const position = reduced.matches ? 0 : clamp((travel - g.height * 2.8) / (g.height * 1.1), 0, works.length - 1);
-      if (!reduced.matches && travel >= g.height * 2.8) {
-        renderExhibition(position, travel / g.height);
-        if (Math.abs(portraitTravelTarget - portraitTravelCurrent) >= 0.15) {
-          frame = requestAnimationFrame(renderPortrait);
-        }
-        return;
-      }
+      if (!reduced.matches && travel >= g.height * 2.8) { renderExhibition(position, travel / g.height); return; }
       ensureScene(0);
       active.clear(); active.add(0);
       scenes.forEach((scene, i) => { if (i) { scene.style.visibility = 'hidden'; scene.setAttribute('aria-hidden', 'true'); scene.classList.remove('is-visible'); } });
@@ -2617,7 +2597,7 @@
       if (reduced.matches) soundscape?.frame({ distance: scrollY / Math.max(1, g.height), depth: 0, mode: 'still', phase: 'scroll', axisDirection: 1, slug: 'rara-avis' });
       else if (progress <= .44 || ready(0)) soundscape?.frame({ distance: travel / g.height, depth, mode: 'E', phase: progress > 0 && progress < .96 ? 'transition' : 'hold', axisDirection: 1, slug: 'rara-avis' });
       if (!reduced.matches) releaseDistant(0);
-      if (!reduced.matches && (Math.abs(portraitTravelTarget - portraitTravelCurrent) >= 0.15 || Math.abs(mouse.tx - mouse.x) > 0.002 || Math.abs(mouse.ty - mouse.y) > 0.002)) {
+      if (!reduced.matches && (Math.abs(mouse.tx - mouse.x) > 0.002 || Math.abs(mouse.ty - mouse.y) > 0.002)) {
         frame = requestAnimationFrame(renderPortrait);
       }
     }
@@ -2640,7 +2620,7 @@
     ensureScene(0); measurePortrait();
   }
   if (!stage) {
-    const sections = $$('[data-parallax]'); let frame = null, parallaxCurrentY = scrollY || 0, parallaxTargetY = scrollY || 0, parallaxLastTime = 0;
+    const sections = $$('[data-parallax]'); let frame = null;
     sections.forEach(section => {
       if (!section.matches('.page-hero')) return;
       section.addEventListener('pointermove', e => {
@@ -2661,33 +2641,19 @@
         section.style.setProperty('--hero-ry', '0deg');
       }, { passive: true });
     });
-    function pageParallax(now = performance.now()) {
+    function pageParallax() {
       frame = null;
       const vh = innerHeight || 800;
-      parallaxTargetY = scrollY || 0;
-      const dt = parallaxLastTime > 0 ? clamp((now - parallaxLastTime) / 16.6667, 0.5, 2.2) : 1;
-      parallaxLastTime = now;
-      const dy = parallaxTargetY - parallaxCurrentY;
-      if (reduced.matches || Math.abs(dy) < 0.25) {
-        parallaxCurrentY = parallaxTargetY;
-        parallaxLastTime = 0;
-      } else {
-        const alpha = 1 - Math.pow(1 - 0.165, dt);
-        parallaxCurrentY += dy * alpha;
-      }
-      const offsetDelta = parallaxCurrentY - parallaxTargetY;
       sections.forEach(section => {
-        const r = section.getBoundingClientRect();
-        const virtualTop = r.top - offsetDelta;
-        if (r.bottom < -120 || r.top > vh + 120) return;
+        const r = section.getBoundingClientRect(); if (r.bottom < -100 || r.top > vh + 100) return;
         const target = $('.page-hero-image', section) || (section.matches('.contact-background') ? section : $('img', section));
         if (!target) return;
-        const progress = clamp((vh - virtualTop) / (vh + r.height), 0, 1);
+        const progress = clamp((vh - r.top) / (vh + r.height), 0, 1);
         const shift = (progress - .5) * 2 * vh * .07;
         target.style.transform = reduced.matches ? '' : `translate3d(0,${shift.toFixed(2)}px,0) scale(1.08)`;
         const copy = $('.page-hero-copy', section);
         if (copy) {
-          const exit = clamp(-virtualTop / vh, 0, 1);
+          const exit = clamp(-r.top / vh, 0, 1);
           const splitEase = exit * exit * (3 - 2 * exit);
           copy.style.transform = reduced.matches ? '' : `translate3d(0,${(-exit * vh * .035).toFixed(2)}px,0)`;
           copy.style.opacity = reduced.matches ? '1' : (1 - exit * .75).toFixed(3);
@@ -2697,9 +2663,6 @@
         }
       });
       $('.site-nav').classList.toggle('is-scrolled', scrollY > vh * .72);
-      if (!reduced.matches && Math.abs(parallaxTargetY - parallaxCurrentY) >= 0.25) {
-        frame = requestAnimationFrame(pageParallax);
-      }
     }
     const schedule = () => { if (frame === null) frame = requestAnimationFrame(pageParallax); };
     addEventListener('scroll', schedule, { passive: true }); addEventListener('resize', schedule, { passive: true }); reduced.addEventListener('change', schedule); schedule();

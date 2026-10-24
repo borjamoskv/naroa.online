@@ -194,6 +194,87 @@ export function KineticHorizon({
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
+  // Bucle de física inercial bajo demanda (On-Demand 60/120Hz ProMotion Sub-Step Engine) — Ley 1 y Ley 4
+  const startPhysicsLoopRef = useRef<() => void>(() => {})
+
+  useEffect(() => {
+    let lastTime = 0
+
+    const updatePhysics = (now: number) => {
+      animationFrameRef.current = null
+      const dt = lastTime > 0 ? Math.max(0.5, Math.min(2.2, (now - lastTime) / 16.6667)) : 1
+      lastTime = now
+      const prevX = currentXRef.current
+
+      if (!isDraggingRef.current) {
+        const diff = targetXRef.current - currentXRef.current
+        // Amortiguamiento continuo invariante al framerate (alpha base 0.165..0.21)
+        const baseAlpha = Math.min(0.21, 0.165 + Math.abs(diff / Math.max(1, itemSpacing)) * 0.045)
+        const alpha = 1 - Math.pow(1 - baseAlpha, dt)
+        currentXRef.current += diff * alpha
+
+        const nearestIdx = Math.max(
+          0,
+          Math.min(ARTWORKS.length - 1, Math.round(currentXRef.current / itemSpacing))
+        )
+
+        if (Math.abs(diff) < 0.25 && Math.abs(velocityRef.current) < 0.05) {
+          currentXRef.current = targetXRef.current
+        }
+
+        if (nearestIdx !== lastAnnouncedIndexRef.current) {
+          lastAnnouncedIndexRef.current = nearestIdx
+          activeIndexRef.current = nearestIdx
+          setActiveIdx(nearestIdx)
+          sound.playHapticClick(1.0 + (nearestIdx % 3) * 0.08)
+          sound.playSessionStep(nearestIdx)
+          triggerArtworkVocal(nearestIdx)
+          onSelectArtwork(nearestIdx)
+        }
+      } else {
+        const dragAlpha = 1 - Math.pow(1 - 0.38, dt)
+        currentXRef.current += (targetXRef.current - currentXRef.current) * dragAlpha
+      }
+
+      const instVel = (currentXRef.current - prevX) / Math.max(0.5, dt)
+      smoothVelRef.current = smoothVelRef.current * 0.76 + instVel * 0.24
+      const clampedSkew = Math.max(-3.2, Math.min(3.2, -smoothVelRef.current * 0.075))
+      const nextSkew = Math.abs(clampedSkew) < 0.03 ? 0 : Number(clampedSkew.toFixed(2))
+      setVelocitySkew(nextSkew)
+      setRenderPos(currentXRef.current)
+
+      const remaining = Math.abs(targetXRef.current - currentXRef.current)
+      if (isDraggingRef.current || remaining >= 0.25 || Math.abs(smoothVelRef.current) >= 0.08) {
+        animationFrameRef.current = requestAnimationFrame(updatePhysics)
+      } else {
+        currentXRef.current = targetXRef.current
+        smoothVelRef.current = 0
+        lastTime = 0
+        setVelocitySkew(0)
+        setRenderPos(targetXRef.current)
+      }
+    }
+
+    const schedulePhysics = () => {
+      if (animationFrameRef.current === null) {
+        animationFrameRef.current = requestAnimationFrame(updatePhysics)
+      }
+    }
+
+    startPhysicsLoopRef.current = schedulePhysics
+    schedulePhysics()
+
+    return () => {
+      if (animationFrameRef.current !== null) {
+        cancelAnimationFrame(animationFrameRef.current)
+        animationFrameRef.current = null
+      }
+      if (wheelSettleTimerRef.current) {
+        window.clearTimeout(wheelSettleTimerRef.current)
+      }
+    }
+  }, [itemSpacing, onSelectArtwork, triggerArtworkVocal])
+
   // Sincronizar targetX si currentIndex cambia desde el exterior (Índice, Hash, etc.)
   useEffect(() => {
     if (Math.abs(targetXRef.current - currentIndex * itemSpacing) > 10) {
@@ -201,6 +282,7 @@ export function KineticHorizon({
       activeIndexRef.current = currentIndex
       lastAnnouncedIndexRef.current = currentIndex
       setActiveIdx(currentIndex)
+      startPhysicsLoopRef.current()
     }
   }, [currentIndex, itemSpacing])
 
@@ -217,69 +299,6 @@ export function KineticHorizon({
     })
   }, [currentIndex])
 
-  // Bucle de física inercial a 60/120 FPS
-  useEffect(() => {
-    let lastTime = performance.now()
-
-    const updatePhysics = (now: number) => {
-      const dt = Math.min(32, now - lastTime) / 16.666
-      lastTime = now
-      const prevX = currentXRef.current
-
-      // Si el usuario no está arrastrando activamente, aplicar amortiguación inercial
-      if (!isDraggingRef.current) {
-        // Suavizado Lerp de alta costura (easing factor 0.088)
-        const diff = targetXRef.current - currentXRef.current
-        currentXRef.current += diff * 0.088 * dt
-
-        // Cálculo de obra más próxima al centro focal
-        const nearestIdx = Math.max(
-          0,
-          Math.min(ARTWORKS.length - 1, Math.round(currentXRef.current / itemSpacing))
-        )
-
-        // Si la inercia se está deteniendo suavemente, alinear con precisión magnética
-        if (Math.abs(diff) < 1.5 && Math.abs(velocityRef.current) < 0.1) {
-          currentXRef.current = targetXRef.current
-        }
-
-        // Anunciar cambio de obra al padre cuando cruza el ecuador focal
-        if (nearestIdx !== lastAnnouncedIndexRef.current) {
-          lastAnnouncedIndexRef.current = nearestIdx
-          activeIndexRef.current = nearestIdx
-          setActiveIdx(nearestIdx)
-          sound.playHapticClick(1.0 + (nearestIdx % 3) * 0.08)
-          sound.playSessionStep(nearestIdx)
-          triggerArtworkVocal(nearestIdx)
-          onSelectArtwork(nearestIdx)
-        }
-      } else {
-        // Durante el arrastre, seguir directamente a targetX con respuesta táctil inmediata
-        currentXRef.current += (targetXRef.current - currentXRef.current) * 0.35 * dt
-      }
-
-      // Velocidad instantánea suavizada para deformación cinética V3 (ds/dt)
-      const instVel = (currentXRef.current - prevX) / Math.max(0.5, dt)
-      smoothVelRef.current = smoothVelRef.current * 0.8 + instVel * 0.2
-      const clampedSkew = Math.max(-3.4, Math.min(3.4, -smoothVelRef.current * 0.085))
-      setVelocitySkew(Math.abs(clampedSkew) < 0.04 ? 0 : Number(clampedSkew.toFixed(2)))
-
-      setRenderPos(currentXRef.current)
-      animationFrameRef.current = requestAnimationFrame(updatePhysics)
-    }
-
-    animationFrameRef.current = requestAnimationFrame(updatePhysics)
-
-    return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current)
-      }
-      if (wheelSettleTimerRef.current) {
-        window.clearTimeout(wheelSettleTimerRef.current)
-      }
-    }
-  }, [itemSpacing, onSelectArtwork, triggerArtworkVocal])
-
   // Navegación secuencial suave (Prev / Next)
   const glideTo = useCallback(
     (newIndex: number) => {
@@ -292,6 +311,7 @@ export function KineticHorizon({
       setActiveIdx(clamped)
       triggerArtworkVocal(clamped)
       onSelectArtwork(clamped)
+      startPhysicsLoopRef.current()
     },
     [itemSpacing, onSelectArtwork, triggerArtworkVocal]
   )
@@ -331,6 +351,7 @@ export function KineticHorizon({
 
     // Acumular desplazamiento continuo en el objetivo de inercia
     targetXRef.current = Math.max(0, Math.min(maxX, targetXRef.current + delta * 1.15))
+    startPhysicsLoopRef.current()
 
     // Asentamiento magnético suave al detener el gesto de rueda/trackpad
     if (wheelSettleTimerRef.current) {
@@ -339,6 +360,7 @@ export function KineticHorizon({
     wheelSettleTimerRef.current = window.setTimeout(() => {
       const snappedIdx = Math.max(0, Math.min(ARTWORKS.length - 1, Math.round(targetXRef.current / itemSpacing)))
       targetXRef.current = snappedIdx * itemSpacing
+      startPhysicsLoopRef.current()
     }, 150)
   }
 
@@ -354,6 +376,7 @@ export function KineticHorizon({
     lastDragTimeRef.current = performance.now()
     velocityRef.current = 0
     sound.playHapticClick(0.9)
+    startPhysicsLoopRef.current()
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new CustomEvent('naroa:cursor', { detail: { label: 'ARRASTRAR' } }))
     }
@@ -394,6 +417,7 @@ export function KineticHorizon({
     }
 
     targetXRef.current = newTarget
+    startPhysicsLoopRef.current()
   }
 
   const handlePointerUp = () => {
@@ -415,6 +439,7 @@ export function KineticHorizon({
     const finalSnappedTarget = targetIdx * itemSpacing
 
     targetXRef.current = Math.max(0, Math.min(maxX, finalSnappedTarget))
+    startPhysicsLoopRef.current()
     sound.playHapticClick(1.05)
   }
 
@@ -698,9 +723,7 @@ export function KineticHorizon({
                 justifyContent: 'center',
                 cursor: 'pointer',
                 pointerEvents: 'auto',
-                transition: isDragging
-                  ? 'none'
-                  : 'transform 0.14s ease-out, opacity 0.15s ease-out',
+                willChange: 'transform, opacity',
               }}
             >
               {/* NUMERAL MONUMENTAL EN PARALLAX CLÁSICO DE ALTA COSTURA */}
@@ -1151,7 +1174,6 @@ export function KineticHorizon({
               borderRadius: '50%',
               background: '#D4AF37',
               boxShadow: '0 0 14px rgba(212, 175, 55, 0.95)',
-              transition: isDragging ? 'none' : 'left 0.12s ease-out',
               pointerEvents: 'none',
             }}
           />
