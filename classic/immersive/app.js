@@ -265,7 +265,6 @@
   const stage = $('[data-gallery]');
   if (stage) {
     const works = catalogue.projects.filter(p => stage.dataset.subset !== 'Vaivenes' || p.series === 'Vaivenes');
-    const ezquerraIndex = works.findIndex(w => w.slug === 'jose-manuel-ezquerra');
     const scenes = $$('.art-scene', stage), images = scenes.map(s => $('img', s));
     scenes.forEach((s, i) => { if (works[i]) s.dataset.work = works[i].slug; });
     const kineticTitle = $('[data-kinetic-title]', stage), caption = $('[data-art-copy]', stage);
