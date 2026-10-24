@@ -1523,7 +1523,7 @@
     });
     $('[data-ouroboros]', stage)?.addEventListener('click', () => change(0));
     $('[data-journey-cue]', stage)?.addEventListener('click', () => {
-      if (works[state.index]?.slug === 'dustin') change(0);
+      if (works[state.index]?.slug === 'dustin' || works[state.index]?.slug === 'game-over') change(0);
     });
     $('[data-fit]', stage).addEventListener('click', () => { pause(); state.fit = !state.fit; images[state.index].src = state.fit ? works[state.index].photos[0].src : works[state.index].cover; resetPan(); metadata(); render(); });
     $('[data-threshold-enter]', stage)?.addEventListener('click', () => {
@@ -1661,7 +1661,7 @@
     }
     $('[data-ouroboros]', stage)?.addEventListener('click', () => change(0));
     $('[data-journey-cue]', stage)?.addEventListener('click', () => {
-      if (works[state.index]?.slug === 'dustin') change(0);
+      if (works[state.index]?.slug === 'dustin' || works[state.index]?.slug === 'game-over') change(0);
     });
     $('[data-open-photos]', stage).addEventListener('click', event => openWorkGallery(event.currentTarget));
     $('[data-photo-prev]').addEventListener('click', () => photoStep(-1)); $('[data-photo-next]').addEventListener('click', () => photoStep(1));
