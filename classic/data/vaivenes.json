@@ -61,6 +61,14 @@
           "caption": "Róisín, obra completa con plumas, tejido y adornos."
         },
         {
+          "src": "/images/catalogo/roisin-bw-pinklips.jpg",
+          "width": 4160,
+          "height": 3120,
+          "sha256": "7d460a49e8b8670bf421938dca7f883a5bb57a59322ce040d2abbb7778903c85",
+          "source": null,
+          "caption": "Róisín en blanco y negro con labios rosas."
+        },
+        {
           "src": "/images/catalogo/roisin-dibujo-original.png",
           "width": 1585,
           "height": 1189,
@@ -68,15 +76,6 @@
           "source": null,
           "sha256": "6959ebc6a63402a7055a04c0e2d8a7886b960947444d48ee62d44c1297023500",
           "source_local": "/var/folders/r_/hw1ds2nj49zffr6r4m_81r5h0000gn/T/codex-clipboard-67919ec2-e8c8-45a6-b46c-891a7cdc3d91.png"
-        },
-        {
-          "src": "/images/catalogo/roisin-otra-vista.png",
-          "width": 2048,
-          "height": 1536,
-          "caption": "Otra vista de la obra terminada y sus materiales.",
-          "source": null,
-          "sha256": "bcff88e3ca2f636a96c8d1018cb581ccdacc1512b859cc7a936add9f9a3bd653",
-          "source_local": "/var/folders/r_/hw1ds2nj49zffr6r4m_81r5h0000gn/T/codex-clipboard-b1d81a42-155d-4477-b932-f7fe27cff933.png"
         }
       ]
     },

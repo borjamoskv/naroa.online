@@ -1238,5 +1238,20 @@ export const ARTWORKS: Artwork[] = [
     medium: 'Técnica mixta, acrílico, rotuladores Uni-Posca y collage sobre tabla de madera de 50 × 50 cm barnizada con látex líquido',
     description: '«Mare mía, mecachisenlamar, que no me puedo imaginar algo más espectacular que junto a ti pasar unas vacaciones en el mar». Retrato colorista doble realizado mediante técnica mixta sobre tabla de madera de 50 × 50 cm barnizada con látex líquido. La pieza combina pintura acrílica a pincel y rotuladores Uni-Posca con recortes de papel de seda, papel de regalo plastificado con mensaje, telas, celofán, aluminio y plástico decorado.',
     sizeCategory: 'medium'
+  },
+  {
+    id: 82,
+    category: 'kintsugi',
+    kicker: 'Postalak · Visión personal de Bilbao',
+    quote: 'La femme fatale es una construcción cinematográfica que a menudo termina explotando en liberación femenina.',
+    slug: 'marian-de-miranda',
+    aspectRatio: 0.666,
+    url: '/images/catalogo/marian-de-miranda-obra-2048.jpg',
+    title: 'Marian de Miranda: luciendo la pantorrilla',
+    href: '#obra-marian-de-miranda',
+    year: '2024',
+    medium: 'Dibujo a lápices de colores, collage tangible sobre caja de sardinas de chocolate y retoques digitales con tocado de gildas',
+    description: '«La femme fatale es una construcción masculina y cinematográfica, pero que a menudo termina explotando en liberación femenina». Retrato de Marian Puertas caracterizada con el cuerpo y el tocado de Carmen Miranda, combinando ilustración física a lápices de colores Faber-Castell, collage tangible a partir de una caja de sardinas de chocolate con celofán, concha, redes y flores secas, y composición digital con un tocado de tres gildas bilbaínas en homenaje cruzado a Bilbao, Carmen Miranda y Rita Hayworth en Gilda para el proyecto Postalak.',
+    sizeCategory: 'medium'
   }
 ]

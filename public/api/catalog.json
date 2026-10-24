@@ -1234,36 +1234,50 @@
       "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Dar%20la%20Lata"
     },
     {
-      "slug": "marian-de-miranda-luciendo-la-pantorrilla",
-      "title": "Marian de Miranda Luciendo la Pantorrilla",
+      "slug": "marian-de-miranda",
+      "title": "Marian de Miranda: luciendo la pantorrilla",
       "category": "collage",
       "series": null,
-      "technique": "Dibujo, collage físico y composición digital",
-      "support": "Papel, materiales encontrados y archivo digital",
-      "dimensions": "Dibujo: 20 × 10 cm · Collage físico: 23 × 18 cm",
-      "materials": null,
-      "year": null,
-      "story": "Proyecto PostalaK: el dibujo y el collage físico se escanean y combinan en variantes digitales. El retrato de Marian Puertas dialoga con la figura y el tocado de Carmen Miranda.",
-      "url": "https://naroagutierrezgil.com/obra/marian-de-miranda-luciendo-la-pantorrilla/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/marian-de-miranda-luciendo-la-pantorrilla-original-01-1457-8ffe5e299496-view.webp",
+      "technique": "Dibujo a lápices de colores, collage tangible y retoques digitales",
+      "support": "Papel sobre caja de sardinas de chocolate, celofán y red",
+      "dimensions": "23 × 18 cm",
+      "materials": "Lápices Faber-Castell sobre papel de 80 g/m², caja de sardinas de chocolate, celofán azul, concha, masilla adhesiva, brillantes, red amarilla y azul, cinta adhesiva, plástico dorado, pétalos, alga seca y collage digital de gildas",
+      "year": 2024,
+      "story": "«La femme fatale es una construcción masculina y cinematográfica, pero que a menudo termina explotando en liberación femenina». Retrato de Marian Puertas caracterizada con el cuerpo y el tocado de Carmen Miranda, combinando ilustración física a lápices de colores Faber-Castell, collage tangible a partir de una caja de sardinas de chocolate con celofán, concha, redes y flores secas, y composición digital con un tocado de tres gildas bilbaínas en homenaje cruzado a Bilbao, Carmen Miranda y Rita Hayworth en Gilda para el proyecto Postalak.",
+      "url": "https://naroagutierrezgil.com/obra/marian-de-miranda/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/marian-de-miranda-obra-2048-b34907ad7a97-view.webp",
       "photos": [
         {
-          "url": "https://naroagutierrezgil.com/images/catalogo/marian-de-miranda-luciendo-la-pantorrilla-original-01-1457.jpg",
-          "width": 971,
-          "height": 1457,
-          "caption": "Variante digital de la composición",
-          "sha256": "8ffe5e299496776b53a442c4dbd8b0cccb96847490b73b49973fc81638540e00"
+          "url": "https://naroagutierrezgil.com/images/catalogo/marian-de-miranda-obra-2048.jpg",
+          "width": 1364,
+          "height": 2048,
+          "caption": "Obra final: Marian Puertas como Carmen Miranda con tocado de tres gildas, red y caja de sardinas.",
+          "sha256": "b34907ad7a979f8a71cbb6c6a2f6b87447663b8c7e2dfba8b43d1b242df88f91"
         },
         {
-          "url": "https://naroagutierrezgil.com/images/catalogo/marian-de-miranda-luciendo-la-pantorrilla-original-02-2048.jpg",
-          "width": 1365,
+          "url": "https://naroagutierrezgil.com/images/catalogo/marian-de-miranda-montaje-digital-2048.jpg",
+          "width": 1364,
           "height": 2048,
-          "caption": "Otra variante de PostalaK",
-          "sha256": "668f5d1af2dcba2df5e09d91ab040a9a27785e02a836b3c97690dcb3dcbb2aec"
+          "caption": "Montaje digital intermedio del proceso sobre fondo fucsia y caja de sardinas.",
+          "sha256": "c8c01f8548f5a38e840ea4b2be301bdd3431ca948efcc9da8933a018e609eb55"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/marian-de-miranda-collage-sardinas-2048.jpg",
+          "width": 1440,
+          "height": 2048,
+          "caption": "Base de collage tangible: caja de sardinas de chocolate, envoltorio metalizado y llave abrelatas.",
+          "sha256": "b21e766470f9c376016e6e798663e46629c02a09af8564e7dd1405a2b2118faf"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/marian-de-miranda-referencia-marian-2048.jpg",
+          "width": 2048,
+          "height": 2004,
+          "caption": "Fotografía de referencia de Marian Puertas con aros y gesto icónico.",
+          "sha256": "85240f846a8c89c9b8ea0a1ab04df1bfc40681355e4622b6bf37ebe6f7792c97"
         }
       ],
-      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Marian%20de%20Miranda%20Luciendo%20la%20Pantorrilla",
-      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Marian%20de%20Miranda%20Luciendo%20la%20Pantorrilla"
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Marian%20de%20Miranda%3A%20luciendo%20la%20pantorrilla",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Marian%20de%20Miranda%3A%20luciendo%20la%20pantorrilla"
     },
     {
       "slug": "my-tiny-face",
@@ -2536,6 +2550,13 @@
           "height": 3120,
           "caption": "Róisín, obra completa con plumas, tejido y adornos.",
           "sha256": "f096f99f38d6b7da7913be35521dd0680ca979f0f5e43c12907bbca140c31651"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/roisin-bw-pinklips.jpg",
+          "width": 4160,
+          "height": 3120,
+          "caption": "Róisín en blanco y negro con labios rosas.",
+          "sha256": "7d460a49e8b8670bf421938dca7f883a5bb57a59322ce040d2abbb7778903c85"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/roisin-dibujo-original.png",

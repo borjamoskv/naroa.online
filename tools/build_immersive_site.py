@@ -99,17 +99,14 @@ def build(output):
         stage = im.get("stage", "obra")
         photos = im.get("images", [im])
         projects.append({"slug": slug, "title": im["title"], "category": "collage", "label": "Vaivenes" + (" · Detalle" if stage == "detalle" else " · Dibujo" if stage == "dibujo" else ""), "story": im["caption"], "technique": im.get("technique", "Pintura y collage" if stage != "dibujo" else "Dibujo"), "support": im.get("support"), "dimensions": im.get("dimensions"), "materials": im.get("materials"), "year": None, "series": "Vaivenes", "credit": None, "source": im["source"], "kind": "obra", "cover": derivative(im["src"]), "thumb": derivative(im["src"], 480, True), "photos": [{"src": derivative(photo["src"]), "original": photo["src"], "caption": photo["caption"], "width": photo["width"], "height": photo["height"]} for photo in photos], "stage": stage})
-    # The non-curated order follows the reviewed files, independently of hash seed.
-    first = {slug: i for i, slug in enumerate(CURATED)}
-    original_order = {p["slug"]: i for i, p in enumerate(catalogue["projects"])}
-    for i, im in enumerate(series["images"]):
-        original_order.setdefault(im.get("work_slug", im.get("slug")), len(catalogue["projects"]) + i)
-    projects.sort(key=lambda p: (0, first[p["slug"]]) if p["slug"] in first else (1, original_order[p["slug"]]))
+    # Order follows the canonical journey camera score.
+    journey = read_data("journey")
+    scene_index = {scene["slug"]: i for i, scene in enumerate(journey["scenes"])}
+    projects.sort(key=lambda p: scene_index[p["slug"]])
     assert len(projects) == len(known)
     portrait = derivative("/images/sobre-mi/naroa-monoculo.jpg", 3468, quality=94)
     portrait_wink = derivative("/images/sobre-mi/naroa-monoculo-guino.png", 3468, quality=94)
     cantinflowers = derivative("/images/trayectoria/cantinflowers.jpg")
-    journey = read_data("journey")
     assert [scene["slug"] for scene in journey["scenes"]] == [p["slug"] for p in projects], "Camera score must cover the ordered catalogue exactly"
     assert all(scene["mode"] in journey["durations"] for scene in journey["scenes"])
     content = {"journey": journey, "projects": projects, "reviewed": catalogue["reviewed"], "labels": LABELS}
@@ -1017,7 +1014,15 @@ def build(output):
     }
     page("/contacto/", "Contacto", "Habla con Naroa Gutiérrez Gil sobre una obra o un retrato por encargo. Bilbao. Email, WhatsApp e Instagram.", contact, rara["photos"][0]["original"], schema=contact_schema)
     page("/404/", "Esta página se ha ido de paseo", "Vuelve a la obra de Naroa Gutiérrez Gil.", '<main id="main" class="not-found"><p class="eyebrow">404</p><h1>Esta página<br>se ha ido de paseo.</h1><a class="text-link" href="/">Volver a la obra ↗</a></main>', amor["photos"][0]["original"], not_found=True)
-    aliases = {"/bio/": "/sobre-mi/", "/exposiciones/": "/trayectoria/", "/encargos/": "/retratos-por-encargo-bilbao/", "/retratos-por-encargo/": "/retratos-por-encargo-bilbao/", "/prensa/": "/cuaderno/", "/blog/": "/cuaderno/"}
+    aliases = {
+        "/bio/": "/sobre-mi/",
+        "/exposiciones/": "/trayectoria/",
+        "/encargos/": "/retratos-por-encargo-bilbao/",
+        "/retratos-por-encargo/": "/retratos-por-encargo-bilbao/",
+        "/prensa/": "/cuaderno/",
+        "/blog/": "/cuaderno/",
+        "/obra/marian-de-miranda-luciendo-la-pantorrilla/": "/obra/marian-de-miranda/",
+    }
     for src, dest in aliases.items():
         write(output / src.lstrip("/") / "index.html", f'<!doctype html><html lang="es"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0;url={dest}"><link rel="canonical" href="{ORIGIN}{dest}"><title>Naroa Gutiérrez Gil</title></head><body><a href="{dest}">Continuar →</a></body></html>')
 

@@ -1217,36 +1217,53 @@
       "source": "https://www.facebook.com/media/set/?set=a.606818890797536&type=3"
     },
     {
-      "slug": "marian-de-miranda-luciendo-la-pantorrilla",
-      "title": "Marian de Miranda Luciendo la Pantorrilla",
+      "slug": "marian-de-miranda",
+      "title": "Marian de Miranda: luciendo la pantorrilla",
       "category": "collage",
-      "technique": "Dibujo, collage físico y composición digital",
-      "support": "Papel, materiales encontrados y archivo digital",
-      "story": "Proyecto PostalaK: el dibujo y el collage físico se escanean y combinan en variantes digitales. El retrato de Marian Puertas dialoga con la figura y el tocado de Carmen Miranda.",
+      "technique": "Dibujo a lápices de colores, collage tangible y retoques digitales",
+      "support": "Papel sobre caja de sardinas de chocolate, celofán y red",
+      "story": "«La femme fatale es una construcción masculina y cinematográfica, pero que a menudo termina explotando en liberación femenina». Retrato de Marian Puertas caracterizada con el cuerpo y el tocado de Carmen Miranda, combinando ilustración física a lápices de colores Faber-Castell, collage tangible a partir de una caja de sardinas de chocolate con celofán, concha, redes y flores secas, y composición digital con un tocado de tres gildas bilbaínas en homenaje cruzado a Bilbao, Carmen Miranda y Rita Hayworth en Gilda para el proyecto Postalak.",
       "images": [
         {
-          "src": "/images/catalogo/marian-de-miranda-luciendo-la-pantorrilla-original-01-1457.jpg",
-          "width": 971,
-          "height": 1457,
-          "caption": "Variante digital de la composición",
+          "src": "/images/catalogo/marian-de-miranda-obra-2048.jpg",
+          "width": 1364,
+          "height": 2048,
+          "caption": "Obra final: Marian Puertas como Carmen Miranda con tocado de tres gildas, red y caja de sardinas.",
           "source": "https://www.facebook.com/photo/?fbid=1087698559376231&set=a.1087704452708975",
-          "sha256": "8ffe5e299496776b53a442c4dbd8b0cccb96847490b73b49973fc81638540e00"
+          "sha256": "b34907ad7a979f8a71cbb6c6a2f6b87447663b8c7e2dfba8b43d1b242df88f91"
         },
         {
-          "src": "/images/catalogo/marian-de-miranda-luciendo-la-pantorrilla-original-02-2048.jpg",
-          "width": 1365,
+          "src": "/images/catalogo/marian-de-miranda-montaje-digital-2048.jpg",
+          "width": 1364,
           "height": 2048,
-          "caption": "Otra variante de PostalaK",
+          "caption": "Montaje digital intermedio del proceso sobre fondo fucsia y caja de sardinas.",
           "source": "https://www.facebook.com/photo/?fbid=1087698802709540&set=a.1087704452708975",
-          "sha256": "668f5d1af2dcba2df5e09d91ab040a9a27785e02a836b3c97690dcb3dcbb2aec"
+          "sha256": "c8c01f8548f5a38e840ea4b2be301bdd3431ca948efcc9da8933a018e609eb55"
+        },
+        {
+          "src": "/images/catalogo/marian-de-miranda-collage-sardinas-2048.jpg",
+          "width": 1440,
+          "height": 2048,
+          "caption": "Base de collage tangible: caja de sardinas de chocolate, envoltorio metalizado y llave abrelatas.",
+          "source": "https://www.facebook.com/media/set/?set=a.1087704452708975&type=3",
+          "sha256": "b21e766470f9c376016e6e798663e46629c02a09af8564e7dd1405a2b2118faf"
+        },
+        {
+          "src": "/images/catalogo/marian-de-miranda-referencia-marian-2048.jpg",
+          "width": 2048,
+          "height": 2004,
+          "caption": "Fotografía de referencia de Marian Puertas con aros y gesto icónico.",
+          "source": "https://www.facebook.com/media/set/?set=a.1087704452708975&type=3",
+          "sha256": "85240f846a8c89c9b8ea0a1ab04df1bfc40681355e4622b6bf37ebe6f7792c97"
         }
       ],
-      "dimensions": "Dibujo: 20 × 10 cm · Collage físico: 23 × 18 cm",
+      "dimensions": "23 × 18 cm",
+      "materials": "Lápices Faber-Castell sobre papel de 80 g/m², caja de sardinas de chocolate, celofán azul, concha, masilla adhesiva, brillantes, red amarilla y azul, cinta adhesiva, plástico dorado, pétalos, alga seca y collage digital de gildas",
       "series": null,
-      "year": null,
+      "year": 2024,
       "credit": null,
       "selected": false,
-      "kind": "proyecto",
+      "kind": "obra",
       "source": "https://www.facebook.com/media/set/?set=a.1087704452708975&type=3"
     },
     {

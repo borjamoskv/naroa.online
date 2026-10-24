@@ -392,8 +392,8 @@
       galleryReturnFocus = null;
       scheduleScroll();
     });
-    const focals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '56% 42%', 'amor-en-conserva': '50% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'johnny-rocks': '50% 42%', 'rockagipsy': '50% 43%', 'hugo-box': '50% 38%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '54% 44%', 'lauralore': '46% 44%', 'izei': '48% 42%', 'the-love-boat': '50% 44%' };
-    const mobileFocals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '61% 40%', 'amor-en-conserva': '48% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'denbora-nora-zoaz': '18% 45%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '56% 44%', 'lauralore': '48% 44%', 'izei': '48% 42%', 'the-love-boat': '50% 44%' };
+    const focals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '56% 42%', 'amor-en-conserva': '50% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'johnny-rocks': '50% 42%', 'rockagipsy': '50% 43%', 'hugo-box': '50% 38%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '54% 44%', 'lauralore': '46% 44%', 'izei': '48% 42%', 'the-love-boat': '50% 44%', 'marian-de-miranda': '66% 36%' };
+    const mobileFocals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '61% 40%', 'amor-en-conserva': '48% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'denbora-nora-zoaz': '18% 45%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '56% 44%', 'lauralore': '48% 44%', 'izei': '48% 42%', 'the-love-boat': '50% 44%', 'marian-de-miranda': '66% 36%' };
     // Pupil centres measured on the unaltered cover photographs, in source-image coordinates.
     const eyes = {
       'marilyn-rocks': { x: .635, y: .392, iris: .030 },
@@ -552,6 +552,7 @@
         image.style.transformOrigin = works[index].slug === 'el-hombre-que-susurraba-a-las-estrellas' ? '65.2% 57.4%'
           : works[index].slug === 'i-got-you-babe' ? '38% 46%'
           : works[index].slug === 'jose-manuel-ezquerra' ? '62% 42%'
+          : works[index].slug === 'roisin' ? '61.1% 58.6%'
           : '50% 50%';
         if (works[index].interaction === 'puzzle' && (!still || puzzles.has(index))) drawPuzzle(index, outgoing && transition ? fraction : 0, still);
         if (works[index].slug === 'custom-jaio' && !state.fit) {
@@ -592,6 +593,10 @@
             const travelY = -travelProgress * overflowY;
             image.style.transformOrigin = '50% 0%';
             image.style.transform = `translate3d(0,${travelY.toFixed(3)}px,0) scale(${mobileScale.toFixed(5)})`;
+          } else if (works[index].slug === 'roisin') {
+            image.style.transformOrigin = '61.1% 58.6%';
+            const roisinZoom = 1.08 + smooth(pose.explore) * 0.16;
+            image.style.transform = `scale(${roisinZoom.toFixed(5)})`;
           } else {
             image.style.transform = `translate3d(0,${(-smooth(pose.explore) * 3).toFixed(3)}%,0) scale(1.08000)`;
           }
@@ -648,6 +653,43 @@
           if (!outgoing) scene.style.opacity = exit.toFixed(4);
           scene.style.transform = `translate3d(0,${(outgoing ? -exit * geometry.height : (1 - exit) * geometry.height).toFixed(3)}px,0)`;
           image.style.transform = 'scale(1.08000)';
+        }
+        if (works[index].slug === 'roisin') {
+          let roisinOverlay = scene.querySelector('.roisin-bw-layer');
+          if (!roisinOverlay) {
+            roisinOverlay = document.createElement('div');
+            roisinOverlay.className = 'roisin-bw-layer';
+            roisinOverlay.setAttribute('aria-hidden', 'true');
+            const bwSrc = works[index].photos[1]?.src || '/images/catalogo/roisin-bw-pinklips.jpg';
+            roisinOverlay.style.position = 'absolute';
+            roisinOverlay.style.inset = '0';
+            roisinOverlay.style.width = '100%';
+            roisinOverlay.style.height = '100%';
+            roisinOverlay.style.backgroundImage = `url("${bwSrc}")`;
+            roisinOverlay.style.backgroundSize = state.fit ? 'contain' : 'cover';
+            roisinOverlay.style.backgroundPosition = state.fit ? 'center' : (scene.style.getPropertyValue('--position') || '61.1% 58.6%');
+            roisinOverlay.style.backgroundRepeat = 'no-repeat';
+            roisinOverlay.style.pointerEvents = 'none';
+            roisinOverlay.style.willChange = 'opacity,transform';
+            roisinOverlay.style.zIndex = '2';
+            const pan = $('.art-pan', scene) || scene;
+            pan.appendChild(roisinOverlay);
+          }
+          if (still) {
+            roisinOverlay.style.transform = '';
+            roisinOverlay.style.opacity = '0';
+          } else {
+            roisinOverlay.style.backgroundSize = state.fit ? 'contain' : 'cover';
+            roisinOverlay.style.backgroundPosition = state.fit ? 'center' : (scene.style.getPropertyValue('--position') || '61.1% 58.6%');
+            roisinOverlay.style.transformOrigin = image.style.transformOrigin;
+            roisinOverlay.style.transform = image.style.transform;
+            if (!transition) {
+              const colorProgress = smooth(pose.explore);
+              roisinOverlay.style.opacity = (1 - colorProgress).toFixed(4);
+            } else {
+              roisinOverlay.style.opacity = outgoing ? '0' : '1';
+            }
+          }
         }
       });
       const activeSlug = transition && fraction >= .5 ? works[incoming].slug : works[base].slug;
