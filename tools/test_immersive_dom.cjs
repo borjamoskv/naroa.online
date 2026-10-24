@@ -13,7 +13,9 @@ function create(route = '/', reduce = false, viewport = { width: 1024, height: 7
   let time = 0, id = 0;
   const observers = [];
   const callbacks = new Map(), native = new VirtualConsole();
-  native.on('jsdomError', error => errors.push(error.message));
+  native.on('jsdomError', error => {
+    if (!error.message.includes('HTMLMediaElement.prototype.play')) errors.push(error.message);
+  });
   const dom = new JSDOM(fs.readFileSync(file, 'utf8'), {
     runScripts: 'outside-only', url: 'https://portfolio.test' + route, virtualConsole: native,
     beforeParse(w) {
@@ -36,6 +38,9 @@ function create(route = '/', reduce = false, viewport = { width: 1024, height: 7
         unobserve(target) { this.targets.delete(target); }
       };
       w.scrollTo = options => { w.scrollY = options.top; w.pageYOffset = options.top; w.dispatchEvent(new w.Event('scroll')); };
+      w.HTMLMediaElement.prototype.play = async () => {};
+      w.HTMLMediaElement.prototype.pause = () => {};
+      w.HTMLMediaElement.prototype.load = () => {};
       Object.defineProperty(w.HTMLElement.prototype, 'inert', {
         get() { return this.hasAttribute('inert'); }, set(value) { this.toggleAttribute('inert', value); }
       });
@@ -49,6 +54,11 @@ function create(route = '/', reduce = false, viewport = { width: 1024, height: 7
       w.HTMLDialogElement.prototype.close = function () {
         this.removeAttribute('open'); this.dispatchEvent(new w.Event('close')); this.returnFocus?.focus();
       };
+      if (w.HTMLMediaElement) {
+        w.HTMLMediaElement.prototype.play = () => Promise.resolve();
+        w.HTMLMediaElement.prototype.pause = () => {};
+        w.HTMLMediaElement.prototype.load = () => {};
+      }
     }
   });
   const w = dom.window, document = w.document;
@@ -780,6 +790,7 @@ async function eyeMatch(ui, base, points) {
   const robeIndex = works.findIndex(w => w.slug === 'entre-tantas-flores-de-dia');
   reactiveGallery.scroll(robeIndex); await reactiveGallery.flush();
   assert.equal(reactiveGallery.find('.art-stage').classList.contains('has-deltoya-pulse'), false, 'Robe maintains sober pictorial atmosphere without pop distortions or shout badges');
+  assert.equal(reactiveGallery.w.NAROA_SOUND.lastDeltoyaSlug, 'entre-tantas-flores-de-dia', 'Arriving at Robe triggers authentic autotuned Deltoya shout');
   const saioIdx = works.findIndex(w => w.slug === 'saio-puzzle');
   if (saioIdx >= 0) {
     galleryAudio.advance(150); reactiveGallery.scroll(saioIdx); await reactiveGallery.flush();
@@ -863,6 +874,17 @@ async function eyeMatch(ui, base, points) {
       page.find('#cfg-support').value = 'Collage textil sobre madera';
       page.find('#cfg-support').dispatchEvent(new page.w.Event('change'));
       assert.ok(page.find('#cfg-whatsapp-btn').href.includes(encodeURIComponent('Collage textil sobre madera')), 'Changing support updates WhatsApp query parameter');
+      assert.ok(page.w.WebMCP, 'WebMCP interface exposed on window');
+      const catalogResults = await page.w.WebMCP.callTool('search_catalogue', { query: 'pizarra' });
+      assert.ok(catalogResults.length > 0, 'WebMCP search_catalogue returns matches');
+      const amyDetails = await page.w.WebMCP.callTool('get_artwork_details', { slug: 'amy-rocks' });
+      assert.equal(amyDetails.slug, 'amy-rocks', 'WebMCP get_artwork_details returns target artwork');
+      const configInquiry = await page.w.WebMCP.callTool('configure_commission_inquiry', { support: 'Pizarra natural rústica', motif: 'Retrato individual' });
+      assert.ok(configInquiry.whatsapp_url.includes('wa.me'), 'WebMCP configure_commission_inquiry generates valid WhatsApp URL');
+      const artistProfile = await page.w.WebMCP.callTool('get_artist_profile');
+      assert.equal(artistProfile.name, 'Naroa Gutiérrez Gil', 'WebMCP get_artist_profile returns artist name');
+      assert.equal(artistProfile.entity_id, 'https://naroagutierrezgil.com/#artist', 'WebMCP get_artist_profile returns canonical entity ID');
+      assert.equal(artistProfile.studio_id, 'https://naroagutierrezgil.com/#studio', 'WebMCP get_artist_profile returns canonical studio ID');
     }
     page.dom.window.close();
   }

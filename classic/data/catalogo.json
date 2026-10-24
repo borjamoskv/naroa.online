@@ -1673,13 +1673,13 @@
       "story": "El retrato dibujado se combina con fragmentos de cerámica decorada y elementos vegetales. La composición fue realizada como regalo de cumpleaños y juega con la idea del eguzkilore.",
       "images": [
         {
-          "src": "/images/catalogo/lauralore-01.jpg",
-          "width": 600,
-          "height": 800,
-          "caption": "Obra completa.",
+          "src": "/images/catalogo/lauralore-01-4k.jpg",
+          "width": 2400,
+          "height": 3200,
+          "caption": "Obra completa remasterizada en Ultra-HD.",
           "source": "https://www.facebook.com/photo/?fbid=666366311509460&set=a.666379298174828",
-          "sha256": "e90123f9f60689ea91d06808cd12c65cb1d9f5be7b785cf0096c0102eaf6c2fc",
-          "source_local": "work/naroa-artwork-intake/666379298174828-03.jpg"
+          "sha256": "24c1ca198fdd9177e5b9281f3250c682be10b4005d5df891b33d0cd08339a4d9",
+          "source_local": "classic/images/catalogo/lauralore-01-4k.jpg"
         },
         {
           "src": "/images/catalogo/lauralore-02.jpg",
