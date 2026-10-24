@@ -158,9 +158,10 @@
       if (clickGain.gain.exponentialRampToValueAtTime) {
         clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.075);
       }
+      const target = engine.compressor || engine.master;
       clickSrc.connect(clickFilter);
       clickFilter.connect(clickGain);
-      clickGain.connect(engine.master);
+      clickGain.connect(target);
       clickSrc.start(now);
 
       if (typeof context.createOscillator === 'function') {
@@ -171,12 +172,12 @@
         if (popOsc.frequency.exponentialRampToValueAtTime) {
           popOsc.frequency.exponentialRampToValueAtTime(120, now + 0.055);
         }
-        popGain.gain.setValueAtTime(0.32, now + 0.006);
+        popGain.gain.setValueAtTime(0.38, now + 0.006);
         if (popGain.gain.exponentialRampToValueAtTime) {
           popGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.065);
         }
         popOsc.connect(popGain);
-        popGain.connect(engine.master);
+        popGain.connect(target);
         popOsc.start(now + 0.006);
         popOsc.stop(now + 0.07);
       }
@@ -315,7 +316,7 @@
     envelope[0] = envelope[63] = 0;
     const noteEnvelope = Float32Array.from({ length: 64 }, (_, i) => i === 0 ? 0 : i < 53 ? 1 : Math.cos((i - 53) / 10 * Math.PI / 2) ** 2);
     noteEnvelope[63] = 0;
-    return { master, nature, iris, filter, tone, open, core, music, panner, roomGain, roomTone, buffers: decoded.slice(0, 2), box: decoded[2], envelope, noteEnvelope, voices: new Set() };
+    return { master, nature, iris, filter, tone, open, core, music, panner, roomGain, roomTone, compressor, buffers: decoded.slice(0, 2), box: decoded[2], envelope, noteEnvelope, voices: new Set() };
   }
   button.addEventListener('click', () => {
     if (loading) return;
@@ -360,6 +361,10 @@
     frame(state = {}) {
       if (!state || typeof state !== 'object') return;
       advance(state.distance, state.depth, state.mode, state.phase, state.axisDirection, state.slug, state.flash);
+    },
+    flash() {
+      lastFlashSlug = 'ajenjo-cam';
+      playCameraFlash();
     },
     get lastUtterance() { return lastUtterance; },
     get lastFlashSlug() { return lastFlashSlug; }

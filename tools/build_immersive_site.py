@@ -58,6 +58,28 @@ def build(output):
 
     catalogue = read_data("catalogo")
     series = read_data("vaivenes")
+    sha_by_src = {}
+    source_by_src = {}
+    for p in catalogue["projects"]:
+        for im in p["images"]:
+            if im.get("sha256"):
+                sha_by_src[im["src"]] = im["sha256"]
+            if im.get("source"):
+                source_by_src[im["src"]] = im["source"]
+    for im in series["images"]:
+        for photo in im.get("images", [im]):
+            if photo.get("sha256"):
+                sha_by_src[photo["src"]] = photo["sha256"]
+            if photo.get("source"):
+                source_by_src[photo["src"]] = photo["source"]
+    image_meta_cache = {}
+
+    def image_info(src):
+        if src not in image_meta_cache:
+            with Image.open(SOURCE / src.lstrip("/")) as im:
+                image_meta_cache[src] = (im.width, im.height, Image.MIME.get(im.format, "image/jpeg"))
+        return image_meta_cache[src]
+
     projects = []
     series_slugs = {im.get("work_slug", im.get("slug")) for im in series["images"]}
     for p in catalogue["projects"]:
@@ -141,9 +163,25 @@ def build(output):
 
     pages = []
 
-    def page(path, title, description, body, image, gallery=False, schema=None, not_found=False):
+    def page(path, title, description, body, image, gallery=False, schema=None, not_found=False, image_alt=None):
         canonical = ORIGIN + path
-        structured = schema or {"@context": "https://schema.org", "@type": "WebPage", "name": title, "url": canonical, "description": description}
+        im_w, im_h, im_mime = image_info(image)
+        im_alt = image_alt or f"{title} · Naroa Gutiérrez Gil"
+        structured = dict(schema or {"@context": "https://schema.org", "@type": "WebPage", "name": title, "url": canonical, "description": description})
+        structured.setdefault("inLanguage", "es-ES")
+        structured.setdefault("dateModified", catalogue["reviewed"])
+        if not not_found:
+            structured.setdefault(
+                "primaryImageOfPage",
+                {
+                    "@type": "ImageObject",
+                    "contentUrl": f"{ORIGIN}{image}",
+                    "width": im_w,
+                    "height": im_h,
+                    "encodingFormat": im_mime,
+                    "caption": im_alt,
+                },
+            )
         breadcrumb = None
         if not not_found and path != "/":
             section_name = "Obras" if path.startswith("/obra/") else "Vaivenes" if path.startswith("/series/vaivenes/") else title.split("·")[0].strip()
@@ -162,11 +200,11 @@ def build(output):
                 "itemListElement": items
             }
         breadcrumb_tag = f'<script type="application/ld+json" id="seo-breadcrumb">{data_json(breadcrumb)}</script>' if breadcrumb else ''
-        html = f'''<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>{esc(title)} · Naroa Gutiérrez Gil</title><meta name="description" content="{esc(description)}"><meta name="robots" content="index, follow, max-image-preview:large"><link rel="canonical" href="{canonical}"><meta property="og:site_name" content="Naroa Gutiérrez Gil"><meta property="og:locale" content="es_ES"><meta property="og:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{canonical}"><meta property="og:type" content="{'article' if gallery else 'website'}"><meta property="og:image" content="{ORIGIN}{image}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta name="twitter:description" content="{esc(description)}"><meta name="twitter:image" content="{ORIGIN}{image}"><link rel="icon" href="{favicon_path}" type="image/svg+xml" sizes="any"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="{assets['app.css']}"><script type="application/ld+json" id="page-schema">{data_json(structured)}</script>{breadcrumb_tag}<script defer src="{catalog_path}"></script><script defer src="{assets['soundscape.js']}"></script><script defer src="{assets['journey.js']}"></script><script defer src="{assets['app.js']}"></script></head><body class="{'gallery-page' if gallery else 'editorial-page'}"><a class="skip-link" href="#main">Ir al contenido</a>{header(gallery)}{body}{'' if gallery else footer()}{dialogs()}</body></html>'''
+        html = f'''<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>{esc(title)} · Naroa Gutiérrez Gil</title><meta name="description" content="{esc(description)}"><meta name="robots" content="index, follow, max-image-preview:large"><link rel="canonical" href="{canonical}"><meta property="og:site_name" content="Naroa Gutiérrez Gil"><meta property="og:locale" content="es_ES"><meta property="og:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{canonical}"><meta property="og:type" content="{'article' if gallery else 'website'}"><meta property="og:image" content="{ORIGIN}{image}"><meta property="og:image:secure_url" content="{ORIGIN}{image}"><meta property="og:image:width" content="{im_w}"><meta property="og:image:height" content="{im_h}"><meta property="og:image:type" content="{im_mime}"><meta property="og:image:alt" content="{esc(im_alt)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta name="twitter:description" content="{esc(description)}"><meta name="twitter:image" content="{ORIGIN}{image}"><meta name="twitter:image:alt" content="{esc(im_alt)}"><link rel="icon" href="{favicon_path}" type="image/svg+xml" sizes="any"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="{assets['app.css']}"><script type="application/ld+json" id="page-schema">{data_json(structured)}</script>{breadcrumb_tag}<script defer src="{catalog_path}"></script><script defer src="{assets['soundscape.js']}"></script><script defer src="{assets['journey.js']}"></script><script defer src="{assets['app.js']}"></script></head><body class="{'gallery-page' if gallery else 'editorial-page'}"><a class="skip-link" href="#main">Ir al contenido</a>{header(gallery)}{body}{'' if gallery else footer()}{dialogs()}</body></html>'''
         dest = output / ("404.html" if not_found else path.lstrip("/") + "index.html")
         write(dest, html)
         if not not_found:
-            pages.append((path, image))
+            pages.append((path, image, title, im_alt))
 
     def work_alt(q, caption=None):
         medium = " · ".join(filter(None, [q.get("technique"), q.get("support")])) or q["label"]

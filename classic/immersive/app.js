@@ -274,6 +274,17 @@
       img.style.transformOrigin = '0px 0px';
       img.style.transform = `translate3d(${tx.toFixed(3)}px,${ty.toFixed(3)}px,0) scale(${zoom.toFixed(5)})`;
     }
+    let ajenjoBurstTimer = null, ajenjoVisited = false;
+    function fireAjenjoFlash() {
+      soundscape?.flash?.();
+      stage.classList.remove('has-flash-burst');
+      void stage.offsetWidth;
+      stage.classList.add('has-flash-burst');
+      clearTimeout(ajenjoBurstTimer);
+      ajenjoBurstTimer = setTimeout(() => {
+        stage.classList.remove('has-flash-burst');
+      }, 420);
+    }
     function focusPictures() { works.forEach((p, i) => scenes[i].style.setProperty('--position', (innerWidth < 760 && mobileFocals[p.slug]) || focals[p.slug] || '50% 44%')); }
     focusPictures();
     function ensureImage(i) {
@@ -399,6 +410,14 @@
         }
       });
       const activeSlug = transition && fraction >= .5 ? works[incoming].slug : works[base].slug;
+      if (works[base].slug === 'ajenjo-cam' || works[incoming].slug === 'ajenjo-cam') {
+        if (!ajenjoVisited && (works[state.index].slug === 'ajenjo-cam' || (transition && fraction >= 0.25))) {
+          ajenjoVisited = true;
+          fireAjenjoFlash();
+        }
+      } else {
+        ajenjoVisited = false;
+      }
       const flash = transition && (works[base].slug === 'ajenjo-cam' || works[incoming].slug === 'ajenjo-cam')
         ? Math.exp(-Math.pow((fraction - 0.5) / 0.08, 2)) * 0.96
         : 0;
@@ -565,7 +584,10 @@
       openWorkGallery(galleryTrigger);
     }
     function photoStep(d) { state.photo = clamp(state.photo + d, 0, works[state.index].photos.length - 1); showPhoto(); }
-    galleryTrigger.addEventListener('click', () => openWorkGallery(galleryTrigger));
+    galleryTrigger.addEventListener('click', () => {
+      if (works[state.index]?.slug === 'ajenjo-cam') fireAjenjoFlash();
+      openWorkGallery(galleryTrigger);
+    });
     $('[data-open-photos]', stage).addEventListener('click', event => openWorkGallery(event.currentTarget));
     $('[data-photo-prev]').addEventListener('click', () => photoStep(-1)); $('[data-photo-next]').addEventListener('click', () => photoStep(1));
     photosDialog.addEventListener('keydown', event => {
