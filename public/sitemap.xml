@@ -3,7 +3,7 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://naroa.online/</loc>
-    <lastmod>2026-10-03</lastmod>
+    <lastmod>2026-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
@@ -150,6 +150,50 @@
       <image:loc>https://naroa.online/assets/the-golden-couple-C9C95N75.webp</image:loc>
       <image:title>The Golden Couple</image:title>
       <image:caption>The Golden Couple — obra de Naroa Gutiérrez Gil</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://naroa.online/retratos-por-encargo-bilbao/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://naroa.online/assets/marilyn-rocks--qPeLHxE.webp</image:loc>
+      <image:title>Retratos por encargo en Bilbao · Naroa Gutiérrez Gil</image:title>
+      <image:caption>Retratos artísticos y personalizados por encargo en Bilbao: pintura, dibujo y técnicas mixtas</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://naroa.online/sobre-mi/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://naroa.online/assets/naroa-portrait-DW8XfHYG.jpg</image:loc>
+      <image:title>Sobre Naroa Gutiérrez Gil · Artista y Retratista</image:title>
+      <image:caption>Perfil biográfico, declaración de artista y proceso creativo de Naroa Gutiérrez Gil</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://naroa.online/trayectoria/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://naroa.online/assets/celia-cruz-cantinflowers-DO-SRKMB.webp</image:loc>
+      <image:title>Trayectoria artística · Exposiciones y proyectos</image:title>
+      <image:caption>Historial expositivo, proyectos interdisciplinares y trayectoria artística</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://naroa.online/series/vaivenes/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://naroa.online/assets/cantinflas-0-D712oJYO.webp</image:loc>
+      <image:title>Serie Vaivenes · Naroa Gutiérrez Gil</image:title>
+      <image:caption>Serie Vaivenes: exploración gráfica y técnica mixta</image:caption>
     </image:image>
   </url>
 </urlset>
