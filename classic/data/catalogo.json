@@ -154,11 +154,11 @@
         },
         {
           "src": "/images/catalogo/johnny-rocks-4k.webp",
-          "width": 2932,
+          "width": 2870,
           "height": 3840,
           "caption": "Fotografía master 4K del retrato de Johnny Depp sobre plato de pizarra.",
           "source": null,
-          "sha256": "5221c7cc4efc1b2485e2817ff0ec2681a3ea8093612bc00d1ddcbb98b91ef566"
+          "sha256": "b439483cae55d5e8be9aad248b16bb0159205a2e7e4011eb681039e9d86c20cd"
         }
       ],
       "dimensions": "18 × 10 × 0,6 cm",
@@ -369,6 +369,14 @@
           "source": "https://www.facebook.com/media/set/?set=a.989285339217554&type=3",
           "sha256": "4078d5f9fc66c71782aaed0d5c55bcaef4aeb29da5c505265c95916decbb9618",
           "source_local": "raw_artworks_facebook/divinos/989285149217573.jpg"
+        },
+        {
+          "src": "/images/catalogo/rockagipsy-4k.webp",
+          "width": 2932,
+          "height": 3840,
+          "caption": "Fotografía master 4K del retrato de Camarón de la Isla con tejidos de lunares y textura sobre lienzo.",
+          "source": null,
+          "sha256": "5221c7cc4efc1b2485e2817ff0ec2681a3ea8093612bc00d1ddcbb98b91ef566"
         }
       ],
       "dimensions": "Marco: 37,5 × 29,5 cm",
@@ -2155,6 +2163,13 @@
       "story": "Andre Agassi en Roland Garros de 1990. El marco se convierte en pista: fieltro, redes y cabellos acompañan el retrato. El recorte del passepartout y las gotas de látex prolongan la tensión de la escena.",
       "images": [
         {
+          "src": "/images/catalogo/out-por-los-pelos-master-4k.jpg",
+          "width": 2000,
+          "height": 2435,
+          "caption": "OUT (por los pelos) — Fotografía master de la obra enmarcada completa.",
+          "sha256": "92aad807f4dadd2efceb409302869f3650d37e20e199c7cafbeb67a405369d2f"
+        },
+        {
           "src": "/images/catalogo/out-por-los-pelos-01.jpg",
           "width": 1356,
           "height": 1684,
@@ -2211,7 +2226,7 @@
       ],
       "source": "https://www.facebook.com/media/set/?set=a.4622940807780595&type=3",
       "dimensions": "50 × 40 cm",
-      "materials": null,
+      "materials": "Pelota de tenis de fieltro, cabello anudado, papeles Canson, acetato impreso publicitario (“Do they match?”), marcador washi-tape con las letras OUT, redes cosidas y gotas de látex líquido a modo de sudor.",
       "series": null,
       "year": null,
       "credit": null,
@@ -2385,18 +2400,10 @@
       "story": "Fuerza animal hiperrealista inmortalizada sobre la dureza del soporte de pizarra. La mirada felina emerge de la roca con veladuras y texturas que aprovechan el relieve geológico de la pieza.",
       "images": [
         {
-          "src": "/images/catalogo/el-gran-dakari-4k.webp",
-          "width": 2876,
-          "height": 3840,
-          "caption": "Fotografía master 4K de El Gran Dakari sobre plato de pizarra natural.",
-          "source": null,
-          "sha256": "ca0fc32a256f7f07b3b3dc371460470489183bdeec96e872f11bd880f66fe73a"
-        },
-        {
           "src": "/images/artworks/el-gran-dakari-C1tAWAhR.webp",
           "width": 1498,
           "height": 2000,
-          "caption": "Detalle de textura y relieve sobre la roca.",
+          "caption": "Fotografía original de El Gran Dakari sobre plato de pizarra natural.",
           "source": null,
           "sha256": "0a4a77967d4278f5b880719f03019b8464018a6e85a9c70604997589260c34a1"
         }
@@ -2410,12 +2417,10 @@
       "source": null,
       "editorial": {
         "image_order": [
-          0,
-          1
+          0
         ],
         "captions": [
-          "El Gran Dakari completo sobre la superficie pétrea.",
-          "El canto irregular y la profundidad de la mirada felina."
+          "El Gran Dakari original sobre la superficie de pizarra."
         ]
       }
     },
@@ -2756,6 +2761,206 @@
       "selected": false,
       "kind": "obra",
       "source": null
+    },
+    {
+      "slug": "la-famiglia",
+      "title": "La Famiglia",
+      "category": "collage",
+      "technique": "Lápices de colores y pintura acrílica",
+      "support": "Papel de acuarela (300 g/m²)",
+      "dimensions": "18 × 24 cm",
+      "materials": "Lápices de colores Art & Graphic de Faber-Castell, pintura acrílica muy diluida en agua y etiquetas washi-tape",
+      "story": "Retrato de Marlon Brando interpretando el personaje Vito Corleone en El Padrino, trazado en negro y gris sobre un fondo multicolor de acuarela. Una felicitación familiar cargada de afecto: «Zorionak Jon de la Famiglia de corazón».",
+      "series": null,
+      "year": 2021,
+      "credit": null,
+      "selected": true,
+      "kind": "obra",
+      "source": null,
+      "images": [
+        {
+          "src": "/images/catalogo/la-famiglia-01.jpg",
+          "width": 2048,
+          "height": 1560,
+          "caption": "La Famiglia — Retrato de Vito Corleone sobre fondo acuarelado.",
+          "sha256": "48058f357ca4c5e1bb549b495f3f5c49c8b5aa3ce4a58b62233dc56fa059968e"
+        }
+      ]
+    },
+    {
+      "slug": "smile-and-the-world-smiles-back",
+      "title": "Smile & the World Smiles Back",
+      "category": "objetos",
+      "technique": "Técnica mixta y collage",
+      "support": "Plato de madera sin tratar",
+      "dimensions": "Ø 24 cm",
+      "materials": "Lápices Faber-Castell Art & Graphic, rotuladores Uni-Posca, collage (papel de seda, cenefa de punto, adornos bordados, telas estampadas, papel de regalo) y barniz de látex líquido",
+      "story": "“Cuando me permito reconocer mi espejo en el otro, despierto a la conciencia y reviso en mi interior quien creo ser”. Retrato colorista sobre plato de madera sin tratar intervenido con elementos textiles y collage.",
+      "series": null,
+      "year": 2016,
+      "credit": null,
+      "selected": true,
+      "kind": "obra",
+      "source": null,
+      "images": [
+        {
+          "src": "/images/catalogo/smile-and-the-world-smiles-back-01.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Smile & the World Smiles Back — Retrato sobre plato de madera y elementos bordados.",
+          "sha256": "84fe46b108b39edf53657e497496e69a54c12153a381c2d6af0f4ee0d4ba435a"
+        }
+      ]
+    },
+    {
+      "slug": "luis-and-sis",
+      "title": "Luis & sis",
+      "category": "collage",
+      "technique": "Técnica mixta",
+      "support": "Papel poliéster impreso en lámina de 350 g/m² en marco con passepartout",
+      "dimensions": "40 × 50 cm",
+      "materials": "Lápices de colores Faber-Castell Art & Graphic sobre papel poliéster",
+      "story": "“Aquellos maravillosos años…”. Retrato realista doble en blanco y negro con la ropa garabateada a color mediante técnica mixta, recreando la espontaneidad y cariño de la infancia.",
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": true,
+      "kind": "obra",
+      "source": null,
+      "images": [
+        {
+          "src": "/images/catalogo/luis-and-sis-01.jpg",
+          "width": 2048,
+          "height": 1516,
+          "caption": "Luis & sis — Retrato infantil doble con toques de color garabateados.",
+          "sha256": "373d097129afc1d56fbbc6f94689b1b7889078f3ed2b33e877f2b459dfbb7a47"
+        }
+      ]
+    },
+    {
+      "slug": "de-color",
+      "title": "…de color",
+      "category": "collage",
+      "technique": "Técnica mixta",
+      "support": "Papel de 350 g/m² ligeramente satinado (A3) en marco con passepartout",
+      "dimensions": "40 × 50 cm",
+      "materials": "Lápices Faber-Castell Art & Graphic, pintura acrílica diluida en salpicaduras y rotuladores Uni-Posca",
+      "story": "“El mundo a veces se nos antoja gris y hay días en los que lo vemos todo negro, pero cuando Aitor llega, entonces hay tormenta intensa... un aluvión de energía que en vez de agua descarga trombas de color”.",
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": true,
+      "kind": "obra",
+      "source": null,
+      "images": [
+        {
+          "src": "/images/catalogo/de-color-01.jpg",
+          "width": 2048,
+          "height": 1364,
+          "caption": "…de color — Retrato de Aitor con salpicaduras y fondo de arcoíris desestructurado.",
+          "sha256": "70952370b409d760f58f4655ee66274a4960b3d541140b3b5ded77b8dbb21538"
+        }
+      ]
+    },
+    {
+      "slug": "el-reencuentro",
+      "title": "El Reencuentro",
+      "category": "collage",
+      "technique": "Pintura acrílica",
+      "support": "Lienzo 3D",
+      "dimensions": "30 × 40 cm",
+      "materials": "Pintura acrílica negra, rotulador Edding permanente blanco y cobertura protectora de látex líquido",
+      "story": "Una hija y su padre vuelven a encontrarse sobre un fondo blanco a partir de una fotografía de juventud rescatada. El rastro de caricias con pincel en rostros y cabellos materializa el reencuentro sobre el lienzo.",
+      "series": null,
+      "year": 2015,
+      "credit": null,
+      "selected": true,
+      "kind": "obra",
+      "source": null,
+      "images": [
+        {
+          "src": "/images/catalogo/el-reencuentro-01.jpg",
+          "width": 2048,
+          "height": 1538,
+          "caption": "El Reencuentro — Retrato familiar doble en acrílico blanco y negro sobre lienzo 3D.",
+          "sha256": "9d092673be5b063a045fe3e7a187ec22833f73707dd16008c151ef9e4afc3402"
+        }
+      ]
+    },
+    {
+      "slug": "papitxulo",
+      "title": "Papitxulo",
+      "category": "collage",
+      "technique": "Técnica mixta y mosaico",
+      "support": "Lienzo",
+      "dimensions": "50 × 40 cm",
+      "materials": "Látex vinílico sobre silueta mate y mosaico de láminas holográficas y papel espejo sobre óleo amarillo",
+      "story": "Retrato del aitatxu de Naroa capturado en un selfie dandy con bata de laboratorio y cigarrillo en la empresa de artes gráficas donde se conocieron sus progenitores. La silueta mate resalta sobre un fondo de mosaico holográfico que muta con la perspectiva.",
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": true,
+      "kind": "obra",
+      "source": null,
+      "images": [
+        {
+          "src": "/images/catalogo/papitxulo-01.jpg",
+          "width": 2048,
+          "height": 2560,
+          "caption": "Papitxulo — Retrato del aitatxu de Naroa con fondo de mosaico holográfico.",
+          "sha256": "6d67341675e7fbdddfdfad7f1853102b805d1cfa8eeadd93e866f56c1de6378f"
+        }
+      ]
+    },
+    {
+      "slug": "starchild",
+      "title": "Starchild",
+      "category": "collage",
+      "technique": "Ilustración a bolígrafo Bic y collage holográfico",
+      "support": "Papel poliéster impreso en papel de alto gramaje con marco y paspartú intervenido",
+      "dimensions": "50 × 70 cm",
+      "materials": "Bolígrafos Bic, bolsas de cartón holográficas, plástico holográfico en relieve y rotulador permanente",
+      "story": "“There's a starman waiting in the sky / He'd like to come and meet us / But he thinks he'd blow our minds”. Retrato de David Bowie con gesto de silencio y firmamento a sus espaldas con astronautas, satélites y planetas holográficos.",
+      "series": null,
+      "year": null,
+      "credit": null,
+      "selected": true,
+      "kind": "obra",
+      "source": null,
+      "images": [
+        {
+          "src": "/images/catalogo/starchild-01.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Starchild — Retrato de David Bowie con collage holográfico espacial.",
+          "sha256": "25128ae99889284842420364ce449a15f986ce0052b69166fc1cd91748172995"
+        }
+      ]
+    },
+    {
+      "slug": "las-rosalias",
+      "title": "Las RosaLías",
+      "category": "collage",
+      "technique": "Collage y técnica mixta",
+      "support": "Papel de alto gramaje y marco con passepartout",
+      "dimensions": "40 × 50 cm",
+      "materials": "Lápices Faber-Castell sobre poliéster, frottage de monedas en chanclas, rosas glossy, fieltro, papel Canson rayado, papel de estraza, celofán con nubes y rotuladores Uni-Posca",
+      "story": "Rara avis que destaca entre las obras enmarcadas por la riqueza de materiales y capas de significado. Los pies descansando en la barandilla de Copper Deli, las rosas plastificadas, los elefantes, el paisaje de fieltro y el cielo de celofán conforman un puzzle textil y afectivo en perfecto equilibrio.",
+      "series": null,
+      "year": 2019,
+      "credit": null,
+      "selected": true,
+      "kind": "obra",
+      "source": null,
+      "images": [
+        {
+          "src": "/images/catalogo/las-rosalias-01.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Las RosaLías — Collage textil y plástico con pies en la barandilla de Copper Deli.",
+          "sha256": "7d6bd9742afbedeb34188a8c2eba47c39ac75b6ade6d5126e430d0942eaecca4"
+        }
+      ]
     }
   ]
 }

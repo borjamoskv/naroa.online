@@ -410,6 +410,54 @@
       "mode": "F",
       "hold": 25,
       "explore": 0
+    },
+    {
+      "slug": "la-famiglia",
+      "mode": "H",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "smile-and-the-world-smiles-back",
+      "mode": "Z",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "luis-and-sis",
+      "mode": "V",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "de-color",
+      "mode": "H",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "el-reencuentro",
+      "mode": "V",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "papitxulo",
+      "mode": "Z",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "starchild",
+      "mode": "Z",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "las-rosalias",
+      "mode": "V",
+      "hold": 25,
+      "explore": 0
     }
   ]
 }

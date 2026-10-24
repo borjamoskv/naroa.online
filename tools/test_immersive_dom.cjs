@@ -183,7 +183,7 @@ async function eyeMatch(ui, base, points) {
   const ui = create(); await ui.flush();
   const works = ui.w.NAROA_CATALOG.projects;
   assert.equal(works.length, manifest.projects);
-  for (const slug of ['la-llorona', 'pablo', 'euskolander-no-hay-mas-que-uno', 'idoia-arkatz-bihotz', 'little-adi', 'lauralore', 'izei', 'the-love-boat', 'marian-de-miranda', 'can-dy-queen', 'el-hombre-que-susurraba-a-las-estrellas', 'olinga-a-la-naranja', 'i-got-you-babe', 'jose-manuel-ezquerra', 'billy-saw', 'out-por-los-pelos', 'the-munsters', 'denbora-nora-zoaz']) {
+  for (const slug of ['la-llorona', 'pablo', 'euskolander-no-hay-mas-que-uno', 'idoia-arkatz-bihotz', 'little-adi', 'lauralore', 'izei', 'the-love-boat', 'marian-de-miranda', 'can-dy-queen', 'el-hombre-que-susurraba-a-las-estrellas', 'olinga-a-la-naranja', 'i-got-you-babe', 'jose-manuel-ezquerra', 'billy-saw', 'out-por-los-pelos', 'the-munsters', 'denbora-nora-zoaz', 'la-famiglia', 'smile-and-the-world-smiles-back', 'luis-and-sis', 'de-color', 'el-reencuentro', 'papitxulo', 'starchild', 'las-rosalias']) {
     assert.equal(works.filter(p => p.slug === slug).length, 1, 'Every supplied artwork has one stable route');
   }
   assert.equal(works.find(p => p.slug === 'la-llorona').photos.length, 3);
@@ -219,7 +219,7 @@ async function eyeMatch(ui, base, points) {
   assert.ok(llorona.find('[data-facts]').textContent.includes('sal rosa'));
   llorona.dom.window.close();
   assert.equal(ui.journey.entries.length, manifest.projects);
-  assert.deepEqual(Array.from(ui.w.NAROA_CATALOG.journey.scenes, e => e.mode).join(' '), 'E H V Z V E H H V Z E V H H V Z H V Z P V H Z V H Z V H Z V H H Z E Z V H Z H Z Z V Z H Z H V Z H V Z H V Z H V Z H V H Z H H Z H F');
+  assert.deepEqual(Array.from(ui.w.NAROA_CATALOG.journey.scenes, e => e.mode).join(' '), 'E H V Z V E H H V Z E V H H V Z H V Z P V H Z V H Z V H Z V H H Z E Z V H Z H Z Z V Z H Z H V Z H V Z H V Z H V Z H V H Z H H Z H F H Z V H V Z Z V');
   const modes = { E: 'eyes', H: 'horizontal', V: 'vertical', Z: 'zoom', P: 'puzzle' };
   let horizontalDirection = -1, inHorizontal = false;
   for (let index = 0; index < works.length; index++) {
@@ -252,6 +252,12 @@ async function eyeMatch(ui, base, points) {
     } else if (entry.slug === 'rockagipsy') {
       const rockaScene = ui.find(`[data-scene="${index}"]`);
       assert.ok(rockaScene.style.transform.includes('rotate('), 'RockaGipsy tilts and falls laterally to reveal Hugo Box');
+    }
+    if (entry.slug === 'entre-tantas-flores-de-dia') {
+      const stickman = ui.find('[data-stickman]');
+      assert.ok(stickman, 'White stickman element is present in DOM');
+      assert.ok(stickman.classList.contains('is-running'), 'Stickman runs during Flores to Johnny transition');
+      assert.ok(!stickman.hasAttribute('hidden'), 'Stickman is visible during the black void transition');
     }
     if (entry.mode === 'H') {
       const specDir = ui.w.NAROA_CATALOG.journey.scenes.find(s => s.slug === entry.slug)?.direction;

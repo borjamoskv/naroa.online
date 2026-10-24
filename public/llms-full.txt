@@ -30,9 +30,9 @@
 - **¿Se puede visitar el estudio en Bilbao?** Sí, visitas con cita concertada previa para ver obra en directo, valorar soportes y definir el proyecto en persona.
 
 ## Secciones Principales
-- [Inicio e Inmersión](https://naroagutierrezgil.com/): Experiencia inmersiva y catálogo completo de 66 obras.
+- [Inicio e Inmersión](https://naroagutierrezgil.com/): Experiencia inmersiva y catálogo completo de 74 obras.
 - [Retratos por Encargo en Bilbao](https://naroagutierrezgil.com/retratos-por-encargo-bilbao/): Condiciones técnicas, formatos (20×30 cm a 40×50 cm), plazos de 2 a 4 semanas, configurador interactivo y galería de ejemplos reales.
-- [Catálogo Completo](https://naroagutierrezgil.com/obra/): Ficha detallada de las 66 piezas de la colección con fotografías de detalle y relato.
+- [Catálogo Completo](https://naroagutierrezgil.com/obra/): Ficha detallada de las 74 piezas de la colección con fotografías de detalle y relato.
 - [Serie Vaivenes](https://naroagutierrezgil.com/series/vaivenes/): Retratos en técnica mixta, collage textil y objetos de memoria.
 - [Sobre Mí](https://naroagutierrezgil.com/sobre-mi/): Biografía, técnica, proceso creativo y proyectos comunitarios (Walking Gallery Bilbao, El ReCreo).
 - [Trayectoria](https://naroagutierrezgil.com/trayectoria/): Archivo cronológico de exposiciones documentadas desde 2010 (DEIA, GARA, Politena, Dock Bilbao).
@@ -40,14 +40,14 @@
 - [Contacto](https://naroagutierrezgil.com/contacto/): Canales directos de consulta para obra y encargos.
 
 ## Recursos Machine-to-Machine y GEO SOTA 2026
-- [Catálogo JSON Estructurado](https://naroagutierrezgil.com/api/catalog.json): Endpoint con especificaciones completas de las 66 obras y Evidence Graph.
+- [Catálogo JSON Estructurado](https://naroagutierrezgil.com/api/catalog.json): Endpoint con especificaciones completas de las 74 obras y Evidence Graph.
 - [Endpoint WebMCP](https://naroagutierrezgil.com/.well-known/mcp.json): Manifiesto y definición formal de herramientas WebMCP para agentes autónomos.
 - [Índice Extendido llms-full.txt](https://naroagutierrezgil.com/llms-full.txt): Desglose exhaustivo de todas las piezas, fotos de detalle con hashes SHA-256 y condiciones de encargo.
-- [Sitemap XML](https://naroagutierrezgil.com/sitemap.xml): Índice canónico de 74 rutas y metadatos de imágenes.
+- [Sitemap XML](https://naroagutierrezgil.com/sitemap.xml): Índice canónico de 82 rutas y metadatos de imágenes.
 - [Feed RSS 2.0](https://naroagutierrezgil.com/feed.xml): Sindicación de obras recientes y publicaciones del taller.
 - [Protocolo IndexNow](https://naroagutierrezgil.com/indexnow.json): Sincronización instantánea de indexación para Bing y motores asociados.
 
-## Catálogo Exhaustivo de Obras (66 Piezas Documentadas)
+## Catálogo Exhaustivo de Obras (74 Piezas Documentadas)
 
 ### Marilyn Rocks (None)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/marilyn-rocks/
@@ -504,7 +504,7 @@
 - **Técnica:** Lápices de colores y collage
 - **Soporte:** Marco con passepartout intervenido
 - **Medidas:** 50 × 40 cm
-- **Materiales:** Lápices de colores y collage
+- **Materiales:** Pelota de tenis de fieltro, cabello anudado, papeles Canson, acetato impreso publicitario (“Do they match?”), marcador washi-tape con las letras OUT, redes cosidas y gotas de látex líquido a modo de sudor.
 - **Serie:** Colección general
 - **Relato:** Andre Agassi en Roland Garros de 1990. El marco se convierte en pista: fieltro, redes y cabellos acompañan el retrato. El recorte del passepartout y las gotas de látex prolongan la tensión de la escena.
 - **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20OUT%20%28por%20los%20pelos%29
@@ -722,6 +722,86 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
 - **Serie:** Vaivenes
 - **Relato:** Dustin Hoffman en El Graduado. El collage recoge alusiones a la película para hablar de las expectativas, el plástico y las oscilaciones del mundo interior. La figura dibujada se escanea, se imprime y se combina con materiales cotidianos de distintas texturas.
 - **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Hello%20Darkness%20My%20Old%20Friend
+
+### La Famiglia (2021)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/la-famiglia/
+- **Técnica:** Lápices de colores y pintura acrílica
+- **Soporte:** Papel de acuarela (300 g/m²)
+- **Medidas:** 18 × 24 cm
+- **Materiales:** Lápices de colores Art & Graphic de Faber-Castell, pintura acrílica muy diluida en agua y etiquetas washi-tape
+- **Serie:** Colección general
+- **Relato:** Retrato de Marlon Brando interpretando el personaje Vito Corleone en El Padrino, trazado en negro y gris sobre un fondo multicolor de acuarela. Una felicitación familiar cargada de afecto: «Zorionak Jon de la Famiglia de corazón».
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20La%20Famiglia
+
+### Smile & the World Smiles Back (2016)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/smile-and-the-world-smiles-back/
+- **Técnica:** Técnica mixta y collage
+- **Soporte:** Plato de madera sin tratar
+- **Medidas:** Ø 24 cm
+- **Materiales:** Lápices Faber-Castell Art & Graphic, rotuladores Uni-Posca, collage (papel de seda, cenefa de punto, adornos bordados, telas estampadas, papel de regalo) y barniz de látex líquido
+- **Serie:** Colección general
+- **Relato:** “Cuando me permito reconocer mi espejo en el otro, despierto a la conciencia y reviso en mi interior quien creo ser”. Retrato colorista sobre plato de madera sin tratar intervenido con elementos textiles y collage.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Smile%20%26%20the%20World%20Smiles%20Back
+
+### Luis & sis (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/luis-and-sis/
+- **Técnica:** Técnica mixta
+- **Soporte:** Papel poliéster impreso en lámina de 350 g/m² en marco con passepartout
+- **Medidas:** 40 × 50 cm
+- **Materiales:** Lápices de colores Faber-Castell Art & Graphic sobre papel poliéster
+- **Serie:** Colección general
+- **Relato:** “Aquellos maravillosos años…”. Retrato realista doble en blanco y negro con la ropa garabateada a color mediante técnica mixta, recreando la espontaneidad y cariño de la infancia.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Luis%20%26%20sis
+
+### …de color (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/de-color/
+- **Técnica:** Técnica mixta
+- **Soporte:** Papel de 350 g/m² ligeramente satinado (A3) en marco con passepartout
+- **Medidas:** 40 × 50 cm
+- **Materiales:** Lápices Faber-Castell Art & Graphic, pintura acrílica diluida en salpicaduras y rotuladores Uni-Posca
+- **Serie:** Colección general
+- **Relato:** “El mundo a veces se nos antoja gris y hay días en los que lo vemos todo negro, pero cuando Aitor llega, entonces hay tormenta intensa... un aluvión de energía que en vez de agua descarga trombas de color”.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20%E2%80%A6de%20color
+
+### El Reencuentro (2015)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/el-reencuentro/
+- **Técnica:** Pintura acrílica
+- **Soporte:** Lienzo 3D
+- **Medidas:** 30 × 40 cm
+- **Materiales:** Pintura acrílica negra, rotulador Edding permanente blanco y cobertura protectora de látex líquido
+- **Serie:** Colección general
+- **Relato:** Una hija y su padre vuelven a encontrarse sobre un fondo blanco a partir de una fotografía de juventud rescatada. El rastro de caricias con pincel en rostros y cabellos materializa el reencuentro sobre el lienzo.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20El%20Reencuentro
+
+### Papitxulo (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/papitxulo/
+- **Técnica:** Técnica mixta y mosaico
+- **Soporte:** Lienzo
+- **Medidas:** 50 × 40 cm
+- **Materiales:** Látex vinílico sobre silueta mate y mosaico de láminas holográficas y papel espejo sobre óleo amarillo
+- **Serie:** Colección general
+- **Relato:** Retrato del aitatxu de Naroa capturado en un selfie dandy con bata de laboratorio y cigarrillo en la empresa de artes gráficas donde se conocieron sus progenitores. La silueta mate resalta sobre un fondo de mosaico holográfico que muta con la perspectiva.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Papitxulo
+
+### Starchild (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/starchild/
+- **Técnica:** Ilustración a bolígrafo Bic y collage holográfico
+- **Soporte:** Papel poliéster impreso en papel de alto gramaje con marco y paspartú intervenido
+- **Medidas:** 50 × 70 cm
+- **Materiales:** Bolígrafos Bic, bolsas de cartón holográficas, plástico holográfico en relieve y rotulador permanente
+- **Serie:** Colección general
+- **Relato:** “There's a starman waiting in the sky / He'd like to come and meet us / But he thinks he'd blow our minds”. Retrato de David Bowie con gesto de silencio y firmamento a sus espaldas con astronautas, satélites y planetas holográficos.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Starchild
+
+### Las RosaLías (2019)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/las-rosalias/
+- **Técnica:** Collage y técnica mixta
+- **Soporte:** Papel de alto gramaje y marco con passepartout
+- **Medidas:** 40 × 50 cm
+- **Materiales:** Lápices Faber-Castell sobre poliéster, frottage de monedas en chanclas, rosas glossy, fieltro, papel Canson rayado, papel de estraza, celofán con nubes y rotuladores Uni-Posca
+- **Serie:** Colección general
+- **Relato:** Rara avis que destaca entre las obras enmarcadas por la riqueza de materiales y capas de significado. Los pies descansando en la barandilla de Copper Deli, las rosas plastificadas, los elefantes, el paisaje de fieltro y el cielo de celofán conforman un puzzle textil y afectivo en perfecto equilibrio.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Las%20RosaL%C3%ADas
 
 
 ## Condiciones del Servicio de Encargos en Bilbao (Evidence Base)

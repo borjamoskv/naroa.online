@@ -392,8 +392,8 @@
       galleryReturnFocus = null;
       scheduleScroll();
     });
-    const focals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '56% 42%', 'amor-en-conserva': '50% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'johnny-rocks': '50% 42%', 'rockagipsy': '50% 43%', 'hugo-box': '50% 38%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '54% 44%', 'lauralore': '46% 44%', 'izei': '48% 42%', 'the-love-boat': '50% 44%', 'marian-de-miranda': '66% 36%' };
-    const mobileFocals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '61% 40%', 'amor-en-conserva': '48% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'denbora-nora-zoaz': '18% 45%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '56% 44%', 'lauralore': '48% 44%', 'izei': '48% 42%', 'the-love-boat': '50% 44%', 'marian-de-miranda': '66% 36%' };
+    const focals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '56% 42%', 'amor-en-conserva': '50% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'johnny-rocks': '50% 42%', 'rockagipsy': '50% 43%', 'hugo-box': '50% 38%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '54% 44%', 'lauralore': '46% 44%', 'izei': '48% 42%', 'the-love-boat': '50% 44%', 'marian-de-miranda': '66% 36%', 'la-famiglia': '50% 40%', 'smile-and-the-world-smiles-back': '50% 50%', 'luis-and-sis': '50% 45%', 'de-color': '50% 45%', 'el-reencuentro': '50% 45%', 'papitxulo': '50% 40%', 'starchild': '50% 40%', 'las-rosalias': '50% 50%' };
+    const mobileFocals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '61% 40%', 'amor-en-conserva': '48% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'denbora-nora-zoaz': '18% 45%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '56% 44%', 'lauralore': '48% 44%', 'izei': '48% 42%', 'the-love-boat': '50% 44%', 'marian-de-miranda': '66% 36%', 'la-famiglia': '50% 40%', 'smile-and-the-world-smiles-back': '50% 50%', 'luis-and-sis': '50% 45%', 'de-color': '50% 45%', 'el-reencuentro': '50% 45%', 'papitxulo': '50% 40%', 'starchild': '50% 40%', 'las-rosalias': '50% 50%' };
     // Pupil centres measured on the unaltered cover photographs, in source-image coordinates.
     const eyes = {
       'marilyn-rocks': { x: .635, y: .392, iris: .030 },
@@ -437,6 +437,71 @@
     }
     function fireDeltoya() {
       soundscape?.deltoya?.();
+    }
+    let stickman = stage.querySelector('[data-stickman]');
+    if (!stickman) {
+      stickman = document.createElement('div');
+      stickman.className = 'art-stickman';
+      stickman.setAttribute('data-stickman', '');
+      stickman.setAttribute('aria-hidden', 'true');
+      stickman.setAttribute('hidden', '');
+      stickman.innerHTML = `<svg viewBox="0 0 80 100" class="stickman-svg" aria-hidden="true">
+        <circle cx="38" cy="18" r="9" stroke="#fff" stroke-width="3" fill="#11120f" />
+        <circle cx="41" cy="17" r="1.5" fill="#fff" />
+        <line x1="38" y1="27" x2="36" y2="54" stroke="#fff" stroke-width="3.5" stroke-linecap="round" />
+        <polyline data-stick-arm-l points="38,34 26,44 18,36" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+        <polyline data-stick-arm-r points="38,34 50,42 60,50" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+        <polyline data-stick-leg-l points="36,54 24,70 34,88" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+        <polyline data-stick-leg-r points="36,54 50,68 44,88" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+        <line data-stick-dust-1 x1="14" y1="86" x2="2" y2="86" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linecap="round" />
+        <line data-stick-dust-2 x1="18" y1="92" x2="6" y2="92" stroke="rgba(255,255,255,0.4)" stroke-width="2" stroke-linecap="round" />
+      </svg>`;
+      stage.appendChild(stickman);
+    }
+    const stickArmL = stickman.querySelector('[data-stick-arm-l]');
+    const stickArmR = stickman.querySelector('[data-stick-arm-r]');
+    const stickLegL = stickman.querySelector('[data-stick-leg-l]');
+    const stickLegR = stickman.querySelector('[data-stick-leg-r]');
+    const stickDust1 = stickman.querySelector('[data-stick-dust-1]');
+    const stickDust2 = stickman.querySelector('[data-stick-dust-2]');
+    let lastStickFraction = 0;
+    let stickDirection = 1;
+
+    function updateStickmanPose(phase) {
+      const hipX = 36, hipY = 54;
+      const thighL = Math.sin(phase) * 0.75 + 0.2;
+      const kneeLX = hipX + Math.sin(thighL) * 16;
+      const kneeLY = hipY + Math.cos(thighL) * 16;
+      const calfL = thighL - Math.max(0, Math.sin(phase - 0.5) * 1.2);
+      const footLX = kneeLX + Math.sin(calfL) * 16;
+      const footLY = kneeLY + Math.cos(calfL) * 16;
+
+      const thighR = Math.sin(phase + Math.PI) * 0.75 + 0.2;
+      const kneeRX = hipX + Math.sin(thighR) * 16;
+      const kneeRY = hipY + Math.cos(thighR) * 16;
+      const calfR = thighR - Math.max(0, Math.sin(phase + Math.PI - 0.5) * 1.2);
+      const footRX = kneeRX + Math.sin(calfR) * 16;
+      const footRY = kneeRY + Math.cos(calfR) * 16;
+
+      const shX = 38, shY = 34;
+      const armL = -Math.sin(phase) * 0.85;
+      const elbLX = shX + Math.sin(armL) * 12;
+      const elbLY = shY + Math.cos(armL) * 12;
+      const handLX = elbLX + Math.sin(armL - 0.8) * 12;
+      const handLY = elbLY + Math.cos(armL - 0.8) * 12;
+
+      const armR = -Math.sin(phase + Math.PI) * 0.85;
+      const elbRX = shX + Math.sin(armR) * 12;
+      const elbRY = shY + Math.cos(armR) * 12;
+      const handRX = elbRX + Math.sin(armR - 0.8) * 12;
+      const handRY = elbRY + Math.cos(armR - 0.8) * 12;
+
+      if (stickLegL) stickLegL.setAttribute('points', `${hipX},${hipY} ${kneeLX.toFixed(1)},${kneeLY.toFixed(1)} ${footLX.toFixed(1)},${footLY.toFixed(1)}`);
+      if (stickLegR) stickLegR.setAttribute('points', `${hipX},${hipY} ${kneeRX.toFixed(1)},${kneeRY.toFixed(1)} ${footRX.toFixed(1)},${footRY.toFixed(1)}`);
+      if (stickArmL) stickArmL.setAttribute('points', `${shX},${shY} ${elbLX.toFixed(1)},${elbLY.toFixed(1)} ${handLX.toFixed(1)},${handLY.toFixed(1)}`);
+      if (stickArmR) stickArmR.setAttribute('points', `${shX},${shY} ${elbRX.toFixed(1)},${elbRY.toFixed(1)} ${handRX.toFixed(1)},${handRY.toFixed(1)}`);
+      if (stickDust1) stickDust1.style.opacity = (Math.abs(Math.sin(phase)) * 0.9).toFixed(2);
+      if (stickDust2) stickDust2.style.opacity = (Math.abs(Math.cos(phase)) * 0.8).toFixed(2);
     }
     let lastQuartile = 0;
     function checkMilestone(ratio) {
@@ -769,6 +834,26 @@
         }
       } else {
         deltoyaVisited = false;
+      }
+      const isFloresToJohnny = transition && works[base]?.slug === 'entre-tantas-flores-de-dia' && works[incoming]?.slug === 'johnny-rocks';
+      if (isFloresToJohnny && !still) {
+        stickman.removeAttribute('hidden');
+        stickman.classList.add('is-running');
+        const stageW = geometry.width || window.innerWidth;
+        const stageH = geometry.height || window.innerHeight;
+        if (fraction > lastStickFraction + 0.002) stickDirection = 1;
+        else if (fraction < lastStickFraction - 0.002) stickDirection = -1;
+        lastStickFraction = fraction;
+        const posX = -90 + fraction * (stageW + 180);
+        const bounce = Math.abs(Math.sin(fraction * 36)) * 6;
+        const posY = stageH * 0.38 - bounce;
+        stickman.style.transform = `translate3d(${posX.toFixed(2)}px,${posY.toFixed(2)}px,0) scaleX(${stickDirection})`;
+        updateStickmanPose(fraction * 36);
+      } else {
+        if (!stickman.hasAttribute('hidden')) {
+          stickman.setAttribute('hidden', '');
+          stickman.classList.remove('is-running');
+        }
       }
       soundscape?.frame({
         distance: still ? scrollY / Math.max(1, geometry.height) : pose.distance,
