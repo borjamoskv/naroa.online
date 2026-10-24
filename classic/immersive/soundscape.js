@@ -273,6 +273,103 @@
   let lastShakerSlug = '';
   function playSugarShaker() {}
   let lastPuzzleSlug = '', lastClockSlug = '';
+
+  /**
+   * Convolutive Gallery Space (Vector V4 - Espacio Acústico de Techos Altos de Museo)
+   * Procedural impulse response (~1.35s) modeling a 6-meter ceiling European art museum.
+   * Stereo exponential decay with 1800 Hz lowpass damping (INV_WARMTH_ACOUSTIC_GATE).
+   * Guarded against missing Web Audio, suspended state, and headless JSDOM environments.
+   */
+  function getGalleryReverb() {
+    if (!context || !engine || context.state !== 'running') return null;
+    if (engine.galleryReverb) return engine.galleryReverb;
+    if (typeof context.createConvolver !== 'function' || typeof context.createBuffer !== 'function' || typeof context.createGain !== 'function') return null;
+    try {
+      const sampleRate = context.sampleRate || 44100;
+      const duration = 1.35; // 1.35s high-ceiling museum acoustics (6-meter European gallery)
+      const length = Math.ceil(sampleRate * duration);
+      const buffer = context.createBuffer(2, length, sampleRate);
+      const fc = 1800; // 1800 Hz lowpass damping (INV_WARMTH_ACOUSTIC_GATE)
+      const alpha = 1 - Math.exp(-2 * Math.PI * fc / sampleRate);
+
+      for (let channel = 0; channel < 2; channel++) {
+        const samples = buffer.getChannelData(channel);
+        let random = (1337 + channel * 9973) >>> 0;
+        let lp = 0;
+        const preDelay = Math.floor(sampleRate * 0.018); // 18ms pre-delay
+
+        for (let i = preDelay; i < length; i++) {
+          random = (random * 1664525 + 1013904223) >>> 0;
+          const noise = (random / 4294967296 * 2 - 1);
+          lp += alpha * (noise - lp);
+          const t = i / sampleRate;
+          const decay = Math.exp(-t / 0.30) * (1 - i / length);
+          samples[i] = lp * 0.028 * decay;
+        }
+
+        // Discrete early reflections of a 6-meter ceiling stone/parquet hall
+        const reflections = [
+          [0.024, 0.16],
+          [0.045, 0.12],
+          [0.072, 0.08],
+          [0.108, 0.05],
+          [0.145, 0.03]
+        ];
+        reflections.forEach(([delay, level]) => {
+          const idx = Math.round((delay + channel * 0.0024) * sampleRate);
+          if (idx < length) {
+            samples[idx] += level * (channel === 0 ? 0.9 : 0.7);
+          }
+        });
+      }
+
+      const convolver = context.createConvolver();
+      convolver.normalize = false;
+      convolver.buffer = buffer;
+
+      const input = context.createGain();
+      input.gain.value = 1.0;
+
+      const filter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
+      if (filter) {
+        filter.type = 'lowpass';
+        if (filter.frequency.setValueAtTime) {
+          filter.frequency.setValueAtTime(1800, context.currentTime);
+        } else {
+          filter.frequency.value = 1800;
+        }
+        if (filter.Q.setValueAtTime) {
+          filter.Q.setValueAtTime(0.5, context.currentTime);
+        } else {
+          filter.Q.value = 0.5;
+        }
+      }
+
+      const wetGain = context.createGain();
+      // Subtle wet level (~18-22%) for natural museum room resonance
+      if (wetGain.gain.setValueAtTime) {
+        wetGain.gain.setValueAtTime(0.20, context.currentTime);
+      } else {
+        wetGain.gain.value = 0.20;
+      }
+
+      const target = engine.compressor || engine.master;
+      if (filter) {
+        input.connect(filter);
+        filter.connect(convolver);
+      } else {
+        input.connect(convolver);
+      }
+      convolver.connect(wetGain);
+      wetGain.connect(target);
+
+      engine.galleryReverb = { input, convolver, filter, wetGain };
+      return engine.galleryReverb;
+    } catch {
+      return null;
+    }
+  }
+
   function playPuzzleSnap() {
     lastPuzzleSlug = 'saio-puzzle';
     if (typeof navigator !== 'undefined' && navigator.vibrate) {
@@ -282,6 +379,7 @@
     try {
       const now = context.currentTime + 0.002;
       const target = engine.compressor || engine.master;
+      const gallery = getGalleryReverb();
 
       // Impulso sordo de madera noble sobre caballete (96 Hz -> 62 Hz en caída amortiguada)
       if (typeof context.createOscillator === 'function') {
@@ -299,6 +397,9 @@
         }
         osc.connect(gain);
         gain.connect(target);
+        if (gallery?.input) {
+          try { gain.connect(gallery.input); } catch {}
+        }
         osc.start(now);
         osc.stop(now + 0.052);
 
@@ -320,6 +421,9 @@
         thudOsc.connect(thudFilter || thudGain);
         if (thudFilter) thudFilter.connect(thudGain);
         thudGain.connect(target);
+        if (gallery?.input) {
+          try { thudGain.connect(gallery.input); } catch {}
+        }
         thudOsc.start(now);
         thudOsc.stop(now + 0.038);
       }
@@ -334,6 +438,7 @@
     try {
       const now = context.currentTime + 0.002;
       const target = engine.compressor || engine.master;
+      const gallery = getGalleryReverb();
       [
         { offset: 0.00, freq: 3400, vol: 0.45 },
         { offset: 0.26, freq: 2750, vol: 0.38 }
@@ -350,6 +455,9 @@
           }
           osc.connect(gain);
           gain.connect(target);
+          if (gallery?.input) {
+            try { gain.connect(gallery.input); } catch {}
+          }
           osc.start(now + offset);
           osc.stop(now + offset + 0.025);
         }
@@ -366,6 +474,7 @@
     try {
       const now = context.currentTime + 0.002;
       const target = engine.compressor || engine.master;
+      const gallery = getGalleryReverb();
       [
         { freq: 2093.0, vol: 0.55, decay: 1.35 },
         { freq: 2793.8, vol: 0.38, decay: 0.95 },
@@ -383,6 +492,9 @@
           }
           osc.connect(gain);
           gain.connect(target);
+          if (gallery?.input) {
+            try { gain.connect(gallery.input); } catch {}
+          }
           osc.start(now);
           osc.stop(now + decay + 0.05);
         }
@@ -399,6 +511,7 @@
     try {
       const now = context.currentTime + 0.002;
       const target = engine.compressor || engine.master;
+      const gallery = getGalleryReverb();
       if (typeof context.createOscillator === 'function') {
         const osc = context.createOscillator();
         const gain = context.createGain();
@@ -414,6 +527,9 @@
         }
         osc.connect(gain);
         gain.connect(target);
+        if (gallery?.input) {
+          try { gain.connect(gallery.input); } catch {}
+        }
         osc.start(now);
         osc.stop(now + 0.05);
       }
@@ -447,6 +563,7 @@
     try {
       const now = context.currentTime + 0.002;
       const target = engine.compressor || engine.master;
+      const gallery = getGalleryReverb();
       const sampleRate = context.sampleRate || 44100;
 
       // Stage 1: Obturador mecánico de titanio / Leica M3 sear release (t = 0.000s)
@@ -468,6 +585,9 @@
       }
       mirrorSrc.connect(mirrorGain);
       mirrorGain.connect(target);
+      if (gallery?.input) {
+        try { mirrorGain.connect(gallery.input); } catch {}
+      }
       mirrorSrc.start(now);
 
       // Stage 2: Arco de ionización de xenón + pop de presión (t = 0.010s)
@@ -485,6 +605,9 @@
         }
         popOsc.connect(popGain);
         popGain.connect(target);
+        if (gallery?.input) {
+          try { popGain.connect(gallery.input); } catch {}
+        }
         popOsc.start(now + 0.010);
         popOsc.stop(now + 0.06);
 
@@ -552,6 +675,9 @@
       }
       latchSrc.connect(latchGain);
       latchGain.connect(target);
+      if (gallery?.input) {
+        try { latchGain.connect(gallery.input); } catch {}
+      }
       latchSrc.start(now + 0.035);
 
       // Stage 5: Carraca táctil de arrastre de película (3 micro-ticks de rueda dentada)
@@ -710,7 +836,7 @@
     envelope[0] = envelope[63] = 0;
     const noteEnvelope = Float32Array.from({ length: 64 }, (_, i) => i === 0 ? 0 : i < 53 ? 1 : Math.cos((i - 53) / 10 * Math.PI / 2) ** 2);
     noteEnvelope[63] = 0;
-    return { master, nature, iris, filter, tone, open, core, music, panner, roomGain, roomTone, compressor, buffers: decoded.slice(0, 2), box: decoded[2], envelope, noteEnvelope, voices: new Set() };
+    return { master, nature, iris, filter, tone, open, core, music, panner, roomGain, roomTone, compressor, buffers: decoded.slice(0, 2), box: decoded[2], envelope, noteEnvelope, voices: new Set(), galleryReverb: null };
   }
   button.addEventListener('click', () => {
     if (loading) return;
@@ -806,6 +932,7 @@
     resolveCadence() {
       resolveCadence();
     },
+    get galleryReverb() { return engine?.galleryReverb || null; },
     get lastUtterance() { return lastUtterance; },
     get lastFlashSlug() { return lastFlashSlug; },
     get lastPunchSlug() { return lastPunchSlug; },
