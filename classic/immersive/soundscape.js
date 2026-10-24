@@ -12,8 +12,14 @@
   let lastY = scrollY, lastDistance = null, lastPhase = 'hold', lastSlug = '', lastHeroSlug = '', lastUtterance = '';
   let lastCameraFlashTime = 0, lastFlashSlug = '';
   let lastMotion = null, lastGrain = -Infinity, energy = 0, direction = 1, seed = 0, pendingDistance = 0;
-  // Original four-phrase motif in D minor. Null steps let the mechanism breathe.
-  const melody = [74,77,81,77,76,74,69,null,72,76,79,76,74,72,69,null,74,77,81,84,81,77,76,null,74,null,69,72,77,76,null,74];
+  // Microtonal music-box motif in D minor: acoustic fifths (3/2, +2c), natural fourths (4/3, -2c),
+  // neutral alboka thirds (+24c), syntonic major second (-14c) and harmonic sub-seventh (-26c).
+  const melody = [
+    74.00, 77.24, 81.02, 77.24, 75.86, 74.00, 69.02, null,
+    71.74, 75.86, 78.98, 75.86, 74.00, 71.74, 69.02, null,
+    74.00, 77.24, 81.02, 83.74, 81.02, 77.24, 75.86, null,
+    74.00, null,  69.02, 71.74, 77.24, 75.86, null,  74.00
+  ];
   let melodyStep = -1, lastNote = -Infinity, noteDistance = 0;
   function message(text = '') { status.textContent = text; status.hidden = !text; }
   function paint() {

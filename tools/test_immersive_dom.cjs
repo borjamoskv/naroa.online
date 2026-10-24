@@ -724,7 +724,9 @@ async function eyeMatch(ui, base, points) {
   for (let i = 0; i < 8; i++) { boxAudio.advance(700); box.w.scrollTo({ top: (i + 1) * 300 }); await box.flush(); }
   const played = boxAudio.notes.map(source => 74 + 12 * Math.log2(source.playbackRate.value));
   assert.deepEqual(played.map(Math.round), [74,77,81,77,76,74,69], 'Scroll plays a coherent, tuned seven-note phrase followed by a rest');
-  assert.ok(played.every(note => Math.abs(note - Math.round(note)) < 1e-6), 'Movement speed never detunes the melody');
+  const expectedMicro = [74.00, 77.24, 81.02, 77.24, 75.86, 74.00, 69.02];
+  assert.ok(played.every((note, i) => Math.abs(note - expectedMicro[i]) < 1e-4), 'Movement speed preserves deterministic microtonal scale degrees');
+  assert.ok(played.some(note => Math.abs(note - Math.round(note)) > 0.01), 'Melody features authentic microtonal intervals');
   const strikes = boxAudio.notes.map(source => Math.max(...source.target.gain.curve));
   assert.ok(new Set(strikes.map(value => value.toFixed(3))).size >= 3, 'The phrase has a leading accent and gentler answering notes');
   assert.ok(strikes.every(value => value <= .851), 'Even fast gestures leave headroom in each bell');
