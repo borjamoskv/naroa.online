@@ -73,12 +73,16 @@
         engine.master.gain.setValueAtTime(0, context.currentTime); stopGrains();
         context.suspend().catch(() => {});
       } else {
-        const parameter = engine.master.gain, duration = .26 + depth * .22, now = hold(parameter);
+        const parameter = engine.master.gain, duration = .26 + depth * .22;
+        hold(parameter);
         const release = Float32Array.from({ length: 64 }, (_, i) => parameter.value * .5 * (1 + Math.cos(Math.PI * i / 63)));
         release[63] = 0;
-        parameter.setValueCurveAtTime(release, now, duration);
-        parameter.setValueAtTime(0, now + duration + .001);
-        suspension = setTimeout(() => { stopGrains(); context.suspend().catch(() => {}); }, duration * 1000 + 40);
+        // A future audio-clock boundary prevents the browser from clamping a
+        // just-expired start time and overlapping the zero event with the curve.
+        const start = context.currentTime + .02;
+        parameter.setValueCurveAtTime(release, start, duration);
+        parameter.setValueAtTime(0, start + duration + .001);
+        suspension = setTimeout(() => { stopGrains(); context.suspend().catch(() => {}); }, duration * 1000 + 60);
       }
     }
     paint();

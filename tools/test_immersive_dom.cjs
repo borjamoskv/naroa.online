@@ -53,8 +53,7 @@ function create(route = '/', reduce = false, viewport = { width: 1024, height: 7
   const track = document.querySelector('.art-scroll'), stage = document.querySelector('[data-gallery]');
   const step = w.innerHeight * 1.1;
   if (track) {
-    const height = w.innerHeight + Number(track.style.getPropertyValue('--steps')) * step;
-    track.getBoundingClientRect = () => ({ top: -w.scrollY, bottom: height - w.scrollY, height, width: viewport.width, left: 0, right: viewport.width });
+    track.getBoundingClientRect = () => { const height = w.innerHeight * (1 + parseFloat(track.style.getPropertyValue('--journey-length') || '0') / 100); return { top: -w.scrollY, bottom: height - w.scrollY, height, width: viewport.width, left: 0, right: viewport.width }; };
     stage.getBoundingClientRect = () => ({ top: 0, bottom: w.innerHeight, height: w.innerHeight, width: viewport.width, left: 0, right: viewport.width });
   }
   const portraitTrack = document.querySelector('[data-portrait-scroll]');
@@ -81,7 +80,9 @@ function create(route = '/', reduce = false, viewport = { width: 1024, height: 7
     find('[data-gallery]').dispatchEvent(event); return event;
   }
   const key = value => document.dispatchEvent(new w.KeyboardEvent('keydown', { key: value, bubbles: true, cancelable: true }));
-  return { dom, w, document, find, click, flush, wheel, key, observers, step, scroll: index => w.scrollTo({top:index * step}) };
+  const journey = stage ? w.NAROA_JOURNEY.create(w.NAROA_CATALOG.projects.filter(p => stage.dataset.subset !== 'Vaivenes' || p.series === 'Vaivenes'), w.NAROA_CATALOG.journey) : null;
+  const distance = index => journey.at(index) * w.innerHeight;
+  return { dom, w, document, find, click, flush, wheel, key, observers, step, journey, distance, scroll: index => w.scrollTo({top:distance(index)}) };
 }
 
 // Mock only the browser audio/network boundary; exercise real click, camera and lifecycle code.
@@ -201,6 +202,46 @@ async function eyeMatch(ui, base, points) {
   assert.equal(llorona.find('[data-art-source]').hidden, true, 'An attachment without a public URL does not produce a fabricated source link');
   assert.ok(llorona.find('[data-facts]').textContent.includes('sal rosa'));
   llorona.dom.window.close();
+  assert.equal(ui.journey.entries.length, 55);
+  assert.deepEqual(Array.from(ui.w.NAROA_CATALOG.journey.scenes, e => e.mode).join(' '), 'E H V Z V E H H V Z E V H H V Z H V Z P V H Z V H Z V H Z V H H Z H Z V H Z H Z H V Z H Z H V Z H Z H H Z H F');
+  const modes = { E: 'eyes', H: 'horizontal', V: 'vertical', Z: 'zoom', P: 'puzzle' };
+  let horizontalDirection = -1, inHorizontal = false;
+  for (let index = 0; index < works.length; index++) {
+    const entry = ui.journey.entries[index];
+    assert.equal(entry.hold, index ? .25 : .45, 'Every artwork has the agreed viewing pause');
+    if (index) assert.ok(Math.abs(entry.start - ui.journey.entries[index - 1].end) < 1e-8, 'Camera sections join with no scroll gap');
+    ui.w.scrollTo({ top: (entry.start + entry.hold * .25) * ui.w.innerHeight }); await ui.flush();
+    const image = ui.find(`[data-scene="${index}"] img`), fixedPose = image.style.transform;
+    ui.w.scrollTo({ top: (entry.start + entry.hold * .75) * ui.w.innerHeight }); await ui.flush();
+    assert.equal(image.style.transform, fixedPose, 'Scrolling during the viewing pause leaves the camera fixed');
+    assert.equal(ui.find('[data-art-title]').textContent, works[index].title);
+    if (index === works.length - 1) continue;
+    ui.scroll(index + .3); await ui.flush();
+    assert.equal(ui.find('[data-gallery]').dataset.transition, modes[entry.mode]);
+    const before = ui.find(`[data-scene="${index}"]`).style.cssText;
+    ui.scroll(index + .7); await ui.flush(); ui.scroll(index + .3); await ui.flush();
+    assert.equal(ui.find(`[data-scene="${index}"]`).style.cssText, before, 'Every camera pass reverses along the same path');
+    if (entry.mode === 'H' || entry.mode === 'V') {
+      const translation = scene => /translate3d\(([-\d.]+)px,([-\d.]+)px,0\)/.exec(scene.style.transform).slice(1).map(Number);
+      const from = translation(ui.find(`[data-scene="${index}"]`)), to = translation(ui.find(`[data-scene="${index + 1}"]`));
+      const axis = entry.mode === 'H' ? 0 : 1, size = axis ? ui.w.innerHeight : ui.w.innerWidth;
+      assert.ok(Math.abs(Math.abs(to[axis] - from[axis]) - size) < .002, 'Full-screen panels meet exactly without an uncovered seam');
+    }
+    if (entry.mode === 'H') {
+      if (!inHorizontal) horizontalDirection *= -1;
+      assert.equal(entry.direction, horizontalDirection, 'Consecutive lateral panels share direction; a new block reverses it');
+    }
+    inHorizontal = entry.mode === 'H';
+  }
+  ui.w.scrollTo({ top: .45 * ui.w.innerHeight }); await ui.flush();
+  const surfaceStart = ui.find('[data-scene="0"] img').style.transform;
+  ui.w.scrollTo({ top: .70 * ui.w.innerHeight }); await ui.flush();
+  assert.equal(ui.find('[data-gallery]').dataset.transition, 'explore');
+  assert.notEqual(ui.find('[data-scene="0"] img').style.transform, surfaceStart, 'The opening explores Marilyn vertically before entering the iris');
+  ui.w.scrollTo({ top: ui.distance(20) - .4 }); await ui.flush();
+  assert.equal(ui.find('[data-gallery]').dataset.transition, 'hold', 'Native pixel rounding preserves the viewing pause at a direct-link boundary');
+  assert.equal(ui.find('[data-art-title]').textContent, 'Custom Jaio');
+  ui.scroll(0); await ui.flush();
   assert.equal(ui.find('[data-art-title]').textContent, 'Marilyn Rocks');
   assert.ok(ui.document.querySelectorAll('.art-scene img[src]').length <= 3, 'Do not eagerly decode the complete catalogue');
   const originalTransform = ui.find('.art-scene img').style.transform;
@@ -227,8 +268,9 @@ async function eyeMatch(ui, base, points) {
   assert.equal(ui.find('[data-kinetic-title]').textContent, '');
   assert.equal(ui.find('[data-art-copy]').style.opacity, '1');
   ui.scroll(1.28); await ui.flush();
-  assert.match(ui.find('[data-scene="2"]').style.maskImage, /^linear-gradient\(110deg,/);
-  assert.equal(ui.find('[data-gallery]').dataset.transition, 'depth');
+  assert.equal(ui.find('[data-scene="2"]').style.maskImage, 'none');
+  assert.ok(parseFloat(ui.find('[data-scene="2"]').style.transform.slice(12)) > 0, 'The next work enters from a full horizontal viewport');
+  assert.equal(ui.find('[data-gallery]').dataset.transition, 'horizontal');
   assert.equal(ui.key('ArrowDown'), true, 'Vertical keyboard scrolling remains native throughout the gallery');
   assert.equal(ui.key('ArrowUp'), true);
   const heldPosition = ui.w.scrollY, heldPose = ui.find('[data-scene="1"] img').style.transform;
@@ -257,7 +299,7 @@ async function eyeMatch(ui, base, points) {
   ui.scroll(3.1); await ui.flush();
   assert.equal(ui.find('[data-art-title]').textContent, works[3].title, 'Reversing scroll follows the new position immediately');
   ui.scroll(7.3); ui.w.dispatchEvent(new ui.w.Event('resize')); await ui.flush();
-  assert.equal(ui.w.scrollY, 7.3 * ui.step, 'A resize with unchanged geometry must not jump back to the last decoded frame');
+  assert.equal(ui.w.scrollY, ui.distance(7.3), 'A resize with unchanged geometry must not jump back to the last decoded frame');
   await eyeMatch(ui, 5, [[.583,.459],[.545,.402]]);
   await eyeMatch(ui, 10, [[.469,.463],[.678,.439]]);
   ui.click('[data-select="0"]'); await ui.flush();
@@ -314,7 +356,7 @@ async function eyeMatch(ui, base, points) {
 
   const deepLink = create('/obra/amy-rocks/'); await deepLink.flush();
   assert.equal(deepLink.find('[data-art-title]').textContent, 'Amy Rocks');
-  assert.equal(deepLink.w.scrollY, 3 * deepLink.step, 'Direct artwork URLs start at the correct document position');
+  assert.equal(deepLink.w.scrollY, deepLink.distance(3), 'Direct artwork URLs start at the correct document position');
   deepLink.dom.window.close();
 
   const series = create('/series/vaivenes/'); await series.flush();
@@ -650,5 +692,5 @@ async function eyeMatch(ui, base, points) {
     page.dom.window.close();
   }
   assert.equal(manifest.projects, 55); assert.deepEqual(errors, []);
-  console.log('PASS: all 55 artwork flows, feathered depth transitions, 3 gallery eye pairs, kinetic titles, native scroll, free inertia, direct links, 3-image loading bound, search/filters, details/photos, quiet mode, reduced motion, Vaivenes, editorial reveals, responsive Naroa-to-Rara Avis pupil/iris alignment, photographic wink, cinematic deep-iris camera with continuous forward velocity across the blend, eased outward turn, reversible reveal, image-load guard, seamless continuation through all 55 works, 8 additional deep eye matches embedded catalogue navigation, opt-in reactive sound fragments, speed and direction response, bounded voices, silence at rest and safe audio lifecycle.');
+  console.log('PASS: 55 variable camera scores, fixed viewing pauses, full-viewport vertical and horizontal seams, deterministic reverse motion, three deep iris passes, zoom and puzzle chapters; all 55 artwork flows, 3 gallery eye pairs, kinetic titles, native scroll, free inertia, direct links, 3-image loading bound, search/filters, details/photos, quiet mode, reduced motion, Vaivenes, editorial reveals, responsive Naroa-to-Rara Avis pupil/iris alignment, photographic wink, cinematic deep-iris camera with continuous forward velocity across the blend, eased outward turn, reversible reveal, image-load guard, seamless continuation through all 55 works, 8 additional deep eye matches embedded catalogue navigation, opt-in reactive sound fragments, speed and direction response, bounded voices, silence at rest and safe audio lifecycle.');
 })().catch(error => { console.error(error); process.exitCode = 1; });

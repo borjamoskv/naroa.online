@@ -1,0 +1,346 @@
+{
+  "version": 1,
+  "durations": {
+    "V": 100,
+    "H": 130,
+    "Z": 140,
+    "E": 180,
+    "P": 220,
+    "F": 0
+  },
+  "scenes": [
+    {
+      "slug": "marilyn-rocks",
+      "mode": "E",
+      "hold": 45,
+      "explore": 35,
+      "target": "rara-avis"
+    },
+    {
+      "slug": "rara-avis",
+      "mode": "H",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "amor-en-conserva",
+      "mode": "V",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "amy-rocks",
+      "mode": "Z",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "entre-tantas-flores-de-dia",
+      "mode": "V",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "johnny-rocks",
+      "mode": "E",
+      "hold": 25,
+      "explore": 0,
+      "target": "rockagipsy"
+    },
+    {
+      "slug": "rockagipsy",
+      "mode": "H",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "hugo-box",
+      "mode": "H",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "james-rocks",
+      "mode": "V",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "mario-moreno",
+      "mode": "Z",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "infusion-de-berto",
+      "mode": "E",
+      "hold": 25,
+      "explore": 0,
+      "target": "buena-fuente"
+    },
+    {
+      "slug": "buena-fuente",
+      "mode": "V",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "ajenjo-cam",
+      "mode": "H",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "beatriz-de-pandora",
+      "mode": "H",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "el-gato-que-es-kutxa",
+      "mode": "V",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "me-parto-de-risa",
+      "mode": "Z",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "red-red-wine",
+      "mode": "H",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "i-remember-when-your-head-caught-flame",
+      "mode": "V",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "julio-iglesias-como-un-reloj-suizo",
+      "mode": "Z",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "saio-puzzle",
+      "mode": "P",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "custom-jaio",
+      "mode": "V",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "13n",
+      "mode": "H",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "patxi-en-su-pino",
+      "mode": "Z",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "el-luengo-y-el-mar",
+      "mode": "V",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "el-armigo-atomico",
+      "mode": "H",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "elene",
+      "mode": "Z",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "dar-la-lata",
+      "mode": "V",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "marian-de-miranda-luciendo-la-pantorrilla",
+      "mode": "H",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "my-tiny-face",
+      "mode": "Z",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "aaron",
+      "mode": "V",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "pajarraca-azul",
+      "mode": "H",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "flying-dragon",
+      "mode": "H",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "monster-dragon",
+      "mode": "Z",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "la-llorona",
+      "mode": "H",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "pablo",
+      "mode": "Z",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "euskolander-no-hay-mas-que-uno",
+      "mode": "V",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "idoia-arkatz-bihotz",
+      "mode": "H",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "little-adi",
+      "mode": "Z",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "lauralore",
+      "mode": "H",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "can-dy-queen",
+      "mode": "Z",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "el-hombre-que-susurraba-a-las-estrellas",
+      "mode": "H",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "olinga-a-la-naranja",
+      "mode": "V",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "i-got-you-babe",
+      "mode": "Z",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "jose-manuel-ezquerra",
+      "mode": "H",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "billy-saw",
+      "mode": "Z",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "out-por-los-pelos",
+      "mode": "H",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "the-munsters",
+      "mode": "V",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "denbora-nora-zoaz",
+      "mode": "Z",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "roisin",
+      "mode": "H",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "mr-fahrenheit",
+      "mode": "Z",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "audreys-lightning",
+      "mode": "H",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "cantinflowers",
+      "mode": "H",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "pippilotta",
+      "mode": "Z",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "rosetta",
+      "mode": "H",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "dustin",
+      "mode": "F",
+      "hold": 25,
+      "explore": 0
+    }
+  ]
+}

@@ -61,8 +61,10 @@
     const scenes = $$('.art-scene', stage), images = scenes.map(s => $('img', s));
     const kineticTitle = $('[data-kinetic-title]', stage), caption = $('[data-art-copy]', stage);
     const state = { index: Number(stage.dataset.initial) || 0, fit: false, quiet: false, photo: 0 };
-    const motion = { position: state.index, desired: state.index, frame: null, request: 0, navigation: null };
-    const track = stage.closest('.art-scroll'), geometry = { top: 0, step: 1, width: 0, height: 0 };
+    const journey = window.NAROA_JOURNEY.create(works, catalogue.journey);
+    const motion = { pose: journey.read(journey.at(state.index)), position: state.index, desired: state.index, frame: null, request: 0, navigation: null };
+    const track = stage.closest('.art-scroll'), geometry = { top: 0, unit: 1, width: 0, height: 0 };
+    track.style.setProperty('--journey-length', `${journey.total * 100}svh`);
     document.documentElement.classList.add('gallery-scroll');
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     const pan = { x: 0, y: 0, tx: 0, ty: 0, frame: null };
@@ -163,28 +165,29 @@
     const mobileFocals = { 'rara-avis': '61% 40%', 'amor-en-conserva': '48% 54%', 'denbora-nora-zoaz': '18% 45%', 'el-hombre-que-susurraba-a-las-estrellas': '74% 44%' };
     // Pupil centres measured on the unaltered cover photographs, in source-image coordinates.
     const eyes = {
-      'marilyn-rocks': { x: .635, y: .392, span: .067 },
-      'rara-avis': { x: .683, y: .417, span: .049 },
-      'johnny-rocks': { x: .583, y: .459, span: .066 },
-      'rockagipsy': { x: .545, y: .402, span: .037 },
-      'infusion-de-berto': { x: .469, y: .463, span: .043 },
-      'buena-fuente': { x: .678, y: .439, span: .050 }
+      'marilyn-rocks': { x: .635, y: .392, iris: .030 },
+      'rara-avis': { x: .683, y: .417, iris: .025 },
+      'johnny-rocks': { x: .583, y: .459, iris: .028 },
+      'rockagipsy': { x: .545, y: .402, iris: .018 },
+      'infusion-de-berto': { x: .469, y: .463, iris: .020 },
+      'buena-fuente': { x: .678, y: .439, iris: .025 }
     };
     const eyeLinks = { 'marilyn-rocks': 'rara-avis', 'johnny-rocks': 'rockagipsy', 'infusion-de-berto': 'buena-fuente' };
     const ease = value => { const t = clamp(value, 0, 1); return t * t * (3 - 2 * t); };
-    function eyePose(index, amount) {
+    const smooth = value => { const t = clamp(value, 0, 1); return t * t * t * (t * (t * 6 - 15) + 10); };
+    function eyeGeometry(index) {
       const eye = eyes[works[index].slug], img = images[index];
       const width = geometry.width + 20, height = geometry.height + 20;
       const naturalWidth = img.naturalWidth || 1000, naturalHeight = img.naturalHeight || 1000;
       const cover = Math.max(width / naturalWidth, height / naturalHeight);
       const pictureWidth = naturalWidth * cover, pictureHeight = naturalHeight * cover;
       const focus = scenes[index].style.getPropertyValue('--position').split(' ').map(v => parseFloat(v) / 100);
-      const x = (width - pictureWidth) * focus[0] + eye.x * pictureWidth;
-      const y = (height - pictureHeight) * focus[1] + eye.y * pictureHeight;
-      const closeup = clamp(clamp(geometry.width * .18, 140, 280) / (eye.span * pictureWidth), 2.6, 6);
-      const zoom = 1.10 + (closeup - 1.10) * amount;
-      const tx = -(zoom - 1) * width / 2 * (1 - amount) + (geometry.width * .5 + 10 - x * zoom) * amount;
-      const ty = -(zoom - 1) * height / 2 * (1 - amount) + (geometry.height * .42 + 10 - y * zoom) * amount;
+      return { width, height, x: (width - pictureWidth) * focus[0] + eye.x * pictureWidth, y: (height - pictureHeight) * focus[1] + eye.y * pictureHeight, iris: eye.iris * pictureWidth };
+    }
+    function eyePose(index, diameter, focus, offset = 0) {
+      const point = eyeGeometry(index), zoom = diameter / point.iris, img = images[index];
+      const tx = -(zoom - 1) * point.width / 2 * (1 - focus) + (geometry.width * .5 + 10 - point.x * zoom) * focus;
+      const ty = -(zoom - 1) * point.height / 2 * (1 - focus) + (geometry.height * .42 + 10 - point.y * zoom) * focus + offset * (1 - focus);
       img.style.transformOrigin = '0px 0px';
       img.style.transform = `translate3d(${tx.toFixed(3)}px,${ty.toFixed(3)}px,0) scale(${zoom.toFixed(5)})`;
     }
@@ -250,80 +253,93 @@
       $('#page-schema').textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'VisualArtwork', name: p.title, url: 'https://naroagutierrezgil.com' + url, description: p.story, image: p.photos.map(ph => 'https://naroagutierrezgil.com' + ph.original), creator: { '@type': 'Person', name: 'Naroa Gutiérrez Gil' } });
     }
     function render() {
-      const position = clamp(motion.position, 0, works.length - 1), base = Math.floor(position), fraction = position - base;
-      const still = state.fit || reduced.matches, progress = ease(fraction);
-      const puzzlePass = !still && works[base].interaction === 'puzzle';
-      const sideways = (base + 1) % 2 === 0;
-      const eyeMatch = !still && !!eyeLinks[works[base].slug] && eyeLinks[works[base].slug] === works[base + 1]?.slug;
-      const edge = (1 - progress) * 100, feather = Math.sin(progress * Math.PI) * 14;
-      stage.dataset.transition = still ? 'still' : puzzlePass ? 'puzzle' : eyeMatch ? 'eyes' : 'depth';
-      const visible = new Set(still ? [state.index] : fraction > .0001 ? [base, base + 1] : [base]);
+      const pose = motion.pose, { entry, phase, progress: fraction } = pose;
+      const base = entry.index, incoming = Math.min(base + 1, works.length - 1);
+      const still = state.fit || reduced.matches;
+      const transition = !still && phase === 'transition' && fraction > 0;
+      const mode = entry.mode, progress = smooth(fraction), eyeMatch = transition && mode === 'E';
+      stage.dataset.transition = still ? 'still' : phase === 'explore' ? 'explore' : !transition ? 'hold' : ({ E: 'eyes', H: 'horizontal', V: 'vertical', Z: 'zoom', P: 'puzzle' })[mode];
+      stage.dataset.journeyPhase = phase;
+      const visible = new Set(still ? [state.index] : transition ? [base, incoming] : [base]);
       paintedScenes.forEach(index => {
         if (visible.has(index)) return;
         scenes[index].style.visibility = 'hidden'; scenes[index].style.willChange = images[index].style.willChange = 'auto';
       });
       paintedScenes.clear();
+      let depth = 0, diameter = 0, focus = 0;
+      if (eyeMatch) {
+        const from = eyeGeometry(base).iris * 1.16, to = eyeGeometry(incoming).iris * 1.16;
+        const deep = Math.max(Math.min(geometry.width, geometry.height) * 2.4, Math.hypot(geometry.width, geometry.height) * 1.2);
+        const approach = smooth(fraction / .64), reveal = smooth((fraction - .64) / .36);
+        diameter = Math.exp(fraction <= .64 ? Math.log(from) + Math.log(deep / from) * approach : Math.log(deep) + Math.log(to / deep) * reveal);
+        focus = smooth(fraction / .34) * (1 - reveal); depth = approach * (1 - reveal);
+      } else if (transition && mode === 'Z') depth = smooth(fraction / .55) * (1 - smooth((fraction - .55) / .45));
       visible.forEach(index => {
-        const scene = scenes[index]; paintedScenes.add(index);
-        scene.style.visibility = 'visible'; scene.style.zIndex = index === base + 1 ? '2' : '1';
-        scene.style.willChange = 'opacity,mask-image'; images[index].style.willChange = 'transform';
-        scene.style.clipPath = 'inset(0)'; scene.style.opacity = '1';
-        scene.style.maskImage = scene.style.webkitMaskImage = 'none';
-        images[index].style.transformOrigin = '50% 50%';
-          if (works[index].interaction === 'puzzle' && (!still || puzzles.has(index))) drawPuzzle(index, index === base ? fraction : 0, still);
-        if (still) { images[index].style.transform = ''; return; }
-          if (puzzlePass) {
-            const exit = ease((fraction - .80) / .20);
-            scene.style.opacity = (index === base ? 1 - exit : exit).toFixed(4);
-            images[index].style.transform = `scale(${(1.1 + (1 - exit) * .12).toFixed(5)})`;
-            return;
-          }
-        if (eyeMatch) {
-          eyePose(index, index === base ? ease(fraction * 2) : 1 - ease((fraction - .5) * 2));
-          if (index === base + 1) scene.style.opacity = ease((fraction - .40) / .20).toFixed(4);
-          return;
-        }
-        if (index === base) {
-          images[index].style.transform = sideways
-            ? `translate3d(${(-progress * 9).toFixed(3)}%,0,0) scale(${(1.10 + progress * .24).toFixed(5)})`
-            : `translate3d(0,${(-progress * 9).toFixed(3)}%,0) scale(${(1.10 + progress * .24).toFixed(5)})`;
-        } else {
-          const mask = `linear-gradient(${sideways ? 110 : 170}deg,transparent ${(edge - feather).toFixed(3)}%,#000 ${(edge + feather).toFixed(3)}%)`;
-          scene.style.maskImage = scene.style.webkitMaskImage = mask;
-          images[index].style.transform = sideways
-            ? `translate3d(${((1 - progress) * 12).toFixed(3)}%,0,0) scale(${(1.10 + (1 - progress) * .18).toFixed(5)})`
-            : `translate3d(0,${((1 - progress) * 12).toFixed(3)}%,0) scale(${(1.10 + (1 - progress) * .18).toFixed(5)})`;
+        const scene = scenes[index], image = images[index], outgoing = index === base;
+        paintedScenes.add(index);
+        scene.style.visibility = 'visible'; scene.style.zIndex = outgoing ? '1' : '2';
+        scene.style.willChange = transition ? 'opacity,transform' : 'auto'; image.style.willChange = still ? 'auto' : 'transform';
+        scene.style.clipPath = 'inset(0)'; scene.style.opacity = '1'; scene.style.transform = 'translate3d(0px,0px,0)';
+        scene.style.maskImage = scene.style.webkitMaskImage = 'none'; image.style.transformOrigin = '50% 50%';
+        if (works[index].interaction === 'puzzle' && (!still || puzzles.has(index))) drawPuzzle(index, outgoing && transition ? fraction : 0, still);
+        if (still) { image.style.transform = ''; return; }
+        if (!transition) {
+          image.style.transform = `translate3d(0,${(-smooth(pose.explore) * 6).toFixed(3)}%,0) scale(1.16000)`;
+        } else if (mode === 'E') {
+          eyePose(index, diameter, focus, outgoing && entry.explore ? -(geometry.height + 20) * .06 : 0);
+          if (!outgoing) scene.style.opacity = smooth((fraction - .42) / .16).toFixed(4);
+        } else if (mode === 'H' || mode === 'V') {
+          const displacement = outgoing ? -progress : 1 - progress;
+          const x = mode === 'H' ? displacement * geometry.width * entry.direction : 0;
+          const y = mode === 'V' ? displacement * geometry.height : 0;
+          scene.style.transform = `translate3d(${x.toFixed(3)}px,${y.toFixed(3)}px,0)`;
+          const parallax = displacement * 4;
+          image.style.transform = `translate3d(${mode === 'H' ? parallax.toFixed(3) : '0'}%,${mode === 'V' ? parallax.toFixed(3) : '0'}%,0) scale(1.16000)`;
+        } else if (mode === 'Z') {
+          const close = outgoing ? smooth(fraction / .65) : 1 - smooth((fraction - .35) / .65);
+          image.style.transform = `scale(${Math.exp(Math.log(1.16) + Math.log(3.6 / 1.16) * close).toFixed(5)})`;
+          if (!outgoing) scene.style.opacity = smooth((fraction - .40) / .20).toFixed(4);
+        } else if (mode === 'P') {
+          const exit = smooth((fraction - .80) / .20);
+          if (!outgoing) scene.style.opacity = exit.toFixed(4);
+          scene.style.transform = `translate3d(0,${(outgoing ? -exit * geometry.height : (1 - exit) * geometry.height).toFixed(3)}px,0)`;
+          image.style.transform = 'scale(1.16000)';
         }
       });
-      soundscape?.depth(eyeMatch && !still ? fraction < .5 ? ease(fraction * 2) : 1 - ease((fraction - .5) * 2) : 0);
-      const transitioning = !still && fraction > .001 && fraction < .999;
-      const nextTitle = transitioning ? works[base + 1].title : '';
+      soundscape?.depth(still ? 0 : depth);
+      const nextTitle = transition ? works[incoming].title : '';
       if (kineticTitle.textContent !== nextTitle) kineticTitle.textContent = nextTitle;
-      kineticTitle.style.opacity = transitioning && !eyeMatch && !puzzlePass ? (Math.sin(progress * Math.PI) * .32).toFixed(3) : '0';
+      kineticTitle.style.opacity = transition && !eyeMatch && mode !== 'P' ? (Math.sin(progress * Math.PI) * .20).toFixed(3) : '0';
       kineticTitle.style.transform = `translate3d(${((progress - .5) * -14).toFixed(3)}%,${((progress - .5) * -16).toFixed(3)}vh,0)`;
-      caption.style.opacity = transitioning ? (.45 + .55 * Math.pow(Math.abs(fraction - .5) * 2, .6)).toFixed(3) : '1';
-      caption.style.transform = transitioning ? `translateY(${(-Math.sin(fraction * Math.PI * 2) * 10).toFixed(3)}px)` : '';
-      stage.classList.toggle('is-travelling', transitioning);
-      stage.style.setProperty('--progress', (position * 100).toFixed(3) + '%');
+      caption.style.opacity = transition ? (.45 + .55 * Math.pow(Math.abs(fraction - .5) * 2, .6)).toFixed(3) : '1';
+      caption.style.transform = transition ? `translateY(${(-Math.sin(fraction * Math.PI * 2) * 10).toFixed(3)}px)` : '';
+      const cue = $('[data-journey-cue]', stage);
+      cue.textContent = still ? 'Desplázate para recorrer ↕' : !transition ? phase === 'explore' ? 'Explora la superficie ↓' : 'Una pausa para mirar · sigue ↓' : ({ E: 'Entra en la mirada ↓', H: entry.direction > 0 ? 'Atravesar → · sigue bajando' : 'Atravesar ← · sigue bajando', V: 'Déjate llevar ↓', Z: 'Acércate ↓', P: 'Mezclar y volver a unir ↓' })[mode];
+      stage.classList.toggle('is-travelling', transition);
+      stage.style.setProperty('--progress', (pose.distance / journey.total * (works.length - 1) * 100).toFixed(3) + '%');
     }
     function measure() {
       const bounds = track.getBoundingClientRect(), viewport = stage.getBoundingClientRect(), height = viewport.height || innerHeight;
       geometry.width = viewport.width || innerWidth; geometry.height = height;
       geometry.top = bounds.top + scrollY;
-      geometry.step = (bounds.height - height) / Math.max(1, works.length - 1) || height * 1.1;
+      geometry.unit = (bounds.height - height) / journey.total || height;
     }
     function leaveFit() { if (state.fit) { state.fit = false; images[state.index].src = works[state.index].cover; } }
     function syncScroll() {
       motion.frame = null;
       if (document.querySelector('dialog[open]')) return;
-      const position = clamp((scrollY - geometry.top) / geometry.step, 0, works.length - 1);
+      const pixels = scrollY - geometry.top;
+      // Native scroll positions round to device pixels, including direct-link jumps.
+      const boundary = journey.entries.find(entry => Math.abs(entry.start * geometry.unit - pixels) < 1);
+      const pose = journey.read(boundary ? boundary.start : pixels / geometry.unit);
+      const position = pose.position;
       const request = ++motion.request;
       motion.desired = position;
       if (motion.navigation !== null && Math.abs(position - motion.navigation) < .002) motion.navigation = null;
-      if (Math.abs(position - motion.position) > .002) { leaveFit(); resetPan(); }
+      if (Math.abs(pose.distance - motion.pose.distance) > .002) { leaveFit(); resetPan(); }
       Promise.all([ensureImage(Math.floor(position)), ensureImage(Math.ceil(position))]).then(() => {
         if (request !== motion.request || document.querySelector('dialog[open]')) return;
-        motion.position = position;
+        motion.pose = pose; motion.position = position;
         const base = Math.floor(position);
         const index = !reduced.matches && works[base].interaction === 'puzzle' && position - base < .9 ? base : clamp(Math.round(position), 0, works.length - 1);
         if (index !== state.index) { state.index = index; metadata(); saveRoute(); }
@@ -333,7 +349,7 @@
     }
     function scheduleScroll() { if (motion.frame === null) motion.frame = requestAnimationFrame(syncScroll); }
     function moveTo(index, smooth = false) {
-      window.scrollTo({ top: geometry.top + index * geometry.step, behavior: smooth && !reduced.matches ? 'smooth' : 'auto' });
+      window.scrollTo({ top: geometry.top + journey.at(index) * geometry.unit, behavior: smooth && !reduced.matches ? 'smooth' : 'auto' });
       scheduleScroll();
     }
     function pause() {
@@ -435,7 +451,7 @@
       motion.frame = null; motion.navigation = null;
       leaveFit(); resetPan();
       state.index = index; state.photo = 0;
-      motion.position = motion.desired = index;
+      motion.position = motion.desired = index; motion.pose = journey.read(journey.at(index));
       metadata(); saveRoute(); render(); moveTo(index);
       openWorkGallery(galleryTrigger);
     }
@@ -461,16 +477,15 @@
     });
     function drawPan() { pan.x += (pan.tx - pan.x) * .1; pan.y += (pan.ty - pan.y) * .1; if (Math.abs(pan.tx - pan.x) < .03 && Math.abs(pan.ty - pan.y) < .03) { pan.x = pan.tx; pan.y = pan.ty; pan.frame = null; } else pan.frame = requestAnimationFrame(drawPan); stage.style.setProperty('--pan-x', pan.x.toFixed(2) + 'px'); stage.style.setProperty('--pan-y', pan.y.toFixed(2) + 'px'); }
     function resetPan() { if (pan.frame !== null) cancelAnimationFrame(pan.frame); pan.x = pan.y = pan.tx = pan.ty = 0; pan.frame = null; stage.style.setProperty('--pan-x', '0px'); stage.style.setProperty('--pan-y', '0px'); }
-    stage.addEventListener('pointermove', e => { if (e.pointerType !== 'mouse' || state.fit || reduced.matches || stage.dataset.transition === 'eyes' && stage.classList.contains('is-travelling') || document.querySelector('dialog[open]')) return; const r = stage.getBoundingClientRect(); if (!r.width || !r.height) return; pan.tx = ((e.clientX - r.left) / r.width - .5) * -28; pan.ty = ((e.clientY - r.top) / r.height - .5) * -24; if (pan.frame === null) pan.frame = requestAnimationFrame(drawPan); });
+    stage.addEventListener('pointermove', e => { if (e.pointerType !== 'mouse' || state.fit || reduced.matches || stage.classList.contains('is-travelling') || document.querySelector('dialog[open]')) return; const r = stage.getBoundingClientRect(); if (!r.width || !r.height) return; pan.tx = ((e.clientX - r.left) / r.width - .5) * -28; pan.ty = ((e.clientY - r.top) / r.height - .5) * -24; if (pan.frame === null) pan.frame = requestAnimationFrame(drawPan); });
     stage.addEventListener('pointerleave', () => { pan.tx = pan.ty = 0; if (pan.frame === null && !reduced.matches) pan.frame = requestAnimationFrame(drawPan); });
     reduced.addEventListener('change', () => { resetPan(); pause(); if (reduced.matches) $('.art-layers', stage).getAnimations?.().forEach(animation => animation.cancel()); });
     addEventListener('resize', () => {
-      const position = clamp((scrollY - geometry.top) / geometry.step, 0, works.length - 1);
-      const oldStep = geometry.step, oldTop = geometry.top;
+      const distance = (scrollY - geometry.top) / geometry.unit;
+      const oldUnit = geometry.unit, oldTop = geometry.top;
       focusPictures(); measure();
-      // Mobile toolbar changes must not cancel the user's native scrolling.
-      if (Math.abs(oldStep - geometry.step) > .5 || Math.abs(oldTop - geometry.top) > .5) moveTo(position);
-      else scheduleScroll();
+      if (Math.abs(oldUnit - geometry.unit) > .5 || Math.abs(oldTop - geometry.top) > .5) window.scrollTo({ top: geometry.top + distance * geometry.unit, behavior: 'auto' });
+      scheduleScroll();
     }, { passive: true });
     addEventListener('pageshow', scheduleScroll, { passive: true });
     $$('dialog').forEach(dialog => dialog.addEventListener('close', scheduleScroll));

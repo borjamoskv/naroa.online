@@ -59,3 +59,12 @@ dialog{color:#fffdf4;background:#11120f;border:0;padding:0;max-width:none;max-he
 .art-stage[data-transition="puzzle"] .art-material::after{content:' · Desliza para mezclar y volver a encajar'}
 @media(max-width:759px){.puzzle-camera{transform:translateY(-5vh) scale(.98)}}
 @media(prefers-reduced-motion:reduce){.puzzle-camera{display:none}.art-scene.is-puzzle .art-pan>img{visibility:visible!important}}
+
+/* Camera distances vary by artwork; the document still scrolls on one native axis. */
+.art-scroll{height:calc(100svh + var(--journey-length,calc(var(--steps,0)*110svh)))}
+.gallery-page .art-scene{backface-visibility:hidden}
+.gallery-page .art-stage[data-transition="horizontal"] .art-pan,
+.gallery-page .art-stage[data-transition="vertical"] .art-pan{transform:none}
+.gallery-page [data-journey-cue]{display:inline-block}
+@media(max-width:760px){.gallery-page [data-journey-cue]{max-width:230px;vertical-align:top}}
+@media(prefers-reduced-motion:reduce){.gallery-page .art-scene{transform:none!important}}
