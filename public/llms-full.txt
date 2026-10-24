@@ -30,9 +30,9 @@
 - **¿Se puede visitar el estudio en Bilbao?** Sí, visitas con cita concertada previa para ver obra en directo, valorar soportes y definir el proyecto en persona.
 
 ## Secciones Principales
-- [Inicio e Inmersión](https://naroagutierrezgil.com/): Experiencia inmersiva y catálogo completo de 65 obras.
+- [Inicio e Inmersión](https://naroagutierrezgil.com/): Experiencia inmersiva y catálogo completo de 66 obras.
 - [Retratos por Encargo en Bilbao](https://naroagutierrezgil.com/retratos-por-encargo-bilbao/): Condiciones técnicas, formatos (20×30 cm a 40×50 cm), plazos de 2 a 4 semanas, configurador interactivo y galería de ejemplos reales.
-- [Catálogo Completo](https://naroagutierrezgil.com/obra/): Ficha detallada de las 65 piezas de la colección con fotografías de detalle y relato.
+- [Catálogo Completo](https://naroagutierrezgil.com/obra/): Ficha detallada de las 66 piezas de la colección con fotografías de detalle y relato.
 - [Serie Vaivenes](https://naroagutierrezgil.com/series/vaivenes/): Retratos en técnica mixta, collage textil y objetos de memoria.
 - [Sobre Mí](https://naroagutierrezgil.com/sobre-mi/): Biografía, técnica, proceso creativo y proyectos comunitarios (Walking Gallery Bilbao, El ReCreo).
 - [Trayectoria](https://naroagutierrezgil.com/trayectoria/): Archivo cronológico de exposiciones documentadas desde 2010 (DEIA, GARA, Politena, Dock Bilbao).
@@ -40,14 +40,14 @@
 - [Contacto](https://naroagutierrezgil.com/contacto/): Canales directos de consulta para obra y encargos.
 
 ## Recursos Machine-to-Machine y GEO SOTA 2026
-- [Catálogo JSON Estructurado](https://naroagutierrezgil.com/api/catalog.json): Endpoint con especificaciones completas de las 65 obras y Evidence Graph.
+- [Catálogo JSON Estructurado](https://naroagutierrezgil.com/api/catalog.json): Endpoint con especificaciones completas de las 66 obras y Evidence Graph.
 - [Endpoint WebMCP](https://naroagutierrezgil.com/.well-known/mcp.json): Manifiesto y definición formal de herramientas WebMCP para agentes autónomos.
 - [Índice Extendido llms-full.txt](https://naroagutierrezgil.com/llms-full.txt): Desglose exhaustivo de todas las piezas, fotos de detalle con hashes SHA-256 y condiciones de encargo.
-- [Sitemap XML](https://naroagutierrezgil.com/sitemap.xml): Índice canónico de 73 rutas y metadatos de imágenes.
+- [Sitemap XML](https://naroagutierrezgil.com/sitemap.xml): Índice canónico de 74 rutas y metadatos de imágenes.
 - [Feed RSS 2.0](https://naroagutierrezgil.com/feed.xml): Sindicación de obras recientes y publicaciones del taller.
 - [Protocolo IndexNow](https://naroagutierrezgil.com/indexnow.json): Sincronización instantánea de indexación para Bing y motores asociados.
 
-## Catálogo Exhaustivo de Obras (65 Piezas Documentadas)
+## Catálogo Exhaustivo de Obras (66 Piezas Documentadas)
 
 ### Marilyn Rocks (None)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/marilyn-rocks/
@@ -642,6 +642,16 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
 - **Serie:** Colección general
 - **Relato:** «Shine, baby, shine». Retrato en blanco y negro con un toque de color, realizado mediante lápices de colores Art & Graphic de Faber-Castell sobre papel poliéster. Posteriormente escaneado e impreso en papel de 350 gr/m². Sobre el fondo de esta lámina se aplicaron pinceladas de esmalte transparente con brillantina dorada y un detalle de alas a rotulador acrílico Uni-Posca. Presentado en marco formato A3 con cristal.
 - **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Izei
+
+### The Love Boat (2021)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/the-love-boat/
+- **Técnica:** Técnica mixta, acrílico, rotuladores Uni-Posca y collage sobre tabla
+- **Soporte:** Tabla de madera de 50 × 50 cm barnizada con látex líquido
+- **Medidas:** 50 × 50 cm
+- **Materiales:** Pintura acrílica (pincel y rotuladores Uni-Posca), papel de seda y de regalo plastificado, telas, celofán, aluminio y plástico decorado
+- **Serie:** Colección general
+- **Relato:** «Mare mía, mecachisenlamar, que no me puedo imaginar algo más espectacular que junto a ti pasar unas vacaciones en el mar». Retrato colorista doble realizado mediante técnica mixta sobre tabla de madera de 50 × 50 cm barnizada con látex líquido. La pieza combina pintura acrílica a pincel y rotuladores Uni-Posca con recortes de papel de seda, papel de regalo plastificado con mensaje, telas, celofán, aluminio y plástico decorado.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20The%20Love%20Boat
 
 ### Róisín (None)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/roisin/

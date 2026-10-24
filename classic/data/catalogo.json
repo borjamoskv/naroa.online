@@ -325,14 +325,6 @@
           "caption": "Composición master 4K de Mario Moreno (Cantinflas) con flores y collage.",
           "source": null,
           "sha256": "9dd913cf1c42a8278cff1b1c2daa8cca4ea362f1e658353065bd5fadd142e3d8"
-        },
-        {
-          "src": "/images/catalogo/mario-moreno-04.jpg",
-          "width": 720,
-          "height": 884,
-          "caption": "Detalle de los acabados, ojos y expresión de Cantinflas.",
-          "source": null,
-          "sha256": "90c2c8346e796e898d345c1f394a3abb23d34331c8a47b8e7169f680a931ed03"
         }
       ],
       "dimensions": "Lienzo: 24 × 18 cm · Marco: 32 × 26 cm",
@@ -803,22 +795,6 @@
           "caption": "Detalle de la composición",
           "source": "https://www.facebook.com/photo/?fbid=1069042134575207&set=a.1069042964575124",
           "sha256": "0ac10b611798de6e8e947bd76f681e71530f1eecd729fa5cb3b8aa0d570e48df"
-        },
-        {
-          "src": "/images/catalogo/red-red-wine-03.jpg",
-          "width": 843,
-          "height": 678,
-          "caption": "Detalle de relieve, etiqueta y textura vinícola.",
-          "source": null,
-          "sha256": "f98706b4f8e9c343a22818884eca7d48a2df8bb682577069451fcce00ac4f571"
-        },
-        {
-          "src": "/images/catalogo/red-red-wine-04.jpg",
-          "width": 843,
-          "height": 506,
-          "caption": "Vista en perspectiva del volumen y la botella.",
-          "source": null,
-          "sha256": "2ebcdf7c2c269daca96d19cb4a58c413bfe4f16284f4481124dd42d6d944a589"
         }
       ],
       "dimensions": "Papel: A5",
@@ -920,19 +896,10 @@
       "story": "Un retrato que también se puede construir por piezas. Las juntas del puzzle atraviesan la imagen en blanco y negro y su fondo de color.",
       "images": [
         {
-          "src": "/images/catalogo/saio-puzzle-original-2048.png",
-          "width": 2048,
-          "height": 2047,
-          "caption": "El puzle completo, con el retrato y sus piezas encajadas.",
-          "source": null,
-          "sha256": "7800a05027f4c26a742b0b8761c8caed8d8ebcd1e0e1c8273bb904a9de01c734",
-          "source_local": "/var/folders/r_/hw1ds2nj49zffr6r4m_81r5h0000gn/T/codex-clipboard-bf59393a-5474-45f4-bb78-845e63d14f30.png"
-        },
-        {
           "src": "/images/catalogo/saio-puzzle-original-01-2048.jpg",
           "width": 2048,
           "height": 2047,
-          "caption": "Puzzle completo",
+          "caption": "El puzle completo, con el retrato y sus piezas encajadas.",
           "source": "https://www.facebook.com/photo/?fbid=890523279093761&set=a.890533279092761",
           "sha256": "95120f255b54e61f59af82a5cdffd067a235305a1360bd8ca8e68c0930b174bd"
         },
@@ -1272,22 +1239,6 @@
           "caption": "Otra variante de PostalaK",
           "source": "https://www.facebook.com/photo/?fbid=1087698802709540&set=a.1087704452708975",
           "sha256": "668f5d1af2dcba2df5e09d91ab040a9a27785e02a836b3c97690dcb3dcbb2aec"
-        },
-        {
-          "src": "/images/catalogo/marian-de-miranda-luciendo-la-pantorrilla-05.jpg",
-          "width": 552,
-          "height": 828,
-          "caption": "Detalle de encaje y pantorrilla con matices de época.",
-          "source": null,
-          "sha256": "2d7761657ef8a5d1f67ecd0db05d372c5af8f1e1f2bcc3ffcbd1f977475f43f1"
-        },
-        {
-          "src": "/images/catalogo/marian-de-miranda-luciendo-la-pantorrilla-06.jpg",
-          "width": 552,
-          "height": 828,
-          "caption": "Detalle de textura, veladuras y color.",
-          "source": null,
-          "sha256": "2dee333ff68021fbd60fe85bcfa38c7a8a28c570421ea343cd4f27a3ed25687a"
         }
       ],
       "dimensions": "Dibujo: 20 × 10 cm · Collage físico: 23 × 18 cm",
@@ -2347,14 +2298,6 @@
           "source": null,
           "sha256": "d00881c21faed4404688946cdb589a7a521ee3906705863b513c0860053a941e",
           "source_local": "classic/images/catalogo/la-pensadora-original-01-2048.jpg"
-        },
-        {
-          "src": "/images/catalogo/la-pensadora-hq-02.webp",
-          "width": 1600,
-          "height": 1200,
-          "caption": "Detalle de texturas y acrílico sobre lienzo 3D con laterales pintados.",
-          "source": null,
-          "sha256": "6fcd81721c8182d91851457f8c0eb5312d7f2496b16a9fb8deda2843c900e09f"
         }
       ],
       "source": null,
@@ -2603,14 +2546,6 @@
           "caption": "Composición completa de Love en collage textil y acrílico.",
           "source": null,
           "sha256": "3eb4ad82f6c6f85829e396f791afd390f69a296428a0c93c5db0cda0705bf778"
-        },
-        {
-          "src": "/images/artworks/love-DA7L_L5F.webp",
-          "width": 1200,
-          "height": 1600,
-          "caption": "Detalle de texturas y capas tipográficas.",
-          "source": null,
-          "sha256": "3eb4ad82f6c6f85829e396f791afd390f69a296428a0c93c5db0cda0705bf778"
         }
       ],
       "dimensions": "30 × 22 cm",
@@ -2622,12 +2557,10 @@
       "source": null,
       "editorial": {
         "image_order": [
-          0,
-          1
+          0
         ],
         "captions": [
-          "Love: collage pop y capas tipográficas.",
-          "Detalle de la textura textil sobre madera."
+          "Love: collage pop y capas tipográficas."
         ]
       }
     },
@@ -2755,6 +2688,51 @@
       ],
       "dimensions": "Formato A3 (42 × 29,7 cm)",
       "materials": null,
+      "series": null,
+      "year": 2021,
+      "credit": null,
+      "selected": false,
+      "kind": "obra",
+      "source": null
+    },
+    {
+      "slug": "the-love-boat",
+      "title": "The Love Boat",
+      "category": "collage",
+      "technique": "Técnica mixta, acrílico, rotuladores Uni-Posca y collage sobre tabla",
+      "support": "Tabla de madera de 50 × 50 cm barnizada con látex líquido",
+      "story": "«Mare mía, mecachisenlamar, que no me puedo imaginar algo más espectacular que junto a ti pasar unas vacaciones en el mar». Retrato colorista doble realizado mediante técnica mixta sobre tabla de madera de 50 × 50 cm barnizada con látex líquido. La pieza combina pintura acrílica a pincel y rotuladores Uni-Posca con recortes de papel de seda, papel de regalo plastificado con mensaje, telas, celofán, aluminio y plástico decorado.",
+      "images": [
+        {
+          "src": "/images/catalogo/the-love-boat-frontal-2048.jpg",
+          "width": 2048,
+          "height": 2037,
+          "caption": "Retrato colorista doble sobre tabla de madera con marco perimetral intervenido.",
+          "source": null,
+          "sha256": "53ef178a27e4b63e79d9f6b717f4d7c04ef8a48fa4ac8f7a015008dc26ee9b61",
+          "source_local": "classic/images/catalogo/the-love-boat-frontal-2048.jpg"
+        },
+        {
+          "src": "/images/catalogo/the-love-boat-detalle-01-2048.jpg",
+          "width": 2048,
+          "height": 2048,
+          "caption": "Detalle de los rostros, gafas de sol con reflejos y vibración cromática.",
+          "source": null,
+          "sha256": "42d6cf9f8dca3b87bc178f4188b641f17c3b1ac31f173c1956709131b7953b49",
+          "source_local": "classic/images/catalogo/the-love-boat-detalle-01-2048.jpg"
+        },
+        {
+          "src": "/images/catalogo/the-love-boat-detalle-02-2048.jpg",
+          "width": 2048,
+          "height": 2048,
+          "caption": "Detalle del retrato femenino con gafas aviador y textura de collage.",
+          "source": null,
+          "sha256": "6123956d6bc0f2e1120680a0b010d3151a45ded217e6f30aa9f56a53d4cbe288",
+          "source_local": "classic/images/catalogo/the-love-boat-detalle-02-2048.jpg"
+        }
+      ],
+      "dimensions": "50 × 50 cm",
+      "materials": "Pintura acrílica (pincel y rotuladores Uni-Posca), papel de seda y de regalo plastificado, telas, celofán, aluminio y plástico decorado",
       "series": null,
       "year": 2021,
       "credit": null,

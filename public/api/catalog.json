@@ -135,7 +135,7 @@
       }
     ]
   },
-  "artworks_count": 65,
+  "artworks_count": 66,
   "reviewed": "2026-10-24",
   "artworks": [
     {
@@ -572,13 +572,6 @@
           "height": 2456,
           "caption": "Composición master 4K de Mario Moreno (Cantinflas) con flores y collage.",
           "sha256": "9dd913cf1c42a8278cff1b1c2daa8cca4ea362f1e658353065bd5fadd142e3d8"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/mario-moreno-04.jpg",
-          "width": 720,
-          "height": 884,
-          "caption": "Detalle de los acabados, ojos y expresión de Cantinflas.",
-          "sha256": "90c2c8346e796e898d345c1f394a3abb23d34331c8a47b8e7169f680a931ed03"
         }
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Mario%20Moreno",
@@ -845,20 +838,6 @@
           "height": 1230,
           "caption": "Detalle de la composición",
           "sha256": "0ac10b611798de6e8e947bd76f681e71530f1eecd729fa5cb3b8aa0d570e48df"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/red-red-wine-03.jpg",
-          "width": 843,
-          "height": 678,
-          "caption": "Detalle de relieve, etiqueta y textura vinícola.",
-          "sha256": "f98706b4f8e9c343a22818884eca7d48a2df8bb682577069451fcce00ac4f571"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/red-red-wine-04.jpg",
-          "width": 843,
-          "height": 506,
-          "caption": "Vista en perspectiva del volumen y la botella.",
-          "sha256": "2ebcdf7c2c269daca96d19cb4a58c413bfe4f16284f4481124dd42d6d944a589"
         }
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Red%20Red%20Wine",
@@ -954,20 +933,13 @@
       "year": null,
       "story": "Un retrato que también se puede construir por piezas. Las juntas del puzzle atraviesan la imagen en blanco y negro y su fondo de color.",
       "url": "https://naroagutierrezgil.com/obra/saio-puzzle/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/saio-puzzle-original-2048-7800a05027f4-view.webp",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/saio-puzzle-original-01-2048-95120f255b54-view.webp",
       "photos": [
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/saio-puzzle-original-2048.png",
-          "width": 2048,
-          "height": 2047,
-          "caption": "El puzle completo, con el retrato y sus piezas encajadas.",
-          "sha256": "7800a05027f4c26a742b0b8761c8caed8d8ebcd1e0e1c8273bb904a9de01c734"
-        },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/saio-puzzle-original-01-2048.jpg",
           "width": 2048,
           "height": 2047,
-          "caption": "Puzzle completo",
+          "caption": "El puzle completo, con el retrato y sus piezas encajadas.",
           "sha256": "95120f255b54e61f59af82a5cdffd067a235305a1360bd8ca8e68c0930b174bd"
         },
         {
@@ -1288,20 +1260,6 @@
           "height": 2048,
           "caption": "Otra variante de PostalaK",
           "sha256": "668f5d1af2dcba2df5e09d91ab040a9a27785e02a836b3c97690dcb3dcbb2aec"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/marian-de-miranda-luciendo-la-pantorrilla-05.jpg",
-          "width": 552,
-          "height": 828,
-          "caption": "Detalle de encaje y pantorrilla con matices de época.",
-          "sha256": "2d7761657ef8a5d1f67ecd0db05d372c5af8f1e1f2bcc3ffcbd1f977475f43f1"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/marian-de-miranda-luciendo-la-pantorrilla-06.jpg",
-          "width": 552,
-          "height": 828,
-          "caption": "Detalle de textura, veladuras y color.",
-          "sha256": "2dee333ff68021fbd60fe85bcfa38c7a8a28c570421ea343cd4f27a3ed25687a"
         }
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Marian%20de%20Miranda%20Luciendo%20la%20Pantorrilla",
@@ -2226,13 +2184,6 @@
           "height": 1536,
           "caption": "Vista completa: La pensadora, procesos cognitivos y mundo interior.",
           "sha256": "d00881c21faed4404688946cdb589a7a521ee3906705863b513c0860053a941e"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/la-pensadora-hq-02.webp",
-          "width": 1600,
-          "height": 1200,
-          "caption": "Detalle de texturas y acrílico sobre lienzo 3D con laterales pintados.",
-          "sha256": "6fcd81721c8182d91851457f8c0eb5312d7f2496b16a9fb8deda2843c900e09f"
         }
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20La%20pensadora",
@@ -2418,13 +2369,6 @@
           "height": 1600,
           "caption": "Composición completa de Love en collage textil y acrílico.",
           "sha256": "3eb4ad82f6c6f85829e396f791afd390f69a296428a0c93c5db0cda0705bf778"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/artworks/love-DA7L_L5F.webp",
-          "width": 1200,
-          "height": 1600,
-          "caption": "Detalle de texturas y capas tipográficas.",
-          "sha256": "3eb4ad82f6c6f85829e396f791afd390f69a296428a0c93c5db0cda0705bf778"
         }
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Love",
@@ -2532,6 +2476,45 @@
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Izei",
       "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Izei"
+    },
+    {
+      "slug": "the-love-boat",
+      "title": "The Love Boat",
+      "category": "collage",
+      "series": null,
+      "technique": "Técnica mixta, acrílico, rotuladores Uni-Posca y collage sobre tabla",
+      "support": "Tabla de madera de 50 × 50 cm barnizada con látex líquido",
+      "dimensions": "50 × 50 cm",
+      "materials": "Pintura acrílica (pincel y rotuladores Uni-Posca), papel de seda y de regalo plastificado, telas, celofán, aluminio y plástico decorado",
+      "year": 2021,
+      "story": "«Mare mía, mecachisenlamar, que no me puedo imaginar algo más espectacular que junto a ti pasar unas vacaciones en el mar». Retrato colorista doble realizado mediante técnica mixta sobre tabla de madera de 50 × 50 cm barnizada con látex líquido. La pieza combina pintura acrílica a pincel y rotuladores Uni-Posca con recortes de papel de seda, papel de regalo plastificado con mensaje, telas, celofán, aluminio y plástico decorado.",
+      "url": "https://naroagutierrezgil.com/obra/the-love-boat/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/the-love-boat-frontal-2048-53ef178a27e4-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/the-love-boat-frontal-2048.jpg",
+          "width": 2048,
+          "height": 2037,
+          "caption": "Retrato colorista doble sobre tabla de madera con marco perimetral intervenido.",
+          "sha256": "53ef178a27e4b63e79d9f6b717f4d7c04ef8a48fa4ac8f7a015008dc26ee9b61"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/the-love-boat-detalle-01-2048.jpg",
+          "width": 2048,
+          "height": 2048,
+          "caption": "Detalle de los rostros, gafas de sol con reflejos y vibración cromática.",
+          "sha256": "42d6cf9f8dca3b87bc178f4188b641f17c3b1ac31f173c1956709131b7953b49"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/the-love-boat-detalle-02-2048.jpg",
+          "width": 2048,
+          "height": 2048,
+          "caption": "Detalle del retrato femenino con gafas aviador y textura de collage.",
+          "sha256": "6123956d6bc0f2e1120680a0b010d3151a45ded217e6f30aa9f56a53d4cbe288"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20The%20Love%20Boat",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20The%20Love%20Boat"
     },
     {
       "slug": "roisin",

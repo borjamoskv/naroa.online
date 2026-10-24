@@ -1223,5 +1223,20 @@ export const ARTWORKS: Artwork[] = [
     medium: 'Lápices de colores Faber-Castell sobre poliéster, impresión en 350 gr/m², esmalte con brillantina dorada y rotulador Uni-Posca',
     description: '«Shine, baby, shine». Retrato en blanco y negro con un toque de color, realizado mediante lápices de colores Art & Graphic de Faber-Castell sobre papel poliéster. Posteriormente escaneado e impreso en papel de 350 gr/m². Sobre el fondo de esta lámina se aplicaron pinceladas de esmalte transparente con brillantina dorada y un detalle de alas a rotulador acrílico Uni-Posca. Presentado en marco formato A3 con cristal.',
     sizeCategory: 'medium'
+  },
+  {
+    id: 81,
+    category: 'kintsugi',
+    kicker: 'Vacaciones en el mar',
+    quote: 'Mare mía, que no me puedo imaginar algo más espectacular que junto a ti pasar unas vacaciones en el mar.',
+    slug: 'the-love-boat',
+    aspectRatio: 1.005,
+    url: '/images/catalogo/the-love-boat-frontal-2048.jpg',
+    title: 'The Love Boat',
+    href: '#obra-the-love-boat',
+    year: '2021',
+    medium: 'Técnica mixta, acrílico, rotuladores Uni-Posca y collage sobre tabla de madera de 50 × 50 cm barnizada con látex líquido',
+    description: '«Mare mía, mecachisenlamar, que no me puedo imaginar algo más espectacular que junto a ti pasar unas vacaciones en el mar». Retrato colorista doble realizado mediante técnica mixta sobre tabla de madera de 50 × 50 cm barnizada con látex líquido. La pieza combina pintura acrílica a pincel y rotuladores Uni-Posca con recortes de papel de seda, papel de regalo plastificado con mensaje, telas, celofán, aluminio y plástico decorado.',
+    sizeCategory: 'medium'
   }
 ]
