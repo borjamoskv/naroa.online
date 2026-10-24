@@ -915,10 +915,14 @@ async function eyeMatch(ui, base, points) {
       assert.ok(page.find('[data-kintsugi-editorial]'), 'Sobre mí includes Kintsugi editorial scroll container');
       assert.ok(page.find('.kintsugi-seam-svg'), 'Sobre mí injects SVG golden Kintsugi seam');
       assert.equal(page.document.querySelectorAll('[data-hand-margin]').length, 4, 'Sobre mí includes 4 first-person handwritten margin notes');
+      assert.equal(page.document.querySelectorAll('.kintsugi-shard--top').length, 4, 'Sobre mí splits chapters into upper tectonic shards');
+      assert.equal(page.document.querySelectorAll('.kintsugi-shard--bottom').length, 4, 'Sobre mí splits chapters into lower tectonic shards');
+      assert.equal(page.document.querySelectorAll('.kintsugi-chasm-crack').length, 4, 'Sobre mí injects liquid gold SVG cracks inside every chasm');
       assert.ok(page.find('[data-reverse-portrait]'), 'Sobre mí includes Reverse Portrait diagnostic section');
       assert.ok(page.w.NAROA_ABOUT_SCROLL, 'NAROA_ABOUT_SCROLL API exposed on window');
       const scrollState = page.w.NAROA_ABOUT_SCROLL.triggerSampleScroll(1400);
-      assert.equal(scrollState.backend, 'kintsugi-substep-inertial', 'Sobre mí uses sub-step inertial Kintsugi scroll backend');
+      assert.equal(scrollState.backend, 'kintsugi-tectonic-fracture-v8', 'Sobre mí uses V8 tectonic fracture + golden suture scroll backend');
+      assert.equal(scrollState.fractureStates.espejo, 'sutured', 'Scrolling past chapter sutures the tectonic fracture with liquid gold');
       assert.ok(scrollState.dwellChapters.espejo >= 12, 'Reverse portrait tracks chapter dwell telemetry');
       assert.ok(page.find('[data-gaze-work]').textContent.includes('Rara Avis'), 'Reverse portrait updates mirror artwork from scroll dwell');
     }
