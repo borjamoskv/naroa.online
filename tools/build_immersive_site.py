@@ -160,10 +160,77 @@ def build(output):
         p = selected[initial]
         stages = ''.join(f'''<div class="art-scene{' is-current' if q['slug']==p['slug'] else ''}" data-scene="{i}"{' aria-hidden="true"' if q['slug']!=p['slug'] else ''}><div class="art-pan"><img {'src' if q['slug']==p['slug'] else 'data-src'}="{q['cover']}" alt="{esc(work_alt(q))}" decoding="async" draggable="false"{' fetchpriority="high"' if q['slug']==p['slug'] else ''}></div></div>''' for i, q in enumerate(selected))
         nav = ''.join(f'<button type="button" data-select="{i}" aria-label="Ver {esc(q["title"])}" aria-pressed="{str(i==initial).lower()}"{ " hidden" if abs(i-initial)>2 else ""}>{i+1:02d}</button>' for i, q in enumerate(selected))
+        facts_items = [
+            ("Técnica", p["technique"]),
+            ("Soporte", p["support"]),
+            ("Medidas", p["dimensions"]),
+            ("Materiales", p.get("materials")),
+            ("Serie", p.get("series")),
+            ("Año", p.get("year")),
+        ]
+        facts_html = "".join(
+            f"<div><dt>{esc(label)}</dt><dd>{esc(str(val))}</dd></div>"
+            for label, val in facts_items
+            if val
+        )
         body = f'''<main id="main" class="art-scroll" style="--steps:{len(selected)-1}"><section class="art-stage" data-gallery data-initial="{initial}" data-subset="{subset}"><div class="art-layers">{stages}</div><div class="art-shade" aria-hidden="true"></div><div class="kinetic-title" data-kinetic-title aria-hidden="true"></div><nav class="art-index" aria-label="Recorrido de obras">{nav}</nav><div class="art-bottom"><div><div data-art-copy aria-live="polite"><p class="art-counter"><span data-counter>{initial+1:02d} / {len(selected):02d}</span><small data-journey-cue>Desplázate para recorrer ↕</small></p><h1 data-art-title>{esc(p['title'])}</h1><p class="art-material" data-art-material>{esc(p['label'])}</p></div><button type="button" class="art-story-link" data-open-story>Sobre esta obra <span aria-hidden="true">+</span></button></div><div class="art-controls"><div class="art-view-actions"><button type="button" data-effects aria-pressed="false">Activar efectos</button><button type="button" data-fit aria-pressed="false">Ver imagen completa ↗</button><button type="button" data-open-photos>Otras miradas ↗</button></div><div class="art-arrows"><button type="button" data-prev aria-label="Obra anterior"{' disabled' if initial==0 else ''}>←</button><button type="button" data-next aria-label="Obra siguiente"{' disabled' if initial==len(selected)-1 else ''}>→</button></div></div></div><button type="button" class="restore-ui" data-restore hidden>Volver a la navegación ↙</button><div class="art-progress" aria-hidden="true"><span></span></div></section></main>
-<dialog id="story-dialog" class="story-dialog" aria-labelledby="story-title"><div class="dialog-top"><span data-story-category>{esc(p['label'])}</span><button type="button" data-close-dialog>Cerrar ×</button></div><div class="story-body"><h2 id="story-title">{esc(p['title'])}</h2><p data-story>{esc(p['story'])}</p><dl data-facts></dl><p class="art-credit" data-credit>{esc(p['credit'] or '')}</p><a class="text-link" data-art-email href="mailto:naroa@naroa.eu?subject={quote('Consulta sobre '+p['title'])}">Consultar sobre esta obra ↗</a><a class="source-link" data-art-source{' hidden' if not p['source'] else ''} href="{esc(p['source'] or '')}" target="_blank" rel="noopener noreferrer">Ver publicación de la artista ↗</a></div><a class="story-footer" href="/retratos-por-encargo-bilbao/">Tu propio retrato empieza aquí ↗</a></dialog>
+<dialog id="story-dialog" class="story-dialog" aria-labelledby="story-title"><div class="dialog-top"><span data-story-category>{esc(p['label'])}</span><button type="button" data-close-dialog>Cerrar ×</button></div><div class="story-body"><h2 id="story-title">{esc(p['title'])}</h2><p data-story>{esc(p['story'])}</p><dl data-facts>{facts_html}</dl><p class="art-credit" data-credit>{esc(p['credit'] or '')}</p><div class="story-actions"><a class="text-link" data-art-email href="mailto:naroa@naroa.eu?subject={quote('Consulta sobre '+p['title'])}">Consultar por email ↗</a><a class="text-link" data-art-whatsapp href="https://wa.me/34636060609?text={quote('Hola Naroa, me gustaría consultar sobre la obra ' + p['title'])}" target="_blank" rel="noopener noreferrer">Consultar por WhatsApp ↗</a></div><a class="source-link" data-art-source{' hidden' if not p['source'] else ''} href="{esc(p['source'] or '')}" target="_blank" rel="noopener noreferrer">Ver publicación de la artista ↗</a></div><a class="story-footer" href="/retratos-por-encargo-bilbao/">Tu propio retrato empieza aquí ↗</a></dialog>
 <dialog id="photos-dialog" class="photos-dialog" aria-labelledby="photos-heading"><div class="dialog-top"><span id="photos-heading">{esc(p['title'])}</span><button type="button" data-close-dialog>Cerrar ×</button></div><div class="photo-view"><button type="button" data-photo-prev aria-label="Fotografía anterior">←</button><img data-photo-image data-src="{p['photos'][0]['src']}" alt="{esc(work_alt(p, p['photos'][0]['caption']))}" decoding="async"><button type="button" data-photo-next aria-label="Fotografía siguiente">→</button></div><p data-photo-caption aria-live="polite"></p></dialog>'''
-        default_schema = {"@context": "https://schema.org", "@type": "VisualArtwork", "name": p["title"], "url": ORIGIN + "/obra/" + p["slug"] + "/", "image": [ORIGIN + ph["original"] for ph in p["photos"]], "description": p["story"], "creator": {"@type": "Person", "name": "Naroa Gutiérrez Gil", "jobTitle": "Artista plástica y retratista", "url": ORIGIN + "/", "sameAs": ["https://www.facebook.com/naroa.artista.plastica", "https://instagram.com/naroa_art/", "https://naroagutierrez.wordpress.com/"]}, "artMedium": p["technique"]}
+        artwork_photos = [
+            {
+                "@type": "ImageObject",
+                "contentUrl": ORIGIN + ph["original"],
+                "caption": ph.get("caption") or f"{p['title']} — {p.get('technique', '')} de Naroa Gutiérrez Gil",
+                "width": ph.get("width"),
+                "height": ph.get("height"),
+            }
+            for ph in p["photos"]
+        ]
+        default_schema = {
+            "@context": "https://schema.org",
+            "@type": "VisualArtwork",
+            "@id": ORIGIN + "/obra/" + p["slug"] + "/#artwork",
+            "name": p["title"],
+            "url": ORIGIN + "/obra/" + p["slug"] + "/",
+            "image": [ORIGIN + ph["original"] for ph in p["photos"]],
+            "subjectOf": {
+                "@type": "ImageGallery",
+                "name": f"Galería fotográfica de {p['title']}",
+                "image": artwork_photos,
+            },
+            "description": p["story"],
+            "creator": {
+                "@type": "Person",
+                "@id": ORIGIN + "/#artist",
+                "name": "Naroa Gutiérrez Gil",
+                "jobTitle": "Artista plástica y retratista",
+                "url": ORIGIN + "/",
+                "sameAs": [
+                    "https://www.facebook.com/naroa.artista.plastica",
+                    "https://instagram.com/naroa_art/",
+                    "https://naroagutierrez.wordpress.com/",
+                ],
+            },
+            "artMedium": p.get("technique"),
+            "artworkSurface": p.get("support"),
+            "material": p.get("materials"),
+            "artform": "VisualArtwork",
+            "offers": {
+                "@type": "Offer",
+                "availability": "https://schema.org/InStock",
+                "priceCurrency": "EUR",
+                "url": ORIGIN + "/obra/" + p["slug"] + "/",
+                "description": "Obra original de catálogo y encargos personalizados basados en esta técnica. Consulta directa con la artista.",
+                "seller": {
+                    "@type": "Person",
+                    "name": "Naroa Gutiérrez Gil",
+                },
+            },
+        }
+        if p.get("year"):
+            default_schema["dateCreated"] = str(p["year"])
+        if p.get("dimensions"):
+            default_schema["size"] = p["dimensions"]
         page(path, title or p["title"], description or p["story"], body, p["photos"][0]["original"], True, schema or default_schema)
 
     def hero(image, eyebrow, heading, lead="", link=None, alt="Obra de Naroa Gutiérrez Gil", position="50% 45%"):
@@ -279,7 +346,26 @@ def build(output):
         else:
             imgs = f'<image:image><image:loc>{ORIGIN}{esc(image)}</image:loc></image:image>' if image else ''
         sitemap_entries.append(f'<url><loc>{ORIGIN}{path}</loc>{imgs}</url>')
-    write(output / "robots.txt", "User-agent: *\nAllow: /\nSitemap: " + ORIGIN + "/sitemap.xml\n")
+    robots_content = (
+        "User-agent: OAI-SearchBot\n"
+        "Allow: /\n\n"
+        "User-agent: PerplexityBot\n"
+        "Allow: /\n\n"
+        "User-agent: Googlebot\n"
+        "Allow: /\n\n"
+        "User-agent: Bingbot\n"
+        "Allow: /\n\n"
+        "User-agent: GPTBot\n"
+        "Disallow: /\n\n"
+        "User-agent: CCBot\n"
+        "Disallow: /\n\n"
+        "User-agent: *\n"
+        "Allow: /\n"
+        "Disallow: /test/\n"
+        "Disallow: /assets/backup_pre4k/\n\n"
+        "Sitemap: " + ORIGIN + "/sitemap.xml\n"
+    )
+    write(output / "robots.txt", robots_content)
     write(output / "sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">' + ''.join(sitemap_entries) + '</urlset>\n')
     write(output / "_headers", '/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n  Cache-Control: public, max-age=0, must-revalidate\n/immersive/*\n  Cache-Control: public, max-age=31536000, immutable\n')
     write(output / "_redirects", ''.join(f'{src.rstrip("/")} {dest} 301\n' for src, dest in aliases.items()) + '/landing-bilbao /retratos-por-encargo-bilbao/ 301\n')
