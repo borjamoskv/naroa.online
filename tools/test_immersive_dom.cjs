@@ -744,37 +744,13 @@ async function eyeMatch(ui, base, points) {
   galleryAudio.advance(150); reactiveGallery.scroll(5.93); await reactiveGallery.flush();
   assert.ok(galleryContext.filters[1].frequency.value > 8500 && galleryContext.gains[3].gain.value > .99, 'Leaving through Rocka opens brightness and stereo before the full framing returns');
   assert.ok(galleryAudio.starts[5].playbackRate.value > innerRate * 1.7, 'The next eye opens the pitch along with its framing');
-  const bowieIndex = works.findIndex(w => w.slug === 'el-hombre-que-susurraba-a-las-estrellas');
-  galleryAudio.advance(150); reactiveGallery.scroll(bowieIndex + .35); await reactiveGallery.flush();
-  assert.equal(reactiveGallery.w.NAROA_SOUND.lastUtterance, 'We can be heroes', 'Passing through Bowie triggers We can be heroes');
-  const denboraIndex = works.findIndex(w => w.slug === 'denbora-nora-zoaz');
-  galleryAudio.advance(150); reactiveGallery.scroll(denboraIndex); await reactiveGallery.flush();
-  assert.equal(reactiveGallery.w.NAROA_SOUND.lastUtterance, 'Just For One Day', 'Arriving at Denbora triggers Just For One Day in an elderly voice');
-  const dustinIndex = works.findIndex(w => w.slug === 'dustin');
-  galleryAudio.advance(150); reactiveGallery.scroll(dustinIndex); await reactiveGallery.flush();
-  assert.equal(reactiveGallery.w.NAROA_SOUND.lastUtterance, 'Hello darkness, my old friend', 'Arriving at final work 55/55 triggers Sound of Silence finale');
-  const ajenjoIndex = works.findIndex(w => w.slug === 'ajenjo-cam');
-  galleryAudio.advance(150); reactiveGallery.scroll(ajenjoIndex - 1 + .50); await reactiveGallery.flush();
-  const flashLevel = Number(reactiveGallery.find('.art-stage').style.getPropertyValue('--camera-flash') || 0);
-  assert.ok(flashLevel > 0.85, 'Passing through Ajenjo Cam triggers intense camera flashazo: ' + flashLevel);
-  assert.equal(reactiveGallery.w.NAROA_SOUND.lastFlashSlug, 'ajenjo-cam', 'Audio engine registers camera flash trigger on Ajenjo Cam');
   const ezquerraIndex = works.findIndex(w => w.slug === 'jose-manuel-ezquerra');
-  galleryAudio.advance(150); reactiveGallery.scroll(ezquerraIndex - 1 + .52); await reactiveGallery.flush();
-  assert.equal(reactiveGallery.w.NAROA_SOUND.lastPunchSlug, 'jose-manuel-ezquerra', 'Audio engine registers punch impact between Bill Murray and Ezquerra');
   reactiveGallery.scroll(ezquerraIndex); await reactiveGallery.flush();
-  assert.ok(reactiveGallery.find('.art-stage').classList.contains('has-ezquerra-brake'), 'Arriving at Ezquerra activates the 2-second brake');
-  assert.equal(reactiveGallery.wheel(100).defaultPrevented, true, 'Forward wheel is braked during contemplation');
-  assert.equal(reactiveGallery.wheel(-100).defaultPrevented, false, 'Backward wheel is never trapped');
-  const celiaIndex = works.findIndex(w => w.slug === 'asucar-celia-cruz');
-  if (celiaIndex >= 0) {
-    galleryAudio.advance(150); reactiveGallery.scroll(celiaIndex); await reactiveGallery.flush();
-    assert.equal(reactiveGallery.w.NAROA_SOUND.lastShakerSlug, 'asucar-celia-cruz', 'Arriving at Celia Cruz triggers sugar shaker');
-    assert.equal(reactiveGallery.w.NAROA_SOUND.lastUtterance, '¡Azúcar!', 'Celia Cruz triggers ¡Azúcar! shout');
-  }
+  assert.equal(reactiveGallery.find('.art-stage').classList.contains('has-ezquerra-brake'), false, 'Navigation through Ezquerra is fluid with zero artificial locking');
+  assert.equal(reactiveGallery.wheel(100).defaultPrevented, false, 'Forward wheel flows without artificial interruption');
   const robeIndex = works.findIndex(w => w.slug === 'entre-tantas-flores-de-dia');
-  galleryAudio.advance(150); reactiveGallery.scroll(robeIndex); await reactiveGallery.flush();
-  assert.equal(reactiveGallery.w.NAROA_SOUND.lastDeltoyaSlug, 'entre-tantas-flores-de-dia', 'Arriving at Robe triggers Deltoya');
-  assert.equal(reactiveGallery.w.NAROA_SOUND.lastUtterance, '¡DELTOYA!', 'Robe triggers ¡DELTOYA! shout');
+  reactiveGallery.scroll(robeIndex); await reactiveGallery.flush();
+  assert.equal(reactiveGallery.find('.art-stage').classList.contains('has-deltoya-pulse'), false, 'Robe maintains sober pictorial atmosphere without pop distortions or shout badges');
   const saioIdx = works.findIndex(w => w.slug === 'saio-puzzle');
   if (saioIdx >= 0) {
     galleryAudio.advance(150); reactiveGallery.scroll(saioIdx); await reactiveGallery.flush();
