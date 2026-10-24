@@ -129,7 +129,7 @@ html:has(dialog[open]){overflow:hidden}
 .menu-preview-picture:after{content:'';position:absolute;inset:0;background:linear-gradient(transparent 55%,#0009);pointer-events:none}
 .menu-preview-picture>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 43%;opacity:0;transform:scale(1.04);transition:opacity .5s ease,transform 1s cubic-bezier(.16,1,.3,1)}
 .menu-preview-picture>img.is-visible{opacity:1;transform:scale(1)}
-.menu-preview-picture>img.menu-preview-wink{z-index:1;pointer-events:none;transform:scale(1);opacity:0;transition:opacity .24s ease;-webkit-mask-image:radial-gradient(ellipse 14% 9% at 46% 39.5%,#000 62%,transparent 100%);mask-image:radial-gradient(ellipse 14% 9% at 46% 39.5%,#000 62%,transparent 100%)}
+.menu-preview-picture>img.menu-preview-wink{z-index:1;pointer-events:none;transform:scale(1);opacity:0;transition:opacity .24s ease;-webkit-mask-image:radial-gradient(ellipse 11% 8% at 61% 41%,#000 60%,transparent 100%);mask-image:radial-gradient(ellipse 11% 8% at 61% 41%,#000 60%,transparent 100%)}
 .menu-preview-picture.is-winking>img.menu-preview-wink{opacity:1}
 .menu-preview-loupe{position:absolute;inset:0;z-index:1;pointer-events:none;background:center 43%/cover no-repeat;opacity:0;transform:scale(1.52);transform-origin:var(--loupe-x,50%) var(--loupe-y,43%);clip-path:circle(66px at var(--loupe-x,50%) var(--loupe-y,43%));filter:contrast(1.1) brightness(1.04);transition:opacity .25s ease}
 .menu-preview-picture:before{content:'';position:absolute;z-index:3;width:136px;height:136px;left:calc(var(--loupe-x,50%) - 68px);top:calc(var(--loupe-y,43%) - 68px);border-radius:50%;border:2px solid #edbca499;box-shadow:inset 0 0 16px rgba(0,0,0,.6),0 0 14px rgba(237,188,164,.4);pointer-events:none;opacity:0;transition:opacity .25s ease}
@@ -168,6 +168,24 @@ html:has(dialog[open]){overflow:hidden}
 .menu-dialog .menu-foot>span{width:auto;font-size:11px;color:#a4a698}
 .menu-dialog .menu-foot>a{min-height:44px;display:flex;align-items:center;font-size:11px}
 .chapter-links,.notebook-actions{display:flex;flex-wrap:wrap;gap:16px 28px;margin-top:12px}
+
+/* ═══ PALETA CROMÁTICA DE SECCIONES EDITORIALES (C5-REAL) ═══ */
+.chapter{position:relative;border-radius:24px;padding:75px 44px;margin:35px 0;border:1px solid rgba(255,255,255,0.07);transition:background .3s ease,box-shadow .3s ease}
+.chapter:nth-of-type(1){background:linear-gradient(135deg,rgba(14,16,22,0.85) 0%,rgba(8,9,13,0.95) 100%);border-color:rgba(255,255,255,0.08);box-shadow:0 18px 45px rgba(0,0,0,0.35)}
+.chapter:nth-of-type(2){background:linear-gradient(135deg,rgba(28,14,8,0.8) 0%,rgba(15,8,4,0.95) 100%);border-color:rgba(212,175,55,0.18);box-shadow:0 18px 45px rgba(28,14,8,0.22)}
+.chapter:nth-of-type(3){background:linear-gradient(135deg,rgba(26,8,18,0.8) 0%,rgba(14,4,10,0.95) 100%);border-color:rgba(244,63,94,0.18);box-shadow:0 18px 45px rgba(26,8,18,0.22)}
+.chapter:nth-of-type(4){background:linear-gradient(135deg,rgba(6,26,20,0.8) 0%,rgba(3,14,11,0.95) 100%);border-color:rgba(16,185,129,0.18);box-shadow:0 18px 45px rgba(6,26,20,0.22)}
+.commission-examples-section{background:linear-gradient(135deg,rgba(28,10,20,0.75) 0%,rgba(14,4,10,0.95) 100%);border:1px solid rgba(244,63,94,0.18);border-radius:28px;padding:60px 44px 30px;margin:45px 0;box-shadow:0 20px 50px rgba(28,10,20,0.3)}
+.commission-steps{background:linear-gradient(135deg,rgba(8,20,38,0.8) 0%,rgba(3,9,18,0.95) 100%);border:1px solid rgba(59,130,246,0.18);border-radius:28px;padding:60px 44px;margin:45px 0;box-shadow:0 20px 50px rgba(8,20,38,0.32)}
+.commission-faq{background:linear-gradient(135deg,rgba(24,16,6,0.75) 0%,rgba(12,8,3,0.95) 100%);border:1px solid rgba(212,175,55,0.18);border-radius:28px;padding:60px 44px;margin:45px 0;box-shadow:0 20px 50px rgba(24,16,6,0.28)}
+.career.editorial{background:linear-gradient(180deg,rgba(24,16,6,0.55) 0%,rgba(10,7,2,0.85) 100%);border-radius:28px;padding:60px 5% 40px;margin:30px auto;border:1px solid rgba(212,175,55,0.14)}
+.editorial.notebook{background:linear-gradient(180deg,rgba(6,24,18,0.55) 0%,rgba(2,10,7,0.85) 100%);border-radius:28px;padding:60px 5% 40px;margin:30px auto;border:1px solid rgba(16,185,129,0.14)}
+.closing{background:linear-gradient(135deg,rgba(10,24,46,0.85) 0%,rgba(4,10,20,0.95) 100%);border:1px solid rgba(59,130,246,0.22);border-radius:28px;padding:65px 44px;margin:45px 0 85px;box-shadow:0 25px 60px rgba(4,10,20,0.45)}
+@media(max-width:760px){
+  .chapter{padding:42px 20px;border-radius:18px;margin:22px 0}
+  .commission-examples-section,.commission-steps,.commission-faq,.closing{padding:38px 20px;border-radius:20px;margin:24px 0}
+}
+
 .notebook-photo{display:block;overflow:hidden;margin-bottom:20px;background:#191a17;border:1px solid #fffdf41a;aspect-ratio:4/3}
 .notebook-photo img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.16,1,.3,1)}
 .notebook-card:hover .notebook-photo img{transform:scale(1.03)}

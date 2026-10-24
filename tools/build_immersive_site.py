@@ -10,6 +10,8 @@ import json
 import re
 import shutil
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime, timezone
+from email.utils import format_datetime
 from html import escape as esc
 from pathlib import Path
 from urllib.parse import quote
@@ -137,6 +139,53 @@ def build(output):
     catalog_path = f"/immersive/catalog-{digest}.js"
     write(output / catalog_path.lstrip("/"), encoded)
 
+    for icon_name in ("naroa-icon-180-v1.png", "naroa-icon-64-v1.png", "naroa-icon-32-v1.png"):
+        icon_src = SOURCE / "assets" / icon_name
+        if icon_src.exists():
+            dest_asset = output / "assets" / icon_name
+            dest_asset.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(icon_src, dest_asset)
+    apple_touch_src = SOURCE / "assets" / "naroa-icon-180-v1.png"
+    if apple_touch_src.exists():
+        shutil.copy2(apple_touch_src, output / "apple-touch-icon.png")
+
+    manifest_data = {
+        "name": "Naroa Gutiérrez Gil · Arte y Retratos",
+        "short_name": "Naroa",
+        "description": "Catálogo de obra plástica y servicio de retratos personalizados en Bilbao por Naroa Gutiérrez Gil.",
+        "start_url": "/",
+        "scope": "/",
+        "display": "standalone",
+        "background_color": "#11120f",
+        "theme_color": "#11120f",
+        "icons": [
+            {
+                "src": "/assets/naroa-icon-180-v1.png",
+                "sizes": "180x180",
+                "type": "image/png",
+                "purpose": "any maskable"
+            },
+            {
+                "src": "/assets/naroa-icon-64-v1.png",
+                "sizes": "64x64",
+                "type": "image/png"
+            },
+            {
+                "src": "/assets/naroa-icon-32-v1.png",
+                "sizes": "32x32",
+                "type": "image/png"
+            },
+            {
+                "src": "/favicon.svg",
+                "sizes": "any",
+                "type": "image/svg+xml"
+            }
+        ]
+    }
+    manifest_json = json.dumps(manifest_data, ensure_ascii=False, indent=2) + "\n"
+    write(output / "manifest.webmanifest", manifest_json)
+    write(REPO / "public" / "manifest.webmanifest", manifest_json)
+
     def links():
         work = {p["slug"]: p for p in projects}
         vaivenes_list = [p for p in projects if p["series"] == "Vaivenes"]
@@ -235,7 +284,7 @@ def build(output):
                 "itemListElement": items
             }
         breadcrumb_tag = f'<script type="application/ld+json" id="seo-breadcrumb">{data_json(breadcrumb)}</script>' if breadcrumb else ''
-        html = f'''<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>{esc(title)} · Naroa Gutiérrez Gil</title><meta name="description" content="{esc(description)}"><meta name="robots" content="index, follow, max-image-preview:large"><link rel="canonical" href="{canonical}"><meta property="og:site_name" content="Naroa Gutiérrez Gil"><meta property="og:locale" content="es_ES"><meta property="og:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{canonical}"><meta property="og:type" content="{'article' if gallery else 'website'}"><meta property="og:image" content="{ORIGIN}{image}"><meta property="og:image:secure_url" content="{ORIGIN}{image}"><meta property="og:image:width" content="{im_w}"><meta property="og:image:height" content="{im_h}"><meta property="og:image:type" content="{im_mime}"><meta property="og:image:alt" content="{esc(im_alt)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta name="twitter:description" content="{esc(description)}"><meta name="twitter:image" content="{ORIGIN}{image}"><meta name="twitter:image:alt" content="{esc(im_alt)}"><link rel="icon" href="{favicon_path}" type="image/svg+xml" sizes="any"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="{assets['app.css']}"><script type="application/ld+json" id="page-schema">{data_json(structured)}</script>{breadcrumb_tag}<script defer src="{catalog_path}"></script><script defer src="{assets['soundscape.js']}"></script><script defer src="{assets['journey.js']}"></script><script defer src="{assets['app.js']}"></script></head><body class="{'gallery-page' if gallery else 'editorial-page'}"><a class="skip-link" href="#main">Ir al contenido</a>{header(gallery)}{body}{'' if gallery else footer()}{dialogs()}</body></html>'''
+        html = f'''<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>{esc(title)} · Naroa Gutiérrez Gil</title><meta name="description" content="{esc(description)}"><meta name="robots" content="index, follow, max-image-preview:large"><meta name="theme-color" content="#11120f"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Naroa"><link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/assets/naroa-icon-180-v1.png"><link rel="alternate" type="application/rss+xml" title="Naroa Gutiérrez Gil · Obras y Cuaderno" href="{ORIGIN}/feed.xml"><link rel="canonical" href="{canonical}"><meta property="og:site_name" content="Naroa Gutiérrez Gil"><meta property="og:locale" content="es_ES"><meta property="og:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{canonical}"><meta property="og:type" content="{'article' if gallery else 'website'}"><meta property="og:image" content="{ORIGIN}{image}"><meta property="og:image:secure_url" content="{ORIGIN}{image}"><meta property="og:image:width" content="{im_w}"><meta property="og:image:height" content="{im_h}"><meta property="og:image:type" content="{im_mime}"><meta property="og:image:alt" content="{esc(im_alt)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta name="twitter:description" content="{esc(description)}"><meta name="twitter:image" content="{ORIGIN}{image}"><meta name="twitter:image:alt" content="{esc(im_alt)}"><link rel="icon" href="{favicon_path}" type="image/svg+xml" sizes="any"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="{assets['app.css']}"><script type="application/ld+json" id="page-schema">{data_json(structured)}</script>{breadcrumb_tag}<script defer src="{catalog_path}"></script><script defer src="{assets['soundscape.js']}"></script><script defer src="{assets['journey.js']}"></script><script defer src="{assets['app.js']}"></script></head><body class="{'gallery-page' if gallery else 'editorial-page'}"><a class="skip-link" href="#main">Ir al contenido</a>{header(gallery)}{body}{'' if gallery else footer()}{dialogs()}</body></html>'''
         dest = output / ("404.html" if not_found else path.lstrip("/") + "index.html")
         write(dest, html)
         if not not_found:
@@ -598,8 +647,50 @@ def build(output):
         ("Entrega y envíos", "Entrega en mano en Bilbao y Bizkaia, o envío protegido y asegurado a cualquier punto de España e internacional."),
     ]
     specs_html = "".join(f"<p><strong>{esc(k)}:</strong> {esc(v)}</p>" for k, v in specs_rows)
+    configurator_html = (
+        '<section class="commission-configurator" aria-labelledby="configurator-heading" data-commission-configurator>'
+        '<div class="section-opening">'
+        '<p class="eyebrow">Configura tu consulta directa</p>'
+        '<h2 id="configurator-heading">¿Qué retrato imaginas?</h2>'
+        '<p>Elige soporte, motivo y ocasión para preparar un mensaje directo y personalizado a Naroa por WhatsApp.</p>'
+        '</div>'
+        '<div class="configurator-grid">'
+        '<div class="configurator-field">'
+        '<label for="cfg-support">Soporte preferido</label>'
+        '<select id="cfg-support" class="configurator-select">'
+        '<option value="Pizarra natural rústica">Pizarra natural rústica (borde irregular y mica)</option>'
+        '<option value="Collage textil sobre madera">Collage textil y dibujo sobre madera</option>'
+        '<option value="Caja personalizada u objeto">Caja de memoria tridimensional u objeto</option>'
+        '<option value="Retrato al óleo o grafito">Retrato al óleo o grafito sobre tabla</option>'
+        '<option value="Asesoramiento en estudio">Por definir (asesoramiento con Naroa)</option>'
+        '</select>'
+        '</div>'
+        '<div class="configurator-field">'
+        '<label for="cfg-motif">Motivo del retrato</label>'
+        '<select id="cfg-motif" class="configurator-select">'
+        '<option value="Retrato individual">Retrato individual (persona)</option>'
+        '<option value="Pareja o familia">Pareja o familia</option>'
+        '<option value="Mascota">Mascota (perro, gato u otro animal)</option>'
+        '<option value="Homenaje o recuerdo">Homenaje / recuerdo especial</option>'
+        '</select>'
+        '</div>'
+        '<div class="configurator-field">'
+        '<label for="cfg-timing">Plazo estimado</label>'
+        '<select id="cfg-timing" class="configurator-select">'
+        '<option value="Sin prisa (2 a 4 semanas)">Plazo habitual (2 a 4 semanas)</option>'
+        '<option value="Fecha señalada próxima">Fecha especial próxima (cumpleaños, aniversario)</option>'
+        '</select>'
+        '</div>'
+        '</div>'
+        '<div class="configurator-action">'
+        '<a id="cfg-whatsapp-btn" class="commission-cta-btn" href="https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20un%20encargo%20de%20retrato%20sobre%20Pizarra%20natural%20r%C3%BAstica%20para%20Retrato%20individual%20con%20plazo%20Sin%20prisa%20%282%20a%204%20semanas%29." target="_blank" rel="noopener noreferrer">'
+        '<span>Consultar esta idea por WhatsApp ↗</span>'
+        '</a>'
+        '</div>'
+        '</section>'
+    )
     commissions = hero(amor["cover"], "Retratos personalizados por encargo · Bilbao", "No retrato solo tu cara.<br><span>Retrato tu historia.</span>", "Tu historia convertida en una obra de arte original sobre pizarra, collage, madera u objetos con vida propia.", ("/contacto/", "Solicitar un retrato"), alt=work_alt(amor))
-    commissions += f'''<article class="editorial" id="contenido"><section class="chapter"><p class="eyebrow">Retrato de autor a partir de tu historia</p><div><h2>Más allá de<br>una fotografía.</h2><p class="lead">Encarga un retrato personalizado en Bilbao con Naroa Gutiérrez Gil a partir de tu historia o fotografías. Obras originales de autor sobre pizarra natural, collage, madera y objetos intervenidos, con presupuesto cerrado previo y entrega local en mano o envío protegido.</p><p>Puedes partir de una fotografía, un recuerdo o un objeto con significado para encargar una pieza hecha a mano y pensada para quien la recibe. Es una práctica de retrato que continúa la exploración iniciada en muestras individuales en Bilbao como <em>Espejos del alma</em> (Colegio de Abogados de Bilbao), valorando en el taller el soporte que mejor cuente esa historia: pizarra con contornos naturales, composiciones de dibujo y tela vaquera, o cajas de madera personalizadas.</p></div></section><section class="commission-examples-section" aria-labelledby="commission-examples-heading"><div class="section-opening"><p class="eyebrow">Soportes reales del catálogo</p><h2 id="commission-examples-heading">Tres maneras de dar<br>forma a un retrato.</h2><p>Cada pieza cuenta con fotografías de conjunto, ángulo y detalle real del soporte en el archivo de Naroa.</p></div><div class="commission-examples">{examples_html}</div></section><section class="chapter" aria-labelledby="commission-specs-heading"><p class="eyebrow">Ficha técnica de encargos</p><div><h2 id="commission-specs-heading">Materiales, formatos<br>y condiciones reales.</h2>{specs_html}</div></section><section class="commission-steps" aria-label="Proceso de encargo"><article><span>01</span><h3>Me cuentas tu idea y tu foto.</h3><p>A quién quieres retratar, si es para regalar y qué historia u objetos le definen. Puedes adjuntar fotografías de referencia.</p></article><article><span>02</span><h3>Propuesta, materiales y presupuesto.</h3><p>Acordamos técnica, formato, orientación de precio y plazo de entrega antes de comenzar la obra.</p></article><article><span>03</span><h3>El retrato cobra vida en el estudio.</h3><p>Compartimos imágenes del proceso mientras el dibujo, la pizarra o el collage van tomando forma.</p></article><article><span>04</span><h3>Entrega en Bilbao o envío.</h3><p>Acordamos la entrega en mano en Bilbao y Bizkaia o el envío preparado según el soporte y los materiales.</p></article></section><section class="commission-faq" aria-labelledby="commission-faq-heading"><div class="section-opening"><p class="eyebrow">Dudas frecuentes antes de encargar</p><h2 id="commission-faq-heading">Precios, fotos<br>y plazos.</h2></div><div class="commission-faq-list">{faq_html}</div></section><div class="closing"><p class="hand">¿A quién te gustaría retratar?</p><a class="text-link" href="https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20un%20retrato%20personalizado%20por%20encargo." target="_blank" rel="noopener noreferrer">Hablar por WhatsApp directo ↗</a><a class="text-link" href="mailto:naroa@naroa.eu?subject=Solicitud%20de%20presupuesto%20para%20retrato%20por%20encargo">Solicitar presupuesto por email ↗</a><a class="text-link" href="/obra/#indice">Explorar las {len(projects)} obras del catálogo ↗</a></div></article>'''
+    commissions += f'''<article class="editorial" id="contenido"><section class="chapter"><p class="eyebrow">Retrato de autor a partir de tu historia</p><div><h2>Más allá de<br>una fotografía.</h2><p class="lead">Encarga un retrato personalizado en Bilbao con Naroa Gutiérrez Gil a partir de tu historia o fotografías. Obras originales de autor sobre pizarra natural, collage, madera y objetos intervenidos, con presupuesto cerrado previo y entrega local en mano o envío protegido.</p><p>Puedes partir de una fotografía, un recuerdo o un objeto con significado para encargar una pieza hecha a mano y pensada para quien la recibe. Es una práctica de retrato que continúa la exploración iniciada en muestras individuales en Bilbao como <em>Espejos del alma</em> (Colegio de Abogados de Bilbao), valorando en el taller el soporte que mejor cuente esa historia: pizarra con contornos naturales, composiciones de dibujo y tela vaquera, o cajas de madera personalizadas.</p></div></section><section class="commission-examples-section" aria-labelledby="commission-examples-heading"><div class="section-opening"><p class="eyebrow">Soportes reales del catálogo</p><h2 id="commission-examples-heading">Tres maneras de dar<br>forma a un retrato.</h2><p>Cada pieza cuenta con fotografías de conjunto, ángulo y detalle real del soporte en el archivo de Naroa.</p></div><div class="commission-examples">{examples_html}</div></section><section class="chapter" aria-labelledby="commission-specs-heading"><p class="eyebrow">Ficha técnica de encargos</p><div><h2 id="commission-specs-heading">Materiales, formatos<br>y condiciones reales.</h2>{specs_html}</div></section><section class="commission-steps" aria-label="Proceso de encargo"><article><span>01</span><h3>Me cuentas tu idea y tu foto.</h3><p>A quién quieres retratar, si es para regalar y qué historia u objetos le definen. Puedes adjuntar fotografías de referencia.</p></article><article><span>02</span><h3>Propuesta, materiales y presupuesto.</h3><p>Acordamos técnica, formato, orientación de precio y plazo de entrega antes de comenzar la obra.</p></article><article><span>03</span><h3>El retrato cobra vida en el estudio.</h3><p>Compartimos imágenes del proceso mientras el dibujo, la pizarra o el collage van tomando forma.</p></article><article><span>04</span><h3>Entrega en Bilbao o envío.</h3><p>Acordamos la entrega en mano en Bilbao y Bizkaia o el envío preparado según el soporte y los materiales.</p></article></section>{configurator_html}<section class="commission-faq" aria-labelledby="commission-faq-heading"><div class="section-opening"><p class="eyebrow">Dudas frecuentes antes de encargar</p><h2 id="commission-faq-heading">Precios, fotos<br>y plazos.</h2></div><div class="commission-faq-list">{faq_html}</div></section><div class="closing"><p class="hand">¿A quién te gustaría retratar?</p><a class="text-link" href="https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20un%20retrato%20personalizado%20por%20encargo." target="_blank" rel="noopener noreferrer">Hablar por WhatsApp directo ↗</a><a class="text-link" href="mailto:naroa@naroa.eu?subject=Solicitud%20de%20presupuesto%20para%20retrato%20por%20encargo">Solicitar presupuesto por email ↗</a><a class="text-link" href="/obra/#indice">Explorar las {len(projects)} obras del catálogo ↗</a></div></article>'''
     commissions_schema = {
         "@context": "https://schema.org",
         "@type": ["Service", "ProfessionalService"],
@@ -775,6 +866,67 @@ def build(output):
     write(output / "robots.txt", robots_content)
     write(output / "sitemap.xml", sitemap_xml)
     write(REPO / "public" / "sitemap.xml", sitemap_xml)
+
+    blog_file = SOURCE / "data/blog.json"
+    blog_posts = json.loads(blog_file.read_text()).get("posts", []) if blog_file.exists() else []
+
+    feed_items = []
+    for p in projects:
+        pub_year = p.get("year")
+        try:
+            year_int = int(pub_year)
+        except (ValueError, TypeError):
+            year_int = 2026
+        dt = datetime(year_int, 1, 1, 12, 0, 0, tzinfo=timezone.utc)
+        medium_parts = [p.get("technique"), p.get("support"), p.get("dimensions")]
+        medium_desc = " · ".join(filter(None, medium_parts))
+        desc_text = f"{p['story']} ({medium_desc})" if medium_desc else p['story']
+        item_xml = (
+            "<item>"
+            f"<title>{esc(p['title'])} · Retrato de autor</title>"
+            f"<link>{ORIGIN}/obra/{p['slug']}/</link>"
+            f"<guid isPermaLink=\"true\">{ORIGIN}/obra/{p['slug']}/</guid>"
+            f"<pubDate>{format_datetime(dt)}</pubDate>"
+            f"<description>{esc(desc_text)}</description>"
+            f'<enclosure url="{ORIGIN}{esc(p["cover"])}" length="0" type="image/webp"/>'
+            "</item>"
+        )
+        feed_items.append(item_xml)
+
+    for post in blog_posts:
+        try:
+            post_dt = datetime.fromisoformat(post["date"]).replace(tzinfo=timezone.utc)
+        except Exception:
+            post_dt = datetime(2026, 1, 1, 12, 0, 0, tzinfo=timezone.utc)
+        post_link = post.get("url") or f"{ORIGIN}/cuaderno/"
+        item_xml = (
+            "<item>"
+            f"<title>{esc(post['title'])}</title>"
+            f"<link>{esc(post_link)}</link>"
+            f"<guid isPermaLink=\"true\">{esc(post_link)}</guid>"
+            f"<pubDate>{format_datetime(post_dt)}</pubDate>"
+            f"<description>{esc(post.get('summary', ''))}</description>"
+            "</item>"
+        )
+        feed_items.append(item_xml)
+
+    build_now = datetime(2026, 10, 24, 8, 20, 0, tzinfo=timezone.utc)
+    feed_xml = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n'
+        '  <channel>\n'
+        '    <title>Naroa Gutiérrez Gil · Arte y Retratos</title>\n'
+        f'    <link>{ORIGIN}/</link>\n'
+        '    <description>Catálogo de obra plástica, servicio de retratos de autor y publicaciones del cuaderno de taller de Naroa Gutiérrez Gil en Bilbao.</description>\n'
+        '    <language>es-es</language>\n'
+        f'    <lastBuildDate>{format_datetime(build_now)}</lastBuildDate>\n'
+        f'    <atom:link href="{ORIGIN}/feed.xml" rel="self" type="application/rss+xml"/>\n'
+        + "".join(feed_items)
+        + '\n  </channel>\n'
+        '</rss>\n'
+    )
+    write(output / "feed.xml", feed_xml)
+    write(REPO / "public" / "feed.xml", feed_xml)
     indexnow_key = "6621e1f1c138eeb14922f7804f61ae34"
     write(output / f"{indexnow_key}.txt", indexnow_key + "\n")
     write(output / "indexnow.json", json.dumps({"host": "naroagutierrezgil.com", "key": indexnow_key, "keyLocation": f"{ORIGIN}/{indexnow_key}.txt", "urlList": [ORIGIN + p[0] for p in pages]}, indent=2) + "\n")

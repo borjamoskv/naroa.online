@@ -177,8 +177,6 @@
   function speakSilence() {}
   let lastShakerSlug = '';
   function playSugarShaker() {}
-  let lastDeltoyaSlug = '';
-  function speakDeltoya() {}
   let lastPuzzleSlug = '', lastClockSlug = '';
   function playPuzzleSnap() {
     lastPuzzleSlug = 'saio-puzzle';
@@ -689,9 +687,6 @@
     shaker() {
       playSugarShaker();
     },
-    speakDeltoya() {
-      speakDeltoya();
-    },
     puzzleSnap() {
       playPuzzleSnap();
     },
@@ -714,7 +709,6 @@
     get lastFlashSlug() { return lastFlashSlug; },
     get lastPunchSlug() { return lastPunchSlug; },
     get lastShakerSlug() { return lastShakerSlug; },
-    get lastDeltoyaSlug() { return lastDeltoyaSlug; },
     get lastPuzzleSlug() { return lastPuzzleSlug; },
     get lastClockSlug() { return lastClockSlug; },
     get lastWineSlug() { return lastWineSlug; },

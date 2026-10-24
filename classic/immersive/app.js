@@ -704,35 +704,64 @@
     }
     function leaveFit() { if (state.fit) { state.fit = false; images[state.index].src = works[state.index].cover; } }
     function syncScroll() {
-      motion.frame = null;
       if (document.querySelector('dialog[open]')) return;
       let pixels = scrollY - geometry.top;
       // Native scroll positions round to device pixels, including direct-link jumps.
       const boundary = journey.entries.find(entry => Math.abs(entry.start * geometry.unit - pixels) < 1);
-      const pose = journey.read(boundary ? boundary.start : pixels / geometry.unit);
+      const targetDist = clamp(boundary ? boundary.start : pixels / geometry.unit, 0, journey.total);
+      motion.target = targetDist;
+      if (reduced.matches || state.fit) {
+        motion.current = targetDist;
+      }
+      scheduleMotion();
+    }
+    function scheduleMotion() {
+      if (motion.frame === null) motion.frame = requestAnimationFrame(stepMotion);
+    }
+    function stepMotion() {
+      motion.frame = null;
+      if (document.querySelector('dialog[open]')) return;
+      const still = state.fit || reduced.matches;
+      const delta = motion.target - motion.current;
+      if (still || Math.abs(delta) < 0.00015) {
+        motion.current = motion.target;
+      } else {
+        // High-density sub-step damping (0.16 per frame) generates silky-smooth minipasos across any scroll gesture
+        motion.current += delta * 0.16;
+      }
+      const pose = journey.read(motion.current);
       const position = pose.position;
-      const request = ++motion.request;
       motion.desired = position;
       if (motion.navigation !== null && Math.abs(position - motion.navigation) < .002) motion.navigation = null;
-      if (Math.abs(pose.distance - motion.pose.distance) > .002) {
+      if (Math.abs(pose.distance - motion.pose.distance) > .0008) {
+        const pixels = motion.current * geometry.unit;
         const skew = clamp((pixels - lastScrollPixels) * 0.035, -3.2, 3.2);
         stage.style.setProperty('--velocity-skew', `${skew.toFixed(2)}deg`);
         leaveFit(); resetPan(); travelCamera();
+        lastScrollPixels = pixels;
       }
-      lastScrollPixels = pixels;
-      Promise.all([ensureImage(Math.floor(position)), ensureImage(Math.ceil(position))]).then(() => {
-        if (request !== motion.request || document.querySelector('dialog[open]')) return;
-        motion.pose = pose; motion.position = position;
-        const base = Math.floor(position);
-        const index = !reduced.matches && works[base].interaction === 'puzzle' && position - base < .9 ? base : clamp(Math.round(position), 0, works.length - 1);
-        if (index !== state.index) { state.index = index; metadata(); saveRoute(); }
-        else stage.classList.toggle('is-fit', state.fit);
-        render();
-      });
+      motion.pose = pose;
+      motion.position = position;
+      const base = Math.floor(position);
+      const index = !reduced.matches && works[base].interaction === 'puzzle' && position - base < .9 ? base : clamp(Math.round(position), 0, works.length - 1);
+      if (index !== state.index) { state.index = index; metadata(); saveRoute(); }
+      else stage.classList.toggle('is-fit', state.fit);
+      render();
+      ensureImage(Math.floor(position));
+      ensureImage(Math.ceil(position));
+      if (motion.current !== motion.target) {
+        motion.frame = requestAnimationFrame(stepMotion);
+      }
     }
-    function scheduleScroll() { if (motion.frame === null) motion.frame = requestAnimationFrame(syncScroll); }
+    function scheduleScroll() { syncScroll(); }
     function moveTo(index, smooth = false) {
-      window.scrollTo({ top: geometry.top + journey.at(index) * geometry.unit, behavior: smooth && !reduced.matches ? 'smooth' : 'auto' });
+      const targetDist = journey.at(index);
+      if (!smooth || reduced.matches) {
+        motion.current = motion.target = targetDist;
+      } else {
+        motion.target = targetDist;
+      }
+      window.scrollTo({ top: geometry.top + targetDist * geometry.unit, behavior: smooth && !reduced.matches ? 'smooth' : 'auto' });
       scheduleScroll();
     }
     function pause() {
@@ -741,6 +770,7 @@
       motion.navigation = null;
       if (motion.frame !== null) cancelAnimationFrame(motion.frame);
       motion.frame = null;
+      motion.current = motion.target;
       render();
     }
     function change(next) {
@@ -877,7 +907,9 @@
       motion.frame = null; motion.navigation = null;
       leaveFit(); resetPan();
       state.index = index; state.photo = 0;
-      motion.position = motion.desired = index; motion.pose = journey.read(journey.at(index));
+      motion.position = motion.desired = index;
+      motion.current = motion.target = journey.at(index);
+      motion.pose = journey.read(journey.at(index));
       metadata(); saveRoute(); render(); moveTo(index);
       openWorkGallery(galleryTrigger);
     }

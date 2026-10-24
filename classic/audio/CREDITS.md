@@ -41,13 +41,8 @@ con un ataque breve derivado de las grabaciones CC0 indicadas arriba.
 La muestra se genera con `tools/compose_musicbox.py`; la melodía se interpreta
 en el navegador con alturas afinadas y desciende una octava dentro del iris.
 
-## Homenaje a David Bowie ("El hombre que susurraba a las estrellas"), "Denbora Nora Zoaz", "Hello Darkness", Celia Cruz ("Asúcar") y Extremoduro ("Entre Tantas Flores de Día" - "¡DELTOYA!")
+## Paisaje sonoro orgánico y contemplativo
 
-Vocalización y diseño sonoro procesado con reverberación de placa y compresión
-estudio inspirada en las sesiones de Hansa Studios Berlín ("We can be heroes" y
-"Just For One Day" en registro grave de barítono mayor), cadencia final
-de caja de música ("The Sound of Silence"), diseño foley granular de
-maraca de sobre de azúcar real con exclamación ("¡Azúcar!") sintetizada para la obra
-y acorde de guitarra eléctrica saturada estilo Marshall con grito rasgado ("¡DELTOYA!")
-al alcanzar el retrato de Robe Iniesta en "Entre Tantas Flores de Día".
-*Asúcar (Celia Cruz)* en homenaje al ritmo latino y al collage con sobres de azúcar.
+Diseño sonoro sutil y espacializado para la galería inmersiva de Naroa Gutiérrez Gil,
+centrado en la textura de los materiales (pizarra, mica, papel, madera) y la melodía
+íntima de caja de música generada por el recorrido.
