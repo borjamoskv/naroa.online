@@ -57,20 +57,27 @@
     if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) d.close();
   }));
   const menu = $('#menu-dialog'), menuLinks = $$('[data-menu-item]', menu), menuImages = $$('[data-menu-image]', menu);
+  const menuReel = $('[data-menu-reel]', menu);
   const menuButtons = $$('[data-open-menu]');
-  let menuRequest = 0, menuImageIndex = -1;
+  let menuRequest = 0, menuImageIndex = -1, reelTimer = 0, activeReel = null, activeReelIndex = 0, activeReelLabel = '';
+  function clearReelTimer() {
+    if (reelTimer) { clearTimeout(reelTimer); reelTimer = 0; }
+  }
   function currentMenuLink() {
     const path = location.pathname;
     return path === '/' ? menuLinks[0] : menuLinks.find(link => path.startsWith(new URL(link.href).pathname));
   }
-  function labelMenu(link) {
-    $('[data-menu-preview-title]', menu).textContent = link.dataset.previewTitle;
-    $('[data-menu-preview-label]', menu).textContent = link.dataset.previewLabel;
+  function labelMenu(title, label) {
+    $('[data-menu-preview-title]', menu).textContent = title;
+    $('[data-menu-preview-label]', menu).textContent = label;
   }
-  async function previewMenu(link) {
-    if (!link || !menu.open) return;
-    const source = link.dataset.previewSrc, request = ++menuRequest;
-    if (menuImages.some(image => image.classList.contains('is-visible') && image.getAttribute('src') === source)) { labelMenu(link); return; }
+  async function showMenuFrame(source, title, label) {
+    if (!source || !menu.open) return;
+    const request = ++menuRequest;
+    if (menuImages.some(image => image.classList.contains('is-visible') && image.getAttribute('src') === source)) {
+      labelMenu(title, label);
+      return;
+    }
     const picture = new Image(); picture.src = source;
     try {
       if (picture.decode) await picture.decode();
@@ -79,9 +86,72 @@
     if (request !== menuRequest || !menu.open) return;
     menuImageIndex = (menuImageIndex + 1) % menuImages.length;
     const image = menuImages[menuImageIndex];
-    image.src = source; image.alt = link.dataset.previewTitle;
+    image.src = source; image.alt = title;
     menuImages.forEach(item => item.classList.toggle('is-visible', item === image));
-    labelMenu(link);
+    labelMenu(title, label);
+  }
+  function syncReelButtons() {
+    if (!menuReel) return;
+    $$('[data-reel-index]', menuReel).forEach((btn, idx) => btn.classList.toggle('is-active', idx === activeReelIndex));
+  }
+  function scheduleReelStep() {
+    clearReelTimer();
+    if (!menu.open || !activeReel || activeReel.length < 2) return;
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches && !document.documentElement.classList.contains('motion-opt-in')) return;
+    reelTimer = setTimeout(() => {
+      if (!menu.open || !activeReel) return;
+      activeReelIndex = (activeReelIndex + 1) % activeReel.length;
+      const frame = activeReel[activeReelIndex];
+      syncReelButtons();
+      showMenuFrame(frame.src, frame.title, activeReelLabel);
+      scheduleReelStep();
+    }, 1800);
+  }
+  function renderReel(link) {
+    clearReelTimer();
+    if (!menuReel) return;
+    const raw = link.dataset.previewReel;
+    if (!raw) {
+      activeReel = null;
+      menuReel.hidden = true;
+      menuReel.replaceChildren();
+      return;
+    }
+    try { activeReel = JSON.parse(raw); } catch { activeReel = null; }
+    if (!activeReel || !activeReel.length) {
+      menuReel.hidden = true;
+      menuReel.replaceChildren();
+      return;
+    }
+    activeReelIndex = 0;
+    activeReelLabel = link.dataset.previewLabel;
+    menuReel.hidden = false;
+    menuReel.replaceChildren(...activeReel.map((frame, idx) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'menu-reel-frame' + (idx === 0 ? ' is-active' : '');
+      btn.dataset.reelIndex = String(idx);
+      btn.dataset.reelTitle = frame.title;
+      btn.tabIndex = -1;
+      btn.title = frame.title;
+      btn.style.backgroundImage = `url("${frame.src}")`;
+      const selectFrame = e => {
+        e.stopPropagation();
+        activeReelIndex = idx;
+        syncReelButtons();
+        showMenuFrame(frame.src, frame.title, activeReelLabel);
+        scheduleReelStep();
+      };
+      btn.addEventListener('pointerenter', selectFrame);
+      btn.addEventListener('click', selectFrame);
+      return btn;
+    }));
+    scheduleReelStep();
+  }
+  async function previewMenu(link) {
+    if (!link || !menu.open) return;
+    renderReel(link);
+    await showMenuFrame(link.dataset.previewSrc, link.dataset.previewTitle, link.dataset.previewLabel);
   }
   function refreshMenu() {
     const current = currentMenuLink();
@@ -94,6 +164,8 @@
     link.addEventListener('focus', () => previewMenu(link));
   });
   menu.addEventListener('close', () => {
+    clearReelTimer();
+    activeReel = null;
     menuRequest++;
     menuButtons.forEach(button => button.setAttribute('aria-expanded', 'false'));
   });

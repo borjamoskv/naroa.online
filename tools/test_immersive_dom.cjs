@@ -288,8 +288,17 @@ async function eyeMatch(ui, base, points) {
   assert.equal(ui.find('[data-menu-item][aria-current]').getAttribute('href'), '/obra/');
   assert.equal(ui.document.querySelectorAll('[data-menu-item]').length, 7);
   assert.equal(ui.find('[data-menu-preview-title]').textContent, 'Amy Rocks');
+  assert.equal(ui.find('[data-menu-reel]').hidden, false, 'Obras displays the 4-frame curated filmstrip');
+  assert.equal(ui.document.querySelectorAll('[data-menu-reel] [data-reel-index]').length, 4);
+  ui.find('[data-menu-reel] [data-reel-index="1"]').click(); await ui.flush();
+  assert.equal(ui.find('[data-menu-preview-title]').textContent, 'Marilyn Rocks', 'Selecting a filmstrip frame updates the main preview');
+  const vaivenesMenu = ui.find('[data-menu-item][href="/series/vaivenes/"]');
+  vaivenesMenu.dispatchEvent(new ui.w.Event('pointerenter')); await ui.flush();
+  assert.equal(ui.find('[data-menu-reel]').hidden, false, 'Vaivenes also displays its 4-frame series filmstrip');
+  assert.equal(ui.document.querySelectorAll('[data-menu-reel] [data-reel-index]').length, 4);
   const artistMenu = ui.find('[data-menu-item][href="/sobre-mi/"]');
   artistMenu.dispatchEvent(new ui.w.Event('pointerenter')); await ui.flush();
+  assert.equal(ui.find('[data-menu-reel]').hidden, true, 'Non-collection sections hide the filmstrip cleanly');
   assert.equal(ui.find('[data-menu-preview-title]').textContent, 'Naroa Gutiérrez Gil', 'Preview follows the requested menu item');
   assert.equal(ui.find('[data-menu-item][aria-current]').getAttribute('href'), '/obra/', 'A preview never changes the current location');
   ui.find('[data-menu-item][href="/contacto/"]').focus(); await ui.flush();
