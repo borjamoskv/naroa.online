@@ -224,7 +224,7 @@
       try {
         const now = context.currentTime + 0.01;
         const target = engine.compressor || engine.master;
-        // Arpegio de The Sound of Silence (D4-D4-F4-F4-A4-A4-G4) + Última nota final suspendida (D4/D5) que muere en el silencio
+        // C1 & C2: The Sound of Silence motif + Acorde abierto que decae + Filtro subacuático a 480 Hz
         const motif = [
           [0.00, 146.83, 0.35, 0.045],
           [0.36, 146.83, 0.35, 0.040],
@@ -233,8 +233,10 @@
           [1.44, 220.00, 0.42, 0.052],
           [1.80, 220.00, 0.42, 0.046],
           [2.18, 196.00, 1.15, 0.058],
-          [3.45, 146.83, 2.80, 0.065],
-          [3.47, 293.66, 2.95, 0.048]
+          [3.45, 146.83, 3.20, 0.065],
+          [3.46, 220.00, 3.20, 0.050],
+          [3.47, 293.66, 3.40, 0.048],
+          [3.48, 587.33, 3.50, 0.038]
         ];
         motif.forEach(([offset, freq, dur, peak]) => {
           const osc = context.createOscillator();
@@ -253,6 +255,25 @@
           osc.start(now + offset);
           osc.stop(now + offset + dur + 0.02);
         });
+
+        // C2: Filtro subacuático (Ben Braddock Pool Drift) - Inmersión a 480 Hz
+        if (engine.filter && engine.filter.frequency && engine.filter.frequency.exponentialRampToValueAtTime) {
+          const startFreq = Math.max(480, engine.filter.frequency.value || 3000);
+          engine.filter.frequency.cancelScheduledValues(now + 2.4);
+          engine.filter.frequency.setValueAtTime(startFreq, now + 2.4);
+          engine.filter.frequency.exponentialRampToValueAtTime(480, now + 4.8);
+          if (engine.filter.Q && engine.filter.Q.linearRampToValueAtTime) {
+            engine.filter.Q.setValueAtTime(engine.filter.Q.value || 1, now + 2.4);
+            engine.filter.Q.linearRampToValueAtTime(2.8, now + 4.8);
+          }
+        }
+
+        // C1: Apagado acústico progresivo - Master gain decae hacia -60 dB (0.00001) tras la última nota
+        if (engine.master && engine.master.gain && engine.master.gain.exponentialRampToValueAtTime) {
+          engine.master.gain.cancelScheduledValues(now + 3.8);
+          engine.master.gain.setValueAtTime(Math.max(0.001, engine.master.gain.value || 0.12), now + 3.8);
+          engine.master.gain.exponentialRampToValueAtTime(0.00001, now + 6.8);
+        }
       } catch {}
     }
   }
@@ -454,7 +475,21 @@
     if (slug === 'el-hombre-que-susurraba-a-las-estrellas' && lastHeroSlug !== slug) speakHero();
     else if (slug === 'denbora-nora-zoaz' && lastHeroSlug !== slug) speakDenbora();
     else if (slug === 'dustin' && lastHeroSlug !== slug) speakSilence();
-    else if (slug && slug !== 'el-hombre-que-susurraba-a-las-estrellas' && slug !== 'denbora-nora-zoaz' && slug !== 'dustin') lastHeroSlug = '';
+    else if (slug && slug !== 'el-hombre-que-susurraba-a-las-estrellas' && slug !== 'denbora-nora-zoaz' && slug !== 'dustin') {
+      if (lastHeroSlug === 'dustin' && context && engine && context.state === 'running') {
+        const resetTime = context.currentTime;
+        if (engine.filter && engine.filter.frequency && engine.filter.frequency.exponentialRampToValueAtTime) {
+          engine.filter.frequency.cancelScheduledValues(resetTime);
+          engine.filter.frequency.setValueAtTime(Math.max(120, engine.filter.frequency.value || 480), resetTime);
+          engine.filter.frequency.exponentialRampToValueAtTime(3200, resetTime + 0.4);
+        }
+        if (engine.filter && engine.filter.Q && engine.filter.Q.linearRampToValueAtTime) {
+          engine.filter.Q.cancelScheduledValues(resetTime);
+          engine.filter.Q.setValueAtTime(1, resetTime);
+        }
+      }
+      lastHeroSlug = '';
+    }
     if (slug !== 'dustin') playMelody(now);
     if (now - lastGrain < 150 - energy * 25 + depth * 15 || engine.voices.size > 10) return;
     lastGrain = now; seed += direction * .371;
