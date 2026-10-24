@@ -85,23 +85,24 @@ continues to use `dist/`. The Cloudflare and Vercel project identities are kept.
 
 ## Optional soundscape
 
-The Sonido button enables a reactive music box over quiet nature textures.
+The Sonido button enables a reactive music box over quiet nature textures, linked
+to the rendered camera state via `NAROA_SOUND.frame({distance, depth, mode, phase, axisDirection})`.
+Gallery and the artist page report the state only after the displayed images are ready,
+so sound never advances into an unshown artwork and remains silent during contemplation pauses (`hold`).
 An original four-phrase D-minor melody advances one step with each accepted
 scroll pulse, reverses with the scroll direction and includes rests. Note spacing
-responds to movement speed without detuning the melody. The sampled metallic
-tine is modal synthesis with a small strike from the credited nature recording;
+ranges between 450 and 700 ms according to movement speed without detuning the melody.
+The sampled metallic tine is modal synthesis with a small strike from the credited nature recording;
 `tools/compose_musicbox.py` creates its 2.4-second D5 sample. It is loaded only
-after opt-in, along with the two nature beds. Notes move down an octave inside an
-iris and recover their register on exit, sharing the existing stereo/mono
-transition and exact-silence release. Notes and texture fragments share a bounded
-voice budget; no timer advances the melody while the visitor is still.
-Each new step also needs 5.5svh of accepted travel, so small movements cannot
-retrigger a rapid run. The four phrases have leading accents and softer answers,
-with six concurrent bells at most. A short stereo room is synthesized locally
-from deterministic reflections; its filtered return closes inside the iris and
-opens outside. It enters before the master silence gate, so the reflections
-cannot leak through a pause. Gentler nature windows and a soft-knee compressor
-control accumulated transients without adding a continuous backing track.
+after opt-in, along with the two nature beds. Already-sounding notes keep their exact
+tuning while filters provide depth; only newly struck notes inside an iris drop one octave.
+Notes and texture fragments share a bounded budget of 3 concurrent bells and 12 total voices,
+with musical gain at 0.55, relative prominence for nature textures, and master gain capped at 0.32.
+Each new step requires at least 10svh of accepted travel, so small movements cannot
+retrigger a rapid run. A short 0.45-second stereo room is synthesized locally
+from deterministic reflections; its filtered return gathers inside the iris and
+opens gently outside. Stopping scroll reaches exact zero and suspends the audio
+engine in at most 600 ms without producing new notes.
 
 The nature texture uses a reactive ambient / musique concrète instrument using
 CC0 field recordings of birds, river and wind by Thimras. Sources, licence and

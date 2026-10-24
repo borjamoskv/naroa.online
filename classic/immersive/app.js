@@ -180,7 +180,7 @@
         group.append(svgNode('use', { href: `#puzzle-photo-${index}`, 'clip-path': `url(#puzzle-cut-${index}-${n})` }));
         svg.append(group);
         const destination = (n * 7 + 9) % 25;
-        pieces.push({ group, cx: x + 100, cy: y + 100, dx: (destination % 5 - col) * 155 + Math.sin(n * 2.4) * 65, dy: (Math.floor(destination / 5) - row) * 155, turn: (n % 7 - 3) * 12, arc: Math.sin(n * 1.7) * 100 });
+        pieces.push({ group, cx: x + 100, cy: y + 100, dx: ((destination % 5 - col) * 155 + Math.sin(n * 2.4) * 65) * .45, dy: (Math.floor(destination / 5) - row) * 155 * .45, turn: (n % 7 - 3) * 12 * .45, arc: Math.sin(n * 1.7) * 100 * .45 });
       }
       const puzzle = { svg, picture, pieces };
       $('.art-pan', scenes[index]).append(svg); scenes[index].classList.add('is-puzzle');
@@ -351,8 +351,8 @@
       paintedScenes.clear();
       let depth = 0, diameter = 0, focus = 0;
       if (eyeMatch) {
-        const from = eyeGeometry(base).iris * 1.16, to = eyeGeometry(incoming).iris * 1.16;
-        const deep = Math.max(Math.min(geometry.width, geometry.height) * 2.4, Math.hypot(geometry.width, geometry.height) * 1.2);
+        const from = eyeGeometry(base).iris * 1.08, to = eyeGeometry(incoming).iris * 1.08;
+        const deep = Math.hypot(geometry.width, geometry.height) * 1.02;
         const approach = smooth(fraction / .64), reveal = smooth((fraction - .64) / .36);
         diameter = Math.exp(fraction <= .64 ? Math.log(from) + Math.log(deep / from) * approach : Math.log(deep) + Math.log(to / deep) * reveal);
         focus = smooth(fraction / .34) * (1 - reveal); depth = approach * (1 - reveal);
@@ -365,42 +365,56 @@
         scene.style.clipPath = 'inset(0)'; scene.style.opacity = '1'; scene.style.transform = 'translate3d(0px,0px,0)';
         scene.style.maskImage = scene.style.webkitMaskImage = 'none'; image.style.transformOrigin = '50% 50%';
         if (works[index].interaction === 'puzzle' && (!still || puzzles.has(index))) drawPuzzle(index, outgoing && transition ? fraction : 0, still);
+        if (works[index].slug === 'custom-jaio' && !state.fit) {
+          const step = outgoing && transition ? (fraction < .34 ? 0 : fraction < .67 ? 1 : 2) : 0;
+          const nextSrc = works[index].photos[step]?.src || works[index].cover;
+          if (image.getAttribute('src') !== nextSrc) image.src = nextSrc;
+        }
         if (still) { image.style.transform = ''; return; }
         if (!transition) {
-          image.style.transform = `translate3d(0,${(-smooth(pose.explore) * 6).toFixed(3)}%,0) scale(1.16000)`;
+          image.style.transform = `translate3d(0,${(-smooth(pose.explore) * 3).toFixed(3)}%,0) scale(1.08000)`;
         } else if (mode === 'E') {
-          eyePose(index, diameter, focus, outgoing && entry.explore ? -(geometry.height + 20) * .06 : 0);
+          eyePose(index, diameter, focus, outgoing && entry.explore ? -(geometry.height + 20) * .03 : 0);
           if (!outgoing) scene.style.opacity = smooth((fraction - .42) / .16).toFixed(4);
         } else if (mode === 'H' || mode === 'V') {
           const displacement = outgoing ? -progress : 1 - progress;
           const x = mode === 'H' ? displacement * geometry.width * entry.direction : 0;
           const y = mode === 'V' ? displacement * geometry.height : 0;
           scene.style.transform = `translate3d(${x.toFixed(3)}px,${y.toFixed(3)}px,0)`;
-          // The framed image opens as it arrives; the departing surface grows closer.
-          const parallax = displacement * 6;
-          const lens = 1.16 + .12 * (outgoing ? progress : 1 - progress);
+          // Subtle interior parallax (max 2%) and lens scale between 1.08 and 1.12.
+          const parallax = displacement * 2;
+          const lens = 1.08 + .04 * (outgoing ? progress : 1 - progress);
           image.style.transform = `translate3d(${mode === 'H' ? parallax.toFixed(3) : '0'}%,${mode === 'V' ? parallax.toFixed(3) : '0'}%,0) scale(${lens.toFixed(5)})`;
         } else if (mode === 'Z') {
           const close = outgoing ? smooth(fraction / .65) : 1 - smooth((fraction - .35) / .65);
-          image.style.transform = `scale(${Math.exp(Math.log(1.16) + Math.log(3.6 / 1.16) * close).toFixed(5)})`;
+          image.style.transform = `scale(${Math.exp(Math.log(1.08) + Math.log(1.65 / 1.08) * close).toFixed(5)})`;
           if (!outgoing) scene.style.opacity = smooth((fraction - .40) / .20).toFixed(4);
         } else if (mode === 'P') {
           const exit = smooth((fraction - .80) / .20);
           if (!outgoing) scene.style.opacity = exit.toFixed(4);
           scene.style.transform = `translate3d(0,${(outgoing ? -exit * geometry.height : (1 - exit) * geometry.height).toFixed(3)}px,0)`;
-          image.style.transform = 'scale(1.16000)';
+          image.style.transform = 'scale(1.08000)';
         }
       });
-      soundscape?.depth(still ? 0 : depth);
-      const nextTitle = transition ? works[incoming].title : '';
-      if (kineticTitle.textContent !== nextTitle) kineticTitle.textContent = nextTitle;
-      kineticTitle.style.opacity = transition && !eyeMatch && mode !== 'P' ? (Math.sin(progress * Math.PI) * .065).toFixed(3) : '0';
-      kineticTitle.style.transform = `translate3d(${((progress - .5) * -14).toFixed(3)}%,${((progress - .5) * -16).toFixed(3)}vh,0)`;
+      const activeSlug = transition && fraction >= .5 ? works[incoming].slug : works[base].slug;
+      soundscape?.frame({
+        distance: still ? scrollY / Math.max(1, geometry.height) : pose.distance,
+        depth: still ? 0 : depth,
+        mode: still ? 'still' : mode,
+        phase: still ? 'scroll' : transition ? 'transition' : phase === 'explore' ? 'explore' : 'hold',
+        axisDirection: mode === 'H' ? entry.direction : 1,
+        slug: activeSlug
+      });
+      if (kineticTitle.textContent) kineticTitle.textContent = '';
+      kineticTitle.style.opacity = '0';
+      kineticTitle.style.transform = '';
       caption.style.opacity = '1';
       caption.style.transform = '';
-      // Camera framing follows distance. Reading controls return as soon as scroll rests.
+      // Attenuate reading controls down to a minimum of 35% opacity while moving, recovering to 100% at rest.
       const veil = transition ? Math.sin(fraction * Math.PI) : phase === 'explore' ? Math.sin(pose.explore * Math.PI) * .5 : 0;
-      stage.style.setProperty('--camera-veil', (veil * .94).toFixed(4));
+      stage.style.setProperty('--camera-veil', (veil * .65).toFixed(4));
+      const flash = transition && (works[base].slug === 'ajenjo-cam' || works[incoming].slug === 'ajenjo-cam') ? Math.pow(Math.sin(fraction * Math.PI), 4) * .55 : 0;
+      stage.style.setProperty('--camera-flash', flash.toFixed(4));
       if (still) restCamera();
       const cue = $('[data-journey-cue]', stage);
       cue.textContent = still ? reduced.matches ? 'Activa los efectos para ver el viaje ↓' : 'Desplázate para recorrer ↕' : !transition ? phase === 'explore' ? 'Explora la superficie ↓' : 'Una pausa para mirar · sigue ↓' : ({ E: 'Entra en la mirada ↓', H: entry.direction > 0 ? 'Atravesar → · sigue bajando' : 'Atravesar ← · sigue bajando', V: 'Déjate llevar ↓', Z: 'Acércate ↓', P: 'Mezclar y volver a unir ↓' })[mode];
@@ -565,10 +579,7 @@
       if (e.key === 'ArrowRight') { e.preventDefault(); change(Math.round(motion.navigation ?? motion.desired) + 1); }
       if (e.key === 'ArrowLeft') { e.preventDefault(); change(Math.round(motion.navigation ?? motion.desired) - 1); }
     });
-    function drawPan() { pan.x += (pan.tx - pan.x) * .1; pan.y += (pan.ty - pan.y) * .1; if (Math.abs(pan.tx - pan.x) < .03 && Math.abs(pan.ty - pan.y) < .03) { pan.x = pan.tx; pan.y = pan.ty; pan.frame = null; } else pan.frame = requestAnimationFrame(drawPan); stage.style.setProperty('--pan-x', pan.x.toFixed(2) + 'px'); stage.style.setProperty('--pan-y', pan.y.toFixed(2) + 'px'); }
     function resetPan() { if (pan.frame !== null) cancelAnimationFrame(pan.frame); pan.x = pan.y = pan.tx = pan.ty = 0; pan.frame = null; stage.style.setProperty('--pan-x', '0px'); stage.style.setProperty('--pan-y', '0px'); }
-    stage.addEventListener('pointermove', e => { if (e.pointerType !== 'mouse' || state.fit || reduced.matches || stage.classList.contains('is-travelling') || document.querySelector('dialog[open]')) return; const r = stage.getBoundingClientRect(); if (!r.width || !r.height) return; pan.tx = ((e.clientX - r.left) / r.width - .5) * -28; pan.ty = ((e.clientY - r.top) / r.height - .5) * -24; if (pan.frame === null) pan.frame = requestAnimationFrame(drawPan); });
-    stage.addEventListener('pointerleave', () => { pan.tx = pan.ty = 0; if (pan.frame === null && !reduced.matches) pan.frame = requestAnimationFrame(drawPan); });
     reduced.addEventListener('change', () => { resetPan(); pause(); if (reduced.matches) $('.art-layers', stage).getAnimations?.().forEach(animation => animation.cancel()); });
     addEventListener('resize', () => {
       const distance = (scrollY - geometry.top) / geometry.unit;
@@ -691,18 +702,17 @@
     }
     function eyePass(from, target, fromBox, targetBox, fromEye, targetEye, progress) {
       const start = fromEye.iris * fromBox.width, finish = targetEye.iris * targetBox.width;
-      // One camera distance drives both photographs. Keep pushing through the
-      // dissolve; the deepest point arrives afterwards, with a C2 turn into the reveal.
-      const deep = Math.max(Math.min(geometry.width, geometry.height) * 2.4, Math.hypot(geometry.width, geometry.height) * 1.2);
+      // Minimum iris immersion needed to cover the viewport frame with a 2% margin.
+      const deep = Math.hypot(geometry.width, geometry.height) * 1.02;
       const approach = smooth(progress / .64), reveal = smooth((progress - .64) / .32);
       const diameter = Math.exp(progress <= .64
         ? Math.log(start) + Math.log(deep / start) * approach
         : Math.log(deep) + Math.log(finish / deep) * reveal);
       const focus = smooth(progress / .34) * (1 - reveal);
-      soundscape?.depth(approach * (1 - reveal));
+      const depth = approach * (1 - reveal);
       pose(from, fromBox, fromEye, Math.max(1, diameter / start), focus);
       pose(target, targetBox, targetEye, Math.max(1, diameter / finish), focus);
-      return smooth((progress - .44) / .14);
+      return { blend: smooth((progress - .44) / .14), depth };
     }
     function showCaption(index, opacity) {
       const work = works[index]; current = index;
@@ -716,9 +726,9 @@
       [artCopy, controls].forEach(element => {
         element.style.opacity = opacity.toFixed(3); element.style.visibility = opacity > 0 ? 'visible' : 'hidden'; element.inert = opacity < .2;
       });
-      artCopy.style.transform = reduced.matches ? '' : `translate3d(0,${((1 - opacity) * 24).toFixed(2)}px,0)`;
+      artCopy.style.transform = reduced.matches ? '' : `translate3d(0,${((1 - opacity) * 12).toFixed(2)}px,0)`;
     }
-    function renderExhibition(position) {
+    function renderExhibition(position, totalDistance) {
       const g = geometry, base = Math.floor(position), fraction = position - base;
       const incoming = Math.min(base + 1, works.length - 1), pair = fraction > 0 && incoming !== base;
       ensureScene(base); if (pair) ensureScene(incoming);
@@ -733,19 +743,22 @@
       const outgoing = scenes[base], target = scenes[incoming], fromEye = eyes[works[base].slug], toEye = eyes[works[incoming].slug];
       outgoing.style.opacity = '1'; outgoing.style.zIndex = '1';
       const eyeMatch = pair && fromEye && toEye;
+      const activeSlug = pair && fraction >= .5 ? works[incoming].slug : works[base].slug;
       hero.dataset.transition = eyeMatch ? 'eyes' : pair ? 'depth' : 'still';
       if (eyeMatch) {
-        target.style.opacity = eyePass(outgoing, target, g.boxes[base], g.boxes[incoming], fromEye, toEye, fraction).toFixed(4);
+        const pass = eyePass(outgoing, target, g.boxes[base], g.boxes[incoming], fromEye, toEye, fraction);
+        target.style.opacity = pass.blend.toFixed(4);
+        soundscape?.frame({ distance: totalDistance, depth: pass.depth, mode: 'E', phase: 'transition', axisDirection: 1, slug: activeSlug });
       } else {
         const progress = smooth(fraction), centre = { x: .5, y: .5 };
-        pose(outgoing, g.boxes[base], centre, 1 + progress * .12, 0, -g.height * .05 * progress);
+        pose(outgoing, g.boxes[base], centre, 1 + progress * .06, 0, -g.height * .025 * progress);
         if (pair) {
-          pose(target, g.boxes[incoming], centre, 1 + (1 - progress) * .12, 0, g.height * .05 * (1 - progress));
+          pose(target, g.boxes[incoming], centre, 1 + (1 - progress) * .06, 0, g.height * .025 * (1 - progress));
           target.style.opacity = smooth((fraction - .10) / .80).toFixed(4);
         }
+        soundscape?.frame({ distance: totalDistance, depth: 0, mode: 'Z', phase: pair ? 'transition' : 'hold', axisDirection: 1, slug: activeSlug });
       }
       if (pair) target.style.zIndex = '2';
-      if (!eyeMatch) soundscape?.depth(0);
       const opacity = eyeMatch ? 1 - smooth(fraction / .22) + smooth((fraction - .84) / .12)
         : pair ? .4 + .6 * Math.pow(Math.abs(fraction - .5) * 2, .6) : 1;
       showCaption(Math.round(position), opacity);
@@ -760,12 +773,12 @@
       const travel = Math.max(0, -portraitTrack.getBoundingClientRect().top);
       const progress = reduced.matches ? 0 : clamp(travel / (g.height * 2.8), 0, 1);
       const position = reduced.matches ? 0 : clamp((travel - g.height * 2.8) / (g.height * 1.1), 0, works.length - 1);
-      if (!reduced.matches && travel >= g.height * 2.8) { renderExhibition(position); return; }
+      if (!reduced.matches && travel >= g.height * 2.8) { renderExhibition(position, travel / g.height); return; }
       ensureScene(0);
       active.clear(); active.add(0);
       scenes.forEach((scene, i) => { if (i) { scene.style.visibility = 'hidden'; scene.setAttribute('aria-hidden', 'true'); scene.classList.remove('is-visible'); } });
       const approach = smooth(progress / .42);
-      const blend = eyePass(plane, artwork, g.portrait, g.art, eye, eyes['rara-avis'], progress);
+      const { blend, depth } = eyePass(plane, artwork, g.portrait, g.art, eye, eyes['rara-avis'], progress);
       const mix = ready(0) ? blend : 0;
       artwork.style.opacity = mix.toFixed(4); artwork.style.zIndex = '1';
       artwork.style.visibility = mix > 0 ? 'visible' : 'hidden'; artwork.classList.toggle('is-visible', mix > 0);
@@ -775,11 +788,13 @@
       wink.setAttribute('opacity', closure.toFixed(4));
       const visibility = 1 - smooth(progress / .13);
       copy.style.opacity = visibility.toFixed(3);
-      copy.style.transform = reduced.matches ? '' : `translate3d(0,${(-smooth(progress / .18) * 80).toFixed(2)}px,0)`;
+      copy.style.transform = reduced.matches ? '' : `translate3d(0,${(-smooth(progress / .18) * 40).toFixed(2)}px,0)`;
       cue.style.opacity = visibility.toFixed(3); cue.style.pointerEvents = visibility < .1 ? 'none' : ''; cue.tabIndex = visibility < .1 ? -1 : 0;
       const reveal = mix * smooth((progress - .84) / .10);
       showCaption(0, reveal); shade.style.opacity = (1 - approach * .90 + reveal * .65).toFixed(3);
       hero.dataset.transition = 'portrait';
+      if (reduced.matches) soundscape?.frame({ distance: scrollY / Math.max(1, g.height), depth: 0, mode: 'still', phase: 'scroll', axisDirection: 1, slug: 'rara-avis' });
+      else if (progress <= .44 || ready(0)) soundscape?.frame({ distance: travel / g.height, depth, mode: 'E', phase: progress > 0 && progress < .96 ? 'transition' : 'hold', axisDirection: 1, slug: 'rara-avis' });
       if (!reduced.matches) releaseDistant(0);
     }
     function schedulePortrait() { if (frame === null) frame = requestAnimationFrame(renderPortrait); }
@@ -810,12 +825,12 @@
         const target = $('.page-hero-image', section) || (section.matches('.contact-background') ? section : $('img', section));
         if (!target) return;
         const progress = clamp((vh - r.top) / (vh + r.height), 0, 1);
-        const strength = section.matches('.contact-background') ? .28 : .36;
-        target.style.transform = reduced.matches ? '' : `translate3d(0,${((progress - .5) * Math.min(vh, r.height) * strength).toFixed(2)}px,0) scale(1.06)`;
+        const shift = (progress - .5) * 2 * vh * .02;
+        target.style.transform = reduced.matches ? '' : `translate3d(0,${shift.toFixed(2)}px,0) scale(1.04)`;
         const copy = $('.page-hero-copy', section);
         if (copy) {
           const exit = clamp(-r.top / vh, 0, 1);
-          copy.style.transform = reduced.matches ? '' : `translate3d(0,${(-exit * 100).toFixed(2)}px,0)`;
+          copy.style.transform = reduced.matches ? '' : `translate3d(0,${(-exit * vh * .02).toFixed(2)}px,0)`;
           copy.style.opacity = reduced.matches ? '1' : (1 - exit * .75).toFixed(3);
         }
       });
@@ -891,7 +906,7 @@
     syncNotebook();
     document.addEventListener('visibilitychange', () => { if (!document.hidden) syncNotebook(); });
   }
-  const reveals = $$('.chapter>div,.chapter>.eyebrow,.section-opening,.editorial blockquote,.timeline-entry,.notebook-posts article,.commission-example,.commission-steps article,.closing,.contact-channel,.contact-details');
+  const reveals = $$('.chapter>div,.chapter>.eyebrow,.section-opening,.editorial blockquote,.timeline-entry,.notebook-posts article,.commission-example,.commission-steps article,.commission-faq-item,.closing,.contact-channel,.contact-details');
   if ('IntersectionObserver' in window) {
     const observer = new IntersectionObserver(entries => entries.forEach(entry => {
       if (entry.isIntersecting) { entry.target.classList.add('is-revealed'); observer.unobserve(entry.target); }
