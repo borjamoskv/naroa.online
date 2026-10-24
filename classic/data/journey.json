@@ -346,34 +346,32 @@
       "explore": 0
     },
     {
-      "slug": "the-munsters",
-      "mode": "V",
-      "hold": 25,
-      "explore": 0
-    },
-    {
       "slug": "lily-munster",
-      "mode": "V",
+      "mode": "H",
       "hold": 25,
-      "explore": 0
+      "explore": 0,
+      "direction": 1
     },
     {
       "slug": "herman-munster",
-      "mode": "Z",
+      "mode": "H",
       "hold": 25,
-      "explore": 0
+      "explore": 0,
+      "direction": 1
     },
     {
       "slug": "eddie-munster",
-      "mode": "V",
+      "mode": "H",
       "hold": 25,
-      "explore": 0
+      "explore": 0,
+      "direction": 1
     },
     {
       "slug": "abuelo-munster",
-      "mode": "Z",
+      "mode": "H",
       "hold": 25,
-      "explore": 0
+      "explore": 0,
+      "direction": 1
     },
     {
       "slug": "denbora-nora-zoaz",

@@ -544,21 +544,24 @@ export function CustomCursor() {
 
       {isVisible && (
         <>
-          {/* 1. Micro-puntero central de latencia cero (oro mineral) */}
+          {/* 1. Puntero de Artista Soberano (Pincel Naroa con transparencia matérica pura) */}
           <div
             style={{
               position: 'fixed',
               top: position.y,
               left: position.x,
-              width: isClicking ? '6px' : '4px',
-              height: isClicking ? '6px' : '4px',
-              backgroundColor: '#D4AF37',
-              borderRadius: '50%',
-              transform: 'translate(-50%, -50%)',
+              width: isPointer ? '42px' : '34px',
+              height: isPointer ? '42px' : '34px',
+              backgroundImage: "url('/assets/cursors/naroa-pincel-64.png')",
+              backgroundSize: 'contain',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'top left',
+              transform: `translate(-3px, -3px) ${isClicking ? 'rotate(-7deg) scale(0.92)' : 'rotate(0deg) scale(1)'}`,
+              transformOrigin: '3px 3px',
               pointerEvents: 'none',
               zIndex: 9999999,
-              boxShadow: '0 0 8px rgba(212, 175, 55, 0.95)',
-              transition: 'width 0.12s ease, height 0.12s ease',
+              filter: 'drop-shadow(0 2px 6px rgba(0, 0, 0, 0.55))',
+              transition: 'transform 0.08s cubic-bezier(0.16, 1, 0.3, 1), width 0.18s ease, height 0.18s ease',
             }}
           />
 

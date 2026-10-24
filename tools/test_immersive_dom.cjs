@@ -269,12 +269,6 @@ async function eyeMatch(ui, base, points) {
       assert.ok(runner.style.transform.includes('translate3d('), 'Stickman runner translates horizontally across the black void');
       assert.ok(ui.find('[data-stick-scarf]')?.getAttribute('d')?.startsWith('M'), 'Stickman scarf waves dynamically during sprint');
     }
-    if (entry.slug === 'i-got-you-babe') {
-      const punchEl = ui.find('[data-punch-impact]');
-      assert.ok(punchEl, 'Punch impact element is present in DOM');
-      const outgoingImg = ui.find(`[data-scene="${index}"] img`);
-      assert.ok(outgoingImg.style.transform.includes('scale('), 'Bill Murray lunges with punch scale');
-    }
     if (entry.mode === 'H') {
       const specDir = ui.w.NAROA_CATALOG.journey.scenes.find(s => s.slug === entry.slug)?.direction;
       if (specDir !== undefined) {
@@ -416,6 +410,14 @@ async function eyeMatch(ui, base, points) {
     ui.click('#story-dialog [data-close-dialog]');
     assert.equal(ui.find('#story-dialog').open, false);
   }
+  assert.ok(ui.find('#story-remix-dialog'), 'Story remix dialog must exist in DOM');
+  ui.click('[data-share-network="instagram"]');
+  assert.equal(ui.find('#story-remix-dialog').open, true, 'Instagram button opens story remix dialog');
+  assert.ok(ui.find('[data-remix-shuffle]'), 'Shuffle button exists');
+  assert.ok(ui.find('[data-remix-share]'), 'Share button exists');
+  assert.ok(ui.find('[data-remix-download]'), 'Download button exists');
+  ui.click('#story-remix-dialog [data-close-dialog]');
+  assert.equal(ui.find('#story-remix-dialog').open, false);
   assert.equal(ui.find('[data-next]').disabled, true);
   assert.equal(ui.wheel(100).defaultPrevented, false, 'Scrolling past the last work must leave the exhibition');
   assert.equal(ui.wheel(-100, { ctrlKey: true }).defaultPrevented, false, 'Preserve browser zoom');

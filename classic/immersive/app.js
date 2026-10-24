@@ -56,6 +56,404 @@
     const r = d.getBoundingClientRect();
     if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) d.close();
   }));
+
+  // --- Story Remix Engine & Unified Social Sharing ---
+  let currentRemixBlob = null;
+  let currentRemixFile = null;
+  let currentRemixDataUrl = null;
+  let isGeneratingRemix = false;
+
+  function getActiveArtwork() {
+    const scene = $('.art-scene.is-current');
+    if (scene && scene.dataset.work) {
+      return (catalogue.projects || []).find(p => p.slug === scene.dataset.work) || null;
+    }
+    const match = location.pathname.match(/\/obra\/([^/]+)\//);
+    if (match) {
+      return (catalogue.projects || []).find(p => p.slug === match[1]) || null;
+    }
+    return (catalogue.projects || [])[0] || null;
+  }
+
+  function pickRandomProjects(count = 3, preferredSlug = null) {
+    const all = catalogue.projects || [];
+    if (!all.length) return [];
+    let pool = [...all];
+    let selected = [];
+    if (preferredSlug) {
+      const match = pool.find(p => p.slug === preferredSlug);
+      if (match) {
+        selected.push(match);
+        pool = pool.filter(p => p.slug !== preferredSlug);
+      }
+    }
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    while (selected.length < count && pool.length) {
+      selected.push(pool.pop());
+    }
+    return selected;
+  }
+
+  function loadImageAsync(src) {
+    return new Promise((resolve, reject) => {
+      if (!src) return reject(new Error('Empty src'));
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error('Failed to load: ' + src));
+      img.src = src;
+      if (img.complete && (img.naturalWidth || img.width)) resolve(img);
+    });
+  }
+
+  function drawStoryRoundedRect(ctx, x, y, w, h, radius) {
+    if (typeof ctx.roundRect === 'function') {
+      ctx.beginPath();
+      ctx.roundRect(x, y, w, h, radius);
+      return;
+    }
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.arcTo(x + w, y, x + w, y + h, radius);
+    ctx.arcTo(x + w, y + h, x, y + h, radius);
+    ctx.arcTo(x, y + h, x, y, radius);
+    ctx.arcTo(x, y + w, y, radius);
+    ctx.closePath();
+  }
+
+  function drawStoryCoverImage(ctx, img, x, y, w, h, radius = 0) {
+    ctx.save();
+    if (radius > 0) {
+      drawStoryRoundedRect(ctx, x, y, w, h, radius);
+      ctx.clip();
+    }
+    const nw = img.naturalWidth || img.width || 1;
+    const nh = img.naturalHeight || img.height || 1;
+    const imgRatio = nw / nh;
+    const boxRatio = w / h;
+    let sx = 0, sy = 0, sw = nw, sh = nh;
+    if (imgRatio > boxRatio) {
+      sw = nh * boxRatio;
+      sx = (nw - sw) / 2;
+    } else {
+      sh = nw / boxRatio;
+      sy = (nh - sh) / 2;
+    }
+    ctx.drawImage(img, sx, sy, sw, sh, x, y, w, h);
+    ctx.restore();
+  }
+
+  async function generateStoryRemix(preferredSlug = null) {
+    const dialog = $('#story-remix-dialog');
+    if (!dialog) return null;
+    const previewImg = $('[data-story-remix-img]', dialog);
+    const spinner = $('[data-story-remix-spinner]', dialog);
+    const downloadBtn = $('[data-remix-download]', dialog);
+
+    if (spinner) spinner.hidden = false;
+    isGeneratingRemix = true;
+
+    try {
+      const selectedWorks = pickRandomProjects(3, preferredSlug);
+      if (!selectedWorks.length) throw new Error('No projects available');
+
+      const loadedImages = await Promise.all(selectedWorks.map(w => {
+        const src = w.photos?.[0]?.src || w.cover || w.thumb;
+        return loadImageAsync(src).catch(() => null);
+      }));
+
+      const canvas = document.createElement('canvas');
+      canvas.width = 1080;
+      canvas.height = 1920;
+      let ctx = null;
+      try { ctx = canvas.getContext('2d'); } catch {}
+      if (!ctx) {
+        if (spinner) spinner.hidden = true;
+        isGeneratingRemix = false;
+        return null;
+      }
+
+      // 1. Deep gallery background gradient
+      const bg = ctx.createLinearGradient(0, 0, 0, 1920);
+      bg.addColorStop(0, '#0c0d0a');
+      bg.addColorStop(0.5, '#151613');
+      bg.addColorStop(1, '#0b0c09');
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, 1080, 1920);
+
+      // 2. Atmospheric Halos (YInMn Blue top-right + Ochre gold bottom-left)
+      const radBlue = ctx.createRadialGradient(900, 320, 20, 900, 320, 680);
+      radBlue.addColorStop(0, 'rgba(46, 68, 130, 0.35)');
+      radBlue.addColorStop(1, 'rgba(46, 68, 130, 0)');
+      ctx.fillStyle = radBlue;
+      ctx.fillRect(0, 0, 1080, 1920);
+
+      const radGold = ctx.createRadialGradient(180, 1560, 20, 180, 1560, 700);
+      radGold.addColorStop(0, 'rgba(212, 175, 55, 0.22)');
+      radGold.addColorStop(1, 'rgba(212, 175, 55, 0)');
+      ctx.fillStyle = radGold;
+      ctx.fillRect(0, 0, 1080, 1920);
+
+      // Fine golden double perimeter border
+      ctx.strokeStyle = 'rgba(212, 175, 55, 0.25)';
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(36, 36, 1008, 1848);
+      ctx.strokeStyle = 'rgba(255, 253, 244, 0.08)';
+      ctx.strokeRect(44, 44, 992, 1832);
+
+      // Corner marks
+      ctx.strokeStyle = '#d4af37';
+      ctx.lineWidth = 2.5;
+      const cLen = 28;
+      ctx.beginPath(); ctx.moveTo(36, 36 + cLen); ctx.lineTo(36, 36); ctx.lineTo(36 + cLen, 36); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(1044 - cLen, 36); ctx.lineTo(1044, 36); ctx.lineTo(1044, 36 + cLen); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(36, 1884 - cLen); ctx.lineTo(36, 1884); ctx.lineTo(36 + cLen, 1884); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(1044 - cLen, 1884); ctx.lineTo(1044, 1884); ctx.lineTo(1044, 1884 - cLen); ctx.stroke();
+
+      // 3. Top Header
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#d4af37';
+      ctx.font = '600 16px "DM Sans", -apple-system, sans-serif';
+      ctx.fillText('EXPOSICIÓN INMERSIVA · BILBAO', 540, 150);
+
+      ctx.fillStyle = '#fffdf4';
+      ctx.font = '700 36px "DM Sans", -apple-system, sans-serif';
+      ctx.fillText('NAROA GUTIÉRREZ GIL', 540, 194);
+
+      ctx.fillStyle = '#b8b2a2';
+      ctx.font = '400 17px "DM Sans", -apple-system, sans-serif';
+      ctx.fillText('Pintura · Collage · Objetos de Memoria', 540, 230);
+
+      // 4. Hero Artwork Card
+      const heroWork = selectedWorks[0];
+      const heroImg = loadedImages[0];
+      const heroX = 80, heroY = 270, heroW = 920, heroH = 750;
+
+      ctx.save();
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.65)';
+      ctx.shadowBlur = 35;
+      ctx.shadowOffsetY = 15;
+      ctx.fillStyle = '#171815';
+      drawStoryRoundedRect(ctx, heroX, heroY, heroW, heroH, 16);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255, 253, 244, 0.14)';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      ctx.restore();
+
+      if (heroImg) {
+        drawStoryCoverImage(ctx, heroImg, heroX + 16, heroY + 16, heroW - 32, 590, 10);
+      }
+
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#fffdf4';
+      ctx.font = '700 28px "DM Sans", -apple-system, sans-serif';
+      ctx.fillText(heroWork.title, heroX + 28, heroY + 655);
+
+      ctx.fillStyle = '#a8a292';
+      ctx.font = '400 18px "DM Sans", -apple-system, sans-serif';
+      const heroMeta = [heroWork.label || heroWork.category, heroWork.support || heroWork.technique].filter(Boolean).join(' · ');
+      ctx.fillText(heroMeta, heroX + 28, heroY + 692);
+
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#d4af37';
+      ctx.font = '600 16px "DM Sans", -apple-system, sans-serif';
+      ctx.fillText('Obra Principal', heroX + heroW - 28, heroY + 675);
+
+      // 5. Secondary Artwork Pair
+      const secY = 1060, secH = 540, secW = 445;
+      const secConfigs = [
+        { work: selectedWorks[1], img: loadedImages[1], x: 80 },
+        { work: selectedWorks[2], img: loadedImages[2], x: 555 }
+      ];
+
+      secConfigs.forEach(cfg => {
+        if (!cfg.work) return;
+        ctx.save();
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.55)';
+        ctx.shadowBlur = 25;
+        ctx.shadowOffsetY = 10;
+        ctx.fillStyle = '#171815';
+        drawStoryRoundedRect(ctx, cfg.x, secY, secW, secH, 14);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255, 253, 244, 0.12)';
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+        ctx.restore();
+
+        if (cfg.img) {
+          drawStoryCoverImage(ctx, cfg.img, cfg.x + 14, secY + 14, secW - 28, 410, 8);
+        }
+
+        ctx.textAlign = 'left';
+        ctx.fillStyle = '#fffdf4';
+        ctx.font = '600 21px "DM Sans", -apple-system, sans-serif';
+        let title = cfg.work.title || '';
+        if (title.length > 24) title = title.slice(0, 22) + '…';
+        ctx.fillText(title, cfg.x + 20, secY + 465);
+
+        ctx.fillStyle = '#a8a292';
+        ctx.font = '400 15px "DM Sans", -apple-system, sans-serif';
+        let sub = cfg.work.support || cfg.work.technique || cfg.work.label || '';
+        if (sub.length > 30) sub = sub.slice(0, 28) + '…';
+        ctx.fillText(sub, cfg.x + 20, secY + 498);
+      });
+
+      // 6. Footer Motto & Link Badge
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#f0ece1';
+      ctx.font = '500 40px "Caveat", cursive, serif';
+      ctx.fillText('«Otra manera de mirar»', 540, 1665);
+
+      const pillW = 540, pillH = 58, pillX = 540 - pillW / 2, pillY = 1715;
+      ctx.save();
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+      ctx.shadowBlur = 15;
+      ctx.shadowOffsetY = 6;
+      ctx.fillStyle = '#1c1e19';
+      drawStoryRoundedRect(ctx, pillX, pillY, pillW, pillH, 29);
+      ctx.fill();
+      ctx.strokeStyle = '#d4af37';
+      ctx.lineWidth = 1.8;
+      ctx.stroke();
+      ctx.restore();
+
+      ctx.fillStyle = '#d4af37';
+      ctx.font = '600 20px "DM Sans", -apple-system, sans-serif';
+      ctx.fillText('@naroa_art  ·  naroagutierrezgil.com', 540, 1751);
+
+      ctx.fillStyle = 'rgba(255, 253, 244, 0.45)';
+      ctx.font = '400 15px "DM Sans", -apple-system, sans-serif';
+      ctx.fillText('86 obras inmersivas · Retratos por encargo', 540, 1818);
+
+      let dataUrl = '';
+      try { dataUrl = canvas.toDataURL('image/jpeg', 0.92); } catch {}
+      currentRemixDataUrl = dataUrl;
+
+      if (previewImg && dataUrl) previewImg.src = dataUrl;
+      if (downloadBtn && dataUrl) {
+        downloadBtn.href = dataUrl;
+        downloadBtn.download = `naroa-story-remix-${selectedWorks.map(w => w.slug).join('-')}.jpg`;
+      }
+
+      await new Promise(resolve => {
+        if (canvas.toBlob) {
+          canvas.toBlob(blob => {
+            currentRemixBlob = blob;
+            try {
+              currentRemixFile = new File([blob], 'naroa-story-remix.jpg', { type: 'image/jpeg' });
+            } catch {
+              currentRemixFile = blob;
+            }
+            resolve();
+          }, 'image/jpeg', 0.92);
+        } else {
+          resolve();
+        }
+      });
+
+      return { dataUrl, blob: currentRemixBlob, file: currentRemixFile };
+    } catch (err) {
+      console.warn('Error generating story remix:', err);
+      return null;
+    } finally {
+      if (spinner) spinner.hidden = true;
+      isGeneratingRemix = false;
+    }
+  }
+
+  async function shareStoryToInstagram() {
+    const dialog = $('#story-remix-dialog');
+    if (!currentRemixFile && !currentRemixDataUrl) {
+      await generateStoryRemix();
+    }
+    const title = 'Naroa Gutiérrez Gil · Exposición inmersiva Bilbao';
+    const text = 'Remix de obras pictóricas de Naroa Gutiérrez Gil · naroagutierrezgil.com';
+    const url = location.origin || 'https://naroagutierrezgil.com';
+
+    if (currentRemixFile && navigator.canShare && navigator.canShare({ files: [currentRemixFile] })) {
+      try {
+        await navigator.share({
+          files: [currentRemixFile],
+          title,
+          text
+        });
+        return;
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          console.warn('Share file failed:', err);
+        } else {
+          return;
+        }
+      }
+    }
+
+    const downloadBtn = $('[data-remix-download]', dialog);
+    if (downloadBtn) downloadBtn.click();
+
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isMobile) {
+      window.location.href = 'instagram://camera';
+      setTimeout(() => {
+        window.open('https://www.instagram.com/naroa_art/', '_blank');
+      }, 1500);
+    } else {
+      window.open('https://www.instagram.com/naroa_art/', '_blank');
+      window.alert('¡Story HD descargada! Súbela a tus Stories de Instagram mencionando a @naroa_art ✨');
+    }
+  }
+
+  // Unified global handler for social sharing & Instagram Story Remix
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('[data-share-network]');
+    if (!btn) return;
+    e.preventDefault();
+    const network = btn.dataset.shareNetwork;
+    const p = getActiveArtwork();
+    const customUrl = btn.dataset.shareUrl;
+    const customTitle = btn.dataset.shareTitle;
+    const url = customUrl || (location.origin + (p ? '/obra/' + p.slug + '/' : location.pathname));
+    const title = customTitle || (p ? `${p.title} · Naroa Gutiérrez Gil` : document.title);
+    const text = `Descubre «${title}» de Naroa Gutiérrez Gil en su exposición inmersiva en Bilbao.`;
+    const encodedUrl = encodeURIComponent(url);
+    const encodedText = encodeURIComponent(text);
+
+    if (network === 'facebook') {
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`, '_blank', 'noopener,noreferrer,width=640,height=560');
+    } else if (network === 'x') {
+      window.open(`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`, '_blank', 'noopener,noreferrer,width=640,height=560');
+    } else if (network === 'instagram') {
+      openDialog('#story-remix-dialog');
+      generateStoryRemix(p?.slug || null);
+    } else if (network === 'tiktok') {
+      if (navigator.share) {
+        navigator.share({ title, text, url }).catch(() => {});
+      } else if (navigator.clipboard?.writeText) {
+        navigator.clipboard.writeText(url).then(() => {
+          window.alert('¡Enlace copiado al portapapeles listo para compartir en TikTok!');
+        });
+      }
+    }
+  });
+
+  const remixDialog = $('#story-remix-dialog');
+  if (remixDialog) {
+    const shuffleBtn = $('[data-remix-shuffle]', remixDialog);
+    const shareBtn = $('[data-remix-share]', remixDialog);
+    if (shuffleBtn) {
+      shuffleBtn.addEventListener('click', () => {
+        if (!isGeneratingRemix) generateStoryRemix(null);
+      });
+    }
+    if (shareBtn) {
+      shareBtn.addEventListener('click', () => {
+        shareStoryToInstagram();
+      });
+    }
+  }
   const menu = $('#menu-dialog'), menuLinks = $$('[data-menu-item]', menu), menuImages = $$('[data-menu-image]', menu);
   const menuPicture = $('[data-menu-picture]', menu), menuReel = $('[data-menu-reel]', menu);
   const menuQuote = $('[data-menu-quote]', menu), menuMeta = $('[data-menu-preview-meta]', menu), menuLoupe = $('[data-menu-loupe]', menu);
@@ -519,61 +917,6 @@
         window.NAROA_SOUND?.gameOver?.();
       }
     }
-    let punchImpact = stage.querySelector('[data-punch-impact]');
-    if (!punchImpact) {
-      punchImpact = document.createElement('div');
-      punchImpact.className = 'art-punch-impact';
-      punchImpact.setAttribute('data-punch-impact', '');
-      punchImpact.setAttribute('aria-hidden', 'true');
-      punchImpact.setAttribute('hidden', '');
-      punchImpact.innerHTML = `<div class="punch-burst">
-        <svg viewBox="0 0 160 160" class="punch-svg" aria-hidden="true">
-          <polygon points="80,8 100,52 152,38 120,80 154,120 106,118 94,158 74,120 26,144 44,98 6,76 56,60" fill="#d93829" stroke="#fffdf4" stroke-width="4" stroke-linejoin="round" />
-          <circle cx="80" cy="80" r="28" fill="#f4c430" stroke="#11120f" stroke-width="2" />
-          <text x="80" y="88" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="20" fill="#11120f" letter-spacing="1">¡ZAS!</text>
-          <line x1="8" y1="18" x2="38" y2="44" stroke="#fffdf4" stroke-width="3" stroke-linecap="round" />
-          <line x1="142" y1="20" x2="118" y2="46" stroke="#fffdf4" stroke-width="3" stroke-linecap="round" />
-          <line x1="152" y1="144" x2="126" y2="120" stroke="#fffdf4" stroke-width="3" stroke-linecap="round" />
-          <line x1="16" y1="142" x2="40" y2="116" stroke="#fffdf4" stroke-width="3" stroke-linecap="round" />
-        </svg>
-      </div>`;
-      stage.appendChild(punchImpact);
-    }
-    let punchVisited = false, punchFreezeTimer = null, isPunchFrozen = false, punchFreezeDistance = 0;
-    function fireBillPunch() {
-      soundscape?.punch?.();
-      if (typeof navigator !== 'undefined' && navigator.vibrate) {
-        try { navigator.vibrate([45, 30, 85]); } catch {}
-      }
-      if (punchImpact) {
-        punchImpact.removeAttribute('hidden');
-        punchImpact.classList.remove('is-punching');
-        void punchImpact.offsetWidth;
-        punchImpact.classList.add('is-punching');
-      }
-      stage.classList.remove('has-punch-shake', 'is-punch-frozen');
-      void stage.offsetWidth;
-      stage.classList.add('has-punch-shake', 'is-punch-frozen');
-
-      const isTestEnv = typeof window !== 'undefined' && (window.location.hostname === 'portfolio.test' || reduced.matches);
-      if (isTestEnv) {
-        return;
-      }
-
-      isPunchFrozen = true;
-      punchFreezeDistance = motion.current;
-
-      clearTimeout(punchFreezeTimer);
-      punchFreezeTimer = setTimeout(() => {
-        isPunchFrozen = false;
-        stage.classList.remove('has-punch-shake', 'is-punch-frozen');
-        if (punchImpact) {
-          punchImpact.classList.remove('is-punching');
-          setTimeout(() => { if (!isPunchFrozen) punchImpact.setAttribute('hidden', ''); }, 350);
-        }
-        scheduleMotion();
-      }, 3000);
-    }
     let stickman = stage.querySelector('[data-stickman]');
     if (!stickman) {
       stickman = document.createElement('div');
@@ -1033,38 +1376,14 @@
         } else if (mode === 'Z') {
           const close = outgoing ? smooth(fraction / .65) : 1 - smooth((fraction - .35) / .65);
           const isBowie = works[index].slug === 'el-hombre-que-susurraba-a-las-estrellas';
-          const isBillToEzquerra = (works[base]?.slug === 'i-got-you-babe' && works[incoming]?.slug === 'jose-manuel-ezquerra');
           const isHugoToJames = (works[base]?.slug === 'hugo-box' && works[incoming]?.slug === 'james-rocks');
           let maxScale = 1.65;
           if (isHugoToJames) {
             maxScale = outgoing ? 48.0 : 2.10;
           } else if (isBowie) {
             maxScale = 2.45;
-          } else if (isBillToEzquerra) {
-            maxScale = 2.85;
           }
-          if (isBillToEzquerra) {
-            if (outgoing) {
-              const lungeProgress = clamp((fraction - 0.28) / 0.22, 0, 1);
-              const lunge = smooth(lungeProgress);
-              const punchX = lunge * (geometry.width * 0.16);
-              const punchY = -lunge * (geometry.height * 0.04);
-              const billScale = 1.08 + lunge * 1.80;
-              image.style.transform = `translate3d(${punchX.toFixed(2)}px,${punchY.toFixed(2)}px,0) scale(${billScale.toFixed(5)})`;
-              scene.style.opacity = fraction >= 0.50 ? smooth((0.70 - fraction) / 0.20).toFixed(4) : '1';
-            } else {
-              scene.style.opacity = fraction < 0.44 ? '0' : smooth((fraction - 0.44) / 0.08).toFixed(4);
-              const recoilTime = clamp((fraction - 0.46) / 0.20, 0, 1);
-              const recoil = Math.sin(recoilTime * Math.PI);
-              const recoilAngle = -recoil * 9.5;
-              const recoilX = recoil * (geometry.width * 0.075);
-              const recoilY = recoil * (geometry.height * 0.035);
-              scene.style.transformOrigin = 'bottom center';
-              scene.style.transform = `translate3d(${recoilX.toFixed(2)}px,${recoilY.toFixed(2)}px,0) rotate(${recoilAngle.toFixed(2)}deg)`;
-              const ezScale = 0.96 + 0.12 * smooth((fraction - 0.44) / 0.56);
-              image.style.transform = `scale(${ezScale.toFixed(5)})`;
-            }
-          } else if (isBowieToOlinga) {
+          if (isBowieToOlinga) {
             if (outgoing) {
               const flare = smooth(fraction);
               const rot = (flare * 12.0).toFixed(2);
@@ -1300,17 +1619,6 @@
       } else {
         ajenjoVisited = false;
       }
-      const isBillToEzquerra = transition && works[base]?.slug === 'i-got-you-babe' && works[incoming]?.slug === 'jose-manuel-ezquerra';
-      if (works[base]?.slug === 'i-got-you-babe' || works[incoming]?.slug === 'i-got-you-babe') {
-        if (!punchVisited && isBillToEzquerra && fraction >= 0.46 && fraction <= 0.62) {
-          punchVisited = true;
-          fireBillPunch();
-        } else if (fraction < 0.15 || fraction > 0.85) {
-          punchVisited = false;
-        }
-      } else {
-        punchVisited = false;
-      }
       const isRaraToAmor = transition && works[base]?.slug === 'rara-avis' && works[incoming]?.slug === 'amor-en-conserva';
       const isAmorToAmy = transition && works[base]?.slug === 'amor-en-conserva' && works[incoming]?.slug === 'amy-rocks';
       const isJamesToMario = transition && works[base]?.slug === 'james-rocks' && works[incoming]?.slug === 'mario-moreno';
@@ -1356,8 +1664,7 @@
         phase: still ? 'scroll' : transition ? 'transition' : phase === 'explore' ? 'explore' : 'hold',
         axisDirection: mode === 'H' ? entry.direction : 1,
         slug: activeSlug,
-        flash: Number(flash.toFixed(4)),
-        punch: isBillToEzquerra && fraction >= 0.46 && fraction <= 0.56
+        flash: Number(flash.toFixed(4))
       });
       if (kineticTitle.textContent) kineticTitle.textContent = '';
       kineticTitle.style.opacity = '0';
@@ -1378,7 +1685,7 @@
       } else if (works[state.index]?.slug === 'el-armigo-atomico' || isArmigoTransition) {
         cue.textContent = '¡Giro atómico 720°! · sigue ↓';
       } else {
-        cue.textContent = still ? reduced.matches ? 'Activa los efectos para ver el viaje ↓' : 'Desplázate para recorrer ↕' : !transition ? phase === 'explore' ? 'Explora la superficie ↓' : 'Una pausa para mirar · sigue ↓' : isAjenjoPhoto ? 'Dispara y revela la foto ↓' : isBillToEzquerra ? '¡Impacto! Parón de 3 segundos · sigue ↓' : isRaraToAmor ? 'El azogue se disuelve · sigue ↓' : isAmorToAmy ? 'Abre la lata de conserva · sigue ↓' : isJamesToMario ? 'La cantera de pizarra se quiebra · sigue ↓' : isJaioTo13n ? 'Deshilachar las costuras · sigue ↓' : isBowieToOlinga ? 'Refracción de estrella · sigue ↓' : isSeriesPortal ? 'Atravesando portal de serie ↓' : ({ E: 'Entra en la mirada ↓', H: 'Atravesar · sigue bajando ↓', V: 'Déjate llevar ↓', Z: (transition && works[base]?.slug === 'hugo-box') ? 'Entra en la lente rosa ↓' : 'Acércate ↓', P: 'Mezclar y volver a unir ↓' })[mode];
+        cue.textContent = still ? reduced.matches ? 'Activa los efectos para ver el viaje ↓' : 'Desplázate para recorrer ↕' : !transition ? phase === 'explore' ? 'Explora la superficie ↓' : 'Una pausa para mirar · sigue ↓' : isAjenjoPhoto ? 'Dispara y revela la foto ↓' : isRaraToAmor ? 'El azogue se disuelve · sigue ↓' : isAmorToAmy ? 'Abre la lata de conserva · sigue ↓' : isJamesToMario ? 'La cantera de pizarra se quiebra · sigue ↓' : isJaioTo13n ? 'Deshilachar las costuras · sigue ↓' : isBowieToOlinga ? 'Refracción de estrella · sigue ↓' : isSeriesPortal ? 'Atravesando portal de serie ↓' : ({ E: 'Entra en la mirada ↓', H: 'Atravesar · sigue bajando ↓', V: 'Déjate llevar ↓', Z: (transition && works[base]?.slug === 'hugo-box') ? 'Entra en la lente rosa ↓' : 'Acércate ↓', P: 'Mezclar y volver a unir ↓' })[mode];
       }
       stage.classList.toggle('is-travelling', transition);
       stage.style.setProperty('--progress', (pose.distance / journey.total * (works.length - 1) * 100).toFixed(3) + '%');
@@ -1397,12 +1704,6 @@
       // Native scroll positions round to device pixels, including direct-link jumps.
       const boundary = journey.entries.find(entry => Math.abs(entry.start * geometry.unit - pixels) < 1);
       const targetDist = clamp(boundary ? boundary.start : pixels / geometry.unit, 0, journey.total);
-      if (isPunchFrozen) {
-        motion.current = punchFreezeDistance;
-        motion.target = punchFreezeDistance;
-        window.scrollTo({ top: geometry.top + punchFreezeDistance * geometry.unit, behavior: 'auto' });
-        return;
-      }
       motion.target = targetDist;
       if (reduced.matches || state.fit) {
         motion.current = targetDist;
@@ -1415,12 +1716,6 @@
     function stepMotion() {
       motion.frame = null;
       if (document.querySelector('dialog[open]')) return;
-      if (isPunchFrozen) {
-        motion.current = punchFreezeDistance;
-        motion.target = punchFreezeDistance;
-        render();
-        return;
-      }
       const still = state.fit || reduced.matches;
       const delta = motion.target - motion.current;
       if (still || Math.abs(delta) < 0.00015) {
@@ -1458,13 +1753,6 @@
     }
     function scheduleScroll() { syncScroll(); }
     function moveTo(index, smooth = false) {
-      if (isPunchFrozen) {
-        isPunchFrozen = false;
-        clearTimeout(punchFreezeTimer);
-        stage.classList.remove('has-punch-shake', 'is-punch-frozen');
-        punchImpact?.classList.remove('is-punching');
-        punchImpact?.setAttribute('hidden', '');
-      }
       const targetDist = journey.at(index);
       if (!smooth || reduced.matches) {
         motion.current = motion.target = targetDist;
@@ -1475,13 +1763,6 @@
       scheduleScroll();
     }
     function pause() {
-      if (isPunchFrozen) {
-        isPunchFrozen = false;
-        clearTimeout(punchFreezeTimer);
-        stage.classList.remove('has-punch-shake', 'is-punch-frozen');
-        punchImpact?.classList.remove('is-punching');
-        punchImpact?.setAttribute('hidden', '');
-      }
       restCamera();
       motion.request++;
       motion.navigation = null;
@@ -1492,13 +1773,6 @@
     }
     function change(next) {
       if (document.querySelector('dialog[open]') || next < 0 || next >= works.length) return;
-      if (isPunchFrozen) {
-        isPunchFrozen = false;
-        clearTimeout(punchFreezeTimer);
-        stage.classList.remove('has-punch-shake', 'is-punch-frozen');
-        punchImpact?.classList.remove('is-punching');
-        punchImpact?.setAttribute('hidden', '');
-      }
       leaveFit(); resetPan(); metadata();
       motion.navigation = next;
       // Nearby controls use the browser's smooth scroll; catalogue jumps go directly there.
@@ -1508,7 +1782,6 @@
     // Preserve native inertia, browser zoom, touch scrolling and scroll-bar navigation.
     const interruptNavigation = () => { motion.navigation = null; };
     addEventListener('wheel', e => {
-      if (isPunchFrozen) { e.preventDefault(); return; }
       interruptNavigation();
       if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 4) {
         window.scrollBy({ top: e.deltaX, behavior: 'auto' });
@@ -1516,7 +1789,6 @@
     }, { passive: true });
     let touchStartY = 0;
     addEventListener('touchstart', e => {
-      if (isPunchFrozen) return;
       interruptNavigation();
       if (e.touches?.length) touchStartY = e.touches[0].clientY;
     }, { passive: true });
@@ -1557,35 +1829,7 @@
         window.prompt('Copia el enlace directo:', url);
       }
     });
-    document.addEventListener('click', e => {
-      const btn = e.target.closest('[data-share-network]');
-      if (!btn) return;
-      e.preventDefault();
-      const network = btn.dataset.shareNetwork;
-      const p = works[state.index];
-      const customUrl = btn.dataset.shareUrl;
-      const customTitle = btn.dataset.shareTitle;
-      const url = customUrl || (location.origin + (p ? '/obra/' + p.slug + '/' : location.pathname));
-      const title = customTitle || (p ? `${p.title} · Naroa Gutiérrez Gil` : document.title);
-      const text = `Descubre «${title}» de Naroa Gutiérrez Gil en su exposición inmersiva en Bilbao.`;
-      const encodedUrl = encodeURIComponent(url);
-      const encodedText = encodeURIComponent(text);
-
-      if (network === 'facebook') {
-        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`, '_blank', 'noopener,noreferrer,width=640,height=560');
-      } else if (network === 'x') {
-        window.open(`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`, '_blank', 'noopener,noreferrer,width=640,height=560');
-      } else if (network === 'instagram' || network === 'tiktok') {
-        if (navigator.share) {
-          navigator.share({ title, text, url }).catch(() => {});
-        } else if (navigator.clipboard?.writeText) {
-          navigator.clipboard.writeText(url).then(() => {
-            const netLabel = network === 'instagram' ? 'Instagram Stories' : 'TikTok';
-            window.alert(`¡Enlace copiado al portapapeles listo para compartir en ${netLabel}!`);
-          });
-        }
-      }
-    });
+    // Social sharing and Instagram Story remixing are handled globally by setupStoryRemix()
     function showPhoto() {
       const p = works[state.index];
       state.photo = clamp(state.photo, 0, p.photos.length - 1);

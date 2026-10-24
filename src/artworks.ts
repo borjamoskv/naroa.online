@@ -1120,21 +1120,6 @@ export const ARTWORKS: Artwork[] = [
     sizeCategory: 'medium'
   },
   {
-    id: 75,
-    category: 'kintsugi',
-    kicker: 'La familia monstruosamente entrañable',
-    quote: 'La normalidad está sobrevalorada cuando tienes un castillo.',
-    slug: 'the-munsters',
-    aspectRatio: 0.709,
-    url: '/images/catalogo/the-munsters-01.jpg',
-    title: 'The Munsters',
-    href: '#obra-the-munsters',
-    year: '2022',
-    medium: 'Rotuladores de tinta, permanentes y acrílicos; frottage con grafito sobre Papel con marco impreso',
-    description: 'Una colección de cuatro retratos sobre un fondo de frottage. El dibujo, los contrastes de tinta y los marcos impresos reúnen a la familia Munster.',
-    sizeCategory: 'medium'
-  },
-  {
     id: 76,
     category: 'kintsugi',
     kicker: '¿Adónde vas, tiempo hermoso y fugaz?',

@@ -135,7 +135,7 @@
       }
     ]
   },
-  "artworks_count": 86,
+  "artworks_count": 85,
   "reviewed": "2026-10-24",
   "artworks": [
     {
@@ -2562,52 +2562,6 @@
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20OUT%20%28por%20los%20pelos%29",
       "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20OUT%20%28por%20los%20pelos%29"
-    },
-    {
-      "slug": "the-munsters",
-      "title": "The Munsters",
-      "category": "collage",
-      "series": null,
-      "technique": "Rotuladores de tinta, permanentes y acrílicos; frottage con grafito",
-      "support": "Papel con marco impreso",
-      "dimensions": "A4",
-      "materials": null,
-      "year": null,
-      "story": "Una colección de cuatro retratos sobre un fondo de frottage. El dibujo, los contrastes de tinta y los marcos impresos reúnen a la familia Munster.",
-      "url": "https://naroagutierrezgil.com/obra/the-munsters/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/the-munsters-01-000d318e67d1-view.webp",
-      "photos": [
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/the-munsters-01.jpg",
-          "width": 1452,
-          "height": 2048,
-          "caption": "Lily Munster.",
-          "sha256": "000d318e67d1545bb6c117860b40ef68681138792f9526d5b0ec897e61a5627f"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/the-munsters-02.jpg",
-          "width": 590,
-          "height": 826,
-          "caption": "Herman Munster.",
-          "sha256": "3c51035361d744d101c1a38888520cdef70e289e14dccbeb98c554af24df677a"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/the-munsters-03.jpg",
-          "width": 590,
-          "height": 827,
-          "caption": "Eddie Munster.",
-          "sha256": "47c29f12a28bc0e0dcc820aed62a053887d18b75b23cf6a5ade7da9df3c7cb62"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/the-munsters-04.jpg",
-          "width": 590,
-          "height": 837,
-          "caption": "El abuelo Munster.",
-          "sha256": "782e5e581de224803d8dadf0b798d86a327efb5c176308456a45f7605383664a"
-        }
-      ],
-      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20The%20Munsters",
-      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20The%20Munsters"
     },
     {
       "slug": "lily-munster",

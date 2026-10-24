@@ -2234,60 +2234,6 @@
       "kind": "obra"
     },
     {
-      "slug": "the-munsters",
-      "title": "The Munsters",
-      "category": "collage",
-      "technique": "Rotuladores de tinta, permanentes y acrílicos; frottage con grafito",
-      "support": "Papel con marco impreso",
-      "story": "Una colección de cuatro retratos sobre un fondo de frottage. El dibujo, los contrastes de tinta y los marcos impresos reúnen a la familia Munster.",
-      "images": [
-        {
-          "src": "/images/catalogo/the-munsters-01.jpg",
-          "width": 1452,
-          "height": 2048,
-          "caption": "Lily Munster.",
-          "source": "https://www.facebook.com/photo/?fbid=956358734438839&set=a.956358597772186",
-          "sha256": "000d318e67d1545bb6c117860b40ef68681138792f9526d5b0ec897e61a5627f",
-          "source_local": "work/naroa-artwork-intake/956358597772186-cover.jpg"
-        },
-        {
-          "src": "/images/catalogo/the-munsters-02.jpg",
-          "width": 590,
-          "height": 826,
-          "caption": "Herman Munster.",
-          "source": "https://www.facebook.com/photo/?fbid=956358884438824&set=a.956358597772186",
-          "sha256": "3c51035361d744d101c1a38888520cdef70e289e14dccbeb98c554af24df677a",
-          "source_local": "work/naroa-artwork-intake/956358597772186-02.jpg"
-        },
-        {
-          "src": "/images/catalogo/the-munsters-03.jpg",
-          "width": 590,
-          "height": 827,
-          "caption": "Eddie Munster.",
-          "source": "https://www.facebook.com/photo/?fbid=956358754438837&set=a.956358597772186",
-          "sha256": "47c29f12a28bc0e0dcc820aed62a053887d18b75b23cf6a5ade7da9df3c7cb62",
-          "source_local": "work/naroa-artwork-intake/956358597772186-03.jpg"
-        },
-        {
-          "src": "/images/catalogo/the-munsters-04.jpg",
-          "width": 590,
-          "height": 837,
-          "caption": "El abuelo Munster.",
-          "source": "https://www.facebook.com/photo/?fbid=956358727772173&set=a.956358597772186",
-          "sha256": "782e5e581de224803d8dadf0b798d86a327efb5c176308456a45f7605383664a",
-          "source_local": "work/naroa-artwork-intake/956358597772186-04.jpg"
-        }
-      ],
-      "source": "https://www.facebook.com/media/set/?set=a.956358597772186&type=3",
-      "dimensions": "A4",
-      "materials": null,
-      "series": null,
-      "year": null,
-      "credit": null,
-      "selected": false,
-      "kind": "obra"
-    },
-    {
       "slug": "denbora-nora-zoaz",
       "title": "Denbora Nora Zoaz Eder Galant Hori?",
       "category": "collage",

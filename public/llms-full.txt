@@ -30,9 +30,9 @@
 - **¿Se puede visitar el estudio en Bilbao?** Sí, visitas con cita concertada previa para ver obra en directo, valorar soportes y definir el proyecto en persona.
 
 ## Secciones Principales
-- [Inicio e Inmersión](https://naroagutierrezgil.com/): Experiencia inmersiva y catálogo completo de 86 obras.
+- [Inicio e Inmersión](https://naroagutierrezgil.com/): Experiencia inmersiva y catálogo completo de 85 obras.
 - [Retratos por Encargo en Bilbao](https://naroagutierrezgil.com/retratos-por-encargo-bilbao/): Condiciones técnicas, formatos (20×30 cm a 40×50 cm), plazos de 2 a 4 semanas, configurador interactivo y galería de ejemplos reales.
-- [Catálogo Completo](https://naroagutierrezgil.com/obra/): Ficha detallada de las 86 piezas de la colección con fotografías de detalle y relato.
+- [Catálogo Completo](https://naroagutierrezgil.com/obra/): Ficha detallada de las 85 piezas de la colección con fotografías de detalle y relato.
 - [Serie Vaivenes](https://naroagutierrezgil.com/series/vaivenes/): Retratos en técnica mixta, collage textil y objetos de memoria.
 - [Sobre Mí](https://naroagutierrezgil.com/sobre-mi/): Biografía, técnica, proceso creativo y proyectos comunitarios (Walking Gallery Bilbao, El ReCreo).
 - [Trayectoria](https://naroagutierrezgil.com/trayectoria/): Archivo cronológico de exposiciones documentadas desde 2010 (DEIA, GARA, Politena, Dock Bilbao).
@@ -40,14 +40,14 @@
 - [Contacto](https://naroagutierrezgil.com/contacto/): Canales directos de consulta para obra y encargos.
 
 ## Recursos Machine-to-Machine y GEO SOTA 2026
-- [Catálogo JSON Estructurado](https://naroagutierrezgil.com/api/catalog.json): Endpoint con especificaciones completas de las 86 obras y Evidence Graph.
+- [Catálogo JSON Estructurado](https://naroagutierrezgil.com/api/catalog.json): Endpoint con especificaciones completas de las 85 obras y Evidence Graph.
 - [Endpoint WebMCP](https://naroagutierrezgil.com/.well-known/mcp.json): Manifiesto y definición formal de herramientas WebMCP para agentes autónomos.
 - [Índice Extendido llms-full.txt](https://naroagutierrezgil.com/llms-full.txt): Desglose exhaustivo de todas las piezas, fotos de detalle con hashes SHA-256 y condiciones de encargo.
-- [Sitemap XML](https://naroagutierrezgil.com/sitemap.xml): Índice canónico de 94 rutas y metadatos de imágenes.
+- [Sitemap XML](https://naroagutierrezgil.com/sitemap.xml): Índice canónico de 93 rutas y metadatos de imágenes.
 - [Feed RSS 2.0](https://naroagutierrezgil.com/feed.xml): Sindicación de obras recientes y publicaciones del taller.
 - [Protocolo IndexNow](https://naroagutierrezgil.com/indexnow.json): Sincronización instantánea de indexación para Bing y motores asociados.
 
-## Catálogo Exhaustivo de Obras (86 Piezas Documentadas)
+## Catálogo Exhaustivo de Obras (85 Piezas Documentadas)
 
 ### Marilyn Rocks (None)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/marilyn-rocks/
@@ -598,16 +598,6 @@
 - **Serie:** Colección general
 - **Relato:** Andre Agassi en Roland Garros de 1990. El marco se convierte en pista: fieltro, redes y cabellos acompañan el retrato. El recorte del passepartout y las gotas de látex prolongan la tensión de la escena.
 - **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20OUT%20%28por%20los%20pelos%29
-
-### The Munsters (None)
-- **URL Canónica:** https://naroagutierrezgil.com/obra/the-munsters/
-- **Técnica:** Rotuladores de tinta, permanentes y acrílicos; frottage con grafito
-- **Soporte:** Papel con marco impreso
-- **Medidas:** A4
-- **Materiales:** Rotuladores de tinta, permanentes y acrílicos; frottage con grafito
-- **Serie:** Colección general
-- **Relato:** Una colección de cuatro retratos sobre un fondo de frottage. El dibujo, los contrastes de tinta y los marcos impresos reúnen a la familia Munster.
-- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20The%20Munsters
 
 ### Lily Munster (2022)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/lily-munster/

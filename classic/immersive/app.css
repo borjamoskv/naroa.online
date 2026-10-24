@@ -386,21 +386,22 @@ body.page-sobre-mi .site-footer{color:#14080e;border-top:1px solid rgba(20,8,14,
 @keyframes stickman-chalk-pulse{0%{filter:drop-shadow(0 0 8px rgba(255,253,244,0.88)) drop-shadow(0 0 20px rgba(255,253,244,0.4))}100%{filter:drop-shadow(0 0 11px rgba(255,253,244,0.96)) drop-shadow(0 0 26px rgba(255,253,244,0.52))}}
 .art-stickman[hidden]{display:none!important}
 
-/* Puñetazo de Bill Murray a Ezkerra (transición I Got You Babe -> Jose Manuel Ezquerra) */
-.art-punch-impact{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.6);width:220px;height:220px;z-index:10;pointer-events:none;opacity:0;visibility:hidden;will-change:transform,opacity;transition:opacity .15s ease,transform .22s cubic-bezier(.175,.885,.32,1.275)}
-.art-punch-impact.is-punching{opacity:1;visibility:visible;transform:translate(-50%,-50%) scale(1.18) rotate(-4deg)}
-.punch-burst{width:100%;height:100%;filter:drop-shadow(0 0 16px rgba(217,56,41,0.85)) drop-shadow(0 0 35px rgba(244,196,48,0.65));animation:punch-burst-pulse .18s steps(2,end) infinite}
-@keyframes punch-burst-pulse{0%{transform:scale(1) rotate(0deg)}50%{transform:scale(1.08) rotate(2deg)}100%{transform:scale(0.96) rotate(-2deg)}}
-.punch-svg{width:100%;height:100%;overflow:visible}
-.art-punch-impact[hidden]{display:none!important}
-
-/* Pantalla congelada (2 segundos de parón) */
-.art-stage.is-punch-frozen::after{content:"";position:absolute;inset:0;border:4px solid rgba(217,56,41,0.45);box-shadow:inset 0 0 60px rgba(217,56,41,0.35);pointer-events:none;z-index:9;animation:punch-freeze-flash .3s ease-out}
-@keyframes punch-freeze-flash{0%{opacity:0;transform:scale(1.04)}30%{opacity:1;transform:scale(1)}100%{opacity:.85}}
-
-/* Sacudida de pantalla (Screenshake) */
-.art-stage.has-punch-shake{animation:punch-screen-shake .45s cubic-bezier(.36,.07,.19,.97) both}
-@keyframes punch-screen-shake{10%,90%{transform:translate3d(-4px,2px,0)}20%,80%{transform:translate3d(5px,-3px,0)}30%,50%,70%{transform:translate3d(-6px,4px,0)}40%,60%{transform:translate3d(6px,-4px,0)}}
+/* Puntero de Artista Soberano (Pincel Naroa con transparencia pura y hotspot en punta de cerdas) */
+html, body, * {
+  cursor: -webkit-image-set(
+    url('/assets/cursors/naroa-pincel-32.png') 1x,
+    url('/assets/cursors/naroa-pincel-64.png') 2x
+  ) 2 2, url('/assets/cursors/naroa-pincel-32.png') 2 2, auto;
+}
+a, button, [role="button"], input[type="submit"], input[type="button"], select, label[for], .art-gallery-trigger, .work-gallery-image, [data-interactive], .ouroboros-loop-btn, .share-btn, .menu-reel-frame, .menu-index-pill, [data-sound], [data-quiet], [data-fit], [data-effects], .art-scene, .art-stage {
+  cursor: -webkit-image-set(
+    url('/assets/cursors/naroa-pincel-48.png') 1x,
+    url('/assets/cursors/naroa-pincel-64.png') 2x
+  ) 3 3, url('/assets/cursors/naroa-pincel-48.png') 3 3, pointer;
+}
+input[type="text"], input[type="email"], textarea {
+  cursor: text!important;
+}
 
 /* Simulación Euleriana de Fluidos Navier-Stokes & Advect-Curl (FBO Ping-Pong) — Humo en Cursor */
 .naroa-fluid-canvas{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:25;mix-blend-mode:screen;opacity:.88;transition:opacity .4s ease;will-change:contents}
@@ -420,6 +421,27 @@ html.motion-off .naroa-fluid-canvas,body.is-quiet .naroa-fluid-canvas{opacity:0!
 html.motion-off .naroa-portal-canvas,body.is-quiet .naroa-portal-canvas{opacity:0!important;visibility:hidden!important}
 
 @media print{.naroa-fluid-canvas,.naroa-portal-canvas,.naroa-liquid-lens,.art-portal-ring,.art-scene::after{display:none!important}}
+
+/* Story Remix Generator Modal · Instagram */
+.story-remix-dialog{position:fixed;inset:auto;top:50%;left:50%;transform:translate(-50%,-50%);margin:0;width:min(440px,94vw);max-height:94svh;border-radius:18px;background:#141512f5;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid #fffdf429;box-shadow:0 24px 64px #000b;overflow-y:auto;overscroll-behavior:contain;display:none;flex-direction:column;z-index:999;color:#fffdf4}
+.story-remix-dialog[open]{display:flex}
+.story-remix-dialog .dialog-top{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:1px solid #fffdf41f;min-height:auto}
+.story-remix-dialog #story-remix-heading{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:#d4af37;font-weight:500}
+.story-remix-content{padding:18px 22px 24px;display:flex;flex-direction:column;align-items:center;gap:16px}
+.story-remix-preview-frame{position:relative;width:100%;max-width:270px;aspect-ratio:9/16;border-radius:12px;overflow:hidden;box-shadow:0 16px 40px #0009;border:1px solid #d4af374d;background:#0d0e0c;display:flex;align-items:center;justify-content:center}
+.story-remix-preview-frame img{width:100%;height:100%;object-fit:cover;display:block}
+.story-remix-spinner{position:absolute;inset:0;background:#11120fe0;backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;color:#fffdf4;font-size:13px;letter-spacing:.04em;z-index:2;text-align:center;padding:16px}
+.story-remix-actions{display:flex;flex-direction:column;gap:10px;width:100%}
+.remix-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 18px;border-radius:999px;font-size:12px;font-weight:500;letter-spacing:.04em;text-decoration:none;cursor:pointer;transition:transform .15s ease,filter .2s ease,background .2s ease}
+.remix-btn:active{transform:scale(.98)}
+.remix-btn--shuffle{background:#fffdf414;border:1px solid #fffdf433;color:#fffdf4}
+.remix-btn--shuffle:hover{background:#fffdf424}
+.remix-btn--share{background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);color:#fff;border:0;box-shadow:0 4px 16px #fd1d1d59;text-shadow:0 1px 2px #0006}
+.remix-btn--share:hover{filter:brightness(1.1)}
+.remix-btn--download{background:#d4af3726;border:1px solid #d4af3766;color:#f7eed7}
+.remix-btn--download:hover{background:#d4af3740}
+@media(max-width:480px){.story-remix-preview-frame{max-width:230px}.story-remix-content{padding:14px 16px 20px}}
+
 
 
 
