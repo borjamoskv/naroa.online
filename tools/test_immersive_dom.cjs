@@ -219,7 +219,7 @@ async function eyeMatch(ui, base, points) {
   assert.ok(llorona.find('[data-facts]').textContent.includes('sal rosa'));
   llorona.dom.window.close();
   assert.equal(ui.journey.entries.length, manifest.projects);
-  assert.deepEqual(Array.from(ui.w.NAROA_CATALOG.journey.scenes, e => e.mode).join(' '), 'E H V Z V E H H V Z E V H H V Z H V Z P V H Z V H Z V H Z V H H Z E Z V H Z H Z Z V Z H Z H V Z H V Z H V Z H V Z H V H Z H H Z H F H Z V H V Z Z V');
+  assert.deepEqual(Array.from(ui.w.NAROA_CATALOG.journey.scenes, e => e.mode).join(' '), 'E H V Z V E H H V Z E V H H V Z H V Z P V H Z V H Z V H Z V H H Z E Z V H Z H Z Z V Z H Z H V Z H V Z H V Z V Z H V H Z H H Z H F H Z V H V Z Z V');
   const modes = { E: 'eyes', H: 'horizontal', V: 'vertical', Z: 'zoom', P: 'puzzle' };
   let horizontalDirection = -1, inHorizontal = false;
   for (let index = 0; index < works.length; index++) {
@@ -285,9 +285,9 @@ async function eyeMatch(ui, base, points) {
   assert.equal(Number(ui.find('[data-hero-threshold]').style.opacity), 1);
   assert.equal(ui.find('[data-threshold-plane]').style.transform, 'scale(1.0000)');
   assert.equal(ui.find('[data-threshold-wink]').style.opacity, '0');
-  const mEyeOrigin = ui.find('[data-scene="0"] img').style.transformOrigin;
-  assert.equal(mEyeOrigin, '0px 0px', 'Marilyn enters through her eye pupil in reverse zoom');
-  assert.ok(ui.find('[data-scene="0"] img').style.transform.includes('translate3d'), 'Marilyn camera is positioned deep in the eye');
+  const mLipsOrigin = ui.find('[data-scene="0"] img').style.transformOrigin;
+  assert.equal(mLipsOrigin, '50.4% 51.7%', 'Marilyn enters through her iconic lips');
+  assert.ok(ui.find('[data-scene="0"] img').style.transform.includes('scale'), 'Marilyn camera unrolls smoothly from the lips');
   ui.w.scrollTo({ top: 0.09 * ui.w.innerHeight }); await ui.flush();
   assert.equal(ui.find('[data-threshold-wink]').style.opacity, '1', 'Naroa winks as the viewer crosses the monocle threshold');
   assert.notEqual(ui.find('[data-threshold-plane]').style.transform, 'scale(1.0000)', 'Monocle plane zooms exponentially into the lens');

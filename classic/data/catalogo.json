@@ -2554,39 +2554,6 @@
       }
     },
     {
-      "slug": "love",
-      "title": "Love",
-      "category": "collage",
-      "technique": "Collage textil, acrílico y tipografía intervenida",
-      "support": "Madera entelada",
-      "story": "Composición tipográfica y figurativa sobre el afecto contemporáneo. Capas de papel, tela y acrílico estructuran un mensaje directo con la frescura e inmediatez del arte urbano.",
-      "images": [
-        {
-          "src": "/images/catalogo/love-01.webp",
-          "width": 1200,
-          "height": 1600,
-          "caption": "Composición completa de Love en collage textil y acrílico.",
-          "source": null,
-          "sha256": "3eb4ad82f6c6f85829e396f791afd390f69a296428a0c93c5db0cda0705bf778"
-        }
-      ],
-      "dimensions": "30 × 22 cm",
-      "series": "Obras Individuales",
-      "year": 2023,
-      "credit": null,
-      "selected": true,
-      "kind": "obra",
-      "source": null,
-      "editorial": {
-        "image_order": [
-          0
-        ],
-        "captions": [
-          "Love: collage pop y capas tipográficas."
-        ]
-      }
-    },
-    {
       "slug": "the-golden-couple",
       "title": "The Golden Couple",
       "category": "pizarra",

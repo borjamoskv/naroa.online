@@ -219,21 +219,6 @@ export const ARTWORKS: Artwork[] = [
     sizeCategory: 'small'
   },
   {
-    id: 14,
-    category: 'drawing',
-    kicker: 'Grafiti emocional y collage pop',
-    quote: 'Amar sin disculpa en colores primarios.',
-    slug: 'love',
-    aspectRatio: 0.75,
-    url: '/assets/love-DA7L_L5F.webp',
-    title: 'Love',
-    href: '#obra-love',
-    year: '2023',
-    medium: 'Collage & Acrílico Pop',
-    description: 'Composición tipográfica y figurativa sobre el afecto contemporáneo.',
-    sizeCategory: 'small'
-  },
-  {
     id: 15,
     category: 'drawing',
     kicker: 'Mundo interior y procesos cognitivos',

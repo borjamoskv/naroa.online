@@ -392,8 +392,8 @@
       galleryReturnFocus = null;
       scheduleScroll();
     });
-    const focals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '56% 42%', 'amor-en-conserva': '50% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'johnny-rocks': '50% 42%', 'rockagipsy': '50% 43%', 'hugo-box': '50% 38%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '54% 44%', 'lauralore': '46% 44%', 'izei': '48% 42%', 'the-love-boat': '50% 44%', 'marian-de-miranda': '66% 36%', 'la-famiglia': '50% 40%', 'smile-and-the-world-smiles-back': '50% 50%', 'luis-and-sis': '50% 45%', 'de-color': '50% 45%', 'el-reencuentro': '50% 45%', 'papitxulo': '50% 40%', 'starchild': '50% 40%', 'las-rosalias': '50% 50%' };
-    const mobileFocals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '61% 40%', 'amor-en-conserva': '48% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'denbora-nora-zoaz': '18% 45%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '56% 44%', 'lauralore': '48% 44%', 'izei': '48% 42%', 'the-love-boat': '50% 44%', 'marian-de-miranda': '66% 36%', 'la-famiglia': '50% 40%', 'smile-and-the-world-smiles-back': '50% 50%', 'luis-and-sis': '50% 45%', 'de-color': '50% 45%', 'el-reencuentro': '50% 45%', 'papitxulo': '50% 40%', 'starchild': '50% 40%', 'las-rosalias': '50% 50%' };
+    const focals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '56% 42%', 'amor-en-conserva': '50% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'johnny-rocks': '50% 42%', 'rockagipsy': '50% 43%', 'hugo-box': '50% 38%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '54% 44%', 'lauralore': '46% 44%', 'izei': '48% 42%', 'the-love-boat': '50% 44%', 'marian-de-miranda': '66% 36%', 'la-famiglia': '50% 40%', 'smile-and-the-world-smiles-back': '50% 50%', 'luis-and-sis': '50% 45%', 'de-color': '50% 45%', 'el-reencuentro': '50% 45%', 'papitxulo': '50% 40%', 'starchild': '50% 40%', 'las-rosalias': '50% 50%', 'baroque-farrokh': '50% 38%', 'el-gran-dakari': '50% 42%', 'audrey-hepburn': '50% 36%', 'geisha': '50% 38%', 'lagrimas-de-oro': '50% 38%', 'the-golden-couple': '50% 40%', 'pink-and-sparkles': '50% 45%', 'love': '50% 44%' };
+    const mobileFocals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '61% 40%', 'amor-en-conserva': '48% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'denbora-nora-zoaz': '18% 45%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '56% 44%', 'lauralore': '48% 44%', 'izei': '48% 42%', 'the-love-boat': '50% 44%', 'marian-de-miranda': '66% 36%', 'la-famiglia': '50% 40%', 'smile-and-the-world-smiles-back': '50% 50%', 'luis-and-sis': '50% 45%', 'de-color': '50% 45%', 'el-reencuentro': '50% 45%', 'papitxulo': '50% 40%', 'starchild': '50% 40%', 'las-rosalias': '50% 50%', 'baroque-farrokh': '50% 38%', 'el-gran-dakari': '50% 42%', 'audrey-hepburn': '50% 36%', 'geisha': '50% 38%', 'lagrimas-de-oro': '50% 38%', 'the-golden-couple': '50% 40%', 'pink-and-sparkles': '50% 45%', 'love': '50% 44%' };
     // Pupil centres measured on the unaltered cover photographs, in source-image coordinates.
     const eyes = {
       'marilyn-rocks': { x: .635, y: .392, iris: .030 },
@@ -634,16 +634,13 @@
             const holdZoom = 1.25 + smooth(pose.explore) * 0.50;
             image.style.transform = `scale(${holdZoom.toFixed(5)})`;
           } else if (isMarilyn) {
+            image.style.transformOrigin = '50.4% 51.7%';
             if (!still && heroThreshold && pose.distance < 0.36) {
               const tRaw = clamp(pose.distance / 0.36, 0, 1);
               const t = smooth(tRaw);
-              const point = eyeGeometry(0);
-              const deep = Math.hypot(geometry.width, geometry.height) * 1.02;
-              const diameter = Math.exp(Math.log(deep) + Math.log((point.iris * 1.08) / deep) * t);
-              const focus = 1 - t;
-              eyePose(0, diameter, focus, 0);
+              const enterScale = Math.exp(Math.log(3.8) * (1 - t) + Math.log(1.08) * t);
+              image.style.transform = `scale(${enterScale.toFixed(5)})`;
             } else {
-              image.style.transformOrigin = '50.4% 51.7%';
               const lipsZoom = 1.08 + smooth(pose.explore) * 0.40;
               image.style.transform = `scale(${lipsZoom.toFixed(5)})`;
             }
@@ -846,7 +843,8 @@
         lastStickFraction = fraction;
         const posX = -90 + fraction * (stageW + 180);
         const bounce = Math.abs(Math.sin(fraction * 36)) * 6;
-        const posY = stageH * 0.38 - bounce;
+        const floorY = (1 - progress) * stageH;
+        const posY = floorY - 94 - bounce;
         stickman.style.transform = `translate3d(${posX.toFixed(2)}px,${posY.toFixed(2)}px,0) scaleX(${stickDirection})`;
         updateStickmanPose(fraction * 36);
       } else {

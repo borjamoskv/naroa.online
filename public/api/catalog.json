@@ -135,7 +135,7 @@
       }
     ]
   },
-  "artworks_count": 74,
+  "artworks_count": 73,
   "reviewed": "2026-10-24",
   "artworks": [
     {
@@ -2369,31 +2369,6 @@
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20L%C3%A1grimas%20de%20Oro",
       "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20L%C3%A1grimas%20de%20Oro"
-    },
-    {
-      "slug": "love",
-      "title": "Love",
-      "category": "collage",
-      "series": "Obras Individuales",
-      "technique": "Collage textil, acrílico y tipografía intervenida",
-      "support": "Madera entelada",
-      "dimensions": "30 × 22 cm",
-      "materials": null,
-      "year": 2023,
-      "story": "Composición tipográfica y figurativa sobre el afecto contemporáneo. Capas de papel, tela y acrílico estructuran un mensaje directo con la frescura e inmediatez del arte urbano.",
-      "url": "https://naroagutierrezgil.com/obra/love/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/love-01-3eb4ad82f6c6-view.webp",
-      "photos": [
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/love-01.webp",
-          "width": 1200,
-          "height": 1600,
-          "caption": "Composición completa de Love en collage textil y acrílico.",
-          "sha256": "3eb4ad82f6c6f85829e396f791afd390f69a296428a0c93c5db0cda0705bf778"
-        }
-      ],
-      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Love",
-      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Love"
     },
     {
       "slug": "the-golden-couple",
