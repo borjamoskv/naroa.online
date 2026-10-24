@@ -57,9 +57,10 @@
     if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) d.close();
   }));
   const menu = $('#menu-dialog'), menuLinks = $$('[data-menu-item]', menu), menuImages = $$('[data-menu-image]', menu);
-  const menuReel = $('[data-menu-reel]', menu);
+  const menuPicture = $('[data-menu-picture]', menu), menuReel = $('[data-menu-reel]', menu);
+  const menuQuote = $('[data-menu-quote]', menu), menuMeta = $('[data-menu-preview-meta]', menu), menuLoupe = $('[data-menu-loupe]', menu);
   const menuButtons = $$('[data-open-menu]');
-  let menuRequest = 0, menuImageIndex = -1, reelTimer = 0, activeReel = null, activeReelIndex = 0, activeReelLabel = '';
+  let menuRequest = 0, menuImageIndex = -1, reelTimer = 0, activeReel = null, activeReelIndex = 0, activeReelLabel = '', activeMenuLink = null;
   function clearReelTimer() {
     if (reelTimer) { clearTimeout(reelTimer); reelTimer = 0; }
   }
@@ -67,15 +68,18 @@
     const path = location.pathname;
     return path === '/' ? menuLinks[0] : menuLinks.find(link => path.startsWith(new URL(link.href).pathname));
   }
-  function labelMenu(title, label) {
+  function labelMenu(title, label, quoteText, metaText) {
     $('[data-menu-preview-title]', menu).textContent = title;
     $('[data-menu-preview-label]', menu).textContent = label;
+    if (menuQuote && quoteText) menuQuote.textContent = quoteText;
+    if (menuMeta && metaText) menuMeta.textContent = metaText;
   }
-  async function showMenuFrame(source, title, label) {
+  async function showMenuFrame(source, title, label, quoteText, metaText) {
     if (!source || !menu.open) return;
+    if (menuLoupe) menuLoupe.style.backgroundImage = `url("${source}")`;
     const request = ++menuRequest;
     if (menuImages.some(image => image.classList.contains('is-visible') && image.getAttribute('src') === source)) {
-      labelMenu(title, label);
+      labelMenu(title, label, quoteText, metaText);
       return;
     }
     const picture = new Image(); picture.src = source;
@@ -88,7 +92,7 @@
     const image = menuImages[menuImageIndex];
     image.src = source; image.alt = title;
     menuImages.forEach(item => item.classList.toggle('is-visible', item === image));
-    labelMenu(title, label);
+    labelMenu(title, label, quoteText, metaText);
   }
   function syncReelButtons() {
     if (!menuReel) return;
@@ -103,7 +107,7 @@
       activeReelIndex = (activeReelIndex + 1) % activeReel.length;
       const frame = activeReel[activeReelIndex];
       syncReelButtons();
-      showMenuFrame(frame.src, frame.title, activeReelLabel);
+      showMenuFrame(frame.src, frame.title, activeReelLabel, null, frame.meta);
       scheduleReelStep();
     }, 1800);
   }
@@ -139,7 +143,7 @@
         e.stopPropagation();
         activeReelIndex = idx;
         syncReelButtons();
-        showMenuFrame(frame.src, frame.title, activeReelLabel);
+        showMenuFrame(frame.src, frame.title, activeReelLabel, null, frame.meta);
         scheduleReelStep();
       };
       btn.addEventListener('pointerenter', selectFrame);
@@ -148,24 +152,83 @@
     }));
     scheduleReelStep();
   }
-  async function previewMenu(link) {
+  async function previewMenu(link, playSound = false) {
     if (!link || !menu.open) return;
+    activeMenuLink = link;
+    const isPortrait = link.getAttribute('href') === '/sobre-mi/' || link.getAttribute('href') === '/contacto/';
+    const isWink = link.dataset.previewWink === 'true';
+    if (menuPicture) {
+      menuPicture.dataset.portraitMode = String(isPortrait);
+      menuPicture.classList.toggle('is-winking', isWink);
+    }
+    if (playSound) {
+      window.NAROA_SOUND?.menuNote?.(Number(link.dataset.menuIndex) || 0);
+      if (isWink) window.NAROA_SOUND?.portraitWink?.();
+    }
     renderReel(link);
-    await showMenuFrame(link.dataset.previewSrc, link.dataset.previewTitle, link.dataset.previewLabel);
+    await showMenuFrame(link.dataset.previewSrc, link.dataset.previewTitle, link.dataset.previewLabel, link.dataset.previewQuote, link.dataset.previewMeta);
   }
   function refreshMenu() {
     const current = currentMenuLink();
     menuLinks.forEach(link => { if (link === current) link.setAttribute('aria-current', 'location'); else link.removeAttribute('aria-current'); });
     menuButtons.forEach(button => button.setAttribute('aria-expanded', 'true'));
-    previewMenu(current || menuLinks[0]);
+    previewMenu(current || menuLinks[0], false);
   }
   menuLinks.forEach(link => {
-    link.addEventListener('pointerenter', () => previewMenu(link));
-    link.addEventListener('focus', () => previewMenu(link));
+    link.addEventListener('pointerenter', () => previewMenu(link, true));
+    link.addEventListener('focus', () => previewMenu(link, false));
+  });
+  if (menuPicture) {
+    menuPicture.addEventListener('pointermove', e => {
+      const r = menuPicture.getBoundingClientRect();
+      if (!r.width || !r.height) return;
+      const x = Math.max(0, Math.min(100, ((e.clientX - r.left) / r.width) * 100));
+      const y = Math.max(0, Math.min(100, ((e.clientY - r.top) / r.height) * 100));
+      menuPicture.style.setProperty('--loupe-x', `${x.toFixed(1)}%`);
+      menuPicture.style.setProperty('--loupe-y', `${y.toFixed(1)}%`);
+      menuPicture.classList.add('is-loupe-active');
+      if (menuPicture.dataset.portraitMode === 'true') menuPicture.classList.add('is-winking');
+    });
+    menuPicture.addEventListener('pointerleave', () => {
+      menuPicture.classList.remove('is-loupe-active');
+      if (activeMenuLink?.dataset.previewWink !== 'true') menuPicture.classList.remove('is-winking');
+    });
+  }
+  $('[data-menu-open-index]', menu)?.addEventListener('click', () => {
+    menu.close();
+    openDialog('#index-dialog');
+  });
+  menu.addEventListener('keydown', e => {
+    if (!menu.open || e.altKey || e.ctrlKey || e.metaKey) return;
+    if (e.key >= '1' && e.key <= '7') {
+      const idx = Number(e.key) - 1;
+      const target = menuLinks[idx];
+      if (target) {
+        e.preventDefault();
+        target.classList.add('is-key-flash');
+        setTimeout(() => target.classList.remove('is-key-flash'), 260);
+        target.focus();
+        previewMenu(target, true);
+      }
+    } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      const currentIdx = Math.max(0, menuLinks.indexOf(activeMenuLink || currentMenuLink() || menuLinks[0]));
+      const step = e.key === 'ArrowDown' ? 1 : -1;
+      const next = menuLinks[(currentIdx + step + menuLinks.length) % menuLinks.length];
+      if (next) {
+        next.focus();
+        previewMenu(next, true);
+      }
+    } else if (e.key === '/' || e.key === 'i' || e.key === 'I') {
+      e.preventDefault();
+      menu.close();
+      openDialog('#index-dialog');
+    }
   });
   menu.addEventListener('close', () => {
     clearReelTimer();
     activeReel = null;
+    if (menuPicture) menuPicture.classList.remove('is-loupe-active', 'is-winking');
     menuRequest++;
     menuButtons.forEach(button => button.setAttribute('aria-expanded', 'false'));
   });

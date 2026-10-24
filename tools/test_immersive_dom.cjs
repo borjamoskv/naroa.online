@@ -300,9 +300,16 @@ async function eyeMatch(ui, base, points) {
   artistMenu.dispatchEvent(new ui.w.Event('pointerenter')); await ui.flush();
   assert.equal(ui.find('[data-menu-reel]').hidden, true, 'Non-collection sections hide the filmstrip cleanly');
   assert.equal(ui.find('[data-menu-preview-title]').textContent, 'Naroa Gutiérrez Gil', 'Preview follows the requested menu item');
+  assert.equal(ui.find('[data-menu-quote]').textContent, 'Me encontré a mí en los demás.', 'Handwritten quote updates per section');
+  assert.equal(ui.find('[data-menu-picture]').dataset.portraitMode, 'true', 'Portrait mode avoids colliding with the physical naroa sign');
+  assert.equal(ui.w.NAROA_SOUND.lastMenuNoteIndex, 2, 'Pointer hover triggers the matching scale degree');
   assert.equal(ui.find('[data-menu-item][aria-current]').getAttribute('href'), '/obra/', 'A preview never changes the current location');
   ui.find('[data-menu-item][href="/contacto/"]').focus(); await ui.flush();
   assert.equal(ui.find('[data-menu-preview-label]').textContent, 'Contacto', 'A shared photograph still updates the focused section label');
+  assert.equal(ui.find('[data-menu-picture]').classList.contains('is-winking'), true, 'Contacto activates the complicit portrait wink');
+  ui.find('#menu-dialog').dispatchEvent(new ui.w.KeyboardEvent('keydown', { key: '4', bubbles: true, cancelable: true })); await ui.flush();
+  assert.equal(ui.find('[data-menu-preview-label]').textContent, 'Trayectoria', 'Numeric shortcut 1-7 previews and focuses the corresponding section');
+  assert.equal(ui.find('[data-menu-preview-meta]').textContent, 'Exposiciones colectivas e individuales');
   assert.equal(ui.w.scrollY, heldPosition, 'Opening a panel preserves the exact scroll position');
   assert.equal(ui.find('[data-scene="1"] img').style.transform, heldPose, 'Opening a panel preserves the camera pose');
   ui.click('#menu-dialog [data-close-dialog]'); await ui.flush();

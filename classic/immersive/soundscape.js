@@ -22,6 +22,42 @@
     74.00, null,  69.02, 71.74, 77.24, 75.86, null,  74.00
   ];
   let melodyStep = -1, lastNote = -Infinity, noteDistance = 0;
+  const menuScale = [74.00, 77.24, 81.02, 77.24, 75.86, 74.00, 69.02];
+  let lastMenuNoteIndex = -1, lastMenuNoteTime = -Infinity;
+  function playMenuNote(index = 0) {
+    const idx = ((Number(index) || 0) % menuScale.length + menuScale.length) % menuScale.length;
+    lastMenuNoteIndex = idx;
+    if (!enabled || !engine || !context || !pageActive || document.hidden) return;
+    const now = performance.now();
+    if (now - lastMenuNoteTime < 75) return;
+    lastMenuNoteTime = now;
+    const strike = () => {
+      if (!enabled || !engine || !context) return;
+      const bells = [...engine.voices].filter(voice => voice.note !== undefined).length;
+      if (engine.voices.size >= 12 || bells >= 3) return;
+      clearTimeout(idle); clearTimeout(suspension);
+      idle = setTimeout(() => rest(), 240);
+      if (!active) { active = true; paint(); }
+      ramp(engine.master.gain, Math.max(engine.master.gain.value || 0, .18), .035);
+      const note = menuScale[idx];
+      const source = context.createBufferSource(), envelope = context.createGain();
+      const start = context.currentTime + .005;
+      const rate = Math.pow(2, (note - 74) / 12);
+      const duration = Math.min(1.05, engine.box.duration / rate - .02);
+      source.buffer = engine.box; source.loop = false; source.playbackRate.value = rate;
+      const curve = Float32Array.from(engine.noteEnvelope, level => level * .44);
+      envelope.gain.setValueCurveAtTime(curve, start, duration);
+      source.connect(envelope); envelope.connect(engine.music);
+      const voices = engine.voices, voice = { source, envelope, note }; voices.add(voice);
+      source.onended = () => { voices.delete(voice); source.disconnect(); envelope.disconnect(); };
+      source.start(start, 0); source.stop(start + duration);
+    };
+    if (context.state === 'running') strike();
+    else if (!waking) {
+      const ticket = generation;
+      waking = context.resume().then(() => { if (ticket === generation) strike(); }).catch(() => {}).finally(() => { waking = null; });
+    }
+  }
   function message(text = '') { status.textContent = text; status.hidden = !text; }
   function paint() {
     button.setAttribute('aria-pressed', String(enabled));
@@ -935,6 +971,9 @@
     portraitWink() {
       playPortraitWink();
     },
+    menuNote(index) {
+      playMenuNote(index);
+    },
     get lastUtterance() { return lastUtterance; },
     get lastFlashSlug() { return lastFlashSlug; },
     get lastPunchSlug() { return lastPunchSlug; },
@@ -943,7 +982,8 @@
     get lastPuzzleSlug() { return lastPuzzleSlug; },
     get lastClockSlug() { return lastClockSlug; },
     get lastWineSlug() { return lastWineSlug; },
-    get lastWinkSlug() { return lastWinkSlug; }
+    get lastWinkSlug() { return lastWinkSlug; },
+    get lastMenuNoteIndex() { return lastMenuNoteIndex; }
   });
   paint();
 })();
