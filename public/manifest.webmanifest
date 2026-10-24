@@ -1,0 +1,33 @@
+{
+  "name": "Naroa Gutiérrez Gil · Arte y Retratos",
+  "short_name": "Naroa",
+  "description": "Catálogo de obra plástica y servicio de retratos personalizados en Bilbao por Naroa Gutiérrez Gil.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#11120f",
+  "theme_color": "#11120f",
+  "icons": [
+    {
+      "src": "/assets/naroa-icon-180-v1.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/naroa-icon-64-v1.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/naroa-icon-32-v1.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
