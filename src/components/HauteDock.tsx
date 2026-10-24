@@ -235,7 +235,7 @@ export function HauteDock({
           whiteSpace: 'nowrap',
         }}
       >
-        {/* BOTÓN LABORATORIO */}
+        {/* BOTÓN HORIZONTE */}
         <button
           data-cursor="HORIZONTE"
           onClick={() => {
@@ -257,12 +257,12 @@ export function HauteDock({
             transition: 'all 0.25s ease',
           }}
         >
-          LABORATORIO
+          HORIZONTE
         </button>
 
-        {/* BOTÓN PABELLÓN 3D EXPERIMENTS */}
+        {/* BOTÓN PABELLÓN 3D */}
         <button
-          data-cursor="3D EXP"
+          data-cursor="PABELLÓN"
           onClick={() => {
             sound.playHapticClick(1.1)
             onSelectMode('3d')
@@ -282,12 +282,12 @@ export function HauteDock({
             transition: 'all 0.25s ease',
           }}
         >
-          3D EXPERIMENTS
+          PABELLÓN 3D
         </button>
 
-        {/* BOTÓN ARCHIVO CANÓNICO */}
+        {/* BOTÓN COLECCIÓN */}
         <button
-          data-cursor="CATÁLOGO"
+          data-cursor="COLECCIÓN"
           onClick={() => {
             sound.playHapticClick(1.0)
             onOpenIndex()
@@ -314,10 +314,10 @@ export function HauteDock({
             e.currentTarget.style.background = 'transparent'
           }}
         >
-          ARCHIVO ({totalArtworks})
+          COLECCIÓN ({totalArtworks})
         </button>
 
-        {/* BOTÓN PROCESO / TALLER */}
+        {/* BOTÓN EL ATELIER */}
         <button
           data-cursor="ATELIER"
           onClick={() => {
@@ -346,7 +346,7 @@ export function HauteDock({
             e.currentTarget.style.background = 'transparent'
           }}
         >
-          PROCESO / TALLER
+          EL ATELIER
         </button>
 
         {/* BOTÓN ENCARGOS BESPOKE */}

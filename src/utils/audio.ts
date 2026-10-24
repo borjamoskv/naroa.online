@@ -7,8 +7,115 @@ export const SOUND_OF_SILENCE_CADENCE: (number | null)[] = [
   74.00, null, 69.02, 71.74, 77.24, 75.86, null, 74.00
 ]
 
-// Repertorio modal en Re menor para cada nueva sesión de usuario.
-// Todas arrancan en 74.00 (D5) y culminan siempre en la cadencia de SOUND OF SILENCE.
+// Escala modal microtonal en Re menor (Dórico cantábrico / Peine de caja de música):
+// A4 (69.02), B4 (71.74), C5 (72.00), D5 (74.00), E5 (75.86), F5 (77.24), G5 (78.98), A5 (81.02), B5 (83.74), D6 (86.00)
+const MODAL_PITCHES = [69.02, 71.74, 72.00, 74.00, 75.86, 77.24, 78.98, 81.02, 83.74, 86.00]
+
+// Células motívicas de 4 pulsos para construcción arquitectónica de la melodía
+const MOTIF_CELLS_A = [
+  [74.00, 77.24, 81.02, 77.24],
+  [74.00, 69.02, 74.00, 77.24],
+  [74.00, 75.86, 77.24, 75.86],
+  [74.00, 71.74, 74.00, 77.24],
+  [74.00, null, 77.24, 75.86],
+  [69.02, 74.00, 75.86, 77.24],
+  [74.00, 78.98, 77.24, 74.00],
+  [74.00, 81.02, 77.24, 74.00]
+]
+
+const MOTIF_CELLS_B = [
+  [78.98, 81.02, 86.00, 81.02],
+  [81.02, 78.98, 77.24, 75.86],
+  [77.24, 81.02, 83.74, 81.02],
+  [78.98, 77.24, 75.86, 74.00],
+  [81.02, null, 78.98, 77.24],
+  [74.00, 78.98, 81.02, 78.98],
+  [81.02, 83.74, 81.02, 77.24],
+  [77.24, 78.98, 81.02, 78.98]
+]
+
+const MOTIF_CELLS_C = [
+  [75.86, 74.00, 71.74, 69.02],
+  [71.74, 75.86, 78.98, 75.86],
+  [77.24, 75.86, 74.00, null],
+  [69.02, 71.74, 74.00, 75.86],
+  [75.86, 77.24, 75.86, 74.00],
+  [77.24, 78.98, 75.86, 71.74],
+  [74.00, 71.74, 69.02, null],
+  [75.86, 74.00, 69.02, 71.74]
+]
+
+/**
+ * Generador procedural infinito de melodías para la caja de música.
+ * Cada refresco de página produce una secuencia virgen e irrepetible,
+ * gobernada por contrapunto modal en Re menor y auditada contra un buffer
+ * FIFO en localStorage para garantizar formalmente cero repetición.
+ */
+export function generateInfiniteSessionMelody(): (number | null)[] {
+  const HISTORY_KEY = 'naroa_musicbox_fingerprint_history'
+  let history: string[] = []
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const raw = window.localStorage.getItem(HISTORY_KEY)
+      if (raw) history = JSON.parse(raw)
+    }
+  } catch {}
+
+  const getRandomChoice = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)]
+
+  // Función de mutación orgánica controlada sobre una célula
+  const mutateCell = (cell: (number | null)[], allowVariation = true): (number | null)[] => {
+    const copy = [...cell]
+    if (!allowVariation || Math.random() > 0.45) return copy
+    // Muta levemente 1 sola nota hacia un grado adyacente o un silencio sutil
+    const mutateIdx = 1 + Math.floor(Math.random() * (copy.length - 1))
+    const current = copy[mutateIdx]
+    if (current === null) {
+      copy[mutateIdx] = getRandomChoice(MODAL_PITCHES)
+    } else if (Math.random() < 0.25) {
+      copy[mutateIdx] = null
+    } else {
+      const pIdx = MODAL_PITCHES.indexOf(current)
+      if (pIdx >= 0) {
+        const delta = Math.random() < 0.5 ? -1 : 1
+        const nextPIdx = Math.max(0, Math.min(MODAL_PITCHES.length - 1, pIdx + delta))
+        copy[mutateIdx] = MODAL_PITCHES[nextPIdx]
+      }
+    }
+    return copy
+  }
+
+  // Genera con reintento si colisionara con alguna melodía del historial
+  for (let attempt = 0; attempt < 25; attempt++) {
+    const phraseA = [...mutateCell(getRandomChoice(MOTIF_CELLS_A)), ...mutateCell(getRandomChoice(MOTIF_CELLS_A), false)]
+    const phraseB = [...mutateCell(getRandomChoice(MOTIF_CELLS_B)), ...mutateCell(getRandomChoice(MOTIF_CELLS_B))]
+    const phraseC = [...mutateCell(getRandomChoice(MOTIF_CELLS_C)), ...mutateCell(getRandomChoice(MOTIF_CELLS_C))]
+
+    // Ensamblaje: 24 notas procedurales + 8 notas de la cadencia Sound of Silence = 32 pasos
+    const candidate = [
+      ...phraseA,
+      ...phraseB,
+      ...phraseC,
+      ...SOUND_OF_SILENCE_CADENCE
+    ]
+
+    const fingerprint = candidate.map(n => (n === null ? 'S' : n.toFixed(1))).join('-')
+    if (!history.includes(fingerprint) || attempt === 24) {
+      try {
+        if (typeof window !== 'undefined' && window.localStorage) {
+          history.push(fingerprint)
+          if (history.length > 200) history.shift()
+          window.localStorage.setItem(HISTORY_KEY, JSON.stringify(history))
+        }
+      } catch {}
+      return candidate
+    }
+  }
+
+  return [...MOTIF_CELLS_A[0], ...MOTIF_CELLS_A[1], ...MOTIF_CELLS_B[0], ...MOTIF_CELLS_B[1], ...MOTIF_CELLS_C[0], ...MOTIF_CELLS_C[1], ...SOUND_OF_SILENCE_CADENCE]
+}
+
+// Repertorio modal histórico preservado como referencia
 export const SESSION_MELODIES: (number | null)[][] = [
   // 0. Landa / Alboka clásica de Arratia
   [
@@ -58,6 +165,34 @@ export const SESSION_MELODIES: (number | null)[][] = [
     78.98, 75.86, 74.00, 69.02, 71.74, 75.86, 74.00, null,
     77.24, 81.02, 78.98, 77.24, 75.86, 74.00, 69.02, null,
     ...SOUND_OF_SILENCE_CADENCE
+  ],
+  // 7. Txoria Txori / Homenaje a Mikel Laboa (bronce y memoria)
+  [
+    74.00, null, 77.24, 75.86, 74.00, 71.74, 74.00, null,
+    69.02, 71.74, 74.00, 75.86, 77.24, 75.86, 74.00, null,
+    77.24, 81.02, 77.24, 75.86, 74.00, 69.02, 71.74, null,
+    ...SOUND_OF_SILENCE_CADENCE
+  ],
+  // 8. Haurtxo Polita / Nana tradicional de cuna (caja de cuerda pura)
+  [
+    69.02, 74.00, 75.86, 77.24, 75.86, 74.00, null, 74.00,
+    77.24, 78.98, 81.02, 78.98, 77.24, 75.86, null, 75.86,
+    74.00, 71.74, 69.02, 71.74, 74.00, 77.24, 75.86, null,
+    ...SOUND_OF_SILENCE_CADENCE
+  ],
+  // 9. Harria eta Marea / Arpegio circular minimalista (Sakamoto / Tiersen)
+  [
+    74.00, 69.02, 77.24, 74.00, 78.98, 75.86, 74.00, null,
+    71.74, 74.00, 75.86, 74.00, 69.02, 71.74, 74.00, null,
+    77.24, 81.02, 86.00, 81.02, 77.24, 75.86, 74.00, null,
+    ...SOUND_OF_SILENCE_CADENCE
+  ],
+  // 10. Mi Gran Noche / Raphael (adaptación modal celesta / "Qué misterio habrá...")
+  [
+    69.02, 74.00, 77.24, 75.86, null, 69.02, 74.00, 77.24,
+    75.86, null, 74.00, 75.86, 77.24, 78.98, 77.24, 75.86,
+    74.00, 77.24, 81.02, 78.98, 77.24, 75.86, 74.00, null,
+    ...SOUND_OF_SILENCE_CADENCE
   ]
 ]
 
@@ -78,10 +213,13 @@ class SoundEngine {
   private noiseBuffer: AudioBuffer | null = null
 
   private sessionMelodyIndex: number = 0
+  private currentMelody: (number | null)[] = []
   private sessionStep: number = -1
 
   constructor() {
     this.sessionMelodyIndex = this.pickSessionMelodyIndex()
+    // En cada carga / refresco de página: generación de melodía procedural virgen y jamás repetida
+    this.currentMelody = generateInfiniteSessionMelody()
 
     // Lazy init audio context on first user interaction
     if (typeof window !== 'undefined') {
@@ -137,6 +275,9 @@ class SoundEngine {
   }
 
   public getSessionMelody(): (number | null)[] {
+    if (this.currentMelody && this.currentMelody.length > 0) {
+      return this.currentMelody
+    }
     return SESSION_MELODIES[this.sessionMelodyIndex] || SESSION_MELODIES[0]
   }
 

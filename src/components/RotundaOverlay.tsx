@@ -116,17 +116,17 @@ export function RotundaOverlay({
             animation: 'fadeIn 0.25s ease-out',
           }}
         >
-          {/* Micro-índice curatorial */}
+          {/* Micro-índice curatorial de alta gama */}
           <div
             style={{
               fontFamily: 'var(--font-mono, monospace)',
-              fontSize: '0.62rem',
+              fontSize: '0.64rem',
               letterSpacing: '0.24em',
               color: 'rgba(212, 175, 55, 0.75)',
               textTransform: 'uppercase',
             }}
           >
-            ROTONDA · OBRA {String(selectedIndex + 1).padStart(2, '0')} / {String(ARTWORKS.length).padStart(2, '0')}
+            PABELLÓN DE RESONANCIA MINERAL · {String(selectedIndex + 1).padStart(2, '0')} / {String(ARTWORKS.length).padStart(2, '0')}
           </div>
 
           {/* Kicker poético si existe */}
