@@ -17,6 +17,7 @@ class Page(HTMLParser):
         self.ids = []
         self.refs = []
         self.images = []
+        self.meta = {}
         self.headings = 0
         self.lang = None
         self.canonical = None
@@ -32,6 +33,10 @@ class Page(HTMLParser):
             self.ids.append(a["id"])
         if tag == "html":
             self.lang = a.get("lang")
+        if tag == "meta":
+            key = a.get("property") or a.get("name")
+            if key:
+                self.meta[key] = a.get("content", "")
         if tag == "h1":
             self.headings += 1
         if tag == "link" and a.get("rel") == "canonical":

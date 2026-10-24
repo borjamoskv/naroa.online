@@ -691,12 +691,14 @@ def build(output):
 
     work_by_route = {f"/obra/{p['slug']}/": p for p in projects}
     sitemap_entries = []
-    for path, image, *rest in pages:
+    for path, image, page_title, page_alt in pages:
         if path in work_by_route:
             w = work_by_route[path]
             imgs = ''.join(f'<image:image><image:loc>{ORIGIN}{esc(ph["original"])}</image:loc><image:title>{esc(w["title"])} · {esc(ph["caption"])}</image:title><image:caption>{esc(work_alt(w, ph["caption"]))}</image:caption></image:image>' for ph in w["photos"])
+        elif path == "/retratos-por-encargo-bilbao/":
+            imgs = ''.join(f'<image:image><image:loc>{ORIGIN}{esc(ex["photos"][0]["original"])}</image:loc><image:title>{esc(ex["title"])} · {esc(kind_label)}</image:title><image:caption>{esc(work_alt(ex, kind_label))}</image:caption></image:image>' for ex, kind_label, _ in commission_examples)
         else:
-            imgs = f'<image:image><image:loc>{ORIGIN}{esc(image)}</image:loc></image:image>' if image else ''
+            imgs = f'<image:image><image:loc>{ORIGIN}{esc(image)}</image:loc><image:title>{esc(page_title)} · Naroa Gutiérrez Gil</image:title><image:caption>{esc(page_alt)}</image:caption></image:image>' if image else ''
         sitemap_entries.append(f'<url><loc>{ORIGIN}{path}</loc><lastmod>{catalogue["reviewed"]}</lastmod>{imgs}</url>')
     robots_content = (
         "User-agent: OAI-SearchBot\n"
@@ -723,8 +725,10 @@ def build(output):
         "Disallow: /assets/backup_pre4k/\n\n"
         "Sitemap: " + ORIGIN + "/sitemap.xml\n"
     )
+    sitemap_xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">' + ''.join(sitemap_entries) + '</urlset>\n'
     write(output / "robots.txt", robots_content)
-    write(output / "sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">' + ''.join(sitemap_entries) + '</urlset>\n')
+    write(output / "sitemap.xml", sitemap_xml)
+    write(REPO / "public" / "sitemap.xml", sitemap_xml)
     indexnow_key = "6621e1f1c138eeb14922f7804f61ae34"
     write(output / f"{indexnow_key}.txt", indexnow_key + "\n")
     write(output / "indexnow.json", json.dumps({"host": "naroagutierrezgil.com", "key": indexnow_key, "keyLocation": f"{ORIGIN}/{indexnow_key}.txt", "urlList": [ORIGIN + p[0] for p in pages]}, indent=2) + "\n")
