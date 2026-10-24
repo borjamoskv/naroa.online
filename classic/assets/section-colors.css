@@ -1,0 +1,78 @@
+/* ═════════════════════════════════════════════════════════════════════
+   NAROA · PALETAS CROMÁTICAS DIFERENCIADAS POR SECCIÓN (C5-REAL)
+   Cada sección canónica adquiere una identidad cromática única y armónica
+   con el universo de Naroa: Pizarra, Carmesí POP, Esmeralda, Kintsugi y Cobalto.
+   ═════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. PORTADA / HERO: Pizarra Grafito Mineral ── */
+#view-home,
+#view-home.studio-hero {
+  background: linear-gradient(180deg, #0e1014 0%, #08090c 60%, #060709 100%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ── 2. OBRA DESTACADA / CATÁLOGO: Carmesí Veneciano & Rubí POP ── */
+#view-destacada,
+#view-destacada.editorial-catalog {
+  background: linear-gradient(180deg, #1a0812 0%, #12040b 50%, #0a0206 100%) !important;
+  border-bottom: 1px solid rgba(244, 63, 94, 0.12);
+}
+
+#view-destacada .catalog-intro {
+  background: transparent !important;
+}
+
+/* ── 3. SOBRE MÍ & CUADERNO: Verde Jade & Esmeralda Mineral ── */
+#view-about,
+#view-about.view--about {
+  background: linear-gradient(180deg, #061a14 0%, #03110d 50%, #020a08 100%) !important;
+  border-bottom: 1px solid rgba(16, 185, 129, 0.12);
+}
+
+#view-about .artist-hero {
+  background: transparent !important;
+}
+
+#view-about .artist-profile {
+  background: transparent !important;
+}
+
+#view-about .artist-opening {
+  background: transparent !important;
+}
+
+#view-about .artist-notebook {
+  background: rgba(0, 0, 0, 0.22) !important;
+  border-radius: 20px;
+  border: 1px solid rgba(16, 185, 129, 0.15);
+}
+
+/* ── 4. TRAYECTORIA / EXPOSICIONES: Ocre & Oro Kintsugi ── */
+#view-trayectoria,
+#view-trayectoria.view--trayectoria {
+  background: linear-gradient(180deg, #1c1205 0%, #130c03 50%, #0a0601 100%) !important;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+#view-trayectoria #exposiciones-container,
+#view-trayectoria .career-home {
+  background: transparent !important;
+}
+
+/* ── 5. CONTACTO & ENCARGOS: Azul Cobalto & Prusia Medianoche ── */
+#view-contacto,
+#view-contacto.view--contacto {
+  background: linear-gradient(180deg, #081426 0%, #040b15 50%, #02050c 100%) !important;
+}
+
+#view-contacto .contacto,
+#view-contacto .encargo {
+  background: transparent !important;
+}
+
+#view-contacto .contacto__block {
+  background: rgba(8, 20, 38, 0.6) !important;
+  border: 1px solid rgba(59, 130, 246, 0.2) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
