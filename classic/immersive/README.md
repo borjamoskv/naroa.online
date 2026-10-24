@@ -95,6 +95,13 @@ after opt-in, along with the two nature beds. Notes move down an octave inside a
 iris and recover their register on exit, sharing the existing stereo/mono
 transition and exact-silence release. Notes and texture fragments share a bounded
 voice budget; no timer advances the melody while the visitor is still.
+Each new step also needs 5.5svh of accepted travel, so small movements cannot
+retrigger a rapid run. The four phrases have leading accents and softer answers,
+with six concurrent bells at most. A short stereo room is synthesized locally
+from deterministic reflections; its filtered return closes inside the iris and
+opens outside. It enters before the master silence gate, so the reflections
+cannot leak through a pause. Gentler nature windows and a soft-knee compressor
+control accumulated transients without adding a continuous backing track.
 
 The nature texture uses a reactive ambient / musique concrète instrument using
 CC0 field recordings of birds, river and wind by Thimras. Sources, licence and
@@ -102,7 +109,7 @@ editing are documented in `classic/audio/CREDITS.md`, also linked from the site
 menu. Two 66-second source beds (about 2.1 MB combined) supply the material; they
 are never played as a continuous loop. Web Audio and the files load only after
 explicit opt-in, which leaves the instrument silent until the next real scroll.
-Actual displacement triggers short, Hann-windowed fragments with a 90 ms minimum
+Actual displacement triggers short, Hann-windowed fragments with a 120–160 ms minimum
 spacing and a bounded voice count. Scroll speed controls gain and playback rate,
 direction controls gentle stereo placement, and the shared camera depth controls
 the blend and filtering of the field and concrete textures. Inside an iris, shared low-pass filtering, lower fragment pitch and a central

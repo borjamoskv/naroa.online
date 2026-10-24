@@ -10,7 +10,7 @@
   let lastY = scrollY, lastMotion = null, lastGrain = -Infinity, energy = 0, direction = 1, seed = 0, pendingDistance = 0;
   // Original four-phrase motif in D minor. Null steps let the mechanism breathe.
   const melody = [74,77,81,77,76,74,69,null,72,76,79,76,74,72,69,null,74,77,81,84,81,77,76,null,74,null,69,72,77,76,null,74];
-  let melodyStep = -1, lastNote = -Infinity;
+    let melodyStep = -1, lastNote = -Infinity, noteDistance = 0;
   function message(text = '') { status.textContent = text; status.hidden = !text; }
   function paint() {
     button.setAttribute('aria-pressed', String(enabled));
@@ -40,12 +40,16 @@
     ramp(engine.tone.frequency, 9200 * Math.pow(460 / 9200, inside), .18);
     ramp(engine.open.gain, 1 - inside * .94, .18);
     ramp(engine.core.gain, inside * .94, .18);
+      ramp(engine.roomGain.gain, .22 - inside * .20, .22);
+      ramp(engine.roomTone.frequency, 4200 * Math.pow(900 / 4200, inside), .22);
     if (engine.panner) ramp(engine.panner.pan, direction * energy * .22 * (1 - inside * .9), .12);
     engine.voices.forEach(voice => ramp(voice.source.playbackRate, voice.note === undefined ? rateFor(voice.index) : noteRate(voice.note), .12));
   }
   function playMelody(now) {
-    if (now - lastNote < 360 - energy * 130 || engine.voices.size >= 18) return;
+      const bells = [...engine.voices].filter(voice => voice.note !== undefined).length;
+      if (now - lastNote < 420 - energy * 150 + depth * 80 || engine.voices.size >= 18 || bells >= 6 || (melodyStep >= 0 && noteDistance < .055)) return;
     lastNote = now;
+      noteDistance = 0;
     melodyStep = melodyStep < 0 ? 0 : (melodyStep + direction + melody.length) % melody.length;
     const note = melody[melodyStep];
     if (note === null) return;
@@ -53,7 +57,10 @@
     const start = context.currentTime + .005;
     const duration = Math.min(1.25 + depth * .25, engine.box.duration / Math.pow(2, (note - 74) / 12) - .02);
     source.buffer = engine.box; source.loop = false; source.playbackRate.value = noteRate(note);
-    envelope.gain.setValueCurveAtTime(engine.noteEnvelope, start, duration);
+      const accent = melodyStep % 8 === 0 ? 1 : melodyStep % 4 === 2 ? .82 : .91;
+      const velocity = (.62 + energy * .23) * accent;
+      const curve = Float32Array.from(engine.noteEnvelope, level => level * velocity);
+      envelope.gain.setValueCurveAtTime(curve, start, duration);
     source.connect(envelope); envelope.connect(engine.music);
     const voices = engine.voices, voice = { source, envelope, note }; voices.add(voice);
     source.onended = () => { voices.delete(voice); source.disconnect(); envelope.disconnect(); };
@@ -90,10 +97,10 @@
   function excite() {
     const now = performance.now();
     if (!enabled || !engine || !pageActive || document.hidden || lastMotion === null || now - lastMotion > 200) return;
-    ramp(engine.master.gain, .10 + energy * .48, .035);
+      ramp(engine.master.gain, .10 + energy * .40, .045);
     mix();
     playMelody(now);
-    if (now - lastGrain < 90 || engine.voices.size >= 18) return;
+      if (now - lastGrain < 145 - energy * 25 + depth * 15 || engine.voices.size >= 16) return;
     lastGrain = now; seed += direction * .371;
     const start = context.currentTime + .005, voices = engine.voices;
     engine.buffers.forEach((buffer, index) => {
@@ -117,6 +124,8 @@
     pendingDistance += delta;
     if (Math.abs(pendingDistance) < Math.max(active ? 1.5 : 5, innerHeight * (active ? .002 : .008))) return;
     delta = pendingDistance; pendingDistance = 0;
+      // Wind the mechanism with distance as well as time; never queue a burst.
+      noteDistance = Math.min(.18, noteDistance + Math.abs(delta) / Math.max(1, innerHeight));
     const now = performance.now(), elapsed = lastMotion === null ? .08 : Math.max(.016, Math.min(.12, (now - lastMotion) / 1000));
     energy = Math.min(1, Math.sqrt(Math.abs(delta) / Math.max(1, innerHeight) / elapsed * .55));
     direction = Math.sign(delta); lastMotion = now;
@@ -142,19 +151,41 @@
     const tone = context.createBiquadFilter(); tone.type = 'lowpass'; tone.frequency.value = 9200; tone.Q.value = .4;
     const open = context.createGain(), core = context.createGain();
     const music = context.createGain(); music.gain.value = .86; music.connect(master);
+      // Short, deterministic stereo reflections give each tine a small room.
+      // The return is upstream of the master gate, so a pause silences the room too.
+      const roomGain = context.createGain(), roomTone = context.createBiquadFilter(), room = context.createConvolver();
+      roomTone.type = 'lowpass'; roomTone.frequency.value = 4200; roomTone.Q.value = .3;
+      roomGain.gain.value = .22;
+      const response = context.createBuffer(2, Math.ceil(context.sampleRate * .72), context.sampleRate);
+      for (let channel = 0; channel < 2; channel++) {
+        const samples = response.getChannelData(channel); let random = 731 + channel * 197;
+        for (let i = Math.floor(context.sampleRate * .018); i < samples.length; i++) {
+          random = (random * 1664525 + 1013904223) >>> 0;
+          samples[i] = (random / 4294967296 * 2 - 1) * .012 * Math.exp(-i / context.sampleRate / .14) * (1 - i / samples.length);
+        }
+        [[.023,.22],[.041,.16],[.069,.10],[.113,.06]].forEach(([delay, level]) => {
+          samples[Math.round((delay + channel * .0017) * context.sampleRate)] += level;
+        });
+      }
+      room.normalize = false; room.buffer = response;
+      music.connect(roomTone); roomTone.connect(room); room.connect(roomGain); roomGain.connect(master);
     core.channelCount = 1; core.channelCountMode = 'explicit'; core.channelInterpretation = 'speakers';
     master.gain.value = 0; nature.gain.value = .12; iris.gain.value = .025; open.gain.value = 1; core.gain.value = 0;
     nature.connect(master); iris.connect(master); master.connect(open); master.connect(core);
     open.connect(tone); core.connect(tone);
     filter.connect(nature);
     const panner = context.createStereoPanner?.();
-    if (panner) { tone.connect(panner); panner.connect(context.destination); }
-    else tone.connect(context.destination);
-    const envelope = Float32Array.from({ length: 64 }, (_, i) => .7 * Math.sin(Math.PI * i / 63) ** 2);
+      const compressor = context.createDynamicsCompressor();
+      compressor.threshold.value = -18; compressor.knee.value = 18; compressor.ratio.value = 3;
+      compressor.attack.value = .006; compressor.release.value = .18;
+      if (panner) { tone.connect(panner); panner.connect(compressor); }
+      else tone.connect(compressor);
+      compressor.connect(context.destination);
+      const envelope = Float32Array.from({ length: 64 }, (_, i) => .55 * Math.sin(Math.PI * i / 63) ** 2);
     envelope[0] = envelope[63] = 0;
     const noteEnvelope = Float32Array.from({ length: 64 }, (_, i) => i === 0 ? 0 : i < 53 ? 1 : Math.cos((i - 53) / 10 * Math.PI / 2) ** 2);
     noteEnvelope[63] = 0;
-    return { master, nature, iris, filter, tone, open, core, music, panner, buffers: decoded.slice(0, 2), box: decoded[2], envelope, noteEnvelope, voices: new Set() };
+      return { master, nature, iris, filter, tone, open, core, music, panner, roomGain, roomTone, buffers: decoded.slice(0, 2), box: decoded[2], envelope, noteEnvelope, voices: new Set() };
   }
   button.addEventListener('click', () => {
     if (loading) return;
