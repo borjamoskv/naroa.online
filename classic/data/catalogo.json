@@ -2573,26 +2573,26 @@
       "materials": "Lápices de colores, tintas, papeles estampados, celosía dorada, gominolas en relieve y marco vitrina negro"
     },
     {
-      "slug": "pink-and-sparkles",
-      "title": "Pink and Sparkles",
-      "category": "objetos",
-      "technique": "Grafito, acrílico neón, mica mineral y collage textil",
+      "slug": "boy",
+      "title": "Boy",
+      "category": "collage",
+      "technique": "Grafito, acrílico neón, mica mineral y collage",
       "support": "Lienzo sobre bastidor",
-      "story": "Retrato de mirada penetrante y expresiva con fondo de mica mineral pura en tonalidad rubí y destellos de acrílico neón. El contraste entre la sutileza del trazo y la materia geológica reflectante crea una atmósfera hipnótica.",
+      "story": "Homenaje a la célebre portada del álbum debut de U2, «Boy» (1980), protagonizada por Peter Rowen. La mirada penetrante e inocente del niño emerge entre el trazo sutil de grafito y un fondo vibrante de mica mineral rubí pura y acrílico neón.",
       "images": [
         {
-          "src": "/images/catalogo/pink-and-sparkles-4k.webp",
+          "src": "/images/catalogo/boy-4k.webp",
           "width": 3072,
           "height": 3840,
-          "caption": "Fotografía master 4K de Pink and Sparkles con grafito, acrílico neón y fondo de mica mineral pura.",
+          "caption": "Fotografía master 4K de Boy: grafito, acrílico neón y fondo de mica mineral pura.",
           "source": null,
           "sha256": "265fd042fe8c0a54c8e8cbb01252c3bfd214afd53dac480123b78848128654d7"
         },
         {
-          "src": "/images/artworks/pink-and-sparkles-c4K6RUzC.webp",
+          "src": "/images/artworks/boy-c4K6RUzC.webp",
           "width": 3072,
           "height": 3840,
-          "caption": "Detalle del relieve volumétrico y destellos de la mica mineral.",
+          "caption": "Detalle del relieve mineral y destellos de la mica rubí.",
           "source": null,
           "sha256": "265fd042fe8c0a54c8e8cbb01252c3bfd214afd53dac480123b78848128654d7"
         }
@@ -2610,7 +2610,7 @@
           1
         ],
         "captions": [
-          "Pink and Sparkles: destellos minerales e intensidad cromática.",
+          "Boy: el rostro icónico de Peter Rowen envuelto en destellos minerales.",
           "El volumen y los reflejos de la mica mineral pura."
         ]
       }

@@ -2955,36 +2955,36 @@
       "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20The%20Golden%20Couple"
     },
     {
-      "slug": "pink-and-sparkles",
-      "title": "Pink and Sparkles",
-      "category": "objetos",
+      "slug": "boy",
+      "title": "Boy",
+      "category": "collage",
       "series": "DiviNos",
-      "technique": "Grafito, acrílico neón, mica mineral y collage textil",
+      "technique": "Grafito, acrílico neón, mica mineral y collage",
       "support": "Lienzo sobre bastidor",
       "dimensions": "50 × 40 cm",
       "materials": null,
       "year": 2005,
-      "story": "Retrato de mirada penetrante y expresiva con fondo de mica mineral pura en tonalidad rubí y destellos de acrílico neón. El contraste entre la sutileza del trazo y la materia geológica reflectante crea una atmósfera hipnótica.",
-      "url": "https://naroagutierrezgil.com/obra/pink-and-sparkles/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/pink-and-sparkles-4k-265fd042fe8c-view.webp",
+      "story": "Homenaje a la célebre portada del álbum debut de U2, «Boy» (1980), protagonizada por Peter Rowen. La mirada penetrante e inocente del niño emerge entre el trazo sutil de grafito y un fondo vibrante de mica mineral rubí pura y acrílico neón.",
+      "url": "https://naroagutierrezgil.com/obra/boy/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/boy-4k-265fd042fe8c-view.webp",
       "photos": [
         {
-          "url": "https://naroagutierrezgil.com/images/catalogo/pink-and-sparkles-4k.webp",
+          "url": "https://naroagutierrezgil.com/images/catalogo/boy-4k.webp",
           "width": 3072,
           "height": 3840,
-          "caption": "Fotografía master 4K de Pink and Sparkles con grafito, acrílico neón y fondo de mica mineral pura.",
+          "caption": "Fotografía master 4K de Boy: grafito, acrílico neón y fondo de mica mineral pura.",
           "sha256": "265fd042fe8c0a54c8e8cbb01252c3bfd214afd53dac480123b78848128654d7"
         },
         {
-          "url": "https://naroagutierrezgil.com/images/artworks/pink-and-sparkles-c4K6RUzC.webp",
+          "url": "https://naroagutierrezgil.com/images/artworks/boy-c4K6RUzC.webp",
           "width": 3072,
           "height": 3840,
-          "caption": "Detalle del relieve volumétrico y destellos de la mica mineral.",
+          "caption": "Detalle del relieve mineral y destellos de la mica rubí.",
           "sha256": "265fd042fe8c0a54c8e8cbb01252c3bfd214afd53dac480123b78848128654d7"
         }
       ],
-      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Pink%20and%20Sparkles",
-      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Pink%20and%20Sparkles"
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Boy",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Boy"
     },
     {
       "slug": "izei",
