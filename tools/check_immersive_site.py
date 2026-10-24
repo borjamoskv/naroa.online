@@ -83,6 +83,15 @@ def check(output):
         assert page.canonical == "https://naroagutierrezgil.com" + route, file
         assert page.favicon and page.favicon.startswith("/immersive/favicon-amy-"), file
         assert page.json_blocks and page.json_blocks[0].get("@type"), file
+        schema0 = page.json_blocks[0]
+        assert schema0.get("inLanguage") == "es-ES", (file, "missing inLanguage")
+        assert schema0.get("dateModified") == manifest["reviewed"], (file, "missing dateModified")
+        assert schema0.get("primaryImageOfPage", {}).get("width", 0) > 0, (file, "missing primaryImageOfPage dimensions")
+        assert "FAQPage" not in json.dumps(schema0), (file, "deprecated FAQPage schema present")
+        assert int(page.meta.get("og:image:width", "0")) > 0, (file, "missing og:image:width")
+        assert int(page.meta.get("og:image:height", "0")) > 0, (file, "missing og:image:height")
+        assert page.meta.get("og:image:alt"), (file, "missing og:image:alt")
+        assert page.meta.get("twitter:image:alt"), (file, "missing twitter:image:alt")
         if page.gallery:
             assert int(page.gallery["data-initial"]) < len(page.scenes), file
             assert len(page.scenes) == (8 if route == "/series/vaivenes/" else len(expected)), (file, len(page.scenes))
@@ -104,6 +113,14 @@ def check(output):
     assert picture.startswith("data:image/webp;base64,")
     assert base64.b64decode(picture.split(",", 1)[1], validate=True).startswith(b"RIFF")
     assert (output / "robots.txt").is_file()
+    sitemap_root = ET.parse(output / "sitemap.xml").getroot()
+    ns = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9", "i": "http://www.google.com/schemas/sitemap-image/1.1"}
+    sitemap_urls = sitemap_root.findall("s:url", ns)
+    assert len(sitemap_urls) == len(manifest["canonical_routes"])
+    for u_el in sitemap_urls:
+        for img_el in u_el.findall("i:image", ns):
+            assert img_el.findtext("i:title", default="", namespaces=ns).strip(), "sitemap image missing title"
+            assert img_el.findtext("i:caption", default="", namespaces=ns).strip(), "sitemap image missing caption"
     for file in output.rglob("*"):
         if file.is_file():
             assert file.stat().st_size < 25 * 1024 * 1024, ("asset exceeds hosting limit", file)
