@@ -721,6 +721,7 @@ async function eyeMatch(ui, base, points) {
   assert.equal(ctx.gains[5].gain.value, .55, 'Musical gain is set to 0.55');
   assert.equal(typeof music.w.NAROA_SOUND.frame, 'function', 'NAROA_SOUND.frame interface is exposed');
   assert.equal(typeof music.w.NAROA_SOUND.portraitWink, 'function', 'portraitWink interface is exposed');
+  assert.ok(music.w.NAROA_SOUND.dailyMelody?.name, 'Music box daily melody name is present');
   music.click('[data-portrait-plane]'); await music.flush();
   assert.equal(music.w.NAROA_SOUND.lastWinkSlug, 'naroa-monoculo', 'Clicking portrait plane triggers monocle wink acoustic cue');
   music.w.scrollTo({ top: 20 }); await music.flush();

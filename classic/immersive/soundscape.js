@@ -17,93 +17,107 @@
   // D5 (sound), [silencio], A4 (of), C5 (si-), F5 (-lence), E5 (resolución), [silencio], D5 (tónica)
   const SOUND_OF_SILENCE_CADENCE = [74.00, null, 69.02, 71.74, 77.24, 75.86, null, 74.00];
 
-  // Repertorio de melodías modales en Re menor microtonal para cada nueva sesión de usuario.
-  // Cada nueva sesión carga un recorrido melódico exclusivo, culminando siempre en SOUND OF SILENCE.
-  const SESSION_MELODIES = [
-    // 0. Landa / Alboka clásica de Arratia
-    [
-      74.00, 77.24, 81.02, 77.24, 75.86, 74.00, 69.02, null,
-      71.74, 75.86, 78.98, 75.86, 74.00, 71.74, 69.02, null,
-      74.00, 77.24, 81.02, 83.74, 81.02, 77.24, 75.86, null,
-      ...SOUND_OF_SILENCE_CADENCE
-    ],
-    // 1. Olatua / Marejada cantábrica (arpegios amplios en ascenso)
-    [
-      74.00, 69.02, 74.00, 77.24, 81.02, 78.98, 77.24, null,
-      77.24, 81.02, 83.74, 81.02, 78.98, 77.24, 74.00, null,
-      74.00, 78.98, 81.02, 86.00, 83.74, 81.02, 77.24, null,
-      ...SOUND_OF_SILENCE_CADENCE
-    ],
-    // 2. Mika / Mineral íntimo (campanas y destellos de celesta)
-    [
-      74.00, 81.02, 77.24, 74.00, 75.86, 77.24, 74.00, null,
-      69.02, 74.00, 77.24, 81.02, 78.98, 75.86, 74.00, null,
-      77.24, 78.98, 81.02, 78.98, 77.24, 75.86, 71.74, null,
-      ...SOUND_OF_SILENCE_CADENCE
-    ],
-    // 3. Eskuak / Gesto de taller (ritmo pausado y contemplativo)
-    [
-      74.00, 75.86, 77.24, 74.00, 81.02, null, 78.98, 77.24,
-      75.86, 74.00, 71.74, 69.02, 74.00, 77.24, 75.86, null,
-      81.02, 77.24, 74.00, 78.98, 81.02, 83.74, 81.02, null,
-      ...SOUND_OF_SILENCE_CADENCE
-    ],
-    // 4. Argia / Luz de ría (apertura diurna brillante)
-    [
-      74.00, 77.24, 74.00, 81.02, 77.24, 83.74, 81.02, null,
-      78.98, 81.02, 77.24, 75.86, 74.00, 69.02, 71.74, null,
-      74.00, 77.24, 81.02, 78.98, 75.86, 77.24, 74.00, null,
-      ...SOUND_OF_SILENCE_CADENCE
-    ],
-    // 5. Gaua / Nocturno de Bilbao (graves densos y silencio envolvente)
-    [
-      74.00, 71.74, 69.02, null, 74.00, 77.24, 75.86, 74.00,
-      69.02, 74.00, 77.24, 78.98, 81.02, 77.24, 74.00, null,
-      81.02, 83.74, 81.02, 77.24, 75.86, 71.74, 69.02, null,
-      ...SOUND_OF_SILENCE_CADENCE
-    ],
-    // 6. Haizea / Viento en los pinos (arpegios etéreos en cascada)
-    [
-      74.00, 77.24, 81.02, 86.00, 81.02, 77.24, 74.00, null,
-      78.98, 75.86, 74.00, 69.02, 71.74, 75.86, 74.00, null,
-      77.24, 81.02, 78.98, 77.24, 75.86, 74.00, 69.02, null,
-      ...SOUND_OF_SILENCE_CADENCE
-    ]
+  // Repertorio de melodías modales en Re menor microtonal para la caja de música ("caja de muñecas").
+  // Cada día del calendario la melodía cambia de forma determinista, culminando siempre en SOUND OF SILENCE.
+  const DAILY_MELODIES = [
+    {
+      name: 'Landa (Alboka clásica)',
+      day: 'Lunes',
+      notes: [
+        74.00, 77.24, 81.02, 77.24, 75.86, 74.00, 69.02, null,
+        71.74, 75.86, 78.98, 75.86, 74.00, 71.74, 69.02, null,
+        74.00, 77.24, 81.02, 83.74, 81.02, 77.24, 75.86, null,
+        ...SOUND_OF_SILENCE_CADENCE
+      ]
+    },
+    {
+      name: 'Olatua (Marejada cantábrica)',
+      day: 'Martes',
+      notes: [
+        74.00, 69.02, 74.00, 77.24, 81.02, 78.98, 77.24, null,
+        77.24, 81.02, 83.74, 81.02, 78.98, 77.24, 74.00, null,
+        74.00, 78.98, 81.02, 86.00, 83.74, 81.02, 77.24, null,
+        ...SOUND_OF_SILENCE_CADENCE
+      ]
+    },
+    {
+      name: 'Mika (Mineral íntimo)',
+      day: 'Miércoles',
+      notes: [
+        74.00, 81.02, 77.24, 74.00, 75.86, 77.24, 74.00, null,
+        69.02, 74.00, 77.24, 81.02, 78.98, 75.86, 74.00, null,
+        77.24, 78.98, 81.02, 78.98, 77.24, 75.86, 71.74, null,
+        ...SOUND_OF_SILENCE_CADENCE
+      ]
+    },
+    {
+      name: 'Eskuak (Gesto de taller)',
+      day: 'Jueves',
+      notes: [
+        74.00, 75.86, 77.24, 74.00, 81.02, null, 78.98, 77.24,
+        75.86, 74.00, 71.74, 69.02, 74.00, 77.24, 75.86, null,
+        81.02, 77.24, 74.00, 78.98, 81.02, 83.74, 81.02, null,
+        ...SOUND_OF_SILENCE_CADENCE
+      ]
+    },
+    {
+      name: 'Argia (Luz de ría)',
+      day: 'Viernes',
+      notes: [
+        74.00, 77.24, 74.00, 81.02, 77.24, 83.74, 81.02, null,
+        78.98, 81.02, 77.24, 75.86, 74.00, 69.02, 71.74, null,
+        74.00, 77.24, 81.02, 78.98, 75.86, 77.24, 74.00, null,
+        ...SOUND_OF_SILENCE_CADENCE
+      ]
+    },
+    {
+      name: 'Gaua (Nocturno de Bilbao)',
+      day: 'Sábado',
+      notes: [
+        74.00, 71.74, 69.02, null, 74.00, 77.24, 75.86, 74.00,
+        69.02, 74.00, 77.24, 78.98, 81.02, 77.24, 74.00, null,
+        81.02, 83.74, 81.02, 77.24, 75.86, 71.74, 69.02, null,
+        ...SOUND_OF_SILENCE_CADENCE
+      ]
+    },
+    {
+      name: 'Haizea (Viento en los pinos)',
+      day: 'Domingo',
+      notes: [
+        74.00, 77.24, 81.02, 86.00, 81.02, 77.24, 74.00, null,
+        78.98, 75.86, 74.00, 69.02, 71.74, 75.86, 74.00, null,
+        77.24, 81.02, 78.98, 77.24, 75.86, 74.00, 69.02, null,
+        ...SOUND_OF_SILENCE_CADENCE
+      ]
+    }
   ];
 
-  function pickSessionMelody() {
-    const key = 'naroa_session_melody_idx';
+  const SESSION_MELODIES = DAILY_MELODIES.map(m => m.notes);
+
+  function pickDailyMelody() {
     try {
       const ua = (typeof window !== 'undefined' && window.navigator?.userAgent) || (typeof navigator !== 'undefined' && navigator.userAgent) || '';
       if (/jsdom|node/i.test(ua)) {
-        return { melody: SESSION_MELODIES[0], index: 0 };
+        return { melody: DAILY_MELODIES[0].notes, index: 0, meta: DAILY_MELODIES[0] };
       }
-      if (typeof window !== 'undefined' && window.sessionStorage) {
-        const stored = window.sessionStorage.getItem(key);
-        if (stored !== null) {
-          const idx = parseInt(stored, 10);
-          if (!isNaN(idx) && idx >= 0 && idx < SESSION_MELODIES.length) {
-            return { melody: SESSION_MELODIES[idx], index: idx };
-          }
+      if (typeof window !== 'undefined' && window.location?.search) {
+        const match = /[?&]melody=(\d+)/.exec(window.location.search);
+        if (match) {
+          const idx = parseInt(match[1], 10) % DAILY_MELODIES.length;
+          return { melody: DAILY_MELODIES[idx].notes, index: idx, meta: DAILY_MELODIES[idx] };
         }
-        let lastIdx = -1;
-        try {
-          const lastStr = window.localStorage.getItem('naroa_last_session_melody');
-          if (lastStr !== null) lastIdx = parseInt(lastStr, 10);
-        } catch {}
-        let nextIdx = Math.floor(Math.random() * SESSION_MELODIES.length);
-        if (lastIdx >= 0 && SESSION_MELODIES.length > 1) {
-          nextIdx = (lastIdx + 1 + Math.floor(Math.random() * (SESSION_MELODIES.length - 1))) % SESSION_MELODIES.length;
-        }
-        window.sessionStorage.setItem(key, String(nextIdx));
-        try { window.localStorage.setItem('naroa_last_session_melody', String(nextIdx)); } catch {}
-        return { melody: SESSION_MELODIES[nextIdx], index: nextIdx };
       }
-    } catch {}
-    return { melody: SESSION_MELODIES[0], index: 0 };
+      const now = new Date();
+      // Monday = 0, Tuesday = 1, ... Sunday = 6
+      const dayOfWeek = (now.getDay() + 6) % 7;
+      const item = DAILY_MELODIES[dayOfWeek] || DAILY_MELODIES[0];
+      return { melody: item.notes, index: dayOfWeek, meta: item };
+    } catch {
+      return { melody: DAILY_MELODIES[0].notes, index: 0, meta: DAILY_MELODIES[0] };
+    }
   }
 
-  const { melody, index: activeMelodyIndex } = pickSessionMelody();
+  const { melody, index: activeMelodyIndex, meta: activeMelodyMeta } = pickDailyMelody();
   let melodyStep = -1, lastNote = -Infinity, noteDistance = 0;
   const menuScale = [74.00, 77.24, 81.02, 77.24, 75.86, 74.00, 69.02];
   let lastMenuNoteIndex = -1, lastMenuNoteTime = -Infinity;
@@ -738,7 +752,7 @@
         enabled = true; lastY = scrollY;
         if (!managedPage) lastDistance = scrollY / Math.max(1, innerHeight);
         rest(true); mix();
-        message('Caja de música activada. Desplázate para tocar.');
+        message(`Caja de música activada (${activeMelodyMeta.day} · ${activeMelodyMeta.name}). Desplázate para tocar.`);
       })().catch(async () => {
         enabled = false;
         if (context) await context.close().catch(() => {});
@@ -759,6 +773,11 @@
   addEventListener('pagehide', () => { pageActive = false; rest(true); });
   addEventListener('pageshow', () => { pageActive = true; lastY = scrollY; });
   window.NAROA_SOUND = Object.freeze({
+    dailyMelody: Object.freeze({
+      index: activeMelodyIndex,
+      name: activeMelodyMeta.name,
+      day: activeMelodyMeta.day
+    }),
     depth(value) { depth = Math.max(0, Math.min(1, value)); if (enabled) mix(); },
     frame(state = {}) {
       if (!state || typeof state !== 'object') return;
