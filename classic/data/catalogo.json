@@ -229,6 +229,15 @@
       "story": "El retrato de Robe parte de un dibujo a lápices sobre poliéster. Tras escanearlo e imprimirlo a mayor tamaño, la imagen se recorta, retoca y combina con tela floral y una frase en alambre.",
       "images": [
         {
+          "src": "/images/catalogo/deltoya-robe-master-4k.jpg",
+          "width": 2457,
+          "height": 3072,
+          "caption": "Retrato completo de Robe Iniesta (Deltoya) en alta fidelidad 4K.",
+          "source": null,
+          "sha256": "a377e060f80fce97c59b06fc779a89e6cc9ceef274433c90307a71d9b9a63f97",
+          "source_local": "classic/images/catalogo/deltoya-robe-master-4k.jpg"
+        },
+        {
           "src": "/images/catalogo/entre-tantas-flores-de-dia-hq-01.webp",
           "width": 1528,
           "height": 2048,
