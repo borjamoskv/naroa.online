@@ -139,6 +139,7 @@ export function KineticHorizon({
       sound.playPunch()
     } else if (slug === 'dustin' && lastSpokenSlugRef.current !== slug) {
       lastSpokenSlugRef.current = slug
+      sound.playSilenceFinale()
       try {
         const audio = new window.Audio('/audio/sound-of-silence.mp3')
         audio.volume = 0.95
@@ -532,6 +533,59 @@ export function KineticHorizon({
       >
         ›
       </button>
+
+      {/* C3: BOTÓN OUROBOROS (REINICIAR CICLO DESDE EL SILENCIO AL LLEGAR AL FINAL) */}
+      {activeIdx === ARTWORKS.length - 1 && (
+        <button
+          className="desktop-only"
+          onClick={(e) => {
+            e.stopPropagation()
+            glideTo(0)
+          }}
+          data-cursor="ORIGEN"
+          aria-label="Volver al origen de la exposición"
+          style={{
+            position: 'absolute',
+            right: 'clamp(74px, 7.5vw, 118px)',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            zIndex: 36,
+            background: 'rgba(212, 175, 55, 0.14)',
+            border: '1px solid rgba(212, 175, 55, 0.45)',
+            borderRadius: '24px',
+            padding: '8px 18px',
+            color: '#D4AF37',
+            cursor: 'pointer',
+            fontSize: '0.76rem',
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+            boxShadow: '0 0 24px rgba(212, 175, 55, 0.2)',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(212, 175, 55, 0.28)'
+            e.currentTarget.style.borderColor = '#D4AF37'
+            e.currentTarget.style.color = '#FFFDF4'
+            e.currentTarget.style.transform = 'translateY(-50%) scale(1.05)'
+            e.currentTarget.style.boxShadow = '0 0 32px rgba(212, 175, 55, 0.4)'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'rgba(212, 175, 55, 0.14)'
+            e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.45)'
+            e.currentTarget.style.color = '#D4AF37'
+            e.currentTarget.style.transform = 'translateY(-50%) scale(1)'
+            e.currentTarget.style.boxShadow = '0 0 24px rgba(212, 175, 55, 0.2)'
+          }}
+        >
+          <span>Volver al origen</span>
+          <span style={{ fontSize: '1rem', lineHeight: 1 }}>↺</span>
+        </button>
+      )}
 
       {/* EL ESCENARIO PANORÁMICO CONTINUO (Continuous Horizon Runway) */}
       <div

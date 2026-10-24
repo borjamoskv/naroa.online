@@ -603,6 +603,64 @@ class SoundEngine {
       // Ignore audio errors
     }
   }
+
+  public playSilenceFinale() {
+    if (!this.enabled) return
+    try {
+      this.initCtx()
+      if (!this.ctx) return
+
+      const now = this.ctx.currentTime + 0.01
+
+      // C2: Subaquatic Low-pass Filter (Ben Braddock Pool Drift)
+      const subaquaticFilter = this.ctx.createBiquadFilter()
+      subaquaticFilter.type = 'lowpass'
+      subaquaticFilter.frequency.setValueAtTime(3200, now)
+      subaquaticFilter.frequency.exponentialRampToValueAtTime(480, now + 4.8)
+      subaquaticFilter.Q.setValueAtTime(1.0, now)
+      subaquaticFilter.Q.linearRampToValueAtTime(2.8, now + 4.8)
+
+      // C1: Acoustic Fade down to -60 dB
+      const masterGain = this.ctx.createGain()
+      masterGain.gain.setValueAtTime(0.08, now)
+      masterGain.gain.exponentialRampToValueAtTime(0.00001, now + 6.8)
+
+      subaquaticFilter.connect(masterGain)
+      masterGain.connect(this.ctx.destination)
+
+      // The Sound of Silence motif + open lingering chord
+      const motif = [
+        { f: 146.83, t: 0.00, d: 0.35, p: 0.045 },
+        { f: 146.83, t: 0.36, d: 0.35, p: 0.040 },
+        { f: 174.61, t: 0.72, d: 0.38, p: 0.045 },
+        { f: 174.61, t: 1.08, d: 0.38, p: 0.040 },
+        { f: 220.00, t: 1.44, d: 0.42, p: 0.052 },
+        { f: 220.00, t: 1.80, d: 0.42, p: 0.046 },
+        { f: 196.00, t: 2.18, d: 1.15, p: 0.058 },
+        { f: 146.83, t: 3.45, d: 3.20, p: 0.065 },
+        { f: 220.00, t: 3.46, d: 3.20, p: 0.050 },
+        { f: 293.66, t: 3.47, d: 3.40, p: 0.048 },
+        { f: 587.33, t: 3.48, d: 3.50, p: 0.038 }
+      ]
+
+      motif.forEach(({ f, t, d, p }) => {
+        if (!this.ctx) return
+        const osc = this.ctx.createOscillator()
+        const gain = this.ctx.createGain()
+        osc.type = 'sine'
+        osc.frequency.setValueAtTime(f, now + t)
+        gain.gain.setValueAtTime(0.0001, now + t)
+        gain.gain.linearRampToValueAtTime(p, now + t + 0.02)
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + t + d)
+        osc.connect(gain)
+        gain.connect(subaquaticFilter)
+        osc.start(now + t)
+        osc.stop(now + t + d + 0.05)
+      })
+    } catch {
+      // Ignore audio errors
+    }
+  }
 }
 
 export const sound = new SoundEngine()
