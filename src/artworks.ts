@@ -390,13 +390,13 @@ export const ARTWORKS: Artwork[] = [
     kicker: 'Energía neón y destellos minerales',
     quote: 'El brillo como actitud irreverente.',
     slug: 'pink-and-sparkles',
-    aspectRatio: 1.0,
+    aspectRatio: 0.8,
     url: '/assets/pink-and-sparkles-c4K6RUzC.webp',
     title: 'Pink and Sparkles',
     href: '#obra-pink-and-sparkles',
-    year: '2024',
-    medium: 'Acrílico Neón & Destellos Minerales',
-    description: 'Vibración rosa pop con destellos de mica mineral pura.',
+    year: '2005',
+    medium: 'Grafito, Acrílico Neón & Mica Mineral',
+    description: 'Retrato con fondo de mica mineral pura en tonalidad rubí y destellos de acrílico neón.',
     sizeCategory: 'medium'
   },
   {

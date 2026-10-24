@@ -723,11 +723,18 @@
         const scene = scenes[index], image = images[index], outgoing = index === base;
         const isRockaToHugo = transition && works[base]?.slug === 'rockagipsy' && works[incoming]?.slug === 'hugo-box';
         const isAjenjoToBeatriz = transition && works[base]?.slug === 'ajenjo-cam' && works[incoming]?.slug === 'beatriz-de-pandora';
+        const isRaraToAmor = transition && works[base]?.slug === 'rara-avis' && works[incoming]?.slug === 'amor-en-conserva';
+        const isAmorToAmy = transition && works[base]?.slug === 'amor-en-conserva' && works[incoming]?.slug === 'amy-rocks';
+        const isJamesToMario = transition && works[base]?.slug === 'james-rocks' && works[incoming]?.slug === 'mario-moreno';
+        const isJaioTo13n = transition && works[base]?.slug === 'custom-jaio' && works[incoming]?.slug === '13n';
+        const isBowieToOlinga = transition && works[base]?.slug === 'el-hombre-que-susurraba-a-las-estrellas' && works[incoming]?.slug === 'olinga-a-la-naranja';
         paintedScenes.add(index);
-        scene.style.visibility = 'visible'; scene.style.zIndex = isRockaToHugo ? (outgoing ? '2' : '1') : (outgoing ? '1' : '2');
+        const isTopOutgoing = isRockaToHugo || isAmorToAmy || isJamesToMario || isJaioTo13n || isRaraToAmor || isBowieToOlinga;
+        scene.style.visibility = 'visible'; scene.style.zIndex = isTopOutgoing ? (outgoing ? '2' : '1') : (outgoing ? '1' : '2');
         scene.style.willChange = transition ? 'opacity,transform' : 'auto'; image.style.willChange = still ? 'auto' : 'transform';
         scene.style.clipPath = 'inset(0)'; scene.style.opacity = '1'; scene.style.transform = 'translate3d(0px,0px,0)';
         scene.style.maskImage = scene.style.webkitMaskImage = 'none';
+        image.style.filter = 'none';
         image.style.transformOrigin = works[index].slug === 'el-hombre-que-susurraba-a-las-estrellas' ? '65.2% 57.4%'
           : works[index].slug === 'i-got-you-babe' ? '38% 46%'
           : works[index].slug === 'jose-manuel-ezquerra' ? '62% 42%'
@@ -842,6 +849,39 @@
             const yPose = outgoing ? -overflowY : 0;
             image.style.transformOrigin = '50% 0%';
             image.style.transform = `translate3d(0,${yPose.toFixed(3)}px,0) scale(${mobileScale.toFixed(5)})`;
+          } else if (isRaraToAmor) {
+            if (outgoing) {
+              const tarnish = smooth(fraction);
+              const br = (1 + Math.sin(fraction * Math.PI) * 0.55).toFixed(3);
+              const ct = (1 - tarnish * 0.40).toFixed(3);
+              const sep = (tarnish * 0.35).toFixed(3);
+              const bl = (Math.sin(fraction * Math.PI) * 4.2).toFixed(2);
+              image.style.filter = `brightness(${br}) contrast(${ct}) sepia(${sep}) blur(${bl}px)`;
+              scene.style.opacity = smooth(1 - fraction * 0.95).toFixed(4);
+            } else {
+              scene.style.opacity = smooth((fraction - 0.15) / 0.45).toFixed(4);
+            }
+            image.style.transform = `translate3d(${mode === 'H' ? parallax.toFixed(3) : '0'}%,${mode === 'V' ? parallax.toFixed(3) : '0'}%,0) scale(${lens.toFixed(5)})`;
+          } else if (isAmorToAmy) {
+            if (outgoing) {
+              const peel = smooth(fraction);
+              const peelPct = (peel * 100).toFixed(2);
+              scene.style.clipPath = `inset(0 0 ${peelPct}% 0)`;
+              image.style.filter = `brightness(${(1 + Math.sin(fraction * Math.PI) * 0.30).toFixed(3)})`;
+            }
+            image.style.transform = `translate3d(${mode === 'H' ? parallax.toFixed(3) : '0'}%,${mode === 'V' ? parallax.toFixed(3) : '0'}%,0) scale(${lens.toFixed(5)})`;
+          } else if (isJamesToMario) {
+            if (outgoing) {
+              const crack = smooth(fraction);
+              image.style.filter = `brightness(${(1 + Math.sin(fraction * Math.PI) * 0.38).toFixed(3)}) contrast(${(1 + crack * 0.18).toFixed(3)})`;
+            }
+            image.style.transform = `translate3d(${mode === 'H' ? parallax.toFixed(3) : '0'}%,${mode === 'V' ? parallax.toFixed(3) : '0'}%,0) scale(${lens.toFixed(5)})`;
+          } else if (isJaioTo13n) {
+            if (outgoing) {
+              const unseam = smooth(fraction);
+              image.style.filter = `contrast(${(1 + unseam * 0.22).toFixed(3)})`;
+            }
+            image.style.transform = `translate3d(${mode === 'H' ? parallax.toFixed(3) : '0'}%,${mode === 'V' ? parallax.toFixed(3) : '0'}%,0) scale(${lens.toFixed(5)})`;
           } else {
             image.style.transform = `translate3d(${mode === 'H' ? parallax.toFixed(3) : '0'}%,${mode === 'V' ? parallax.toFixed(3) : '0'}%,0) scale(${lens.toFixed(5)})`;
           }
@@ -878,6 +918,21 @@
               scene.style.transform = `translate3d(${recoilX.toFixed(2)}px,${recoilY.toFixed(2)}px,0) rotate(${recoilAngle.toFixed(2)}deg)`;
               const ezScale = 0.96 + 0.12 * smooth((fraction - 0.44) / 0.56);
               image.style.transform = `scale(${ezScale.toFixed(5)})`;
+            }
+          } else if (isBowieToOlinga) {
+            if (outgoing) {
+              const flare = smooth(fraction);
+              const rot = (flare * 12.0).toFixed(2);
+              const prismScale = (1.08 + flare * 2.10).toFixed(5);
+              image.style.transformOrigin = '65.2% 57.4%';
+              image.style.transform = `scale(${prismScale}) rotate(${rot}deg)`;
+              scene.style.opacity = fraction >= 0.68 ? smooth((1 - fraction) / 0.32).toFixed(4) : '1';
+              image.style.filter = `saturate(${(1 + flare * 1.6).toFixed(3)}) brightness(${(1 + Math.sin(fraction * Math.PI) * 0.75).toFixed(3)})`;
+            } else {
+              scene.style.transform = 'translate3d(0px,0px,0)';
+              scene.style.opacity = fraction < 0.28 ? '0' : smooth((fraction - 0.28) / 0.32).toFixed(4);
+              const olingaScale = 0.95 + 0.13 * smooth(fraction);
+              image.style.transform = `scale(${olingaScale.toFixed(5)})`;
             }
           } else {
             image.style.transform = `scale(${Math.exp(Math.log(1.08) + Math.log(maxScale / 1.08) * close).toFixed(5)})`;
@@ -1053,6 +1108,11 @@
       } else {
         punchVisited = false;
       }
+      const isRaraToAmor = transition && works[base]?.slug === 'rara-avis' && works[incoming]?.slug === 'amor-en-conserva';
+      const isAmorToAmy = transition && works[base]?.slug === 'amor-en-conserva' && works[incoming]?.slug === 'amy-rocks';
+      const isJamesToMario = transition && works[base]?.slug === 'james-rocks' && works[incoming]?.slug === 'mario-moreno';
+      const isJaioTo13n = transition && works[base]?.slug === 'custom-jaio' && works[incoming]?.slug === '13n';
+      const isBowieToOlinga = transition && works[base]?.slug === 'el-hombre-que-susurraba-a-las-estrellas' && works[incoming]?.slug === 'olinga-a-la-naranja';
       const flash = isAjenjoPhoto
         ? Math.exp(-Math.pow((fraction - 0.22) / 0.065, 2)) * 0.98
         : 0;
@@ -1080,7 +1140,7 @@
       if (works[state.index]?.slug === 'dustin' && !transition) {
         cue.textContent = 'La última nota ya es silencio · Volver al origen ↺';
       } else {
-        cue.textContent = still ? reduced.matches ? 'Activa los efectos para ver el viaje ↓' : 'Desplázate para recorrer ↕' : !transition ? phase === 'explore' ? 'Explora la superficie ↓' : 'Una pausa para mirar · sigue ↓' : isAjenjoPhoto ? 'Dispara y revela la foto ↓' : isBillToEzquerra ? '¡Impacto! Parón de 2 segundos · sigue ↓' : ({ E: 'Entra en la mirada ↓', H: 'Atravesar · sigue bajando ↓', V: 'Déjate llevar ↓', Z: (transition && works[base]?.slug === 'hugo-box') ? 'Entra en la lente rosa ↓' : 'Acércate ↓', P: 'Mezclar y volver a unir ↓' })[mode];
+        cue.textContent = still ? reduced.matches ? 'Activa los efectos para ver el viaje ↓' : 'Desplázate para recorrer ↕' : !transition ? phase === 'explore' ? 'Explora la superficie ↓' : 'Una pausa para mirar · sigue ↓' : isAjenjoPhoto ? 'Dispara y revela la foto ↓' : isBillToEzquerra ? '¡Impacto! Parón de 2 segundos · sigue ↓' : isRaraToAmor ? 'El azogue se disuelve · sigue ↓' : isAmorToAmy ? 'Abre la lata de conserva · sigue ↓' : isJamesToMario ? 'La cantera de pizarra se quiebra · sigue ↓' : isJaioTo13n ? 'Deshilachar las costuras · sigue ↓' : isBowieToOlinga ? 'Refracción de estrella · sigue ↓' : ({ E: 'Entra en la mirada ↓', H: 'Atravesar · sigue bajando ↓', V: 'Déjate llevar ↓', Z: (transition && works[base]?.slug === 'hugo-box') ? 'Entra en la lente rosa ↓' : 'Acércate ↓', P: 'Mezclar y volver a unir ↓' })[mode];
       }
       stage.classList.toggle('is-travelling', transition);
       stage.style.setProperty('--progress', (pose.distance / journey.total * (works.length - 1) * 100).toFixed(3) + '%');

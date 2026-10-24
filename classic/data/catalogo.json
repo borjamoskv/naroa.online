@@ -2557,30 +2557,30 @@
       "slug": "pink-and-sparkles",
       "title": "Pink and Sparkles",
       "category": "objetos",
-      "technique": "Acrílico neón, mica mineral pura y collage",
-      "support": "Objeto intervenido con marco volumétrico",
-      "story": "Vibración rosa pop con destellos de mica mineral pura. Una pieza que desafía los límites del soporte convencional jugando con el volumen, el brillo y la saturación cromática.",
+      "technique": "Grafito, acrílico neón, mica mineral y collage textil",
+      "support": "Lienzo sobre bastidor",
+      "story": "Retrato de mirada penetrante y expresiva con fondo de mica mineral pura en tonalidad rubí y destellos de acrílico neón. El contraste entre la sutileza del trazo y la materia geológica reflectante crea una atmósfera hipnótica.",
       "images": [
         {
           "src": "/images/catalogo/pink-and-sparkles-4k.webp",
-          "width": 3000,
-          "height": 3000,
-          "caption": "Fotografía master 4K de Pink and Sparkles con acrílico neón y mica mineral.",
+          "width": 3072,
+          "height": 3840,
+          "caption": "Fotografía master 4K de Pink and Sparkles con grafito, acrílico neón y fondo de mica mineral pura.",
           "source": null,
-          "sha256": "afc905ab8d6d867da60fea52811c6f73d242e7e19f3955fbb7bd2b1be2970ca8"
+          "sha256": "265fd042fe8c0a54c8e8cbb01252c3bfd214afd53dac480123b78848128654d7"
         },
         {
           "src": "/images/artworks/pink-and-sparkles-c4K6RUzC.webp",
-          "width": 3000,
-          "height": 3000,
-          "caption": "Detalle del relieve volumétrico y destellos.",
+          "width": 3072,
+          "height": 3840,
+          "caption": "Detalle del relieve volumétrico y destellos de la mica mineral.",
           "source": null,
-          "sha256": "afc905ab8d6d867da60fea52811c6f73d242e7e19f3955fbb7bd2b1be2970ca8"
+          "sha256": "265fd042fe8c0a54c8e8cbb01252c3bfd214afd53dac480123b78848128654d7"
         }
       ],
-      "dimensions": "25 × 25 × 3 cm",
-      "series": "Facefood",
-      "year": 2024,
+      "dimensions": "50 × 40 cm",
+      "series": "DiviNos",
+      "year": 2005,
       "credit": null,
       "selected": true,
       "kind": "obra",
@@ -2592,7 +2592,7 @@
         ],
         "captions": [
           "Pink and Sparkles: destellos minerales e intensidad cromática.",
-          "El volumen y los reflejos de la mica mineral."
+          "El volumen y los reflejos de la mica mineral pura."
         ]
       }
     },
