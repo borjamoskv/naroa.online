@@ -209,6 +209,53 @@
       } catch {}
     }
   }
+  function speakSilence() {
+    lastHeroSlug = 'dustin';
+    lastUtterance = 'Hello darkness, my old friend';
+    if (typeof window.Audio === 'function' && !window.navigator.userAgent.includes('jsdom')) {
+      try {
+        const audioUrl = button?.dataset?.silenceSrc || '/audio/sound-of-silence.mp3';
+        const silenceAudio = new window.Audio(audioUrl);
+        silenceAudio.volume = 0.94;
+        silenceAudio.play().catch(() => {});
+      } catch {}
+    }
+    if (context && engine && context.state === 'running') {
+      try {
+        const now = context.currentTime + 0.01;
+        const target = engine.compressor || engine.master;
+        // Arpegio de The Sound of Silence (D4-D4-F4-F4-A4-A4-G4) + Última nota final suspendida (D4/D5) que muere en el silencio
+        const motif = [
+          [0.00, 146.83, 0.35, 0.045],
+          [0.36, 146.83, 0.35, 0.040],
+          [0.72, 174.61, 0.38, 0.045],
+          [1.08, 174.61, 0.38, 0.040],
+          [1.44, 220.00, 0.42, 0.052],
+          [1.80, 220.00, 0.42, 0.046],
+          [2.18, 196.00, 1.15, 0.058],
+          [3.45, 146.83, 2.80, 0.065],
+          [3.47, 293.66, 2.95, 0.048]
+        ];
+        motif.forEach(([offset, freq, dur, peak]) => {
+          const osc = context.createOscillator();
+          const gain = context.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + offset);
+          gain.gain.setValueAtTime(0.0001, now + offset);
+          if (gain.gain.linearRampToValueAtTime) {
+            gain.gain.linearRampToValueAtTime(peak, now + offset + 0.018);
+          }
+          if (gain.gain.exponentialRampToValueAtTime) {
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + offset + dur);
+          }
+          osc.connect(gain);
+          gain.connect(target);
+          osc.start(now + offset);
+          osc.stop(now + offset + dur + 0.02);
+        });
+      } catch {}
+    }
+  }
   function playCameraFlash() {
     if (!context || !engine || context.state !== 'running') return;
     try {
@@ -374,8 +421,9 @@
     mix();
     if (slug === 'el-hombre-que-susurraba-a-las-estrellas' && lastHeroSlug !== slug) speakHero();
     else if (slug === 'denbora-nora-zoaz' && lastHeroSlug !== slug) speakDenbora();
-    else if (slug && slug !== 'el-hombre-que-susurraba-a-las-estrellas' && slug !== 'denbora-nora-zoaz') lastHeroSlug = '';
-    playMelody(now);
+    else if (slug === 'dustin' && lastHeroSlug !== slug) speakSilence();
+    else if (slug && slug !== 'el-hombre-que-susurraba-a-las-estrellas' && slug !== 'denbora-nora-zoaz' && slug !== 'dustin') lastHeroSlug = '';
+    if (slug !== 'dustin') playMelody(now);
     if (now - lastGrain < 150 - energy * 25 + depth * 15 || engine.voices.size > 10) return;
     lastGrain = now; seed += direction * .371;
     const start = context.currentTime + .005, voices = engine.voices;
@@ -548,6 +596,9 @@
     },
     speakDenbora() {
       speakDenbora();
+    },
+    speakSilence() {
+      speakSilence();
     },
     get lastUtterance() { return lastUtterance; },
     get lastFlashSlug() { return lastFlashSlug; },

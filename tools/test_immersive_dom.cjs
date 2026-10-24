@@ -715,6 +715,9 @@ async function eyeMatch(ui, base, points) {
   const denboraIndex = works.findIndex(w => w.slug === 'denbora-nora-zoaz');
   galleryAudio.advance(150); reactiveGallery.scroll(denboraIndex); await reactiveGallery.flush();
   assert.equal(reactiveGallery.w.NAROA_SOUND.lastUtterance, 'Just For One Day', 'Arriving at Denbora triggers Just For One Day in an elderly voice');
+  const dustinIndex = works.findIndex(w => w.slug === 'dustin');
+  galleryAudio.advance(150); reactiveGallery.scroll(dustinIndex); await reactiveGallery.flush();
+  assert.equal(reactiveGallery.w.NAROA_SOUND.lastUtterance, 'Hello darkness, my old friend', 'Arriving at final work 55/55 triggers Sound of Silence finale');
   const ajenjoIndex = works.findIndex(w => w.slug === 'ajenjo-cam');
   galleryAudio.advance(150); reactiveGallery.scroll(ajenjoIndex - 1 + .50); await reactiveGallery.flush();
   const flashLevel = Number(reactiveGallery.find('.art-stage').style.getPropertyValue('--camera-flash') || 0);

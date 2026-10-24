@@ -286,7 +286,7 @@
         stage.classList.remove('has-flash-burst');
       }, 420);
     }
-    let bowieZoomTimer = null, bowieVisited = false, denboraVisited = false;
+    let bowieZoomTimer = null, bowieVisited = false, denboraVisited = false, dustinVisited = false;
     function fireBowieZoom() {
       soundscape?.speakHero?.();
       stage.classList.remove('has-bowie-zoom');
@@ -472,6 +472,16 @@
         }
       } else {
         denboraVisited = false;
+      }
+      if (works[base].slug === 'dustin' || works[incoming].slug === 'dustin') {
+        if (!dustinVisited && (works[state.index].slug === 'dustin' || (transition && works[incoming].slug === 'dustin' && fraction >= 0.45))) {
+          dustinVisited = true;
+          soundscape?.speakSilence?.();
+        }
+        stage.dataset.finale = 'silence';
+      } else {
+        dustinVisited = false;
+        delete stage.dataset.finale;
       }
       const isPunchPair = (works[base].slug === 'i-got-you-babe' && works[incoming].slug === 'jose-manuel-ezquerra') ||
                           (works[base].slug === 'jose-manuel-ezquerra' && works[incoming].slug === 'i-got-you-babe');
@@ -679,6 +689,9 @@
       if (works[state.index]?.slug === 'denbora-nora-zoaz') {
         soundscape?.speakDenbora?.();
       }
+      if (works[state.index]?.slug === 'dustin') {
+        soundscape?.speakSilence?.();
+      }
       if (works[state.index]?.slug === 'i-got-you-babe' || works[state.index]?.slug === 'jose-manuel-ezquerra') {
         firePuñetazo();
       }
@@ -694,6 +707,11 @@
       if (works[i]?.slug === 'denbora-nora-zoaz') {
         sc.addEventListener('click', () => {
           soundscape?.speakDenbora?.();
+        });
+      }
+      if (works[i]?.slug === 'dustin') {
+        sc.addEventListener('click', () => {
+          soundscape?.speakSilence?.();
         });
       }
       if (works[i]?.slug === 'i-got-you-babe' || works[i]?.slug === 'jose-manuel-ezquerra') {

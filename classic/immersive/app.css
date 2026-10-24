@@ -96,6 +96,7 @@ html.motion-off .kinetic-title{display:none}
 .gallery-page .art-stage.is-camera-moving:not(:has(:focus-visible)) .art-shade{opacity:calc(1 - var(--camera-veil,0)*.55);transition-duration:.18s}
 .gallery-page .art-stage.is-camera-moving [data-art-copy]:hover{opacity:1!important;translate:0 0}
 .gallery-page .art-stage.is-camera-moving [data-art-title]{transform:skewX(var(--velocity-skew,0deg));transition:transform .16s cubic-bezier(.16,1,.3,1)}
+.gallery-page .art-stage[data-finale="silence"] .art-shade{background:radial-gradient(circle at 58% 42%,transparent 22%,rgba(8,8,10,0.86) 88%),linear-gradient(180deg,#000b 0%,#0000 28%,#0000 48%,#000e 100%)}
 .art-progress{cursor:pointer;padding:8px 0;margin-bottom:-8px;background:linear-gradient(transparent 7px,#fffdf43b 7px,#fffdf43b 9px,transparent 9px)}
 .scrubber-tooltip{position:absolute;bottom:18px;transform:translateX(-50%);background:#11120ff2;border:1px solid #edbca466;color:#fffdf4;padding:5px 11px;border-radius:16px;font-size:10px;letter-spacing:.06em;white-space:nowrap;pointer-events:none;box-shadow:0 6px 20px #000a;backdrop-filter:blur(12px)}
 .has-motion .art-stage.has-travelled .art-layers,.has-motion .art-stage.has-travelled [data-art-title],.has-motion .art-stage.has-travelled .art-counter,.has-motion .art-stage.has-travelled .art-material{animation:none}
