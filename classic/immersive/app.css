@@ -93,9 +93,9 @@ html.motion-off .kinetic-title{display:none}
 
 /* Give the camera the frame; bring reading controls back when the gesture rests. */
 .gallery-page .art-shade{transition:opacity .6s}
-.gallery-page .art-stage:after{content:'';position:absolute;inset:0;z-index:7;pointer-events:none;background:radial-gradient(circle at 58% 46%,#ffffff 0%,#fffef8 64%,rgba(255,253,244,0.94) 100%);opacity:var(--camera-flash,0);mix-blend-mode:normal;will-change:opacity}
-@keyframes ajenjo-flash-burst{0%{opacity:.98}15%{opacity:.92}38%{opacity:.42}72%{opacity:.08}100%{opacity:0}}
-.gallery-page .art-stage.has-flash-burst:after{animation:ajenjo-flash-burst .42s cubic-bezier(.1,.9,.2,1) forwards}
+.gallery-page .art-stage:after{content:'';position:absolute;inset:0;z-index:7;pointer-events:none;background:radial-gradient(circle at 52% 48%,#ffffff 0%,#fffef6 55%,rgba(255,253,244,0.96) 82%,rgba(255,245,230,0.85) 100%);opacity:var(--camera-flash,0);mix-blend-mode:screen;will-change:opacity,filter}
+@keyframes ajenjo-flash-burst{0%{opacity:.98;filter:brightness(1.8) contrast(1.15)}12%{opacity:.92;filter:brightness(1.5)}28%{opacity:.48;filter:brightness(1.2)}62%{opacity:.12;filter:brightness(1.05)}100%{opacity:0;filter:none}}
+.gallery-page .art-stage.has-flash-burst:after{animation:ajenjo-flash-burst .38s cubic-bezier(.08,.9,.18,1) forwards}
 .gallery-page .art-scene[data-work="el-hombre-que-susurraba-a-las-estrellas"] img{transform-origin:65.2% 57.4%!important}
 .gallery-page .art-scene[data-work="i-got-you-babe"] img{transform-origin:38% 46%!important}
 .gallery-page .art-scene[data-work="jose-manuel-ezquerra"] img{transform-origin:62% 42%!important}
@@ -149,6 +149,8 @@ html.motion-off .kinetic-title{display:none}
 .hero-monocle-portal{position:absolute;left:46%;top:39.5%;width:clamp(124px,14.5vmin,212px);height:clamp(124px,14.5vmin,212px);transform:translate(-50%,-50%) translate3d(calc(var(--hero-mx,0)*12px),calc(var(--hero-my,0)*12px),24px);pointer-events:none;z-index:3;display:grid;place-items:center}
 .hero-monocle-lens{position:relative;width:66%;height:66%;border-radius:50%;overflow:hidden;backdrop-filter:blur(2.5px) contrast(1.22) saturate(1.28) brightness(1.12);-webkit-backdrop-filter:blur(2.5px) contrast(1.22) saturate(1.28) brightness(1.12);box-shadow:0 0 32px rgba(237,188,164,.42),inset 0 0 18px rgba(255,253,244,.36),inset 0 0 34px rgba(17,18,15,.85);border:1.5px solid rgba(247,213,148,.52)}
 .hero-monocle-marilyn{position:absolute;inset:-14%;background-image:var(--monocle-preview);background-size:cover;background-position:50.4% 51.7%;opacity:.76;mix-blend-mode:screen;filter:contrast(1.18) saturate(1.18);transform-origin:50.4% 51.7%;animation:monocle-marilyn-pulse 3.4s ease-in-out infinite alternate;will-change:transform,opacity}
+.hero-monocle-canvas{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;pointer-events:none;z-index:2;mix-blend-mode:normal;opacity:0.96;transition:opacity .35s ease}
+html.motion-off .hero-monocle-canvas,body.is-quiet .hero-monocle-canvas{display:none!important}
 @keyframes monocle-marilyn-pulse{0%{transform:scale(1.05) rotate(-1.5deg);opacity:.58}50%{transform:scale(1.22) rotate(.8deg);opacity:.86}100%{transform:scale(1.12) rotate(1.8deg);opacity:.70}}
 .hero-monocle-caustics{position:absolute;inset:-30%;background:conic-gradient(from 45deg at 50% 50%,transparent 0deg,rgba(255,253,244,.38) 42deg,transparent 88deg,rgba(237,188,164,.42) 195deg,transparent 245deg,rgba(247,213,148,.28) 310deg,transparent 360deg);mix-blend-mode:overlay;transform:translate3d(calc(var(--hero-mx,0)*-22px),calc(var(--hero-my,0)*-22px),0) rotate(calc(var(--hero-mx,0)*35deg))}
 .hero-monocle-ring{position:absolute;inset:-16%;width:132%;height:132%;overflow:visible;filter:drop-shadow(0 2px 12px rgba(0,0,0,.75));animation:monocle-ring-spin 22s linear infinite}

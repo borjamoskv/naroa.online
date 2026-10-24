@@ -430,127 +430,142 @@
   function playCameraFlash() {
     lastFlashSlug = 'ajenjo-cam';
     if (typeof navigator !== 'undefined' && navigator.vibrate) {
-      try { navigator.vibrate([18, 25, 14, 60, 45]); } catch {}
+      try { navigator.vibrate([22, 30, 16, 45]); } catch {}
     }
-    const audioSrc = button?.dataset?.cameraSrc || '/audio/polaroid-shutter.mp3';
-    try {
-      const audio = new window.Audio(audioSrc);
-      audio.volume = 0.95;
-      audio.play().catch(() => {});
-    } catch {}
     if (!context || !engine || context.state !== 'running') return;
     try {
       const now = context.currentTime + 0.002;
       const target = engine.compressor || engine.master;
       const sampleRate = context.sampleRate || 44100;
 
-      // Stage 1: Mirror slap & initial mechanical latch (t = 0.000s)
-      const mirrorLen = Math.round(sampleRate * 0.045);
+      // Stage 1: Obturador mecánico de titanio / Leica M3 sear release (t = 0.000s)
+      const mirrorLen = Math.round(sampleRate * 0.038);
       const mirrorBuffer = context.createBuffer(1, mirrorLen, sampleRate);
       const mirrorData = mirrorBuffer.getChannelData(0);
       for (let i = 0; i < mirrorLen; i++) {
         const t = i / sampleRate;
-        const thump = Math.sin(2 * Math.PI * (140 - 80 * (t / 0.045)) * t) * Math.exp(-t / 0.022);
-        const metallic = (Math.sin(2 * Math.PI * 1850 * t) * 0.6 + Math.sin(2 * Math.PI * 3420 * t) * 0.4) * Math.exp(-t / 0.005);
-        mirrorData[i] = thump * 0.45 + metallic * 0.75;
+        const thump = Math.sin(2 * Math.PI * (185 - 110 * (t / 0.038)) * t) * Math.exp(-t / 0.016);
+        const metallic = (Math.sin(2 * Math.PI * 2450 * t) * 0.55 + Math.sin(2 * Math.PI * 4600 * t) * 0.45) * Math.exp(-t / 0.004);
+        mirrorData[i] = thump * 0.55 + metallic * 0.85;
       }
       const mirrorSrc = context.createBufferSource();
       mirrorSrc.buffer = mirrorBuffer;
       const mirrorGain = context.createGain();
-      mirrorGain.gain.setValueAtTime(0.85, now);
+      mirrorGain.gain.setValueAtTime(0.92, now);
       if (mirrorGain.gain.exponentialRampToValueAtTime) {
-        mirrorGain.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
+        mirrorGain.gain.exponentialRampToValueAtTime(0.001, now + 0.038);
       }
       mirrorSrc.connect(mirrorGain);
       mirrorGain.connect(target);
       mirrorSrc.start(now);
 
-      // Stage 2: Xenon flash arc pop + capacitor whine (t = 0.012s)
+      // Stage 2: Arco de ionización de xenón + pop de presión (t = 0.010s)
       if (typeof context.createOscillator === 'function') {
         const popOsc = context.createOscillator();
         const popGain = context.createGain();
         popOsc.type = 'sine';
-        popOsc.frequency.setValueAtTime(2880, now + 0.012);
+        popOsc.frequency.setValueAtTime(3200, now + 0.010);
         if (popOsc.frequency.exponentialRampToValueAtTime) {
-          popOsc.frequency.exponentialRampToValueAtTime(160, now + 0.055);
+          popOsc.frequency.exponentialRampToValueAtTime(110, now + 0.048);
         }
-        popGain.gain.setValueAtTime(0.55, now + 0.012);
+        popGain.gain.setValueAtTime(0.68, now + 0.010);
         if (popGain.gain.exponentialRampToValueAtTime) {
-          popGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.065);
+          popGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.055);
         }
         popOsc.connect(popGain);
         popGain.connect(target);
-        popOsc.start(now + 0.012);
-        popOsc.stop(now + 0.07);
+        popOsc.start(now + 0.010);
+        popOsc.stop(now + 0.06);
 
-        // Capacitor recharge whine
+        // Chisporroteo de xenón mediante micro-ruido blanco filtrado
+        const noiseLen = Math.round(sampleRate * 0.018);
+        const noiseBuffer = context.createBuffer(1, noiseLen, sampleRate);
+        const noiseData = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < noiseLen; i++) {
+          const t = i / sampleRate;
+          noiseData[i] = ((Math.random() * 2) - 1) * Math.exp(-t / 0.006);
+        }
+        const noiseSrc = context.createBufferSource();
+        noiseSrc.buffer = noiseBuffer;
+        const noiseFilter = context.createBiquadFilter();
+        noiseFilter.type = 'bandpass';
+        noiseFilter.frequency.setValueAtTime(2800, now + 0.010);
+        noiseFilter.Q.setValueAtTime(3.2, now + 0.010);
+        const noiseGain = context.createGain();
+        noiseGain.gain.setValueAtTime(0.38, now + 0.010);
+        noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.028);
+        noiseSrc.connect(noiseFilter);
+        noiseFilter.connect(noiseGain);
+        noiseGain.connect(target);
+        noiseSrc.start(now + 0.010);
+
+        // Stage 3: Zumbido ascendente de condensador electrolítico analógico (t = 0.040s .. 0.240s)
         const whineOsc = context.createOscillator();
+        const whineFilter = context.createBiquadFilter();
         const whineGain = context.createGain();
-        whineOsc.type = 'triangle';
-        whineOsc.frequency.setValueAtTime(2160, now + 0.025);
-        if (whineOsc.frequency.linearRampToValueAtTime) {
-          whineOsc.frequency.linearRampToValueAtTime(5800, now + 0.12);
+        whineOsc.type = 'sine';
+        whineOsc.frequency.setValueAtTime(1450, now + 0.040);
+        if (whineOsc.frequency.exponentialRampToValueAtTime) {
+          whineOsc.frequency.exponentialRampToValueAtTime(4950, now + 0.220);
         }
-        whineGain.gain.setValueAtTime(0.001, now + 0.025);
+        whineFilter.type = 'lowpass';
+        whineFilter.frequency.setValueAtTime(3800, now + 0.040);
+        whineFilter.Q.setValueAtTime(0.65, now + 0.040);
+
+        whineGain.gain.setValueAtTime(0.0001, now + 0.040);
         if (whineGain.gain.linearRampToValueAtTime) {
-          whineGain.gain.linearRampToValueAtTime(0.12, now + 0.06);
-          whineGain.gain.linearRampToValueAtTime(0.0001, now + 0.12);
+          whineGain.gain.linearRampToValueAtTime(0.095, now + 0.080);
+          whineGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.240);
         }
-        whineOsc.connect(whineGain);
+        whineOsc.connect(whineFilter);
+        whineFilter.connect(whineGain);
         whineGain.connect(target);
-        whineOsc.start(now + 0.025);
-        whineOsc.stop(now + 0.125);
+        whineOsc.start(now + 0.040);
+        whineOsc.stop(now + 0.250);
       }
 
-      // Stage 3: Second curtain latch snap (t = 0.038s)
-      const latchLen = Math.round(sampleRate * 0.035);
+      // Stage 4: Segunda cortinilla / Cierre mecánico seco (t = 0.035s)
+      const latchLen = Math.round(sampleRate * 0.028);
       const latchBuffer = context.createBuffer(1, latchLen, sampleRate);
       const latchData = latchBuffer.getChannelData(0);
       for (let i = 0; i < latchLen; i++) {
         const t = i / sampleRate;
-        latchData[i] = (Math.sin(2 * Math.PI * 2160 * t) * 0.6 + Math.sin(2 * Math.PI * 4320 * t) * 0.4) * Math.exp(-t / 0.005);
+        latchData[i] = (Math.sin(2 * Math.PI * 2600 * t) * 0.65 + Math.sin(2 * Math.PI * 4800 * t) * 0.35) * Math.exp(-t / 0.005);
       }
       const latchSrc = context.createBufferSource();
       latchSrc.buffer = latchBuffer;
       const latchGain = context.createGain();
-      latchGain.gain.setValueAtTime(0.70, now + 0.038);
+      latchGain.gain.setValueAtTime(0.78, now + 0.035);
       if (latchGain.gain.exponentialRampToValueAtTime) {
-        latchGain.gain.exponentialRampToValueAtTime(0.001, now + 0.073);
+        latchGain.gain.exponentialRampToValueAtTime(0.001, now + 0.063);
       }
       latchSrc.connect(latchGain);
       latchGain.connect(target);
-      latchSrc.start(now + 0.038);
+      latchSrc.start(now + 0.035);
 
-      // Stage 4: Polaroid SX-70 motorized film ejection rollers (t = 0.075s .. 0.420s)
-      if (typeof context.createOscillator === 'function') {
-        const motorOsc = context.createOscillator();
-        const motorGain = context.createGain();
-        motorOsc.type = 'sawtooth';
-        motorOsc.frequency.setValueAtTime(180, now + 0.075);
-        const motorFilter = context.createBiquadFilter ? context.createBiquadFilter() : null;
-        if (motorFilter) {
-          motorFilter.type = 'lowpass';
-          motorFilter.frequency.setValueAtTime(950, now + 0.075);
+      // Stage 5: Carraca táctil de arrastre de película (3 micro-ticks de rueda dentada)
+      [0.115, 0.165, 0.215].forEach((tickDelay, idx) => {
+        const tickTime = now + tickDelay;
+        const tickOsc = context.createOscillator();
+        const tickGain = context.createGain();
+        tickOsc.type = 'triangle';
+        tickOsc.frequency.setValueAtTime(3200 - idx * 280, tickTime);
+        tickGain.gain.setValueAtTime(0.08, tickTime);
+        if (tickGain.gain.exponentialRampToValueAtTime) {
+          tickGain.gain.exponentialRampToValueAtTime(0.0001, tickTime + 0.012);
         }
-        motorGain.gain.setValueAtTime(0.001, now + 0.075);
-        if (motorGain.gain.linearRampToValueAtTime) {
-          motorGain.gain.linearRampToValueAtTime(0.26, now + 0.14);
-          motorGain.gain.linearRampToValueAtTime(0.24, now + 0.36);
-          motorGain.gain.linearRampToValueAtTime(0.0001, now + 0.44);
-        }
-        motorOsc.connect(motorFilter || motorGain);
-        if (motorFilter) motorFilter.connect(motorGain);
-        motorGain.connect(target);
-        motorOsc.start(now + 0.075);
-        motorOsc.stop(now + 0.46);
-      }
+        tickOsc.connect(tickGain);
+        tickGain.connect(target);
+        tickOsc.start(tickTime);
+        tickOsc.stop(tickTime + 0.015);
+      });
     } catch {}
   }
   function triggerCameraFlash(currentSlug, flashLevel) {
-    if ((currentSlug === 'ajenjo-cam' || slug === 'ajenjo-cam') && flashLevel >= 0.45) {
+    if (flashLevel >= 0.35 || currentSlug === 'ajenjo-cam' || slug === 'ajenjo-cam') {
       lastFlashSlug = 'ajenjo-cam';
       const now = performance.now();
-      if (now - lastCameraFlashTime > 1100) {
+      if (now - lastCameraFlashTime > 650) {
         lastCameraFlashTime = now;
         playCameraFlash();
       }
@@ -738,8 +753,11 @@
       advance(state.distance, state.depth, state.mode, state.phase, state.axisDirection, state.slug, state.flash, state.punch);
     },
     flash() {
-      lastFlashSlug = 'ajenjo-cam';
-      playCameraFlash();
+      const now = performance.now();
+      if (now - lastCameraFlashTime > 650) {
+        lastCameraFlashTime = now;
+        playCameraFlash();
+      }
     },
     punch() {
       playPunchImpact();
