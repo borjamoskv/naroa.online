@@ -160,6 +160,65 @@
     ctx.restore();
   }
 
+  function drawStoryZoomedDetail(ctx, img, x, y, w, h, radius = 0, zoom = 2.45, cx = 0.5, cy = 0.44) {
+    ctx.save();
+    if (radius > 0) {
+      drawStoryRoundedRect(ctx, x, y, w, h, radius);
+      ctx.clip();
+    }
+    const nw = img.naturalWidth || img.width || 1;
+    const nh = img.naturalHeight || img.height || 1;
+    const boxRatio = w / h;
+    const cropW = nw / zoom;
+    const cropH = cropW / boxRatio;
+    let sx = nw * cx - cropW / 2;
+    let sy = nh * cy - cropH / 2;
+    sx = Math.max(0, Math.min(nw - cropW, sx));
+    sy = Math.max(0, Math.min(nh - cropH, sy));
+    ctx.drawImage(img, sx, sy, cropW, cropH, x, y, w, h);
+    ctx.restore();
+  }
+
+  function drawStoryMiniature(ctx, img, x, y, w, h, radius = 18) {
+    ctx.save();
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.85)';
+    ctx.shadowBlur = 34;
+    ctx.shadowOffsetY = 16;
+    ctx.fillStyle = '#11120f';
+    drawStoryRoundedRect(ctx, x, y, w, h, radius);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255, 253, 244, 0.88)';
+    ctx.lineWidth = 2.0;
+    ctx.stroke();
+    ctx.restore();
+
+    ctx.save();
+    drawStoryRoundedRect(ctx, x + 8, y + 8, w - 16, h - 16, radius - 4);
+    ctx.clip();
+    ctx.fillStyle = '#070705';
+    ctx.fillRect(x + 8, y + 8, w - 16, h - 16);
+
+    const nw = img.naturalWidth || img.width || 1;
+    const nh = img.naturalHeight || img.height || 1;
+    const imgRatio = nw / nh;
+    const innerW = w - 16, innerH = h - 16;
+    const boxRatio = innerW / innerH;
+    let dw, dh, dx, dy;
+    if (imgRatio > boxRatio) {
+      dw = innerW;
+      dh = innerW / imgRatio;
+      dx = x + 8;
+      dy = y + 8 + (innerH - dh) / 2;
+    } else {
+      dh = innerH;
+      dw = innerH * imgRatio;
+      dx = x + 8 + (innerW - dw) / 2;
+      dy = y + 8;
+    }
+    ctx.drawImage(img, 0, 0, nw, nh, dx, dy, dw, dh);
+    ctx.restore();
+  }
+
   async function generateStoryRemix(preferredSlug = null) {
     const dialog = $('#story-remix-dialog');
     if (!dialog) return null;
@@ -171,13 +230,17 @@
     isGeneratingRemix = true;
 
     try {
-      const selectedWorks = pickRandomProjects(3, preferredSlug);
-      if (!selectedWorks.length) throw new Error('No projects available');
+      // Enfoque DETAIL OBSESSION: Obra protagonista con zoom macro y miniatura completa
+      const activeP = getActiveArtwork();
+      const targetSlug = preferredSlug || activeP?.slug || null;
+      let heroWork = targetSlug ? projects.find(w => w.slug === targetSlug) : null;
+      if (!heroWork) {
+        heroWork = projects[Math.floor(Math.random() * projects.length)] || projects[0];
+      }
+      if (!heroWork) throw new Error('No projects available');
 
-      const loadedImages = await Promise.all(selectedWorks.map(w => {
-        const src = w.photos?.[0]?.src || w.cover || w.thumb;
-        return loadImageAsync(src).catch(() => null);
-      }));
+      const src = heroWork.photos?.[0]?.src || heroWork.cover || heroWork.thumb;
+      const heroImg = await loadImageAsync(src).catch(() => null);
 
       const canvas = document.createElement('canvas');
       canvas.width = 1080;
@@ -190,68 +253,39 @@
         return null;
       }
 
-      // 1. Deep gallery background gradient
+      // 1. Fondo de galería museo contemporáneo
       const bg = ctx.createLinearGradient(0, 0, 0, 1920);
-      bg.addColorStop(0, '#0c0d0a');
-      bg.addColorStop(0.5, '#151613');
-      bg.addColorStop(1, '#0b0c09');
+      bg.addColorStop(0, '#0a0b08');
+      bg.addColorStop(0.5, '#12140f');
+      bg.addColorStop(1, '#080806');
       ctx.fillStyle = bg;
       ctx.fillRect(0, 0, 1080, 1920);
 
-      // 2. Atmospheric Halos (YInMn Blue top-right + Ochre gold bottom-left)
-      const radBlue = ctx.createRadialGradient(900, 320, 20, 900, 320, 680);
-      radBlue.addColorStop(0, 'rgba(46, 68, 130, 0.35)');
-      radBlue.addColorStop(1, 'rgba(46, 68, 130, 0)');
-      ctx.fillStyle = radBlue;
+      // 2. Halo atmosférico cálido (sutil)
+      const radHalo = ctx.createRadialGradient(540, 780, 40, 540, 780, 850);
+      radHalo.addColorStop(0, 'rgba(212, 175, 55, 0.16)');
+      radHalo.addColorStop(1, 'rgba(212, 175, 55, 0)');
+      ctx.fillStyle = radHalo;
       ctx.fillRect(0, 0, 1080, 1920);
 
-      const radGold = ctx.createRadialGradient(180, 1560, 20, 180, 1560, 700);
-      radGold.addColorStop(0, 'rgba(212, 175, 55, 0.22)');
-      radGold.addColorStop(1, 'rgba(212, 175, 55, 0)');
-      ctx.fillStyle = radGold;
-      ctx.fillRect(0, 0, 1080, 1920);
-
-      // Fine golden double perimeter border
-      ctx.strokeStyle = 'rgba(212, 175, 55, 0.25)';
-      ctx.lineWidth = 1.5;
-      ctx.strokeRect(36, 36, 1008, 1848);
-      ctx.strokeStyle = 'rgba(255, 253, 244, 0.08)';
-      ctx.strokeRect(44, 44, 992, 1832);
-
-      // Corner marks
-      ctx.strokeStyle = '#d4af37';
-      ctx.lineWidth = 2.5;
-      const cLen = 28;
-      ctx.beginPath(); ctx.moveTo(36, 36 + cLen); ctx.lineTo(36, 36); ctx.lineTo(36 + cLen, 36); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(1044 - cLen, 36); ctx.lineTo(1044, 36); ctx.lineTo(1044, 36 + cLen); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(36, 1884 - cLen); ctx.lineTo(36, 1884); ctx.lineTo(36 + cLen, 1884); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(1044 - cLen, 1884); ctx.lineTo(1044, 1884); ctx.lineTo(1044, 1884 - cLen); ctx.stroke();
-
-      // 3. Top Header
+      // 3. Encabezado minimalista Awwwards
       ctx.textAlign = 'center';
       ctx.fillStyle = '#d4af37';
-      ctx.font = '600 16px "DM Sans", -apple-system, sans-serif';
-      ctx.fillText('EXPOSICIÓN INMERSIVA · BILBAO', 540, 150);
-
-      ctx.fillStyle = '#fffdf4';
-      ctx.font = '700 36px "DM Sans", -apple-system, sans-serif';
-      ctx.fillText('NAROA GUTIÉRREZ GIL', 540, 194);
+      ctx.font = '700 17px "DM Sans", -apple-system, sans-serif';
+      ctx.fillText('NAROA GUTIÉRREZ GIL', 540, 72);
 
       ctx.fillStyle = '#b8b2a2';
-      ctx.font = '400 17px "DM Sans", -apple-system, sans-serif';
-      ctx.fillText('Pintura · Collage · Objetos de Memoria', 540, 230);
+      ctx.font = '500 13px "DM Sans", -apple-system, sans-serif';
+      ctx.fillText('DETAIL OBSESSION · TEXTURAS Y MATERIA', 540, 100);
 
-      // 4. Hero Artwork Card
-      const heroWork = selectedWorks[0];
-      const heroImg = loadedImages[0];
-      const heroX = 80, heroY = 270, heroW = 920, heroH = 750;
-
+      // 4. Fragmento ampliado (Ocupa casi toda la pantalla para mostrar texturas y pinceladas)
+      const mainX = 48, mainY = 130, mainW = 984, mainH = 1530;
       ctx.save();
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.65)';
-      ctx.shadowBlur = 35;
-      ctx.shadowOffsetY = 15;
-      ctx.fillStyle = '#171815';
-      drawStoryRoundedRect(ctx, heroX, heroY, heroW, heroH, 16);
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
+      ctx.shadowBlur = 40;
+      ctx.shadowOffsetY = 18;
+      ctx.fillStyle = '#141512';
+      drawStoryRoundedRect(ctx, mainX, mainY, mainW, mainH, 28);
       ctx.fill();
       ctx.strokeStyle = 'rgba(255, 253, 244, 0.14)';
       ctx.lineWidth = 1.5;
@@ -259,98 +293,87 @@
       ctx.restore();
 
       if (heroImg) {
-        drawStoryCoverImage(ctx, heroImg, heroX + 16, heroY + 16, heroW - 32, 590, 10);
+        // Zoom macro x2.45 sobre el centro matérico de la obra
+        drawStoryZoomedDetail(ctx, heroImg, mainX, mainY, mainW, mainH, 28, 2.45, 0.5, 0.44);
       }
 
-      ctx.textAlign = 'left';
-      ctx.fillStyle = '#fffdf4';
-      ctx.font = '700 28px "DM Sans", -apple-system, sans-serif';
-      ctx.fillText(heroWork.title, heroX + 28, heroY + 655);
+      // Sombra gradual interior inferior para legibilidad del título
+      const gradBottom = ctx.createLinearGradient(0, mainY + mainH - 320, 0, mainY + mainH);
+      gradBottom.addColorStop(0, 'rgba(10, 11, 8, 0)');
+      gradBottom.addColorStop(0.65, 'rgba(10, 11, 8, 0.72)');
+      gradBottom.addColorStop(1, 'rgba(10, 11, 8, 0.94)');
+      ctx.save();
+      drawStoryRoundedRect(ctx, mainX, mainY, mainW, mainH, 28);
+      ctx.clip();
+      ctx.fillStyle = gradBottom;
+      ctx.fillRect(mainX, mainY + mainH - 320, mainW, 320);
+      ctx.restore();
 
-      ctx.fillStyle = '#a8a292';
-      ctx.font = '400 18px "DM Sans", -apple-system, sans-serif';
-      const heroMeta = [heroWork.label || heroWork.category, heroWork.support || heroWork.technique].filter(Boolean).join(' · ');
-      ctx.fillText(heroMeta, heroX + 28, heroY + 692);
+      // 5. Miniatura que revela la pieza completa (Picture-in-Picture)
+      const miniW = 290, miniH = 370;
+      const miniX = mainX + 40, miniY = mainY + mainH - miniH - 40;
+      if (heroImg) {
+        drawStoryMiniature(ctx, heroImg, miniX, miniY, miniW, miniH, 18);
 
-      ctx.textAlign = 'right';
-      ctx.fillStyle = '#d4af37';
-      ctx.font = '600 16px "DM Sans", -apple-system, sans-serif';
-      ctx.fillText('Obra Principal', heroX + heroW - 28, heroY + 675);
-
-      // 5. Secondary Artwork Pair
-      const secY = 1060, secH = 540, secW = 445;
-      const secConfigs = [
-        { work: selectedWorks[1], img: loadedImages[1], x: 80 },
-        { work: selectedWorks[2], img: loadedImages[2], x: 555 }
-      ];
-
-      secConfigs.forEach(cfg => {
-        if (!cfg.work) return;
+        // Badge «PIEZA COMPLETA»
+        const badgeW = 160, badgeH = 32;
+        const badgeX = miniX + (miniW - badgeW) / 2;
+        const badgeY = miniY + miniH - 22;
         ctx.save();
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.55)';
-        ctx.shadowBlur = 25;
-        ctx.shadowOffsetY = 10;
-        ctx.fillStyle = '#171815';
-        drawStoryRoundedRect(ctx, cfg.x, secY, secW, secH, 14);
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
+        ctx.shadowBlur = 12;
+        ctx.fillStyle = '#0d0e0b';
+        drawStoryRoundedRect(ctx, badgeX, badgeY, badgeW, badgeH, 16);
         ctx.fill();
-        ctx.strokeStyle = 'rgba(255, 253, 244, 0.12)';
+        ctx.strokeStyle = '#d4af37';
         ctx.lineWidth = 1.2;
         ctx.stroke();
         ctx.restore();
 
-        if (cfg.img) {
-          drawStoryCoverImage(ctx, cfg.img, cfg.x + 14, secY + 14, secW - 28, 410, 8);
-        }
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#f7d594';
+        ctx.font = '700 11px "DM Sans", -apple-system, sans-serif';
+        ctx.fillText('PIEZA COMPLETA', badgeX + badgeW / 2, badgeY + 20);
+      }
 
-        ctx.textAlign = 'left';
-        ctx.fillStyle = '#fffdf4';
-        ctx.font = '600 21px "DM Sans", -apple-system, sans-serif';
-        let title = cfg.work.title || '';
-        if (title.length > 24) title = title.slice(0, 22) + '…';
-        ctx.fillText(title, cfg.x + 20, secY + 465);
-
-        ctx.fillStyle = '#a8a292';
-        ctx.font = '400 15px "DM Sans", -apple-system, sans-serif';
-        let sub = cfg.work.support || cfg.work.technique || cfg.work.label || '';
-        if (sub.length > 30) sub = sub.slice(0, 28) + '…';
-        ctx.fillText(sub, cfg.x + 20, secY + 498);
-      });
-
-      // 6. Footer Motto & Link Badge
-      ctx.textAlign = 'center';
-      ctx.fillStyle = '#f0ece1';
-      ctx.font = '500 40px "Caveat", cursive, serif';
-      ctx.fillText('«Otra manera de mirar»', 540, 1665);
-
-      const pillW = 540, pillH = 58, pillX = 540 - pillW / 2, pillY = 1715;
-      ctx.save();
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
-      ctx.shadowBlur = 15;
-      ctx.shadowOffsetY = 6;
-      ctx.fillStyle = '#1c1e19';
-      drawStoryRoundedRect(ctx, pillX, pillY, pillW, pillH, 29);
-      ctx.fill();
-      ctx.strokeStyle = '#d4af37';
-      ctx.lineWidth = 1.8;
-      ctx.stroke();
-      ctx.restore();
+      // 6. Información de la obra al pie del marco
+      const textLeft = miniX + miniW + 36;
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#fffdf4';
+      ctx.font = '700 36px "DM Sans", -apple-system, sans-serif';
+      let title = heroWork.title || 'Obra';
+      if (title.length > 20) title = title.slice(0, 19) + '…';
+      ctx.fillText(title, textLeft, mainY + mainH - 120);
 
       ctx.fillStyle = '#d4af37';
-      ctx.font = '600 20px "DM Sans", -apple-system, sans-serif';
-      ctx.fillText('@naroa_art  ·  naroagutierrezgil.com', 540, 1751);
+      ctx.font = '600 17px "DM Sans", -apple-system, sans-serif';
+      const cat = heroWork.label || heroWork.category || '';
+      ctx.fillText(cat.toUpperCase(), textLeft, mainY + mainH - 85);
+
+      ctx.fillStyle = '#c5bfaf';
+      ctx.font = '400 15px "DM Sans", -apple-system, sans-serif';
+      let tech = heroWork.support || heroWork.technique || 'Pintura y materia';
+      if (tech.length > 34) tech = tech.slice(0, 32) + '…';
+      ctx.fillText(tech, textLeft, mainY + mainH - 58);
+
+      // 7. Pie de Story & sticker de enlace
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#fffdf4';
+      ctx.font = '600 18px "DM Sans", -apple-system, sans-serif';
+      ctx.fillText('@naroa_art   ·   naroagutierrezgil.com', 540, 1720);
 
       ctx.fillStyle = 'rgba(255, 253, 244, 0.45)';
-      ctx.font = '400 15px "DM Sans", -apple-system, sans-serif';
-      ctx.fillText('86 obras inmersivas · Retratos por encargo', 540, 1818);
+      ctx.font = '400 14px "DM Sans", -apple-system, sans-serif';
+      ctx.fillText('86 obras inmersivas · Retratos sobre pizarra y materia', 540, 1752);
 
       let dataUrl = '';
-      try { dataUrl = canvas.toDataURL('image/jpeg', 0.92); } catch {}
+      try { dataUrl = canvas.toDataURL('image/jpeg', 0.94); } catch {}
       currentRemixDataUrl = dataUrl;
 
       if (previewImg && dataUrl) previewImg.src = dataUrl;
       if (downloadBtn && dataUrl) {
         downloadBtn.href = dataUrl;
-        downloadBtn.download = `naroa-story-remix-${selectedWorks.map(w => w.slug).join('-')}.jpg`;
+        downloadBtn.download = `naroa-detail-obsession-${heroWork.slug}.jpg`;
       }
 
       await new Promise(resolve => {
@@ -358,12 +381,12 @@
           canvas.toBlob(blob => {
             currentRemixBlob = blob;
             try {
-              currentRemixFile = new File([blob], 'naroa-story-remix.jpg', { type: 'image/jpeg' });
+              currentRemixFile = new File([blob], `naroa-story-${heroWork.slug}.jpg`, { type: 'image/jpeg' });
             } catch {
               currentRemixFile = blob;
             }
             resolve();
-          }, 'image/jpeg', 0.92);
+          }, 'image/jpeg', 0.94);
         } else {
           resolve();
         }
@@ -371,7 +394,7 @@
 
       return { dataUrl, blob: currentRemixBlob, file: currentRemixFile };
     } catch (err) {
-      console.warn('Error generating story remix:', err);
+      console.warn('Error generating story detail obsession:', err);
       return null;
     } finally {
       if (spinner) spinner.hidden = true;

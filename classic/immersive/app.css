@@ -155,6 +155,7 @@ html.motion-off .kinetic-title{display:none}
 @keyframes monocle-ring-spin{to{transform:rotate(360deg)}}
 .hero-monocle-bezel{fill:none;stroke:rgba(237,188,164,.55);stroke-width:1.1;stroke-dasharray:6 3}
 .hero-monocle-inner-ring{fill:none;stroke:rgba(247,213,148,.42);stroke-width:.85}
+.hero-telemetry, .hero-kinetic-split, .hero-monocle-svg-text{display:none!important}
 .hero-monocle-svg-text{fill:#f7d594;font:500 9.6px/1 'DM Sans',sans-serif;letter-spacing:.215em;text-transform:uppercase;opacity:.94}
 .hero-kinetic-split{position:absolute;inset:0;z-index:4;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;padding:clamp(112px,15vh,164px) 4.5% clamp(96px,14vh,148px);transform-style:preserve-3d}
 .hero-kinetic-row{display:flex;flex-direction:column;will-change:transform,opacity}
