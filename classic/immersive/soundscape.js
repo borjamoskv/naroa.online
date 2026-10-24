@@ -344,6 +344,53 @@
       } catch {}
     }
   }
+  let lastDeltoyaSlug = '';
+  function speakDeltoya() {
+    lastDeltoyaSlug = 'entre-tantas-flores-de-dia';
+    lastHeroSlug = 'entre-tantas-flores-de-dia';
+    lastUtterance = '¡DELTOYA!';
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      try { navigator.vibrate([35, 50, 25, 90, 40, 160]); } catch {}
+    }
+    try {
+      if (window.speechSynthesis && typeof window.SpeechSynthesisUtterance === 'function') {
+        window.speechSynthesis.cancel();
+        const utterance = new window.SpeechSynthesisUtterance('¡DELTOYA!');
+        utterance.lang = 'es-ES'; utterance.rate = 1.05; utterance.pitch = 0.86; utterance.volume = 1.0;
+        window.speechSynthesis.speak(utterance);
+      }
+    } catch {}
+    if (typeof window.Audio === 'function' && !window.navigator.userAgent.includes('jsdom')) {
+      try {
+        const audioUrl = button?.dataset?.deltoyaSrc || '/audio/deltoya.mp3';
+        const deltoyaAudio = new window.Audio(audioUrl);
+        deltoyaAudio.volume = 0.98;
+        deltoyaAudio.play().catch(() => {});
+      } catch {}
+    }
+    if (context && engine && context.state === 'running') {
+      try {
+        const now = context.currentTime + 0.005;
+        const target = engine.compressor || engine.master;
+        // Distorted electric guitar power chord: E2 (82.4Hz), B2 (123.5Hz), E3 (164.8Hz), G#3 (207.65Hz)
+        [82.41, 123.47, 164.81, 207.65].forEach((freq, idx) => {
+          const osc = context.createOscillator();
+          const gain = context.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(freq, now);
+          gain.gain.setValueAtTime(0.001, now);
+          gain.gain.linearRampToValueAtTime(0.32 / (idx + 1), now + 0.015);
+          if (gain.gain.exponentialRampToValueAtTime) {
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.8);
+          }
+          osc.connect(gain);
+          gain.connect(target);
+          osc.start(now);
+          osc.stop(now + 1.85);
+        });
+      } catch {}
+    }
+  }
   function playCameraFlash() {
     if (!context || !engine || context.state !== 'running') return;
     try {
@@ -542,8 +589,9 @@
     if (slug === 'el-hombre-que-susurraba-a-las-estrellas' && lastHeroSlug !== slug) speakHero();
     else if (slug === 'denbora-nora-zoaz' && lastHeroSlug !== slug) speakDenbora();
     else if (slug === 'asucar-celia-cruz' && lastHeroSlug !== slug) playSugarShaker();
+    else if (slug === 'entre-tantas-flores-de-dia' && lastHeroSlug !== slug) speakDeltoya();
     else if (slug === 'dustin' && lastHeroSlug !== slug) speakSilence();
-    else if (slug && slug !== 'el-hombre-que-susurraba-a-las-estrellas' && slug !== 'denbora-nora-zoaz' && slug !== 'asucar-celia-cruz' && slug !== 'dustin') {
+    else if (slug && slug !== 'el-hombre-que-susurraba-a-las-estrellas' && slug !== 'denbora-nora-zoaz' && slug !== 'asucar-celia-cruz' && slug !== 'entre-tantas-flores-de-dia' && slug !== 'dustin') {
       if (lastHeroSlug === 'dustin' && context && engine && context.state === 'running') {
         const resetTime = context.currentTime;
         if (engine.filter && engine.filter.frequency && engine.filter.frequency.exponentialRampToValueAtTime) {
@@ -738,10 +786,14 @@
     shaker() {
       playSugarShaker();
     },
+    speakDeltoya() {
+      speakDeltoya();
+    },
     get lastUtterance() { return lastUtterance; },
     get lastFlashSlug() { return lastFlashSlug; },
     get lastPunchSlug() { return lastPunchSlug; },
-    get lastShakerSlug() { return lastShakerSlug; }
+    get lastShakerSlug() { return lastShakerSlug; },
+    get lastDeltoyaSlug() { return lastDeltoyaSlug; }
   });
   paint();
 })();

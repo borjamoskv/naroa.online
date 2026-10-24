@@ -320,6 +320,17 @@
         stage.classList.remove('has-sugar-shake');
       }, 550);
     }
+    let deltoyaTimer = null, deltoyaVisited = false;
+    function fireDeltoya() {
+      soundscape?.speakDeltoya?.();
+      stage.classList.remove('has-deltoya-pulse');
+      void stage.offsetWidth;
+      stage.classList.add('has-deltoya-pulse');
+      clearTimeout(deltoyaTimer);
+      deltoyaTimer = setTimeout(() => {
+        stage.classList.remove('has-deltoya-pulse');
+      }, 700);
+    }
     function focusPictures() { works.forEach((p, i) => scenes[i].style.setProperty('--position', (innerWidth < 760 && mobileFocals[p.slug]) || focals[p.slug] || '50% 44%')); }
     focusPictures();
     function ensureImage(i) {
@@ -521,6 +532,14 @@
         }
       } else {
         sugarVisited = false;
+      }
+      if (works[base].slug === 'entre-tantas-flores-de-dia' || works[incoming].slug === 'entre-tantas-flores-de-dia') {
+        if (!deltoyaVisited && (works[state.index].slug === 'entre-tantas-flores-de-dia' || (transition && works[incoming].slug === 'entre-tantas-flores-de-dia' && fraction >= 0.35))) {
+          deltoyaVisited = true;
+          fireDeltoya();
+        }
+      } else {
+        deltoyaVisited = false;
       }
       const isPunchPair = (works[base].slug === 'i-got-you-babe' && works[incoming].slug === 'jose-manuel-ezquerra') ||
                           (works[base].slug === 'jose-manuel-ezquerra' && works[incoming].slug === 'i-got-you-babe');
@@ -742,6 +761,9 @@
       if (works[state.index]?.slug === 'asucar-celia-cruz') {
         fireSugarShake();
       }
+      if (works[state.index]?.slug === 'entre-tantas-flores-de-dia') {
+        fireDeltoya();
+      }
       if (works[state.index]?.slug === 'i-got-you-babe' || works[state.index]?.slug === 'jose-manuel-ezquerra') {
         firePuñetazo();
       }
@@ -767,6 +789,11 @@
       if (works[i]?.slug === 'asucar-celia-cruz') {
         sc.addEventListener('click', () => {
           fireSugarShake();
+        });
+      }
+      if (works[i]?.slug === 'entre-tantas-flores-de-dia') {
+        sc.addEventListener('click', () => {
+          fireDeltoya();
         });
       }
       if (works[i]?.slug === 'i-got-you-babe' || works[i]?.slug === 'jose-manuel-ezquerra') {
