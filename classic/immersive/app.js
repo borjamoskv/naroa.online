@@ -655,6 +655,7 @@
 
   const stage = $('[data-gallery]');
   if (stage) {
+    stage.classList.add('is-resting');
     const works = catalogue.projects.filter(p => stage.dataset.subset !== 'Vaivenes' || p.series === 'Vaivenes');
     const scenes = $$('.art-scene', stage), images = scenes.map(s => $('img', s));
     scenes.forEach((s, i) => {
@@ -2031,6 +2032,7 @@
       if (reduced.matches || state.fit) {
         motion.current = targetDist;
       }
+      stage.classList.remove('is-resting');
       scheduleMotion();
     }
     function scheduleMotion() {
@@ -2049,7 +2051,9 @@
         motion.lastTime = 0;
         stage.style.setProperty('--scroll-energy', '0');
         stage.style.setProperty('--velocity-skew', '0deg');
+        stage.classList.add('is-resting');
       } else {
+        stage.classList.remove('is-resting');
         // Amortiguamiento continuo invariante al framerate (60Hz / 120Hz ProMotion) — Ley 1 (INV_C5_SCROLL_SUBSTEP_DYNAMICS)
         const currentBase = Math.floor(motion.desired || motion.position || 0);
         const isPuzzle = works[currentBase]?.interaction === 'puzzle' || works[currentBase]?.slug === 'saio-puzzle';
