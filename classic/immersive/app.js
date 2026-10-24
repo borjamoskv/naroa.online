@@ -271,7 +271,17 @@
     const kineticTitle = $('[data-kinetic-title]', stage), caption = $('[data-art-copy]', stage);
     const state = { index: Number(stage.dataset.initial) || 0, fit: false, quiet: false, photo: 0 };
     const journey = window.NAROA_JOURNEY.create(works, catalogue.journey);
-    const motion = { pose: journey.read(journey.at(state.index)), position: state.index, desired: state.index, frame: null, request: 0, navigation: null };
+    const initialDistance = journey.at(state.index);
+    const motion = {
+      pose: journey.read(initialDistance),
+      position: state.index,
+      desired: state.index,
+      current: initialDistance,
+      target: initialDistance,
+      frame: null,
+      request: 0,
+      navigation: null
+    };
     const track = stage.closest('.art-scroll'), geometry = { top: 0, unit: 1, width: 0, height: 0 };
     track.style.setProperty('--journey-length', `${journey.total * 100}svh`);
     document.documentElement.classList.add('gallery-scroll');
@@ -1318,7 +1328,23 @@
     syncNotebook();
     document.addEventListener('visibilitychange', () => { if (!document.hidden) syncNotebook(); });
   }
-  const reveals = $$('.chapter>div,.chapter>.eyebrow,.section-opening,.editorial blockquote,.timeline-entry,.notebook-posts article,.commission-example,.commission-steps article,.commission-faq-item,.closing,.contact-channel,.contact-details');
+  const configurator = $('[data-commission-configurator]');
+  if (configurator) {
+    const supportEl = $('#cfg-support');
+    const motifEl = $('#cfg-motif');
+    const timingEl = $('#cfg-timing');
+    const btn = $('#cfg-whatsapp-btn');
+    const updateLink = () => {
+      if (!supportEl || !motifEl || !timingEl || !btn) return;
+      const s = supportEl.value;
+      const m = motifEl.value;
+      const t = timingEl.value;
+      const msg = `Hola Naroa, me gustaría consultar un encargo de retrato sobre ${s} para ${m} con plazo ${t}.`;
+      btn.href = `https://wa.me/34636060609?text=${encodeURIComponent(msg)}`;
+    };
+    [supportEl, motifEl, timingEl].forEach(el => el?.addEventListener('change', updateLink));
+  }
+  const reveals = $$('.chapter>div,.chapter>.eyebrow,.section-opening,.editorial blockquote,.timeline-entry,.notebook-posts article,.commission-example,.commission-steps article,.commission-configurator,.commission-faq-item,.closing,.contact-channel,.contact-details');
   if ('IntersectionObserver' in window) {
     const observer = new IntersectionObserver(entries => entries.forEach(entry => {
       if (entry.isIntersecting) { entry.target.classList.add('is-revealed'); observer.unobserve(entry.target); }
