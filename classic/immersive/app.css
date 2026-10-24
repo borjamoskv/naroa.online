@@ -456,6 +456,53 @@ html.motion-off .naroa-portal-canvas,body.is-quiet .naroa-portal-canvas{opacity:
 .remix-btn--download:hover{background:#d4af3740}
 @media(max-width:480px){.story-remix-preview-frame{max-width:230px}.story-remix-content{padding:14px 16px 20px}}
 
+/* Tipografía Nino Prodigio para Clímax 8-Bit Game Over */
+.art-stage[data-active-slug="game-over"] .art-bottom h1,
+.art-stage[data-active-slug="game-over"] [data-art-title],
+.game-over-pixel-text {
+  font-family: 'Nino Prodigio', monospace !important;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fffdf4;
+  text-shadow: 0 0 14px #ff0055, 0 0 28px #00f0ff;
+}
+
+/* LauraLore: Acercamiento progresivo a la boca (5 segundos) */
+.art-scene img.is-mouth-zooming {
+  transition: transform 5s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  transform: scale(2.85) !important;
+}
+
+/* Clímax Ouroboros: Fundido a Negro, Monigote BreakDance & Rebobinado Supersónico */
+.art-stage.is-breakdance-stage {
+  background: #000000 !important;
+}
+.art-stage.is-breakdance-stage .art-scene {
+  opacity: 0 !important;
+  transition: opacity 0.8s ease;
+}
+.art-stickman.is-breakdancing {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1.65);
+  z-index: 15;
+  display: block !important;
+  animation: bboy-spin 0.95s linear infinite;
+  transform-origin: 50% 50%;
+}
+@keyframes bboy-spin {
+  0% { transform: translate(-50%, -50%) scale(1.65) rotate(0deg); }
+  25% { transform: translate(-50%, -50%) scale(1.65, 0.75) rotate(90deg); }
+  50% { transform: translate(-50%, -50%) scale(1.65) rotate(180deg); }
+  75% { transform: translate(-50%, -50%) scale(1.65, 0.75) rotate(270deg); }
+  100% { transform: translate(-50%, -50%) scale(1.65) rotate(360deg); }
+}
+.art-stage.is-supersonic-rewind {
+  filter: contrast(1.3) saturate(1.4);
+  box-shadow: inset 0 0 140px rgba(0, 240, 255, 0.45);
+}
+
 
 
 

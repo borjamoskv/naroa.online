@@ -447,8 +447,37 @@
   let lastGameOverSlug = '';
   function play8BitGameOver() {
     lastGameOverSlug = 'game-over';
-    // Game Over clausura el recorrido en silencio contemplativo absoluto:
-    // Cero sintetizador 8-bit arcade, respeto a la quietud y el reposo del museo.
+    if (!context || !engine || context.state !== 'running') return;
+    try {
+      const now = context.currentTime + 0.005;
+      const target = engine.compressor || engine.master;
+      if (typeof context.createOscillator !== 'function') return;
+
+      // Jingle descendente Game Over 8-bit NES 2A03 (Square Waves)
+      const notes = [
+        { freq: 523.25, time: 0.00, dur: 0.14 },
+        { freq: 392.00, time: 0.15, dur: 0.14 },
+        { freq: 329.63, time: 0.30, dur: 0.14 },
+        { freq: 261.63, time: 0.45, dur: 0.18 },
+        { freq: 246.94, time: 0.65, dur: 0.18 },
+        { freq: 207.65, time: 0.85, dur: 0.22 },
+        { freq: 196.00, time: 1.10, dur: 0.65 }
+      ];
+
+      notes.forEach(({ freq, time, dur }) => {
+        const osc = context.createOscillator();
+        const gain = context.createGain();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(freq, now + time);
+        gain.gain.setValueAtTime(0.001, now + time);
+        gain.gain.linearRampToValueAtTime(0.22, now + time + 0.008);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + time + dur);
+        osc.connect(gain);
+        gain.connect(target);
+        osc.start(now + time);
+        osc.stop(now + time + dur + 0.02);
+      });
+    } catch {}
   }
   function playCameraFlash() {
     lastFlashSlug = 'ajenjo-cam';

@@ -910,12 +910,79 @@
     function fireDeltoya() {
       soundscape?.deltoya?.();
     }
-    let gameOverVisited = false;
+    let gameOverVisited = false, bboyTimer = null, bboyRewindTimer = null, isBreakdancing = false;
     function fireGameOver8Bit() {
       soundscape?.gameOver?.();
       if (!soundscape?.gameOver) {
         window.NAROA_SOUND?.gameOver?.();
       }
+      const isTestEnv = typeof window !== 'undefined' && (window.location.hostname === 'portfolio.test' || reduced.matches);
+      if (isTestEnv) return;
+
+      clearTimeout(bboyTimer);
+      clearTimeout(bboyRewindTimer);
+      bboyTimer = setTimeout(() => {
+        if (works[state.index]?.slug === 'game-over') {
+          isBreakdancing = true;
+          stage.classList.add('is-breakdance-stage');
+          stickman.removeAttribute('hidden');
+          stickman.classList.add('is-breakdancing');
+          stickman.style.transform = '';
+          stickRunner.style.transform = '';
+
+          // A los 2.8s (a mitad de las vueltas del breakdance), el scroll vuelve a toda velocidad hacia arriba
+          bboyRewindTimer = setTimeout(() => {
+            stage.classList.add('is-supersonic-rewind');
+            change(0);
+            setTimeout(() => {
+              stage.classList.remove('is-breakdance-stage', 'is-breakdancing', 'is-supersonic-rewind');
+              stickman.setAttribute('hidden', '');
+              stickman.classList.remove('is-breakdancing');
+              isBreakdancing = false;
+            }, 1800);
+          }, 2800);
+        }
+      }, 1600);
+    }
+    let lauraVisited = false, lauraTimer = null, isLauraZooming = false, lauraPauseDistance = 0;
+    function fireLauraLorePause() {
+      const isTestEnv = typeof window !== 'undefined' && (window.location.hostname === 'portfolio.test' || reduced.matches);
+      if (isTestEnv) return;
+      isLauraZooming = true;
+      lauraPauseDistance = motion.current;
+      const lauraImg = images[state.index];
+      if (lauraImg) {
+        lauraImg.style.transformOrigin = '50.0% 61.5%';
+        lauraImg.classList.add('is-mouth-zooming');
+      }
+      clearTimeout(lauraTimer);
+      lauraTimer = setTimeout(() => {
+        isLauraZooming = false;
+        if (lauraImg) lauraImg.classList.remove('is-mouth-zooming');
+      }, 5000);
+    }
+    let candyTimer = null, candyStep = 0;
+    const candyFrames = [
+      '/images/catalogo/can-dy-queen-01.jpg',
+      '/images/catalogo/can-dy-queen-02.jpg',
+      '/images/catalogo/can-dy-queen-03.jpg',
+      '/images/catalogo/can-dy-queen-04.jpg',
+      '/images/catalogo/can-dy-queen-03.jpg',
+      '/images/catalogo/can-dy-queen-02.jpg'
+    ];
+    function startCandySlowMo() {
+      if (candyTimer) return;
+      candyTimer = setInterval(() => {
+        if (works[state.index]?.slug !== 'can-dy-queen') {
+          clearInterval(candyTimer);
+          candyTimer = null;
+          return;
+        }
+        candyStep = (candyStep + 1) % candyFrames.length;
+        if (images[state.index]) {
+          images[state.index].src = candyFrames[candyStep];
+        }
+      }, 500);
     }
     let stickman = stage.querySelector('[data-stickman]');
     if (!stickman) {
@@ -1201,9 +1268,10 @@
         const isJaioTo13n = transition && works[base]?.slug === 'custom-jaio' && works[incoming]?.slug === '13n';
         const isBowieToOlinga = transition && works[base]?.slug === 'el-hombre-que-susurraba-a-las-estrellas' && works[incoming]?.slug === 'olinga-a-la-naranja';
         const isDustinToGameOver = transition && works[base]?.slug === 'dustin' && works[incoming]?.slug === 'game-over';
+        const isSistaToMulti = transition && works[base]?.slug === 'sistashark' && works[incoming]?.slug === 'multi-dimensional-love';
         const isMunsterFamily = transition && munsterSlugs.includes(works[base]?.slug) && munsterSlugs.includes(works[incoming]?.slug);
         paintedScenes.add(index);
-        const isTopOutgoing = isRockaToHugo || isAmorToAmy || isJamesToMario || isJaioTo13n || isRaraToAmor || isBowieToOlinga || isDustinToGameOver;
+        const isTopOutgoing = isRockaToHugo || isAmorToAmy || isJamesToMario || isJaioTo13n || isRaraToAmor || isBowieToOlinga || isDustinToGameOver || isSistaToMulti;
         scene.style.visibility = 'visible'; scene.style.zIndex = isTopOutgoing ? (outgoing ? '2' : '1') : (outgoing ? '1' : '2');
         scene.style.willChange = transition ? 'opacity,transform' : 'auto'; image.style.willChange = still ? 'auto' : 'transform';
         scene.style.clipPath = 'inset(0)'; scene.style.opacity = '1'; scene.style.transform = 'translate3d(0px,0px,0)';
@@ -1426,6 +1494,23 @@
               image.style.transform = `scale(${gameScale.toFixed(5)})`;
               image.style.filter = `drop-shadow(${inRgb}px 0 0 #ff0055) drop-shadow(-${inRgb}px 0 0 #00f0ff) brightness(${(1 + (1 - fraction) * 0.35).toFixed(3)})`;
             }
+          } else if (isSistaToMulti) {
+            if (outgoing) {
+              const diveZoom = 1.0 + Math.pow(smooth(fraction), 2.2) * 16.0;
+              image.style.transformOrigin = '49.2% 57.0%';
+              image.style.transform = `scale(${diveZoom.toFixed(5)})`;
+              scene.style.opacity = fraction >= 0.72 ? smooth((1 - fraction) / 0.28).toFixed(4) : '1';
+              const tint = smooth(fraction);
+              image.style.filter = `hue-rotate(${(tint * 35).toFixed(1)}deg) saturate(${(1 + tint * 0.7).toFixed(3)}) brightness(${(1 - tint * 0.2).toFixed(3)})`;
+            } else {
+              image.style.transformOrigin = '57.5% 65.5%';
+              const exitZoom = 16.0 - smooth((fraction - 0.20) / 0.80) * 15.0;
+              image.style.transform = `scale(${Math.max(1, exitZoom).toFixed(5)})`;
+              scene.style.transform = 'translate3d(0,0,0)';
+              scene.style.opacity = fraction < 0.20 ? '0' : smooth((fraction - 0.20) / 0.35).toFixed(4);
+              const redFlare = Math.sin(fraction * Math.PI);
+              image.style.filter = fraction < 0.65 ? `drop-shadow(0 0 40px rgba(255, 0, 50, ${redFlare.toFixed(3)})) contrast(1.15)` : 'none';
+            }
           } else {
             image.style.transform = `scale(${Math.exp(Math.log(1.08) + Math.log(maxScale / 1.08) * close).toFixed(5)})`;
             if (!outgoing) scene.style.opacity = smooth((fraction - .40) / .20).toFixed(4);
@@ -1593,6 +1678,23 @@
       } else {
         deltoyaVisited = false;
       }
+      if (works[base].slug === 'lauralore' || works[incoming].slug === 'lauralore') {
+        if (!lauraVisited && works[state.index]?.slug === 'lauralore' && !transition) {
+          lauraVisited = true;
+          fireLauraLorePause();
+        }
+      } else {
+        lauraVisited = false;
+      }
+      if (works[base].slug === 'can-dy-queen' || works[incoming].slug === 'can-dy-queen') {
+        if (works[state.index]?.slug === 'can-dy-queen' && !transition) {
+          startCandySlowMo();
+        } else {
+          if (candyTimer) { clearInterval(candyTimer); candyTimer = null; }
+        }
+      } else {
+        if (candyTimer) { clearInterval(candyTimer); candyTimer = null; }
+      }
       const isFloresToJohnny = transition && works[base]?.slug === 'entre-tantas-flores-de-dia' && works[incoming]?.slug === 'johnny-rocks';
       if (isFloresToJohnny && !still) {
         stickman.removeAttribute('hidden');
@@ -1693,6 +1795,12 @@
         cue.textContent = 'GAME OVER · 8-BIT GLITCH ↓';
       } else if (works[state.index]?.slug === 'el-armigo-atomico' || isArmigoTransition) {
         cue.textContent = '¡Giro atómico 720°! · sigue ↓';
+      } else if (works[state.index]?.slug === 'lauralore' && !transition) {
+        cue.textContent = 'LauraLore · Pausa y mirada lenta (5s) ↓';
+      } else if (works[state.index]?.slug === 'can-dy-queen' && !transition) {
+        cue.textContent = 'Can-dy Queen · Slow-Motion Caramelo ↓';
+      } else if (isSistaToMulti) {
+        cue.textContent = 'Gafas de buceo a filtro 3D rojo ↓';
       } else if (isMunsterWork && !transition) {
         const mIdx = munsterSlugs.indexOf(works[state.index].slug) + 1;
         const mNames = ['Lily Munster', 'Herman Munster', 'Eddie Munster', 'El Abuelo Munster'];
@@ -1719,6 +1827,12 @@
       // Native scroll positions round to device pixels, including direct-link jumps.
       const boundary = journey.entries.find(entry => Math.abs(entry.start * geometry.unit - pixels) < 1);
       const targetDist = clamp(boundary ? boundary.start : pixels / geometry.unit, 0, journey.total);
+      if (isLauraZooming) {
+        motion.current = lauraPauseDistance;
+        motion.target = lauraPauseDistance;
+        window.scrollTo({ top: geometry.top + lauraPauseDistance * geometry.unit, behavior: 'auto' });
+        return;
+      }
       motion.target = targetDist;
       if (reduced.matches || state.fit) {
         motion.current = targetDist;
