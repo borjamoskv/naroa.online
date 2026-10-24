@@ -413,75 +413,7 @@
       img.style.transformOrigin = '0px 0px';
       img.style.transform = `translate3d(${tx.toFixed(3)}px,${ty.toFixed(3)}px,0) scale(${zoom.toFixed(5)})`;
     }
-    let ajenjoBurstTimer = null, ajenjoVisited = false;
-    function fireAjenjoFlash() {
-      soundscape?.flash?.();
-      stage.classList.remove('has-flash-burst');
-      void stage.offsetWidth;
-      stage.classList.add('has-flash-burst');
-      clearTimeout(ajenjoBurstTimer);
-      ajenjoBurstTimer = setTimeout(() => {
-        stage.classList.remove('has-flash-burst');
-      }, 420);
-    }
-    let bowieZoomTimer = null, bowieVisited = false, denboraVisited = false, dustinVisited = false, dustinEpilogueTimer = null;
-    function fireBowieZoom() {
-      soundscape?.speakHero?.();
-      stage.classList.remove('has-bowie-zoom');
-      void stage.offsetWidth;
-      stage.classList.add('has-bowie-zoom');
-      clearTimeout(bowieZoomTimer);
-      bowieZoomTimer = setTimeout(() => {
-        stage.classList.remove('has-bowie-zoom');
-      }, 1600);
-    }
-    let punchBurstTimer = null, punchVisited = false;
-    function firePuñetazo() {
-      soundscape?.punch?.();
-      stage.classList.remove('has-punch-impact');
-      void stage.offsetWidth;
-      stage.classList.add('has-punch-impact');
-      clearTimeout(punchBurstTimer);
-      punchBurstTimer = setTimeout(() => {
-        stage.classList.remove('has-punch-impact');
-      }, 450);
-    }
-    let ezquerraBrakeTimer = null, ezquerraBrakeActive = false;
-    let ezquerraBrakeVisited = (state.index === ezquerraIndex);
-    function triggerEzquerraBrake() {
-      if (ezquerraBrakeVisited || ezquerraBrakeActive || reduced.matches || ezquerraIndex < 0) return;
-      ezquerraBrakeVisited = true;
-      ezquerraBrakeActive = true;
-      stage.classList.add('has-ezquerra-brake');
-      clearTimeout(ezquerraBrakeTimer);
-      ezquerraBrakeTimer = setTimeout(() => {
-        ezquerraBrakeActive = false;
-        stage.classList.remove('has-ezquerra-brake');
-        render();
-      }, 2000);
-    }
-    let sugarShakeTimer = null, sugarVisited = false;
-    function fireSugarShake() {
-      soundscape?.shaker?.();
-      stage.classList.remove('has-sugar-shake');
-      void stage.offsetWidth;
-      stage.classList.add('has-sugar-shake');
-      clearTimeout(sugarShakeTimer);
-      sugarShakeTimer = setTimeout(() => {
-        stage.classList.remove('has-sugar-shake');
-      }, 550);
-    }
-    let deltoyaTimer = null, deltoyaVisited = false;
-    function fireDeltoya() {
-      soundscape?.speakDeltoya?.();
-      stage.classList.remove('has-deltoya-pulse');
-      void stage.offsetWidth;
-      stage.classList.add('has-deltoya-pulse');
-      clearTimeout(deltoyaTimer);
-      deltoyaTimer = setTimeout(() => {
-        stage.classList.remove('has-deltoya-pulse');
-      }, 700);
-    }
+    let dustinVisited = false, dustinEpilogueTimer = null;
     let puzzleVisited = false, clockVisited = false, wineVisited = false;
     function firePuzzleSnap() {
       soundscape?.puzzleSnap?.();
@@ -614,10 +546,15 @@
         if (still) { image.style.transform = ''; return; }
         if (!transition) {
           const isBowie = works[index].slug === 'el-hombre-que-susurraba-a-las-estrellas';
+          const isMarilyn = index === 0;
           if (isBowie) {
             image.style.transformOrigin = '65.2% 57.4%';
             const holdZoom = 1.25 + smooth(pose.explore) * 0.50;
             image.style.transform = `scale(${holdZoom.toFixed(5)})`;
+          } else if (isMarilyn) {
+            image.style.transformOrigin = '50.4% 51.7%';
+            const lipsZoom = 1.08 + smooth(pose.explore) * 0.40;
+            image.style.transform = `scale(${lipsZoom.toFixed(5)})`;
           } else {
             image.style.transform = `translate3d(0,${(-smooth(pose.explore) * 3).toFixed(3)}%,0) scale(1.08000)`;
           }
@@ -654,11 +591,9 @@
       if (heroThreshold) {
         const thresholdPlane = $('[data-threshold-plane]', heroThreshold);
         const thresholdWink = $('[data-threshold-wink]', heroThreshold);
-        const thresholdCopy = $('[data-threshold-copy]', heroThreshold);
         if (still || pose.distance >= 0.36) {
           heroThreshold.style.visibility = 'hidden';
           heroThreshold.style.opacity = '0';
-          if (thresholdCopy) thresholdCopy.style.pointerEvents = 'none';
         } else {
           const tRaw = clamp(pose.distance / 0.36, 0, 1);
           const t = smooth(tRaw);
@@ -668,10 +603,17 @@
           heroThreshold.style.opacity = fade.toFixed(4);
           if (thresholdPlane) thresholdPlane.style.transform = `scale(${scale.toFixed(4)})`;
           if (thresholdWink) thresholdWink.style.opacity = (tRaw >= 0.08 && tRaw <= 0.48) ? '1' : '0';
-          if (thresholdCopy) {
-            thresholdCopy.style.opacity = (1 - smooth(tRaw / 0.32)).toFixed(4);
-            thresholdCopy.style.pointerEvents = tRaw < 0.25 ? 'auto' : 'none';
-          }
+        }
+      }
+      const artBottom = $('.art-bottom', stage);
+      if (artBottom) {
+        if (!still && pose.distance < 0.36) {
+          const bottomFade = smooth((pose.distance - 0.20) / 0.16);
+          artBottom.style.opacity = bottomFade.toFixed(4);
+          artBottom.style.pointerEvents = bottomFade > 0.5 ? 'auto' : 'none';
+        } else {
+          artBottom.style.opacity = '';
+          artBottom.style.pointerEvents = '';
         }
       }
       if (works[base].slug === 'dustin' || works[incoming].slug === 'dustin') {
@@ -931,60 +873,7 @@
     }
     function photoStep(d) { state.photo = clamp(state.photo + d, 0, works[state.index].photos.length - 1); showPhoto(); }
     galleryTrigger.addEventListener('click', () => {
-      if (works[state.index]?.slug === 'ajenjo-cam') fireAjenjoFlash();
-      if (works[state.index]?.slug === 'el-hombre-que-susurraba-a-las-estrellas') {
-        fireBowieZoom();
-        soundscape?.speakHero?.();
-      }
-      if (works[state.index]?.slug === 'denbora-nora-zoaz') {
-        soundscape?.speakDenbora?.();
-      }
-      if (works[state.index]?.slug === 'dustin') {
-        soundscape?.speakSilence?.();
-      }
-      if (works[state.index]?.slug === 'asucar-celia-cruz') {
-        fireSugarShake();
-      }
-      if (works[state.index]?.slug === 'entre-tantas-flores-de-dia') {
-        fireDeltoya();
-      }
-      if (works[state.index]?.slug === 'i-got-you-babe' || works[state.index]?.slug === 'jose-manuel-ezquerra') {
-        firePuñetazo();
-      }
       openWorkGallery(galleryTrigger);
-    });
-    scenes.forEach((sc, i) => {
-      if (works[i]?.slug === 'el-hombre-que-susurraba-a-las-estrellas') {
-        sc.addEventListener('click', () => {
-          fireBowieZoom();
-          soundscape?.speakHero?.();
-        });
-      }
-      if (works[i]?.slug === 'denbora-nora-zoaz') {
-        sc.addEventListener('click', () => {
-          soundscape?.speakDenbora?.();
-        });
-      }
-      if (works[i]?.slug === 'dustin') {
-        sc.addEventListener('click', () => {
-          soundscape?.speakSilence?.();
-        });
-      }
-      if (works[i]?.slug === 'asucar-celia-cruz') {
-        sc.addEventListener('click', () => {
-          fireSugarShake();
-        });
-      }
-      if (works[i]?.slug === 'entre-tantas-flores-de-dia') {
-        sc.addEventListener('click', () => {
-          fireDeltoya();
-        });
-      }
-      if (works[i]?.slug === 'i-got-you-babe' || works[i]?.slug === 'jose-manuel-ezquerra') {
-        sc.addEventListener('click', () => {
-          firePuñetazo();
-        });
-      }
     });
     const progressBar = $('.art-progress', stage);
     if (progressBar) {
