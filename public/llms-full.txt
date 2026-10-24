@@ -9,9 +9,9 @@
 - Especialidad: Retratos de autor sobre pizarra natural, técnica mixta con escamas de mica mineral, collage textil sobre madera y objetos intervenidos.
 
 ## Secciones Principales
-- [Inicio e Inmersión](https://naroagutierrezgil.com/): Experiencia inmersiva y catálogo de 55 obras.
+- [Inicio e Inmersión](https://naroagutierrezgil.com/): Experiencia inmersiva y catálogo de 56 obras.
 - [Retratos por Encargo en Bilbao](https://naroagutierrezgil.com/retratos-por-encargo-bilbao/): Condiciones técnicas, formatos (20×30 cm a 40×50 cm), plazos de 2 a 4 semanas, presupuesto cerrado y galería de ejemplos reales.
-- [Catálogo Completo](https://naroagutierrezgil.com/obra/): Ficha detallada de las 55 piezas de la colección con fotografías de detalle y relato.
+- [Catálogo Completo](https://naroagutierrezgil.com/obra/): Ficha detallada de las 56 piezas de la colección con fotografías de detalle y relato.
 - [Serie Vaivenes](https://naroagutierrezgil.com/series/vaivenes/): Retratos en técnica mixta, collage textil y objetos de memoria.
 - [Sobre Mí](https://naroagutierrezgil.com/sobre-mi/): Biografía, técnica, proceso creativo y proyectos comunitarios (Walking Gallery Bilbao, El ReCreo).
 - [Trayectoria](https://naroagutierrezgil.com/trayectoria/): Archivo cronológico de exposiciones documentadas desde 2010 (DEIA, GARA, Politena, Dock Bilbao).
@@ -19,10 +19,10 @@
 - [Contacto](https://naroagutierrezgil.com/contacto/): Canales directos de consulta para obra y encargos.
 
 ## Recursos Machine-to-Machine y GEO
-- [Catálogo JSON Estructurado](https://naroagutierrezgil.com/api/catalog.json): Endpoint con especificaciones completas de las 55 obras.
+- [Catálogo JSON Estructurado](https://naroagutierrezgil.com/api/catalog.json): Endpoint con especificaciones completas de las 56 obras.
 - [Índice Extendido llms-full.txt](https://naroagutierrezgil.com/llms-full.txt): Desglose exhaustivo de todas las piezas y condiciones de encargo.
 
-## Catálogo Exhaustivo de Obras (55 Piezas Documentadas)
+## Catálogo Exhaustivo de Obras (56 Piezas Documentadas)
 
 ### Marilyn Rocks (None)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/marilyn-rocks/
@@ -503,6 +503,30 @@
 - **Serie:** Colección general
 - **Relato:** Un rostro contempla el paso del tiempo entre hojas de calendario recortadas como vegetales y turnos de espera. Los tonos cálidos y los distintos barnices acompañan una reflexión sobre el afecto por la vida y la manera de habitar los días.
 - **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Denbora%20Nora%20Zoaz%20Eder%20Galant%20Hori%3F
+
+### La pensadora (2023)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/la-pensadora/
+- **Técnica:** Acrílico mate y metálico sobre lienzo 3D con laterales pintados. Barniz mate y satinado.
+- **Soporte:** Lienzo 3D con laterales pintados
+- **Medidas:** 50 × 70 cm
+- **Materiales:** None
+- **Serie:** Mundo Interior
+- **Relato:** Esta obra, al igual que el renombrado ‘Pensador’ de Rodin, representa de alguna manera el mundo interior y los procesos cognitivos de la humanidad. A su vez pretende romper el tópico de que la belleza y la intelectualidad son excluyentes.
+
+También hace referencia a la importancia de ser dueños y no ignorantes o esclavos de nuestros propios pensamientos, controlando así los caminos hacia los que éstos nos conducen. Por qué ser víctima y verdugo, pudiendo ser el propio propulsor de nuestros sueños.
+
+«Qué pensarías si te digo
+que lo que piensas es sagrado
+pues es detonante y testigo
+de lo que se te ha manifestado.
+
+No importa si te ha dado abrigo
+o en cambio te ha perjudicado;
+todo es fruto de tu mente, amigo,
+de lo que sembraste y has regado».
+
+Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansado se puede escuchar mejor y distinguir así a profetas sabios o tunantes, de entre todos esos contertulios que viven a voces en nuestro interior.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20La%20pensadora
 
 ### Róisín (None)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/roisin/

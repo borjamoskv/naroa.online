@@ -208,8 +208,8 @@ async function eyeMatch(ui, base, points) {
   assert.equal(llorona.find('[data-art-source]').hidden, true, 'An attachment without a public URL does not produce a fabricated source link');
   assert.ok(llorona.find('[data-facts]').textContent.includes('sal rosa'));
   llorona.dom.window.close();
-  assert.equal(ui.journey.entries.length, 55);
-  assert.deepEqual(Array.from(ui.w.NAROA_CATALOG.journey.scenes, e => e.mode).join(' '), 'E H V Z V E H H V Z E V H H V Z H V Z P V H Z V H Z V H Z V H H Z H Z V H Z H Z Z V Z H Z H V Z H Z H H Z H F');
+  assert.equal(ui.journey.entries.length, 56);
+  assert.deepEqual(Array.from(ui.w.NAROA_CATALOG.journey.scenes, e => e.mode).join(' '), 'E H V Z V E H H V Z E V H H V Z H V Z P V H Z V H Z V H Z V H H Z H Z V H Z H Z Z V Z H Z H V Z H H Z H H Z H F');
   const modes = { E: 'eyes', H: 'horizontal', V: 'vertical', Z: 'zoom', P: 'puzzle' };
   let horizontalDirection = -1, inHorizontal = false;
   for (let index = 0; index < works.length; index++) {
@@ -616,6 +616,9 @@ async function eyeMatch(ui, base, points) {
   assert.equal(ctx.rooms[0].buffer.length, Math.ceil(ctx.sampleRate * .45), 'Room resonance is shortened to 0.45 seconds');
   assert.equal(ctx.gains[5].gain.value, .55, 'Musical gain is set to 0.55');
   assert.equal(typeof music.w.NAROA_SOUND.frame, 'function', 'NAROA_SOUND.frame interface is exposed');
+  assert.equal(typeof music.w.NAROA_SOUND.portraitWink, 'function', 'portraitWink interface is exposed');
+  music.click('[data-portrait-plane]'); await music.flush();
+  assert.equal(music.w.NAROA_SOUND.lastWinkSlug, 'naroa-monoculo', 'Clicking portrait plane triggers monocle wink acoustic cue');
   music.w.scrollTo({ top: 20 }); await music.flush();
   assert.equal(audio.starts.length, 2, 'A real scroll excites a pair of short field fragments');
   assert.equal(audio.notes.length, 1, 'The same scroll plays the first tuned music-box note');

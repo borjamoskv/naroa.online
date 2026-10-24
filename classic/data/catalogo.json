@@ -2216,6 +2216,40 @@
       "credit": null,
       "selected": false,
       "kind": "obra"
+    },
+    {
+      "slug": "la-pensadora",
+      "title": "La pensadora",
+      "category": "collage",
+      "technique": "Acrílico mate y metálico sobre lienzo 3D con laterales pintados. Barniz mate y satinado.",
+      "support": "Lienzo 3D con laterales pintados",
+      "story": "Esta obra, al igual que el renombrado ‘Pensador’ de Rodin, representa de alguna manera el mundo interior y los procesos cognitivos de la humanidad. A su vez pretende romper el tópico de que la belleza y la intelectualidad son excluyentes.\n\nTambién hace referencia a la importancia de ser dueños y no ignorantes o esclavos de nuestros propios pensamientos, controlando así los caminos hacia los que éstos nos conducen. Por qué ser víctima y verdugo, pudiendo ser el propio propulsor de nuestros sueños.\n\n«Qué pensarías si te digo\nque lo que piensas es sagrado\npues es detonante y testigo\nde lo que se te ha manifestado.\n\nNo importa si te ha dado abrigo\no en cambio te ha perjudicado;\ntodo es fruto de tu mente, amigo,\nde lo que sembraste y has regado».\n\nUn poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansado se puede escuchar mejor y distinguir así a profetas sabios o tunantes, de entre todos esos contertulios que viven a voces en nuestro interior.",
+      "images": [
+        {
+          "src": "/images/catalogo/la-pensadora-original-01-2048.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Vista completa: La pensadora, procesos cognitivos y mundo interior.",
+          "source": null,
+          "sha256": "d00881c21faed4404688946cdb589a7a521ee3906705863b513c0860053a941e",
+          "source_local": "classic/images/catalogo/la-pensadora-original-01-2048.jpg"
+        }
+      ],
+      "source": null,
+      "dimensions": "50 × 70 cm",
+      "series": "Mundo Interior",
+      "year": "2023",
+      "credit": null,
+      "selected": true,
+      "kind": "obra",
+      "editorial": {
+        "image_order": [
+          0
+        ],
+        "captions": [
+          "La pensadora: procesos cognitivos y dominio del pensamiento."
+        ]
+      }
     }
   ]
 }

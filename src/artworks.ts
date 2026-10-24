@@ -17,6 +17,7 @@ export interface Artwork {
   kicker?: string
   quote?: string
   category?: ArtworkCategory
+  dimensions?: string
 }
 
 export const ARTWORKS: Artwork[] = [
@@ -235,16 +236,17 @@ export const ARTWORKS: Artwork[] = [
   {
     id: 15,
     category: 'drawing',
-    kicker: 'La pausa del pensamiento',
-    quote: 'La mente se detiene cuando el cuerpo escucha.',
+    kicker: 'Mundo interior y procesos cognitivos',
+    quote: 'Qué pensarías si te digo que lo que piensas es sagrado pues es detonante y testigo de lo que se te ha manifestado.',
     slug: 'la-pensadora',
     aspectRatio: 1.333,
     url: '/assets/la-pensadora-CFHSnMA0.webp',
-    title: 'La Pensadora',
+    title: 'La pensadora',
     href: '#obra-la-pensadora',
     year: '2023',
-    medium: 'Óleo sobre Lienzo',
-    description: 'Estudio de la introspección femenina con juego cromático frío.',
+    medium: 'Acrílico mate y metálico sobre lienzo 3D con laterales pintados. Barniz mate y satinado.',
+    description: 'Inspirada en ‘El Pensador’ de Rodin, representa los procesos cognitivos rompiendo el tópico de que la belleza y la intelectualidad son excluyentes: «Todo es fruto de tu mente, amigo, de lo que sembraste y has regado».',
+    dimensions: '50 × 70 cm',
     sizeCategory: 'small'
   },
   {
