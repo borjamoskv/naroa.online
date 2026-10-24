@@ -195,12 +195,14 @@
     {
       "slug": "pajarraca-azul",
       "mode": "H",
+      "direction": 1,
       "hold": 25,
       "explore": 0
     },
     {
       "slug": "flying-dragon",
       "mode": "H",
+      "direction": -1,
       "hold": 25,
       "explore": 0
     },

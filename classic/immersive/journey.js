@@ -12,7 +12,11 @@
         let mode = index === works.length - 1 ? 'F' : spec.mode;
         if (mode === 'E' && spec.target !== works[index + 1]?.slug) mode = 'Z';
         if (mode === 'F' && index < works.length - 1) mode = 'V';
-        if (mode === 'H' && !horizontal) direction *= -1;
+        if (spec.direction !== undefined) {
+          direction = spec.direction;
+        } else if (mode === 'H' && !horizontal) {
+          direction *= -1;
+        }
         horizontal = mode === 'H';
         const start = cursor, hold = spec.hold / 100, explore = spec.explore / 100;
         const transitionStart = start + hold + explore;

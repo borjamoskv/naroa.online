@@ -234,7 +234,12 @@ async function eyeMatch(ui, base, points) {
       assert.ok(Math.abs(Math.abs(to[axis] - from[axis]) - size) < .002, 'Full-screen panels meet exactly without an uncovered seam');
     }
     if (entry.mode === 'H') {
-      if (!inHorizontal) horizontalDirection *= -1;
+      const specDir = ui.w.NAROA_CATALOG.journey.scenes.find(s => s.slug === entry.slug)?.direction;
+      if (specDir !== undefined) {
+        horizontalDirection = specDir;
+      } else if (!inHorizontal) {
+        horizontalDirection *= -1;
+      }
       assert.equal(entry.direction, horizontalDirection, 'Consecutive lateral panels share direction; a new block reverses it');
     }
     inHorizontal = entry.mode === 'H';
