@@ -640,16 +640,7 @@
           let maxScale = 1.65;
           if (isBowie) maxScale = 2.45;
           else if (isBillToEzquerra) maxScale = 2.65;
-          let transform = `scale(${Math.exp(Math.log(1.08) + Math.log(maxScale / 1.08) * close).toFixed(5)})`;
-          if (isBillToEzquerra && !outgoing && fraction >= 0.44 && fraction <= 0.72) {
-            const punchPhase = (fraction - 0.44) / 0.28;
-            const recoilAmt = Math.sin(punchPhase * Math.PI);
-            const recoilX = (-recoilAmt * 18).toFixed(2);
-            const recoilY = (recoilAmt * 12).toFixed(2);
-            const recoilRot = (-recoilAmt * 2.6).toFixed(2);
-            transform += ` translate3d(${recoilX}px,${recoilY}px,0) rotate(${recoilRot}deg)`;
-          }
-          image.style.transform = transform;
+          image.style.transform = `scale(${Math.exp(Math.log(1.08) + Math.log(maxScale / 1.08) * close).toFixed(5)})`;
           if (!outgoing) scene.style.opacity = smooth((fraction - .40) / .20).toFixed(4);
         } else if (mode === 'P') {
           const exit = smooth((fraction - .80) / .20);
@@ -683,34 +674,9 @@
           }
         }
       }
-      if (works[base].slug === 'ajenjo-cam' || works[incoming].slug === 'ajenjo-cam') {
-        if (!ajenjoVisited && (works[state.index].slug === 'ajenjo-cam' || (transition && fraction >= 0.25))) {
-          ajenjoVisited = true;
-          fireAjenjoFlash();
-        }
-      } else {
-        ajenjoVisited = false;
-      }
-      if (works[base].slug === 'el-hombre-que-susurraba-a-las-estrellas' || works[incoming].slug === 'el-hombre-que-susurraba-a-las-estrellas') {
-        if (!bowieVisited && (works[state.index].slug === 'el-hombre-que-susurraba-a-las-estrellas' || (transition && fraction >= 0.25))) {
-          bowieVisited = true;
-          soundscape?.speakHero?.();
-        }
-      } else {
-        bowieVisited = false;
-      }
-      if (works[base].slug === 'denbora-nora-zoaz' || works[incoming].slug === 'denbora-nora-zoaz') {
-        if (!denboraVisited && (works[state.index].slug === 'denbora-nora-zoaz' || (transition && works[incoming].slug === 'denbora-nora-zoaz' && fraction >= 0.25))) {
-          denboraVisited = true;
-          soundscape?.speakDenbora?.();
-        }
-      } else {
-        denboraVisited = false;
-      }
       if (works[base].slug === 'dustin' || works[incoming].slug === 'dustin') {
         if (!dustinVisited && (works[state.index].slug === 'dustin' || (transition && works[incoming].slug === 'dustin' && fraction >= 0.45))) {
           dustinVisited = true;
-          soundscape?.speakSilence?.();
           clearTimeout(dustinEpilogueTimer);
           dustinEpilogueTimer = setTimeout(() => {
             if (works[state.index]?.slug === 'dustin') {
@@ -724,22 +690,6 @@
         clearTimeout(dustinEpilogueTimer);
         stage.classList.remove('is-silent-epilogue');
         delete stage.dataset.finale;
-      }
-      if (works[base].slug === 'asucar-celia-cruz' || works[incoming].slug === 'asucar-celia-cruz') {
-        if (!sugarVisited && (works[state.index].slug === 'asucar-celia-cruz' || (transition && works[incoming].slug === 'asucar-celia-cruz' && fraction >= 0.35))) {
-          sugarVisited = true;
-          fireSugarShake();
-        }
-      } else {
-        sugarVisited = false;
-      }
-      if (works[base].slug === 'entre-tantas-flores-de-dia' || works[incoming].slug === 'entre-tantas-flores-de-dia') {
-        if (!deltoyaVisited && (works[state.index].slug === 'entre-tantas-flores-de-dia' || (transition && works[incoming].slug === 'entre-tantas-flores-de-dia' && fraction >= 0.35))) {
-          deltoyaVisited = true;
-          fireDeltoya();
-        }
-      } else {
-        deltoyaVisited = false;
       }
       if (works[base].slug === 'saio-puzzle' || works[incoming].slug === 'saio-puzzle') {
         if (!puzzleVisited && (works[state.index].slug === 'saio-puzzle' || (transition && works[incoming].slug === 'saio-puzzle' && fraction >= 0.70))) {
@@ -765,34 +715,6 @@
       } else {
         wineVisited = false;
       }
-      const isPunchPair = (works[base].slug === 'i-got-you-babe' && works[incoming].slug === 'jose-manuel-ezquerra') ||
-                          (works[base].slug === 'jose-manuel-ezquerra' && works[incoming].slug === 'i-got-you-babe');
-      const isPunchActive = transition && isPunchPair && fraction >= 0.44 && fraction <= 0.64;
-      if (isPunchPair) {
-        if (!punchVisited && isPunchActive) {
-          punchVisited = true;
-          firePuñetazo();
-        } else if (fraction < 0.25 || fraction > 0.80) {
-          punchVisited = false;
-        }
-      } else {
-        punchVisited = false;
-      }
-      if (ezquerraIndex >= 0) {
-        const isAtEzquerra = (works[base]?.slug === 'jose-manuel-ezquerra' && !transition) ||
-                             (transition && works[base]?.slug === 'i-got-you-babe' && works[incoming]?.slug === 'jose-manuel-ezquerra' && fraction >= 0.95);
-        if (isAtEzquerra) {
-          if (!ezquerraBrakeVisited && !reduced.matches) {
-            triggerEzquerraBrake();
-          }
-        } else if (pose.position < ezquerraIndex - 0.75 || pose.position > ezquerraIndex + 1.25) {
-          ezquerraBrakeVisited = false;
-        }
-      }
-      const flash = transition && (works[base].slug === 'ajenjo-cam' || works[incoming].slug === 'ajenjo-cam')
-        ? Math.exp(-Math.pow((fraction - 0.5) / 0.08, 2)) * 0.96
-        : 0;
-      stage.style.setProperty('--camera-flash', flash.toFixed(4));
       soundscape?.frame({
         distance: still ? scrollY / Math.max(1, geometry.height) : pose.distance,
         depth: still ? 0 : depth,
@@ -800,8 +722,8 @@
         phase: still ? 'scroll' : transition ? 'transition' : phase === 'explore' ? 'explore' : 'hold',
         axisDirection: mode === 'H' ? entry.direction : 1,
         slug: activeSlug,
-        flash: Number(flash.toFixed(4)),
-        punch: isPunchActive
+        flash: 0,
+        punch: false
       });
       if (kineticTitle.textContent) kineticTitle.textContent = '';
       kineticTitle.style.opacity = '0';
@@ -867,11 +789,6 @@
       motion.navigation = null;
       if (motion.frame !== null) cancelAnimationFrame(motion.frame);
       motion.frame = null;
-      if (ezquerraBrakeActive) {
-        clearTimeout(ezquerraBrakeTimer);
-        ezquerraBrakeActive = false;
-        stage.classList.remove('has-ezquerra-brake');
-      }
       render();
     }
     function change(next) {
@@ -886,39 +803,22 @@
     const interruptNavigation = () => { motion.navigation = null; };
     addEventListener('wheel', e => {
       interruptNavigation();
-      if (ezquerraBrakeActive && e.deltaY > 0) {
-        e.preventDefault();
-        return;
-      }
       if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 4) {
         window.scrollBy({ top: e.deltaX, behavior: 'auto' });
       }
-    }, { passive: false });
+    }, { passive: true });
     let touchStartY = 0;
     addEventListener('touchstart', e => {
       interruptNavigation();
       if (e.touches?.length) touchStartY = e.touches[0].clientY;
     }, { passive: true });
-    addEventListener('touchmove', e => {
-      if (ezquerraBrakeActive && e.touches?.length) {
-        const delta = touchStartY - e.touches[0].clientY;
-        if (delta > 0) {
-          e.preventDefault();
-        }
-      }
-    }, { passive: false });
-    addEventListener('keydown', e => {
-      if (ezquerraBrakeActive && ['ArrowDown', 'PageDown', 'Space', 'ArrowRight', 'j'].includes(e.key)) {
-        e.preventDefault();
-      }
-    });
+    addEventListener('touchmove', () => {}, { passive: true });
     $$('[data-select]', stage).forEach(b => b.addEventListener('click', () => change(Number(b.dataset.select))));
     $('[data-prev]', stage).addEventListener('click', () => {
       const cur = motion.navigation ?? motion.desired;
       change(Math.floor(cur) === Math.ceil(cur) ? Math.round(cur) - 1 : Math.floor(cur));
     });
     $('[data-next]', stage).addEventListener('click', () => {
-      if (ezquerraBrakeActive) return;
       const cur = motion.navigation ?? motion.desired;
       change(Math.floor(cur) + 1);
     });
