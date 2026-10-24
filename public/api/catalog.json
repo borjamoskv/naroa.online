@@ -50,8 +50,7 @@
         "Cajas tridimensionales y objetos intervenidos",
         "Pizarra natural (exploración reciente)"
       ],
-      "pricing_policy": "Presupuesto cerrado previo por escrito sin compromiso (tarifas orientativas desde 300 € – 350 € en pequeños formatos o cajas y desde 800 € en óleo o gran formato)",
-      "price_range": "300 € - 2.500 €",
+      "pricing_policy": "Presupuesto cerrado previo por escrito según técnica y dimensiones, sin compromiso",
       "turnaround": "2 a 4 semanas según complejidad y secado de materiales",
       "delivery": "Entrega en mano en Bilbao y Bizkaia o envío asegurado nacional e internacional"
     }
@@ -68,7 +67,7 @@
       {
         "intent": "Precios y presupuestos de retratos por encargo",
         "question": "¿Cuánto cuesta un retrato personalizado en Bilbao con Naroa Gutiérrez Gil?",
-        "answer": "Presupuesto cerrado previo por escrito según técnica, soporte y formato (tarifas orientativas desde 300 € – 350 € en pequeños formatos, dibujo o cajas y desde 800 € en óleo o gran formato sobre madera o pizarra de 20×30 cm a 40×50 cm). Sin compromiso previo."
+        "answer": "Presupuesto cerrado previo por escrito según técnica, soporte y formato (dibujo, óleo, collage textil sobre madera, cajas de memoria o piezas en pizarra de 20×30 cm a 40×50 cm). Sin compromiso previo."
       },
       {
         "intent": "Plazos de entrega",

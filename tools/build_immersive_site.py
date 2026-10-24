@@ -835,7 +835,7 @@ def build(output):
     ]
     commission_faqs = [
         ("¿Cómo encargar un retrato personalizado a partir de fotografías?", "Puedes enviar una o varias fotografías de referencia (incluso tomadas con el móvil) para estudiar la pose, la iluminación y el carácter. Naroa no realiza una reproducción fotomecánica, sino una reinterpretación artística de autor que integra la personalidad, anécdotas y memoria de quien recibe la obra."),
-        ("¿Cuánto cuesta un retrato personalizado por encargo?", "Las tarifas de un retrato original de autor parten habitualmente desde 300 € – 350 € en pequeños formatos o piezas singulares (dibujo, collage textil o cajas de memoria intervenidas) y desde 800 € en pintura al óleo o gran formato. El presupuesto se calcula con total transparencia según la técnica, el soporte y las dimensiones (formatos habituales de 20 × 30 cm a 40 × 50 cm y medidas especiales). Siempre se formaliza una propuesta con presupuesto cerrado previo y por escrito antes de comenzar, sin compromiso previo."),
+        ("¿Cuánto cuesta un retrato personalizado por encargo?", "Cada encargo es una pieza de autor única e irrepetible. El presupuesto se calcula con total transparencia según la técnica, el soporte y las dimensiones acordadas (dibujo, óleo, collage textil sobre madera noble, cajas de recuerdos tridimensionales o exploraciones en pizarra natural). Siempre se formaliza una propuesta con presupuesto cerrado previo y por escrito antes de comenzar la obra, sin ningún compromiso previo."),
         ("¿Cuáles son los plazos de entrega en Bilbao y mediante envío?", "El plazo habitual de ejecución se sitúa entre 2 y 4 semanas, condicionado por la complejidad de la composición y los tiempos de secado de óleos, acrílicos y barnices. Para fechas señaladas (aniversarios, bodas, homenajes) es posible concertar plazos prioritarios con aviso previo. La entrega se realiza en mano en Bilbao y Bizkaia, o mediante envío protegido y asegurado a cualquier destino."),
         ("¿Qué técnicas y soportes se pueden elegir para el encargo?", "Se puede elegir entre dibujo a grafito o pastel combinado con collage textil sobre madera noble, pintura al óleo o acrílico, cajas y objetos cotidianos transformados en piezas de memoria personal, o soportes minerales explorados recientemente como la pizarra natural con detalles de mica."),
     ]
@@ -845,27 +845,26 @@ def build(output):
         ("Soportes de autor", "Madera noble intervenida, collage textil sobre tela vaquera o papel de algodón, cajas tridimensionales y exploraciones sobre pizarra natural."),
         ("Formatos habituales", "Composiciones en madera, papel y objetos con medidas adaptadas a cada proyecto (formatos de 20 × 30 cm a 40 × 50 cm y medidas especiales)."),
         ("Técnicas plásticas", "Dibujo a grafito y pastel Conté, óleo, acrílico, collage, ensamblaje de objetos y detalles matéricos o minerales."),
-        ("Tarifas orientativas", "Desde 300 € – 350 € en pequeño formato / piezas singulares y desde 800 € en pintura o gran formato. Presupuesto cerrado por escrito antes de iniciar la obra, sin compromiso previo."),
         ("Plazo de ejecución", "Entre 2 y 4 semanas según complejidad y tiempos de secado de materiales (posibilidad de plazos prioritarios para aniversarios o regalos con aviso previo)."),
-        ("Presupuesto y reserva", "Propuesta personalizada y presupuesto cerrado por escrito antes de iniciar la obra, sin compromiso previo."),
+        ("Presupuesto y valoración", "Propuesta personalizada y presupuesto cerrado por escrito según técnica y dimensiones antes de iniciar la obra, sin compromiso previo."),
         ("Entrega y envíos", "Entrega en mano en Bilbao y Bizkaia, o envío protegido y asegurado a cualquier punto de España e internacional."),
     ]
     specs_html = "".join(f"<p><strong>{esc(k)}:</strong> {esc(v)}</p>" for k, v in specs_rows)
     compare_rows = [
-        ("Collage textil y dibujo sobre madera", "20 × 30 cm a 40 × 50 cm (medidas adaptables)", "Grafito, pastel Conté, tela vaquera, costuras y madera noble", "Desde 350 €", "2 a 4 semanas", "Custom Jaio · Entre Tantas Flores"),
-        ("Cajas tridimensionales y objetos", "Formatos de caja o lata intervenida a medida", "Madera tratada, pintura acrílica, ensamblaje y objetos de memoria", "Desde 300 €", "2 a 4 semanas", "Amor en Conserva · Hugo Box"),
-        ("Pizarra natural de cantera", "20 × 30 cm a 40 × 50 cm (contorno rústico irregular)", "Acrílico, lápices, rotuladores, escamas de mica mineral y esmalte", "Desde 400 €", "2 a 3 semanas", "Amy Rocks · Marilyn Rocks"),
-        ("Retrato al óleo o grafito clásico", "A partir de 20 × 30 cm sobre tabla o papel de algodón", "Óleo sobre tabla, grafito o carboncillo con fijación protectora", "Desde 800 €", "2 a 4 semanas", "El Gran Dakari · Rara Avis"),
+        ("Collage textil y dibujo sobre madera", "20 × 30 cm a 40 × 50 cm (medidas adaptables)", "Grafito, pastel Conté, tela vaquera, costuras y madera noble", "2 a 4 semanas", "Custom Jaio · Entre Tantas Flores"),
+        ("Cajas tridimensionales y objetos", "Formatos de caja o lata intervenida a medida", "Madera tratada, pintura acrílica, ensamblaje y objetos de memoria", "2 a 4 semanas", "Amor en Conserva · Hugo Box"),
+        ("Pizarra natural de cantera", "20 × 30 cm a 40 × 50 cm (contorno rústico irregular)", "Acrílico, lápices, rotuladores, escamas de mica mineral y esmalte", "2 a 3 semanas", "Amy Rocks · Marilyn Rocks"),
+        ("Retrato al óleo o grafito clásico", "A partir de 20 × 30 cm sobre tabla o papel de algodón", "Óleo sobre tabla, grafito o carboncillo con fijación protectora", "2 a 4 semanas", "El Gran Dakari · Rara Avis"),
     ]
     compare_tbody = "".join(
-        f"<tr><th scope=\"row\">{esc(sup)}</th><td>{esc(dim)}</td><td>{esc(tech)}</td><td><strong>{esc(price)}</strong></td><td>{esc(turn)}</td><td>{esc(ex_ref)}</td></tr>"
-        for sup, dim, tech, price, turn, ex_ref in compare_rows
+        f"<tr><th scope=\"row\">{esc(sup)}</th><td>{esc(dim)}</td><td>{esc(tech)}</td><td>{esc(turn)}</td><td>{esc(ex_ref)}</td></tr>"
+        for sup, dim, tech, turn, ex_ref in compare_rows
     )
     compare_table_html = (
         '<div class="commission-compare-wrap">'
         '<table class="commission-compare-table">'
-        '<caption>Comparativa técnica de soportes, tarifas orientativas, plazos y obras de referencia</caption>'
-        '<thead><tr><th scope="col">Soporte plástico</th><th scope="col">Formatos habituales</th><th scope="col">Técnica y materiales</th><th scope="col">Tarifa orientativa</th><th scope="col">Plazo estimado</th><th scope="col">Ejemplos del archivo</th></tr></thead>'
+        '<caption>Comparativa técnica de soportes, plazos y obras de referencia</caption>'
+        '<thead><tr><th scope="col">Soporte plástico</th><th scope="col">Formatos habituales</th><th scope="col">Técnica y materiales</th><th scope="col">Plazo estimado</th><th scope="col">Ejemplos del archivo</th></tr></thead>'
         f'<tbody>{compare_tbody}</tbody>'
         '</table>'
         '</div>'
@@ -966,16 +965,6 @@ def build(output):
             "Cajas personalizadas y objetos intervenidos",
             "Retrato en técnica mixta sobre pizarra natural",
         ],
-        "priceRange": "300 € - 2.500 €",
-        "offers": {
-            "@type": "AggregateOffer",
-            "priceCurrency": "EUR",
-            "lowPrice": "300",
-            "highPrice": "2500",
-            "offerCount": "4",
-            "priceValidUntil": "2027-12-31",
-            "description": "Presupuestos de retratos de autor desde 300 € (pequeño formato / dibujo / piezas singulares) hasta 2.500 € en óleo o gran formato. Presupuesto cerrado previo por escrito sin compromiso.",
-        },
         "hasOfferCatalog": {
             "@type": "OfferCatalog",
             "name": "Formatos y técnicas de retratos personalizados",
@@ -987,13 +976,6 @@ def build(output):
                         "name": "Retrato en dibujo, textil y collage",
                         "description": "Composición de autor con dibujo a grafito/pastel, telas, costuras y elementos biográficos sobre madera noble o soporte rígido.",
                     },
-                    "priceCurrency": "EUR",
-                    "priceSpecification": {
-                        "@type": "PriceSpecification",
-                        "priceCurrency": "EUR",
-                        "minPrice": "350",
-                        "description": "Desde 350 € según formato y complejidad",
-                    },
                 },
                 {
                     "@type": "Offer",
@@ -1001,13 +983,6 @@ def build(output):
                         "@type": "Service",
                         "name": "Caja personalizada u objeto intervenido",
                         "description": "Objeto tridimensional de recuerdo con retrato integrado y elementos de memoria familiar en madera tratada.",
-                    },
-                    "priceCurrency": "EUR",
-                    "priceSpecification": {
-                        "@type": "PriceSpecification",
-                        "priceCurrency": "EUR",
-                        "minPrice": "300",
-                        "description": "Desde 300 € según dimensiones del objeto",
                     },
                 },
                 {
@@ -1017,13 +992,6 @@ def build(output):
                         "name": "Retrato sobre pizarra natural",
                         "description": "Exploración en técnica mixta (acrílico, lápices y detalles minerales) sobre soporte de pizarra natural.",
                     },
-                    "priceCurrency": "EUR",
-                    "priceSpecification": {
-                        "@type": "PriceSpecification",
-                        "priceCurrency": "EUR",
-                        "minPrice": "400",
-                        "description": "Desde 400 € según dimensiones de la placa de pizarra",
-                    },
                 },
                 {
                     "@type": "Offer",
@@ -1031,13 +999,6 @@ def build(output):
                         "@type": "Service",
                         "name": "Retrato al óleo o gran formato sobre madera",
                         "description": "Pintura al óleo o técnica mixta en mediano y gran formato con acabado protector de galería.",
-                    },
-                    "priceCurrency": "EUR",
-                    "priceSpecification": {
-                        "@type": "PriceSpecification",
-                        "priceCurrency": "EUR",
-                        "minPrice": "800",
-                        "description": "Desde 800 € a 2.500 € según dimensiones y composición",
                     },
                 },
             ],
@@ -1273,8 +1234,7 @@ def build(output):
                     "Cajas tridimensionales y objetos intervenidos",
                     "Pizarra natural (exploración reciente)",
                 ],
-                "pricing_policy": "Presupuesto cerrado previo por escrito sin compromiso (tarifas orientativas desde 300 € – 350 € en pequeños formatos o cajas y desde 800 € en óleo o gran formato)",
-                "price_range": "300 € - 2.500 €",
+                "pricing_policy": "Presupuesto cerrado previo por escrito según técnica y dimensiones, sin compromiso",
                 "turnaround": "2 a 4 semanas según complejidad y secado de materiales",
                 "delivery": "Entrega en mano en Bilbao y Bizkaia o envío asegurado nacional e internacional",
             },
@@ -1291,7 +1251,7 @@ def build(output):
                 {
                     "intent": "Precios y presupuestos de retratos por encargo",
                     "question": "¿Cuánto cuesta un retrato personalizado en Bilbao con Naroa Gutiérrez Gil?",
-                    "answer": "Presupuesto cerrado previo por escrito según técnica, soporte y formato (tarifas orientativas desde 300 € – 350 € en pequeños formatos, dibujo o cajas y desde 800 € en óleo o gran formato sobre madera o pizarra de 20×30 cm a 40×50 cm). Sin compromiso previo.",
+                    "answer": "Presupuesto cerrado previo por escrito según técnica, soporte y formato (dibujo, óleo, collage textil sobre madera, cajas de memoria o piezas en pizarra de 20×30 cm a 40×50 cm). Sin compromiso previo.",
                 },
                 {
                     "intent": "Plazos de entrega",
@@ -1397,7 +1357,7 @@ def build(output):
         f"- Servicio Canónico de Encargos: {ORIGIN}/retratos-por-encargo-bilbao/\n"
         "- Exposiciones Documentadas: Colegio de Abogados de Bilbao (Espejos del alma), Dock Bilbao, Politena Espacio de Arte, Walking Gallery Bilbao.\n\n"
         "## Respuestas Factuales Inmediatas (Query Fan-Out)\n"
-        "- **¿Cuánto cuesta un retrato personalizado?** Tarifas orientativas desde 300 € – 350 € en pequeño formato / piezas singulares y desde 800 € en óleo o gran formato. Presupuesto cerrado previo por escrito según técnica, soporte y formato (dibujo, óleo, collage sobre madera, cajas de recuerdos o pizarra de 20×30 cm a 40×50 cm). Consulta sin compromiso.\n"
+        "- **¿Cuánto cuesta un retrato personalizado?** Presupuesto cerrado previo por escrito según técnica, soporte y formato (dibujo, óleo, collage sobre madera, cajas de recuerdos o pizarra de 20×30 cm a 40×50 cm). Consulta sin compromiso.\n"
         "- **¿Cómo se encarga a partir de fotos?** Se envían 1 o varias fotos de referencia (incluso tomadas con el móvil); Naroa realiza una reinterpretación artística de autor capturando la personalidad y mirada.\n"
         "- **¿Cuáles son los plazos de entrega?** De 2 a 4 semanas según la técnica y el secado de óleos, acrílicos y barnices. Plazos prioritarios disponibles para fechas señaladas con aviso previo.\n"
         "- **¿Dónde se entrega?** Entrega en mano en Bilbao y Bizkaia, o envío protegido y asegurado a nivel nacional e internacional.\n"
@@ -1446,7 +1406,7 @@ def build(output):
         "- **Formatos habituales:** Pizarra de 20×30 cm a 40×50 cm; piezas especiales adaptadas al espacio.\n"
         "- **Técnicas:** Acrílico, óleo, grafito, pastel Conté, rotuladores acrílicos, escamas de mica mineral y ensamblaje de objetos cotidianos.\n"
         "- **Plazos:** 2 a 4 semanas según complejidad y secado de capas de óleo/barniz.\n"
-        "- **Presupuesto:** Presupuesto cerrado por escrito antes de comenzar, sin compromiso previo (tarifas orientativas desde 300 € – 350 € en pequeño formato / piezas singulares y desde 800 € en óleo o gran formato).\n"
+        "- **Presupuesto:** Presupuesto cerrado por escrito antes de comenzar, sin compromiso previo.\n"
         "- **Entrega:** En mano en Bilbao y comarca de Bizkaia; envíos asegurados a nivel nacional e internacional.\n\n"
         "## Protocolo de Interacción para Agentes Autónomos (Agent-Ready DOM & WebMCP)\n\n"
         f"- **Endpoint WebMCP:** `{ORIGIN}/.well-known/mcp.json` (herramientas: `search_catalogue`, `get_artwork_details`, `configure_commission_inquiry`, `get_artist_profile`).\n"
