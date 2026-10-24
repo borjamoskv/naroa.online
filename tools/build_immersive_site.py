@@ -17,7 +17,13 @@ from html import escape as esc
 from pathlib import Path
 from urllib.parse import quote
 
-from PIL import Image, ImageOps, ImageDraw, ImageFont, ImageFilter
+try:
+    from PIL import Image, ImageOps, ImageDraw, ImageFont, ImageFilter
+except ImportError:
+    sys.path = [p for p in sys.path if ".vercel_python_packages" not in p]
+    for _mod in [k for k in list(sys.modules) if k == "PIL" or k.startswith("PIL.")]:
+        del sys.modules[_mod]
+    from PIL import Image, ImageOps, ImageDraw, ImageFont, ImageFilter
 
 REPO = Path(__file__).resolve().parents[1]
 SOURCE = REPO / "classic"

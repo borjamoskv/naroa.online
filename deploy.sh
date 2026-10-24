@@ -129,15 +129,42 @@ fi
 # Build the approved immersive design directly from reviewed source data.
 # Original catalogue, photographs and legacy generators are preserved.
 log "Compilando portfolio inmersivo completo..."
-if ! python3 -c "import PIL" 2>/dev/null; then
-  log "Instalando dependencia Python Pillow para pipeline de assets..."
-  python3 -m pip install --quiet --break-system-packages -r requirements.txt 2>/dev/null || \
-  python3 -m pip install --quiet -r requirements.txt 2>/dev/null || \
-  python3 -m pip install --quiet --break-system-packages Pillow 2>/dev/null || \
-  python3 -m pip install --quiet Pillow 2>/dev/null || fail "Error instalando Pillow para build_immersive_site.py"
+PIL_CHECK="from PIL import Image, ImageOps, ImageDraw, ImageFont, ImageFilter"
+PYTHON_CMD=""
+for candidate in "python3" "python3.14" "python3.13" "python3.12" "python3.11"; do
+  if command -v "$candidate" >/dev/null 2>&1 && "$candidate" -c "$PIL_CHECK" 2>/dev/null; then
+    PYTHON_CMD="$candidate"
+    break
+  fi
+done
+if [ -z "$PYTHON_CMD" ] && command -v uv >/dev/null 2>&1; then
+  UV_PY=$(uv python find 3.14 2>/dev/null || uv python find 2>/dev/null || true)
+  if [ -n "$UV_PY" ] && "$UV_PY" -c "$PIL_CHECK" 2>/dev/null; then
+    PYTHON_CMD="$UV_PY"
+  elif PYTHONPATH="" uv run --with Pillow python3 -c "$PIL_CHECK" 2>/dev/null; then
+    unset PYTHONPATH
+    PYTHON_CMD="uv run --with Pillow python3"
+  fi
 fi
-python3 tools/build_immersive_site.py || fail "Compilación del portfolio falló"
-python3 tools/check_immersive_site.py || fail "Validación del portfolio falló"
+if [ -z "$PYTHON_CMD" ]; then
+  log "Saneando PYTHONPATH e instalando Pillow para $(python3 --version 2>&1)..."
+  unset PYTHONPATH
+  if ! python3 -c "$PIL_CHECK" 2>/dev/null; then
+    if python3 -m venv .venv-build 2>/dev/null && .venv-build/bin/pip install --quiet -r requirements.txt 2>/dev/null; then
+      PYTHON_CMD=".venv-build/bin/python3"
+    else
+      python3 -m pip install --quiet --break-system-packages --ignore-installed -r requirements.txt 2>/dev/null || \
+      python3 -m pip install --quiet --ignore-installed -r requirements.txt 2>/dev/null || \
+      python3 -m pip install --quiet --user --ignore-installed -r requirements.txt 2>/dev/null || \
+      fail "Error instalando Pillow para build_immersive_site.py"
+      PYTHON_CMD="python3"
+    fi
+  else
+    PYTHON_CMD="python3"
+  fi
+fi
+$PYTHON_CMD tools/build_immersive_site.py || fail "Compilación del portfolio falló"
+$PYTHON_CMD tools/check_immersive_site.py || fail "Validación del portfolio falló"
 node --max-old-space-size=4096 tools/test_immersive_dom.cjs || fail "Validación de interacciones falló"
 ok "Portfolio completo compilado → .deploy/"
 
