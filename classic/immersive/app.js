@@ -782,6 +782,8 @@
         clip.append(svgNode('path', { d: path })); defs.append(clip);
         const group = svgNode('g', { 'data-puzzle-piece': n });
         group.append(svgNode('use', { href: `#puzzle-photo-${index}`, 'clip-path': `url(#puzzle-cut-${index}-${n})` }));
+        const bevel = svgNode('path', { d: path, class: 'puzzle-piece-edge', fill: 'none' });
+        group.append(bevel);
         svg.append(group);
         const destination = (n * 7 + 9) % 25;
         const destCol = destination % 5;
@@ -792,7 +794,8 @@
         const dy = ((destRow - row) * 220 + Math.cos(n * 1.9) * 120 + relY * 1.35) * 1.15;
         const turn = (n % 7 - 3) * 28 + Math.sin(n * 2.8) * 18;
         const arc = Math.sin(n * 1.7) * 240 + Math.cos(n * 2.3) * 110;
-        pieces.push({ group, cx: x + 100, cy: y + 100, dx, dy, turn, arc });
+        const radialDist = Math.hypot(col - 2, row - 2) / 2.8284;
+        pieces.push({ group, cx: x + 100, cy: y + 100, dx, dy, turn, arc, radialDist });
       }
       const puzzle = { svg, picture, pieces };
       $('.art-pan', scenes[index]).append(svg); scenes[index].classList.add('is-puzzle');
@@ -808,8 +811,10 @@
       puzzle.svg.style.setProperty('--puzzle-lift', amount.toFixed(3));
       puzzle.svg.style.visibility = still ? 'hidden' : 'visible';
       scenes[index].classList.toggle('puzzle-still', still);
-      puzzle.pieces.forEach(({ group, cx, cy, dx, dy, turn, arc }) => {
-        const a = amount, lift = Math.sin(phase * Math.PI * 2) * a;
+      puzzle.pieces.forEach(({ group, cx, cy, dx, dy, turn, arc, radialDist }) => {
+        const pieceExp = 1.35 - 0.57 * (radialDist || 0);
+        const a = amount === 0 ? 0 : Math.pow(amount, pieceExp);
+        const lift = Math.sin(phase * Math.PI * 2) * a;
         group.setAttribute('transform', `translate(${(dx * a).toFixed(3)} ${(dy * a + arc * lift).toFixed(3)}) rotate(${(turn * a).toFixed(3)} ${cx} ${cy})`);
       });
       return puzzle;

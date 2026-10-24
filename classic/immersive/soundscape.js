@@ -276,40 +276,53 @@
   function playPuzzleSnap() {
     lastPuzzleSlug = 'saio-puzzle';
     if (typeof navigator !== 'undefined' && navigator.vibrate) {
-      try { navigator.vibrate([12, 10, 18]); } catch {}
+      try { navigator.vibrate([14, 18]); } catch {}
     }
     if (!context || !engine || context.state !== 'running') return;
     try {
       const now = context.currentTime + 0.002;
       const target = engine.compressor || engine.master;
-      const sampleRate = context.sampleRate || 44100;
-      [0.00, 0.016].forEach((offset, idx) => {
-        const len = Math.round(sampleRate * 0.035);
-        const buf = context.createBuffer(1, len, sampleRate);
-        const data = buf.getChannelData(0);
-        for (let i = 0; i < len; i++) {
-          const t = i / len;
-          data[i] = (Math.random() * 2 - 1) * Math.exp(-t * (idx === 0 ? 12 : 9));
-        }
-        const src = context.createBufferSource();
-        src.buffer = buf;
-        const filter = context.createBiquadFilter ? context.createBiquadFilter() : null;
-        if (filter) {
-          filter.type = 'bandpass';
-          filter.frequency.value = idx === 0 ? 2100 : 2850;
-          filter.Q.value = 4.2;
-        }
+
+      // Impulso sordo de madera noble sobre caballete (96 Hz -> 62 Hz en caída amortiguada)
+      if (typeof context.createOscillator === 'function') {
+        const osc = context.createOscillator();
         const gain = context.createGain();
-        gain.gain.setValueAtTime(0.01, now + offset);
-        gain.gain.linearRampToValueAtTime(idx === 0 ? 0.42 : 0.65, now + offset + 0.003);
-        if (gain.gain.exponentialRampToValueAtTime) {
-          gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.032);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(96, now);
+        if (osc.frequency.exponentialRampToValueAtTime) {
+          osc.frequency.exponentialRampToValueAtTime(62, now + 0.038);
         }
-        src.connect(filter || gain);
-        if (filter) filter.connect(gain);
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.linearRampToValueAtTime(0.55, now + 0.003);
+        if (gain.gain.exponentialRampToValueAtTime) {
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.048);
+        }
+        osc.connect(gain);
         gain.connect(target);
-        src.start(now + offset);
-      });
+        osc.start(now);
+        osc.stop(now + 0.052);
+
+        // Resonancia de fieltro amortiguado (240 Hz con corte paso-bajo suave)
+        const thudOsc = context.createOscillator();
+        const thudFilter = context.createBiquadFilter ? context.createBiquadFilter() : null;
+        const thudGain = context.createGain();
+        thudOsc.type = 'triangle';
+        thudOsc.frequency.setValueAtTime(240, now);
+        if (thudFilter) {
+          thudFilter.type = 'lowpass';
+          thudFilter.frequency.setValueAtTime(380, now);
+          thudFilter.Q.setValueAtTime(1.1, now);
+        }
+        thudGain.gain.setValueAtTime(0.28, now);
+        if (thudGain.gain.exponentialRampToValueAtTime) {
+          thudGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.034);
+        }
+        thudOsc.connect(thudFilter || thudGain);
+        if (thudFilter) thudFilter.connect(thudGain);
+        thudGain.connect(target);
+        thudOsc.start(now);
+        thudOsc.stop(now + 0.038);
+      }
     } catch {}
   }
   function playSwissClock() {
