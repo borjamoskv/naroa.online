@@ -51,7 +51,7 @@ class Page(HTMLParser):
             self.scenes.append(a["data-scene"])
         if tag == "img":
             self.images.append(a)
-        for key in ["src", "href", "data-src", "data-preview-src", "data-nature-src", "data-iris-src", "data-musicbox-src"]:
+        for key in ["src", "href", "data-src", "data-preview-src", "data-nature-src", "data-iris-src", "data-musicbox-src", "data-hero-src", "data-denbora-src"]:
             if a.get(key, "").startswith("/") and not a[key].startswith("//"):
                 self.refs.append(a[key])
 
@@ -132,6 +132,15 @@ def check(output):
         for img_el in u_el.findall("i:image", ns):
             assert img_el.findtext("i:title", default="", namespaces=ns).strip(), "sitemap image missing title"
             assert img_el.findtext("i:caption", default="", namespaces=ns).strip(), "sitemap image missing caption"
+    catalog_path = output / "api" / "catalog.json"
+    assert catalog_path.is_file(), "missing api/catalog.json"
+    catalog_data = json.loads(catalog_path.read_text())
+    assert catalog_data.get("artworks_count") == len(expected), "incorrect artworks_count in api/catalog.json"
+    assert len(catalog_data.get("artworks", [])) == len(expected), "mismatched artworks list in api/catalog.json"
+    assert (output / "llms.txt").is_file(), "missing llms.txt"
+    assert (output / "llms-full.txt").is_file(), "missing llms-full.txt"
+    assert "https://naroagutierrezgil.com" in (output / "llms.txt").read_text(), "llms.txt missing canonical domain"
+    assert "https://naroagutierrezgil.com" in (output / "llms-full.txt").read_text(), "llms-full.txt missing canonical domain"
     for file in output.rglob("*"):
         if file.is_file():
             assert file.stat().st_size < 25 * 1024 * 1024, ("asset exceeds hosting limit", file)

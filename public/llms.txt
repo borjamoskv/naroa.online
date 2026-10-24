@@ -1,0 +1,23 @@
+# Naroa Gutiérrez Gil · Artista Plástica y Retratista (Bilbao)
+
+> Catálogo oficial de obra plástica, servicio de retratos personalizados por encargo y archivo de exposiciones.
+
+## Resumen del Sitio
+- Dominio Canónico: https://naroagutierrezgil.com
+- Ubicación del Estudio: Bilbao, Bizkaia, España (43.2630 N, -2.9350 W)
+- Contacto Directo: naroa@naroa.eu | WhatsApp: +34 636 060 609
+- Especialidad: Retratos de autor sobre pizarra natural, técnica mixta con escamas de mica mineral, collage textil sobre madera y objetos intervenidos.
+
+## Secciones Principales
+- [Inicio e Inmersión](https://naroagutierrezgil.com/): Experiencia inmersiva y catálogo de 55 obras.
+- [Retratos por Encargo en Bilbao](https://naroagutierrezgil.com/retratos-por-encargo-bilbao/): Condiciones técnicas, formatos (20×30 cm a 40×50 cm), plazos de 2 a 4 semanas, presupuesto cerrado y galería de ejemplos reales.
+- [Catálogo Completo](https://naroagutierrezgil.com/obra/): Ficha detallada de las 55 piezas de la colección con fotografías de detalle y relato.
+- [Serie Vaivenes](https://naroagutierrezgil.com/series/vaivenes/): Retratos en técnica mixta, collage textil y objetos de memoria.
+- [Sobre Mí](https://naroagutierrezgil.com/sobre-mi/): Biografía, técnica, proceso creativo y proyectos comunitarios (Walking Gallery Bilbao, El ReCreo).
+- [Trayectoria](https://naroagutierrezgil.com/trayectoria/): Archivo cronológico de exposiciones documentadas desde 2010 (DEIA, GARA, Politena, Dock Bilbao).
+- [Cuaderno](https://naroagutierrezgil.com/cuaderno/): Relatos de proceso, vivencias del taller y artículos de prensa.
+- [Contacto](https://naroagutierrezgil.com/contacto/): Canales directos de consulta para obra y encargos.
+
+## Recursos Machine-to-Machine y GEO
+- [Catálogo JSON Estructurado](https://naroagutierrezgil.com/api/catalog.json): Endpoint con especificaciones completas de las 55 obras.
+- [Índice Extendido llms-full.txt](https://naroagutierrezgil.com/llms-full.txt): Desglose exhaustivo de todas las piezas y condiciones de encargo.

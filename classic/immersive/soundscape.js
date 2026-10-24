@@ -11,6 +11,7 @@
   let active = false, pageActive = true, idle = null, suspension = null, waking = null, generation = 0;
   let lastY = scrollY, lastDistance = null, lastPhase = 'hold', lastSlug = '', lastHeroSlug = '', lastUtterance = '';
   let lastCameraFlashTime = 0, lastFlashSlug = '';
+  let lastPunchTime = 0, lastPunchSlug = '';
   let lastMotion = null, lastGrain = -Infinity, energy = 0, direction = 1, seed = 0, pendingDistance = 0;
   // Microtonal music-box motif in D minor: acoustic fifths (3/2, +2c), natural fourths (4/3, -2c),
   // neutral alboka thirds (+24c), syntonic major second (-14c) and harmonic sub-seventh (-26c).
@@ -224,6 +225,81 @@
       lastFlashSlug = '';
     }
   }
+  function playPunchImpact() {
+    lastPunchSlug = 'jose-manuel-ezquerra';
+    if (!context || !engine || context.state !== 'running') return;
+    try {
+      const now = context.currentTime + 0.002;
+      const target = engine.compressor || engine.master;
+      const subOsc = context.createOscillator();
+      const subGain = context.createGain();
+      subOsc.type = 'sine';
+      subOsc.frequency.setValueAtTime(220, now);
+      if (subOsc.frequency.exponentialRampToValueAtTime) {
+        subOsc.frequency.exponentialRampToValueAtTime(32, now + 0.16);
+      }
+      subGain.gain.setValueAtTime(0.88, now);
+      if (subGain.gain.exponentialRampToValueAtTime) {
+        subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+      }
+      subOsc.connect(subGain);
+      subGain.connect(target);
+      subOsc.start(now);
+      subOsc.stop(now + 0.24);
+
+      const sampleRate = context.sampleRate || 44100;
+      const snapLen = Math.round(sampleRate * 0.045);
+      const snapBuffer = context.createBuffer(1, snapLen, sampleRate);
+      const snapData = snapBuffer.getChannelData(0);
+      for (let i = 0; i < snapLen; i++) {
+        const t = i / snapLen;
+        snapData[i] = (Math.random() * 2 - 1) * Math.exp(-t * 9);
+      }
+      const snapSrc = context.createBufferSource();
+      snapSrc.buffer = snapBuffer;
+      const snapFilter = context.createBiquadFilter ? context.createBiquadFilter() : context.createGain();
+      if (snapFilter.frequency) {
+        snapFilter.type = 'bandpass';
+        snapFilter.frequency.value = 1650;
+        snapFilter.Q.value = 2.5;
+      }
+      const snapGain = context.createGain();
+      snapGain.gain.setValueAtTime(0.75, now);
+      if (snapGain.gain.exponentialRampToValueAtTime) {
+        snapGain.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
+      }
+      snapSrc.connect(snapFilter);
+      snapFilter.connect(snapGain);
+      snapGain.connect(target);
+      snapSrc.start(now);
+
+      const woodOsc = context.createOscillator();
+      const woodGain = context.createGain();
+      woodOsc.type = 'triangle';
+      woodOsc.frequency.setValueAtTime(145, now + 0.005);
+      if (woodOsc.frequency.exponentialRampToValueAtTime) {
+        woodOsc.frequency.exponentialRampToValueAtTime(68, now + 0.18);
+      }
+      woodGain.gain.setValueAtTime(0.55, now + 0.005);
+      if (woodGain.gain.exponentialRampToValueAtTime) {
+        woodGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
+      }
+      woodOsc.connect(woodGain);
+      woodGain.connect(target);
+      woodOsc.start(now + 0.005);
+      woodOsc.stop(now + 0.26);
+    } catch {}
+  }
+  function triggerPunchImpact(currentSlug, isPunchActive) {
+    if ((currentSlug === 'jose-manuel-ezquerra' || currentSlug === 'i-got-you-babe') && isPunchActive) {
+      lastPunchSlug = 'jose-manuel-ezquerra';
+      const now = performance.now();
+      if (now - lastPunchTime > 900) {
+        lastPunchTime = now;
+        playPunchImpact();
+      }
+    }
+  }
   function excite() {
     const now = performance.now();
     if (!enabled || !engine || !pageActive || document.hidden || lastMotion === null || now - lastMotion > 180) return;
@@ -251,13 +327,14 @@
     });
     message();
   }
-  function advance(nextDistance, nextDepth = depth, nextMode = mode, nextPhase = phase, nextAxis = axisDirection, nextSlug = slug, nextFlash = 0) {
+  function advance(nextDistance, nextDepth = depth, nextMode = mode, nextPhase = phase, nextAxis = axisDirection, nextSlug = slug, nextFlash = 0, nextPunch = false) {
     depth = Math.max(0, Math.min(1, Number(nextDepth) || 0));
     mode = nextMode || mode;
     phase = nextPhase || phase;
     axisDirection = nextAxis === -1 ? -1 : 1;
     if (nextSlug !== undefined) slug = nextSlug;
     triggerCameraFlash(slug, Number(nextFlash) || 0);
+    triggerPunchImpact(slug, !!nextPunch);
     if (typeof nextDistance !== 'number' || Number.isNaN(nextDistance)) {
       if (enabled) mix();
       return;
@@ -395,11 +472,15 @@
       lastFlashSlug = 'ajenjo-cam';
       playCameraFlash();
     },
+    punch() {
+      playPunchImpact();
+    },
     speakHero() {
       speakHero();
     },
     get lastUtterance() { return lastUtterance; },
-    get lastFlashSlug() { return lastFlashSlug; }
+    get lastFlashSlug() { return lastFlashSlug; },
+    get lastPunchSlug() { return lastPunchSlug; }
   });
   paint();
 })();

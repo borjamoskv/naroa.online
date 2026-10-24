@@ -1,0 +1,585 @@
+# Naroa Gutiérrez Gil · Artista Plástica y Retratista (Bilbao)
+
+> Catálogo oficial de obra plástica, servicio de retratos personalizados por encargo y archivo de exposiciones.
+
+## Resumen del Sitio
+- Dominio Canónico: https://naroagutierrezgil.com
+- Ubicación del Estudio: Bilbao, Bizkaia, España (43.2630 N, -2.9350 W)
+- Contacto Directo: naroa@naroa.eu | WhatsApp: +34 636 060 609
+- Especialidad: Retratos de autor sobre pizarra natural, técnica mixta con escamas de mica mineral, collage textil sobre madera y objetos intervenidos.
+
+## Secciones Principales
+- [Inicio e Inmersión](https://naroagutierrezgil.com/): Experiencia inmersiva y catálogo de 55 obras.
+- [Retratos por Encargo en Bilbao](https://naroagutierrezgil.com/retratos-por-encargo-bilbao/): Condiciones técnicas, formatos (20×30 cm a 40×50 cm), plazos de 2 a 4 semanas, presupuesto cerrado y galería de ejemplos reales.
+- [Catálogo Completo](https://naroagutierrezgil.com/obra/): Ficha detallada de las 55 piezas de la colección con fotografías de detalle y relato.
+- [Serie Vaivenes](https://naroagutierrezgil.com/series/vaivenes/): Retratos en técnica mixta, collage textil y objetos de memoria.
+- [Sobre Mí](https://naroagutierrezgil.com/sobre-mi/): Biografía, técnica, proceso creativo y proyectos comunitarios (Walking Gallery Bilbao, El ReCreo).
+- [Trayectoria](https://naroagutierrezgil.com/trayectoria/): Archivo cronológico de exposiciones documentadas desde 2010 (DEIA, GARA, Politena, Dock Bilbao).
+- [Cuaderno](https://naroagutierrezgil.com/cuaderno/): Relatos de proceso, vivencias del taller y artículos de prensa.
+- [Contacto](https://naroagutierrezgil.com/contacto/): Canales directos de consulta para obra y encargos.
+
+## Recursos Machine-to-Machine y GEO
+- [Catálogo JSON Estructurado](https://naroagutierrezgil.com/api/catalog.json): Endpoint con especificaciones completas de las 55 obras.
+- [Índice Extendido llms-full.txt](https://naroagutierrezgil.com/llms-full.txt): Desglose exhaustivo de todas las piezas y condiciones de encargo.
+
+## Catálogo Exhaustivo de Obras (55 Piezas Documentadas)
+
+### Marilyn Rocks (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/marilyn-rocks/
+- **Técnica:** Técnica mixta con escamas de mica y esmalte con brillantina
+- **Soporte:** Plato de pizarra natural
+- **Medidas:** 18 × 10 × 0,6 cm
+- **Materiales:** None
+- **Serie:** DiviNos
+- **Relato:** Marilyn Monroe sobre pizarra, con detalles dorados y escamas de mica encoladas. La luz revela la textura de los materiales añadidos.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Marilyn%20Rocks
+
+### Rara Avis (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/rara-avis/
+- **Técnica:** Pastel Conté y collage
+- **Soporte:** Papel y ensamblaje de materiales
+- **Medidas:** 50 × 35 cm
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Un autorretrato frente al espejo que se expande en marcos, reflejos, cintas y una pluma de pavo real. El dibujo se convierte en una composición de capas, creada en el taller de Ana Rosa Arroyo en Basauri.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Rara%20Avis
+
+### Amor en Conserva (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/amor-en-conserva/
+- **Técnica:** Fotocollage por capas y ensamblaje
+- **Soporte:** Lata intervenida
+- **Medidas:** None
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** El retrato de Mary y Mala se construye con varias impresiones recortadas y montadas por capas. Flores, alambre y elementos de un collar acompañan la escena.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Amor%20en%20Conserva
+
+### Amy Rocks (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/amy-rocks/
+- **Técnica:** Acrílico, lápices y rotuladores
+- **Soporte:** Plato de pizarra natural
+- **Medidas:** 18 × 10 × 0,6 cm
+- **Materiales:** None
+- **Serie:** DiviNos
+- **Relato:** Amy Winehouse en blanco, negro y grises, con acentos rojos y dorados. La forma y el canto de la pizarra participan en el retrato.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Amy%20Rocks
+
+### Entre Tantas Flores de Día (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/entre-tantas-flores-de-dia/
+- **Técnica:** Ilustración reproducida e intervenida; collage textil y alambre
+- **Soporte:** Papel impreso sobre tela floral
+- **Medidas:** Marco: 46 × 33 cm
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** El retrato de Robe parte de un dibujo a lápices sobre poliéster. Tras escanearlo e imprimirlo a mayor tamaño, la imagen se recorta, retoca y combina con tela floral y una frase en alambre.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Entre%20Tantas%20Flores%20de%20D%C3%ADa
+
+### Johnny Rocks (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/johnny-rocks/
+- **Técnica:** Acrílico, lápices y rotuladores
+- **Soporte:** Plato de pizarra natural
+- **Medidas:** 18 × 10 × 0,6 cm
+- **Materiales:** None
+- **Serie:** DiviNos
+- **Relato:** Un retrato de Johnny Depp con contrastes en blanco y negro y detalles dorados y rojizos. Forma parte de DiviNos.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Johnny%20Rocks
+
+### RockaGipsy (2015)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/rockagipsy/
+- **Técnica:** Acrílico y collage textil
+- **Soporte:** Reverso de lienzo sin imprimar
+- **Medidas:** Marco: 37,5 × 29,5 cm
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Camarón aparece sobre el reverso del lienzo, rodeado por papeles de lunares y tela decorada. La silueta superpuesta añade profundidad al retrato.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20RockaGipsy
+
+### Hugo Box (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/hugo-box/
+- **Técnica:** Fotocopia intervenida y collage
+- **Soporte:** Caja de madera
+- **Medidas:** None
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Una caja de cumpleaños que transforma una fotografía en retrato con volumen. La toalla, la montura recortada y las láminas metalizadas rosas construyen los detalles de la tapa.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Hugo%20Box
+
+### James Rocks (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/james-rocks/
+- **Técnica:** Técnica mixta y pintura dimensional
+- **Soporte:** Plato de pizarra natural
+- **Medidas:** 18 × 10 × 0,6 cm
+- **Materiales:** None
+- **Serie:** DiviNos
+- **Relato:** James Dean sobre un fondo de rojos y motivos dorados. La pintura dimensional negra añade relieve a la superficie.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20James%20Rocks
+
+### Mario Moreno (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/mario-moreno/
+- **Técnica:** Acrílico, rotulador y collage textil
+- **Soporte:** Lienzo
+- **Medidas:** Lienzo: 24 × 18 cm · Marco: 32 × 26 cm
+- **Materiales:** None
+- **Serie:** Vaivenes
+- **Relato:** Mario Moreno aparece en blanco y negro, atravesado por pequeñas intervenciones textiles: seda roja en la corbata, vaquero negro y un retal de lienzo como pañuelo.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Mario%20Moreno
+
+### Infusión de Berto (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/infusion-de-berto/
+- **Técnica:** Acrílico, lápices, rotuladores y collage
+- **Soporte:** Rodaja de fresno sin tratar
+- **Medidas:** 18 cm de diámetro
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Berto Romero, romero y una bolsita de infusión se encuentran en un mismo retrato. La corteza, los líquenes del fresno y los objetos añadidos prolongan el juego de palabras.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Infusi%C3%B3n%20de%20Berto
+
+### Buena Fuente (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/buena-fuente/
+- **Técnica:** Lápices, rotuladores, acrílico y collage
+- **Soporte:** Plato de madera sin tratar
+- **Medidas:** 18 cm de diámetro
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Un retrato colorista de Andreu Buenafuente con tipografía, una cabeza de tenedor y una etiqueta de pintura. El objeto cotidiano entra en la composición.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Buena%20Fuente
+
+### Ajenjo Cam (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/ajenjo-cam/
+- **Técnica:** Fotografías impresas, cartón y técnica mixta
+- **Soporte:** Caja de cerillas
+- **Medidas:** None
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Un miniálbum desplegable que toma la forma de una cámara instantánea. Al abrirlo, la pequeña caja deja salir una secuencia de fotografías.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Ajenjo%20Cam
+
+### Beatriz de Pandora (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/beatriz-de-pandora/
+- **Técnica:** Lápices de colores y collage textil
+- **Soporte:** Caja de madera
+- **Medidas:** 5 × 8 × 13 cm
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** El retrato de la tapa incorpora vaquero, encaje, cuerda y cinta en la gorra. El interior de la caja prolonga la composición con color y pequeños objetos de celebración.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Beatriz%20de%20Pandora
+
+### El Gato que es Kutxa (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/el-gato-que-es-kutxa/
+- **Técnica:** Fotocopia recortada, pintura y estampación
+- **Soporte:** Caja de madera
+- **Medidas:** 4,7 × 8,3 × 8,3 cm
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Un gato emerge de una tapa pintada en rosa y turquesa. La imagen recortada se combina con huellas estampadas y un interior preparado para un regalo.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20El%20Gato%20que%20es%20Kutxa
+
+### Me Parto (de risa) (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/me-parto-de-risa/
+- **Técnica:** Lápices de colores, papel rasgado y collage textil
+- **Soporte:** Papel sobre salvamanteles textil
+- **Medidas:** None
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Luciano Mellera aparece en una composición que se rasga y recompone. Un envoltorio dorado ocupa la grieta: una referencia expresiva al kintsugi trasladada al collage.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Me%20Parto%20%28de%20risa%29
+
+### Red Red Wine (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/red-red-wine/
+- **Técnica:** Vino y lápiz magenta
+- **Soporte:** Papel de acuarela de 300 g/m²
+- **Medidas:** Papel: A5
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Un retrato experimental de Neil Diamond en el que el vino se convierte en material de dibujo. La pieza parte de la relación entre el músico y Red Red Wine.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Red%20Red%20Wine
+
+### I Remember when your Head caught Flame (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/i-remember-when-your-head-caught-flame/
+- **Técnica:** Reproducción recortada, celofán y papeles
+- **Soporte:** Collage enmarcado
+- **Medidas:** Marco: 25 × 18 cm · Ventana: aproximadamente 7 × 11 cm
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Una reproducción de la obra Carole Lombard se transforma en un nuevo collage. Papeles fluorescentes, celofán naranja y pequeños fragmentos impresos construyen otra escena alrededor del retrato.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20I%20Remember%20when%20your%20Head%20caught%20Flame
+
+### Julio Iglesias, como un Reloj Suizo (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/julio-iglesias-como-un-reloj-suizo/
+- **Técnica:** Fotocollage articulado y ensamblaje
+- **Soporte:** Caja de reloj con compartimentos
+- **Medidas:** None
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Un retrato tridimensional de Julio Iglesias que se puede accionar mediante hilos y tiradores. La caja contiene compartimentos y objetos que forman parte del relato.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Julio%20Iglesias%2C%20como%20un%20Reloj%20Suizo
+
+### Saio Puzzle (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/saio-puzzle/
+- **Técnica:** Rotuladores permanentes y acrílicos
+- **Soporte:** Puzzle para dibujar
+- **Medidas:** None
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Un retrato que también se puede construir por piezas. Las juntas del puzzle atraviesan la imagen en blanco y negro y su fondo de color.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Saio%20Puzzle
+
+### Custom Jaio (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/custom-jaio/
+- **Técnica:** Acrílico, rotuladores, lápices y botones cosidos
+- **Soporte:** Vaquero negro en bastidor
+- **Medidas:** Bastidor: 17 cm de diámetro
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Un retrato sobre tela vaquera negra, preparada e intervenida con pintura y botones. El bastidor conserva su presencia como parte de la obra.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Custom%20Jaio
+
+### 13N (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/13n/
+- **Técnica:** Lápices, pastel, pan de oro, acrílico y collage
+- **Soporte:** Plato de madera con caja personalizada
+- **Medidas:** Plato: 18 cm de diámetro
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Un retrato doble sobre madera, acompañado de una caja intervenida. Letras de periódico, pan de oro y otros materiales conviven con el dibujo.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%2013N
+
+### Patxi en su-pino (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/patxi-en-su-pino/
+- **Técnica:** Lápices de colores, pastel y acrílico
+- **Soporte:** Rodaja de pino sin tratar
+- **Medidas:** None
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** El retrato sigue las vetas de una rodaja de pino. La corteza conserva el contorno natural del soporte y convierte el juego del título en materia.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Patxi%20en%20su-pino
+
+### El Luengo y el Mar (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/el-luengo-y-el-mar/
+- **Técnica:** Acrílico, rotuladores, grattage y collage con mica
+- **Soporte:** Concha de vieira
+- **Medidas:** None
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Un retrato marino sobre una concha. Hebras de mandarina coloreadas evocan algas y coral; la mica plateada recuerda las escamas y el nácar.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20El%20Luengo%20y%20el%20Mar
+
+### El Armigo Atómico (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/el-armigo-atomico/
+- **Técnica:** Lápices, acrílico, pastel y mica
+- **Soporte:** Plato de madera
+- **Medidas:** 18 cm de diámetro
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Un retrato humorístico que une un rostro realista y la figura de la Hormiga Atómica. La intervención continúa en el reverso del plato.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20El%20Armigo%20At%C3%B3mico
+
+### Elene (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/elene/
+- **Técnica:** Lápices, acrílico, pastel y flores añadidas
+- **Soporte:** Plato de madera
+- **Medidas:** 18 cm de diámetro
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Un retrato acompañado de rosas de papel y calas de goma EVA. Los elementos florales aportan volumen alrededor de la figura.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Elene
+
+### Dar la Lata (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/dar-la-lata/
+- **Técnica:** Fotografías recortadas y ensamblaje
+- **Soporte:** Latas de conservas
+- **Medidas:** None
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Dar la Lata reúne retratos tridimensionales realizados con fotografías y pequeñas latas. Cada recipiente se convierte en soporte, marco y escenario de una composición.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Dar%20la%20Lata
+
+### Marian de Miranda Luciendo la Pantorrilla (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/marian-de-miranda-luciendo-la-pantorrilla/
+- **Técnica:** Dibujo, collage físico y composición digital
+- **Soporte:** Papel, materiales encontrados y archivo digital
+- **Medidas:** Dibujo: 20 × 10 cm · Collage físico: 23 × 18 cm
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Proyecto PostalaK: el dibujo y el collage físico se escanean y combinan en variantes digitales. El retrato de Marian Puertas dialoga con la figura y el tocado de Carmen Miranda.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Marian%20de%20Miranda%20Luciendo%20la%20Pantorrilla
+
+### My Tiny Face (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/my-tiny-face/
+- **Técnica:** Maquillaje tradicional y al agua
+- **Soporte:** Rostro
+- **Medidas:** None
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Una ilusión de rostro pequeño creada sobre la cara parcialmente oculta. Los gestos y los accesorios completan la caracterización.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20My%20Tiny%20Face
+
+### Aaron (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/aaron/
+- **Técnica:** Maquillaje, vestuario y complementos
+- **Soporte:** Caracterización de Naroa
+- **Medidas:** None
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Aaron es un anagrama de Naroa y el nombre de un personaje interpretado por la artista. Maquillaje, peinado y vestuario transforman su apariencia.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Aaron
+
+### Pajarraca Azul (2024)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/pajarraca-azul/
+- **Técnica:** Máscara de cartón, plumas y maquillaje
+- **Soporte:** Máscara y rostro
+- **Medidas:** None
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Una máscara de pájara creada para el Carnaval de Bilbao y Santutxu de 2024. El antifaz pintado, las plumas y el maquillaje construyen el personaje.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Pajarraca%20Azul
+
+### Flying Dragon (2023)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/flying-dragon/
+- **Técnica:** Maquillaje tradicional y al agua
+- **Soporte:** Rostro y vestuario
+- **Medidas:** None
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Caracterización de dragón para los carnavales de Uribarri y Santutxu de 2023. El dibujo del rostro se combina con el disfraz.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Flying%20Dragon
+
+### Monster Dragon (2023)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/monster-dragon/
+- **Técnica:** Maquillaje tradicional y al agua
+- **Soporte:** Rostro y vestuario
+- **Medidas:** None
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Un rostro de reptil acompañado de un disfraz kigurumi. Proyecto de caracterización realizado para el Carnaval de Bilbao de 2023.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Monster%20Dragon
+
+### La Llorona (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/la-llorona/
+- **Técnica:** Pintura acrílica y collage
+- **Soporte:** Lienzo
+- **Medidas:** 20 × 30 × 3,5 cm
+- **Materiales:** Pintura acrílica, sal rosa, cubiertas de auriculares fucsias, hembrillas antiguas, pétalos negros, lentejuelas de colores con forma de corazón, eslabones de cadenas, pequeña pieza textil, recorte de rosa impresa plastificada, celo de doble cara deteriorado por el tiempo, pegamento y látex líquido.
+- **Serie:** Colección general
+- **Relato:** Retrato de Chavela Vargas en el que un ojo de sal rosa, las lágrimas y las flores revelan parte del simbolismo de la obra. «No sé qué tienen las flores, llorona, las flores del campo santo; que cuando las mueve el viento, llorona, parecen que están llorando».
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20La%20Llorona
+
+### Pablo (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/pablo/
+- **Técnica:** Lápices de colores Art & Graphic de Faber-Castell
+- **Soporte:** Papel poliéster
+- **Medidas:** None
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** El gran Pablo, admiración total. Retrato en el que el dibujo del rostro convive con el color de la camisa.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Pablo
+
+### Euskolander no hay más que uno (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/euskolander-no-hay-mas-que-uno/
+- **Técnica:** Lápiz de color negro, bolígrafo y collage
+- **Soporte:** Papel poliéster e impresión en papel de 350 g/m²
+- **Medidas:** None
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Del trazo al recorte: retrato dibujado con lápiz de color negro y bolígrafo sobre poliéster, diluido con alcohol en algunas zonas. Tras escanearlo e imprimirlo, Naroa vuelve a dibujar sus rasgos con lápiz Art & Graphic de Faber-Castell y recorta la silueta.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Euskolander%20no%20hay%20m%C3%A1s%20que%20uno
+
+### Idoia, Arkatz & Bihotz (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/idoia-arkatz-bihotz/
+- **Técnica:** Grafito, rotulador acrílico y collage de washi tapes
+- **Soporte:** Papel de 80 g/m²
+- **Medidas:** None
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Un retrato que combina una figura en grises con pequeños acentos de color. Las cintas decoradas intervienen la composición y acompañan el gesto de la retratada.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Idoia%2C%20Arkatz%20%26%20Bihotz
+
+### Little Adi (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/little-adi/
+- **Técnica:** Grafito, lápices de colores y collage
+- **Soporte:** Papel de 80 g/m² recortado sobre papel de seda decorado
+- **Medidas:** None
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** La figura dibujada se recorta y superpone al fondo. El gris del retrato deja paso al verde de la pala y al contraste entre el naranja y los lunares fucsias.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Little%20Adi
+
+### LauraLore (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/lauralore/
+- **Técnica:** Lápiz de color negro y collage
+- **Soporte:** Papel de 350 g/m² en marco de profundidad
+- **Medidas:** 50 × 40 cm
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** El retrato dibujado se combina con fragmentos de cerámica decorada y elementos vegetales. La composición fue realizada como regalo de cumpleaños y juega con la idea del eguzkilore.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20LauraLore
+
+### Can-dy Queen (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/can-dy-queen/
+- **Técnica:** Fotografía por capas y ensamblaje
+- **Soporte:** Lata de conservas intervenida
+- **Medidas:** None
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Retrato en relieve de Olatz, rodeado de colores y dulces. La lata incorpora patas de alambre, gominolas, papeles y una corona hecha con materiales cotidianos. Las capas de la fotografía aportan profundidad.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Can-dy%20Queen
+
+### El hombre que susurraba a las estrellas (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/el-hombre-que-susurraba-a-las-estrellas/
+- **Técnica:** Bolígrafo negro y collage
+- **Soporte:** Papel poliéster e impresión de 350 g/m²
+- **Medidas:** A3
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** David Bowie aparece entre estrellas y un rayo de color. El dibujo se transforma mediante el escaneado, la impresión y el recorte; el tejido vaquero y los papeles metalizados añaden diferentes superficies.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20El%20hombre%20que%20susurraba%20a%20las%20estrellas
+
+### Olinga a la Naranja (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/olinga-a-la-naranja/
+- **Técnica:** Lápices de colores y collage
+- **Soporte:** Marco con passepartout
+- **Medidas:** 45 × 55 cm
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** La figura dibujada se recorta y se integra en un fondo hecho con envoltorios de naranjas. Papel de seda, cuerda bicolor y celofán rosa prolongan el color más allá del retrato.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Olinga%20a%20la%20Naranja
+
+### I Got You Babe (2020)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/i-got-you-babe/
+- **Técnica:** Pintura y ensamblaje
+- **Soporte:** Reloj de pared de bambú
+- **Medidas:** None
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Un autorretrato colectivo del confinamiento realizado en abril de 2020. El rostro de Bill Murray y la referencia a Atrapado en el tiempo expresan la repetición de los días. La maquinaria desmontada del reloj pasa a formar parte de la superficie de la obra.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20I%20Got%20You%20Babe
+
+### Jose Manuel Ezquerra: t’abla con su mirada (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/jose-manuel-ezquerra/
+- **Técnica:** Lápices Art & Graphic, rotuladores Uni-Posca, permanentes y acrílico
+- **Soporte:** Tabla de cocina de madera sin tratar
+- **Medidas:** 25 × 35 cm
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Un retrato lleno de trazos de color sobre una tabla de cocina. El dibujo y la pintura dejan visible la presencia cotidiana del soporte.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Jose%20Manuel%20Ezquerra%3A%20t%E2%80%99abla%20con%20su%20mirada
+
+### Billy Saw (2016)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/billy-saw/
+- **Técnica:** Caracterización
+- **Soporte:** Rostro
+- **Medidas:** None
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Caracterización presentada para los carnavales de 2016: una transformación que explora el rostro como soporte artístico.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Billy%20Saw
+
+### OUT (por los pelos) (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/out-por-los-pelos/
+- **Técnica:** Lápices de colores y collage
+- **Soporte:** Marco con passepartout intervenido
+- **Medidas:** 50 × 40 cm
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Andre Agassi en Roland Garros de 1990. El marco se convierte en pista: fieltro, redes y cabellos acompañan el retrato. El recorte del passepartout y las gotas de látex prolongan la tensión de la escena.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20OUT%20%28por%20los%20pelos%29
+
+### The Munsters (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/the-munsters/
+- **Técnica:** Rotuladores de tinta, permanentes y acrílicos; frottage con grafito
+- **Soporte:** Papel con marco impreso
+- **Medidas:** A4
+- **Materiales:** None
+- **Serie:** Colección general
+- **Relato:** Una colección de cuatro retratos sobre un fondo de frottage. El dibujo, los contrastes de tinta y los marcos impresos reúnen a la familia Munster.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20The%20Munsters
+
+### Denbora Nora Zoaz Eder Galant Hori? (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/denbora-nora-zoaz/
+- **Técnica:** Pintura acrílica y collage
+- **Soporte:** Lienzo
+- **Medidas:** 54 × 81 cm
+- **Materiales:** Hojas de calendario impresas, pintura acrílica y barnices mate y brillante.
+- **Serie:** Colección general
+- **Relato:** Un rostro contempla el paso del tiempo entre hojas de calendario recortadas como vegetales y turnos de espera. Los tonos cálidos y los distintos barnices acompañan una reflexión sobre el afecto por la vida y la manera de habitar los días.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Denbora%20Nora%20Zoaz%20Eder%20Galant%20Hori%3F
+
+### Róisín (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/roisin/
+- **Técnica:** Pintura y collage
+- **Soporte:** None
+- **Medidas:** None
+- **Materiales:** None
+- **Serie:** Vaivenes
+- **Relato:** El retrato se encuentra con las plumas, el tejido y los adornos. Fotografía publicada por Naroa en su relato de Vaivenes en Haika.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20R%C3%B3is%C3%ADn
+
+### Mr. Fahrenheit (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/mr-fahrenheit/
+- **Técnica:** Pintura y collage
+- **Soporte:** None
+- **Medidas:** None
+- **Materiales:** None
+- **Serie:** Vaivenes
+- **Relato:** Retrato de Freddie Mercury. El dibujo a lápices de colores se combina con distintas capas de papel, recortes de periódico y una corona de roscón de Reyes.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Mr.%20Fahrenheit
+
+### Audrey’s Lightning (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/audreys-lightning/
+- **Técnica:** Pintura y collage
+- **Soporte:** None
+- **Medidas:** None
+- **Materiales:** None
+- **Serie:** Vaivenes
+- **Relato:** Detalle del retrato de Audrey Hepburn: el rayo sobre su ojo hace un guiño a David Bowie. La pieza combina pintura y collage y fue presentada en Vaivenes en el Copper Deli Museo.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Audrey%E2%80%99s%20Lightning
+
+### Cantinflowers (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/cantinflowers/
+- **Técnica:** Pintura y collage
+- **Soporte:** None
+- **Medidas:** None
+- **Materiales:** None
+- **Serie:** Vaivenes
+- **Relato:** Pintura y collage en torno a Mario Moreno. Una obra que Naroa recupera al presentar el encuentro entre DiviNos y Vaivenes en 2026.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Cantinflowers
+
+### Loving Långstrump (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/pippilotta/
+- **Técnica:** Técnica mixta
+- **Soporte:** Marco con passepartout
+- **Medidas:** 50 × 40 cm
+- **Materiales:** None
+- **Serie:** Vaivenes
+- **Relato:** Retrato de Inger Nilsson como Pippilotta Viktualia Rullgardina Krusmynta Efraimsdotter Långstrump —Pippi Calzaslargas— y su mono, el Señor Nilsson. El dibujo se integra en un collage de cuadros, corazones y pequeños envoltorios.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Loving%20L%C3%A5ngstrump
+
+### Rosetta no es de piedra (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/rosetta/
+- **Técnica:** Lápices de colores Art & Graphic de Faber-Castell y collage
+- **Soporte:** Marco con passepartout
+- **Medidas:** 50 × 40 cm
+- **Materiales:** Papel de seda, recortes de papeles impresos e hilo grueso.
+- **Serie:** Vaivenes
+- **Relato:** Retrato de Sister Rosetta Tharpe, la abuela del rock & roll. El dibujo con lápices de colores pasa por el escáner y vuelve al soporte físico para convivir con capas de collage. El papel de seda, los recortes y el hilo de las cuerdas crean un arcoíris alrededor de su guitarra.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Rosetta%20no%20es%20de%20piedra
+
+### Hello Darkness My Old Friend (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/dustin/
+- **Técnica:** Lápices de colores Art & Graphic de Faber-Castell y collage
+- **Soporte:** Marco con passepartout
+- **Medidas:** 50 × 40 cm
+- **Materiales:** Papel de pared antiguo, plástico de burbujas, envoltorios, celofán, cerillas, pieza de puzle, goma eva, acetato impreso, poliespán y pajitas.
+- **Serie:** Vaivenes
+- **Relato:** Dustin Hoffman en El Graduado. El collage recoge alusiones a la película para hablar de las expectativas, el plástico y las oscilaciones del mundo interior. La figura dibujada se escanea, se imprime y se combina con materiales cotidianos de distintas texturas.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Hello%20Darkness%20My%20Old%20Friend
+
+
+## Condiciones del Servicio de Encargos en Bilbao
+
+- **Soportes:** Pizarra natural de cantera con contorno irregular, madera noble, collage textil sobre tela vaquera o papel de algodón, y cajas tridimensionales.
+- **Formatos habituales:** Pizarra de 20×30 cm a 40×50 cm; piezas especiales adaptadas al espacio.
+- **Técnicas:** Acrílico, óleo, grafito, pastel Conté, rotuladores acrílicos, escamas de mica mineral y ensamblaje de objetos.
+- **Plazos:** 2 a 4 semanas según complejidad y secado de capas de óleo/barniz.
+- **Presupuesto:** Presupuesto cerrado por escrito antes de comenzar, sin compromiso previo.
+- **Entrega:** En mano en Bilbao y comarca de Bizkaia; envíos asegurados a nivel nacional e internacional.

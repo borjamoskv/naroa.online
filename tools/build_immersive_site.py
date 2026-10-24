@@ -123,7 +123,7 @@ def build(output):
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src, dest)
         assets[name] = "/" + str(dest.relative_to(output))
-    for name in ("naroa-naturaleza.mp3", "naroa-iris.mp3", "naroa-caja-musica.mp3", "we-can-be-heroes.mp3"):
+    for name in ("naroa-naturaleza.mp3", "naroa-iris.mp3", "naroa-caja-musica.mp3", "we-can-be-heroes.mp3", "just-for-one-day.mp3"):
         src = SOURCE / "audio" / name
         digest = hashlib.sha256(src.read_bytes()).hexdigest()[:12]
         dest = output / "immersive/audio" / f"{src.stem}-{digest}{src.suffix}"
@@ -151,7 +151,7 @@ def build(output):
         return ''.join(f'''<a href="{href}" data-menu-item data-preview-src="{src}" data-preview-title="{esc(title)}" data-preview-label="{esc(label)}"><span class="menu-number" aria-hidden="true">{i:02}</span><span class="menu-name">{label}<small>{detail}</small></span><span class="menu-arrow" aria-hidden="true">↗</span></a>''' for i, (href, label, detail, src, title) in enumerate(items, 1))
 
     def header(gallery=False):
-        return f'''<header class="site-nav"><a class="signature" href="/" aria-label="Naroa Gutiérrez Gil, inicio"><span>Naroa</span><small>GUTIÉRREZ GIL</small></a><nav aria-label="Principal"><a href="/obra/#indice" data-open-index>Obras</a><a class="desktop-link" href="/retratos-por-encargo-bilbao/">Encargos</a>{'<button type="button" data-quiet>Solo obra</button>' if gallery else '<a class="desktop-link" href="/sobre-mi/">La artista</a>'}<button type="button" class="sound-toggle" data-sound data-nature-src="{assets['naroa-naturaleza.mp3']}" data-iris-src="{assets['naroa-iris.mp3']}" data-musicbox-src="{assets['naroa-caja-musica.mp3']}" data-hero-src="{assets['we-can-be-heroes.mp3']}" aria-label="Activar caja de música reactiva" title="Caja de música: desplázate para tocar" aria-pressed="false"><svg viewBox="0 0 18 20" aria-hidden="true"><path d="M3 7v6M9 3v14M15 6v8"/></svg><span>Sonido</span></button><button type="button" data-open-menu aria-haspopup="dialog" aria-controls="menu-dialog" aria-expanded="false">Menú <span aria-hidden="true">+</span></button></nav><span class="sound-status" data-sound-status role="status" hidden></span></header>'''
+        return f'''<header class="site-nav"><a class="signature" href="/" aria-label="Naroa Gutiérrez Gil, inicio"><span>Naroa</span><small>GUTIÉRREZ GIL</small></a><nav aria-label="Principal"><a href="/obra/#indice" data-open-index>Obras</a><a class="desktop-link" href="/retratos-por-encargo-bilbao/">Encargos</a>{'<button type="button" data-quiet>Solo obra</button>' if gallery else '<a class="desktop-link" href="/sobre-mi/">La artista</a>'}<button type="button" class="sound-toggle" data-sound data-nature-src="{assets['naroa-naturaleza.mp3']}" data-iris-src="{assets['naroa-iris.mp3']}" data-musicbox-src="{assets['naroa-caja-musica.mp3']}" data-hero-src="{assets['we-can-be-heroes.mp3']}" data-denbora-src="{assets['just-for-one-day.mp3']}" aria-label="Activar caja de música reactiva" title="Caja de música: desplázate para tocar" aria-pressed="false"><svg viewBox="0 0 18 20" aria-hidden="true"><path d="M3 7v6M9 3v14M15 6v8"/></svg><span>Sonido</span></button><button type="button" data-open-menu aria-haspopup="dialog" aria-controls="menu-dialog" aria-expanded="false">Menú <span aria-hidden="true">+</span></button></nav><span class="sound-status" data-sound-status role="status" hidden></span></header>'''
 
     def dialogs():
         index = ''.join(f'''<a class="index-work" href="/obra/{p['slug']}/" data-work="{p['slug']}" data-category="{p['category']}" data-series="{esc(p['series'] or '')}" data-search="{esc(' '.join(str(p[k] or '') for k in ['title','technique','support','series','story','materials']))}"><img src="{p['thumb']}" width="92" height="100" alt="{esc(p['title'])}" loading="lazy"><span><small>{esc(p['label'])}</small><strong>{esc(p['title'])}</strong><em>{esc(p['support'] or p['technique'] or '')}</em></span><span aria-hidden="true">↗</span></a>''' for p in projects)
@@ -755,7 +755,139 @@ def build(output):
     indexnow_key = "6621e1f1c138eeb14922f7804f61ae34"
     write(output / f"{indexnow_key}.txt", indexnow_key + "\n")
     write(output / "indexnow.json", json.dumps({"host": "naroagutierrezgil.com", "key": indexnow_key, "keyLocation": f"{ORIGIN}/{indexnow_key}.txt", "urlList": [ORIGIN + p[0] for p in pages]}, indent=2) + "\n")
-    write(output / "_headers", '/*\n  X-Frame-Options: DENY\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload\n  Cache-Control: public, max-age=0, must-revalidate\n/immersive/*\n  Cache-Control: public, max-age=31536000, immutable\n')
+
+    catalog_api = {
+        "version": "1.0",
+        "artist": {
+            "name": "Naroa Gutiérrez Gil",
+            "role": "Artista plástica y retratista",
+            "location": "Bilbao, Bizkaia, España",
+            "url": ORIGIN + "/",
+            "contact": {
+                "email": "naroa@naroa.eu",
+                "whatsapp": "+34636060609",
+                "inquiry_form": ORIGIN + "/contacto/",
+            },
+            "commission_service": {
+                "url": ORIGIN + "/retratos-por-encargo-bilbao/",
+                "supports": [
+                    "Pizarra natural de cantera con contorno irregular",
+                    "Collage y técnica mixta textil sobre madera",
+                    "Cajas tridimensionales y objetos intervenidos",
+                    "Retrato al óleo y dibujo a grafito/pastel",
+                ],
+                "pricing_policy": "Presupuesto cerrado previo por escrito sin compromiso",
+                "turnaround": "2 a 4 semanas según secado de materiales y fijación de mica mineral",
+                "delivery": "Entrega en mano en Bilbao y Bizkaia o envío asegurado nacional e internacional",
+            },
+        },
+        "artworks_count": len(projects),
+        "reviewed": catalogue["reviewed"],
+        "artworks": [
+            {
+                "slug": p["slug"],
+                "title": p["title"],
+                "category": p["category"],
+                "series": p.get("series"),
+                "technique": p.get("technique"),
+                "support": p.get("support"),
+                "dimensions": p.get("dimensions"),
+                "materials": p.get("materials"),
+                "year": p.get("year"),
+                "story": p["story"],
+                "url": ORIGIN + "/obra/" + p["slug"] + "/",
+                "cover_url": ORIGIN + p["cover"],
+                "photos": [
+                    {
+                        "url": ORIGIN + ph["original"],
+                        "width": ph.get("width"),
+                        "height": ph.get("height"),
+                        "caption": ph.get("caption") or p["title"],
+                        "sha256": sha_by_src.get(ph["original"]),
+                    }
+                    for ph in p["photos"]
+                ],
+                "inquire_email": f"mailto:naroa@naroa.eu?subject={quote('Consulta sobre '+p['title'])}",
+                "inquire_whatsapp": f"https://wa.me/34636060609?text={quote('Hola Naroa, me gustaría consultar sobre la obra ' + p['title'])}",
+            }
+            for p in projects
+        ],
+    }
+    write(output / "api" / "catalog.json", json.dumps(catalog_api, ensure_ascii=False, indent=2) + "\n")
+
+    llms_txt = (
+        "# Naroa Gutiérrez Gil · Artista Plástica y Retratista (Bilbao)\n\n"
+        "> Catálogo oficial de obra plástica, servicio de retratos personalizados por encargo y archivo de exposiciones.\n\n"
+        "## Resumen del Sitio\n"
+        f"- Dominio Canónico: {ORIGIN}\n"
+        "- Ubicación del Estudio: Bilbao, Bizkaia, España (43.2630 N, -2.9350 W)\n"
+        "- Contacto Directo: naroa@naroa.eu | WhatsApp: +34 636 060 609\n"
+        "- Especialidad: Retratos de autor sobre pizarra natural, técnica mixta con escamas de mica mineral, collage textil sobre madera y objetos intervenidos.\n\n"
+        "## Secciones Principales\n"
+        f"- [Inicio e Inmersión]({ORIGIN}/): Experiencia inmersiva y catálogo de 55 obras.\n"
+        f"- [Retratos por Encargo en Bilbao]({ORIGIN}/retratos-por-encargo-bilbao/): Condiciones técnicas, formatos (20×30 cm a 40×50 cm), plazos de 2 a 4 semanas, presupuesto cerrado y galería de ejemplos reales.\n"
+        f"- [Catálogo Completo]({ORIGIN}/obra/): Ficha detallada de las 55 piezas de la colección con fotografías de detalle y relato.\n"
+        f"- [Serie Vaivenes]({ORIGIN}/series/vaivenes/): Retratos en técnica mixta, collage textil y objetos de memoria.\n"
+        f"- [Sobre Mí]({ORIGIN}/sobre-mi/): Biografía, técnica, proceso creativo y proyectos comunitarios (Walking Gallery Bilbao, El ReCreo).\n"
+        f"- [Trayectoria]({ORIGIN}/trayectoria/): Archivo cronológico de exposiciones documentadas desde 2010 (DEIA, GARA, Politena, Dock Bilbao).\n"
+        f"- [Cuaderno]({ORIGIN}/cuaderno/): Relatos de proceso, vivencias del taller y artículos de prensa.\n"
+        f"- [Contacto]({ORIGIN}/contacto/): Canales directos de consulta para obra y encargos.\n\n"
+        "## Recursos Machine-to-Machine y GEO\n"
+        f"- [Catálogo JSON Estructurado]({ORIGIN}/api/catalog.json): Endpoint con especificaciones completas de las 55 obras.\n"
+        f"- [Índice Extendido llms-full.txt]({ORIGIN}/llms-full.txt): Desglose exhaustivo de todas las piezas y condiciones de encargo.\n"
+    )
+    write(output / "llms.txt", llms_txt)
+    write(REPO / "public" / "llms.txt", llms_txt)
+
+    artworks_md = "\n".join(
+        f"### {p['title']} ({p.get('year', 's/f')})\n"
+        f"- **URL Canónica:** {ORIGIN}/obra/{p['slug']}/\n"
+        f"- **Técnica:** {p.get('technique', 'Técnica mixta')}\n"
+        f"- **Soporte:** {p.get('support', 'Soporte rígido')}\n"
+        f"- **Medidas:** {p.get('dimensions', 'Medidas variables')}\n"
+        f"- **Materiales:** {p.get('materials', 'Acrílico, mica y pigmentos')}\n"
+        f"- **Serie:** {p.get('series') or 'Colección general'}\n"
+        f"- **Relato:** {p['story']}\n"
+        f"- **Contacto Obra:** mailto:naroa@naroa.eu?subject={quote('Consulta sobre '+p['title'])}\n"
+        for p in projects
+    )
+    llms_full_txt = (
+        f"{llms_txt}\n"
+        "## Catálogo Exhaustivo de Obras (55 Piezas Documentadas)\n\n"
+        f"{artworks_md}\n\n"
+        "## Condiciones del Servicio de Encargos en Bilbao\n\n"
+        "- **Soportes:** Pizarra natural de cantera con contorno irregular, madera noble, collage textil sobre tela vaquera o papel de algodón, y cajas tridimensionales.\n"
+        "- **Formatos habituales:** Pizarra de 20×30 cm a 40×50 cm; piezas especiales adaptadas al espacio.\n"
+        "- **Técnicas:** Acrílico, óleo, grafito, pastel Conté, rotuladores acrílicos, escamas de mica mineral y ensamblaje de objetos.\n"
+        "- **Plazos:** 2 a 4 semanas según complejidad y secado de capas de óleo/barniz.\n"
+        "- **Presupuesto:** Presupuesto cerrado por escrito antes de comenzar, sin compromiso previo.\n"
+        "- **Entrega:** En mano en Bilbao y comarca de Bizkaia; envíos asegurados a nivel nacional e internacional.\n"
+    )
+    write(output / "llms-full.txt", llms_full_txt)
+    write(REPO / "public" / "llms-full.txt", llms_full_txt)
+
+    headers_content = (
+        "/*\n"
+        "  X-Frame-Options: DENY\n"
+        "  X-Content-Type-Options: nosniff\n"
+        "  Referrer-Policy: strict-origin-when-cross-origin\n"
+        "  Permissions-Policy: camera=(), microphone=(), geolocation=()\n"
+        "  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload\n"
+        "  Cache-Control: public, max-age=0, must-revalidate\n"
+        "/api/*\n"
+        "  Content-Type: application/json; charset=utf-8\n"
+        "  Access-Control-Allow-Origin: *\n"
+        "  Cache-Control: public, max-age=3600, stale-while-revalidate=86400\n"
+        "/llms.txt\n"
+        "  Content-Type: text/markdown; charset=utf-8\n"
+        "  Cache-Control: public, max-age=3600, stale-while-revalidate=86400\n"
+        "/llms-full.txt\n"
+        "  Content-Type: text/markdown; charset=utf-8\n"
+        "  Cache-Control: public, max-age=3600, stale-while-revalidate=86400\n"
+        "/immersive/*\n"
+        "  Cache-Control: public, max-age=31536000, immutable\n"
+    )
+    write(output / "_headers", headers_content)
     write(output / "_redirects", ''.join(f'{src.rstrip("/")} {dest} 301\n' for src, dest in aliases.items()) + '/landing-bilbao /retratos-por-encargo-bilbao/ 301\n')
     write(output / "immersive" / "build-manifest.json", json.dumps({"reviewed": catalogue["reviewed"], "projects": len(projects), "canonical_routes": [p[0] for p in pages], "media_files": len(jobs), "originals": len(originals), "assets": assets}, ensure_ascii=False, indent=2) + '\n')
     print(f'Built {len(projects)} artworks, {len(pages)} canonical routes, {len(jobs)} optimized images → {output}')

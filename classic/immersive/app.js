@@ -244,8 +244,8 @@
       galleryReturnFocus = null;
       scheduleScroll();
     });
-    const focals = { 'rara-avis': '56% 42%', 'amor-en-conserva': '50% 54%', 'entre-tantas-flores-de-dia': '50% 36%', 'johnny-rocks': '50% 42%', 'rockagipsy': '50% 43%', 'hugo-box': '50% 38%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%' };
-    const mobileFocals = { 'rara-avis': '61% 40%', 'amor-en-conserva': '48% 54%', 'denbora-nora-zoaz': '18% 45%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%' };
+    const focals = { 'rara-avis': '56% 42%', 'amor-en-conserva': '50% 54%', 'entre-tantas-flores-de-dia': '50% 36%', 'johnny-rocks': '50% 42%', 'rockagipsy': '50% 43%', 'hugo-box': '50% 38%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%' };
+    const mobileFocals = { 'rara-avis': '61% 40%', 'amor-en-conserva': '48% 54%', 'denbora-nora-zoaz': '18% 45%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%' };
     // Pupil centres measured on the unaltered cover photographs, in source-image coordinates.
     const eyes = {
       'marilyn-rocks': { x: .635, y: .392, iris: .030 },
@@ -295,6 +295,17 @@
       bowieZoomTimer = setTimeout(() => {
         stage.classList.remove('has-bowie-zoom');
       }, 1600);
+    }
+    let punchBurstTimer = null, punchVisited = false;
+    function firePuñetazo() {
+      soundscape?.punch?.();
+      stage.classList.remove('has-punch-impact');
+      void stage.offsetWidth;
+      stage.classList.add('has-punch-impact');
+      clearTimeout(punchBurstTimer);
+      punchBurstTimer = setTimeout(() => {
+        stage.classList.remove('has-punch-impact');
+      }, 450);
     }
     function focusPictures() { works.forEach((p, i) => scenes[i].style.setProperty('--position', (innerWidth < 760 && mobileFocals[p.slug]) || focals[p.slug] || '50% 44%')); }
     focusPictures();
@@ -388,7 +399,10 @@
         scene.style.willChange = transition ? 'opacity,transform' : 'auto'; image.style.willChange = still ? 'auto' : 'transform';
         scene.style.clipPath = 'inset(0)'; scene.style.opacity = '1'; scene.style.transform = 'translate3d(0px,0px,0)';
         scene.style.maskImage = scene.style.webkitMaskImage = 'none';
-        image.style.transformOrigin = works[index].slug === 'el-hombre-que-susurraba-a-las-estrellas' ? '65.2% 57.4%' : '50% 50%';
+        image.style.transformOrigin = works[index].slug === 'el-hombre-que-susurraba-a-las-estrellas' ? '65.2% 57.4%'
+          : works[index].slug === 'i-got-you-babe' ? '38% 46%'
+          : works[index].slug === 'jose-manuel-ezquerra' ? '62% 42%'
+          : '50% 50%';
         if (works[index].interaction === 'puzzle' && (!still || puzzles.has(index))) drawPuzzle(index, outgoing && transition ? fraction : 0, still);
         if (works[index].slug === 'custom-jaio' && !state.fit) {
           const step = outgoing && transition ? (fraction < .34 ? 0 : fraction < .67 ? 1 : 2) : 0;
@@ -420,7 +434,10 @@
         } else if (mode === 'Z') {
           const close = outgoing ? smooth(fraction / .65) : 1 - smooth((fraction - .35) / .65);
           const isBowie = works[index].slug === 'el-hombre-que-susurraba-a-las-estrellas';
-          const maxScale = isBowie ? 2.45 : 1.65;
+          const isBillToEzquerra = (works[base].slug === 'i-got-you-babe' && works[incoming].slug === 'jose-manuel-ezquerra');
+          let maxScale = 1.65;
+          if (isBowie) maxScale = 2.45;
+          else if (isBillToEzquerra) maxScale = 2.65;
           image.style.transform = `scale(${Math.exp(Math.log(1.08) + Math.log(maxScale / 1.08) * close).toFixed(5)})`;
           if (!outgoing) scene.style.opacity = smooth((fraction - .40) / .20).toFixed(4);
         } else if (mode === 'P') {
@@ -447,6 +464,19 @@
       } else {
         bowieVisited = false;
       }
+      const isPunchPair = (works[base].slug === 'i-got-you-babe' && works[incoming].slug === 'jose-manuel-ezquerra') ||
+                          (works[base].slug === 'jose-manuel-ezquerra' && works[incoming].slug === 'i-got-you-babe');
+      const isPunchActive = transition && isPunchPair && fraction >= 0.44 && fraction <= 0.64;
+      if (isPunchPair) {
+        if (!punchVisited && isPunchActive) {
+          punchVisited = true;
+          firePuñetazo();
+        } else if (fraction < 0.25 || fraction > 0.80) {
+          punchVisited = false;
+        }
+      } else {
+        punchVisited = false;
+      }
       const flash = transition && (works[base].slug === 'ajenjo-cam' || works[incoming].slug === 'ajenjo-cam')
         ? Math.exp(-Math.pow((fraction - 0.5) / 0.08, 2)) * 0.96
         : 0;
@@ -458,7 +488,8 @@
         phase: still ? 'scroll' : transition ? 'transition' : phase === 'explore' ? 'explore' : 'hold',
         axisDirection: mode === 'H' ? entry.direction : 1,
         slug: activeSlug,
-        flash: Number(flash.toFixed(4))
+        flash: Number(flash.toFixed(4)),
+        punch: isPunchActive
       });
       if (kineticTitle.textContent) kineticTitle.textContent = '';
       kineticTitle.style.opacity = '0';

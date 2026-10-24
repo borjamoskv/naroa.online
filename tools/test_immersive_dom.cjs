@@ -717,6 +717,9 @@ async function eyeMatch(ui, base, points) {
   const flashLevel = Number(reactiveGallery.find('.art-stage').style.getPropertyValue('--camera-flash') || 0);
   assert.ok(flashLevel > 0.85, 'Passing through Ajenjo Cam triggers intense camera flashazo: ' + flashLevel);
   assert.equal(reactiveGallery.w.NAROA_SOUND.lastFlashSlug, 'ajenjo-cam', 'Audio engine registers camera flash trigger on Ajenjo Cam');
+  const ezquerraIndex = works.findIndex(w => w.slug === 'jose-manuel-ezquerra');
+  galleryAudio.advance(150); reactiveGallery.scroll(ezquerraIndex - 1 + .52); await reactiveGallery.flush();
+  assert.equal(reactiveGallery.w.NAROA_SOUND.lastPunchSlug, 'jose-manuel-ezquerra', 'Audio engine registers punch impact between Bill Murray and Ezquerra');
   reactiveGallery.click('[data-sound]'); galleryAudio.advance(600); reactiveGallery.dom.window.close();
   const boxAudio = audioBoundary();
   const box = create('/contacto/', false, { width: 1024, height: 768 }, boxAudio); await box.flush();
