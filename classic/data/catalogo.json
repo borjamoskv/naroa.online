@@ -2885,6 +2885,68 @@
           "sha256": "7d6bd9742afbedeb34188a8c2eba47c39ac75b6ade6d5126e430d0942eaecca4"
         }
       ]
+    },
+    {
+      "slug": "sistashark",
+      "title": "Sistashark",
+      "category": "objetos",
+      "technique": "Fotografía por capas y ensamblaje",
+      "support": "Lata de conservas intervenida",
+      "story": "Retrato 3D realizado a partir del fotograma de un vídeo con decorado de la canción infantil Babyshark, impreso por capas en papel fotográfico y montado con silicona caliente dentro de una lata de conservas. Corona superior de conchas marinas con alambre y esmalte dorado, interior con mica plateada y brillantina, y reverso con mini-faro ensamblado y rotuladora Dymo.",
+      "images": [
+        {
+          "src": "/images/catalogo/sistashark-01.jpg",
+          "width": 994,
+          "height": 1024,
+          "caption": "Retrato 3D frontal con corona de conchas y gafas de buceo en lata intervenida.",
+          "source": null,
+          "sha256": "5ab7be79bd89c669910dd753b1e00fa75223dc0fd2665ff85700f85c50f6c901"
+        },
+        {
+          "src": "/images/catalogo/sistashark-02.jpg",
+          "width": 768,
+          "height": 1024,
+          "caption": "Vista superior y perspectiva del volumen tridimensional y capas de relieve.",
+          "source": null,
+          "sha256": "f5498b65fa3637587c7fdbc9938533f03aca8d3d2b8c1fbc6322aeb04281cc48"
+        },
+        {
+          "src": "/images/catalogo/sistashark-03.jpg",
+          "width": 1024,
+          "height": 768,
+          "caption": "Composición posterior con mini-faro, pegatinas y rotulación Dymo (NARO.22).",
+          "source": null,
+          "sha256": "b5996d92b8c030ecd0a4c5f8bd2b8f2d3ef6b0b1b68d2a7ae75853e16724bc5a"
+        },
+        {
+          "src": "/images/catalogo/sistashark-4k.webp",
+          "width": 994,
+          "height": 1024,
+          "caption": "Fotografía master de Sistashark: retrato 3D en lata de conservas.",
+          "source": null,
+          "sha256": "0ebd64373e0b9cdd55331b46705371c287e2fe3c21222f1f4166038142a9275b"
+        }
+      ],
+      "source": null,
+      "dimensions": null,
+      "materials": "Papel fotográfico, lata de conservas, alambre, silicona caliente, conchas marinas, mica plateada, brillantina dorada, pintura acrílica y cinta Dymo",
+      "series": "Serie En.lata",
+      "year": "2022",
+      "credit": null,
+      "selected": true,
+      "kind": "obra",
+      "editorial": {
+        "image_order": [
+          0,
+          1,
+          2
+        ],
+        "captions": [
+          "Vista frontal del retrato 3D con corona de conchas y decoración marina.",
+          "Perspectiva superior mostrando el relieve tridimensional y la separación de capas.",
+          "Reverso de la lata con mini-faro ensamblado y firma NARO.22 con Dymo."
+        ]
+      }
     }
   ]
 }

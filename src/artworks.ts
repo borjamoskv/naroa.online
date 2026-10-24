@@ -1358,5 +1358,20 @@ export const ARTWORKS: Artwork[] = [
     medium: 'Lápices sobre poliéster, frottage de monedas, rosas glossy, fieltro, papeles Canson, celofán y rotuladores Uni-Posca',
     description: 'Rara avis que destaca entre las obras enmarcadas por la riqueza de materiales y capas de significado. Los pies descansando en la barandilla de Copper Deli, las rosas plastificadas, los elefantes, el paisaje de fieltro y el cielo de celofán conforman un puzzle textil y afectivo en perfecto equilibrio.',
     sizeCategory: 'large'
+  },
+  {
+    id: 91,
+    category: 'kintsugi',
+    kicker: 'El fondo marino en relieve de hojalata',
+    quote: 'Bucear en el recuerdo a través de una lata de conservas.',
+    slug: 'sistashark',
+    aspectRatio: 0.971,
+    url: '/assets/sistashark-4k.webp',
+    title: 'Sistashark',
+    href: '#obra-sistashark',
+    year: '2022',
+    medium: 'Serie En.lata — Fotocollage 3D & Ensamblaje',
+    description: 'Retrato en relieve tridimensional montado por capas dentro de una lata de conservas con corona de conchas marinas y mini-faro.',
+    sizeCategory: 'small'
   }
 ]

@@ -135,7 +135,7 @@
       }
     ]
   },
-  "artworks_count": 72,
+  "artworks_count": 73,
   "reviewed": "2026-10-24",
   "artworks": [
     {
@@ -1753,6 +1753,52 @@
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Can-dy%20Queen",
       "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Can-dy%20Queen"
+    },
+    {
+      "slug": "sistashark",
+      "title": "Sistashark",
+      "category": "objetos",
+      "series": "Serie En.lata",
+      "technique": "Fotografía por capas y ensamblaje",
+      "support": "Lata de conservas intervenida",
+      "dimensions": null,
+      "materials": "Papel fotográfico, lata de conservas, alambre, silicona caliente, conchas marinas, mica plateada, brillantina dorada, pintura acrílica y cinta Dymo",
+      "year": "2022",
+      "story": "Retrato 3D realizado a partir del fotograma de un vídeo con decorado de la canción infantil Babyshark, impreso por capas en papel fotográfico y montado con silicona caliente dentro de una lata de conservas. Corona superior de conchas marinas con alambre y esmalte dorado, interior con mica plateada y brillantina, y reverso con mini-faro ensamblado y rotuladora Dymo.",
+      "url": "https://naroagutierrezgil.com/obra/sistashark/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/sistashark-01-5ab7be79bd89-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/sistashark-01.jpg",
+          "width": 994,
+          "height": 1024,
+          "caption": "Retrato 3D frontal con corona de conchas y gafas de buceo en lata intervenida.",
+          "sha256": "5ab7be79bd89c669910dd753b1e00fa75223dc0fd2665ff85700f85c50f6c901"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/sistashark-02.jpg",
+          "width": 768,
+          "height": 1024,
+          "caption": "Vista superior y perspectiva del volumen tridimensional y capas de relieve.",
+          "sha256": "f5498b65fa3637587c7fdbc9938533f03aca8d3d2b8c1fbc6322aeb04281cc48"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/sistashark-03.jpg",
+          "width": 1024,
+          "height": 768,
+          "caption": "Composición posterior con mini-faro, pegatinas y rotulación Dymo (NARO.22).",
+          "sha256": "b5996d92b8c030ecd0a4c5f8bd2b8f2d3ef6b0b1b68d2a7ae75853e16724bc5a"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/sistashark-4k.webp",
+          "width": 994,
+          "height": 1024,
+          "caption": "Fotografía master de Sistashark: retrato 3D en lata de conservas.",
+          "sha256": "0ebd64373e0b9cdd55331b46705371c287e2fe3c21222f1f4166038142a9275b"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Sistashark",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Sistashark"
     },
     {
       "slug": "el-hombre-que-susurraba-a-las-estrellas",
