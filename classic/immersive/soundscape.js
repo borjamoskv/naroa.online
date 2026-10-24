@@ -9,9 +9,9 @@
   let context = null, engine = null, loading = null, enabled = false, depth = 0;
   let mode = 'V', phase = 'hold', axisDirection = 1, slug = '';
   let active = false, pageActive = true, idle = null, suspension = null, waking = null, generation = 0;
-  let lastY = scrollY, lastDistance = null, lastPhase = 'hold', lastSlug = '', lastHeroSlug = '', lastUtterance = '';
+  let lastY = scrollY, lastDistance = null, lastPhase = 'hold', lastSlug = '', lastUtterance = '';
   let lastCameraFlashTime = 0, lastFlashSlug = '';
-  let lastPunchTime = 0, lastPunchSlug = '';
+  let lastPunchSlug = '';
   let lastMotion = null, lastGrain = -Infinity, energy = 0, direction = 1, seed = 0, pendingDistance = 0;
   // Cadencia obligatoria final: notas icónicas de SOUND OF SILENCE en Re menor microtonal
   // D5 (sound), [silencio], A4 (of), C5 (si-), F5 (-lence), E5 (resolución), [silencio], D5 (tónica)
@@ -91,8 +91,6 @@
       ]
     }
   ];
-
-  const SESSION_MELODIES = DAILY_MELODIES.map(m => m.notes);
 
   function pickDailyMelody() {
     try {
@@ -576,7 +574,7 @@
   function playPunchImpact() {
     return;
   }
-  function triggerPunchImpact(currentSlug, isPunchActive) {
+  function triggerPunchImpact() {
     return;
   }
   function excite() {

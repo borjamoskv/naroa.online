@@ -5,16 +5,16 @@ import { sound } from './utils/audio'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { CustomCursor } from './components/CustomCursor'
 import { KineticHorizon } from './components/KineticHorizon'
-import { StudioLoupe } from './components/StudioLoupe'
-import { VisualIndex } from './components/VisualIndex'
-import { ArtistManifesto } from './components/ArtistManifesto'
-import { CommissionCalculator } from './components/CommissionCalculator'
 import { NavigationPill, type ActiveMode } from './components/NavigationPill'
-import { RotundaOverlay } from './components/RotundaOverlay'
-import { MicaSystem } from './components/MicaSystem'
 
-// Carga diferida de WebGL para rendimiento sub-segundo
+// Carga diferida de modales y WebGL para rendimiento inicial sub-segundo
 const Scene = lazy(() => import('./components/Scene'))
+const StudioLoupe = lazy(() => import('./components/StudioLoupe').then((m) => ({ default: m.StudioLoupe })))
+const VisualIndex = lazy(() => import('./components/VisualIndex').then((m) => ({ default: m.VisualIndex })))
+const ArtistManifesto = lazy(() => import('./components/ArtistManifesto').then((m) => ({ default: m.ArtistManifesto })))
+const CommissionCalculator = lazy(() => import('./components/CommissionCalculator').then((m) => ({ default: m.CommissionCalculator })))
+const RotundaOverlay = lazy(() => import('./components/RotundaOverlay').then((m) => ({ default: m.RotundaOverlay })))
+const MicaSystem = lazy(() => import('./components/MicaSystem').then((m) => ({ default: m.MicaSystem })))
 
 const toSlug = (s: string) =>
   s
@@ -40,11 +40,12 @@ export default function App() {
   // Estado de enfoque en el Pabellón 3D
   const [selected3DIndex, setSelected3DIndex] = useState<number | null>(null)
 
-  // Carga diferida de WebGL
+  // Montar WebGL bajo demanda al activar el modo 3D
   useEffect(() => {
-    const timer = setTimeout(() => setIsWebGLMounted(true), 350)
-    return () => clearTimeout(timer)
-  }, [])
+    if (activeMode === '3d') {
+      setIsWebGLMounted(true)
+    }
+  }, [activeMode])
 
   // Control del scroll en modo 3D
   useEffect(() => {
@@ -212,90 +213,95 @@ export default function App() {
         />
       </main>
 
-      {/* MODO LUPA DE TALLER: ZOOM 2.5X Y FOCO ESPECULAR */}
-      <StudioLoupe
-        artworkIndex={loupeIndex}
-        onClose={() => setLoupeIndex(null)}
-        onNavigate={(idx) => {
-          setCurrentIndex(idx)
-          setLoupeIndex(idx)
-        }}
-        onOpenCommission={(pieceTitle) => {
-          setLoupeIndex(null)
-          setCommissionPieceTitle(pieceTitle)
-          setIsCommissionOpen(true)
-        }}
-      />
+      {/* MODALES SECUNDARIOS Y OVERLAYS (LAZY LOADED) */}
+      <Suspense fallback={null}>
+        {loupeIndex !== null && (
+          <StudioLoupe
+            artworkIndex={loupeIndex}
+            onClose={() => setLoupeIndex(null)}
+            onNavigate={(idx) => {
+              setCurrentIndex(idx)
+              setLoupeIndex(idx)
+            }}
+            onOpenCommission={(pieceTitle) => {
+              setLoupeIndex(null)
+              setCommissionPieceTitle(pieceTitle)
+              setIsCommissionOpen(true)
+            }}
+          />
+        )}
 
-      {/* ÍNDICE VISUAL DE ALTA COSTURA (OBRAS CANÓNICAS) */}
-      <VisualIndex
-        isOpen={isIndexOpen}
-        onClose={() => setIsIndexOpen(false)}
-        onSelectArtwork={(idx) => {
-          setCurrentIndex(idx)
-          setActiveMode('horizon')
-        }}
-      />
+        {isIndexOpen && (
+          <VisualIndex
+            isOpen={isIndexOpen}
+            onClose={() => setIsIndexOpen(false)}
+            onSelectArtwork={(idx) => {
+              setCurrentIndex(idx)
+              setActiveMode('horizon')
+            }}
+          />
+        )}
 
-      {/* MANIFIESTO ARTISTA, PALÍNDROMO & ATELIER BESPOKE */}
-      <ArtistManifesto
-        isOpen={isArtistOpen}
-        onClose={() => setIsArtistOpen(false)}
-      />
+        {isArtistOpen && (
+          <ArtistManifesto
+            isOpen={isArtistOpen}
+            onClose={() => setIsArtistOpen(false)}
+          />
+        )}
 
-      {/* CALCULADORA / FORMULARIO INTERACTIVO DE ENCARGOS BESPOKE */}
-      <CommissionCalculator
-        isOpen={isCommissionOpen}
-        onClose={() => {
-          setIsCommissionOpen(false)
-          setCommissionPieceTitle(undefined)
-        }}
-        initialPieceTitle={commissionPieceTitle}
-      />
+        {isCommissionOpen && (
+          <CommissionCalculator
+            isOpen={isCommissionOpen}
+            onClose={() => {
+              setIsCommissionOpen(false)
+              setCommissionPieceTitle(undefined)
+            }}
+            initialPieceTitle={commissionPieceTitle}
+          />
+        )}
 
-      {/* ASISTENTE CONVERSACIONAL SOTA: MICA SYSTEM v∞ */}
-      <MicaSystem
-        isOpen={isMicaOpen}
-        onToggle={() => setIsMicaOpen((prev) => !prev)}
-        onClose={() => setIsMicaOpen(false)}
-        onOpenCommission={(pieceTitle) => {
-          setIsMicaOpen(false)
-          setCommissionPieceTitle(pieceTitle)
-          setIsCommissionOpen(true)
-        }}
-        onOpenArtwork={(idx) => {
-          setIsMicaOpen(false)
-          setCurrentIndex(idx)
-          setLoupeIndex(idx)
-        }}
-        onOpen3D={() => {
-          setIsMicaOpen(false)
-          setActiveMode('3d')
-          window.location.hash = '#/3d'
-        }}
-        onOpenIndex={() => {
-          setIsMicaOpen(false)
-          setIsIndexOpen(true)
-        }}
-        currentArtwork={loupeIndex !== null ? ARTWORKS[loupeIndex] : ARTWORKS[currentIndex]}
-      />
-
-      {/* CAPA CURATORIAL MINIMALISTA PABELLÓN 3D */}
-      {isSceneVisible && (
-        <RotundaOverlay
-          onExit={() => {
-            setSelected3DIndex(null)
-            setActiveMode('horizon')
-          }}
-          selectedIndex={selected3DIndex}
-          onSelectArtwork={setSelected3DIndex}
-          onInspectArtwork={handleInspectArtwork}
-          onOpenCommission={(title) => {
-            setCommissionPieceTitle(title)
+        <MicaSystem
+          isOpen={isMicaOpen}
+          onToggle={() => setIsMicaOpen((prev) => !prev)}
+          onClose={() => setIsMicaOpen(false)}
+          onOpenCommission={(pieceTitle) => {
+            setIsMicaOpen(false)
+            setCommissionPieceTitle(pieceTitle)
             setIsCommissionOpen(true)
           }}
+          onOpenArtwork={(idx) => {
+            setIsMicaOpen(false)
+            setCurrentIndex(idx)
+            setLoupeIndex(idx)
+          }}
+          onOpen3D={() => {
+            setIsMicaOpen(false)
+            setActiveMode('3d')
+            window.location.hash = '#/3d'
+          }}
+          onOpenIndex={() => {
+            setIsMicaOpen(false)
+            setIsIndexOpen(true)
+          }}
+          currentArtwork={loupeIndex !== null ? ARTWORKS[loupeIndex] : ARTWORKS[currentIndex]}
         />
-      )}
+
+        {isSceneVisible && (
+          <RotundaOverlay
+            onExit={() => {
+              setSelected3DIndex(null)
+              setActiveMode('horizon')
+            }}
+            selectedIndex={selected3DIndex}
+            onSelectArtwork={setSelected3DIndex}
+            onInspectArtwork={handleInspectArtwork}
+            onOpenCommission={(title) => {
+              setCommissionPieceTitle(title)
+              setIsCommissionOpen(true)
+            }}
+          />
+        )}
+      </Suspense>
 
       {/* ESCENA 3D ARQUITECTÓNICA (THREE.JS WEBGL) */}
       {isWebGLMounted && (

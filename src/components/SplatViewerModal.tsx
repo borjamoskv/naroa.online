@@ -15,7 +15,7 @@ interface SplatViewerProps {
 
 type LightingPreset = 'gold' | 'neon' | 'studio'
 
-import { easing } from 'maath'
+import * as easing from 'maath/easing'
 
 function AnimatedSplatGroup({ children }: { children: React.ReactNode }) {
   const groupRef = useRef<THREE.Group>(null)
