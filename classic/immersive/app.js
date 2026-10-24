@@ -824,7 +824,74 @@
     const schedule = () => { if (frame === null) frame = requestAnimationFrame(pageParallax); };
     addEventListener('scroll', schedule, { passive: true }); addEventListener('resize', schedule, { passive: true }); reduced.addEventListener('change', schedule); schedule();
   }
-  const reveals = $$('.chapter>div,.chapter>.eyebrow,.section-opening,.editorial blockquote,.timeline-entry,.notebook-posts article,.commission-steps article,.closing,.contact-details');
+  const notebookSync = $('[data-notebook-sync]'), notebookGrid = $('[data-notebook-posts]');
+  if (notebookSync && notebookGrid && typeof fetch === 'function') {
+    const endpoint = notebookSync.dataset.notebookSync;
+    const plain = value => {
+      const doc = new DOMParser().parseFromString(String(value || ''), 'text/html');
+      return (doc.body?.textContent || '').trim();
+    };
+    const safeUrl = (value, isImage = false) => {
+      try {
+        const u = new URL(value);
+        return u.protocol === 'https:' && u.hostname === 'naroagutierrez.wordpress.com' && (!isImage || u.pathname.startsWith('/wp-content/uploads/')) ? u.href : null;
+      } catch { return null; }
+    };
+    async function syncNotebook() {
+      if (!endpoint || document.hidden) return;
+      try {
+        const res = await fetch(endpoint, { credentials: 'omit' });
+        if (!res.ok) return;
+        const data = await res.json();
+        const posts = (data?.posts || []).filter(p => safeUrl(p.URL) && p.title && !Number.isNaN(Date.parse(p.date))).slice(0, 6);
+        if (posts.length < 6) return;
+        const existingImages = new Map($$('[data-notebook-entry]', notebookGrid).map(card => {
+          const link = $('h3 a', card)?.getAttribute('href'), img = $('.notebook-photo img', card);
+          return [link, img ? { src: img.getAttribute('src'), width: img.width || 1080, height: img.height || 1080, alt: img.alt } : null];
+        }));
+        const cards = posts.map(post => {
+          const title = plain(post.title), url = safeUrl(post.URL);
+          const localImg = existingImages.get(url);
+          const remoteSrc = safeUrl(post.featured_image, true);
+          const imgSrc = localImg?.src || remoteSrc;
+          const article = document.createElement('article');
+          article.className = 'notebook-card is-revealed';
+          article.dataset.notebookEntry = '';
+          if (imgSrc) {
+            const photoLink = document.createElement('a');
+            photoLink.className = 'notebook-photo'; photoLink.href = url; photoLink.target = '_blank'; photoLink.rel = 'noopener noreferrer';
+            const img = document.createElement('img');
+            img.src = imgSrc; img.alt = localImg?.alt || title; img.loading = 'lazy'; img.decoding = 'async';
+            img.width = localImg?.width || 1080; img.height = localImg?.height || 1080;
+            photoLink.append(img); article.append(photoLink);
+          }
+          const body = document.createElement('div'); body.className = 'notebook-card-body';
+          const eyebrow = document.createElement('p'); eyebrow.className = 'eyebrow';
+          const cat = document.createElement('span'); cat.textContent = 'Del cuaderno de Naroa';
+          const time = document.createElement('time');
+          const iso = String(post.date).slice(0, 10);
+          time.dateTime = iso;
+          time.textContent = new Intl.DateTimeFormat('es', { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(post.date));
+          eyebrow.append(cat, ' · ', time);
+          const h3 = document.createElement('h3'), titleLink = document.createElement('a');
+          titleLink.href = url; titleLink.target = '_blank'; titleLink.rel = 'noopener noreferrer'; titleLink.textContent = `${title} ↗`;
+          h3.append(titleLink);
+          const excerpt = plain(post.excerpt).replace(/\s+/g, ' ');
+          const summary = document.createElement('p');
+          summary.textContent = excerpt.length > 170 ? excerpt.slice(0, 170).replace(/\s+\S*$/, '') + '…' : excerpt;
+          const readLink = document.createElement('a');
+          readLink.className = 'text-link'; readLink.href = url; readLink.target = '_blank'; readLink.rel = 'noopener noreferrer';
+          readLink.textContent = 'Leer en el cuaderno de Naroa ↗';
+          body.append(eyebrow, h3, summary, readLink); article.append(body);
+          return article;
+        });
+        notebookGrid.replaceChildren(...cards);
+      } catch {}
+    }
+    syncNotebook();
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) syncNotebook(); });
+  }
+  const reveals = $$('.chapter>div,.chapter>.eyebrow,.section-opening,.editorial blockquote,.timeline-entry,.notebook-posts article,.commission-example,.commission-steps article,.closing,.contact-channel,.contact-details');
   if ('IntersectionObserver' in window) {
     const observer = new IntersectionObserver(entries => entries.forEach(entry => {
       if (entry.isIntersecting) { entry.target.classList.add('is-revealed'); observer.unobserve(entry.target); }

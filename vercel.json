@@ -48,6 +48,16 @@
       "source": "/landing-bilbao",
       "destination": "/retratos-por-encargo-bilbao/",
       "permanent": true
+    },
+    {
+      "source": "/retratos-por-encargo",
+      "destination": "/retratos-por-encargo-bilbao/",
+      "permanent": true
+    },
+    {
+      "source": "/encargos",
+      "destination": "/retratos-por-encargo-bilbao/",
+      "permanent": true
     }
   ]
 }
