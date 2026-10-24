@@ -130,6 +130,7 @@
   if (stage) {
     const works = catalogue.projects.filter(p => stage.dataset.subset !== 'Vaivenes' || p.series === 'Vaivenes');
     const scenes = $$('.art-scene', stage), images = scenes.map(s => $('img', s));
+    scenes.forEach((s, i) => { if (works[i]) s.dataset.work = works[i].slug; });
     const kineticTitle = $('[data-kinetic-title]', stage), caption = $('[data-art-copy]', stage);
     const state = { index: Number(stage.dataset.initial) || 0, fit: false, quiet: false, photo: 0 };
     const journey = window.NAROA_JOURNEY.create(works, catalogue.journey);
@@ -286,7 +287,7 @@
         stage.classList.remove('has-flash-burst');
       }, 420);
     }
-    let bowieZoomTimer = null, bowieVisited = false, denboraVisited = false, dustinVisited = false;
+    let bowieZoomTimer = null, bowieVisited = false, denboraVisited = false, dustinVisited = false, dustinEpilogueTimer = null;
     function fireBowieZoom() {
       soundscape?.speakHero?.();
       stage.classList.remove('has-bowie-zoom');
@@ -337,6 +338,8 @@
       $('[data-counter]', stage).textContent = `${String(state.index + 1).padStart(2, '0')} / ${String(works.length).padStart(2, '0')}`;
       $$('[data-select]', stage).forEach(b => { const i = Number(b.dataset.select); b.hidden = i < begin || i >= begin + 5; b.setAttribute('aria-pressed', String(i === state.index)); });
       $('[data-prev]', stage).disabled = state.index === 0; $('[data-next]', stage).disabled = state.index === works.length - 1;
+      const ouroboros = $('[data-ouroboros]', stage);
+      if (ouroboros) ouroboros.hidden = (state.index !== works.length - 1);
       stage.style.setProperty('--count', works.length);
       stage.classList.toggle('is-fit', state.fit); document.body.classList.toggle('is-quiet', state.quiet);
       $('[data-restore]', stage).hidden = !state.quiet;
@@ -486,10 +489,18 @@
         if (!dustinVisited && (works[state.index].slug === 'dustin' || (transition && works[incoming].slug === 'dustin' && fraction >= 0.45))) {
           dustinVisited = true;
           soundscape?.speakSilence?.();
+          clearTimeout(dustinEpilogueTimer);
+          dustinEpilogueTimer = setTimeout(() => {
+            if (works[state.index]?.slug === 'dustin') {
+              stage.classList.add('is-silent-epilogue');
+            }
+          }, 2400);
         }
         stage.dataset.finale = 'silence';
       } else {
         dustinVisited = false;
+        clearTimeout(dustinEpilogueTimer);
+        stage.classList.remove('is-silent-epilogue');
         delete stage.dataset.finale;
       }
       const isPunchPair = (works[base].slug === 'i-got-you-babe' && works[incoming].slug === 'jose-manuel-ezquerra') ||
@@ -529,7 +540,11 @@
       stage.style.setProperty('--camera-veil', (veil * .65).toFixed(4));
       if (still) restCamera();
       const cue = $('[data-journey-cue]', stage);
-      cue.textContent = still ? reduced.matches ? 'Activa los efectos para ver el viaje ↓' : 'Desplázate para recorrer ↕' : !transition ? phase === 'explore' ? 'Explora la superficie ↓' : 'Una pausa para mirar · sigue ↓' : ({ E: 'Entra en la mirada ↓', H: 'Atravesar · sigue bajando ↓', V: 'Déjate llevar ↓', Z: 'Acércate ↓', P: 'Mezclar y volver a unir ↓' })[mode];
+      if (works[state.index]?.slug === 'dustin' && !transition) {
+        cue.textContent = 'La última nota ya es silencio · Volver al origen ↺';
+      } else {
+        cue.textContent = still ? reduced.matches ? 'Activa los efectos para ver el viaje ↓' : 'Desplázate para recorrer ↕' : !transition ? phase === 'explore' ? 'Explora la superficie ↓' : 'Una pausa para mirar · sigue ↓' : ({ E: 'Entra en la mirada ↓', H: 'Atravesar · sigue bajando ↓', V: 'Déjate llevar ↓', Z: 'Acércate ↓', P: 'Mezclar y volver a unir ↓' })[mode];
+      }
       stage.classList.toggle('is-travelling', transition);
       stage.style.setProperty('--progress', (pose.distance / journey.total * (works.length - 1) * 100).toFixed(3) + '%');
     }
@@ -605,6 +620,10 @@
     $('[data-next]', stage).addEventListener('click', () => {
       const cur = motion.navigation ?? motion.desired;
       change(Math.floor(cur) + 1);
+    });
+    $('[data-ouroboros]', stage)?.addEventListener('click', () => change(0));
+    $('[data-journey-cue]', stage)?.addEventListener('click', () => {
+      if (works[state.index]?.slug === 'dustin') change(0);
     });
     $('[data-fit]', stage).addEventListener('click', () => { pause(); state.fit = !state.fit; images[state.index].src = state.fit ? works[state.index].photos[0].src : works[state.index].cover; resetPan(); metadata(); render(); });
     $('[data-open-story]', stage).addEventListener('click', () => openDialog('#story-dialog'));
@@ -754,6 +773,10 @@
         change(idx);
       });
     }
+    $('[data-ouroboros]', stage)?.addEventListener('click', () => change(0));
+    $('[data-journey-cue]', stage)?.addEventListener('click', () => {
+      if (works[state.index]?.slug === 'dustin') change(0);
+    });
     $('[data-open-photos]', stage).addEventListener('click', event => openWorkGallery(event.currentTarget));
     $('[data-photo-prev]').addEventListener('click', () => photoStep(-1)); $('[data-photo-next]').addEventListener('click', () => photoStep(1));
     photosDialog.addEventListener('keydown', event => {
