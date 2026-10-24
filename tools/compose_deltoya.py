@@ -58,16 +58,16 @@ def generate_rock_guitar_chord():
         kick = math.sin(2.0 * math.pi * kick_freq * t) * math.exp(-t * 14.0) * 0.60
         buffer[i] += kick
 
-    # Marshall tube overdrive saturation: tanh(2.8 * x)
+    # Marshall tube overdrive saturation: harmonic-preserving warm saturation
     distorted = []
     for x in buffer:
-        driven = math.tanh(2.5 * x)
+        driven = math.tanh(1.75 * x)
         if driven > 0:
-            driven = driven * 0.96
+            driven = driven * 0.98
         distorted.append(driven)
 
-    # 4x12 Celestion Speaker Cabinet Filter: IIR rolloff at 3600 Hz to eliminate fizzy high-frequency anergy
-    rc = 1.0 / (2.0 * math.pi * 3600.0)
+    # 4x12 Celestion Speaker Cabinet Filter: IIR rolloff at 3200 Hz to eliminate fizzy high-frequency anergy
+    rc = 1.0 / (2.0 * math.pi * 3200.0)
     dt = 1.0 / SAMPLE_RATE
     alpha = dt / (rc + dt)
     filtered = []
@@ -124,7 +124,7 @@ def main():
         "-i", str(guitar_wav),
         "-i", str(vocal_processed),
         "-filter_complex",
-        "[1:a]adelay=120|120,volume=1.65[vocal];[0:a][vocal]amix=inputs=2:duration=longest:dropout_transition=2,volume=1.18,lowpass=f=6200,highpass=f=80,alimiter=limit=0.96:attack=5:release=50[out]",
+        "[1:a]adelay=120|120,volume=1.65[vocal];[0:a][vocal]amix=inputs=2:duration=longest:dropout_transition=2,volume=1.18,lowpass=f=4600,highpass=f=80,equalizer=f=164:t=q:w=2.0:g=3.0,equalizer=f=220:t=q:w=1.8:g=2.5,equalizer=f=3800:t=q:w=2.0:g=-3.5,alimiter=limit=0.96:attack=5:release=50[out]",
         "-map", "[out]",
         "-codec:a", "libmp3lame",
         "-q:a", "1",

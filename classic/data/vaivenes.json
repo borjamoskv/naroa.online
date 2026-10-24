@@ -94,6 +94,32 @@
       "original": "https://www.facebook.com/media/set/?set=a.3432575976817090&type=3",
       "sha256": "3f2561c4f1948a8adc05a0bcdab6bdd2b11607475e3d820fc71ca43e7e580871",
       "work_slug": "mr-fahrenheit",
+      "images": [
+        {
+          "src": "/images/catalogo/vaivenes-mr-fahrenheit.jpg",
+          "width": 1905,
+          "height": 1545,
+          "sha256": "3f2561c4f1948a8adc05a0bcdab6bdd2b11607475e3d820fc71ca43e7e580871",
+          "source": "https://www.facebook.com/media/set/?set=a.3432575976817090&type=3",
+          "caption": "Retrato de Freddie Mercury enmarcado con collage y corona de roscón."
+        },
+        {
+          "src": "/images/catalogo/mr-fahrenheit-4k.webp",
+          "width": 3840,
+          "height": 2880,
+          "sha256": "e6f0a7cee96208da4b0c5a1595ecfa84889cf677ab98c922e54aa4a9c43a4810",
+          "source": null,
+          "caption": "Fotografía master 4K del retrato de Freddie Mercury."
+        },
+        {
+          "src": "/images/catalogo/baroque-farrokh-4k.webp",
+          "width": 3810,
+          "height": 3090,
+          "sha256": "52f8182de160a40ac84f44d7aecf627556fd982c32a17d0579f3e5f00f263f47",
+          "source": null,
+          "caption": "Composición de estudio Baroque Farrokh en resolución 4K."
+        }
+      ],
       "irises": [
         [
           0.543,
@@ -124,6 +150,24 @@
       "original": "https://www.facebook.com/media/set/?set=a.3546942118713808&type=3",
       "sha256": "db78e90d5426abb9df6613064ce71171dd2be9099ce02603472f72d0529dd76b",
       "work_slug": "audreys-lightning",
+      "images": [
+        {
+          "src": "/images/catalogo/vaivenes-audreys-lightning.webp",
+          "width": 1536,
+          "height": 2048,
+          "sha256": "db78e90d5426abb9df6613064ce71171dd2be9099ce02603472f72d0529dd76b",
+          "source": "https://www.facebook.com/media/set/?set=a.3546942118713808&type=3",
+          "caption": "Detalle del retrato de Audrey Hepburn: el rayo sobre su ojo hace un guiño a David Bowie."
+        },
+        {
+          "src": "/images/catalogo/audrey-hepburn-4k.webp",
+          "width": 3840,
+          "height": 2872,
+          "sha256": "8ff642c0473c781394fb0ab5f7fc92b7d565a35f965a3d755cf85932959a47c3",
+          "source": null,
+          "caption": "Fotografía master 4K del retrato completo de Audrey Hepburn con rayo Bowie."
+        }
+      ],
       "irises": [
         [
           0.409,
@@ -152,6 +196,27 @@
       "slug": "cantinflowers",
       "stage": "obra",
       "work_slug": "cantinflowers",
+      "images": [
+        {
+          "src": "/images/trayectoria/cantinflowers.jpg",
+          "width": 3656,
+          "height": 2456,
+          "caption": "Pintura y collage en torno a Mario Moreno. Una obra que Naroa recupera al presentar el encuentro entre DiviNos y Vaivenes en 2026."
+        },
+        {
+          "src": "/images/catalogo/cantinflowers-4k.webp",
+          "width": 3656,
+          "height": 2456,
+          "sha256": "9dd913cf1c42a8278cff1b1c2daa8cca4ea362f1e658353065bd5fadd142e3d8",
+          "caption": "Composición master 4K de Cantinflowers con matices textiles y florales."
+        },
+        {
+          "src": "/images/catalogo/vaivenes-cantinflowers-detalle.jpg",
+          "width": 2000,
+          "height": 1500,
+          "caption": "Detalle en alta resolución de textura, relieve y prensa."
+        }
+      ],
       "irises": [
         [
           0.312,
