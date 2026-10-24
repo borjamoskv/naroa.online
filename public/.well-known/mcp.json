@@ -1,0 +1,135 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schema/2024-11-05/server.json",
+  "name": "naroa-online-webmcp",
+  "version": "1.0.0",
+  "description": "Servidor WebMCP oficial de Naroa Gutiérrez Gil: catálogo de obras de arte, Evidence Graph y orquestación de consultas de encargos en Bilbao.",
+  "homepage": "https://naroagutierrezgil.com",
+  "capabilities": {
+    "tools": {
+      "listChanged": false
+    },
+    "resources": {
+      "subscribe": false,
+      "listChanged": false
+    }
+  },
+  "endpoints": {
+    "catalog_api": "https://naroagutierrezgil.com/api/catalog.json",
+    "rss_feed": "https://naroagutierrezgil.com/feed.xml",
+    "llms_index": "https://naroagutierrezgil.com/llms.txt",
+    "llms_full": "https://naroagutierrezgil.com/llms-full.txt"
+  },
+  "resources": [
+    {
+      "uri": "https://naroagutierrezgil.com/api/catalog.json",
+      "name": "Catálogo Estructurado Completo",
+      "description": "Especificaciones técnicas, descripciones y Evidence Graph de las obras.",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "https://naroagutierrezgil.com/feed.xml",
+      "name": "Feed RSS de Publicaciones y Obras",
+      "description": "Feed RSS 2.0 sindicado con novedades del estudio.",
+      "mimeType": "application/rss+xml"
+    },
+    {
+      "uri": "https://naroagutierrezgil.com/llms.txt",
+      "name": "Índice Factual LLMs",
+      "description": "Evidence Graph condensado y respuestas directas para agentes.",
+      "mimeType": "text/plain"
+    }
+  ],
+  "tools": [
+    {
+      "name": "search_catalogue",
+      "description": "Busca obras en el catálogo de Naroa Gutiérrez Gil filtrando por término clave, técnica o serie.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Palabra clave a buscar en título, materiales, soporte o relato de la obra."
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "all",
+              "pizarra",
+              "collage",
+              "objetos",
+              "caracterizacion",
+              "Vaivenes"
+            ],
+            "description": "Categoría o serie plástica."
+          }
+        }
+      }
+    },
+    {
+      "name": "get_artwork_details",
+      "description": "Obtiene la ficha técnica verificada completa de una obra concreta por su slug canónico.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "description": "Slug canónico de la obra (ej. 'amy-rocks', 'el-gran-dakari', 'amor-en-conserva')."
+          }
+        },
+        "required": [
+          "slug"
+        ]
+      }
+    },
+    {
+      "name": "configure_commission_inquiry",
+      "description": "Valida las opciones para encargar un retrato personalizado y devuelve los enlaces directos en O(1) para WhatsApp y correo electrónico.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "support": {
+            "type": "string",
+            "enum": [
+              "Pizarra natural rústica",
+              "Collage textil sobre madera",
+              "Caja personalizada u objeto",
+              "Retrato al óleo o grafito",
+              "Asesoramiento en estudio"
+            ],
+            "description": "Soporte plástico preferido para el retrato."
+          },
+          "motif": {
+            "type": "string",
+            "enum": [
+              "Retrato individual",
+              "Pareja o familia",
+              "Mascota",
+              "Homenaje o recuerdo"
+            ],
+            "description": "Motivo del retrato."
+          },
+          "timing": {
+            "type": "string",
+            "enum": [
+              "Sin prisa (2 a 4 semanas)",
+              "Fecha señalada próxima"
+            ],
+            "description": "Plazo estimado de entrega deseado."
+          }
+        },
+        "required": [
+          "support",
+          "motif"
+        ]
+      }
+    },
+    {
+      "name": "get_artist_profile",
+      "description": "Devuelve la información de biografía verificada, exposiciones históricas y canales directos de contacto.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      }
+    }
+  ]
+}

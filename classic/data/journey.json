@@ -214,9 +214,10 @@
     },
     {
       "slug": "la-llorona",
-      "mode": "H",
+      "mode": "E",
       "hold": 25,
-      "explore": 0
+      "explore": 0,
+      "target": "pablo"
     },
     {
       "slug": "pablo",

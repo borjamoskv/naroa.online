@@ -25,6 +25,7 @@ class Page(HTMLParser):
         self.json_text = None
         self.gallery = None
         self.favicon = None
+        self.mcp_link = None
         self.scenes = []
 
     def handle_starttag(self, tag, pairs):
@@ -43,6 +44,8 @@ class Page(HTMLParser):
             self.canonical = a.get("href")
         if tag == "link" and a.get("rel") == "icon":
             self.favicon = a.get("href")
+        if tag == "link" and a.get("rel") == "mcp":
+            self.mcp_link = a.get("href")
         if tag == "script" and a.get("type") == "application/ld+json":
             self.json_text = ""
         if "data-gallery" in a:
@@ -82,6 +85,7 @@ def check(output):
         assert len(page.ids) == len(set(page.ids)), (file, "duplicate ID")
         assert page.canonical == "https://naroagutierrezgil.com" + route, file
         assert page.favicon and page.favicon.startswith("/immersive/favicon-amy-"), file
+        assert page.mcp_link == "https://naroagutierrezgil.com/.well-known/mcp.json", (file, "missing or invalid WebMCP link")
         raw_schema = page.json_blocks[0]
         schema0 = raw_schema["@graph"][0] if "@graph" in raw_schema else raw_schema
         assert schema0.get("@type"), file
@@ -144,6 +148,12 @@ def check(output):
     assert "https://naroagutierrezgil.com" in (output / "llms-full.txt").read_text(), "llms-full.txt missing canonical domain"
     assert (output / "feed.xml").is_file(), "missing feed.xml"
     assert (output / "manifest.webmanifest").is_file(), "missing manifest.webmanifest"
+    webmcp_path = output / ".well-known" / "mcp.json"
+    assert webmcp_path.is_file(), "missing .well-known/mcp.json"
+    webmcp_data = json.loads(webmcp_path.read_text())
+    assert len(webmcp_data.get("tools", [])) >= 4, "missing WebMCP tools"
+    assert "configure_commission_inquiry" in [t["name"] for t in webmcp_data["tools"]], "missing configure_commission_inquiry tool"
+    assert "catalog_api" in webmcp_data.get("endpoints", {}), "missing catalog_api endpoint in WebMCP"
     assert (output / "6621e1f1c138eeb14922f7804f61ae34.txt").is_file(), "missing IndexNow key file"
     assert (output / "indexnow.json").is_file(), "missing indexnow.json"
     assert (output / "apple-touch-icon.png").is_file(), "missing apple-touch-icon.png"

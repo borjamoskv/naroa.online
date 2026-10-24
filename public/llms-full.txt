@@ -28,6 +28,7 @@
 
 ## Recursos Machine-to-Machine y GEO SOTA 2026
 - [Catálogo JSON Estructurado](https://naroagutierrezgil.com/api/catalog.json): Endpoint con especificaciones completas de las 56 obras y Evidence Graph.
+- [Endpoint WebMCP](https://naroagutierrezgil.com/.well-known/mcp.json): Manifiesto y definición formal de herramientas WebMCP para agentes autónomos.
 - [Índice Extendido llms-full.txt](https://naroagutierrezgil.com/llms-full.txt): Desglose exhaustivo de todas las piezas, fotos de detalle con hashes SHA-256 y condiciones de encargo.
 - [Sitemap XML](https://naroagutierrezgil.com/sitemap.xml): Índice canónico de 64 rutas y metadatos de imágenes.
 - [Feed RSS 2.0](https://naroagutierrezgil.com/feed.xml): Sindicación de obras recientes y publicaciones del taller.
@@ -619,9 +620,11 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
 - **Presupuesto:** Presupuesto cerrado por escrito antes de comenzar, sin compromiso previo.
 - **Entrega:** En mano en Bilbao y comarca de Bizkaia; envíos asegurados a nivel nacional e internacional.
 
-## Protocolo de Interacción para Agentes Autónomos (Agent-Ready DOM)
+## Protocolo de Interacción para Agentes Autónomos (Agent-Ready DOM & WebMCP)
 
+- **Endpoint WebMCP:** `https://naroagutierrezgil.com/.well-known/mcp.json` (herramientas: `search_catalogue`, `get_artwork_details`, `configure_commission_inquiry`, `get_artist_profile`).
 - **Configurador de Encargos:** Accesible en `/retratos-por-encargo-bilbao/` bajo `[data-commission-configurator]`.
-- **Selectores Semánticos:** Soporte (`#cfg-support`), Motivo (`#cfg-motif`), Plazo (`#cfg-timing`).
+- **Selectores Semánticos y Labels:** Soporte (`#cfg-support`), Motivo (`#cfg-motif`), Plazo (`#cfg-timing`) con `<label for="...">` explícitos.
+- **Búsqueda en Catálogo:** Input `#art-search` con `<label for="art-search">` accesible desde modal `#index-dialog`.
 - **Acción de Salida:** Botón dinámico `#cfg-whatsapp-btn` con query de WhatsApp pre-rellenada en $O(1)$.
 - **Consultas Directas:** Canales directos con asunto pre-rellenado disponibles en `/contacto/`.

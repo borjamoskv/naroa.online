@@ -209,7 +209,7 @@ async function eyeMatch(ui, base, points) {
   assert.ok(llorona.find('[data-facts]').textContent.includes('sal rosa'));
   llorona.dom.window.close();
   assert.equal(ui.journey.entries.length, 56);
-  assert.deepEqual(Array.from(ui.w.NAROA_CATALOG.journey.scenes, e => e.mode).join(' '), 'E H V Z V E H H V Z E V H H V Z H V Z P V H Z V H Z V H Z V H H Z H Z V H Z H Z Z V Z H Z H V Z H H Z H H Z H F');
+  assert.deepEqual(Array.from(ui.w.NAROA_CATALOG.journey.scenes, e => e.mode).join(' '), 'E H V Z V E H H V Z E V H H V Z H V Z P V H Z V H Z V H Z V H H Z E Z V H Z H Z Z V Z H Z H V Z H H Z H H Z H F');
   const modes = { E: 'eyes', H: 'horizontal', V: 'vertical', Z: 'zoom', P: 'puzzle' };
   let horizontalDirection = -1, inHorizontal = false;
   for (let index = 0; index < works.length; index++) {
@@ -354,6 +354,7 @@ async function eyeMatch(ui, base, points) {
   assert.equal(ui.w.scrollY, ui.distance(7.3), 'A resize with unchanged geometry must not jump back to the last decoded frame');
   await eyeMatch(ui, 5, [[.583,.459],[.545,.402]]);
   await eyeMatch(ui, 10, [[.469,.463],[.678,.439]]);
+  await eyeMatch(ui, 33, [[.2985,.4192],[.7633,.8232]]);
   ui.click('[data-select="0"]'); await ui.flush();
   for (let i = 0; i < works.length; i++) {
     if (i) { ui.click('[data-next]'); await ui.flush(); }
@@ -373,6 +374,11 @@ async function eyeMatch(ui, base, points) {
   assert.equal(ui.wheel(100).defaultPrevented, false, 'Scrolling past the last work must leave the exhibition');
   assert.equal(ui.wheel(-100, { ctrlKey: true }).defaultPrevented, false, 'Preserve browser zoom');
   ui.click('[data-open-index]');
+  const searchLabel = ui.find('label[for="art-search"]');
+  assert.ok(searchLabel, 'Art search input must have an explicit <label for="art-search">');
+  const mcpLink = ui.find('link[rel="mcp"]');
+  assert.ok(mcpLink, 'HTML head must contain a WebMCP <link rel="mcp">');
+  assert.equal(mcpLink.getAttribute('href'), 'https://naroagutierrezgil.com/.well-known/mcp.json');
   const query = ui.find('#art-search'); query.value = 'marilyn'; query.dispatchEvent(new ui.w.Event('input'));
   assert.equal(ui.document.querySelectorAll('.index-work:not([hidden])').length, 1);
   query.value = 'nonexistent123'; query.dispatchEvent(new ui.w.Event('input'));

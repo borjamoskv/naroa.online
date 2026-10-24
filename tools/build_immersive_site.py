@@ -215,7 +215,7 @@ def build(output):
     def dialogs():
         index = ''.join(f'''<a class="index-work" href="/obra/{p['slug']}/" data-work="{p['slug']}" data-category="{p['category']}" data-series="{esc(p['series'] or '')}" data-search="{esc(' '.join(str(p[k] or '') for k in ['title','technique','support','series','story','materials']))}"><img src="{p['thumb']}" width="92" height="100" alt="{esc(p['title'])}" loading="lazy"><span><small>{esc(p['label'])}</small><strong>{esc(p['title'])}</strong><em>{esc(p['support'] or p['technique'] or '')}</em></span><span aria-hidden="true">↗</span></a>''' for p in projects)
         return f'''<dialog id="menu-dialog" class="menu-dialog" aria-labelledby="menu-heading"><div class="dialog-top menu-top"><a class="signature" href="/" aria-label="Naroa Gutiérrez Gil, inicio"><span>Naroa</span><small>GUTIÉRREZ GIL</small></a><span id="menu-heading">Otra manera de mirar</span><button type="button" data-close-dialog autofocus>Cerrar <span aria-hidden="true">×</span></button></div><div class="menu-layout"><figure class="menu-preview"><div class="menu-preview-picture" data-menu-picture><img data-menu-image alt="Amy Rocks" aria-hidden="true" width="480" height="360"><img data-menu-image alt="Amy Rocks" aria-hidden="true" width="480" height="360"><img class="menu-preview-wink" data-menu-wink src="{menu_portrait_wink}" alt="Guiño de Naroa Gutiérrez Gil" aria-hidden="true" width="480" height="360"><div class="menu-preview-loupe" data-menu-loupe aria-hidden="true"></div><span class="menu-preview-hand" data-menu-quote aria-hidden="true">Otra manera de mirar.</span><div class="menu-preview-reel" data-menu-reel hidden aria-hidden="true"></div></div><figcaption class="menu-preview-caption"><div class="menu-caption-main"><span data-menu-preview-label>Obras</span><span data-menu-preview-title>Amy Rocks</span></div><div class="menu-caption-sub"><span class="menu-preview-meta" data-menu-preview-meta>Pizarra, collage y objetos · {len(projects)} obras</span><button type="button" class="menu-index-pill" data-menu-open-index title="Abrir catálogo completo (atajo: / o I)"><span>Índice</span><span aria-hidden="true">⌕</span><kbd aria-hidden="true">/</kbd></button></div></figcaption></figure><nav class="menu-pages" aria-label="Todas las páginas">{links()}</nav></div><div class="menu-foot"><span>Desde Bilbao, con otra mirada.</span><a href="mailto:naroa@naroa.eu">naroa@naroa.eu ↗</a><a href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer">Facebook ↗</a><a href="https://instagram.com/naroa_art/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="/immersive/audio/creditos.txt">Créditos del sonido ↗</a></div></dialog>
-<dialog id="index-dialog" class="index-dialog" aria-labelledby="index-heading"><div class="dialog-top"><h2 id="index-heading">La obra</h2><button type="button" data-close-dialog>Cerrar ×</button></div><div class="index-controls"><label>Buscar obra<input type="search" id="art-search" placeholder="Título, material o retratado…" autocomplete="off"></label><div class="index-filters" role="group" aria-label="Filtrar obras"><button type="button" data-filter="all" aria-pressed="true">Todas</button><button type="button" data-filter="pizarra" aria-pressed="false">Pizarra</button><button type="button" data-filter="collage" aria-pressed="false">Collage</button><button type="button" data-filter="objetos" aria-pressed="false">Objetos</button><button type="button" data-filter="caracterizacion" aria-pressed="false">Caracterización</button><button type="button" data-filter="Vaivenes" aria-pressed="false">Vaivenes</button></div></div><p class="index-count" role="status" aria-live="polite">{len(projects)} proyectos</p><div class="index-list">{index}</div><p class="index-empty" hidden>No hay obras que coincidan con esta búsqueda. <button type="button" data-reset-index>Ver todas</button></p></dialog>'''
+<dialog id="index-dialog" class="index-dialog" aria-labelledby="index-heading"><div class="dialog-top"><h2 id="index-heading">La obra</h2><button type="button" data-close-dialog>Cerrar ×</button></div><div class="index-controls"><label for="art-search">Buscar obra<input type="search" id="art-search" placeholder="Título, material o retratado…" autocomplete="off"></label><div class="index-filters" role="group" aria-label="Filtrar obras"><button type="button" data-filter="all" aria-pressed="true">Todas</button><button type="button" data-filter="pizarra" aria-pressed="false">Pizarra</button><button type="button" data-filter="collage" aria-pressed="false">Collage</button><button type="button" data-filter="objetos" aria-pressed="false">Objetos</button><button type="button" data-filter="caracterizacion" aria-pressed="false">Caracterización</button><button type="button" data-filter="Vaivenes" aria-pressed="false">Vaivenes</button></div></div><p class="index-count" role="status" aria-live="polite">{len(projects)} proyectos</p><div class="index-list">{index}</div><p class="index-empty" hidden>No hay obras que coincidan con esta búsqueda. <button type="button" data-reset-index>Ver todas</button></p></dialog>'''
 
     def footer():
         return '''<footer class="site-footer"><a class="signature" href="/">Naroa</a><a href="mailto:naroa@naroa.eu">naroa@naroa.eu ↗</a><a href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer">Facebook ↗</a><a href="https://instagram.com/naroa_art/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="/contacto/">¿Hablamos? ↗</a><span>Bilbao · © 2026</span></footer>'''
@@ -285,7 +285,7 @@ def build(output):
                 "itemListElement": items
             }
         breadcrumb_tag = f'<script type="application/ld+json" id="seo-breadcrumb">{data_json(breadcrumb)}</script>' if breadcrumb else ''
-        html = f'''<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>{esc(title)} · Naroa Gutiérrez Gil</title><meta name="description" content="{esc(description)}"><meta name="robots" content="index, follow, max-image-preview:large"><meta name="theme-color" content="#11120f"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Naroa"><link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/assets/naroa-icon-180-v1.png"><link rel="alternate" type="application/rss+xml" title="Naroa Gutiérrez Gil · Obras y Cuaderno" href="{ORIGIN}/feed.xml"><link rel="canonical" href="{canonical}"><meta property="og:site_name" content="Naroa Gutiérrez Gil"><meta property="og:locale" content="es_ES"><meta property="og:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{canonical}"><meta property="og:type" content="{'article' if gallery else 'website'}"><meta property="og:image" content="{ORIGIN}{image}"><meta property="og:image:secure_url" content="{ORIGIN}{image}"><meta property="og:image:width" content="{im_w}"><meta property="og:image:height" content="{im_h}"><meta property="og:image:type" content="{im_mime}"><meta property="og:image:alt" content="{esc(im_alt)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta name="twitter:description" content="{esc(description)}"><meta name="twitter:image" content="{ORIGIN}{image}"><meta name="twitter:image:alt" content="{esc(im_alt)}"><link rel="icon" href="{favicon_path}" type="image/svg+xml" sizes="any"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="{assets['app.css']}"><script type="application/ld+json" id="page-schema">{data_json(structured)}</script>{breadcrumb_tag}<script defer src="{catalog_path}"></script><script defer src="{assets['soundscape.js']}"></script><script defer src="{assets['journey.js']}"></script><script defer src="{assets['app.js']}"></script></head><body class="{'gallery-page' if gallery else 'editorial-page'}"><a class="skip-link" href="#main">Ir al contenido</a>{header(gallery)}{body}{'' if gallery else footer()}{dialogs()}</body></html>'''
+        html = f'''<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>{esc(title)} · Naroa Gutiérrez Gil</title><meta name="description" content="{esc(description)}"><meta name="robots" content="index, follow, max-image-preview:large"><meta name="theme-color" content="#11120f"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Naroa"><link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/assets/naroa-icon-180-v1.png"><link rel="alternate" type="application/rss+xml" title="Naroa Gutiérrez Gil · Obras y Cuaderno" href="{ORIGIN}/feed.xml"><link rel="mcp" type="application/json" href="{ORIGIN}/.well-known/mcp.json" title="WebMCP Model Context Protocol"><link rel="canonical" href="{canonical}"><meta property="og:site_name" content="Naroa Gutiérrez Gil"><meta property="og:locale" content="es_ES"><meta property="og:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{canonical}"><meta property="og:type" content="{'article' if gallery else 'website'}"><meta property="og:image" content="{ORIGIN}{image}"><meta property="og:image:secure_url" content="{ORIGIN}{image}"><meta property="og:image:width" content="{im_w}"><meta property="og:image:height" content="{im_h}"><meta property="og:image:type" content="{im_mime}"><meta property="og:image:alt" content="{esc(im_alt)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta name="twitter:description" content="{esc(description)}"><meta name="twitter:image" content="{ORIGIN}{image}"><meta name="twitter:image:alt" content="{esc(im_alt)}"><link rel="icon" href="{favicon_path}" type="image/svg+xml" sizes="any"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="{assets['app.css']}"><script type="application/ld+json" id="page-schema">{data_json(structured)}</script>{breadcrumb_tag}<script defer src="{catalog_path}"></script><script defer src="{assets['soundscape.js']}"></script><script defer src="{assets['journey.js']}"></script><script defer src="{assets['app.js']}"></script></head><body class="{'gallery-page' if gallery else 'editorial-page'}"><a class="skip-link" href="#main">Ir al contenido</a>{header(gallery)}{body}{'' if gallery else footer()}{dialogs()}</body></html>'''
         dest = output / ("404.html" if not_found else path.lstrip("/") + "index.html")
         write(dest, html)
         if not not_found:
@@ -1050,6 +1050,133 @@ def build(output):
     }
     write(output / "api" / "catalog.json", json.dumps(catalog_api, ensure_ascii=False, indent=2) + "\n")
 
+    webmcp_manifest = {
+        "$schema": "https://modelcontextprotocol.io/schema/2024-11-05/server.json",
+        "name": "naroa-online-webmcp",
+        "version": "1.0.0",
+        "description": "Servidor WebMCP oficial de Naroa Gutiérrez Gil: catálogo de obras de arte, Evidence Graph y orquestación de consultas de encargos en Bilbao.",
+        "homepage": ORIGIN,
+        "capabilities": {
+            "tools": {
+                "listChanged": False,
+            },
+            "resources": {
+                "subscribe": False,
+                "listChanged": False,
+            },
+        },
+        "endpoints": {
+            "catalog_api": f"{ORIGIN}/api/catalog.json",
+            "rss_feed": f"{ORIGIN}/feed.xml",
+            "llms_index": f"{ORIGIN}/llms.txt",
+            "llms_full": f"{ORIGIN}/llms-full.txt",
+        },
+        "resources": [
+            {
+                "uri": f"{ORIGIN}/api/catalog.json",
+                "name": "Catálogo Estructurado Completo",
+                "description": "Especificaciones técnicas, descripciones y Evidence Graph de las obras.",
+                "mimeType": "application/json",
+            },
+            {
+                "uri": f"{ORIGIN}/feed.xml",
+                "name": "Feed RSS de Publicaciones y Obras",
+                "description": "Feed RSS 2.0 sindicado con novedades del estudio.",
+                "mimeType": "application/rss+xml",
+            },
+            {
+                "uri": f"{ORIGIN}/llms.txt",
+                "name": "Índice Factual LLMs",
+                "description": "Evidence Graph condensado y respuestas directas para agentes.",
+                "mimeType": "text/plain",
+            },
+        ],
+        "tools": [
+            {
+                "name": "search_catalogue",
+                "description": "Busca obras en el catálogo de Naroa Gutiérrez Gil filtrando por término clave, técnica o serie.",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "query": {
+                            "type": "string",
+                            "description": "Palabra clave a buscar en título, materiales, soporte o relato de la obra.",
+                        },
+                        "category": {
+                            "type": "string",
+                            "enum": ["all", "pizarra", "collage", "objetos", "caracterizacion", "Vaivenes"],
+                            "description": "Categoría o serie plástica.",
+                        },
+                    },
+                },
+            },
+            {
+                "name": "get_artwork_details",
+                "description": "Obtiene la ficha técnica verificada completa de una obra concreta por su slug canónico.",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "slug": {
+                            "type": "string",
+                            "description": "Slug canónico de la obra (ej. 'amy-rocks', 'el-gran-dakari', 'amor-en-conserva').",
+                        },
+                    },
+                    "required": ["slug"],
+                },
+            },
+            {
+                "name": "configure_commission_inquiry",
+                "description": "Valida las opciones para encargar un retrato personalizado y devuelve los enlaces directos en O(1) para WhatsApp y correo electrónico.",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "support": {
+                            "type": "string",
+                            "enum": [
+                                "Pizarra natural rústica",
+                                "Collage textil sobre madera",
+                                "Caja personalizada u objeto",
+                                "Retrato al óleo o grafito",
+                                "Asesoramiento en estudio",
+                            ],
+                            "description": "Soporte plástico preferido para el retrato.",
+                        },
+                        "motif": {
+                            "type": "string",
+                            "enum": [
+                                "Retrato individual",
+                                "Pareja o familia",
+                                "Mascota",
+                                "Homenaje o recuerdo",
+                            ],
+                            "description": "Motivo del retrato.",
+                        },
+                        "timing": {
+                            "type": "string",
+                            "enum": [
+                                "Sin prisa (2 a 4 semanas)",
+                                "Fecha señalada próxima",
+                            ],
+                            "description": "Plazo estimado de entrega deseado.",
+                        },
+                    },
+                    "required": ["support", "motif"],
+                },
+            },
+            {
+                "name": "get_artist_profile",
+                "description": "Devuelve la información de biografía verificada, exposiciones históricas y canales directos de contacto.",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {},
+                },
+            },
+        ],
+    }
+    webmcp_json = json.dumps(webmcp_manifest, ensure_ascii=False, indent=2) + "\n"
+    write(output / ".well-known" / "mcp.json", webmcp_json)
+    write(REPO / "public" / ".well-known" / "mcp.json", webmcp_json)
+
     llms_txt = (
         "# Naroa Gutiérrez Gil · Artista Plástica y Retratista (Bilbao)\n\n"
         "> Catálogo oficial de obra plástica, servicio de retratos personalizados por encargo y archivo de exposiciones.\n\n"
@@ -1076,6 +1203,7 @@ def build(output):
         f"- [Contacto]({ORIGIN}/contacto/): Canales directos de consulta para obra y encargos.\n\n"
         "## Recursos Machine-to-Machine y GEO SOTA 2026\n"
         f"- [Catálogo JSON Estructurado]({ORIGIN}/api/catalog.json): Endpoint con especificaciones completas de las {len(projects)} obras y Evidence Graph.\n"
+        f"- [Endpoint WebMCP]({ORIGIN}/.well-known/mcp.json): Manifiesto y definición formal de herramientas WebMCP para agentes autónomos.\n"
         f"- [Índice Extendido llms-full.txt]({ORIGIN}/llms-full.txt): Desglose exhaustivo de todas las piezas, fotos de detalle con hashes SHA-256 y condiciones de encargo.\n"
         f"- [Sitemap XML]({ORIGIN}/sitemap.xml): Índice canónico de {len(pages)} rutas y metadatos de imágenes.\n"
         f"- [Feed RSS 2.0]({ORIGIN}/feed.xml): Sindicación de obras recientes y publicaciones del taller.\n"
@@ -1107,9 +1235,11 @@ def build(output):
         "- **Plazos:** 2 a 4 semanas según complejidad y secado de capas de óleo/barniz.\n"
         "- **Presupuesto:** Presupuesto cerrado por escrito antes de comenzar, sin compromiso previo.\n"
         "- **Entrega:** En mano en Bilbao y comarca de Bizkaia; envíos asegurados a nivel nacional e internacional.\n\n"
-        "## Protocolo de Interacción para Agentes Autónomos (Agent-Ready DOM)\n\n"
+        "## Protocolo de Interacción para Agentes Autónomos (Agent-Ready DOM & WebMCP)\n\n"
+        f"- **Endpoint WebMCP:** `{ORIGIN}/.well-known/mcp.json` (herramientas: `search_catalogue`, `get_artwork_details`, `configure_commission_inquiry`, `get_artist_profile`).\n"
         "- **Configurador de Encargos:** Accesible en `/retratos-por-encargo-bilbao/` bajo `[data-commission-configurator]`.\n"
-        "- **Selectores Semánticos:** Soporte (`#cfg-support`), Motivo (`#cfg-motif`), Plazo (`#cfg-timing`).\n"
+        "- **Selectores Semánticos y Labels:** Soporte (`#cfg-support`), Motivo (`#cfg-motif`), Plazo (`#cfg-timing`) con `<label for=\"...\">` explícitos.\n"
+        "- **Búsqueda en Catálogo:** Input `#art-search` con `<label for=\"art-search\">` accesible desde modal `#index-dialog`.\n"
         "- **Acción de Salida:** Botón dinámico `#cfg-whatsapp-btn` con query de WhatsApp pre-rellenada en $O(1)$.\n"
         "- **Consultas Directas:** Canales directos con asunto pre-rellenado disponibles en `/contacto/`.\n"
     )
@@ -1125,6 +1255,10 @@ def build(output):
         "  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload\n"
         "  Cache-Control: public, max-age=0, must-revalidate\n"
         "/api/*\n"
+        "  Content-Type: application/json; charset=utf-8\n"
+        "  Access-Control-Allow-Origin: *\n"
+        "  Cache-Control: public, max-age=3600, stale-while-revalidate=86400\n"
+        "/.well-known/*\n"
         "  Content-Type: application/json; charset=utf-8\n"
         "  Access-Control-Allow-Origin: *\n"
         "  Cache-Control: public, max-age=3600, stale-while-revalidate=86400\n"
