@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Check generated routes, content, structured data and local assets offline."""
 import argparse
-import json
 import base64
+import json
+import sys
 import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 from pathlib import Path
@@ -199,6 +200,12 @@ def check(output):
     assert indexnow_data.get("key") == "6621e1f1c138eeb14922f7804f61ae34", "incorrect IndexNow key"
     assert len(indexnow_data.get("urlList", [])) == len(manifest["canonical_routes"]), "IndexNow urlList length mismatch"
     assert (output / "apple-touch-icon.png").is_file(), "missing apple-touch-icon.png"
+    geo_observatory_file = REPO / "tools" / "geo_observatory.py"
+    assert geo_observatory_file.is_file(), "missing tools/geo_observatory.py"
+    sys.path.insert(0, str(REPO / "tools"))
+    import geo_observatory
+    geo_report = geo_observatory.evaluate_grounding_coverage(catalog_data)
+    assert geo_report["grounded_probes"] == geo_report["total_probes"], "GEO Observatory query grounding coverage not 100%"
     for file in output.rglob("*"):
         if file.is_file():
             assert file.stat().st_size < 25 * 1024 * 1024, ("asset exceeds hosting limit", file)
