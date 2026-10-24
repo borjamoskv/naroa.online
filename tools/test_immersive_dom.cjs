@@ -911,6 +911,17 @@ async function eyeMatch(ui, base, points) {
     assert.ok(reveals.length, 'Editorial content participates in viewport reveals');
     page.observers.forEach(observer => observer.callback(Array.from(observer.targets, target => ({ target, isIntersecting: true }))));
     assert.ok(reveals.every(el => el.classList.contains('is-revealed')), 'Visible editorial content is revealed');
+    if (route === '/sobre-mi/') {
+      assert.ok(page.find('[data-kintsugi-editorial]'), 'Sobre mí includes Kintsugi editorial scroll container');
+      assert.ok(page.find('.kintsugi-seam-svg'), 'Sobre mí injects SVG golden Kintsugi seam');
+      assert.equal(page.document.querySelectorAll('[data-hand-margin]').length, 4, 'Sobre mí includes 4 first-person handwritten margin notes');
+      assert.ok(page.find('[data-reverse-portrait]'), 'Sobre mí includes Reverse Portrait diagnostic section');
+      assert.ok(page.w.NAROA_ABOUT_SCROLL, 'NAROA_ABOUT_SCROLL API exposed on window');
+      const scrollState = page.w.NAROA_ABOUT_SCROLL.triggerSampleScroll(1400);
+      assert.equal(scrollState.backend, 'kintsugi-substep-inertial', 'Sobre mí uses sub-step inertial Kintsugi scroll backend');
+      assert.ok(scrollState.dwellChapters.espejo >= 12, 'Reverse portrait tracks chapter dwell telemetry');
+      assert.ok(page.find('[data-gaze-work]').textContent.includes('Rara Avis'), 'Reverse portrait updates mirror artwork from scroll dwell');
+    }
     if (route === '/trayectoria/') { page.click('[data-year="2026"]'); assert.equal(page.document.querySelectorAll('[data-exhibition-year]:not([hidden])').length, 3); }
     if (route === '/cuaderno/') assert.equal(page.document.querySelectorAll('.notebook-posts article').length, 6);
     if (route === '/retratos-por-encargo-bilbao/') {

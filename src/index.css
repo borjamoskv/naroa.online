@@ -1609,3 +1609,11 @@ a:focus:not(:focus-visible) {
   }
 }
 
+/* Puntero Invisible: Sólo se visualiza el humo de simulación Euleriana Navier-Stokes */
+html, body, *, *::before, *::after {
+  cursor: none !important;
+}
+input[type="text"], input[type="email"], input[type="search"], textarea {
+  cursor: text !important;
+}
+

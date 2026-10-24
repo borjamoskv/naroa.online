@@ -400,21 +400,29 @@ body.page-sobre-mi .site-footer{color:#14080e;border-top:1px solid rgba(20,8,14,
 @keyframes stickman-chalk-pulse{0%{filter:drop-shadow(0 0 8px rgba(255,253,244,0.88)) drop-shadow(0 0 20px rgba(255,253,244,0.4))}100%{filter:drop-shadow(0 0 11px rgba(255,253,244,0.96)) drop-shadow(0 0 26px rgba(255,253,244,0.52))}}
 .art-stickman[hidden]{display:none!important}
 
-/* Puntero de Artista Soberano (Pincel Naroa con transparencia pura y hotspot en punta de cerdas) */
-html, body, * {
-  cursor: -webkit-image-set(
-    url('/assets/cursors/naroa-pincel-32.png') 1x,
-    url('/assets/cursors/naroa-pincel-64.png') 2x
-  ) 2 2, url('/assets/cursors/naroa-pincel-32.png') 2 2, auto;
+/* Puntero Invisible: Sólo se visualiza el humo de simulación Euleriana Navier-Stokes */
+html, body, *, *::before, *::after {
+  cursor: none !important;
 }
-a, button, [role="button"], input[type="submit"], input[type="button"], select, label[for], .art-gallery-trigger, .work-gallery-image, [data-interactive], .ouroboros-loop-btn, .share-btn, .menu-reel-frame, .menu-index-pill, [data-sound], [data-quiet], [data-fit], [data-effects], .art-scene, .art-stage {
-  cursor: -webkit-image-set(
-    url('/assets/cursors/naroa-pincel-48.png') 1x,
-    url('/assets/cursors/naroa-pincel-64.png') 2x
-  ) 3 3, url('/assets/cursors/naroa-pincel-48.png') 3 3, pointer;
+input[type="text"], input[type="email"], input[type="search"], textarea {
+  cursor: text !important;
 }
-input[type="text"], input[type="email"], textarea {
-  cursor: text!important;
+
+/* Micro-gota de pintura dorada reactiva en click (Tactilidad de Bellas Artes) */
+.naroa-brush-touch {
+  position: fixed;
+  pointer-events: none;
+  z-index: 999999;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0.25);
+  background: radial-gradient(circle, rgba(255, 235, 140, 0.95) 0%, rgba(212, 175, 55, 0.8) 40%, rgba(212, 175, 55, 0) 75%);
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
+  animation: brush-dab 0.38s cubic-bezier(0.12, 0.8, 0.32, 1) forwards;
+}
+@keyframes brush-dab {
+  0% { transform: translate(-50%, -50%) scale(0.25); opacity: 1; }
+  50% { transform: translate(-50%, -50%) scale(1); opacity: 0.9; }
+  100% { transform: translate(-50%, -50%) scale(1.6); opacity: 0; }
 }
 
 /* Simulación Euleriana de Fluidos Navier-Stokes & Advect-Curl (FBO Ping-Pong) — Humo en Cursor */
@@ -425,14 +433,15 @@ html.motion-off .naroa-fluid-canvas,body.is-quiet .naroa-fluid-canvas{opacity:0!
 .art-scene::after{display:none!important}
 .naroa-liquid-lens{display:none!important}
 .art-portal-ring{display:none!important}
+.naroa-portal-canvas{display:none!important}
 
 /* Giro Atómico 720º para El Armigo Atómico (Obra 25/85) */
 @keyframes armigo-spin-720{0%{transform:scale(0.86) rotate(0deg)}65%{transform:scale(1.12) rotate(540deg)}100%{transform:scale(1.08) rotate(720deg)}}
 .art-scene.is-armigo-spinning img{animation:armigo-spin-720 1.25s cubic-bezier(.22,1,.36,1) both}
 
-/* #7 Cámaras en Spline 3D con Inversión de Ejes y «Portal Scrollytelling» (RenderTarget secundario) */
-.naroa-portal-canvas{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:4;mix-blend-mode:screen;opacity:calc(var(--portal-aperture,0)*0.72);transition:opacity .24s ease;will-change:opacity}
-html.motion-off .naroa-portal-canvas,body.is-quiet .naroa-portal-canvas{opacity:0!important;visibility:hidden!important}
+/* #7 Cámaras en Spline 3D con Inversión de Ejes y «Portal Scrollytelling» (Halos y resplandores amarillos eliminados) */
+.naroa-portal-canvas{display:none!important}
+html.motion-off .naroa-portal-canvas,body.is-quiet .naroa-portal-canvas{display:none!important}
 
 @media print{.naroa-fluid-canvas,.naroa-portal-canvas,.naroa-liquid-lens,.art-portal-ring,.art-scene::after{display:none!important}}
 
@@ -503,6 +512,104 @@ html.motion-off .naroa-portal-canvas,body.is-quiet .naroa-portal-canvas{opacity:
   box-shadow: inset 0 0 140px rgba(0, 240, 255, 0.45);
 }
 
-
-
+/* ── Disruptive Editorial Scroll Engine (/sobre-mi/ Kintsugi Seam + X-Ray Monocle + Reverse Portrait) ── */
+[data-kintsugi-editorial] {
+  position: relative;
+}
+.kintsugi-seam-svg {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 28%;
+  width: 96px;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: calc(0.18 + var(--kintsugi-progress, 0) * 0.72);
+  filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.45));
+  transition: opacity 0.25s ease;
+}
+.kintsugi-seam-glow,
+.kintsugi-seam-core {
+  stroke-dasharray: 1600;
+  stroke-dashoffset: calc(1600 - var(--kintsugi-progress, 0) * 1600);
+  transition: stroke-dashoffset 0.12s linear;
+}
+[data-kintsugi-chapter] {
+  position: relative;
+  z-index: 1;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: skewY(var(--scroll-velocity-skew, 0deg));
+}
+[data-kintsugi-chapter] .hand-margin {
+  margin-top: 22px;
+  padding: 14px 20px;
+  border-left: 2px solid #d4af37;
+  background: linear-gradient(90deg, rgba(212, 175, 55, 0.09), transparent 85%);
+  font: 400 clamp(22px, 2.7vw, 31px)/1.28 'Caveat', cursive;
+  color: #edbca4;
+  max-width: 600px;
+  transform: translate3d(calc((1 - var(--chapter-focus, 0)) * 18px), 0, 0) rotate(-0.8deg);
+  opacity: calc(0.35 + var(--chapter-focus, 0) * 0.65);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
+}
+[data-monocle-xray] {
+  position: relative;
+}
+[data-monocle-xray] .xray-whisper {
+  position: absolute;
+  inset: auto 4% 68px 4%;
+  z-index: 2;
+  padding: 12px 18px;
+  background: rgba(17, 18, 15, 0.88);
+  border: 1px solid rgba(212, 175, 55, 0.55);
+  border-radius: 999px;
+  color: #f7e3a1;
+  font: 400 clamp(18px, 2.1vw, 24px)/1.3 'Caveat', cursive;
+  width: fit-content;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate3d(0, 8px, 0);
+  transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-monocle-xray].is-xray-active .xray-whisper,
+[data-monocle-xray]:hover .xray-whisper {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+[data-monocle-xray].is-xray-active img {
+  filter: contrast(1.16) saturate(1.18) drop-shadow(0 0 24px rgba(212, 175, 55, 0.28));
+}
+.reverse-portrait {
+  border-top: 1px solid rgba(212, 175, 55, 0.35);
+  background: radial-gradient(circle at 18% 50%, rgba(212, 175, 55, 0.08), transparent 70%);
+}
+.gaze-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  margin: 26px 0 18px;
+}
+.gaze-metrics > span {
+  padding: 8px 15px;
+  border: 1px solid rgba(237, 188, 164, 0.38);
+  border-radius: 999px;
+  background: rgba(255, 253, 244, 0.04);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: #fffdf4;
+}
+@media (max-width: 760px) {
+  .kintsugi-seam-svg {
+    left: 4%;
+    width: 48px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-kintsugi-chapter],
+  [data-kintsugi-chapter] .hand-margin {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
 

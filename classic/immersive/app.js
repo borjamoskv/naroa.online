@@ -57,6 +57,20 @@
     if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) d.close();
   }));
 
+  // Salpicadura táctil de pan de oro en pointerdown (tactilidad física de pincel)
+  document.addEventListener('pointerdown', e => {
+    if (e.pointerType === 'touch') return;
+    const dab = document.createElement('div');
+    dab.className = 'naroa-brush-touch';
+    dab.style.left = `${e.clientX}px`;
+    dab.style.top = `${e.clientY}px`;
+    const size = Math.floor(Math.random() * 8 + 18);
+    dab.style.width = `${size}px`;
+    dab.style.height = `${size}px`;
+    document.body.appendChild(dab);
+    dab.addEventListener('animationend', () => dab.remove());
+  }, { passive: true });
+
   // --- Story Remix Engine & Unified Social Sharing ---
   let currentRemixBlob = null;
   let currentRemixFile = null;
@@ -2451,6 +2465,204 @@
     const schedule = () => { if (frame === null) frame = requestAnimationFrame(pageParallax); };
     addEventListener('scroll', schedule, { passive: true }); addEventListener('resize', schedule, { passive: true }); reduced.addEventListener('change', schedule); schedule();
   }
+
+  // ── Disruptive Editorial Scroll Engine (/sobre-mi/ Kintsugi Seam + X-Ray Monocle + Reverse Portrait) ──
+  const kintsugiEditorial = $('[data-kintsugi-editorial]');
+  if (kintsugiEditorial) {
+    const chapters = $$('[data-kintsugi-chapter]', kintsugiEditorial);
+    const xrays = $$('[data-monocle-xray]', kintsugiEditorial);
+    const reverseBox = $('[data-reverse-portrait]', kintsugiEditorial);
+    const summaryEl = $('[data-gaze-summary]', kintsugiEditorial);
+    const detailEl = $('[data-gaze-detail]', kintsugiEditorial);
+    const tempoEl = $('[data-gaze-tempo]', kintsugiEditorial);
+    const elementEl = $('[data-gaze-element]', kintsugiEditorial);
+    const workEl = $('[data-gaze-work]', kintsugiEditorial);
+    const ctaEl = $('[data-gaze-cta]', kintsugiEditorial);
+    const workLinkEl = $('[data-gaze-work-link]', kintsugiEditorial);
+
+    // 1. Veta de Oro Kintsugi continua entre capítulos
+    const seamSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    seamSvg.setAttribute('class', 'kintsugi-seam-svg');
+    seamSvg.setAttribute('viewBox', '0 0 120 1200');
+    seamSvg.setAttribute('preserveAspectRatio', 'none');
+    seamSvg.setAttribute('aria-hidden', 'true');
+    seamSvg.innerHTML = `
+      <defs>
+        <linearGradient id="kintsugi-gold-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#f7e3a1" stop-opacity="0.15"/>
+          <stop offset="50%" stop-color="#d4af37" stop-opacity="0.95"/>
+          <stop offset="100%" stop-color="#edbca4" stop-opacity="0.75"/>
+        </linearGradient>
+      </defs>
+      <path class="kintsugi-seam-glow" d="M64,0 L48,180 L76,340 L38,520 L72,710 L44,890 L68,1060 L56,1200" fill="none" stroke="url(#kintsugi-gold-grad)" stroke-width="5" stroke-linecap="round"/>
+      <path class="kintsugi-seam-core" d="M64,0 L48,180 L76,340 L38,520 L72,710 L44,890 L68,1060 L56,1200" fill="none" stroke="#fffdf4" stroke-width="1.4" stroke-linecap="round"/>
+    `;
+    kintsugiEditorial.prepend(seamSvg);
+
+    const kState = {
+      targetY: scrollY || 0,
+      currentY: scrollY || 0,
+      velocity: 0,
+      peakVelocity: 0,
+      scrollEvents: 0,
+      dwellChapters: { mirada: 0, materia: 0, espejo: 0, compartir: 0 },
+      xrayTouches: 0,
+      seamProgress: 0,
+      raf: null
+    };
+
+    // 2. Lente de Rayos X del Monóculo sobre figuras a sangre
+    xrays.forEach(fig => {
+      fig.style.setProperty('--xray-x', '50%');
+      fig.style.setProperty('--xray-y', '50%');
+      fig.style.setProperty('--xray-r', '0px');
+      fig.addEventListener('pointermove', e => {
+        if (reduced.matches) return;
+        const r = fig.getBoundingClientRect();
+        if (!r.width || !r.height) return;
+        const x = clamp(((e.clientX - r.left) / r.width) * 100, 0, 100);
+        const y = clamp(((e.clientY - r.top) / r.height) * 100, 0, 100);
+        fig.style.setProperty('--xray-x', `${x.toFixed(1)}%`);
+        fig.style.setProperty('--xray-y', `${y.toFixed(1)}%`);
+        fig.style.setProperty('--xray-r', '145px');
+        fig.classList.add('is-xray-active');
+        kState.xrayTouches++;
+      }, { passive: true });
+      fig.addEventListener('pointerleave', () => {
+        fig.style.setProperty('--xray-r', '0px');
+        fig.classList.remove('is-xray-active');
+      }, { passive: true });
+    });
+
+    function updateReversePortrait() {
+      if (!reverseBox) return;
+      const entries = Object.entries(kState.dwellChapters).sort((a, b) => b[1] - a[1]);
+      const dominant = entries[0]?.[0] || 'materia';
+      const fast = kState.peakVelocity > 42;
+      const profiles = {
+        mirada: {
+          tempo: fast ? 'Impulso Eléctrico' : 'Mirada Detenida',
+          element: 'Carbón, grafito y reflejos sobre papel',
+          work: 'Amy Rocks',
+          slug: 'amy-rocks',
+          supportParam: 'Collage textil sobre madera',
+          summary: 'Has buscado primero los ojos antes que la historia.',
+          detail: 'Tu forma de recorrer la página se detiene en el gesto y la expresión. Tu retrato pediría trazo directo y contraste vivo.'
+        },
+        materia: {
+          tempo: fast ? 'Exploración Táctil' : 'Pulso Mineral',
+          element: 'Pizarra natural de cantera, óxido y mica',
+          work: 'Marilyn Rocks',
+          slug: 'marilyn-rocks',
+          supportParam: 'Pizarra natural rústica',
+          summary: 'Tu mirada pesa sobre la textura, la cicatriz y la materia.',
+          detail: 'Te atraen los soportes con vida previa: la laja de pizarra, la lata recuperada y el brillo mineral cuando gira la luz.'
+        },
+        espejo: {
+          tempo: fast ? 'Vértigo Interior' : 'Contemplación Íntima',
+          element: 'Pastel seco, pluma y fragmentos de espejo (Kintsugi)',
+          work: 'Rara Avis',
+          slug: 'rara-avis',
+          supportParam: 'Collage textil sobre madera',
+          summary: 'Te has detenido al otro lado del espejo.',
+          detail: 'Tu lectura resuena con las capas ocultas y el autorretrato simbólico: construir identidad uniendo piezas diversas.'
+        },
+        compartir: {
+          tempo: fast ? 'Paso de Calle (Walking)' : 'Encuentro Abierto',
+          element: 'Madera intervenida y caja de memoria compartida',
+          work: 'Amor en Conserva',
+          slug: 'amor-en-conserva',
+          supportParam: 'Caja personalizada u objeto',
+          summary: 'Entiendes el arte como un lugar donde encontrarse.',
+          detail: 'Tu recorrido conecta con la calle y el juego compartido de El ReCreo: un objeto intervenido que guarda una historia común.'
+        }
+      };
+      const chosen = profiles[dominant] || profiles.materia;
+      if (tempoEl) tempoEl.textContent = `Ritmo: ${chosen.tempo}`;
+      if (elementEl) elementEl.textContent = `Materia afín: ${chosen.element}`;
+      if (workEl) workEl.textContent = `Obra espejo: ${chosen.work}`;
+      if (summaryEl) summaryEl.textContent = chosen.summary;
+      if (detailEl) detailEl.textContent = chosen.detail;
+      if (workLinkEl) {
+        workLinkEl.href = `/obra/${chosen.slug}/`;
+        workLinkEl.textContent = `Ver ${chosen.work} ↗`;
+      }
+      if (ctaEl) {
+        ctaEl.href = `/retratos-por-encargo-bilbao/?soporte=${encodeURIComponent(chosen.supportParam)}`;
+      }
+    }
+
+    function stepKintsugiScroll() {
+      kState.raf = null;
+      const vh = innerHeight || 800;
+      const delta = kState.targetY - kState.currentY;
+      // Ley 1 (INV_C5_SCROLL_SUBSTEP_DYNAMICS): Sub-step inertial follow (alpha = 0.16)
+      if (reduced.matches || Math.abs(delta) < 0.25) {
+        kState.currentY = kState.targetY;
+        kState.velocity = 0;
+      } else {
+        const step = delta * 0.16;
+        kState.currentY += step;
+        kState.velocity = step;
+        kState.peakVelocity = Math.max(kState.peakVelocity, Math.abs(step));
+      }
+
+      const rect = kintsugiEditorial.getBoundingClientRect();
+      const totalH = Math.max(1, rect.height - vh * 0.5);
+      const progressed = clamp((-rect.top + vh * 0.45) / totalH, 0, 1);
+      kState.seamProgress = Number(progressed.toFixed(4));
+      kintsugiEditorial.style.setProperty('--kintsugi-progress', String(kState.seamProgress));
+      const skew = reduced.matches ? 0 : clamp(kState.velocity * 0.045, -3.5, 3.5);
+      kintsugiEditorial.style.setProperty('--scroll-velocity-skew', `${skew.toFixed(2)}deg`);
+
+      chapters.forEach(ch => {
+        const cr = ch.getBoundingClientRect();
+        const centerDist = 1 - clamp(Math.abs((cr.top + cr.height * 0.5) - vh * 0.5) / (vh * 0.65), 0, 1);
+        ch.style.setProperty('--chapter-focus', centerDist.toFixed(3));
+        ch.classList.toggle('is-kintsugi-active', centerDist > 0.35);
+        const key = ch.dataset.kintsugiChapter;
+        if (centerDist > 0.45 && key && key in kState.dwellChapters) {
+          kState.dwellChapters[key] += 1;
+        }
+      });
+
+      updateReversePortrait();
+
+      if (!reduced.matches && Math.abs(kState.targetY - kState.currentY) >= 0.25) {
+        kState.raf = requestAnimationFrame(stepKintsugiScroll);
+      }
+    }
+
+    function scheduleKintsugiScroll() {
+      kState.targetY = scrollY || 0;
+      kState.scrollEvents++;
+      if (kState.raf === null) {
+        kState.raf = requestAnimationFrame(stepKintsugiScroll);
+      }
+    }
+
+    addEventListener('scroll', scheduleKintsugiScroll, { passive: true });
+    addEventListener('resize', scheduleKintsugiScroll, { passive: true });
+    stepKintsugiScroll();
+
+    window.NAROA_ABOUT_SCROLL = {
+      triggerSampleScroll(y = 1400) {
+        kState.targetY = y;
+        kState.peakVelocity = Math.max(kState.peakVelocity, 55);
+        kState.dwellChapters.espejo += 12;
+        stepKintsugiScroll();
+        return this.getState();
+      },
+      getState: () => ({
+        backend: 'kintsugi-substep-inertial',
+        seamProgress: kState.seamProgress,
+        velocity: Number(kState.velocity.toFixed(3)),
+        peakVelocity: Number(kState.peakVelocity.toFixed(3)),
+        dwellChapters: { ...kState.dwellChapters },
+        xrayTouches: kState.xrayTouches
+      })
+    };
+  }
   const notebookSync = $('[data-notebook-sync]'), notebookGrid = $('[data-notebook-posts]');
   if (notebookSync && notebookGrid && typeof fetch === 'function') {
     const endpoint = notebookSync.dataset.notebookSync;
@@ -2734,12 +2946,12 @@
     canvas.setAttribute('aria-hidden', 'true');
     document.body.appendChild(canvas);
 
-    // Paleta mineral de Naroa: Oro Mineral, Azogue/Mica Plateada y Tinta Ámbar
+    // Paleta mineral de Naroa: Humo Plateado, Niebla de Mica, Vapor Etéreo y Luz Neutra de Pizarra (cero tonos amarillos)
     const PALETTE = [
-      [0.83, 0.68, 0.22], // Oro mineral (#D4AF37)
-      [0.78, 0.83, 0.88], // Azogue / Mica plateada
-      [0.72, 0.42, 0.24], // Tinta tierra / Óleo cálido
-      [0.92, 0.85, 0.62]  // Luz de pizarra especular
+      [0.88, 0.90, 0.94], // Humo etéreo plateado
+      [0.75, 0.78, 0.84], // Niebla de mica sutil
+      [0.94, 0.95, 0.98], // Vapor blanco etéreo
+      [0.82, 0.85, 0.89]  // Luz de pizarra mineral neutra
     ];
     let paletteIdx = 0;
 
@@ -3472,48 +3684,19 @@
           }
         `;
 
-        // Pase 1 (Secondary RenderTarget FBO): Mundo 3D interior de la Cámara de Resonancia
+        // Pase 1 (Secondary RenderTarget FBO): Neutralizado (Cero halos o velos cromáticos superpuestos)
         const innerWorldFS = `
           precision highp float;
-          varying vec2 vUv;
-          uniform float uTime;
-          uniform float uAperture;
-          uniform vec3 uCamPos;
-          uniform vec3 uEuler;
           void main() {
-            vec2 p = (vUv - 0.5) * 2.0;
-            // Rotación por inversión de ejes del rig Catmull-Rom
-            float c = cos(uEuler.z * 0.035), s = sin(uEuler.z * 0.035);
-            p = mat2(c, -s, s, c) * p;
-            p += vec2(uEuler.y * 0.002, -uEuler.x * 0.002);
-            float r = length(p);
-            float a = atan(p.y, p.x);
-            // Geometría de anillos de resonancia 3D en profundidad (túnel arquitectónico mineral)
-            float depth = 1.0 / max(r + 0.12, 0.08);
-            float rings = sin(depth * 4.5 - uTime * 3.2 + cos(a * 4.0) * 0.65);
-            float polyhedron = smoothstep(0.42, 0.08, abs(r - 0.32 - 0.06 * sin(a * 6.0 + uTime * 1.8)));
-            vec3 gold = vec3(0.83, 0.68, 0.22);
-            vec3 slate = vec3(0.08, 0.11, 0.18);
-            vec3 rose = vec3(0.93, 0.74, 0.64);
-            vec3 col = mix(slate, gold, smoothstep(0.2, 0.95, rings) * 0.65);
-            col += rose * polyhedron * (0.55 + 0.45 * uAperture);
-            col *= smoothstep(1.45, 0.08, r);
-            gl_FragColor = vec4(col, clamp(uAperture * 0.92 + 0.08, 0.0, 1.0));
+            gl_FragColor = vec4(0.0);
           }
         `;
 
-        // Pase 2 (Composite): Proyección del RenderTarget secundario dentro del marco/portal activo
+        // Pase 2 (Composite): Neutralizado (Transparencia absoluta para preservar la pureza de la obra)
         const compositeFS = `
           precision highp float;
-          varying vec2 vUv;
-          uniform sampler2D uPortalTarget;
-          uniform float uAperture;
           void main() {
-            vec2 centered = vUv - 0.5;
-            float dist = length(centered);
-            float mask = smoothstep(0.46, 0.18, dist) * smoothstep(0.08, 0.26, dist) * uAperture;
-            vec4 innerWorld = texture2D(uPortalTarget, vUv);
-            gl_FragColor = vec4(innerWorld.rgb * mask, innerWorld.a * mask * 0.78);
+            gl_FragColor = vec4(0.0);
           }
         `;
 
@@ -3580,26 +3763,7 @@
       targetEl.style.setProperty('--axis-inversion', String(pose.axisInversion));
 
       if (glPortal && portalFBO && portalSceneProgram && portalCompositeProgram && !reduced.matches) {
-        const now = performance.now() * 0.001;
-        // 1. Renderizar el otro mundo 3D en el RenderTarget secundario (512x512 FBO)
-        glPortal.bindFramebuffer(glPortal.FRAMEBUFFER, portalFBO.fbo);
-        glPortal.viewport(0, 0, portalFBO.size, portalFBO.size);
-        glPortal.useProgram(portalSceneProgram);
-        glPortal.uniform1f(glPortal.getUniformLocation(portalSceneProgram, 'uTime'), now);
-        glPortal.uniform1f(glPortal.getUniformLocation(portalSceneProgram, 'uAperture'), pose.portalAperture);
-        glPortal.uniform3f(glPortal.getUniformLocation(portalSceneProgram, 'uCamPos'), pose.position.x, pose.position.y, pose.position.z);
-        glPortal.uniform3f(glPortal.getUniformLocation(portalSceneProgram, 'uEuler'), pose.euler.pitch, pose.euler.yaw, pose.euler.roll);
-        glPortal.drawArrays(glPortal.TRIANGLE_STRIP, 0, 4);
-
-        // 2. Componer el portal en el lienzo principal
-        glPortal.bindFramebuffer(glPortal.FRAMEBUFFER, null);
-        glPortal.viewport(0, 0, portalCanvas.width, portalCanvas.height);
-        glPortal.useProgram(portalCompositeProgram);
-        glPortal.activeTexture(glPortal.TEXTURE0);
-        glPortal.bindTexture(glPortal.TEXTURE_2D, portalFBO.texture);
-        glPortal.uniform1i(glPortal.getUniformLocation(portalCompositeProgram, 'uPortalTarget'), 0);
-        glPortal.uniform1f(glPortal.getUniformLocation(portalCompositeProgram, 'uAperture'), pose.portalAperture);
-        glPortal.drawArrays(glPortal.TRIANGLE_STRIP, 0, 4);
+        // Halos eliminados: cero dibujo WebGL superpuesto para pureza matérica absoluta y 0% GPU
       }
     }
 

@@ -1,15 +1,6 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 export function CustomCursor() {
-  const [position, setPosition] = useState({ x: -100, y: -100 })
-  const [isPointer, setIsPointer] = useState(false)
-  const [isVisible, setIsVisible] = useState(false)
-  const [isClicking, setIsClicking] = useState(false)
-  const [cursorLabel, setCursorLabel] = useState<string | null>(null)
-
-  const trailingPos = useRef({ x: -100, y: -100 })
-  const [smoothPos, setSmoothPos] = useState({ x: -100, y: -100 })
-  const programmaticLabelRef = useRef<string | null>(null)
   const fluidCanvasRef = useRef<HTMLCanvasElement | null>(null)
 
   // Motor Euleriano de Fluidos Navier-Stokes & Advect-Curl (FBO Ping-Pong en WebGL)
@@ -443,11 +434,6 @@ export function CustomCursor() {
   }, [])
 
   useEffect(() => {
-    // Desactivar en pantallas táctiles o punteros no precisos (coarse pointer)
-    if (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches) {
-      return
-    }
-
     let animId: number
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -550,14 +536,14 @@ export function CustomCursor() {
               position: 'fixed',
               top: position.y,
               left: position.x,
-              width: isPointer ? '42px' : '34px',
-              height: isPointer ? '42px' : '34px',
-              backgroundImage: "url('/assets/cursors/naroa-pincel-64.png')",
+              width: isPointer ? '44px' : '36px',
+              height: isPointer ? '44px' : '36px',
+              backgroundImage: `url(${isPointer ? "'/assets/cursors/naroa-pincel-pointer-64.png'" : "'/assets/cursors/naroa-pincel-64.png'"})`,
               backgroundSize: 'contain',
               backgroundRepeat: 'no-repeat',
               backgroundPosition: 'top left',
-              transform: `translate(-3px, -3px) ${isClicking ? 'rotate(-7deg) scale(0.92)' : 'rotate(0deg) scale(1)'}`,
-              transformOrigin: '3px 3px',
+              transform: `translate(-2px, -2px) ${isClicking ? 'rotate(-7deg) scale(0.92)' : 'rotate(0deg) scale(1)'}`,
+              transformOrigin: '2px 2px',
               pointerEvents: 'none',
               zIndex: 9999999,
               filter: 'drop-shadow(0 2px 6px rgba(0, 0, 0, 0.55))',
