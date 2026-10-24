@@ -233,11 +233,14 @@ def build(output):
     ]
     bilbao_place = {
         "@type": "Place",
-        "name": "Bilbao, Bizkaia",
+        "@id": ORIGIN + "/#studio",
+        "name": "Estudio Naroa Gutiérrez Gil · Bilbao",
         "address": {
             "@type": "PostalAddress",
+            "streetAddress": "Bilbao, Bizkaia",
             "addressLocality": "Bilbao",
             "addressRegion": "Bizkaia",
+            "postalCode": "48001",
             "addressCountry": "ES",
         },
         "geo": {
@@ -246,6 +249,44 @@ def build(output):
             "longitude": -2.9350,
         },
         "hasMap": "https://www.google.com/maps?q=Bilbao,+Bizkaia",
+    }
+    canonical_artist_entity = {
+        "@type": "Person",
+        "@id": ORIGIN + "/#artist",
+        "name": "Naroa Gutiérrez Gil",
+        "jobTitle": "Artista plástica y retratista",
+        "url": ORIGIN + "/",
+        "image": ORIGIN + "/images/sobre-mi/naroa-monoculo.jpg",
+        "email": "naroa@naroa.eu",
+        "telephone": "+34636060609",
+        "sameAs": artist_same_as,
+        "homeLocation": bilbao_place,
+        "workLocation": bilbao_place,
+        "gender": "Female",
+        "nationality": {
+            "@type": "Country",
+            "name": "España",
+            "sameAs": "https://es.wikipedia.org/wiki/Espa%C3%B1a",
+        },
+        "description": "Artista plástica y retratista en Bilbao y Bizkaia. Retratos de autor sobre pizarra natural de cantera, técnica mixta con escamas de mica mineral, collage contemporáneo y objetos intervenidos.",
+        "knowsAbout": [
+            "Retratos artísticos personalizados",
+            "Pintura sobre pizarra natural de cantera",
+            "Técnica mixta con escamas de mica mineral y esmaltes",
+            "Collage contemporáneo y textil sobre madera",
+            "Retrato al óleo, grafito y pastel Conté",
+            "Walking Gallery Bilbao",
+            "Arte figurativo contemporáneo",
+            "Cajas tridimensionales y objetos de memoria",
+        ],
+    }
+    artist_ref = {
+        "@type": "Person",
+        "@id": ORIGIN + "/#artist",
+        "name": "Naroa Gutiérrez Gil",
+        "jobTitle": "Artista plástica y retratista",
+        "url": ORIGIN + "/",
+        "sameAs": artist_same_as,
     }
 
     def page(path, title, description, body, image, gallery=False, schema=None, not_found=False, image_alt=None):
@@ -331,11 +372,8 @@ def build(output):
                 "height": ph.get("height"),
                 "encodingFormat": ph_mime,
                 "representativeOfPage": idx == 0,
-                "creator": {
-                    "@type": "Person",
-                    "@id": ORIGIN + "/#artist",
-                    "name": "Naroa Gutiérrez Gil",
-                },
+                "creator": artist_ref,
+                "author": artist_ref,
                 "creditText": "Naroa Gutiérrez Gil",
                 "copyrightNotice": "© Naroa Gutiérrez Gil",
                 "acquireLicensePage": ORIGIN + "/retratos-por-encargo-bilbao/",
@@ -360,13 +398,13 @@ def build(output):
                 "image": artwork_photos,
             },
             "description": p["story"],
-            "creator": {
-                "@type": "Person",
-                "@id": ORIGIN + "/#artist",
-                "name": "Naroa Gutiérrez Gil",
-                "jobTitle": "Artista plástica y retratista",
-                "url": ORIGIN + "/",
-                "sameAs": artist_same_as,
+            "creator": canonical_artist_entity,
+            "author": artist_ref,
+            "isPartOf": {
+                "@type": "CollectionPage",
+                "@id": ORIGIN + "/obra/#catalogue",
+                "name": "Catálogo completo de obras de Naroa Gutiérrez Gil",
+                "url": ORIGIN + "/obra/",
             },
             "locationCreated": bilbao_place,
             "artMedium": p.get("technique"),
@@ -375,17 +413,22 @@ def build(output):
             "artform": "VisualArtwork",
             "offers": {
                 "@type": "Offer",
+                "@id": ORIGIN + "/obra/" + p["slug"] + "/#offer",
                 "availability": "https://schema.org/InStock",
                 "priceCurrency": "EUR",
                 "url": ORIGIN + "/obra/" + p["slug"] + "/",
                 "description": "Obra original de catálogo y encargos personalizados basados en esta técnica. Consulta directa con la artista.",
-                "seller": {
-                    "@type": "Person",
-                    "@id": ORIGIN + "/#artist",
-                    "name": "Naroa Gutiérrez Gil",
-                },
+                "seller": artist_ref,
+                "itemOffered": ORIGIN + "/obra/" + p["slug"] + "/#artwork",
             },
         }
+        if p.get("series") == "Vaivenes":
+            default_schema["partOfSeries"] = {
+                "@type": "CreativeWorkSeries",
+                "@id": ORIGIN + "/series/vaivenes/#series",
+                "name": "Serie Vaivenes",
+                "url": ORIGIN + "/series/vaivenes/",
+            }
         if p.get("source"):
             default_schema["isBasedOn"] = p["source"]
         if p.get("video"):
@@ -413,25 +456,9 @@ def build(output):
         "name": "Naroa Gutiérrez Gil · Retratista en Bilbao y Bizkaia",
         "url": ORIGIN + "/",
         "description": f"Obra de Naroa Gutiérrez Gil, artista plástica y retratista en Bilbao y Bizkaia. {len(projects)} retratos sobre pizarra, collage, dibujo y objetos intervenidos.",
-        "publisher": {
-            "@type": "Person",
-            "@id": ORIGIN + "/#artist",
-            "name": "Naroa Gutiérrez Gil",
-            "jobTitle": "Artista plástica y retratista",
-            "url": ORIGIN + "/",
-            "homeLocation": bilbao_place,
-            "image": ORIGIN + "/images/sobre-mi/naroa-monoculo.jpg",
-            "email": "naroa@naroa.eu",
-            "telephone": "+34636060609",
-            "sameAs": artist_same_as,
-            "knowsAbout": [
-                "Retratos artísticos personalizados",
-                "Pintura sobre pizarra natural",
-                "Collage y objetos intervenidos",
-                "Walking Gallery Bilbao",
-                "Arte figurativo contemporáneo",
-            ],
-        },
+        "publisher": canonical_artist_entity,
+        "creator": canonical_artist_entity,
+        "author": artist_ref,
         "mainEntity": {
             "@type": "Person",
             "@id": ORIGIN + "/#artist",
@@ -440,9 +467,12 @@ def build(output):
     catalogue_schema = {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
+        "@id": ORIGIN + "/obra/#catalogue",
         "name": f"Obra · {len(projects)} retratos, collage y objetos · Naroa Gutiérrez Gil",
         "url": ORIGIN + "/obra/",
         "description": f"Catálogo completo de {len(projects)} obras y retratos de Naroa Gutiérrez Gil: pizarra, collage, dibujo y objetos intervenidos.",
+        "creator": canonical_artist_entity,
+        "author": artist_ref,
         "mainEntity": {
             "@type": "ItemList",
             "name": f"{len(projects)} retratos y obras de Naroa Gutiérrez Gil",
@@ -453,11 +483,13 @@ def build(output):
                     "position": i + 1,
                     "item": {
                         "@type": "VisualArtwork",
+                        "@id": ORIGIN + "/obra/" + p["slug"] + "/#artwork",
                         "name": p["title"],
                         "url": ORIGIN + "/obra/" + p["slug"] + "/",
                         "image": ORIGIN + p["photos"][0]["original"],
                         "artMedium": p.get("technique"),
                         "artworkSurface": p.get("support"),
+                        "creator": artist_ref,
                     },
                 }
                 for i, p in enumerate(projects)
@@ -468,13 +500,17 @@ def build(output):
     vaivenes_schema = {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
+        "@id": ORIGIN + "/series/vaivenes/#series",
         "name": "Serie Vaivenes · Dibujo, materia y transformación · Naroa Gutiérrez Gil",
         "url": ORIGIN + "/series/vaivenes/",
         "description": "Serie Vaivenes de Naroa Gutiérrez Gil: retratos y piezas donde el collage, el dibujo y los materiales reutilizados exploran emociones y contrastes.",
-        "creator": {
-            "@type": "Person",
-            "@id": ORIGIN + "/#artist",
-            "name": "Naroa Gutiérrez Gil",
+        "creator": canonical_artist_entity,
+        "author": artist_ref,
+        "isPartOf": {
+            "@type": "CollectionPage",
+            "@id": ORIGIN + "/obra/#catalogue",
+            "name": "Catálogo completo de obras de Naroa Gutiérrez Gil",
+            "url": ORIGIN + "/obra/",
         },
         "mainEntity": {
             "@type": "ItemList",
@@ -524,7 +560,14 @@ def build(output):
     amor = next(p for p in projects if p["slug"] == "amor-en-conserva")
     jaio = next(p for p in projects if p["slug"] == "custom-jaio")
     about += f'''<figure class="full-figure" data-parallax><a href="/obra/amor-en-conserva/"><img src="{amor['cover']}" alt="Amor en Conserva, retratos y objetos reunidos en una lata abierta" loading="lazy"></a><figcaption>Amor en Conserva · <a href="/obra/amor-en-conserva/">Entrar en la obra ↗</a></figcaption></figure><section class="chapter"><p class="eyebrow">02 · La propia mirada</p><div><h2>Al otro lado<br>del espejo.</h2><p>Después de años retratando a otras personas, Naroa cuenta que dibujarse directamente ante un espejo supuso un reto nuevo. En 2025 participó en el taller de autorretrato de Ana Rosa Arroyo, en la asociación Mujeres en la Diversidad.</p><p>Rara Avis reúne esa exploración en un autorretrato de pastel y collage. Mirarse se convierte, otra vez, en una oportunidad para experimentar.</p><div class="chapter-links"><a class="text-link" href="/obra/rara-avis/">Descubrir Rara Avis ↗</a><a class="text-link" href="https://naroagutierrez.wordpress.com/2026/05/14/autorretratos-mujeres-a-traves-del-espejo/" target="_blank" rel="noopener noreferrer">Leer cómo nació Rara Avis ↗</a></div></div></section><figure class="full-figure" data-parallax><a href="/obra/rara-avis/"><img src="{rara['cover']}" alt="Rara Avis: autorretrato entre marcos, papeles y reflejos" loading="lazy"></a><figcaption>Rara Avis · Pastel y collage</figcaption></figure><section class="chapter"><p class="eyebrow">03 · Compartir</p><div><h2>Crear también<br>es encontrarse.</h2><p>En Bilbao, sus convocatorias de Walking Gallery invitan a sacar las creaciones a la calle y conversar mientras se camina con ellas.</p><p>En 2024 presentó El ReCreo, un espacio de experimentación para personas de distintas edades. La curiosidad, el respeto y el disfrute del proceso atraviesan esta otra faceta de su práctica.</p><div class="chapter-links"><a class="text-link" href="/trayectoria/">Recorrer su trayectoria ↗</a><a class="text-link" href="https://naroagutierrez.wordpress.com/2022/10/04/walking-gallery-bilbao-octubre-2022-por-amor-al-arte/" target="_blank" rel="noopener noreferrer">Walking Gallery ↗</a><a class="text-link" href="https://naroagutierrez.wordpress.com/2024/01/12/el-recreo-espacio-de-creacion-para-recrearte/" target="_blank" rel="noopener noreferrer">Conocer El ReCreo ↗</a></div></div></section></article>'''
-    about_schema = {"@context": "https://schema.org", "@type": "ProfilePage", "name": "Sobre mí · Artista plástica y retratista en Bilbao y Bizkaia", "url": ORIGIN + "/sobre-mi/", "mainEntity": {"@type": "Person", "@id": ORIGIN + "/#artist", "name": "Naroa Gutiérrez Gil", "jobTitle": "Artista plástica y retratista", "url": ORIGIN + "/", "homeLocation": bilbao_place, "sameAs": artist_same_as}}
+    about_schema = {
+        "@context": "https://schema.org",
+        "@type": "ProfilePage",
+        "@id": ORIGIN + "/sobre-mi/#profile",
+        "name": "Sobre mí · Artista plástica y retratista en Bilbao y Bizkaia",
+        "url": ORIGIN + "/sobre-mi/",
+        "mainEntity": canonical_artist_entity,
+    }
     page("/sobre-mi/", "Sobre mí · Artista plástica y retratista en Bilbao", "Rostros, materia y ganas de jugar. La mirada y el proceso creativo de Naroa Gutiérrez Gil, artista plástica y retratista en Bilbao y Bizkaia.", '<main id="main">' + about + '</main>', "/images/sobre-mi/naroa-monoculo.jpg", schema=about_schema)
 
     exhibitions = read_data("exhibitions")["exhibitions"]
@@ -554,11 +597,8 @@ def build(output):
                 },
             },
             "description": ex["description"],
-            "organizer": {
-                "@type": "Person",
-                "@id": ORIGIN + "/#artist",
-                "name": "Naroa Gutiérrez Gil",
-            },
+            "organizer": artist_ref,
+            "performer": artist_ref,
         }
         if ex.get("endDate"):
             ev["endDate"] = ex["endDate"]
@@ -571,9 +611,12 @@ def build(output):
     career_schema = {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
+        "@id": ORIGIN + "/trayectoria/#career",
         "name": "Trayectoria documentada · Naroa Gutiérrez Gil",
         "url": ORIGIN + "/trayectoria/",
         "description": "Exposiciones, encuentros y espacios compartidos de Naroa Gutiérrez Gil en Bilbao y Bizkaia.",
+        "creator": artist_ref,
+        "about": canonical_artist_entity,
         "mainEntity": {
             "@type": "ItemList",
             "name": "Exposiciones y encuentros de Naroa Gutiérrez Gil",
@@ -600,14 +643,12 @@ def build(output):
     blog_schema = {
         "@context": "https://schema.org",
         "@type": "Blog",
+        "@id": ORIGIN + "/cuaderno/#blog",
         "name": "El cuaderno de Naroa",
         "url": ORIGIN + "/cuaderno/",
         "description": "Historias de obras, procesos y encuentros. El cuaderno de la artista Naroa Gutiérrez Gil.",
-        "author": {
-            "@type": "Person",
-            "@id": ORIGIN + "/#artist",
-            "name": "Naroa Gutiérrez Gil",
-        },
+        "author": canonical_artist_entity,
+        "publisher": artist_ref,
         "blogPost": [
             {
                 "@type": "BlogPosting",
@@ -615,11 +656,8 @@ def build(output):
                 "url": post["url"],
                 "datePublished": post["date"],
                 "description": post["summary"],
-                "author": {
-                    "@type": "Person",
-                    "@id": ORIGIN + "/#artist",
-                    "name": "Naroa Gutiérrez Gil",
-                },
+                "author": artist_ref,
+                "publisher": artist_ref,
             }
             for post in posts
         ],
@@ -703,20 +741,14 @@ def build(output):
         "dateModified": catalogue["reviewed"],
         "description": "Encarga un retrato personalizado en Bilbao con Naroa Gutiérrez Gil. Piezas originales hechas a mano a partir de fotografía e historia personal: pizarra natural, collage, madera y técnica mixta con presupuesto cerrado previo.",
         "image": [ORIGIN + ex["photos"][0]["original"] for ex, _, _ in commission_examples],
-        "provider": {
-            "@type": "Person",
-            "@id": ORIGIN + "/#artist",
-            "name": "Naroa Gutiérrez Gil",
-            "jobTitle": "Artista plástica y retratista",
-            "url": ORIGIN + "/",
-            "sameAs": artist_same_as,
-            "homeLocation": bilbao_place,
-        },
+        "provider": canonical_artist_entity,
         "providerMobility": "dynamic",
         "address": {
             "@type": "PostalAddress",
+            "streetAddress": "Bilbao, Bizkaia",
             "addressLocality": "Bilbao",
             "addressRegion": "Bizkaia",
+            "postalCode": "48001",
             "addressCountry": "ES",
         },
         "geo": {
@@ -787,18 +819,11 @@ def build(output):
     contact_schema = {
         "@context": "https://schema.org",
         "@type": "ContactPage",
+        "@id": ORIGIN + "/contacto/#contact",
         "name": "Contacto · Naroa Gutiérrez Gil",
         "url": ORIGIN + "/contacto/",
         "description": "Habla con Naroa Gutiérrez Gil sobre una obra o un retrato por encargo. Bilbao. Email, WhatsApp e Instagram.",
-        "mainEntity": {
-            "@type": "Person",
-            "@id": ORIGIN + "/#artist",
-            "name": "Naroa Gutiérrez Gil",
-            "email": "naroa@naroa.eu",
-            "telephone": "+34636060609",
-            "homeLocation": bilbao_place,
-            "sameAs": artist_same_as,
-        },
+        "mainEntity": canonical_artist_entity,
     }
     page("/contacto/", "Contacto", "Habla con Naroa Gutiérrez Gil sobre una obra o un retrato por encargo. Bilbao. Email, WhatsApp e Instagram.", contact, rara["photos"][0]["original"], schema=contact_schema)
     page("/404/", "Esta página se ha ido de paseo", "Vuelve a la obra de Naroa Gutiérrez Gil.", '<main id="main" class="not-found"><p class="eyebrow">404</p><h1>Esta página<br>se ha ido de paseo.</h1><a class="text-link" href="/">Volver a la obra ↗</a></main>', amor["photos"][0]["original"], not_found=True)
@@ -905,6 +930,8 @@ def build(output):
             f"<link>{ORIGIN}/obra/{p['slug']}/</link>"
             f"<guid isPermaLink=\"true\">{ORIGIN}/obra/{p['slug']}/</guid>"
             f"<pubDate>{format_datetime(dt)}</pubDate>"
+            "<dc:creator>Naroa Gutiérrez Gil</dc:creator>"
+            "<author>naroa@naroa.eu (Naroa Gutiérrez Gil)</author>"
             f"<description>{esc(desc_text)}</description>"
             f'<enclosure url="{ORIGIN}{esc(p["cover"])}" length="0" type="image/webp"/>'
             "</item>"
@@ -923,6 +950,8 @@ def build(output):
             f"<link>{esc(post_link)}</link>"
             f"<guid isPermaLink=\"true\">{esc(post_link)}</guid>"
             f"<pubDate>{format_datetime(post_dt)}</pubDate>"
+            "<dc:creator>Naroa Gutiérrez Gil</dc:creator>"
+            "<author>naroa@naroa.eu (Naroa Gutiérrez Gil)</author>"
             f"<description>{esc(post.get('summary', ''))}</description>"
             "</item>"
         )
@@ -931,7 +960,7 @@ def build(output):
     build_now = datetime(2026, 10, 24, 8, 20, 0, tzinfo=timezone.utc)
     feed_xml = (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
-        '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n'
+        '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">\n'
         '  <channel>\n'
         '    <title>Naroa Gutiérrez Gil · Arte y Retratos</title>\n'
         f'    <link>{ORIGIN}/</link>\n'
@@ -950,8 +979,9 @@ def build(output):
     write(output / "indexnow.json", json.dumps({"host": "naroagutierrezgil.com", "key": indexnow_key, "keyLocation": f"{ORIGIN}/{indexnow_key}.txt", "urlList": [ORIGIN + p[0] for p in pages]}, indent=2) + "\n")
 
     catalog_api = {
-        "version": "1.1",
+        "version": "1.2",
         "entity_id": ORIGIN + "/#artist",
+        "studio_id": ORIGIN + "/#studio",
         "artist": {
             "name": "Naroa Gutiérrez Gil",
             "role": "Artista plástica y retratista contemporánea",
@@ -959,13 +989,27 @@ def build(output):
             "coordinates": {"latitude": 43.2630, "longitude": -2.9350},
             "url": ORIGIN + "/",
             "sameAs": artist_same_as,
+            "canonical_locations": {
+                "studio": {
+                    "@id": ORIGIN + "/#studio",
+                    "name": "Estudio Naroa Gutiérrez Gil · Bilbao",
+                    "address_locality": "Bilbao",
+                    "address_region": "Bizkaia",
+                    "postal_code": "48001",
+                    "country": "ES",
+                    "coordinates": {"latitude": 43.2630, "longitude": -2.9350},
+                    "hasMap": "https://www.google.com/maps?q=Bilbao,+Bizkaia",
+                }
+            },
             "contact": {
                 "email": "naroa@naroa.eu",
                 "whatsapp": "+34636060609",
                 "inquiry_form": ORIGIN + "/contacto/",
             },
             "commission_service": {
+                "@id": ORIGIN + "/retratos-por-encargo-bilbao/#service",
                 "url": ORIGIN + "/retratos-por-encargo-bilbao/",
+                "provider": ORIGIN + "/#artist",
                 "supports": [
                     "Pizarra natural de cantera con contorno irregular",
                     "Collage y técnica mixta textil sobre madera",
@@ -1053,9 +1097,32 @@ def build(output):
     webmcp_manifest = {
         "$schema": "https://modelcontextprotocol.io/schema/2024-11-05/server.json",
         "name": "naroa-online-webmcp",
-        "version": "1.0.0",
-        "description": "Servidor WebMCP oficial de Naroa Gutiérrez Gil: catálogo de obras de arte, Evidence Graph y orquestación de consultas de encargos en Bilbao.",
+        "version": "1.2.0",
+        "description": "Servidor WebMCP oficial de Naroa Gutiérrez Gil: catálogo de obras de arte, Evidence Graph, perfiles canónicos de creador y orquestación de consultas de encargos en Bilbao.",
         "homepage": ORIGIN,
+        "author": {
+            "name": "Naroa Gutiérrez Gil",
+            "url": ORIGIN + "/",
+            "email": "naroa@naroa.eu",
+            "telephone": "+34636060609",
+            "sameAs": artist_same_as,
+        },
+        "publisher": {
+            "name": "Naroa Gutiérrez Gil",
+            "url": ORIGIN + "/",
+            "sameAs": artist_same_as,
+        },
+        "canonicalLocations": {
+            "studio": {
+                "name": "Estudio Naroa Gutiérrez Gil · Bilbao",
+                "locality": "Bilbao",
+                "region": "Bizkaia",
+                "postalCode": "48001",
+                "country": "ES",
+                "geo": {"latitude": 43.2630, "longitude": -2.9350},
+                "mapUrl": "https://www.google.com/maps?q=Bilbao,+Bizkaia",
+            }
+        },
         "capabilities": {
             "tools": {
                 "listChanged": False,
@@ -1182,10 +1249,19 @@ def build(output):
         "> Catálogo oficial de obra plástica, servicio de retratos personalizados por encargo y archivo de exposiciones.\n\n"
         "## Resumen del Sitio y Evidence Graph\n"
         f"- Dominio Canónico: {ORIGIN}\n"
-        "- Entidad Principal: Naroa Gutiérrez Gil (Artista plástica y retratista)\n"
-        "- Ubicación Física del Estudio: Bilbao, Bizkaia, País Vasco, España (43.2630 N, -2.9350 W)\n"
+        f"- Entidad Creadora: Naroa Gutiérrez Gil [ID Canónico: {ORIGIN}/#artist]\n"
+        f"- Estudio Físico: Bilbao, Bizkaia, País Vasco, España (43.2630 N, -2.9350 W) [ID Canónico: {ORIGIN}/#studio]\n"
         "- Contacto Directo: naroa@naroa.eu | WhatsApp: +34 636 060 609 | Instagram: @naroa_art\n"
+        "- Perfiles de Autoridad (sameAs):\n"
+        "  - Facebook: https://www.facebook.com/naroa.artista.plastica\n"
+        "  - Instagram: https://instagram.com/naroa_art/\n"
+        "  - Cuaderno WordPress: https://naroagutierrez.wordpress.com/\n"
+        "  - DEIA Bizkaia: https://www.deia.eus/bizkaia/vida-social/2026/06/05/bwall-collective-inaugura-exposicion-ocho-11159371.html\n"
+        "  - GARA Agenda: https://gara.naiz.eus/paperezkoa/20100305/186538/eu/Agenda\n"
+        "  - El Correo Agenda: https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-476343.html\n"
+        "  - YouTube: https://www.youtube.com/@naroagutierrezgil\n"
         "- Especialidad: Retratos de autor sobre pizarra natural de cantera con contorno irregular, técnica mixta con escamas de mica mineral, collage textil sobre madera y objetos intervenidos.\n"
+        f"- Servicio Canónico de Encargos: {ORIGIN}/retratos-por-encargo-bilbao/\n"
         "- Exposiciones Documentadas: Colegio de Abogados de Bilbao (Espejos del alma), Dock Bilbao, Politena Espacio de Arte, Walking Gallery Bilbao.\n\n"
         "## Respuestas Factuales Inmediatas (Query Fan-Out)\n"
         "- **¿Cuánto cuesta un retrato personalizado?** Presupuesto cerrado previo por escrito según soporte y formato (pizarra de 20×30 cm a 40×50 cm, collage sobre madera, cajas de recuerdos). Consulta sin compromiso.\n"
