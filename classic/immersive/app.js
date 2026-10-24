@@ -89,28 +89,6 @@
     return (catalogue.projects || [])[0] || null;
   }
 
-  function pickRandomProjects(count = 3, preferredSlug = null) {
-    const all = catalogue.projects || [];
-    if (!all.length) return [];
-    let pool = [...all];
-    let selected = [];
-    if (preferredSlug) {
-      const match = pool.find(p => p.slug === preferredSlug);
-      if (match) {
-        selected.push(match);
-        pool = pool.filter(p => p.slug !== preferredSlug);
-      }
-    }
-    for (let i = pool.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [pool[i], pool[j]] = [pool[j], pool[i]];
-    }
-    while (selected.length < count && pool.length) {
-      selected.push(pool.pop());
-    }
-    return selected;
-  }
-
   function loadImageAsync(src) {
     return new Promise((resolve, reject) => {
       if (!src) return reject(new Error('Empty src'));
@@ -136,28 +114,6 @@
     ctx.arcTo(x, y + h, x, y, radius);
     ctx.arcTo(x, y + w, y, radius);
     ctx.closePath();
-  }
-
-  function drawStoryCoverImage(ctx, img, x, y, w, h, radius = 0) {
-    ctx.save();
-    if (radius > 0) {
-      drawStoryRoundedRect(ctx, x, y, w, h, radius);
-      ctx.clip();
-    }
-    const nw = img.naturalWidth || img.width || 1;
-    const nh = img.naturalHeight || img.height || 1;
-    const imgRatio = nw / nh;
-    const boxRatio = w / h;
-    let sx = 0, sy = 0, sw = nw, sh = nh;
-    if (imgRatio > boxRatio) {
-      sw = nh * boxRatio;
-      sx = (nw - sw) / 2;
-    } else {
-      sh = nw / boxRatio;
-      sy = (nh - sh) / 2;
-    }
-    ctx.drawImage(img, sx, sy, sw, sh, x, y, w, h);
-    ctx.restore();
   }
 
   function drawStoryZoomedDetail(ctx, img, x, y, w, h, radius = 0, zoom = 2.45, cx = 0.5, cy = 0.44) {
@@ -409,7 +365,6 @@
     }
     const title = 'Naroa Gutiérrez Gil · Exposición inmersiva Bilbao';
     const text = 'Remix de obras pictóricas de Naroa Gutiérrez Gil · naroagutierrezgil.com';
-    const url = location.origin || 'https://naroagutierrezgil.com';
 
     if (currentRemixFile && navigator.canShare && navigator.canShare({ files: [currentRemixFile] })) {
       try {
@@ -904,8 +859,6 @@
       'la-llorona': { x: .2985, y: .4192, iris: .022 },
       'pablo': { x: .7633, y: .8232, iris: .032 }
     };
-    const eyeLinks = { 'marilyn-rocks': 'rara-avis', 'johnny-rocks': 'rockagipsy', 'infusion-de-berto': 'buena-fuente', 'la-llorona': 'pablo' };
-    const ease = value => { const t = clamp(value, 0, 1); return t * t * (3 - 2 * t); };
     const smooth = value => { const t = clamp(value, 0, 1); return t * t * t * (t * (t * 6 - 15) + 10); };
     function eyeGeometry(index) {
       const eye = eyes[works[index].slug], img = images[index];
@@ -925,7 +878,7 @@
     }
     let dustinVisited = false, dustinEpilogueTimer = null;
     let puzzleVisited = false, clockVisited = false, wineVisited = false, deltoyaVisited = false;
-    let ajenjoBurstTimer = null, ajenjoVisited = false;
+    let ajenjoVisited = false;
     let cameraFlashTimer = null, lastScrollFlashIndex = -1, lastScrollFlashTime = 0;
     function fireCameraFlash() {
       soundscape?.flash?.();
@@ -959,7 +912,7 @@
         window.NAROA_SOUND?.gameOver?.();
       }
       const isTestEnv = typeof window !== 'undefined' && (window.location.hostname === 'portfolio.test' || reduced.matches);
-      if (isTestEnv) return;
+      if (isTestEnv || isBreakdancing) return;
 
       clearTimeout(bboyTimer);
       clearTimeout(bboyRewindTimer);
@@ -989,7 +942,7 @@
     let lauraVisited = false, lauraTimer = null, isLauraZooming = false, lauraPauseDistance = 0;
     function fireLauraLorePause() {
       const isTestEnv = typeof window !== 'undefined' && (window.location.hostname === 'portfolio.test' || reduced.matches);
-      if (isTestEnv) return;
+      if (isTestEnv || isBreakdancing) return;
       isLauraZooming = true;
       lauraPauseDistance = motion.current;
       const lauraImg = images[state.index];
@@ -2148,10 +2101,10 @@
         window.scrollBy({ top: e.deltaX, behavior: 'auto' });
       }
     }, { passive: true });
-    let touchStartY = 0;
+    let _touchStartY = 0;
     addEventListener('touchstart', e => {
       interruptNavigation();
-      if (e.touches?.length) touchStartY = e.touches[0].clientY;
+      if (e.touches?.length) _touchStartY = e.touches[0].clientY;
     }, { passive: true });
     addEventListener('touchmove', () => {}, { passive: true });
     $$('[data-select]', stage).forEach(b => b.addEventListener('click', () => change(Number(b.dataset.select))));

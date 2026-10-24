@@ -9,7 +9,7 @@
   let context = null, engine = null, loading = null, enabled = false, depth = 0;
   let mode = 'V', phase = 'hold', axisDirection = 1, slug = '';
   let active = false, pageActive = true, idle = null, suspension = null, waking = null, generation = 0;
-  let lastY = scrollY, lastDistance = null, lastPhase = 'hold', lastSlug = '', lastUtterance = '';
+  let lastDistance = null, lastPhase = 'hold', lastSlug = '', lastUtterance = '';
   let lastCameraFlashTime = 0, lastFlashSlug = '';
   let lastPunchSlug = '';
   let lastMotion = null, lastGrain = -Infinity, energy = 0, direction = 1, seed = 0, pendingDistance = 0;
@@ -649,10 +649,8 @@
     }
   }
   function motion() {
-    const y = scrollY;
-    if (managedPage) { lastY = y; return; }
-    lastY = y;
-    advance(y / Math.max(1, innerHeight), 0, 'V', 'scroll', 1, '');
+    if (managedPage) return;
+    advance(scrollY / Math.max(1, innerHeight), 0, 'V', 'scroll', 1, '');
   }
   async function prepare() {
     const decoded = await Promise.all([button.dataset.natureSrc, button.dataset.irisSrc, button.dataset.musicboxSrc].map(async src => {
@@ -716,7 +714,7 @@
       loading = (async () => {
         await resumed;
         if (!engine) engine = await prepare();
-        enabled = true; lastY = scrollY;
+        enabled = true;
         if (!managedPage) lastDistance = scrollY / Math.max(1, innerHeight);
         rest(true); mix();
         message(`Caja de música activada (${activeMelodyMeta.day} · ${activeMelodyMeta.name}). Desplázate para tocar.`);
@@ -732,13 +730,12 @@
     }
   });
   function visibility() {
-    lastY = scrollY;
     if (document.hidden) rest(true);
   }
   document.addEventListener('visibilitychange', visibility);
   addEventListener('scroll', motion, { passive: true });
   addEventListener('pagehide', () => { pageActive = false; rest(true); });
-  addEventListener('pageshow', () => { pageActive = true; lastY = scrollY; });
+  addEventListener('pageshow', () => { pageActive = true; });
   window.NAROA_SOUND = Object.freeze({
     dailyMelody: Object.freeze({
       index: activeMelodyIndex,

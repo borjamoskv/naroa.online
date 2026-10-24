@@ -35,17 +35,11 @@ export default function App() {
   const [isMicaOpen, setIsMicaOpen] = useState(false)
 
   const [audioActive, setAudioActive] = useState<boolean>(sound.isEnabled())
-  const [isWebGLMounted, setIsWebGLMounted] = useState(false)
+  const [hasVisited3D, setHasVisited3D] = useState(() => typeof window !== 'undefined' && window.location.hash.includes('3d'))
+  const isWebGLMounted = activeMode === '3d' || hasVisited3D
 
   // Estado de enfoque en el Pabellón 3D
   const [selected3DIndex, setSelected3DIndex] = useState<number | null>(null)
-
-  // Montar WebGL bajo demanda al activar el modo 3D
-  useEffect(() => {
-    if (activeMode === '3d') {
-      setIsWebGLMounted(true)
-    }
-  }, [activeMode])
 
   // Control del scroll en modo 3D
   useEffect(() => {
@@ -67,6 +61,7 @@ export default function App() {
         }
       } else if (hash === '#/experiments' || hash === '#/3d' || hash === '#/museo' || hash === '#/espacio' || hash === '#/rotonda') {
         setActiveMode('3d')
+        setHasVisited3D(true)
       } else if (
         hash === '#/archive' ||
         hash === '#/archivo' ||
@@ -160,6 +155,7 @@ export default function App() {
         setActiveMode((prev) => {
           const next = prev === '3d' ? 'horizon' : '3d'
           window.location.hash = next === '3d' ? '#/3d' : '#/'
+          if (next === '3d') setHasVisited3D(true)
           return next
         })
       }
@@ -185,6 +181,7 @@ export default function App() {
         currentIndex={activeMode === '3d' && selected3DIndex !== null ? selected3DIndex : currentIndex}
         totalArtworks={ARTWORKS.length}
         onSelectMode={(mode) => {
+          if (mode === '3d') setHasVisited3D(true)
           setActiveMode(mode)
           if (mode === 'horizon') {
             window.location.hash = '#/'
