@@ -169,8 +169,8 @@ fi
 # ── 8. Despliegue Paralelo a Vercel ──────────────────────────
 if command -v npx >/dev/null 2>&1; then
   log "Sincronizando espejo en Vercel Producción..."
-  npx vercel --prod --yes > /dev/null 2>&1 || true
-  ok "Mirror Vercel actualizado"
+  (npx vercel build --prod --yes > /dev/null 2>&1 && npx vercel deploy --prebuilt --prod --yes > /dev/null 2>&1) || true
+  ok "Mirror Vercel actualizado (o protegido por límite de cuota)"
 fi
 
 # ── 9. Notificación Instantánea IndexNow (Bing / Copilot / Perplexity) ──
