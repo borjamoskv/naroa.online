@@ -97,6 +97,18 @@
     document.documentElement.classList.add('gallery-scroll');
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     const pan = { x: 0, y: 0, tx: 0, ty: 0, frame: null };
+    let cameraRestTimer = null;
+    function restCamera() {
+      clearTimeout(cameraRestTimer);
+      cameraRestTimer = null;
+      stage.classList.remove('is-camera-moving');
+    }
+    function travelCamera() {
+      if (reduced.matches || state.fit) { restCamera(); return; }
+      stage.classList.add('is-camera-moving', 'has-travelled');
+      clearTimeout(cameraRestTimer);
+      cameraRestTimer = setTimeout(restCamera, 180);
+    }
     const pendingImages = new Map();
     const puzzles = new Map();
     const svgNode = (name, attrs = {}) => {
@@ -322,8 +334,10 @@
           const x = mode === 'H' ? displacement * geometry.width * entry.direction : 0;
           const y = mode === 'V' ? displacement * geometry.height : 0;
           scene.style.transform = `translate3d(${x.toFixed(3)}px,${y.toFixed(3)}px,0)`;
-          const parallax = displacement * 4;
-          image.style.transform = `translate3d(${mode === 'H' ? parallax.toFixed(3) : '0'}%,${mode === 'V' ? parallax.toFixed(3) : '0'}%,0) scale(1.16000)`;
+          // The framed image opens as it arrives; the departing surface grows closer.
+          const parallax = displacement * 6;
+          const lens = 1.16 + .12 * (outgoing ? progress : 1 - progress);
+          image.style.transform = `translate3d(${mode === 'H' ? parallax.toFixed(3) : '0'}%,${mode === 'V' ? parallax.toFixed(3) : '0'}%,0) scale(${lens.toFixed(5)})`;
         } else if (mode === 'Z') {
           const close = outgoing ? smooth(fraction / .65) : 1 - smooth((fraction - .35) / .65);
           image.style.transform = `scale(${Math.exp(Math.log(1.16) + Math.log(3.6 / 1.16) * close).toFixed(5)})`;
@@ -338,10 +352,14 @@
       soundscape?.depth(still ? 0 : depth);
       const nextTitle = transition ? works[incoming].title : '';
       if (kineticTitle.textContent !== nextTitle) kineticTitle.textContent = nextTitle;
-      kineticTitle.style.opacity = transition && !eyeMatch && mode !== 'P' ? (Math.sin(progress * Math.PI) * .20).toFixed(3) : '0';
+      kineticTitle.style.opacity = transition && !eyeMatch && mode !== 'P' ? (Math.sin(progress * Math.PI) * .065).toFixed(3) : '0';
       kineticTitle.style.transform = `translate3d(${((progress - .5) * -14).toFixed(3)}%,${((progress - .5) * -16).toFixed(3)}vh,0)`;
-      caption.style.opacity = transition ? (.45 + .55 * Math.pow(Math.abs(fraction - .5) * 2, .6)).toFixed(3) : '1';
-      caption.style.transform = transition ? `translateY(${(-Math.sin(fraction * Math.PI * 2) * 10).toFixed(3)}px)` : '';
+      caption.style.opacity = '1';
+      caption.style.transform = '';
+      // Camera framing follows distance. Reading controls return as soon as scroll rests.
+      const veil = transition ? Math.sin(fraction * Math.PI) : phase === 'explore' ? Math.sin(pose.explore * Math.PI) * .5 : 0;
+      stage.style.setProperty('--camera-veil', (veil * .94).toFixed(4));
+      if (still) restCamera();
       const cue = $('[data-journey-cue]', stage);
       cue.textContent = still ? reduced.matches ? 'Activa los efectos para ver el viaje ↓' : 'Desplázate para recorrer ↕' : !transition ? phase === 'explore' ? 'Explora la superficie ↓' : 'Una pausa para mirar · sigue ↓' : ({ E: 'Entra en la mirada ↓', H: entry.direction > 0 ? 'Atravesar → · sigue bajando' : 'Atravesar ← · sigue bajando', V: 'Déjate llevar ↓', Z: 'Acércate ↓', P: 'Mezclar y volver a unir ↓' })[mode];
       stage.classList.toggle('is-travelling', transition);
@@ -365,7 +383,7 @@
       const request = ++motion.request;
       motion.desired = position;
       if (motion.navigation !== null && Math.abs(position - motion.navigation) < .002) motion.navigation = null;
-      if (Math.abs(pose.distance - motion.pose.distance) > .002) { leaveFit(); resetPan(); }
+      if (Math.abs(pose.distance - motion.pose.distance) > .002) { leaveFit(); resetPan(); travelCamera(); }
       Promise.all([ensureImage(Math.floor(position)), ensureImage(Math.ceil(position))]).then(() => {
         if (request !== motion.request || document.querySelector('dialog[open]')) return;
         motion.pose = pose; motion.position = position;
@@ -382,6 +400,7 @@
       scheduleScroll();
     }
     function pause() {
+      restCamera();
       motion.request++;
       motion.navigation = null;
       if (motion.frame !== null) cancelAnimationFrame(motion.frame);

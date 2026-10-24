@@ -75,3 +75,13 @@ html.motion-off .kinetic-title{display:none}
 .art-view-actions [data-effects]{border:1px solid #fffdf477;border-radius:24px;padding:0 13px;white-space:nowrap}
 .art-view-actions [data-effects][aria-pressed=false]{background:#fffdf4;color:#171814;text-shadow:none}
 @media(max-width:760px){.art-view-actions [data-effects]{margin:4px 0;min-height:36px}.motion-off [data-journey-cue]{max-width:205px}}
+
+/* Give the camera the frame; bring reading controls back when the gesture rests. */
+.gallery-page .art-shade{transition:opacity .6s}
+.gallery-page .art-stage [data-art-copy],.gallery-page .art-controls,.gallery-page .art-index{transition:opacity .55s ease,translate .55s ease}
+.gallery-page .art-stage.is-camera-moving:not(:has(:focus-visible)) [data-art-copy]{opacity:calc(1 - var(--camera-veil,0))!important;translate:0 calc(var(--camera-veil,0)*12px);transition-duration:.18s}
+.gallery-page .art-stage.is-camera-moving:not(:has(:focus-visible)) .art-controls,.gallery-page .art-stage.is-camera-moving:not(:has(:focus-visible)) .art-index{opacity:calc(1 - var(--camera-veil,0)*.82);transition-duration:.18s}
+.gallery-page .art-stage.is-camera-moving:not(:has(:focus-visible)) .art-controls:hover,.gallery-page .art-stage.is-camera-moving:not(:has(:focus-visible)) .art-index:hover{opacity:1}
+.gallery-page .art-stage.is-camera-moving:not(:has(:focus-visible)) .art-shade{opacity:calc(1 - var(--camera-veil,0)*.7);transition-duration:.18s}
+.gallery-page .art-stage.is-camera-moving [data-art-copy]:hover{opacity:1!important;translate:0 0}
+.has-motion .art-stage.has-travelled .art-layers,.has-motion .art-stage.has-travelled [data-art-title],.has-motion .art-stage.has-travelled .art-counter,.has-motion .art-stage.has-travelled .art-material{animation:none}
