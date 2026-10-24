@@ -34,6 +34,7 @@ fail() { echo -e "${RED}[FATAL]${NC} $1"; exit 1; }
 # ── 2. Construir Galería 3D / SPA (dist/) ──────────
 log "Construyendo SPA (Vite + React + Three.js)..."
 export NODE_ENV=production
+rm -rf "$BUILD_DIR"
 npm run build || fail "Build de Vite falló"
 ok "Galería 3D compilada → dist/"
 
@@ -137,7 +138,7 @@ if ! python3 -c "import PIL" 2>/dev/null; then
 fi
 python3 tools/build_immersive_site.py || fail "Compilación del portfolio falló"
 python3 tools/check_immersive_site.py || fail "Validación del portfolio falló"
-node tools/test_immersive_dom.cjs || fail "Validación de interacciones falló"
+node --max-old-space-size=4096 tools/test_immersive_dom.cjs || fail "Validación de interacciones falló"
 ok "Portfolio completo compilado → .deploy/"
 
 # ── 6. Deploy a Cloudflare Pages ─────────────────────────────
