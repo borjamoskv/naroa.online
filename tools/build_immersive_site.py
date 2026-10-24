@@ -9,6 +9,7 @@ import hashlib
 import json
 import re
 import shutil
+import sys
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from email.utils import format_datetime
@@ -289,6 +290,142 @@ def build(output):
         "sameAs": artist_same_as,
     }
 
+    webmcp_manifest = {
+        "$schema": "https://modelcontextprotocol.io/schema/2024-11-05/server.json",
+        "name": "naroa-online-webmcp",
+        "version": "1.2.0",
+        "description": "Servidor WebMCP oficial de Naroa Gutiérrez Gil: catálogo de obras de arte, Evidence Graph y orquestación de consultas de encargos en Bilbao.",
+        "homepage": ORIGIN,
+        "author": {
+            "name": "Naroa Gutiérrez Gil",
+            "url": ORIGIN + "/",
+            "email": "naroa@naroa.eu",
+            "telephone": "+34636060609",
+            "sameAs": artist_same_as,
+        },
+        "publisher": {
+            "name": "Naroa Gutiérrez Gil",
+            "url": ORIGIN + "/",
+            "sameAs": artist_same_as,
+        },
+        "capabilities": {
+            "tools": {
+                "listChanged": False,
+            },
+            "resources": {
+                "subscribe": False,
+                "listChanged": False,
+            },
+        },
+        "endpoints": {
+            "catalog_api": f"{ORIGIN}/api/catalog.json",
+            "rss_feed": f"{ORIGIN}/feed.xml",
+            "llms_index": f"{ORIGIN}/llms.txt",
+            "llms_full": f"{ORIGIN}/llms-full.txt",
+        },
+        "resources": [
+            {
+                "uri": f"{ORIGIN}/api/catalog.json",
+                "name": "Catálogo Estructurado Completo",
+                "description": "Especificaciones técnicas, descripciones y Evidence Graph de las obras.",
+                "mimeType": "application/json",
+            },
+            {
+                "uri": f"{ORIGIN}/feed.xml",
+                "name": "Feed RSS de Publicaciones y Obras",
+                "description": "Feed RSS 2.0 sindicado con novedades del estudio.",
+                "mimeType": "application/rss+xml",
+            },
+            {
+                "uri": f"{ORIGIN}/llms.txt",
+                "name": "Índice Factual LLMs",
+                "description": "Evidence Graph condensado y respuestas directas para agentes.",
+                "mimeType": "text/plain",
+            },
+        ],
+        "tools": [
+            {
+                "name": "search_catalogue",
+                "description": "Busca obras en el catálogo de Naroa Gutiérrez Gil filtrando por término clave, técnica o serie.",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "query": {
+                            "type": "string",
+                            "description": "Palabra clave a buscar en título, materiales, soporte o relato de la obra.",
+                        },
+                        "category": {
+                            "type": "string",
+                            "enum": ["all", "pizarra", "collage", "objetos", "caracterizacion", "Vaivenes"],
+                            "description": "Categoría o serie plástica.",
+                        },
+                    },
+                },
+            },
+            {
+                "name": "get_artwork_details",
+                "description": "Obtiene la ficha técnica verificada completa de una obra concreta por su slug canónico.",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "slug": {
+                            "type": "string",
+                            "description": "Slug canónico de la obra (ej. 'amy-rocks', 'el-gran-dakari', 'amor-en-conserva').",
+                        },
+                    },
+                    "required": ["slug"],
+                },
+            },
+            {
+                "name": "configure_commission_inquiry",
+                "description": "Valida las opciones para encargar un retrato personalizado y devuelve los enlaces directos en O(1) para WhatsApp y correo electrónico.",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {
+                        "support": {
+                            "type": "string",
+                            "enum": [
+                                "Pizarra natural rústica",
+                                "Collage textil sobre madera",
+                                "Caja personalizada u objeto",
+                                "Retrato al óleo o grafito",
+                                "Asesoramiento en estudio",
+                            ],
+                            "description": "Soporte plástico preferido para el retrato.",
+                        },
+                        "motif": {
+                            "type": "string",
+                            "enum": [
+                                "Retrato individual",
+                                "Pareja o familia",
+                                "Mascota",
+                                "Homenaje o recuerdo",
+                            ],
+                            "description": "Motivo del retrato.",
+                        },
+                        "timing": {
+                            "type": "string",
+                            "enum": [
+                                "Sin prisa (2 a 4 semanas)",
+                                "Fecha señalada próxima",
+                            ],
+                            "description": "Plazo estimado de entrega deseado.",
+                        },
+                    },
+                    "required": ["support", "motif"],
+                },
+            },
+            {
+                "name": "get_artist_profile",
+                "description": "Devuelve la información de biografía verificada, exposiciones históricas y canales directos de contacto.",
+                "inputSchema": {
+                    "type": "object",
+                    "properties": {},
+                },
+            },
+        ],
+    }
+
     def page(path, title, description, body, image, gallery=False, schema=None, not_found=False, image_alt=None):
         canonical = ORIGIN + path
         im_w, im_h, im_mime = image_info(image)
@@ -326,7 +463,7 @@ def build(output):
                 "itemListElement": items
             }
         breadcrumb_tag = f'<script type="application/ld+json" id="seo-breadcrumb">{data_json(breadcrumb)}</script>' if breadcrumb else ''
-        html = f'''<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>{esc(title)} · Naroa Gutiérrez Gil</title><meta name="description" content="{esc(description)}"><meta name="robots" content="index, follow, max-image-preview:large"><meta name="theme-color" content="#11120f"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Naroa"><link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/assets/naroa-icon-180-v1.png"><link rel="alternate" type="application/rss+xml" title="Naroa Gutiérrez Gil · Obras y Cuaderno" href="{ORIGIN}/feed.xml"><link rel="mcp" type="application/json" href="{ORIGIN}/.well-known/mcp.json" title="WebMCP Model Context Protocol"><link rel="canonical" href="{canonical}"><meta property="og:site_name" content="Naroa Gutiérrez Gil"><meta property="og:locale" content="es_ES"><meta property="og:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{canonical}"><meta property="og:type" content="{'article' if gallery else 'website'}"><meta property="og:image" content="{ORIGIN}{image}"><meta property="og:image:secure_url" content="{ORIGIN}{image}"><meta property="og:image:width" content="{im_w}"><meta property="og:image:height" content="{im_h}"><meta property="og:image:type" content="{im_mime}"><meta property="og:image:alt" content="{esc(im_alt)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta name="twitter:description" content="{esc(description)}"><meta name="twitter:image" content="{ORIGIN}{image}"><meta name="twitter:image:alt" content="{esc(im_alt)}"><link rel="icon" href="{favicon_path}" type="image/svg+xml" sizes="any"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="{assets['app.css']}"><script type="application/ld+json" id="page-schema">{data_json(structured)}</script>{breadcrumb_tag}<script defer src="{catalog_path}"></script><script defer src="{assets['soundscape.js']}"></script><script defer src="{assets['journey.js']}"></script><script defer src="{assets['app.js']}"></script></head><body class="{'gallery-page' if gallery else 'editorial-page'}"><a class="skip-link" href="#main">Ir al contenido</a>{header(gallery)}{body}{'' if gallery else footer()}{dialogs()}</body></html>'''
+        html = f'''<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>{esc(title)} · Naroa Gutiérrez Gil</title><meta name="description" content="{esc(description)}"><meta name="robots" content="index, follow, max-image-preview:large"><meta name="theme-color" content="#11120f"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Naroa"><link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/assets/naroa-icon-180-v1.png"><link rel="alternate" type="application/rss+xml" title="Naroa Gutiérrez Gil · Obras y Cuaderno" href="{ORIGIN}/feed.xml"><link rel="mcp" type="application/json" href="{ORIGIN}/.well-known/mcp.json" title="WebMCP Model Context Protocol"><link rel="canonical" href="{canonical}"><meta property="og:site_name" content="Naroa Gutiérrez Gil"><meta property="og:locale" content="es_ES"><meta property="og:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{canonical}"><meta property="og:type" content="{'article' if gallery else 'website'}"><meta property="og:image" content="{ORIGIN}{image}"><meta property="og:image:secure_url" content="{ORIGIN}{image}"><meta property="og:image:width" content="{im_w}"><meta property="og:image:height" content="{im_h}"><meta property="og:image:type" content="{im_mime}"><meta property="og:image:alt" content="{esc(im_alt)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta name="twitter:description" content="{esc(description)}"><meta name="twitter:image" content="{ORIGIN}{image}"><meta name="twitter:image:alt" content="{esc(im_alt)}"><link rel="icon" href="{favicon_path}" type="image/svg+xml" sizes="any"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="{assets['app.css']}"><script type="application/ld+json" id="page-schema">{data_json(structured)}</script>{breadcrumb_tag}<script type="application/vnd.mcp+json" id="webmcp-schema">{data_json(webmcp_manifest)}</script><script defer src="{catalog_path}"></script><script defer src="{assets['soundscape.js']}"></script><script defer src="{assets['journey.js']}"></script><script defer src="{assets['app.js']}"></script></head><body class="{'gallery-page' if gallery else 'editorial-page'}"><a class="skip-link" href="#main">Ir al contenido</a>{header(gallery)}{body}{'' if gallery else footer()}{dialogs()}</body></html>'''
         dest = output / ("404.html" if not_found else path.lstrip("/") + "index.html")
         write(dest, html)
         if not not_found:
@@ -907,6 +1044,7 @@ def build(output):
     )
     sitemap_xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">' + ''.join(sitemap_entries) + '</urlset>\n'
     write(output / "robots.txt", robots_content)
+    write(REPO / "public" / "robots.txt", robots_content)
     write(output / "sitemap.xml", sitemap_xml)
     write(REPO / "public" / "sitemap.xml", sitemap_xml)
 
@@ -975,8 +1113,11 @@ def build(output):
     write(output / "feed.xml", feed_xml)
     write(REPO / "public" / "feed.xml", feed_xml)
     indexnow_key = "6621e1f1c138eeb14922f7804f61ae34"
+    indexnow_payload = json.dumps({"host": "naroagutierrezgil.com", "key": indexnow_key, "keyLocation": f"{ORIGIN}/{indexnow_key}.txt", "urlList": [ORIGIN + p[0] for p in pages]}, indent=2) + "\n"
     write(output / f"{indexnow_key}.txt", indexnow_key + "\n")
-    write(output / "indexnow.json", json.dumps({"host": "naroagutierrezgil.com", "key": indexnow_key, "keyLocation": f"{ORIGIN}/{indexnow_key}.txt", "urlList": [ORIGIN + p[0] for p in pages]}, indent=2) + "\n")
+    write(output / "indexnow.json", indexnow_payload)
+    write(REPO / "public" / f"{indexnow_key}.txt", indexnow_key + "\n")
+    write(REPO / "public" / "indexnow.json", indexnow_payload)
 
     catalog_api = {
         "version": "1.2",
@@ -1240,6 +1381,7 @@ def build(output):
             },
         ],
     }
+
     webmcp_json = json.dumps(webmcp_manifest, ensure_ascii=False, indent=2) + "\n"
     write(output / ".well-known" / "mcp.json", webmcp_json)
     write(REPO / "public" / ".well-known" / "mcp.json", webmcp_json)
@@ -1356,5 +1498,17 @@ def build(output):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=REPO / ".deploy")
+    parser.add_argument("--ping-indexnow", action="store_true", help="Ping IndexNow endpoints immediately after build")
+    parser.add_argument("--indexnow-dry-run", action="store_true", help="Dry-run IndexNow ping without network dispatch")
     args = parser.parse_args()
-    build(args.output.resolve())
+    dest_output = args.output.resolve()
+    build(dest_output)
+    if args.ping_indexnow or args.indexnow_dry_run:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        from ping_indexnow import submit_indexnow, ENDPOINTS, load_payload
+        payload = load_payload(dest_output / "indexnow.json")
+        print(f"IndexNow Ping Dispatcher · Host: {payload['host']} · URLs: {len(payload['urlList'])}")
+        for name, url in ENDPOINTS.items():
+            res = submit_indexnow(payload, name, url, dry_run=args.indexnow_dry_run)
+            prefix = "✓" if res["success"] else "✗"
+            print(f" {prefix} [{name.upper()}] {res['message']}")

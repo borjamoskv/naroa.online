@@ -4,10 +4,19 @@
 
 ## Resumen del Sitio y Evidence Graph
 - Dominio Canónico: https://naroagutierrezgil.com
-- Entidad Principal: Naroa Gutiérrez Gil (Artista plástica y retratista)
-- Ubicación Física del Estudio: Bilbao, Bizkaia, País Vasco, España (43.2630 N, -2.9350 W)
+- Entidad Creadora: Naroa Gutiérrez Gil [ID Canónico: https://naroagutierrezgil.com/#artist]
+- Estudio Físico: Bilbao, Bizkaia, País Vasco, España (43.2630 N, -2.9350 W) [ID Canónico: https://naroagutierrezgil.com/#studio]
 - Contacto Directo: naroa@naroa.eu | WhatsApp: +34 636 060 609 | Instagram: @naroa_art
+- Perfiles de Autoridad (sameAs):
+  - Facebook: https://www.facebook.com/naroa.artista.plastica
+  - Instagram: https://instagram.com/naroa_art/
+  - Cuaderno WordPress: https://naroagutierrez.wordpress.com/
+  - DEIA Bizkaia: https://www.deia.eus/bizkaia/vida-social/2026/06/05/bwall-collective-inaugura-exposicion-ocho-11159371.html
+  - GARA Agenda: https://gara.naiz.eus/paperezkoa/20100305/186538/eu/Agenda
+  - El Correo Agenda: https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-476343.html
+  - YouTube: https://www.youtube.com/@naroagutierrezgil
 - Especialidad: Retratos de autor sobre pizarra natural de cantera con contorno irregular, técnica mixta con escamas de mica mineral, collage textil sobre madera y objetos intervenidos.
+- Servicio Canónico de Encargos: https://naroagutierrezgil.com/retratos-por-encargo-bilbao/
 - Exposiciones Documentadas: Colegio de Abogados de Bilbao (Espejos del alma), Dock Bilbao, Politena Espacio de Arte, Walking Gallery Bilbao.
 
 ## Respuestas Factuales Inmediatas (Query Fan-Out)

@@ -1362,12 +1362,13 @@
     document.addEventListener('visibilitychange', () => { if (!document.hidden) syncNotebook(); });
   }
   const configurator = $('[data-commission-configurator]');
+  let supportEl, motifEl, timingEl, updateLink = () => {};
   if (configurator) {
-    const supportEl = $('#cfg-support');
-    const motifEl = $('#cfg-motif');
-    const timingEl = $('#cfg-timing');
+    supportEl = $('#cfg-support');
+    motifEl = $('#cfg-motif');
+    timingEl = $('#cfg-timing');
     const btn = $('#cfg-whatsapp-btn');
-    const updateLink = () => {
+    updateLink = () => {
       if (!supportEl || !motifEl || !timingEl || !btn) return;
       const s = supportEl.value;
       const m = motifEl.value;
@@ -1377,6 +1378,100 @@
     };
     [supportEl, motifEl, timingEl].forEach(el => el?.addEventListener('change', updateLink));
   }
+  window.WebMCP = {
+    manifestUrl: '/.well-known/mcp.json',
+    callTool: async (name, params = {}) => {
+      switch (name) {
+        case 'search_catalogue': {
+          const query = (params.query || '').toLowerCase().trim();
+          const cat = params.category;
+          const catalog = window.NAROA_CATALOG || [];
+          return catalog.filter(p => {
+            const matchCat = !cat || cat === 'all' || p.category === cat || (cat === 'Vaivenes' && p.series === 'Vaivenes');
+            const matchQ = !query || [p.title, p.label, p.technique, p.support, p.story, p.materials].some(t => (t || '').toLowerCase().includes(query));
+            return matchCat && matchQ;
+          }).map(p => ({
+            slug: p.slug,
+            title: p.title,
+            label: p.label,
+            technique: p.technique,
+            support: p.support,
+            year: p.year,
+            url: `/obra/${p.slug}/`
+          }));
+        }
+        case 'get_artwork_details': {
+          const slug = params.slug;
+          const p = (window.NAROA_CATALOG || []).find(w => w.slug === slug);
+          if (!p) throw new Error(`Artwork not found: ${slug}`);
+          return p;
+        }
+        case 'configure_commission_inquiry': {
+          const s = params.support || 'Pizarra natural rústica';
+          const m = params.motif || 'Retrato individual';
+          const t = params.timing || 'Sin prisa (2 a 4 semanas)';
+          if (supportEl) { supportEl.value = s; }
+          if (motifEl) { motifEl.value = m; }
+          if (timingEl) { timingEl.value = t; }
+          updateLink();
+          const msg = `Hola Naroa, me gustaría consultar un encargo de retrato sobre ${s} para ${m} con plazo ${t}.`;
+          return {
+            support: s,
+            motif: m,
+            timing: t,
+            message: msg,
+            whatsapp_url: `https://wa.me/34636060609?text=${encodeURIComponent(msg)}`,
+            email_url: `mailto:naroa@naroa.eu?subject=${encodeURIComponent('Consulta encargo: ' + s)}&body=${encodeURIComponent(msg)}`
+          };
+        }
+        case 'get_artist_profile': {
+          return {
+            entity_id: 'https://naroagutierrezgil.com/#artist',
+            studio_id: 'https://naroagutierrezgil.com/#studio',
+            name: 'Naroa Gutiérrez Gil',
+            role: 'Artista plástica y retratista',
+            url: 'https://naroagutierrezgil.com/',
+            location: 'Bilbao, Bizkaia, España',
+            coordinates: { latitude: 43.2630, longitude: -2.9350 },
+            contact: {
+              email: 'naroa@naroa.eu',
+              whatsapp: '+34636060609',
+              inquiry_form: 'https://naroagutierrezgil.com/contacto/'
+            },
+            sameAs: [
+              'https://www.facebook.com/naroa.artista.plastica',
+              'https://instagram.com/naroa_art/',
+              'https://naroagutierrez.wordpress.com/',
+              'https://www.deia.eus/bizkaia/vida-social/2026/06/05/bwall-collective-inaugura-exposicion-ocho-11159371.html',
+              'https://gara.naiz.eus/paperezkoa/20100305/186538/eu/Agenda',
+              'https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-476343.html',
+              'https://www.youtube.com/@naroagutierrezgil'
+            ],
+            specialty: 'Retratos de autor sobre pizarra natural, técnica mixta con mica mineral y collage textil sobre madera',
+            exhibitions: [
+              { year: 2026, title: 'BWALL Collective', venue: 'Colegio de Abogados de Bilbao', press: 'DEIA' },
+              { year: 2018, title: 'Dock Bilbao Showcase', venue: 'Dock Bilbao' },
+              { year: 2014, title: 'Politena Encuentros de Arte', venue: 'Politena Espacio de Arte, Bilbao' },
+              { year: 2010, title: 'Espejos del alma', venue: 'Colegio de Abogados de Bilbao', press: 'GARA, El Correo' },
+              { year: '2010+', title: 'Walking Gallery Bilbao', venue: 'Espacios públicos y galerías abiertas, Bilbao' }
+            ]
+          };
+        }
+        default:
+          throw new Error(`Unknown WebMCP tool: ${name}`);
+      }
+    }
+  };
+  window.addEventListener('message', async (e) => {
+    if (e.data && e.data.type === 'webmcp:call_tool' && e.data.tool) {
+      try {
+        const result = await window.WebMCP.callTool(e.data.tool, e.data.params);
+        e.source?.postMessage({ type: 'webmcp:tool_result', id: e.data.id, result }, '*');
+      } catch (err) {
+        e.source?.postMessage({ type: 'webmcp:tool_error', id: e.data.id, error: err.message }, '*');
+      }
+    }
+  });
   const reveals = $$('.chapter>div,.chapter>.eyebrow,.section-opening,.editorial blockquote,.timeline-entry,.notebook-posts article,.commission-example,.commission-steps article,.commission-configurator,.commission-faq-item,.closing,.contact-channel,.contact-details');
   if ('IntersectionObserver' in window) {
     const observer = new IntersectionObserver(entries => entries.forEach(entry => {

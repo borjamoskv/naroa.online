@@ -379,6 +379,18 @@ async function eyeMatch(ui, base, points) {
   const mcpLink = ui.find('link[rel="mcp"]');
   assert.ok(mcpLink, 'HTML head must contain a WebMCP <link rel="mcp">');
   assert.equal(mcpLink.getAttribute('href'), 'https://naroagutierrezgil.com/.well-known/mcp.json');
+  const inDomMcp = ui.find('script#webmcp-schema');
+  assert.ok(inDomMcp, 'HTML must contain in-DOM WebMCP schema script');
+  const inDomMcpData = JSON.parse(inDomMcp.textContent);
+  assert.equal(inDomMcpData.tools.length, 4, 'In-DOM WebMCP schema must declare 4 tools');
+  assert.ok(ui.w.WebMCP, 'WebMCP runtime dispatcher must be attached to window');
+  const searchResults = await ui.w.WebMCP.callTool('search_catalogue', { query: 'marilyn' });
+  assert.equal(searchResults.length, 1, 'WebMCP search_catalogue must return matching artwork');
+  assert.equal(searchResults[0].slug, 'marilyn-rocks');
+  const artistProfile = await ui.w.WebMCP.callTool('get_artist_profile');
+  assert.equal(artistProfile.name, 'Naroa Gutiérrez Gil');
+  const commQuote = await ui.w.WebMCP.callTool('configure_commission_inquiry', { support: 'Pizarra natural rústica', motif: 'Retrato individual' });
+  assert.ok(commQuote.whatsapp_url.includes('Pizarra'), 'WebMCP configure_commission_inquiry returns formatted whatsapp link');
   const query = ui.find('#art-search'); query.value = 'marilyn'; query.dispatchEvent(new ui.w.Event('input'));
   assert.equal(ui.document.querySelectorAll('.index-work:not([hidden])').length, 1);
   query.value = 'nonexistent123'; query.dispatchEvent(new ui.w.Event('input'));

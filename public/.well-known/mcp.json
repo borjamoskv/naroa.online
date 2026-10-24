@@ -1,9 +1,51 @@
 {
   "$schema": "https://modelcontextprotocol.io/schema/2024-11-05/server.json",
   "name": "naroa-online-webmcp",
-  "version": "1.0.0",
-  "description": "Servidor WebMCP oficial de Naroa Gutiérrez Gil: catálogo de obras de arte, Evidence Graph y orquestación de consultas de encargos en Bilbao.",
+  "version": "1.2.0",
+  "description": "Servidor WebMCP oficial de Naroa Gutiérrez Gil: catálogo de obras de arte, Evidence Graph, perfiles canónicos de creador y orquestación de consultas de encargos en Bilbao.",
   "homepage": "https://naroagutierrezgil.com",
+  "author": {
+    "name": "Naroa Gutiérrez Gil",
+    "url": "https://naroagutierrezgil.com/",
+    "email": "naroa@naroa.eu",
+    "telephone": "+34636060609",
+    "sameAs": [
+      "https://www.facebook.com/naroa.artista.plastica",
+      "https://instagram.com/naroa_art/",
+      "https://naroagutierrez.wordpress.com/",
+      "https://www.deia.eus/bizkaia/vida-social/2026/06/05/bwall-collective-inaugura-exposicion-ocho-11159371.html",
+      "https://gara.naiz.eus/paperezkoa/20100305/186538/eu/Agenda",
+      "https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-476343.html",
+      "https://www.youtube.com/@naroagutierrezgil"
+    ]
+  },
+  "publisher": {
+    "name": "Naroa Gutiérrez Gil",
+    "url": "https://naroagutierrezgil.com/",
+    "sameAs": [
+      "https://www.facebook.com/naroa.artista.plastica",
+      "https://instagram.com/naroa_art/",
+      "https://naroagutierrez.wordpress.com/",
+      "https://www.deia.eus/bizkaia/vida-social/2026/06/05/bwall-collective-inaugura-exposicion-ocho-11159371.html",
+      "https://gara.naiz.eus/paperezkoa/20100305/186538/eu/Agenda",
+      "https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-476343.html",
+      "https://www.youtube.com/@naroagutierrezgil"
+    ]
+  },
+  "canonicalLocations": {
+    "studio": {
+      "name": "Estudio Naroa Gutiérrez Gil · Bilbao",
+      "locality": "Bilbao",
+      "region": "Bizkaia",
+      "postalCode": "48001",
+      "country": "ES",
+      "geo": {
+        "latitude": 43.263,
+        "longitude": -2.935
+      },
+      "mapUrl": "https://www.google.com/maps?q=Bilbao,+Bizkaia"
+    }
+  },
   "capabilities": {
     "tools": {
       "listChanged": false
