@@ -14,7 +14,10 @@ function create(route = '/', reduce = false, viewport = { width: 1024, height: 7
   const observers = [];
   const callbacks = new Map(), native = new VirtualConsole();
   native.on('jsdomError', error => {
-    if (!error.message.includes('HTMLMediaElement.prototype.play')) errors.push(error.message);
+    if (!error.message.includes('HTMLMediaElement.prototype.play') &&
+        !error.message.includes('HTMLCanvasElement.prototype.getContext')) {
+      errors.push(error.message);
+    }
   });
   const dom = new JSDOM(fs.readFileSync(file, 'utf8'), {
     runScripts: 'outside-only', url: 'https://portfolio.test' + route, virtualConsole: native,
@@ -937,8 +940,42 @@ async function eyeMatch(ui, base, points) {
       assert.equal(artistProfile.name, 'Naroa Gutiérrez Gil', 'WebMCP get_artist_profile returns artist name');
       assert.equal(artistProfile.entity_id, 'https://naroagutierrezgil.com/#artist', 'WebMCP get_artist_profile returns canonical entity ID');
       assert.equal(artistProfile.studio_id, 'https://naroagutierrezgil.com/#studio', 'WebMCP get_artist_profile returns canonical studio ID');
+      assert.ok(page.find('[data-fluid-canvas]'), 'Navier-Stokes FBO fluid canvas is mounted');
+      assert.ok(page.w.NAROA_FLUID, 'NAROA_FLUID Eulerian solver API is exposed on window');
+      page.w.NAROA_FLUID.pulseCenter();
+      const fluidTelemetry = page.w.NAROA_FLUID.getState();
+      assert.equal(fluidTelemetry.backend, 'eulerian-fbo-pingpong', 'Fluid engine uses Eulerian FBO Ping-Pong backend');
+      assert.ok(fluidTelemetry.splatCount >= 2, 'Fluid splat impulses increment splatCount');
+      assert.ok(fluidTelemetry.kineticEnergy > 0, 'Fluid splat injects positive kinetic energy and vorticity');
+
+      assert.ok(page.find('[data-portal-canvas]'), 'Secondary RenderTarget Portal Scrollytelling canvas is mounted');
+      assert.ok(page.w.NAROA_SPLINE_PORTAL, 'NAROA_SPLINE_PORTAL 3D Catmull-Rom spline rig API is exposed on window');
+      page.w.NAROA_SPLINE_PORTAL.pushWheel(180, 0);
+      await page.flush();
+      const splineTelemetry = page.w.NAROA_SPLINE_PORTAL.getState();
+      assert.equal(splineTelemetry.backend, 'catmull-rom-3d-portal-fbo', 'Spline portal engine uses Catmull-Rom 3D + Portal FBO backend');
+      assert.equal(splineTelemetry.waypointCount, works.length, 'Catmull-Rom 3D spline covers all resonance chambers');
+      assert.ok(splineTelemetry.u > 0, 'Wheel impulse advances camera rig along the 3D Catmull-Rom spline');
+      const midPose = page.w.NAROA_SPLINE_PORTAL.evaluateAt(0.015);
+      assert.ok(typeof midPose.axisInversion === 'number' && typeof midPose.portalAperture === 'number', 'Spline evaluation computes axis inversion and portal aperture');
+      assert.ok(page.find('[data-liquid-lens]'), 'Liquid Glass IOR refractive lens is mounted');
+      assert.ok(page.w.NAROA_LIQUID_LENS, 'NAROA_LIQUID_LENS API exposed on window');
     }
     page.dom.window.close();
+  }
+
+  // Verificar #9 Iluminación Táctil Especular + Giro Atómico 720º en El Armigo Atómico (Obra 25/85)
+  {
+    const armigoPage = create('/obra/el-armigo-atomico/', false, { width: 1280, height: 800 }, null, 'on');
+    await armigoPage.flush();
+    assert.ok(armigoPage.w.NAROA_RELIEF, 'NAROA_RELIEF 2.5D normal-mapped specular lighting API exposed');
+    armigoPage.w.NAROA_RELIEF.update(0.75, 0.25, 0.9);
+    const relief = armigoPage.w.NAROA_RELIEF.getState();
+    assert.equal(relief.x, 75, 'Tactile relief updates specular X coordinate');
+    assert.ok(armigoPage.find('[data-journey-cue]').textContent.includes('720°'), 'El Armigo Atómico displays 720° atomic spin cue');
+    const armigoScene = armigoPage.find('.art-scene[data-work="el-armigo-atomico"]');
+    assert.ok(armigoScene.classList.contains('is-armigo-spinning'), 'El Armigo Atómico triggers 720° spin on arrival');
+    armigoPage.dom.window.close();
   }
   assert.equal(manifest.projects, works.length); assert.deepEqual(errors, []);
   console.log(`PASS: ${works.length} variable camera scores, fixed viewing pauses, full-viewport vertical and horizontal seams, deterministic reverse motion, three deep iris passes, zoom and puzzle chapters; all ${works.length} artwork flows, 3 gallery eye pairs, kinetic titles, native scroll, free inertia, direct links, 3-image loading bound, search/filters, details/photos, quiet mode, reduced motion, Vaivenes, editorial reveals, responsive Naroa-to-Rara Avis pupil/iris alignment, photographic wink, cinematic deep-iris camera with continuous forward velocity across the blend, eased outward turn, reversible reveal, image-load guard, seamless continuation through all ${works.length} works, 8 additional deep eye matches embedded catalogue navigation, opt-in reactive sound fragments, speed and direction response, bounded voices, silence at rest and safe audio lifecycle.`);

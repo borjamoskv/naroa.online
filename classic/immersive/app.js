@@ -266,7 +266,70 @@
   if (stage) {
     const works = catalogue.projects.filter(p => stage.dataset.subset !== 'Vaivenes' || p.series === 'Vaivenes');
     const scenes = $$('.art-scene', stage), images = scenes.map(s => $('img', s));
-    scenes.forEach((s, i) => { if (works[i]) s.dataset.work = works[i].slug; });
+    scenes.forEach((s, i) => {
+      if (works[i]) {
+        s.dataset.work = works[i].slug;
+        s.dataset.materialCat = works[i].category || 'collage';
+      }
+    });
+    let portalRing = stage.querySelector('[data-portal-ring]');
+    if (!portalRing) {
+      portalRing = document.createElement('div');
+      portalRing.className = 'art-portal-ring';
+      portalRing.setAttribute('data-portal-ring', '');
+      portalRing.setAttribute('aria-hidden', 'true');
+      portalRing.setAttribute('hidden', '');
+      stage.appendChild(portalRing);
+    }
+    let armigoVisited = false, armigoSpinTimer = null;
+    function fireArmigoSpin(sceneEl) {
+      if (!sceneEl) return;
+      sceneEl.classList.remove('is-armigo-spinning');
+      void sceneEl.offsetWidth;
+      sceneEl.classList.add('is-armigo-spinning');
+      clearTimeout(armigoSpinTimer);
+      armigoSpinTimer = setTimeout(() => {
+        sceneEl.classList.remove('is-armigo-spinning');
+      }, 1300);
+    }
+    // #9 Iluminación Táctil Especular y Relieve 2.5D (Normal-Mapped Canvas & MatCaps)
+    const reliefState = { x: 50, y: 42, angle: 135, alpha: 0, dx: 0, dy: 0 };
+    function updateTactileRelief(normX, normY, activeAlpha = 0.88) {
+      if (reduced.matches) return;
+      reliefState.x = clamp(normX * 100, 0, 100);
+      reliefState.y = clamp(normY * 100, 0, 100);
+      const vx = normX - 0.5;
+      const vy = normY - 0.42;
+      reliefState.angle = Math.round((Math.atan2(vy, vx) * 180 / Math.PI) + 180);
+      reliefState.alpha = activeAlpha;
+      reliefState.dx = Number((-vx * 16).toFixed(2));
+      reliefState.dy = Number((-vy * 16).toFixed(2));
+      stage.style.setProperty('--specular-x', `${reliefState.x.toFixed(1)}%`);
+      stage.style.setProperty('--specular-y', `${reliefState.y.toFixed(1)}%`);
+      stage.style.setProperty('--specular-angle', `${reliefState.angle}deg`);
+      stage.style.setProperty('--specular-alpha', reliefState.alpha.toFixed(3));
+      stage.style.setProperty('--relief-dx', `${reliefState.dx}px`);
+      stage.style.setProperty('--relief-dy', `${reliefState.dy}px`);
+    }
+    stage.addEventListener('pointermove', e => {
+      const w = geometry.width || innerWidth || 1;
+      const h = geometry.height || innerHeight || 1;
+      updateTactileRelief(e.clientX / w, e.clientY / h, 0.88);
+    }, { passive: true });
+    stage.addEventListener('pointerleave', () => {
+      reliefState.alpha = 0;
+      stage.style.setProperty('--specular-alpha', '0');
+      stage.style.setProperty('--relief-dx', '0px');
+      stage.style.setProperty('--relief-dy', '0px');
+    }, { passive: true });
+    window.addEventListener('deviceorientation', e => {
+      if (e.gamma === null || e.beta === null) return;
+      updateTactileRelief(clamp(0.5 + e.gamma / 60, 0, 1), clamp(0.42 + (e.beta - 35) / 60, 0, 1), 0.78);
+    }, { passive: true });
+    window.NAROA_RELIEF = {
+      update: updateTactileRelief,
+      getState: () => ({ ...reliefState })
+    };
     const kineticTitle = $('[data-kinetic-title]', stage), caption = $('[data-art-copy]', stage);
     const state = { index: Number(stage.dataset.initial) || 0, fit: false, quiet: false, photo: 0 };
     const journey = window.NAROA_JOURNEY.create(works, catalogue.journey);
@@ -502,7 +565,7 @@
           setTimeout(() => { if (!isPunchFrozen) punchImpact.setAttribute('hidden', ''); }, 350);
         }
         scheduleMotion();
-      }, 2000);
+      }, 3000);
     }
     let stickman = stage.querySelector('[data-stickman]');
     if (!stickman) {
@@ -696,6 +759,55 @@
       $('meta[property="og:image"]').content = 'https://naroagutierrezgil.com' + p.photos[0].original;
       $('#page-schema').textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'VisualArtwork', name: p.title, url: 'https://naroagutierrezgil.com' + url, description: p.story, image: p.photos.map(ph => 'https://naroagutierrezgil.com' + ph.original), creator: { '@type': 'Person', name: 'Naroa Gutiérrez Gil' } });
     }
+    const SCENE_ACCENTS = ['#edbca4', '#f7d594', '#ff69b4', '#93c572', '#6897ff', '#f4d06f', '#e07a5f'];
+    const heroPointer = { x: 0, y: 0, tx: 0, ty: 0, raf: null };
+    const heroThresholdEl = $('[data-hero-threshold]', stage);
+    function stepHeroPointer() {
+      heroPointer.raf = null;
+      if (!heroThresholdEl || reduced.matches || state.fit || motion.pose.distance >= 0.36) return;
+      const dx = heroPointer.tx - heroPointer.x;
+      const dy = heroPointer.ty - heroPointer.y;
+      heroPointer.x += dx * 0.14;
+      heroPointer.y += dy * 0.14;
+      const damp = clamp(1 - motion.pose.distance / 0.36, 0, 1);
+      const mx = heroPointer.x * damp;
+      const my = heroPointer.y * damp;
+      heroThresholdEl.style.setProperty('--hero-mx', mx.toFixed(4));
+      heroThresholdEl.style.setProperty('--hero-my', my.toFixed(4));
+      heroThresholdEl.style.setProperty('--hero-rx', `${(-my * 6.5).toFixed(3)}deg`);
+      heroThresholdEl.style.setProperty('--hero-ry', `${(mx * 8.5).toFixed(3)}deg`);
+      heroThresholdEl.style.setProperty('--spot-x', `${(46 + mx * 34).toFixed(1)}%`);
+      heroThresholdEl.style.setProperty('--spot-y', `${(39.5 + my * 34).toFixed(1)}%`);
+      const cta = $('.hero-kinetic-cta', heroThresholdEl);
+      if (cta) {
+        cta.style.setProperty('--magnet-x', `${(mx * 18).toFixed(2)}px`);
+        cta.style.setProperty('--magnet-y', `${(my * 14).toFixed(2)}px`);
+      }
+      if (Math.abs(dx) > 0.0008 || Math.abs(dy) > 0.0008) {
+        heroPointer.raf = requestAnimationFrame(stepHeroPointer);
+      }
+    }
+    if (heroThresholdEl) {
+      stage.addEventListener('pointermove', e => {
+        if (reduced.matches || state.fit || motion.pose.distance >= 0.36) return;
+        const w = geometry.width || innerWidth || 1;
+        const h = geometry.height || innerHeight || 1;
+        heroPointer.tx = clamp((e.clientX / w) - 0.46, -0.5, 0.5) * 2;
+        heroPointer.ty = clamp((e.clientY / h) - 0.395, -0.5, 0.5) * 2;
+        if (heroPointer.raf === null) heroPointer.raf = requestAnimationFrame(stepHeroPointer);
+      }, { passive: true });
+      stage.addEventListener('pointerleave', () => {
+        heroPointer.tx = 0;
+        heroPointer.ty = 0;
+        if (heroPointer.raf === null) heroPointer.raf = requestAnimationFrame(stepHeroPointer);
+      }, { passive: true });
+      window.addEventListener('deviceorientation', e => {
+        if (reduced.matches || state.fit || motion.pose.distance >= 0.36 || e.gamma === null || e.beta === null) return;
+        heroPointer.tx = clamp(e.gamma / 30, -1, 1);
+        heroPointer.ty = clamp((e.beta - 35) / 30, -1, 1);
+        if (heroPointer.raf === null) heroPointer.raf = requestAnimationFrame(stepHeroPointer);
+      }, { passive: true });
+    }
     function render() {
       const pose = motion.pose, { entry, phase, progress: fraction } = pose;
       const base = entry.index, incoming = Math.min(base + 1, works.length - 1);
@@ -785,6 +897,10 @@
             image.style.transformOrigin = '47.8% 42.7%';
             const hugoZoom = 1.08 + smooth(pose.explore) * 0.45;
             image.style.transform = `scale(${hugoZoom.toFixed(5)})`;
+          } else if (works[index].slug === 'el-armigo-atomico') {
+            image.style.transformOrigin = '50% 50%';
+            const spinDeg = smooth(pose.explore) * 720;
+            image.style.transform = `translate3d(0,${(-smooth(pose.explore) * 3).toFixed(3)}%,0) scale(1.08000) rotate(${spinDeg.toFixed(2)}deg)`;
           } else {
             image.style.transform = `translate3d(0,${(-smooth(pose.explore) * 3).toFixed(3)}%,0) scale(1.08000)`;
           }
@@ -882,6 +998,18 @@
               image.style.filter = `contrast(${(1 + unseam * 0.22).toFixed(3)})`;
             }
             image.style.transform = `translate3d(${mode === 'H' ? parallax.toFixed(3) : '0'}%,${mode === 'V' ? parallax.toFixed(3) : '0'}%,0) scale(${lens.toFixed(5)})`;
+          } else if (works[incoming]?.slug === 'el-armigo-atomico' || works[base]?.slug === 'el-armigo-atomico') {
+            if (!outgoing && works[incoming]?.slug === 'el-armigo-atomico') {
+              const spin720 = smooth(fraction) * 720;
+              image.style.transformOrigin = '50% 50%';
+              image.style.transform = `translate3d(${mode === 'H' ? parallax.toFixed(3) : '0'}%,${mode === 'V' ? parallax.toFixed(3) : '0'}%,0) scale(${lens.toFixed(5)}) rotate(${spin720.toFixed(2)}deg)`;
+            } else if (outgoing && works[base]?.slug === 'el-armigo-atomico') {
+              const spinExit = smooth(fraction) * 720;
+              image.style.transformOrigin = '50% 50%';
+              image.style.transform = `translate3d(${mode === 'H' ? parallax.toFixed(3) : '0'}%,${mode === 'V' ? parallax.toFixed(3) : '0'}%,0) scale(${lens.toFixed(5)}) rotate(${spinExit.toFixed(2)}deg)`;
+            } else {
+              image.style.transform = `translate3d(${mode === 'H' ? parallax.toFixed(3) : '0'}%,${mode === 'V' ? parallax.toFixed(3) : '0'}%,0) scale(${lens.toFixed(5)})`;
+            }
           } else {
             image.style.transform = `translate3d(${mode === 'H' ? parallax.toFixed(3) : '0'}%,${mode === 'V' ? parallax.toFixed(3) : '0'}%,0) scale(${lens.toFixed(5)})`;
           }
@@ -986,21 +1114,43 @@
         }
       });
       const activeSlug = transition && fraction >= .5 ? works[incoming].slug : works[base].slug;
+      stage.style.setProperty('--scene-accent', SCENE_ACCENTS[(transition && fraction >= .5 ? incoming : base) % SCENE_ACCENTS.length]);
       if (heroThreshold) {
         const thresholdPlane = $('[data-threshold-plane]', heroThreshold);
         const thresholdWink = $('[data-threshold-wink]', heroThreshold);
+        const monoclePortal = $('[data-monocle-portal]', heroThreshold);
+        const monocleMarilyn = $('[data-monocle-marilyn]', heroThreshold);
+        const zoomReadout = $('[data-hero-zoom-readout]', heroThreshold);
         if (still || pose.distance >= 0.36) {
           heroThreshold.style.visibility = 'hidden';
           heroThreshold.style.opacity = '0';
+          heroThreshold.style.setProperty('--hero-split', '1');
         } else {
           const tRaw = clamp(pose.distance / 0.36, 0, 1);
           const t = smooth(tRaw);
           const scale = Math.exp(Math.log(7.2) * t);
           const fade = 1 - smooth((tRaw - 0.45) / 0.55);
+          const splitCurtain = smooth(clamp(tRaw / 0.72, 0, 1));
+          const skewDeg = Math.sin(tRaw * Math.PI) * -14;
+          const letterEm = splitCurtain * 0.28;
           heroThreshold.style.visibility = 'visible';
           heroThreshold.style.opacity = fade.toFixed(4);
+          heroThreshold.style.setProperty('--hero-split', splitCurtain.toFixed(4));
+          heroThreshold.style.setProperty('--hero-skew', `${skewDeg.toFixed(2)}deg`);
+          heroThreshold.style.setProperty('--hero-letter', `${letterEm.toFixed(4)}em`);
           if (thresholdPlane) thresholdPlane.style.transform = `scale(${scale.toFixed(4)})`;
           if (thresholdWink) thresholdWink.style.opacity = (tRaw >= 0.08 && tRaw <= 0.48) ? '1' : '0';
+          if (monoclePortal) {
+            const portalFade = 1 - smooth(clamp((tRaw - 0.28) / 0.45, 0, 1));
+            monoclePortal.style.opacity = portalFade.toFixed(4);
+          }
+          if (monocleMarilyn) {
+            const innerCounterScale = Math.exp(Math.log(1.35) * (1 - t));
+            monocleMarilyn.style.transform = `scale(${innerCounterScale.toFixed(4)})`;
+          }
+          if (zoomReadout) {
+            zoomReadout.textContent = `LENTE ÓPTICA ${scale.toFixed(2)}×`;
+          }
         }
       }
       const artBottom = $('.art-bottom', stage);
@@ -1113,6 +1263,35 @@
       const isJamesToMario = transition && works[base]?.slug === 'james-rocks' && works[incoming]?.slug === 'mario-moreno';
       const isJaioTo13n = transition && works[base]?.slug === 'custom-jaio' && works[incoming]?.slug === '13n';
       const isBowieToOlinga = transition && works[base]?.slug === 'el-hombre-que-susurraba-a-las-estrellas' && works[incoming]?.slug === 'olinga-a-la-naranja';
+      const isArmigoTransition = transition && (works[incoming]?.slug === 'el-armigo-atomico' || works[base]?.slug === 'el-armigo-atomico');
+      if (works[base]?.slug === 'el-armigo-atomico' || works[incoming]?.slug === 'el-armigo-atomico') {
+        const armigoIdx = works.findIndex(w => w.slug === 'el-armigo-atomico');
+        if (!armigoVisited && (works[state.index]?.slug === 'el-armigo-atomico' || (transition && works[incoming]?.slug === 'el-armigo-atomico' && fraction >= 0.35))) {
+          armigoVisited = true;
+          if (armigoIdx >= 0) fireArmigoSpin(scenes[armigoIdx]);
+        }
+      } else {
+        armigoVisited = false;
+      }
+      // V2 (#7): Transición de Portal 3D entre Series Artísticas
+      const isSeriesPortal = transition && (works[base]?.category !== works[incoming]?.category || works[base]?.series !== works[incoming]?.series);
+      if (portalRing) {
+        if (isSeriesPortal && !still) {
+          portalRing.removeAttribute('hidden');
+          portalRing.classList.add('is-portal-open');
+          const portalScale = 0.14 + smooth(fraction) * 2.25;
+          const portalOpacity = Math.sin(fraction * Math.PI) * 0.92;
+          portalRing.style.transform = `translate(-50%,-50%) scale(${portalScale.toFixed(3)}) rotate(${(fraction * 180).toFixed(1)}deg)`;
+          portalRing.style.opacity = portalOpacity.toFixed(3);
+          stage.dataset.portalTransition = 'series-portal';
+        } else {
+          if (!portalRing.hasAttribute('hidden')) {
+            portalRing.setAttribute('hidden', '');
+            portalRing.classList.remove('is-portal-open');
+          }
+          delete stage.dataset.portalTransition;
+        }
+      }
       const flash = isAjenjoPhoto
         ? Math.exp(-Math.pow((fraction - 0.22) / 0.065, 2)) * 0.98
         : 0;
@@ -1139,8 +1318,10 @@
       const cue = $('[data-journey-cue]', stage);
       if (works[state.index]?.slug === 'dustin' && !transition) {
         cue.textContent = 'La última nota ya es silencio · Volver al origen ↺';
+      } else if (works[state.index]?.slug === 'el-armigo-atomico' || isArmigoTransition) {
+        cue.textContent = '¡Giro atómico 720°! · sigue ↓';
       } else {
-        cue.textContent = still ? reduced.matches ? 'Activa los efectos para ver el viaje ↓' : 'Desplázate para recorrer ↕' : !transition ? phase === 'explore' ? 'Explora la superficie ↓' : 'Una pausa para mirar · sigue ↓' : isAjenjoPhoto ? 'Dispara y revela la foto ↓' : isBillToEzquerra ? '¡Impacto! Parón de 2 segundos · sigue ↓' : isRaraToAmor ? 'El azogue se disuelve · sigue ↓' : isAmorToAmy ? 'Abre la lata de conserva · sigue ↓' : isJamesToMario ? 'La cantera de pizarra se quiebra · sigue ↓' : isJaioTo13n ? 'Deshilachar las costuras · sigue ↓' : isBowieToOlinga ? 'Refracción de estrella · sigue ↓' : ({ E: 'Entra en la mirada ↓', H: 'Atravesar · sigue bajando ↓', V: 'Déjate llevar ↓', Z: (transition && works[base]?.slug === 'hugo-box') ? 'Entra en la lente rosa ↓' : 'Acércate ↓', P: 'Mezclar y volver a unir ↓' })[mode];
+        cue.textContent = still ? reduced.matches ? 'Activa los efectos para ver el viaje ↓' : 'Desplázate para recorrer ↕' : !transition ? phase === 'explore' ? 'Explora la superficie ↓' : 'Una pausa para mirar · sigue ↓' : isAjenjoPhoto ? 'Dispara y revela la foto ↓' : isBillToEzquerra ? '¡Impacto! Parón de 3 segundos · sigue ↓' : isRaraToAmor ? 'El azogue se disuelve · sigue ↓' : isAmorToAmy ? 'Abre la lata de conserva · sigue ↓' : isJamesToMario ? 'La cantera de pizarra se quiebra · sigue ↓' : isJaioTo13n ? 'Deshilachar las costuras · sigue ↓' : isBowieToOlinga ? 'Refracción de estrella · sigue ↓' : isSeriesPortal ? 'Atravesando portal de serie ↓' : ({ E: 'Entra en la mirada ↓', H: 'Atravesar · sigue bajando ↓', V: 'Déjate llevar ↓', Z: (transition && works[base]?.slug === 'hugo-box') ? 'Entra en la lente rosa ↓' : 'Acércate ↓', P: 'Mezclar y volver a unir ↓' })[mode];
       }
       stage.classList.toggle('is-travelling', transition);
       stage.style.setProperty('--progress', (pose.distance / journey.total * (works.length - 1) * 100).toFixed(3) + '%');
@@ -1160,14 +1341,10 @@
       const boundary = journey.entries.find(entry => Math.abs(entry.start * geometry.unit - pixels) < 1);
       const targetDist = clamp(boundary ? boundary.start : pixels / geometry.unit, 0, journey.total);
       if (isPunchFrozen) {
-        if (Math.abs(targetDist - punchFreezeDistance) < 0.28) {
-          return;
-        }
-        isPunchFrozen = false;
-        clearTimeout(punchFreezeTimer);
-        stage.classList.remove('has-punch-shake', 'is-punch-frozen');
-        punchImpact?.classList.remove('is-punching');
-        punchImpact?.setAttribute('hidden', '');
+        motion.current = punchFreezeDistance;
+        motion.target = punchFreezeDistance;
+        window.scrollTo({ top: geometry.top + punchFreezeDistance * geometry.unit, behavior: 'auto' });
+        return;
       }
       motion.target = targetDist;
       if (reduced.matches || state.fit) {
@@ -1182,26 +1359,21 @@
       motion.frame = null;
       if (document.querySelector('dialog[open]')) return;
       if (isPunchFrozen) {
-        if (Math.abs(motion.target - punchFreezeDistance) > 0.28) {
-          isPunchFrozen = false;
-          clearTimeout(punchFreezeTimer);
-          stage.classList.remove('has-punch-shake', 'is-punch-frozen');
-          punchImpact?.classList.remove('is-punching');
-          punchImpact?.setAttribute('hidden', '');
-        } else {
-          motion.current = punchFreezeDistance;
-          motion.target = punchFreezeDistance;
-          render();
-          return;
-        }
+        motion.current = punchFreezeDistance;
+        motion.target = punchFreezeDistance;
+        render();
+        return;
       }
       const still = state.fit || reduced.matches;
       const delta = motion.target - motion.current;
       if (still || Math.abs(delta) < 0.00015) {
         motion.current = motion.target;
+        stage.style.setProperty('--scroll-energy', '0');
       } else {
-        // High-density sub-step damping (0.16 per frame) generates silky-smooth minipasos across any scroll gesture
-        motion.current += delta * 0.16;
+        // Adaptive sub-step damping (0.16..0.22 per frame) generates silky-smooth minipasos across any scroll gesture
+        const alpha = clamp(0.16 + Math.abs(delta) * 0.06, 0.16, 0.22);
+        motion.current += delta * alpha;
+        stage.style.setProperty('--scroll-energy', clamp(Math.abs(delta) * 2.2, 0, 1).toFixed(3));
       }
       const pose = journey.read(motion.current);
       const position = pose.position;
@@ -1768,6 +1940,26 @@
   }
   if (!stage) {
     const sections = $$('[data-parallax]'); let frame = null;
+    sections.forEach(section => {
+      if (!section.matches('.page-hero')) return;
+      section.addEventListener('pointermove', e => {
+        if (reduced.matches) return;
+        const r = section.getBoundingClientRect();
+        if (!r.width || !r.height) return;
+        const mx = clamp((e.clientX - r.left) / r.width - 0.5, -0.5, 0.5) * 2;
+        const my = clamp((e.clientY - r.top) / r.height - 0.5, -0.5, 0.5) * 2;
+        section.style.setProperty('--hero-mx', mx.toFixed(4));
+        section.style.setProperty('--hero-my', my.toFixed(4));
+        section.style.setProperty('--hero-rx', `${(-my * 4.5).toFixed(2)}deg`);
+        section.style.setProperty('--hero-ry', `${(mx * 5.5).toFixed(2)}deg`);
+      }, { passive: true });
+      section.addEventListener('pointerleave', () => {
+        section.style.setProperty('--hero-mx', '0');
+        section.style.setProperty('--hero-my', '0');
+        section.style.setProperty('--hero-rx', '0deg');
+        section.style.setProperty('--hero-ry', '0deg');
+      }, { passive: true });
+    });
     function pageParallax() {
       frame = null;
       const vh = innerHeight || 800;
@@ -1781,8 +1973,12 @@
         const copy = $('.page-hero-copy', section);
         if (copy) {
           const exit = clamp(-r.top / vh, 0, 1);
+          const splitEase = exit * exit * (3 - 2 * exit);
           copy.style.transform = reduced.matches ? '' : `translate3d(0,${(-exit * vh * .035).toFixed(2)}px,0)`;
           copy.style.opacity = reduced.matches ? '1' : (1 - exit * .75).toFixed(3);
+          section.style.setProperty('--hero-split', reduced.matches ? '0' : splitEase.toFixed(4));
+          section.style.setProperty('--hero-skew', reduced.matches ? '0deg' : `${(Math.sin(exit * Math.PI) * -9.5).toFixed(2)}deg`);
+          section.style.setProperty('--hero-letter', reduced.matches ? '0em' : `${(splitEase * 0.18).toFixed(4)}em`);
         }
       });
       $('.site-nav').classList.toggle('is-scrolled', scrollY > vh * .72);
@@ -2062,5 +2258,995 @@
     const clear = () => { el.style.setProperty('--magnet-x', '0px'); el.style.setProperty('--magnet-y', '0px'); };
     el.addEventListener('pointerleave', clear); el.addEventListener('blur', clear); reduced.addEventListener('change', clear);
   });
+
+  // ── 3. Simulación Euleriana de Fluidos Navier-Stokes y Advect-Curl (FBO Ping-Pong) ──
+  (() => {
+    if (typeof window === 'undefined' || !document.body) return;
+    if (document.querySelector('[data-fluid-canvas]')) return;
+    const canvas = document.createElement('canvas');
+    canvas.className = 'naroa-fluid-canvas';
+    canvas.setAttribute('data-fluid-canvas', '');
+    canvas.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(canvas);
+
+    // Paleta mineral de Naroa: Oro Mineral, Azogue/Mica Plateada y Tinta Ámbar
+    const PALETTE = [
+      [0.83, 0.68, 0.22], // Oro mineral (#D4AF37)
+      [0.78, 0.83, 0.88], // Azogue / Mica plateada
+      [0.72, 0.42, 0.24], // Tinta tierra / Óleo cálido
+      [0.92, 0.85, 0.62]  // Luz de pizarra especular
+    ];
+    let paletteIdx = 0;
+
+    const fluidState = {
+      active: false,
+      backend: 'eulerian-fbo-pingpong',
+      simWidth: 128,
+      simHeight: 128,
+      dyeWidth: 512,
+      dyeHeight: 512,
+      curlStrength: 28.0,
+      pressureIterations: 14,
+      velocityDissipation: 0.975,
+      dyeDissipation: 0.962,
+      splatRadius: 0.0028,
+      kineticEnergy: 0,
+      vorticityPeak: 0,
+      splatCount: 0,
+      lastPointer: { x: 0.5, y: 0.5, vx: 0, vy: 0 }
+    };
+
+    let gl = null;
+    let ext = null;
+    let programs = null;
+    let velocityFBO = null;
+    let dyeFBO = null;
+    let divergenceFBO = null;
+    let curlFBO = null;
+    let pressureFBO = null;
+    let quadVBO = null;
+    let rafId = null;
+    let idleFrames = 0;
+
+    function initWebGL() {
+      try {
+        const params = { alpha: true, depth: false, stencil: false, antialias: false, preserveDrawingBuffer: false };
+        gl = canvas.getContext('webgl2', params);
+        const isWebGL2 = !!gl;
+        if (!isWebGL2) {
+          gl = canvas.getContext('webgl', params) || canvas.getContext('experimental-webgl', params);
+        }
+        if (!gl) return false;
+
+        let halfFloatTexType;
+        let formatRGBA;
+        let formatRG;
+        let formatR;
+
+        if (isWebGL2) {
+          gl.getExtension('EXT_color_buffer_float');
+          const linearSupport = gl.getExtension('OES_texture_float_linear');
+          halfFloatTexType = gl.HALF_FLOAT;
+          formatRGBA = getSupportedFormat(gl, gl.RGBA16F, gl.RGBA, halfFloatTexType);
+          formatRG = getSupportedFormat(gl, gl.RG16F, gl.RG, halfFloatTexType);
+          formatR = getSupportedFormat(gl, gl.R16F, gl.RED, halfFloatTexType);
+          ext = { formatRGBA, formatRG, formatR, halfFloatTexType, supportLinearFiltering: !!linearSupport };
+        } else {
+          const halfFloat = gl.getExtension('OES_texture_half_float');
+          const linearSupport = gl.getExtension('OES_texture_half_float_linear');
+          if (!halfFloat) return false;
+          halfFloatTexType = halfFloat.HALF_FLOAT_OES;
+          formatRGBA = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
+          formatRG = formatRGBA;
+          formatR = formatRGBA;
+          ext = { formatRGBA, formatRG, formatR, halfFloatTexType, supportLinearFiltering: !!linearSupport };
+        }
+        if (!ext.formatRGBA) return false;
+
+        const baseVS = `
+          precision highp float;
+          attribute vec2 aPosition;
+          varying vec2 vUv;
+          varying vec2 vL;
+          varying vec2 vR;
+          varying vec2 vT;
+          varying vec2 vB;
+          uniform vec2 texelSize;
+          void main () {
+            vUv = aPosition * 0.5 + 0.5;
+            vL = vUv - vec2(texelSize.x, 0.0);
+            vR = vUv + vec2(texelSize.x, 0.0);
+            vT = vUv + vec2(0.0, texelSize.y);
+            vB = vUv - vec2(0.0, texelSize.y);
+            gl_Position = vec4(aPosition, 0.0, 1.0);
+          }
+        `;
+
+        const clearFS = `
+          precision mediump float;
+          precision mediump sampler2D;
+          varying highp vec2 vUv;
+          uniform sampler2D uTexture;
+          uniform float value;
+          void main () {
+            gl_FragColor = value * texture2D(uTexture, vUv);
+          }
+        `;
+
+        const splatFS = `
+          precision highp float;
+          precision highp sampler2D;
+          varying vec2 vUv;
+          uniform sampler2D uTarget;
+          uniform float aspectRatio;
+          uniform vec3 color;
+          uniform vec2 point;
+          uniform float radius;
+          void main () {
+            vec2 p = vUv - point.xy;
+            p.x *= aspectRatio;
+            vec3 splat = exp(-dot(p, p) / radius) * color;
+            vec3 base = texture2D(uTarget, vUv).xyz;
+            gl_FragColor = vec4(base + splat, 1.0);
+          }
+        `;
+
+        const advectionFS = `
+          precision highp float;
+          precision highp sampler2D;
+          varying vec2 vUv;
+          uniform sampler2D uVelocity;
+          uniform sampler2D uSource;
+          uniform vec2 texelSize;
+          uniform float dt;
+          uniform float dissipation;
+          void main () {
+            vec2 coord = vUv - dt * texture2D(uVelocity, vUv).xy * texelSize;
+            gl_FragColor = dissipation * texture2D(uSource, coord);
+          }
+        `;
+
+        const divergenceFS = `
+          precision mediump float;
+          precision mediump sampler2D;
+          varying highp vec2 vUv;
+          varying highp vec2 vL;
+          varying highp vec2 vR;
+          varying highp vec2 vT;
+          varying highp vec2 vB;
+          uniform sampler2D uVelocity;
+          void main () {
+            float L = texture2D(uVelocity, vL).x;
+            float R = texture2D(uVelocity, vR).x;
+            float T = texture2D(uVelocity, vT).y;
+            float B = texture2D(uVelocity, vB).y;
+            vec2 C = texture2D(uVelocity, vUv).xy;
+            if (vL.x < 0.0) { L = -C.x; }
+            if (vR.x > 1.0) { R = -C.x; }
+            if (vT.y > 1.0) { T = -C.y; }
+            if (vB.y < 0.0) { B = -C.y; }
+            float div = 0.5 * (R - L + T - B);
+            gl_FragColor = vec4(div, 0.0, 0.0, 1.0);
+          }
+        `;
+
+        const curlFS = `
+          precision mediump float;
+          precision mediump sampler2D;
+          varying highp vec2 vUv;
+          varying highp vec2 vL;
+          varying highp vec2 vR;
+          varying highp vec2 vT;
+          varying highp vec2 vB;
+          uniform sampler2D uVelocity;
+          void main () {
+            float L = texture2D(uVelocity, vL).y;
+            float R = texture2D(uVelocity, vR).y;
+            float T = texture2D(uVelocity, vT).x;
+            float B = texture2D(uVelocity, vB).x;
+            float vorticity = R - L - T + B;
+            gl_FragColor = vec4(0.5 * vorticity, 0.0, 0.0, 1.0);
+          }
+        `;
+
+        const vorticityFS = `
+          precision highp float;
+          precision highp sampler2D;
+          varying vec2 vUv;
+          varying vec2 vL;
+          varying vec2 vR;
+          varying vec2 vT;
+          varying vec2 vB;
+          uniform sampler2D uVelocity;
+          uniform sampler2D uCurl;
+          uniform float curl;
+          uniform float dt;
+          void main () {
+            float L = texture2D(uCurl, vL).x;
+            float R = texture2D(uCurl, vR).x;
+            float T = texture2D(uCurl, vT).x;
+            float B = texture2D(uCurl, vB).x;
+            float C = texture2D(uCurl, vUv).x;
+            vec2 force = 0.5 * vec2(abs(T) - abs(B), abs(R) - abs(L));
+            force /= length(force) + 0.0001;
+            force *= curl * C;
+            force.y *= -1.0;
+            vec2 vel = texture2D(uVelocity, vUv).xy;
+            gl_FragColor = vec4(vel + force * dt, 0.0, 1.0);
+          }
+        `;
+
+        const pressureFS = `
+          precision mediump float;
+          precision mediump sampler2D;
+          varying highp vec2 vUv;
+          varying highp vec2 vL;
+          varying highp vec2 vR;
+          varying highp vec2 vT;
+          varying highp vec2 vB;
+          uniform sampler2D uPressure;
+          uniform sampler2D uDivergence;
+          void main () {
+            float L = texture2D(uPressure, vL).x;
+            float R = texture2D(uPressure, vR).x;
+            float T = texture2D(uPressure, vT).x;
+            float B = texture2D(uPressure, vB).x;
+            float divergence = texture2D(uDivergence, vUv).x;
+            float pressure = (L + R + B + T - divergence) * 0.25;
+            gl_FragColor = vec4(pressure, 0.0, 0.0, 1.0);
+          }
+        `;
+
+        const gradSubtractFS = `
+          precision mediump float;
+          precision mediump sampler2D;
+          varying highp vec2 vUv;
+          varying highp vec2 vL;
+          varying highp vec2 vR;
+          varying highp vec2 vT;
+          varying highp vec2 vB;
+          uniform sampler2D uPressure;
+          uniform sampler2D uVelocity;
+          void main () {
+            float L = texture2D(uPressure, vL).x;
+            float R = texture2D(uPressure, vR).x;
+            float T = texture2D(uPressure, vT).x;
+            float B = texture2D(uPressure, vB).x;
+            vec2 velocity = texture2D(uVelocity, vUv).xy;
+            velocity.xy -= vec2(R - L, T - B);
+            gl_FragColor = vec4(velocity, 0.0, 1.0);
+          }
+        `;
+
+        // Shader de visualización con relieve especular de mercurio/mica y dispersión cromática sutil
+        const displayFS = `
+          precision highp float;
+          precision highp sampler2D;
+          varying vec2 vUv;
+          varying vec2 vL;
+          varying vec2 vR;
+          varying vec2 vT;
+          varying vec2 vB;
+          uniform sampler2D uTexture;
+          void main () {
+            vec3 c = texture2D(uTexture, vUv).rgb;
+            vec3 l = texture2D(uTexture, vL).rgb;
+            vec3 r = texture2D(uTexture, vR).rgb;
+            vec3 t = texture2D(uTexture, vT).rgb;
+            vec3 b = texture2D(uTexture, vB).rgb;
+            float dx = length(r) - length(l);
+            float dy = length(t) - length(b);
+            vec3 normal = normalize(vec3(-dx * 4.5, -dy * 4.5, 1.0));
+            vec3 lightDir = normalize(vec3(0.35, 0.45, 0.82));
+            float spec = pow(max(dot(normal, lightDir), 0.0), 18.0) * 0.38;
+            vec3 finalColor = c + vec3(spec * 0.95, spec * 0.86, spec * 0.65);
+            float alpha = clamp(max(max(finalColor.r, finalColor.g), finalColor.b) * 0.85, 0.0, 0.82);
+            gl_FragColor = vec4(finalColor, alpha);
+          }
+        `;
+
+        programs = {
+          clear: createProgram(gl, baseVS, clearFS),
+          splat: createProgram(gl, baseVS, splatFS),
+          advection: createProgram(gl, baseVS, advectionFS),
+          divergence: createProgram(gl, baseVS, divergenceFS),
+          curl: createProgram(gl, baseVS, curlFS),
+          vorticity: createProgram(gl, baseVS, vorticityFS),
+          pressure: createProgram(gl, baseVS, pressureFS),
+          gradSubtract: createProgram(gl, baseVS, gradSubtractFS),
+          display: createProgram(gl, baseVS, displayFS)
+        };
+
+        quadVBO = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, quadVBO);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, -1, 1, 1, 1, 1, -1]), gl.STATIC_DRAW);
+        const ibo = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([0, 1, 2, 0, 2, 3]), gl.STATIC_DRAW);
+        gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+        gl.enableVertexAttribArray(0);
+
+        initFramebuffers();
+        fluidState.active = true;
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
+    function getSupportedFormat(glCtx, internalFormat, format, type) {
+      if (!supportRenderTextureFormat(glCtx, internalFormat, format, type)) {
+        if (internalFormat === glCtx.R16F) return getSupportedFormat(glCtx, glCtx.RG16F, glCtx.RG, type);
+        if (internalFormat === glCtx.RG16F) return getSupportedFormat(glCtx, glCtx.RGBA16F, glCtx.RGBA, type);
+        return null;
+      }
+      return { internalFormat, format };
+    }
+
+    function supportRenderTextureFormat(glCtx, internalFormat, format, type) {
+      const texture = glCtx.createTexture();
+      glCtx.bindTexture(glCtx.TEXTURE_2D, texture);
+      glCtx.texParameteri(glCtx.TEXTURE_2D, glCtx.TEXTURE_MIN_FILTER, glCtx.NEAREST);
+      glCtx.texParameteri(glCtx.TEXTURE_2D, glCtx.TEXTURE_MAG_FILTER, glCtx.NEAREST);
+      glCtx.texParameteri(glCtx.TEXTURE_2D, glCtx.TEXTURE_WRAP_S, glCtx.CLAMP_TO_EDGE);
+      glCtx.texParameteri(glCtx.TEXTURE_2D, glCtx.TEXTURE_WRAP_T, glCtx.CLAMP_TO_EDGE);
+      glCtx.texImage2D(glCtx.TEXTURE_2D, 0, internalFormat, 4, 4, 0, format, type, null);
+      const fbo = glCtx.createFramebuffer();
+      glCtx.bindFramebuffer(glCtx.FRAMEBUFFER, fbo);
+      glCtx.framebufferTexture2D(glCtx.FRAMEBUFFER, glCtx.COLOR_ATTACHMENT0, glCtx.TEXTURE_2D, texture, 0);
+      const status = glCtx.checkFramebufferStatus(glCtx.FRAMEBUFFER);
+      glCtx.deleteFramebuffer(fbo);
+      glCtx.deleteTexture(texture);
+      return status === glCtx.FRAMEBUFFER_COMPLETE;
+    }
+
+    function compileShader(glCtx, type, source) {
+      const shader = glCtx.createShader(type);
+      glCtx.shaderSource(shader, source);
+      glCtx.compileShader(shader);
+      return shader;
+    }
+
+    function createProgram(glCtx, vsSource, fsSource) {
+      const program = glCtx.createProgram();
+      const vs = compileShader(glCtx, glCtx.VERTEX_SHADER, vsSource);
+      const fs = compileShader(glCtx, glCtx.FRAGMENT_SHADER, fsSource);
+      glCtx.attachShader(program, vs);
+      glCtx.attachShader(program, fs);
+      glCtx.bindAttribLocation(program, 0, 'aPosition');
+      glCtx.linkProgram(program);
+      const uniforms = {};
+      const count = glCtx.getProgramParameter(program, glCtx.ACTIVE_UNIFORMS);
+      for (let i = 0; i < count; i++) {
+        const name = glCtx.getActiveUniform(program, i).name;
+        uniforms[name] = glCtx.getUniformLocation(program, name);
+      }
+      return { program, uniforms, bind() { glCtx.useProgram(program); } };
+    }
+
+    function createFBO(w, h, internalFormat, format, type, param) {
+      gl.activeTexture(gl.TEXTURE0);
+      const texture = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, param);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, param);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texImage2D(gl.TEXTURE_2D, 0, internalFormat, w, h, 0, format, type, null);
+      const fbo = gl.createFramebuffer();
+      gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
+      gl.viewport(0, 0, w, h);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      return {
+        texture, fbo, width: w, height: h,
+        texelSizeX: 1.0 / w, texelSizeY: 1.0 / h,
+        attach(id) { gl.activeTexture(gl.TEXTURE0 + id); gl.bindTexture(gl.TEXTURE_2D, texture); return id; }
+      };
+    }
+
+    function createDoubleFBO(w, h, internalFormat, format, type, param) {
+      let fbo1 = createFBO(w, h, internalFormat, format, type, param);
+      let fbo2 = createFBO(w, h, internalFormat, format, type, param);
+      return {
+        width: w, height: h,
+        texelSizeX: fbo1.texelSizeX, texelSizeY: fbo1.texelSizeY,
+        get read() { return fbo1; },
+        set read(v) { fbo1 = v; },
+        get write() { return fbo2; },
+        set write(v) { fbo2 = v; },
+        swap() { const temp = fbo1; fbo1 = fbo2; fbo2 = temp; }
+      };
+    }
+
+    function initFramebuffers() {
+      const w = innerWidth || 1280;
+      const h = innerHeight || 800;
+      canvas.width = w;
+      canvas.height = h;
+      const aspect = w / Math.max(1, h);
+      const simW = aspect >= 1 ? Math.round(128 * aspect) : 128;
+      const simH = aspect >= 1 ? 128 : Math.round(128 / aspect);
+      const dyeW = aspect >= 1 ? Math.round(512 * aspect) : 512;
+      const dyeH = aspect >= 1 ? 512 : Math.round(512 / aspect);
+      fluidState.simWidth = simW;
+      fluidState.simHeight = simH;
+      fluidState.dyeWidth = dyeW;
+      fluidState.dyeHeight = dyeH;
+
+      const texType = ext.halfFloatTexType;
+      const rgba = ext.formatRGBA;
+      const rg = ext.formatRG;
+      const r = ext.formatR;
+      const filtering = ext.supportLinearFiltering ? gl.LINEAR : gl.NEAREST;
+
+      velocityFBO = createDoubleFBO(simW, simH, rg.internalFormat, rg.format, texType, filtering);
+      dyeFBO = createDoubleFBO(dyeW, dyeH, rgba.internalFormat, rgba.format, texType, filtering);
+      divergenceFBO = createFBO(simW, simH, r.internalFormat, r.format, texType, gl.NEAREST);
+      curlFBO = createFBO(simW, simH, r.internalFormat, r.format, texType, gl.NEAREST);
+      pressureFBO = createDoubleFBO(simW, simH, r.internalFormat, r.format, texType, gl.NEAREST);
+    }
+
+    function blit(target) {
+      if (target == null) {
+        gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      } else {
+        gl.viewport(0, 0, target.width, target.height);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, target.fbo);
+      }
+      gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
+    }
+
+    function splat(x, y, dx, dy, customColor) {
+      if (reduced.matches) return;
+      const c = customColor || PALETTE[paletteIdx++ % PALETTE.length];
+      const speed = Math.hypot(dx, dy);
+      fluidState.kineticEnergy = Math.min(1.0, fluidState.kineticEnergy * 0.7 + Math.min(speed / 900, 1.0) * 0.65);
+      fluidState.vorticityPeak = Math.min(1.0, fluidState.kineticEnergy * 1.15);
+      fluidState.splatCount++;
+      fluidState.lastPointer = { x, y, vx: dx, vy: dy };
+      idleFrames = 0;
+
+      // Acoplar viscosidad y vorticidad al escenario activo (deformación sutil del lienzo)
+      if (stage) {
+        stage.style.setProperty('--fluid-vorticity', fluidState.vorticityPeak.toFixed(4));
+        stage.style.setProperty('--fluid-vx', clamp(dx * 0.008, -6, 6).toFixed(2) + 'px');
+        stage.style.setProperty('--fluid-vy', clamp(dy * 0.008, -6, 6).toFixed(2) + 'px');
+      }
+
+      if (!gl || !programs) return;
+      const aspect = canvas.width / Math.max(1, canvas.height);
+      programs.splat.bind();
+      gl.uniform1i(programs.splat.uniforms.uTarget, velocityFBO.read.attach(0));
+      gl.uniform1f(programs.splat.uniforms.aspectRatio, aspect);
+      gl.uniform2f(programs.splat.uniforms.point, x, y);
+      gl.uniform3f(programs.splat.uniforms.color, dx, dy, 0.0);
+      gl.uniform1f(programs.splat.uniforms.radius, fluidState.splatRadius);
+      blit(velocityFBO.write);
+      velocityFBO.swap();
+
+      gl.uniform1i(programs.splat.uniforms.uTarget, dyeFBO.read.attach(0));
+      const intensity = Math.min(1.15, Math.max(0.28, speed / 550));
+      gl.uniform3f(programs.splat.uniforms.color, c[0] * intensity, c[1] * intensity, c[2] * intensity);
+      blit(dyeFBO.write);
+      dyeFBO.swap();
+
+      scheduleFluidStep();
+    }
+
+    function stepFluid() {
+      rafId = null;
+      if (reduced.matches) {
+        fluidState.kineticEnergy = 0;
+        fluidState.vorticityPeak = 0;
+        return;
+      }
+      fluidState.kineticEnergy *= 0.94;
+      fluidState.vorticityPeak *= 0.93;
+      if (stage) {
+        stage.style.setProperty('--fluid-vorticity', fluidState.vorticityPeak.toFixed(4));
+      }
+
+      if (gl && programs) {
+        const dt = 0.016;
+        gl.disable(gl.BLEND);
+
+        // 1. Curl (Vorticidad: rotacional del campo de velocidades)
+        programs.curl.bind();
+        gl.uniform2f(programs.curl.uniforms.texelSize, velocityFBO.texelSizeX, velocityFBO.texelSizeY);
+        gl.uniform1i(programs.curl.uniforms.uVelocity, velocityFBO.read.attach(0));
+        blit(curlFBO);
+
+        // 2. Vorticity Confinement (Inyección de turbulencia espiral Advect-Curl)
+        programs.vorticity.bind();
+        gl.uniform2f(programs.vorticity.uniforms.texelSize, velocityFBO.texelSizeX, velocityFBO.texelSizeY);
+        gl.uniform1i(programs.vorticity.uniforms.uVelocity, velocityFBO.read.attach(0));
+        gl.uniform1i(programs.vorticity.uniforms.uCurl, curlFBO.attach(1));
+        gl.uniform1f(programs.vorticity.uniforms.curl, fluidState.curlStrength);
+        gl.uniform1f(programs.vorticity.uniforms.dt, dt);
+        blit(velocityFBO.write);
+        velocityFBO.swap();
+
+        // 3. Divergence (Divergencia Euleriana)
+        programs.divergence.bind();
+        gl.uniform2f(programs.divergence.uniforms.texelSize, velocityFBO.texelSizeX, velocityFBO.texelSizeY);
+        gl.uniform1i(programs.divergence.uniforms.uVelocity, velocityFBO.read.attach(0));
+        blit(divergenceFBO);
+
+        // 4. Atenuación previa del campo de presión
+        programs.clear.bind();
+        gl.uniform1i(programs.clear.uniforms.uTexture, pressureFBO.read.attach(0));
+        gl.uniform1f(programs.clear.uniforms.value, 0.80);
+        blit(pressureFBO.write);
+        pressureFBO.swap();
+
+        // 5. Solver iterativo de Jacobi para la ecuación de Poisson de presión
+        programs.pressure.bind();
+        gl.uniform2f(programs.pressure.uniforms.texelSize, velocityFBO.texelSizeX, velocityFBO.texelSizeY);
+        gl.uniform1i(programs.pressure.uniforms.uDivergence, divergenceFBO.attach(0));
+        for (let i = 0; i < fluidState.pressureIterations; i++) {
+          gl.uniform1i(programs.pressure.uniforms.uPressure, pressureFBO.read.attach(1));
+          blit(pressureFBO.write);
+          pressureFBO.swap();
+        }
+
+        // 6. Sustracción del gradiente de presión (Proyección de Helmholtz-Hodge libre de divergencia)
+        programs.gradSubtract.bind();
+        gl.uniform2f(programs.gradSubtract.uniforms.texelSize, velocityFBO.texelSizeX, velocityFBO.texelSizeY);
+        gl.uniform1i(programs.gradSubtract.uniforms.uPressure, pressureFBO.read.attach(0));
+        gl.uniform1i(programs.gradSubtract.uniforms.uVelocity, velocityFBO.read.attach(1));
+        blit(velocityFBO.write);
+        velocityFBO.swap();
+
+        // 7. Advección semi-Lagrangiana del campo de velocidades
+        programs.advection.bind();
+        gl.uniform2f(programs.advection.uniforms.texelSize, velocityFBO.texelSizeX, velocityFBO.texelSizeY);
+        gl.uniform1i(programs.advection.uniforms.uVelocity, velocityFBO.read.attach(0));
+        gl.uniform1i(programs.advection.uniforms.uSource, velocityFBO.read.attach(0));
+        gl.uniform1f(programs.advection.uniforms.dt, dt);
+        gl.uniform1f(programs.advection.uniforms.dissipation, fluidState.velocityDissipation);
+        blit(velocityFBO.write);
+        velocityFBO.swap();
+
+        // 8. Advección del pigmento mineral / tinta sobre el campo de velocidades
+        gl.uniform2f(programs.advection.uniforms.texelSize, dyeFBO.texelSizeX, dyeFBO.texelSizeY);
+        gl.uniform1i(programs.advection.uniforms.uVelocity, velocityFBO.read.attach(0));
+        gl.uniform1i(programs.advection.uniforms.uSource, dyeFBO.read.attach(1));
+        gl.uniform1f(programs.advection.uniforms.dissipation, fluidState.dyeDissipation);
+        blit(dyeFBO.write);
+        dyeFBO.swap();
+
+        // 9. Renderizado final con iluminación especular de normales en pantalla
+        programs.display.bind();
+        gl.uniform2f(programs.display.uniforms.texelSize, 1.0 / Math.max(1, canvas.width), 1.0 / Math.max(1, canvas.height));
+        gl.uniform1i(programs.display.uniforms.uTexture, dyeFBO.read.attach(0));
+        blit(null);
+      }
+
+      idleFrames++;
+      const maxIdle = gl ? 180 : 12;
+      if (idleFrames < maxIdle || (gl && fluidState.kineticEnergy > 0.002)) {
+        scheduleFluidStep();
+      }
+    }
+
+    function scheduleFluidStep() {
+      if (rafId === null && !reduced.matches) {
+        rafId = requestAnimationFrame(stepFluid);
+      }
+    }
+
+    initWebGL();
+
+    let prevX = -1, prevY = -1;
+    addEventListener('pointermove', e => {
+      if (reduced.matches) return;
+      const w = innerWidth || 1280;
+      const h = innerHeight || 800;
+      const x = e.clientX / w;
+      const y = 1.0 - e.clientY / h;
+      if (prevX < 0) {
+        prevX = x;
+        prevY = y;
+        return;
+      }
+      const dx = (x - prevX) * w * 6.5;
+      const dy = (y - prevY) * h * 6.5;
+      prevX = x;
+      prevY = y;
+      if (Math.hypot(dx, dy) > 0.25) {
+        splat(x, y, dx, dy);
+      }
+    }, { passive: true });
+
+    addEventListener('pointerdown', e => {
+      if (reduced.matches) return;
+      const w = innerWidth || 1280;
+      const h = innerHeight || 800;
+      const x = e.clientX / w;
+      const y = 1.0 - e.clientY / h;
+      for (let i = 0; i < 3; i++) {
+        const angle = (i / 3) * Math.PI * 2 + Math.random() * 0.5;
+        splat(x, y, Math.cos(angle) * 320, Math.sin(angle) * 320);
+      }
+    }, { passive: true });
+
+    addEventListener('resize', () => {
+      if (gl) initFramebuffers();
+    }, { passive: true });
+
+    window.NAROA_FLUID = {
+      splat,
+      getState: () => ({ ...fluidState }),
+      pulseCenter: () => {
+        splat(0.5, 0.5, 420, 260, PALETTE[0]);
+        splat(0.5, 0.5, -380, -240, PALETTE[1]);
+      }
+    };
+  })();
+
+  // ── 7. Cámaras en Spline 3D con Inversión de Ejes y «Portal Scrollytelling» (Catmull-Rom 3D + Secondary RenderTarget FBO) ──
+  (() => {
+    if (document.querySelector('[data-portal-canvas]')) return;
+
+    const portalCanvas = document.createElement('canvas');
+    portalCanvas.className = 'naroa-portal-canvas';
+    portalCanvas.setAttribute('data-portal-canvas', '');
+    portalCanvas.setAttribute('aria-hidden', 'true');
+    (stage || document.body).appendChild(portalCanvas);
+
+    // Construcción de los nodos 3D de la curva Catmull-Rom centrípeta a través de las cámaras de resonancia
+    const catalogProjects = Array.isArray(catalogue.projects) && catalogue.projects.length ? catalogue.projects : [{ slug: 'origin' }];
+    const numChambers = catalogProjects.length;
+    const WAYPOINTS = [];
+    for (let i = 0; i < numChambers; i++) {
+      const theta = (i / numChambers) * Math.PI * 2;
+      const radius = 18.0 + (i % 2 === 0 ? 2.4 : -2.1);
+      const x = Math.sin(theta) * radius;
+      const y = Math.cos(theta * 2.0) * 3.2 + (i % 3 - 1) * 1.15;
+      const z = -i * 6.5 + Math.cos(theta) * 4.2;
+      WAYPOINTS.push({ x, y, z, slug: catalogProjects[i].slug, chamberIndex: i });
+    }
+
+    // Interpolador cúbico de Catmull-Rom 3D (tensión 0.5) y derivada tangencial analítica
+    function catmullRomScalar(p0, p1, p2, p3, t) {
+      const t2 = t * t;
+      const t3 = t2 * t;
+      return 0.5 * (
+        (2 * p1) +
+        (-p0 + p2) * t +
+        (2 * p0 - 5 * p1 + 4 * p2 - p3) * t2 +
+        (-p0 + 3 * p1 - 3 * p2 + p3) * t3
+      );
+    }
+
+    function catmullRomDerivative(p0, p1, p2, p3, t) {
+      const t2 = t * t;
+      return 0.5 * (
+        (-p0 + p2) +
+        2 * (2 * p0 - 5 * p1 + 4 * p2 - p3) * t +
+        3 * (-p0 + 3 * p1 - 3 * p2 + p3) * t2
+      );
+    }
+
+    function evaluateAt(uRaw) {
+      const n = WAYPOINTS.length;
+      const u = ((uRaw % 1) + 1) % 1;
+      const scaled = u * n;
+      const seg = Math.floor(scaled) % n;
+      const localT = scaled - Math.floor(scaled);
+
+      const p0 = WAYPOINTS[(seg - 1 + n) % n];
+      const p1 = WAYPOINTS[seg];
+      const p2 = WAYPOINTS[(seg + 1) % n];
+      const p3 = WAYPOINTS[(seg + 2) % n];
+
+      const x = catmullRomScalar(p0.x, p1.x, p2.x, p3.x, localT);
+      const y = catmullRomScalar(p0.y, p1.y, p2.y, p3.y, localT);
+      const z = catmullRomScalar(p0.z, p1.z, p2.z, p3.z, localT);
+
+      const dx = catmullRomDerivative(p0.x, p1.x, p2.x, p3.x, localT);
+      const dy = catmullRomDerivative(p0.y, p1.y, p2.y, p3.y, localT);
+      const dz = catmullRomDerivative(p0.z, p1.z, p2.z, p3.z, localT);
+      const len = Math.hypot(dx, dy, dz) || 1;
+      const tx = dx / len, ty = dy / len, tz = dz / len;
+
+      // Inversión de ejes: el desplazamiento vertical invierte pitch/yaw en el umbral del portal y genera alabeo (roll)
+      const portalWave = Math.sin(localT * Math.PI);
+      const axisInversion = Number((Math.cos(localT * Math.PI * 2) * -1).toFixed(4));
+      const yaw = Number((Math.atan2(tx, -tz) * (180 / Math.PI)).toFixed(3));
+      const pitch = Number((-Math.asin(clamp(ty, -1, 1)) * (180 / Math.PI) * axisInversion).toFixed(3));
+      const roll = Number((tx * -14.5 * portalWave).toFixed(3));
+      const portalAperture = Number(Math.pow(portalWave, 1.35).toFixed(4));
+
+      return {
+        u: Number(u.toFixed(6)),
+        chamberIndex: seg,
+        chamberSlug: p1.slug,
+        nextChamberSlug: p2.slug,
+        position: { x: Number(x.toFixed(3)), y: Number(y.toFixed(3)), z: Number(z.toFixed(3)) },
+        tangent: { x: Number(tx.toFixed(4)), y: Number(ty.toFixed(4)), z: Number(tz.toFixed(4)) },
+        euler: { pitch, yaw, roll },
+        axisInversion,
+        portalAperture
+      };
+    }
+
+    const portalState = {
+      backend: 'catmull-rom-3d-portal-fbo',
+      waypointCount: WAYPOINTS.length,
+      u: 0,
+      targetU: 0,
+      velocityU: 0,
+      portalTargetSize: 512,
+      portalFrameCount: 0,
+      hasSecondaryRenderTarget: false,
+      pose: evaluateAt(0)
+    };
+
+    let glPortal = null;
+    let portalFBO = null;
+    let portalSceneProgram = null;
+    let portalCompositeProgram = null;
+    let portalRaf = null;
+
+    function initPortalWebGL() {
+      try {
+        if (typeof window === 'undefined' || !window.WebGLRenderingContext) return false;
+        const params = { alpha: true, depth: false, stencil: false, antialias: false, preserveDrawingBuffer: false };
+        glPortal = portalCanvas.getContext('webgl2', params) || portalCanvas.getContext('webgl', params);
+        if (!glPortal) return false;
+
+        const vs = `
+          attribute vec2 aPos;
+          varying vec2 vUv;
+          void main() {
+            vUv = aPos * 0.5 + 0.5;
+            gl_Position = vec4(aPos, 0.0, 1.0);
+          }
+        `;
+
+        // Pase 1 (Secondary RenderTarget FBO): Mundo 3D interior de la Cámara de Resonancia
+        const innerWorldFS = `
+          precision highp float;
+          varying vec2 vUv;
+          uniform float uTime;
+          uniform float uAperture;
+          uniform vec3 uCamPos;
+          uniform vec3 uEuler;
+          void main() {
+            vec2 p = (vUv - 0.5) * 2.0;
+            // Rotación por inversión de ejes del rig Catmull-Rom
+            float c = cos(uEuler.z * 0.035), s = sin(uEuler.z * 0.035);
+            p = mat2(c, -s, s, c) * p;
+            p += vec2(uEuler.y * 0.002, -uEuler.x * 0.002);
+            float r = length(p);
+            float a = atan(p.y, p.x);
+            // Geometría de anillos de resonancia 3D en profundidad (túnel arquitectónico mineral)
+            float depth = 1.0 / max(r + 0.12, 0.08);
+            float rings = sin(depth * 4.5 - uTime * 3.2 + cos(a * 4.0) * 0.65);
+            float polyhedron = smoothstep(0.42, 0.08, abs(r - 0.32 - 0.06 * sin(a * 6.0 + uTime * 1.8)));
+            vec3 gold = vec3(0.83, 0.68, 0.22);
+            vec3 slate = vec3(0.08, 0.11, 0.18);
+            vec3 rose = vec3(0.93, 0.74, 0.64);
+            vec3 col = mix(slate, gold, smoothstep(0.2, 0.95, rings) * 0.65);
+            col += rose * polyhedron * (0.55 + 0.45 * uAperture);
+            col *= smoothstep(1.45, 0.08, r);
+            gl_FragColor = vec4(col, clamp(uAperture * 0.92 + 0.08, 0.0, 1.0));
+          }
+        `;
+
+        // Pase 2 (Composite): Proyección del RenderTarget secundario dentro del marco/portal activo
+        const compositeFS = `
+          precision highp float;
+          varying vec2 vUv;
+          uniform sampler2D uPortalTarget;
+          uniform float uAperture;
+          void main() {
+            vec2 centered = vUv - 0.5;
+            float dist = length(centered);
+            float mask = smoothstep(0.46, 0.18, dist) * smoothstep(0.08, 0.26, dist) * uAperture;
+            vec4 innerWorld = texture2D(uPortalTarget, vUv);
+            gl_FragColor = vec4(innerWorld.rgb * mask, innerWorld.a * mask * 0.78);
+          }
+        `;
+
+        const compile = (type, src) => {
+          const sh = glPortal.createShader(type);
+          glPortal.shaderSource(sh, src);
+          glPortal.compileShader(sh);
+          return sh;
+        };
+        const link = (fsSrc) => {
+          const prog = glPortal.createProgram();
+          glPortal.attachShader(prog, compile(glPortal.VERTEX_SHADER, vs));
+          glPortal.attachShader(prog, compile(glPortal.FRAGMENT_SHADER, fsSrc));
+          glPortal.bindAttribLocation(prog, 0, 'aPos');
+          glPortal.linkProgram(prog);
+          return prog;
+        };
+
+        portalSceneProgram = link(innerWorldFS);
+        portalCompositeProgram = link(compositeFS);
+
+        const buf = glPortal.createBuffer();
+        glPortal.bindBuffer(glPortal.ARRAY_BUFFER, buf);
+        glPortal.bufferData(glPortal.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), glPortal.STATIC_DRAW);
+        glPortal.enableVertexAttribArray(0);
+        glPortal.vertexAttribPointer(0, 2, glPortal.FLOAT, false, 0, 0);
+
+        // Creación del RenderTarget secundario (512x512 FBO)
+        const tex = glPortal.createTexture();
+        glPortal.bindTexture(glPortal.TEXTURE_2D, tex);
+        glPortal.texParameteri(glPortal.TEXTURE_2D, glPortal.TEXTURE_MIN_FILTER, glPortal.LINEAR);
+        glPortal.texParameteri(glPortal.TEXTURE_2D, glPortal.TEXTURE_MAG_FILTER, glPortal.LINEAR);
+        glPortal.texParameteri(glPortal.TEXTURE_2D, glPortal.TEXTURE_WRAP_S, glPortal.CLAMP_TO_EDGE);
+        glPortal.texParameteri(glPortal.TEXTURE_2D, glPortal.TEXTURE_WRAP_T, glPortal.CLAMP_TO_EDGE);
+        glPortal.texImage2D(glPortal.TEXTURE_2D, 0, glPortal.RGBA, 512, 512, 0, glPortal.RGBA, glPortal.UNSIGNED_BYTE, null);
+
+        const fbo = glPortal.createFramebuffer();
+        glPortal.bindFramebuffer(glPortal.FRAMEBUFFER, fbo);
+        glPortal.framebufferTexture2D(glPortal.FRAMEBUFFER, glPortal.COLOR_ATTACHMENT0, glPortal.TEXTURE_2D, tex, 0);
+        glPortal.bindFramebuffer(glPortal.FRAMEBUFFER, null);
+
+        portalFBO = { fbo, texture: tex, size: 512 };
+        portalState.hasSecondaryRenderTarget = true;
+        portalCanvas.width = innerWidth || 1280;
+        portalCanvas.height = innerHeight || 800;
+        return true;
+      } catch {
+        return false;
+      }
+    }
+
+    function applySplinePoseToStage(pose) {
+      portalState.pose = pose;
+      portalState.portalFrameCount++;
+      const targetEl = stage || document.documentElement;
+      targetEl.style.setProperty('--spline-u', String(pose.u));
+      targetEl.style.setProperty('--spline-x', `${pose.position.x}px`);
+      targetEl.style.setProperty('--spline-y', `${pose.position.y}px`);
+      targetEl.style.setProperty('--spline-z', `${pose.position.z}px`);
+      targetEl.style.setProperty('--spline-pitch', `${pose.euler.pitch}deg`);
+      targetEl.style.setProperty('--spline-yaw', `${pose.euler.yaw}deg`);
+      targetEl.style.setProperty('--spline-roll', `${pose.euler.roll}deg`);
+      targetEl.style.setProperty('--portal-aperture', String(pose.portalAperture));
+      targetEl.style.setProperty('--axis-inversion', String(pose.axisInversion));
+
+      if (glPortal && portalFBO && portalSceneProgram && portalCompositeProgram && !reduced.matches) {
+        const now = performance.now() * 0.001;
+        // 1. Renderizar el otro mundo 3D en el RenderTarget secundario (512x512 FBO)
+        glPortal.bindFramebuffer(glPortal.FRAMEBUFFER, portalFBO.fbo);
+        glPortal.viewport(0, 0, portalFBO.size, portalFBO.size);
+        glPortal.useProgram(portalSceneProgram);
+        glPortal.uniform1f(glPortal.getUniformLocation(portalSceneProgram, 'uTime'), now);
+        glPortal.uniform1f(glPortal.getUniformLocation(portalSceneProgram, 'uAperture'), pose.portalAperture);
+        glPortal.uniform3f(glPortal.getUniformLocation(portalSceneProgram, 'uCamPos'), pose.position.x, pose.position.y, pose.position.z);
+        glPortal.uniform3f(glPortal.getUniformLocation(portalSceneProgram, 'uEuler'), pose.euler.pitch, pose.euler.yaw, pose.euler.roll);
+        glPortal.drawArrays(glPortal.TRIANGLE_STRIP, 0, 4);
+
+        // 2. Componer el portal en el lienzo principal
+        glPortal.bindFramebuffer(glPortal.FRAMEBUFFER, null);
+        glPortal.viewport(0, 0, portalCanvas.width, portalCanvas.height);
+        glPortal.useProgram(portalCompositeProgram);
+        glPortal.activeTexture(glPortal.TEXTURE0);
+        glPortal.bindTexture(glPortal.TEXTURE_2D, portalFBO.texture);
+        glPortal.uniform1i(glPortal.getUniformLocation(portalCompositeProgram, 'uPortalTarget'), 0);
+        glPortal.uniform1f(glPortal.getUniformLocation(portalCompositeProgram, 'uAperture'), pose.portalAperture);
+        glPortal.drawArrays(glPortal.TRIANGLE_STRIP, 0, 4);
+      }
+    }
+
+    // Ley 1 & 2 & 4 (INV_C5_SCROLL_SUBSTEP_DYNAMICS): Sub-step inertial follow (alpha = 0.16) y reposo a 0% CPU
+    function stepSplineRig() {
+      portalRaf = null;
+      const delta = portalState.targetU - portalState.u;
+      if (reduced.matches || Math.abs(delta) < 0.00015) {
+        portalState.u = portalState.targetU;
+        portalState.velocityU = 0;
+        applySplinePoseToStage(evaluateAt(portalState.u));
+        return;
+      }
+      const step = delta * 0.16;
+      portalState.u += step;
+      portalState.velocityU = Number(step.toFixed(6));
+      applySplinePoseToStage(evaluateAt(portalState.u));
+      portalRaf = requestAnimationFrame(stepSplineRig);
+    }
+
+    function scheduleSplineRig() {
+      if (portalRaf === null) {
+        portalRaf = requestAnimationFrame(stepSplineRig);
+      }
+    }
+
+    function pushWheel(deltaY = 100, deltaX = 0) {
+      // Inversión de ejes: el impulso vertical/horizontal empuja el rig a lo largo de la curva Catmull-Rom 3D
+      const dominant = Math.abs(deltaY) >= Math.abs(deltaX) ? deltaY : -deltaX;
+      const stepU = dominant * 0.00065;
+      portalState.targetU = ((portalState.targetU + stepU) % 1 + 1) % 1;
+      if (reduced.matches) {
+        portalState.u = portalState.targetU;
+        applySplinePoseToStage(evaluateAt(portalState.u));
+      } else {
+        scheduleSplineRig();
+      }
+      return portalState.pose;
+    }
+
+    initPortalWebGL();
+    applySplinePoseToStage(evaluateAt(0));
+
+    addEventListener('wheel', e => {
+      pushWheel(e.deltaY, e.deltaX);
+    }, { passive: true });
+
+    addEventListener('scroll', () => {
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+      portalState.targetU = clamp(scrollY / maxScroll, 0, 1);
+      scheduleSplineRig();
+    }, { passive: true });
+
+    addEventListener('resize', () => {
+      if (glPortal) {
+        portalCanvas.width = innerWidth || 1280;
+        portalCanvas.height = innerHeight || 800;
+      }
+    }, { passive: true });
+
+    window.NAROA_SPLINE_PORTAL = {
+      evaluateAt,
+      pushWheel,
+      stepFrame: stepSplineRig,
+      getState: () => ({
+        ...portalState,
+        pose: { ...portalState.pose }
+      })
+    };
+
+    // V2 (#1): Lente de «Liquid Glass» Refractiva con Dispersión Cromática (IOR)
+    if (!document.querySelector('[data-liquid-lens]')) {
+      const lens = document.createElement('div');
+      lens.className = 'naroa-liquid-lens';
+      lens.setAttribute('data-liquid-lens', '');
+      lens.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(lens);
+      const lensState = { x: -200, y: -200, tx: -200, ty: -200, ior: 1.48, dispersion: 0.032, active: false, raf: null };
+      function stepLens() {
+        lensState.raf = null;
+        if (reduced.matches) return;
+        const dx = lensState.tx - lensState.x;
+        const dy = lensState.ty - lensState.y;
+        lensState.x += dx * 0.22;
+        lensState.y += dy * 0.22;
+        const stretch = clamp(Math.hypot(dx, dy) * 0.004, 0, 0.16);
+        const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+        lens.style.transform = `translate3d(${(lensState.x - 42).toFixed(1)}px,${(lensState.y - 42).toFixed(1)}px,0) rotate(${angle.toFixed(1)}deg) scale(${(1 + stretch).toFixed(3)},${(1 - stretch * 0.5).toFixed(3)})`;
+        if (Math.hypot(dx, dy) > 0.35 && window.WebGLRenderingContext) {
+          lensState.raf = requestAnimationFrame(stepLens);
+        }
+      }
+      addEventListener('pointermove', e => {
+        if (reduced.matches || e.pointerType === 'touch') return;
+        lensState.tx = e.clientX;
+        lensState.ty = e.clientY;
+        if (!lensState.active) {
+          lensState.x = e.clientX;
+          lensState.y = e.clientY;
+          lensState.active = true;
+          lens.classList.add('is-active');
+        }
+        const target = e.target;
+        const isInteractive = target?.closest?.('a,button,summary,[data-open-photos],[data-open-story]');
+        lens.classList.toggle('is-interactive', Boolean(isInteractive));
+        stepLens();
+      }, { passive: true });
+      window.NAROA_LIQUID_LENS = {
+        getState: () => ({ ...lensState })
+      };
+    }
+  })();
+
   if (location.hash === '#indice') openDialog('#index-dialog');
 })();
