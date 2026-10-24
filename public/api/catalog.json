@@ -327,8 +327,15 @@
       "year": null,
       "story": "El retrato de Robe parte de un dibujo a lápices sobre poliéster. Tras escanearlo e imprimirlo a mayor tamaño, la imagen se recorta, retoca y combina con tela floral y una frase en alambre.",
       "url": "https://naroagutierrezgil.com/obra/entre-tantas-flores-de-dia/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/entre-tantas-flores-de-dia-hq-01-e419319adba0-view.webp",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/deltoya-robe-master-4k-a377e060f80f-view.webp",
       "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/deltoya-robe-master-4k.jpg",
+          "width": 2457,
+          "height": 3072,
+          "caption": "Retrato completo de Robe Iniesta (Deltoya) en alta fidelidad 4K.",
+          "sha256": "a377e060f80fce97c59b06fc779a89e6cc9ceef274433c90307a71d9b9a63f97"
+        },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/entre-tantas-flores-de-dia-hq-01.webp",
           "width": 1528,
@@ -1660,49 +1667,49 @@
       "year": null,
       "story": "El retrato dibujado se combina con fragmentos de cerámica decorada y elementos vegetales. La composición fue realizada como regalo de cumpleaños y juega con la idea del eguzkilore.",
       "url": "https://naroagutierrezgil.com/obra/lauralore/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/lauralore-01-4k-24c1ca198fdd-view.webp",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/lauralore-dibujo-2048-b26ca97aaac7-view.webp",
       "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/lauralore-dibujo-2048.jpg",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Retrato original en lápiz negro con caracterización del búho y la rosa.",
+          "sha256": "b26ca97aaac76fe1c0c2c7c1008969c4ecfd89f25843942b1e19a4973090bffe"
+        },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/lauralore-01-4k.jpg",
           "width": 2400,
           "height": 3200,
-          "caption": "Obra completa remasterizada en Ultra-HD.",
+          "caption": "Obra completa enmarcada con collage de cerámica y elementos vegetales.",
           "sha256": "24c1ca198fdd9177e5b9281f3250c682be10b4005d5df891b33d0cd08339a4d9"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/lauralore-02.jpg",
-          "width": 640,
-          "height": 853,
-          "caption": "Detalle o perspectiva 1 de la obra.",
-          "sha256": "8cdd6abdab5f4a8534b9635e6a365d779d496c3b3ad0c3985a8a5a903725d999"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/lauralore-03.jpg",
           "width": 640,
           "height": 853,
-          "caption": "Detalle o perspectiva 2 de la obra.",
+          "caption": "Detalle de la flor tridimensional en cerámica azul y tallo vegetal seco.",
           "sha256": "1836a394733383a9600eced5d098ae456169b2a7006a5e32e4e9f63baf2e0f7d"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/lauralore-02.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Perspectiva lateral del marco de profundidad y relieve cerámico.",
+          "sha256": "8cdd6abdab5f4a8534b9635e6a365d779d496c3b3ad0c3985a8a5a903725d999"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/lauralore-04.jpg",
           "width": 843,
           "height": 632,
-          "caption": "Detalle o perspectiva 3 de la obra.",
+          "caption": "Detalle superior de ramitas de madera y flores secas.",
           "sha256": "751a3e36f9b272a3e5ff2841d1e80afede3e5e44de2b44156b6309cf7d856e82"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/lauralore-05.jpg",
           "width": 640,
           "height": 853,
-          "caption": "Detalle o perspectiva 4 de la obra.",
+          "caption": "Detalle de textura y collage en la esquina.",
           "sha256": "a51d758d45f4e7cf7ce0795e70f5e6f64f7144a71756d4f293d84c9e1c4a24c4"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/lauralore-06.jpg",
-          "width": 843,
-          "height": 632,
-          "caption": "Detalle o perspectiva 5 de la obra.",
-          "sha256": "1fd153e473d85d7c03a8680423737d12e48631d45be67ce25222a5dd75bac852"
         }
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20LauraLore",

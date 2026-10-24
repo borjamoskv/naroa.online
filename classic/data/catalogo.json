@@ -1682,37 +1682,46 @@
       "story": "El retrato dibujado se combina con fragmentos de cerámica decorada y elementos vegetales. La composición fue realizada como regalo de cumpleaños y juega con la idea del eguzkilore.",
       "images": [
         {
+          "src": "/images/catalogo/lauralore-dibujo-2048.jpg",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Retrato original en lápiz negro con caracterización del búho y la rosa.",
+          "source": null,
+          "sha256": "b26ca97aaac76fe1c0c2c7c1008969c4ecfd89f25843942b1e19a4973090bffe",
+          "source_local": "classic/images/catalogo/lauralore-dibujo-2048.jpg"
+        },
+        {
           "src": "/images/catalogo/lauralore-01-4k.jpg",
           "width": 2400,
           "height": 3200,
-          "caption": "Obra completa remasterizada en Ultra-HD.",
+          "caption": "Obra completa enmarcada con collage de cerámica y elementos vegetales.",
           "source": "https://www.facebook.com/photo/?fbid=666366311509460&set=a.666379298174828",
           "sha256": "24c1ca198fdd9177e5b9281f3250c682be10b4005d5df891b33d0cd08339a4d9",
           "source_local": "classic/images/catalogo/lauralore-01-4k.jpg"
         },
         {
-          "src": "/images/catalogo/lauralore-02.jpg",
-          "width": 640,
-          "height": 853,
-          "caption": "Detalle o perspectiva 1 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=666366511509440&set=a.666379298174828",
-          "sha256": "8cdd6abdab5f4a8534b9635e6a365d779d496c3b3ad0c3985a8a5a903725d999",
-          "source_local": "work/naroa-artwork-intake/666379298174828-01.jpg"
-        },
-        {
           "src": "/images/catalogo/lauralore-03.jpg",
           "width": 640,
           "height": 853,
-          "caption": "Detalle o perspectiva 2 de la obra.",
+          "caption": "Detalle de la flor tridimensional en cerámica azul y tallo vegetal seco.",
           "source": "https://www.facebook.com/photo/?fbid=666366318176126&set=a.666379298174828",
           "sha256": "1836a394733383a9600eced5d098ae456169b2a7006a5e32e4e9f63baf2e0f7d",
           "source_local": "work/naroa-artwork-intake/666379298174828-02.jpg"
         },
         {
+          "src": "/images/catalogo/lauralore-02.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Perspectiva lateral del marco de profundidad y relieve cerámico.",
+          "source": "https://www.facebook.com/photo/?fbid=666366511509440&set=a.666379298174828",
+          "sha256": "8cdd6abdab5f4a8534b9635e6a365d779d496c3b3ad0c3985a8a5a903725d999",
+          "source_local": "work/naroa-artwork-intake/666379298174828-01.jpg"
+        },
+        {
           "src": "/images/catalogo/lauralore-04.jpg",
           "width": 843,
           "height": 632,
-          "caption": "Detalle o perspectiva 3 de la obra.",
+          "caption": "Detalle superior de ramitas de madera y flores secas.",
           "source": "https://www.facebook.com/photo/?fbid=666366374842787&set=a.666379298174828",
           "sha256": "751a3e36f9b272a3e5ff2841d1e80afede3e5e44de2b44156b6309cf7d856e82",
           "source_local": "work/naroa-artwork-intake/666379298174828-04.jpg"
@@ -1721,19 +1730,10 @@
           "src": "/images/catalogo/lauralore-05.jpg",
           "width": 640,
           "height": 853,
-          "caption": "Detalle o perspectiva 4 de la obra.",
+          "caption": "Detalle de textura y collage en la esquina.",
           "source": "https://www.facebook.com/photo/?fbid=666366418176116&set=a.666379298174828",
           "sha256": "a51d758d45f4e7cf7ce0795e70f5e6f64f7144a71756d4f293d84c9e1c4a24c4",
           "source_local": "work/naroa-artwork-intake/666379298174828-06.jpg"
-        },
-        {
-          "src": "/images/catalogo/lauralore-06.jpg",
-          "width": 843,
-          "height": 632,
-          "caption": "Detalle o perspectiva 5 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=666366518176106&set=a.666379298174828",
-          "sha256": "1fd153e473d85d7c03a8680423737d12e48631d45be67ce25222a5dd75bac852",
-          "source_local": "work/naroa-artwork-intake/666379298174828-07.jpg"
         }
       ],
       "source": "https://www.facebook.com/media/set/?set=a.666379298174828&type=3",
