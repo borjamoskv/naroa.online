@@ -1402,7 +1402,7 @@ def build(output):
         "  - GARA Agenda: https://gara.naiz.eus/paperezkoa/20100305/186538/eu/Agenda\n"
         "  - El Correo Agenda: https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-476343.html\n"
         "  - YouTube: https://www.youtube.com/@naroagutierrezgil\n"
-        "- Especialidad: Retratos de autor sobre pizarra natural de cantera con contorno irregular, técnica mixta con escamas de mica mineral, collage textil sobre madera y objetos intervenidos.\n"
+        "- Lenguaje y Práctica Artística: Retratos de autor y obra plástica multidisciplinar (dibujo, óleo, técnicas mixtas, collage textil sobre madera y objetos intervenidos, con exploraciones recientes sobre soportes minerales como la pizarra natural de cantera y mica).\n"
         f"- Servicio Canónico de Encargos: {ORIGIN}/retratos-por-encargo-bilbao/\n"
         "- Exposiciones Documentadas: Colegio de Abogados de Bilbao (Espejos del alma), Dock Bilbao, Politena Espacio de Arte, Walking Gallery Bilbao.\n\n"
         "## Respuestas Factuales Inmediatas (Query Fan-Out)\n"
