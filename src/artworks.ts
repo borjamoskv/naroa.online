@@ -371,17 +371,17 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 25,
-    category: 'rocks',
-    kicker: 'La unión sagrada en pan de oro',
-    quote: 'Dos almas que se encuentran en el relieve.',
+    category: 'drawing',
+    kicker: 'La complicidad grabada en collage floral',
+    quote: 'El brillo de una vida compartida entre crisantemos y celosía dorada.',
     slug: 'the-golden-couple',
-    aspectRatio: 1.334,
+    aspectRatio: 1.0,
     url: '/assets/the-golden-couple-C9C95N75.webp',
     title: 'The Golden Couple',
     href: '#obra-the-golden-couple',
     year: '2024',
-    medium: 'Pareja por Encargo — Pan de Oro & Pizarra',
-    description: 'Ejemplo emblemático de retrato de pareja por encargo en acrílico y oro.',
+    medium: 'Retrato Doble — Técnica Mixta, Collage Floral & Marco Vitrina',
+    description: 'Retrato de pareja por encargo en técnica mixta y collage sobre fondo floral de crisantemos, celosía dorada y gominolas en relieve.',
     sizeCategory: 'medium'
   },
   {
@@ -1463,5 +1463,35 @@ export const ARTWORKS: Artwork[] = [
     medium: 'Lápices de Colores y Técnica Mixta Expresiva',
     description: 'Retrato doble de padre e hijo en brazos con trazo vibrante y enérgica fuerza cromática enmarcado en formato cuadrado de 50x50 cm.',
     sizeCategory: 'medium'
+  },
+  {
+    id: 98,
+    category: 'drawing',
+    kicker: 'La inocencia grabada en lápiz y papel',
+    quote: 'Aquellos Maravillosos Años.',
+    slug: 'aquellos-maravillosos-anos',
+    aspectRatio: 1.559,
+    url: '/assets/aquellos-maravillosos-anos-4k.webp',
+    title: 'Aquellos Maravillosos Años',
+    href: '#obra-aquellos-maravillosos-anos',
+    year: '2017',
+    medium: 'Lápices Faber-Castell Art & Graphic sobre Papel A4',
+    description: 'Retrato de infancia de dos hermanos con sutiles veladuras en los rostros y enérgica trama de tartán a color en las prendas.',
+    sizeCategory: 'medium'
+  },
+  {
+    id: 99,
+    category: 'kintsugi',
+    kicker: 'Holy Wood: REtpLATOS & aMOREs',
+    quote: 'La calidez del pino como lienzo de retratos afectivos y humor.',
+    slug: 'holy-wood-retplatos-amores',
+    aspectRatio: 1.333,
+    url: '/assets/holy-wood-retplatos-amores-4k.webp',
+    title: 'Holy Wood: REtpLATOS & aMOREs',
+    href: '#obra-holy-wood-retplatos-amores',
+    year: '2013-2014',
+    medium: 'Serie Holy Wood — Lápices, Rotuladores, Acrílico & Flores sobre Madera de Pino',
+    description: 'Serie emblemática de 9 retratos sobre platos de madera de pino sin tratar (Retplatos) con mariposas, pétalos secos, purpurina y collage.',
+    sizeCategory: 'large'
   }
 ]

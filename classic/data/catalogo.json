@@ -2513,30 +2513,46 @@
     {
       "slug": "the-golden-couple",
       "title": "The Golden Couple",
-      "category": "pizarra",
-      "technique": "Acrílico, rotuladores y pan de oro",
-      "support": "Pizarra natural de cantera",
-      "story": "Retrato doble con acentos de pan de oro sobre pizarra natural. El abrazo y la complicidad de la pareja quedan esculpidos entre el trazo gráfico contemporáneo y la nobleza mineral.",
+      "category": "collage",
+      "technique": "Retrato doble mediante técnica mixta, lápices de colores y collage",
+      "support": "Papel sobre fondo floral y celosía dorada en marco vitrina (shadow box)",
+      "story": "Retrato doble realizado mediante técnica mixta y collage. La complicidad y ternura de la pareja se funden sobre un fondo floral de crisantemos y celosía geométrica dorada, coronado en su base por un lecho de gominolas de colores vivos en relieve dentro de una caja de marco vitrina profunda.",
       "images": [
         {
-          "src": "/images/catalogo/the-golden-couple-4k.webp",
-          "width": 3840,
-          "height": 2880,
-          "caption": "Fotografía master 4K de The Golden Couple sobre pizarra natural con pan de oro.",
+          "src": "/images/catalogo/the-golden-couple-01.jpg",
+          "width": 1024,
+          "height": 1024,
+          "caption": "Retrato doble The Golden Couple en técnica mixta mediante collage con fondo floral, celosía dorada y gominolas.",
           "source": null,
-          "sha256": "7d0ad9655f9578dc735db732bfeb34b69555c79f57390cf00132120acf3d0cfb"
+          "sha256": "f607cbc625541fb46a7405f2e8a990a619af762fc46a933623595d7ff0eb5a67"
         },
         {
-          "src": "/images/artworks/the-golden-couple-C9C95N75.webp",
-          "width": 843,
-          "height": 632,
-          "caption": "Detalle de los trazos dorados y textura.",
+          "src": "/images/catalogo/the-golden-couple-02.jpg",
+          "width": 1024,
+          "height": 768,
+          "caption": "Obra enmarcada en caja vitrina negra (shadow box) dispuesta sobre la hierba con flores silvestres.",
           "source": null,
-          "sha256": "1b1a3d2b2161424a7bd2133695f5ac109b6021c3db13b2a87b2a7e407792f7a5"
+          "sha256": "5e6ffc934dcc709839e81558529f49f30e2d2c3f2ea3de3baeaa6f8a8bb4eddb"
+        },
+        {
+          "src": "/images/catalogo/the-golden-couple-03.jpg",
+          "width": 768,
+          "height": 1024,
+          "caption": "Vista cenital de la obra enmarcada sobre un lecho de margaritas naturales.",
+          "source": null,
+          "sha256": "bef5000612c9cdef4e87e4fbdf483fa736f5d10a9002ae1e456070bd846a0caf"
+        },
+        {
+          "src": "/images/catalogo/the-golden-couple-4k.webp",
+          "width": 1024,
+          "height": 1024,
+          "caption": "Fotografía master de The Golden Couple: técnica mixta mediante collage.",
+          "source": null,
+          "sha256": "7ef7502d06f6abee406d3991ecbe5ecf5760565b7c7cd2e687769f6c7c26b87e"
         }
       ],
       "dimensions": "35 × 46 × 0,7 cm",
-      "series": "DiviNos",
+      "series": null,
       "year": 2024,
       "credit": null,
       "selected": true,
@@ -2545,13 +2561,16 @@
       "editorial": {
         "image_order": [
           0,
-          1
+          1,
+          2
         ],
         "captions": [
-          "The Golden Couple: retrato doble sobre soporte de cantera.",
-          "Detalle de las texturas de pan de oro y rotulador."
+          "The Golden Couple: retrato doble original en técnica mixta mediante collage.",
+          "La pieza enmarcada en marco vitrina (shadow box) negro sobre la hierba.",
+          "Vista de la obra enmarcada entre margaritas silvestres."
         ]
-      }
+      },
+      "materials": "Lápices de colores, tintas, papeles estampados, celosía dorada, gominolas en relieve y marco vitrina negro"
     },
     {
       "slug": "pink-and-sparkles",
@@ -3275,6 +3294,190 @@
           "Retrato artístico Aupas: padre e hijo en trazos de técnica mixta expresiva.",
           "Obra enmarcada en formato cuadrado de 50x50 cm con passepartout firmado Naroa 2019.",
           "El protagonista con el cuadro enmarcado."
+        ]
+      }
+    },
+    {
+      "slug": "aquellos-maravillosos-anos",
+      "title": "Aquellos Maravillosos Años",
+      "category": "collage",
+      "technique": "Lápices de colores Faber-Castell Art & Graphic sobre papel",
+      "support": "Papel de 80 gr/m² tamaño A4",
+      "story": "«Aquellos Maravillosos Años». Retrato de infancia de dos hermanos realizado con lápices de colores Art & Graphic de Faber-Castell sobre papel de 80 gr/m². La artista capta la inocencia y complicidad infantil con sutiles veladuras en los rostros y un enérgico trabajo de trama cromática en las prendas.",
+      "images": [
+        {
+          "src": "/images/catalogo/aquellos-maravillosos-anos-01.jpg",
+          "width": 1024,
+          "height": 657,
+          "caption": "Retrato completo de los dos hermanos en técnica mixta sobre papel A4.",
+          "source": null,
+          "sha256": "eee57d67d1d54b0ed7264e2abf0b1aa6613a3bf9e15fedd794d92e224160ffa9"
+        },
+        {
+          "src": "/images/catalogo/aquellos-maravillosos-anos-02.jpg",
+          "width": 1024,
+          "height": 563,
+          "caption": "Detalle de los rostros, miradas y matices de piel a lápices de colores.",
+          "source": null,
+          "sha256": "2ff7399ead5d48b420649cdebaf68ebd3ba1ceb89122dd47fc6518365f35d644"
+        },
+        {
+          "src": "/images/catalogo/aquellos-maravillosos-anos-03.jpg",
+          "width": 1024,
+          "height": 612,
+          "caption": "Detalle del entramado de tartán a color y firma Naroa 2017.",
+          "source": null,
+          "sha256": "4b9e2d7ce0cb03d5dbabf7dd6de6365a0a8fea4237699583e209ee819c65173a"
+        },
+        {
+          "src": "/images/catalogo/aquellos-maravillosos-anos-4k.webp",
+          "width": 1024,
+          "height": 657,
+          "caption": "Fotografía master 4K de Aquellos Maravillosos Años.",
+          "source": null,
+          "sha256": "fa85d9e62b5b57344a006433462e1e57008e9e5145907377104813053854f70a"
+        }
+      ],
+      "source": null,
+      "dimensions": "21 × 29,7 cm (A4)",
+      "materials": "Lápices de colores Faber-Castell Art & Graphic y papel de dibujo de 80 gr/m²",
+      "series": null,
+      "year": 2017,
+      "credit": "Firmado Naroa 2017.",
+      "selected": true,
+      "kind": "obra",
+      "editorial": {
+        "image_order": [
+          0,
+          1,
+          2
+        ],
+        "captions": [
+          "Retrato completo de los dos hermanos en técnica mixta sobre papel A4.",
+          "Detalle de los rostros, miradas y matices de piel a lápices de colores.",
+          "Detalle del entramado de tartán a color y firma Naroa 2017."
+        ]
+      }
+    },
+    {
+      "slug": "holy-wood-retplatos-amores",
+      "title": "Holy Wood: REtpLATOS & aMOREs",
+      "category": "objetos",
+      "technique": "Lápices de colores, rotuladores Uni-Posca, acrílico, purpurina, flores y collage sobre madera",
+      "support": "Platos redondos de madera de pino sin tratar (Retplatos)",
+      "story": "Holy Wood: REtpLATOS & aMOREs es una serie emblemática de retratos expresivos realizados directamente sobre platos redondos de madera de pino sin tratar. La artista aprovecha la veta y calidez del soporte para plasmar retratos llenos de luz, humor y afecto, incorporando elementos en relieve como purpurina, flores secas, mariposas, encajes y collages botánicos.",
+      "images": [
+        {
+          "src": "/images/catalogo/holy-wood-retplatos-01.jpg",
+          "width": 1024,
+          "height": 768,
+          "caption": "Retplato de mujer a rayas con hojas blancas cayendo como lluvia sobre madera de pino (Naroa 2014).",
+          "source": null,
+          "sha256": "d967e557d435f865280cc469791d584b44a30c4e2b2520cb91495352356263a3"
+        },
+        {
+          "src": "/images/catalogo/holy-wood-retplatos-02.jpg",
+          "width": 1022,
+          "height": 1024,
+          "caption": "Retplato de chico sonriente con mariposas doradas sobre veta de madera (Naroa 2014).",
+          "source": null,
+          "sha256": "4d2c57431d2c5c9adc279d1f1e3540d7d7ad78d409a66bf5862e2f2eebebd34c"
+        },
+        {
+          "src": "/images/catalogo/holy-wood-retplatos-03.jpg",
+          "width": 1024,
+          "height": 816,
+          "caption": "Retplato de mujer joven con pelo recogido, pétalos secos de rosa y encaje (Naroa 2014).",
+          "source": null,
+          "sha256": "2611a219c381e61b1ab1b5fc0fbf3ef2ba7b7a54808bfe269f8e381f61c95abd"
+        },
+        {
+          "src": "/images/catalogo/holy-wood-retplatos-04.jpg",
+          "width": 768,
+          "height": 1024,
+          "caption": "Retplato Hermanita con trenza y collar de cuentas multicolor (Naroa 2014).",
+          "source": null,
+          "sha256": "b53945072223711d91af782906d0f4447c824dc8ba14471e42aaa845d6d95ad8"
+        },
+        {
+          "src": "/images/catalogo/holy-wood-retplatos-05.jpg",
+          "width": 1022,
+          "height": 1024,
+          "caption": "Retplato de fotógrafa con cámara reflex y lámpara mágica de genio.",
+          "source": null,
+          "sha256": "f913d8313482a62a3330747f299f163e2909dc42bc4985ee0cce868773f3760d"
+        },
+        {
+          "src": "/images/catalogo/holy-wood-retplatos-06.jpg",
+          "width": 1014,
+          "height": 1024,
+          "caption": "Retplato de perfil de chico con barba y auriculares.",
+          "source": null,
+          "sha256": "d3c09e375c7fcc62040e90f36ef72e45d9b714a815405149f609453bd0ef441c"
+        },
+        {
+          "src": "/images/catalogo/holy-wood-retplatos-07.jpg",
+          "width": 1024,
+          "height": 1017,
+          "caption": "Retplato marioneta con cuerdas y cigarro (Naroa 2013).",
+          "source": null,
+          "sha256": "d47107b9ee3fa39de9ebc39ead4856ab2cc45ac3be2d05e0df118d608e65b051"
+        },
+        {
+          "src": "/images/catalogo/holy-wood-retplatos-08.jpg",
+          "width": 1024,
+          "height": 1014,
+          "caption": "Retplato de mujer pelirroja sonriente con flor silvestre y botella (Naroa 2013).",
+          "source": null,
+          "sha256": "33f9138a6f3c3e3dbe0e0c81a5be1cd28f99a786d6bc855360d6e98ab349ccd3"
+        },
+        {
+          "src": "/images/catalogo/holy-wood-retplatos-09.jpg",
+          "width": 1024,
+          "height": 1020,
+          "caption": "Retplato de cocinero con gorro de chef y torbellino de color (Naroa 2013).",
+          "source": null,
+          "sha256": "c71ad75255fc1640e6ea2c598e4bc2cf1e4921bd64d421e29d2912e9ec82e984"
+        },
+        {
+          "src": "/images/catalogo/holy-wood-retplatos-amores-4k.webp",
+          "width": 1024,
+          "height": 768,
+          "caption": "Fotografía master 4K de la serie Holy Wood: REtpLATOS & aMOREs.",
+          "source": null,
+          "sha256": "e40303b89381144c57746f067e24d2336dfaedc733e33f46f5f8df5c26e197b9"
+        }
+      ],
+      "source": null,
+      "dimensions": "Ø 22 cm c/u aprox.",
+      "materials": "Madera de pino sin tratar, lápices Art & Graphic, rotuladores Uni-Posca, pintura acrílica, purpurina, pétalos de rosa secos, encaje de papel y elementos decorativos",
+      "series": "Holy Wood",
+      "year": "2013-2014",
+      "credit": "Serie original firmada por Naroa entre 2013 y 2014.",
+      "selected": true,
+      "kind": "serie",
+      "editorial": {
+        "image_order": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "captions": [
+          "Retplato de mujer a rayas con hojas blancas cayendo como lluvia sobre madera de pino (Naroa 2014).",
+          "Retplato de chico sonriente con mariposas doradas sobre veta de madera (Naroa 2014).",
+          "Retplato de mujer joven con pelo recogido, pétalos secos de rosa y encaje (Naroa 2014).",
+          "Retplato Hermanita con trenza y collar de cuentas multicolor (Naroa 2014).",
+          "Retplato de fotógrafa con cámara reflex y lámpara mágica de genio.",
+          "Retplato de perfil de chico con barba y auriculares.",
+          "Retplato marioneta con cuerdas y cigarro (Naroa 2013).",
+          "Retplato de mujer pelirroja sonriente con flor silvestre y botella (Naroa 2013).",
+          "Retplato de cocinero con gorro de chef y torbellino de color (Naroa 2013)."
         ]
       }
     }

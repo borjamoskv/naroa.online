@@ -135,7 +135,7 @@
       }
     ]
   },
-  "artworks_count": 79,
+  "artworks_count": 81,
   "reviewed": "2026-10-24",
   "artworks": [
     {
@@ -2063,6 +2063,140 @@
       "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Aupas"
     },
     {
+      "slug": "aquellos-maravillosos-anos",
+      "title": "Aquellos Maravillosos Años",
+      "category": "collage",
+      "series": null,
+      "technique": "Lápices de colores Faber-Castell Art & Graphic sobre papel",
+      "support": "Papel de 80 gr/m² tamaño A4",
+      "dimensions": "21 × 29,7 cm (A4)",
+      "materials": "Lápices de colores Faber-Castell Art & Graphic y papel de dibujo de 80 gr/m²",
+      "year": 2017,
+      "story": "«Aquellos Maravillosos Años». Retrato de infancia de dos hermanos realizado con lápices de colores Art & Graphic de Faber-Castell sobre papel de 80 gr/m². La artista capta la inocencia y complicidad infantil con sutiles veladuras en los rostros y un enérgico trabajo de trama cromática en las prendas.",
+      "url": "https://naroagutierrezgil.com/obra/aquellos-maravillosos-anos/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/aquellos-maravillosos-anos-01-eee57d67d1d5-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/aquellos-maravillosos-anos-01.jpg",
+          "width": 1024,
+          "height": 657,
+          "caption": "Retrato completo de los dos hermanos en técnica mixta sobre papel A4.",
+          "sha256": "eee57d67d1d54b0ed7264e2abf0b1aa6613a3bf9e15fedd794d92e224160ffa9"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/aquellos-maravillosos-anos-02.jpg",
+          "width": 1024,
+          "height": 563,
+          "caption": "Detalle de los rostros, miradas y matices de piel a lápices de colores.",
+          "sha256": "2ff7399ead5d48b420649cdebaf68ebd3ba1ceb89122dd47fc6518365f35d644"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/aquellos-maravillosos-anos-03.jpg",
+          "width": 1024,
+          "height": 612,
+          "caption": "Detalle del entramado de tartán a color y firma Naroa 2017.",
+          "sha256": "4b9e2d7ce0cb03d5dbabf7dd6de6365a0a8fea4237699583e209ee819c65173a"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/aquellos-maravillosos-anos-4k.webp",
+          "width": 1024,
+          "height": 657,
+          "caption": "Fotografía master 4K de Aquellos Maravillosos Años.",
+          "sha256": "fa85d9e62b5b57344a006433462e1e57008e9e5145907377104813053854f70a"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Aquellos%20Maravillosos%20A%C3%B1os",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Aquellos%20Maravillosos%20A%C3%B1os"
+    },
+    {
+      "slug": "holy-wood-retplatos-amores",
+      "title": "Holy Wood: REtpLATOS & aMOREs",
+      "category": "objetos",
+      "series": "Holy Wood",
+      "technique": "Lápices de colores, rotuladores Uni-Posca, acrílico, purpurina, flores y collage sobre madera",
+      "support": "Platos redondos de madera de pino sin tratar (Retplatos)",
+      "dimensions": "Ø 22 cm c/u aprox.",
+      "materials": "Madera de pino sin tratar, lápices Art & Graphic, rotuladores Uni-Posca, pintura acrílica, purpurina, pétalos de rosa secos, encaje de papel y elementos decorativos",
+      "year": "2013-2014",
+      "story": "Holy Wood: REtpLATOS & aMOREs es una serie emblemática de retratos expresivos realizados directamente sobre platos redondos de madera de pino sin tratar. La artista aprovecha la veta y calidez del soporte para plasmar retratos llenos de luz, humor y afecto, incorporando elementos en relieve como purpurina, flores secas, mariposas, encajes y collages botánicos.",
+      "url": "https://naroagutierrezgil.com/obra/holy-wood-retplatos-amores/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/holy-wood-retplatos-01-d967e557d435-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/holy-wood-retplatos-01.jpg",
+          "width": 1024,
+          "height": 768,
+          "caption": "Retplato de mujer a rayas con hojas blancas cayendo como lluvia sobre madera de pino (Naroa 2014).",
+          "sha256": "d967e557d435f865280cc469791d584b44a30c4e2b2520cb91495352356263a3"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/holy-wood-retplatos-02.jpg",
+          "width": 1022,
+          "height": 1024,
+          "caption": "Retplato de chico sonriente con mariposas doradas sobre veta de madera (Naroa 2014).",
+          "sha256": "4d2c57431d2c5c9adc279d1f1e3540d7d7ad78d409a66bf5862e2f2eebebd34c"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/holy-wood-retplatos-03.jpg",
+          "width": 1024,
+          "height": 816,
+          "caption": "Retplato de mujer joven con pelo recogido, pétalos secos de rosa y encaje (Naroa 2014).",
+          "sha256": "2611a219c381e61b1ab1b5fc0fbf3ef2ba7b7a54808bfe269f8e381f61c95abd"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/holy-wood-retplatos-04.jpg",
+          "width": 768,
+          "height": 1024,
+          "caption": "Retplato Hermanita con trenza y collar de cuentas multicolor (Naroa 2014).",
+          "sha256": "b53945072223711d91af782906d0f4447c824dc8ba14471e42aaa845d6d95ad8"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/holy-wood-retplatos-05.jpg",
+          "width": 1022,
+          "height": 1024,
+          "caption": "Retplato de fotógrafa con cámara reflex y lámpara mágica de genio.",
+          "sha256": "f913d8313482a62a3330747f299f163e2909dc42bc4985ee0cce868773f3760d"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/holy-wood-retplatos-06.jpg",
+          "width": 1014,
+          "height": 1024,
+          "caption": "Retplato de perfil de chico con barba y auriculares.",
+          "sha256": "d3c09e375c7fcc62040e90f36ef72e45d9b714a815405149f609453bd0ef441c"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/holy-wood-retplatos-07.jpg",
+          "width": 1024,
+          "height": 1017,
+          "caption": "Retplato marioneta con cuerdas y cigarro (Naroa 2013).",
+          "sha256": "d47107b9ee3fa39de9ebc39ead4856ab2cc45ac3be2d05e0df118d608e65b051"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/holy-wood-retplatos-08.jpg",
+          "width": 1024,
+          "height": 1014,
+          "caption": "Retplato de mujer pelirroja sonriente con flor silvestre y botella (Naroa 2013).",
+          "sha256": "33f9138a6f3c3e3dbe0e0c81a5be1cd28f99a786d6bc855360d6e98ab349ccd3"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/holy-wood-retplatos-09.jpg",
+          "width": 1024,
+          "height": 1020,
+          "caption": "Retplato de cocinero con gorro de chef y torbellino de color (Naroa 2013).",
+          "sha256": "c71ad75255fc1640e6ea2c598e4bc2cf1e4921bd64d421e29d2912e9ec82e984"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/holy-wood-retplatos-amores-4k.webp",
+          "width": 1024,
+          "height": 768,
+          "caption": "Fotografía master 4K de la serie Holy Wood: REtpLATOS & aMOREs.",
+          "sha256": "e40303b89381144c57746f067e24d2336dfaedc733e33f46f5f8df5c26e197b9"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Holy%20Wood%3A%20REtpLATOS%20%26%20aMOREs",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Holy%20Wood%3A%20REtpLATOS%20%26%20aMOREs"
+    },
+    {
       "slug": "el-hombre-que-susurraba-a-las-estrellas",
       "title": "El hombre que susurraba a las estrellas",
       "category": "collage",
@@ -2649,30 +2783,44 @@
     {
       "slug": "the-golden-couple",
       "title": "The Golden Couple",
-      "category": "pizarra",
-      "series": "DiviNos",
-      "technique": "Acrílico, rotuladores y pan de oro",
-      "support": "Pizarra natural de cantera",
+      "category": "collage",
+      "series": null,
+      "technique": "Retrato doble mediante técnica mixta, lápices de colores y collage",
+      "support": "Papel sobre fondo floral y celosía dorada en marco vitrina (shadow box)",
       "dimensions": "35 × 46 × 0,7 cm",
-      "materials": null,
+      "materials": "Lápices de colores, tintas, papeles estampados, celosía dorada, gominolas en relieve y marco vitrina negro",
       "year": 2024,
-      "story": "Retrato doble con acentos de pan de oro sobre pizarra natural. El abrazo y la complicidad de la pareja quedan esculpidos entre el trazo gráfico contemporáneo y la nobleza mineral.",
+      "story": "Retrato doble realizado mediante técnica mixta y collage. La complicidad y ternura de la pareja se funden sobre un fondo floral de crisantemos y celosía geométrica dorada, coronado en su base por un lecho de gominolas de colores vivos en relieve dentro de una caja de marco vitrina profunda.",
       "url": "https://naroagutierrezgil.com/obra/the-golden-couple/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/the-golden-couple-4k-7d0ad9655f95-view.webp",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/the-golden-couple-01-f607cbc62554-view.webp",
       "photos": [
         {
-          "url": "https://naroagutierrezgil.com/images/catalogo/the-golden-couple-4k.webp",
-          "width": 3840,
-          "height": 2880,
-          "caption": "Fotografía master 4K de The Golden Couple sobre pizarra natural con pan de oro.",
-          "sha256": "7d0ad9655f9578dc735db732bfeb34b69555c79f57390cf00132120acf3d0cfb"
+          "url": "https://naroagutierrezgil.com/images/catalogo/the-golden-couple-01.jpg",
+          "width": 1024,
+          "height": 1024,
+          "caption": "Retrato doble The Golden Couple en técnica mixta mediante collage con fondo floral, celosía dorada y gominolas.",
+          "sha256": "f607cbc625541fb46a7405f2e8a990a619af762fc46a933623595d7ff0eb5a67"
         },
         {
-          "url": "https://naroagutierrezgil.com/images/artworks/the-golden-couple-C9C95N75.webp",
-          "width": 843,
-          "height": 632,
-          "caption": "Detalle de los trazos dorados y textura.",
-          "sha256": "1b1a3d2b2161424a7bd2133695f5ac109b6021c3db13b2a87b2a7e407792f7a5"
+          "url": "https://naroagutierrezgil.com/images/catalogo/the-golden-couple-02.jpg",
+          "width": 1024,
+          "height": 768,
+          "caption": "Obra enmarcada en caja vitrina negra (shadow box) dispuesta sobre la hierba con flores silvestres.",
+          "sha256": "5e6ffc934dcc709839e81558529f49f30e2d2c3f2ea3de3baeaa6f8a8bb4eddb"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/the-golden-couple-03.jpg",
+          "width": 768,
+          "height": 1024,
+          "caption": "Vista cenital de la obra enmarcada sobre un lecho de margaritas naturales.",
+          "sha256": "bef5000612c9cdef4e87e4fbdf483fa736f5d10a9002ae1e456070bd846a0caf"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/the-golden-couple-4k.webp",
+          "width": 1024,
+          "height": 1024,
+          "caption": "Fotografía master de The Golden Couple: técnica mixta mediante collage.",
+          "sha256": "7ef7502d06f6abee406d3991ecbe5ecf5760565b7c7cd2e687769f6c7c26b87e"
         }
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20The%20Golden%20Couple",

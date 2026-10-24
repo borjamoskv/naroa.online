@@ -30,9 +30,9 @@
 - **¿Se puede visitar el estudio en Bilbao?** Sí, visitas con cita concertada previa para ver obra en directo, valorar soportes y definir el proyecto en persona.
 
 ## Secciones Principales
-- [Inicio e Inmersión](https://naroagutierrezgil.com/): Experiencia inmersiva y catálogo completo de 79 obras.
+- [Inicio e Inmersión](https://naroagutierrezgil.com/): Experiencia inmersiva y catálogo completo de 81 obras.
 - [Retratos por Encargo en Bilbao](https://naroagutierrezgil.com/retratos-por-encargo-bilbao/): Condiciones técnicas, formatos (20×30 cm a 40×50 cm), plazos de 2 a 4 semanas, configurador interactivo y galería de ejemplos reales.
-- [Catálogo Completo](https://naroagutierrezgil.com/obra/): Ficha detallada de las 79 piezas de la colección con fotografías de detalle y relato.
+- [Catálogo Completo](https://naroagutierrezgil.com/obra/): Ficha detallada de las 81 piezas de la colección con fotografías de detalle y relato.
 - [Serie Vaivenes](https://naroagutierrezgil.com/series/vaivenes/): Retratos en técnica mixta, collage textil y objetos de memoria.
 - [Sobre Mí](https://naroagutierrezgil.com/sobre-mi/): Biografía, técnica, proceso creativo y proyectos comunitarios (Walking Gallery Bilbao, El ReCreo).
 - [Trayectoria](https://naroagutierrezgil.com/trayectoria/): Archivo cronológico de exposiciones documentadas desde 2010 (DEIA, GARA, Politena, Dock Bilbao).
@@ -40,14 +40,14 @@
 - [Contacto](https://naroagutierrezgil.com/contacto/): Canales directos de consulta para obra y encargos.
 
 ## Recursos Machine-to-Machine y GEO SOTA 2026
-- [Catálogo JSON Estructurado](https://naroagutierrezgil.com/api/catalog.json): Endpoint con especificaciones completas de las 79 obras y Evidence Graph.
+- [Catálogo JSON Estructurado](https://naroagutierrezgil.com/api/catalog.json): Endpoint con especificaciones completas de las 81 obras y Evidence Graph.
 - [Endpoint WebMCP](https://naroagutierrezgil.com/.well-known/mcp.json): Manifiesto y definición formal de herramientas WebMCP para agentes autónomos.
 - [Índice Extendido llms-full.txt](https://naroagutierrezgil.com/llms-full.txt): Desglose exhaustivo de todas las piezas, fotos de detalle con hashes SHA-256 y condiciones de encargo.
-- [Sitemap XML](https://naroagutierrezgil.com/sitemap.xml): Índice canónico de 87 rutas y metadatos de imágenes.
+- [Sitemap XML](https://naroagutierrezgil.com/sitemap.xml): Índice canónico de 89 rutas y metadatos de imágenes.
 - [Feed RSS 2.0](https://naroagutierrezgil.com/feed.xml): Sindicación de obras recientes y publicaciones del taller.
 - [Protocolo IndexNow](https://naroagutierrezgil.com/indexnow.json): Sincronización instantánea de indexación para Bing y motores asociados.
 
-## Catálogo Exhaustivo de Obras (79 Piezas Documentadas)
+## Catálogo Exhaustivo de Obras (81 Piezas Documentadas)
 
 ### Marilyn Rocks (None)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/marilyn-rocks/
@@ -519,6 +519,26 @@
 - **Relato:** Retrato doble de padre e hijo en brazos («Aupas»). Realizado con enérgica trama de líneas en lápices de colores y trazos expresivos en tonos rojo, azul, verde y negro que transmiten el vínculo protector y afectivo de la escena familiar.
 - **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Aupas
 
+### Aquellos Maravillosos Años (2017)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/aquellos-maravillosos-anos/
+- **Técnica:** Lápices de colores Faber-Castell Art & Graphic sobre papel
+- **Soporte:** Papel de 80 gr/m² tamaño A4
+- **Medidas:** 21 × 29,7 cm (A4)
+- **Materiales:** Lápices de colores Faber-Castell Art & Graphic y papel de dibujo de 80 gr/m²
+- **Serie:** Colección general
+- **Relato:** «Aquellos Maravillosos Años». Retrato de infancia de dos hermanos realizado con lápices de colores Art & Graphic de Faber-Castell sobre papel de 80 gr/m². La artista capta la inocencia y complicidad infantil con sutiles veladuras en los rostros y un enérgico trabajo de trama cromática en las prendas.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Aquellos%20Maravillosos%20A%C3%B1os
+
+### Holy Wood: REtpLATOS & aMOREs (2013-2014)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/holy-wood-retplatos-amores/
+- **Técnica:** Lápices de colores, rotuladores Uni-Posca, acrílico, purpurina, flores y collage sobre madera
+- **Soporte:** Platos redondos de madera de pino sin tratar (Retplatos)
+- **Medidas:** Ø 22 cm c/u aprox.
+- **Materiales:** Madera de pino sin tratar, lápices Art & Graphic, rotuladores Uni-Posca, pintura acrílica, purpurina, pétalos de rosa secos, encaje de papel y elementos decorativos
+- **Serie:** Holy Wood
+- **Relato:** Holy Wood: REtpLATOS & aMOREs es una serie emblemática de retratos expresivos realizados directamente sobre platos redondos de madera de pino sin tratar. La artista aprovecha la veta y calidez del soporte para plasmar retratos llenos de luz, humor y afecto, incorporando elementos en relieve como purpurina, flores secas, mariposas, encajes y collages botánicos.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Holy%20Wood%3A%20REtpLATOS%20%26%20aMOREs
+
 ### El hombre que susurraba a las estrellas (None)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/el-hombre-que-susurraba-a-las-estrellas/
 - **Técnica:** Bolígrafo negro y collage
@@ -665,12 +685,12 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
 
 ### The Golden Couple (2024)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/the-golden-couple/
-- **Técnica:** Acrílico, rotuladores y pan de oro
-- **Soporte:** Pizarra natural de cantera
+- **Técnica:** Retrato doble mediante técnica mixta, lápices de colores y collage
+- **Soporte:** Papel sobre fondo floral y celosía dorada en marco vitrina (shadow box)
 - **Medidas:** 35 × 46 × 0,7 cm
-- **Materiales:** Acrílico, rotuladores y pan de oro
-- **Serie:** DiviNos
-- **Relato:** Retrato doble con acentos de pan de oro sobre pizarra natural. El abrazo y la complicidad de la pareja quedan esculpidos entre el trazo gráfico contemporáneo y la nobleza mineral.
+- **Materiales:** Lápices de colores, tintas, papeles estampados, celosía dorada, gominolas en relieve y marco vitrina negro
+- **Serie:** Colección general
+- **Relato:** Retrato doble realizado mediante técnica mixta y collage. La complicidad y ternura de la pareja se funden sobre un fondo floral de crisantemos y celosía geométrica dorada, coronado en su base por un lecho de gominolas de colores vivos en relieve dentro de una caja de marco vitrina profunda.
 - **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20The%20Golden%20Couple
 
 ### Pink and Sparkles (2005)
