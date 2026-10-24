@@ -361,20 +361,6 @@ export function ImmersiveExhibition({ onInspectArtwork }: ImmersiveExhibitionPro
           }}
           onClick={() => onInspectArtwork(currentIndex)}
         >
-          {/* Halo de Resplandor Dorado Posterior */}
-          <div
-            style={{
-              position: 'absolute',
-              width: '92%',
-              height: '92%',
-              background: 'radial-gradient(circle, rgba(212, 175, 55, 0.22) 0%, rgba(43, 59, 229, 0.06) 55%, transparent 75%)',
-              filter: 'blur(45px)',
-              transform: 'translateZ(-40px)',
-              pointerEvents: 'none',
-              borderRadius: '24px',
-            }}
-          />
-
           {/* Marco de Alta Definición */}
           <div
             style={{

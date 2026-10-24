@@ -512,19 +512,6 @@ export function HomeHero({ onInspectArtwork }: HomeHeroProps) {
             }}
             onClick={handleInspectClick}
           >
-            {/* Halo de Resplandor Dorado Posterior */}
-            <div
-              style={{
-                position: 'absolute',
-                inset: '-10px',
-                background: 'radial-gradient(circle, rgba(212, 175, 55, 0.2) 0%, rgba(43, 59, 229, 0.08) 50%, transparent 75%)',
-                filter: 'blur(35px)',
-                transform: 'translateZ(-30px)',
-                pointerEvents: 'none',
-                borderRadius: '24px',
-              }}
-            />
-
             {/* Marco de Pizarra Fósil */}
             <div
               style={{

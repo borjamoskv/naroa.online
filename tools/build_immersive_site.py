@@ -273,6 +273,71 @@ def build(output):
             "#2E5090", "#fffdf4", "#f7d594"
         )
 
+        def create_story_card():
+            SW, SH = 1080, 1920
+            story = Image.new("RGB", (SW, SH), "#0b0c0a")
+            shalo = Image.new("RGBA", (SW, SH), (0, 0, 0, 0))
+            shdraw = ImageDraw.Draw(shalo)
+            shdraw.ellipse([100, 100, 980, 980], fill=(46, 80, 144, 150))
+            shdraw.ellipse([200, 1000, 900, 1700], fill=(247, 213, 148, 55))
+            shalo = shalo.filter(ImageFilter.GaussianBlur(110))
+            story.paste(Image.alpha_composite(Image.new("RGBA", (SW, SH), (11, 12, 10, 255)), shalo).convert("RGB"))
+
+            sdraw = ImageDraw.Draw(story)
+            try:
+                sfont_eyebrow = ImageFont.truetype(font_reg_path, 24)
+                sfont_h1 = ImageFont.truetype(font_bold_path, 54)
+                sfont_lead = ImageFont.truetype(font_reg_path, 28)
+                sfont_pill = ImageFont.truetype(font_bold_path, 24)
+                sfont_foot = ImageFont.truetype(font_reg_path, 22)
+            except Exception:
+                sfont_eyebrow = sfont_h1 = sfont_lead = sfont_pill = sfont_foot = ImageFont.load_default()
+
+            sdraw.text((80, 130), "NAROA GUTIÉRREZ GIL · BILBAO", fill="#f7d594", font=sfont_eyebrow)
+            sdraw.text((80, 185), "LA MIRADA\nQUE ATRAVIESA LA MATERIA", fill="#fffdf4", font=sfont_h1, spacing=10)
+            sdraw.text((80, 335), f"Exposición inmersiva interactiva · {len(projects)} obras originales", fill="#d1cfc7", font=sfont_lead)
+
+            center_path = source_dir / "images/sobre-mi/naroa-monoculo.jpg"
+            if center_path.exists():
+                c_im = Image.open(center_path).convert("RGB")
+                c_crop = ImageOps.fit(c_im, (920, 1040), centering=(0.5, 0.32))
+                c_mask = Image.new("L", (920, 1040), 0)
+                ImageDraw.Draw(c_mask).rounded_rectangle([0, 0, 920, 1040], radius=36, fill=255)
+                story.paste(c_crop, (80, 410), c_mask)
+
+            t1_path = source_dir / "images/catalogo/marilyn-rocks-4k.webp"
+            if t1_path.exists():
+                t1 = Image.open(t1_path).convert("RGB")
+                t1_crop = ImageOps.fit(t1, (200, 200), centering=(0.5, 0.45))
+                m1 = Image.new("L", (200, 200), 0)
+                ImageDraw.Draw(m1).rounded_rectangle([0, 0, 200, 200], radius=24, fill=255)
+                story.paste(t1_crop, (80, 1490), m1)
+
+            t2_path = source_dir / "images/menu/menu-01-luz.jpg"
+            if t2_path.exists():
+                t2 = Image.open(t2_path).convert("RGB")
+                t2_crop = ImageOps.fit(t2, (200, 200), centering=(0.5, 0.4))
+                m2 = Image.new("L", (200, 200), 0)
+                ImageDraw.Draw(m2).rounded_rectangle([0, 0, 200, 200], radius=24, fill=255)
+                story.paste(t2_crop, (310, 1490), m2)
+
+            sdraw = ImageDraw.Draw(story)
+            sdraw.rounded_rectangle([540, 1500, 1000, 1570], radius=20, fill="#2E5090")
+            sdraw.text((570, 1520), f"{len(projects)} OBRAS CANÓNICAS", fill="#fffdf4", font=sfont_pill)
+
+            sdraw.rounded_rectangle([540, 1600, 1000, 1670], radius=20, outline="#f7d594", width=2)
+            sdraw.text((570, 1620), "ESTUDIO EN BILBAO", fill="#f7d594", font=sfont_pill)
+
+            sdraw.text((80, 1780), "naroagutierrezgil.com", fill="#f7d594", font=sfont_pill)
+            sdraw.text((680, 1785), "DESLIZA PARA ENTRAR ↗", fill="#9ca3af", font=sfont_foot)
+
+            dest_src = social_dir / "naroa-story-card-1080x1920.jpg"
+            story.save(dest_src, quality=94, optimize=True)
+            dest_deploy = target_social_dir / "naroa-story-card-1080x1920.jpg"
+            shutil.copy2(dest_src, dest_deploy)
+
+        create_story_card()
+
     generate_social_cards(SOURCE, output)
     assets = {}
     for name in ("app.css", "app.js", "journey.js", "soundscape.js"):

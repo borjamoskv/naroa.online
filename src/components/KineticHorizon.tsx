@@ -655,7 +655,6 @@ export function KineticHorizon({
           const opacity = Math.max(0.24, 1 - absDist * 0.46)
           const zIndex = Math.round(50 - absDist * 18)
           const isCentered = absDist < 0.45
-          const auraColor = ARTWORK_AURA_COLORS[artwork.id] || 'rgba(212, 175, 55, 0.3)'
 
           // Cálculo de coordenadas relativas normalizadas para perspectiva 3D interactiva y brillo de mica
           const winH = typeof window !== 'undefined' ? window.innerHeight : 900
@@ -725,21 +724,6 @@ export function KineticHorizon({
               >
                 {ROMAN_NUMERALS[idx] || String(idx + 1).padStart(2, '0')}
               </div>
-
-              {/* HALO ESPECULAR PROFUNDO DE LA PIEZA */}
-              <div
-                style={{
-                  position: 'absolute',
-                  width: '90%',
-                  height: '80%',
-                  background: `radial-gradient(circle, ${auraColor} 0%, rgba(212, 175, 55, 0.08) 50%, transparent 75%)`,
-                  filter: 'blur(50px)',
-                  transform: 'translateZ(-40px)',
-                  pointerEvents: 'none',
-                  opacity: isCentered ? 0.9 : 0.3,
-                  transition: 'opacity 0.4s ease',
-                }}
-              />
 
               {/* CONTENEDOR DE LA OBRA (SILUETA GEOLÓGICA DE PIZARRA PURA) */}
               <div
