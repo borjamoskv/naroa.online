@@ -78,6 +78,9 @@ html.motion-off .kinetic-title{display:none}
 
 /* Give the camera the frame; bring reading controls back when the gesture rests. */
 .gallery-page .art-shade{transition:opacity .6s}
+.gallery-page .art-stage:after{content:'';position:absolute;inset:0;z-index:7;pointer-events:none;background:radial-gradient(circle at 58% 46%,#ffffff 0%,#fffef8 64%,rgba(255,253,244,0.94) 100%);opacity:var(--camera-flash,0);mix-blend-mode:normal;will-change:opacity}
+@keyframes ajenjo-flash-burst{0%{opacity:.98}15%{opacity:.92}38%{opacity:.42}72%{opacity:.08}100%{opacity:0}}
+.gallery-page .art-stage.has-flash-burst:after{animation:ajenjo-flash-burst .42s cubic-bezier(.1,.9,.2,1) forwards}
 .gallery-page .art-scene[data-work="el-hombre-que-susurraba-a-las-estrellas"] img{transform-origin:65.2% 57.4%!important}
 .gallery-page .art-scene[data-work="i-got-you-babe"] img{transform-origin:38% 46%!important}
 .gallery-page .art-scene[data-work="jose-manuel-ezquerra"] img{transform-origin:62% 42%!important}
