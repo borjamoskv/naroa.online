@@ -319,6 +319,8 @@
       });
       const credit = $('[data-credit]'); credit.textContent = p.credit || ''; credit.hidden = !p.credit;
       $('[data-art-email]').href = 'mailto:naroa@naroa.eu?subject=' + encodeURIComponent('Consulta sobre ' + p.title);
+      const waLink = $('[data-art-whatsapp]');
+      if (waLink) waLink.href = 'https://wa.me/34636060609?text=' + encodeURIComponent('Hola Naroa, me gustaría consultar sobre la obra ' + p.title);
       const source = $('[data-art-source]'); source.hidden = !p.source;
       if (p.source) source.href = p.source; else source.removeAttribute('href');
       scenes.forEach((s, i) => { s.setAttribute('aria-hidden', String(i !== state.index)); s.classList.toggle('is-current', i === state.index); });
