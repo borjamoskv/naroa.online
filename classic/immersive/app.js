@@ -265,6 +265,7 @@
   const stage = $('[data-gallery]');
   if (stage) {
     const works = catalogue.projects.filter(p => stage.dataset.subset !== 'Vaivenes' || p.series === 'Vaivenes');
+    const ezquerraIndex = works.findIndex(w => w.slug === 'jose-manuel-ezquerra');
     const scenes = $$('.art-scene', stage), images = scenes.map(s => $('img', s));
     scenes.forEach((s, i) => { if (works[i]) s.dataset.work = works[i].slug; });
     const kineticTitle = $('[data-kinetic-title]', stage), caption = $('[data-art-copy]', stage);
@@ -444,6 +445,20 @@
       punchBurstTimer = setTimeout(() => {
         stage.classList.remove('has-punch-impact');
       }, 450);
+    }
+    let ezquerraBrakeTimer = null, ezquerraBrakeActive = false;
+    let ezquerraBrakeVisited = (state.index === ezquerraIndex);
+    function triggerEzquerraBrake() {
+      if (ezquerraBrakeVisited || ezquerraBrakeActive || reduced.matches || ezquerraIndex < 0) return;
+      ezquerraBrakeVisited = true;
+      ezquerraBrakeActive = true;
+      stage.classList.add('has-ezquerra-brake');
+      clearTimeout(ezquerraBrakeTimer);
+      ezquerraBrakeTimer = setTimeout(() => {
+        ezquerraBrakeActive = false;
+        stage.classList.remove('has-ezquerra-brake');
+        render();
+      }, 2000);
     }
     let sugarShakeTimer = null, sugarVisited = false;
     function fireSugarShake() {
@@ -734,6 +749,17 @@
       } else {
         punchVisited = false;
       }
+      if (ezquerraIndex >= 0) {
+        const isAtEzquerra = (works[base]?.slug === 'jose-manuel-ezquerra' && !transition) ||
+                             (transition && works[base]?.slug === 'i-got-you-babe' && works[incoming]?.slug === 'jose-manuel-ezquerra' && fraction >= 0.95);
+        if (isAtEzquerra) {
+          if (!ezquerraBrakeVisited && !reduced.matches) {
+            triggerEzquerraBrake();
+          }
+        } else if (pose.position < ezquerraIndex - 0.75 || pose.position > ezquerraIndex + 1.25) {
+          ezquerraBrakeVisited = false;
+        }
+      }
       const flash = transition && (works[base].slug === 'ajenjo-cam' || works[incoming].slug === 'ajenjo-cam')
         ? Math.exp(-Math.pow((fraction - 0.5) / 0.08, 2)) * 0.96
         : 0;
@@ -760,6 +786,8 @@
       const cue = $('[data-journey-cue]', stage);
       if (works[state.index]?.slug === 'dustin' && !transition) {
         cue.textContent = 'La última nota ya es silencio · Volver al origen ↺';
+      } else if (ezquerraBrakeActive) {
+        cue.textContent = 'Una pausa para mirar · su mirada te detiene';
       } else {
         cue.textContent = still ? reduced.matches ? 'Activa los efectos para ver el viaje ↓' : 'Desplázate para recorrer ↕' : !transition ? phase === 'explore' ? 'Explora la superficie ↓' : 'Una pausa para mirar · sigue ↓' : ({ E: 'Entra en la mirada ↓', H: 'Atravesar · sigue bajando ↓', V: 'Déjate llevar ↓', Z: 'Acércate ↓', P: 'Mezclar y volver a unir ↓' })[mode];
       }
@@ -777,7 +805,16 @@
     function syncScroll() {
       motion.frame = null;
       if (document.querySelector('dialog[open]')) return;
-      const pixels = scrollY - geometry.top;
+      let pixels = scrollY - geometry.top;
+      if (ezquerraIndex >= 0 && ezquerraBrakeActive) {
+        const ezEntry = journey.entries[ezquerraIndex];
+        const ezStartPixels = ezEntry ? ezEntry.start * geometry.unit : 0;
+        if (pixels < ezStartPixels - 12) {
+          clearTimeout(ezquerraBrakeTimer);
+          ezquerraBrakeActive = false;
+          stage.classList.remove('has-ezquerra-brake');
+        }
+      }
       // Native scroll positions round to device pixels, including direct-link jumps.
       const boundary = journey.entries.find(entry => Math.abs(entry.start * geometry.unit - pixels) < 1);
       const pose = journey.read(boundary ? boundary.start : pixels / geometry.unit);
@@ -812,6 +849,11 @@
       motion.navigation = null;
       if (motion.frame !== null) cancelAnimationFrame(motion.frame);
       motion.frame = null;
+      if (ezquerraBrakeActive) {
+        clearTimeout(ezquerraBrakeTimer);
+        ezquerraBrakeActive = false;
+        stage.classList.remove('has-ezquerra-brake');
+      }
       render();
     }
     function change(next) {
@@ -826,17 +868,39 @@
     const interruptNavigation = () => { motion.navigation = null; };
     addEventListener('wheel', e => {
       interruptNavigation();
+      if (ezquerraBrakeActive && e.deltaY > 0) {
+        e.preventDefault();
+        return;
+      }
       if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 4) {
         window.scrollBy({ top: e.deltaX, behavior: 'auto' });
       }
+    }, { passive: false });
+    let touchStartY = 0;
+    addEventListener('touchstart', e => {
+      interruptNavigation();
+      if (e.touches?.length) touchStartY = e.touches[0].clientY;
     }, { passive: true });
-    addEventListener('touchstart', interruptNavigation, { passive: true });
+    addEventListener('touchmove', e => {
+      if (ezquerraBrakeActive && e.touches?.length) {
+        const delta = touchStartY - e.touches[0].clientY;
+        if (delta > 0) {
+          e.preventDefault();
+        }
+      }
+    }, { passive: false });
+    addEventListener('keydown', e => {
+      if (ezquerraBrakeActive && ['ArrowDown', 'PageDown', 'Space', 'ArrowRight', 'j'].includes(e.key)) {
+        e.preventDefault();
+      }
+    });
     $$('[data-select]', stage).forEach(b => b.addEventListener('click', () => change(Number(b.dataset.select))));
     $('[data-prev]', stage).addEventListener('click', () => {
       const cur = motion.navigation ?? motion.desired;
       change(Math.floor(cur) === Math.ceil(cur) ? Math.round(cur) - 1 : Math.floor(cur));
     });
     $('[data-next]', stage).addEventListener('click', () => {
+      if (ezquerraBrakeActive) return;
       const cur = motion.navigation ?? motion.desired;
       change(Math.floor(cur) + 1);
     });

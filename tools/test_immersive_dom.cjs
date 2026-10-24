@@ -745,6 +745,10 @@ async function eyeMatch(ui, base, points) {
   const ezquerraIndex = works.findIndex(w => w.slug === 'jose-manuel-ezquerra');
   galleryAudio.advance(150); reactiveGallery.scroll(ezquerraIndex - 1 + .52); await reactiveGallery.flush();
   assert.equal(reactiveGallery.w.NAROA_SOUND.lastPunchSlug, 'jose-manuel-ezquerra', 'Audio engine registers punch impact between Bill Murray and Ezquerra');
+  reactiveGallery.scroll(ezquerraIndex); await reactiveGallery.flush();
+  assert.ok(reactiveGallery.find('.art-stage').classList.contains('has-ezquerra-brake'), 'Arriving at Ezquerra activates the 2-second brake');
+  assert.equal(reactiveGallery.wheel(100).defaultPrevented, true, 'Forward wheel is braked during contemplation');
+  assert.equal(reactiveGallery.wheel(-100).defaultPrevented, false, 'Backward wheel is never trapped');
   const celiaIndex = works.findIndex(w => w.slug === 'asucar-celia-cruz');
   if (celiaIndex >= 0) {
     galleryAudio.advance(150); reactiveGallery.scroll(celiaIndex); await reactiveGallery.flush();
