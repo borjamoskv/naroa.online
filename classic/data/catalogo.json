@@ -3480,6 +3480,182 @@
           "Retplato de cocinero con gorro de chef y torbellino de color (Naroa 2013)."
         ]
       }
+    },
+    {
+      "slug": "lily-munster",
+      "title": "Lily Munster",
+      "category": "collage",
+      "technique": "Rotuladores de tinta, permanentes y acrílicos; frottage con grafito",
+      "support": "Papel con marco impreso vintage",
+      "story": "Retrato expresivo de Lily Munster con frottage de grafito, contrastes de tinta y marco impreso vintage.",
+      "images": [
+        {
+          "src": "/images/catalogo/the-munsters-01.jpg",
+          "width": 1452,
+          "height": 2048,
+          "caption": "Retrato individual de Lily Munster.",
+          "source": null,
+          "sha256": "000d318e67d1545bb6c117860b40ef68681138792f9526d5b0ec897e61a5627f"
+        },
+        {
+          "src": "/images/catalogo/lily-munster-4k.webp",
+          "width": 1452,
+          "height": 2048,
+          "caption": "Fotografía master 4K de Lily Munster.",
+          "source": null,
+          "sha256": "4051c2629495f93ae829f54722230061ff0bb5b742e467e5a880898493f46ba1"
+        }
+      ],
+      "source": null,
+      "dimensions": "A4 aprox.",
+      "materials": "Papel de bellas artes, rotuladores Uni-Posca, tintas permanentes y grafito frottage",
+      "series": "The Munsters",
+      "year": 2022,
+      "credit": "Serie The Munsters.",
+      "selected": true,
+      "kind": "obra",
+      "editorial": {
+        "image_order": [
+          0,
+          1
+        ],
+        "captions": [
+          "Retrato individual de Lily Munster.",
+          "Master de Lily Munster."
+        ]
+      }
+    },
+    {
+      "slug": "herman-munster",
+      "title": "Herman Munster",
+      "category": "collage",
+      "technique": "Rotuladores de tinta, permanentes y acrílicos; frottage con grafito",
+      "support": "Papel con marco impreso vintage",
+      "story": "Retrato de Herman Munster con su característica silueta y expresión bondadosa sobre fondo texturizado con grafito.",
+      "images": [
+        {
+          "src": "/images/catalogo/the-munsters-02.jpg",
+          "width": 590,
+          "height": 826,
+          "caption": "Retrato individual de Herman Munster.",
+          "source": null,
+          "sha256": "3c51035361d744d101c1a38888520cdef70e289e14dccbeb98c554af24df677a"
+        },
+        {
+          "src": "/images/catalogo/herman-munster-4k.webp",
+          "width": 590,
+          "height": 826,
+          "caption": "Fotografía master 4K de Herman Munster.",
+          "source": null,
+          "sha256": "ab823f479381a3b18c1708cc2fd067cd8697ed6db3ccc4802c9fed3788b40a5d"
+        }
+      ],
+      "source": null,
+      "dimensions": "A4 aprox.",
+      "materials": "Papel de bellas artes, rotuladores Uni-Posca, tintas permanentes y grafito frottage",
+      "series": "The Munsters",
+      "year": 2022,
+      "credit": "Serie The Munsters.",
+      "selected": true,
+      "kind": "obra",
+      "editorial": {
+        "image_order": [
+          0,
+          1
+        ],
+        "captions": [
+          "Retrato individual de Herman Munster.",
+          "Master de Herman Munster."
+        ]
+      }
+    },
+    {
+      "slug": "eddie-munster",
+      "title": "Eddie Munster",
+      "category": "collage",
+      "technique": "Rotuladores de tinta, permanentes y acrílicos; frottage con grafito",
+      "support": "Papel con marco impreso vintage",
+      "story": "Retrato del joven Eddie Munster en técnica mixta con intensos contrastes de claroscuro y marco impreso.",
+      "images": [
+        {
+          "src": "/images/catalogo/the-munsters-03.jpg",
+          "width": 590,
+          "height": 827,
+          "caption": "Retrato individual de Eddie Munster.",
+          "source": null,
+          "sha256": "47c29f12a28bc0e0dcc820aed62a053887d18b75b23cf6a5ade7da9df3c7cb62"
+        },
+        {
+          "src": "/images/catalogo/eddie-munster-4k.webp",
+          "width": 590,
+          "height": 827,
+          "caption": "Fotografía master 4K de Eddie Munster.",
+          "source": null,
+          "sha256": "c6f16c0823df4056cdfff6daf896c4072f84bfe7986ed9a3fa967ddf27f65e6f"
+        }
+      ],
+      "source": null,
+      "dimensions": "A4 aprox.",
+      "materials": "Papel de bellas artes, rotuladores Uni-Posca, tintas permanentes y grafito frottage",
+      "series": "The Munsters",
+      "year": 2022,
+      "credit": "Serie The Munsters.",
+      "selected": true,
+      "kind": "obra",
+      "editorial": {
+        "image_order": [
+          0,
+          1
+        ],
+        "captions": [
+          "Retrato individual de Eddie Munster.",
+          "Master de Eddie Munster."
+        ]
+      }
+    },
+    {
+      "slug": "abuelo-munster",
+      "title": "El Abuelo Munster",
+      "category": "collage",
+      "technique": "Rotuladores de tinta, permanentes y acrílicos; frottage con grafito",
+      "support": "Papel con marco impreso vintage",
+      "story": "Retrato del Abuelo Munster con su icónica capa y sonrisa picaresca en trazos de tinta y frottage.",
+      "images": [
+        {
+          "src": "/images/catalogo/the-munsters-04.jpg",
+          "width": 590,
+          "height": 837,
+          "caption": "Retrato individual de El Abuelo Munster.",
+          "source": null,
+          "sha256": "782e5e581de224803d8dadf0b798d86a327efb5c176308456a45f7605383664a"
+        },
+        {
+          "src": "/images/catalogo/abuelo-munster-4k.webp",
+          "width": 590,
+          "height": 837,
+          "caption": "Fotografía master 4K de El Abuelo Munster.",
+          "source": null,
+          "sha256": "ff0a7a1841e8f07196d2793857e91cce4a9bd5410c39eadd02c8ee740a6f86eb"
+        }
+      ],
+      "source": null,
+      "dimensions": "A4 aprox.",
+      "materials": "Papel de bellas artes, rotuladores Uni-Posca, tintas permanentes y grafito frottage",
+      "series": "The Munsters",
+      "year": 2022,
+      "credit": "Serie The Munsters.",
+      "selected": true,
+      "kind": "obra",
+      "editorial": {
+        "image_order": [
+          0,
+          1
+        ],
+        "captions": [
+          "Retrato individual de El Abuelo Munster.",
+          "Master de El Abuelo Munster."
+        ]
+      }
     }
   ]
 }

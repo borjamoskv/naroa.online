@@ -135,7 +135,7 @@
       }
     ]
   },
-  "artworks_count": 81,
+  "artworks_count": 85,
   "reviewed": "2026-10-24",
   "artworks": [
     {
@@ -2608,6 +2608,134 @@
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20The%20Munsters",
       "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20The%20Munsters"
+    },
+    {
+      "slug": "lily-munster",
+      "title": "Lily Munster",
+      "category": "collage",
+      "series": "The Munsters",
+      "technique": "Rotuladores de tinta, permanentes y acrílicos; frottage con grafito",
+      "support": "Papel con marco impreso vintage",
+      "dimensions": "A4 aprox.",
+      "materials": "Papel de bellas artes, rotuladores Uni-Posca, tintas permanentes y grafito frottage",
+      "year": 2022,
+      "story": "Retrato expresivo de Lily Munster con frottage de grafito, contrastes de tinta y marco impreso vintage.",
+      "url": "https://naroagutierrezgil.com/obra/lily-munster/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/the-munsters-01-000d318e67d1-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/the-munsters-01.jpg",
+          "width": 1452,
+          "height": 2048,
+          "caption": "Retrato individual de Lily Munster.",
+          "sha256": "000d318e67d1545bb6c117860b40ef68681138792f9526d5b0ec897e61a5627f"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/lily-munster-4k.webp",
+          "width": 1452,
+          "height": 2048,
+          "caption": "Fotografía master 4K de Lily Munster.",
+          "sha256": "4051c2629495f93ae829f54722230061ff0bb5b742e467e5a880898493f46ba1"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Lily%20Munster",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Lily%20Munster"
+    },
+    {
+      "slug": "herman-munster",
+      "title": "Herman Munster",
+      "category": "collage",
+      "series": "The Munsters",
+      "technique": "Rotuladores de tinta, permanentes y acrílicos; frottage con grafito",
+      "support": "Papel con marco impreso vintage",
+      "dimensions": "A4 aprox.",
+      "materials": "Papel de bellas artes, rotuladores Uni-Posca, tintas permanentes y grafito frottage",
+      "year": 2022,
+      "story": "Retrato de Herman Munster con su característica silueta y expresión bondadosa sobre fondo texturizado con grafito.",
+      "url": "https://naroagutierrezgil.com/obra/herman-munster/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/the-munsters-02-3c51035361d7-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/the-munsters-02.jpg",
+          "width": 590,
+          "height": 826,
+          "caption": "Retrato individual de Herman Munster.",
+          "sha256": "3c51035361d744d101c1a38888520cdef70e289e14dccbeb98c554af24df677a"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/herman-munster-4k.webp",
+          "width": 590,
+          "height": 826,
+          "caption": "Fotografía master 4K de Herman Munster.",
+          "sha256": "ab823f479381a3b18c1708cc2fd067cd8697ed6db3ccc4802c9fed3788b40a5d"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Herman%20Munster",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Herman%20Munster"
+    },
+    {
+      "slug": "eddie-munster",
+      "title": "Eddie Munster",
+      "category": "collage",
+      "series": "The Munsters",
+      "technique": "Rotuladores de tinta, permanentes y acrílicos; frottage con grafito",
+      "support": "Papel con marco impreso vintage",
+      "dimensions": "A4 aprox.",
+      "materials": "Papel de bellas artes, rotuladores Uni-Posca, tintas permanentes y grafito frottage",
+      "year": 2022,
+      "story": "Retrato del joven Eddie Munster en técnica mixta con intensos contrastes de claroscuro y marco impreso.",
+      "url": "https://naroagutierrezgil.com/obra/eddie-munster/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/the-munsters-03-47c29f12a28b-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/the-munsters-03.jpg",
+          "width": 590,
+          "height": 827,
+          "caption": "Retrato individual de Eddie Munster.",
+          "sha256": "47c29f12a28bc0e0dcc820aed62a053887d18b75b23cf6a5ade7da9df3c7cb62"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/eddie-munster-4k.webp",
+          "width": 590,
+          "height": 827,
+          "caption": "Fotografía master 4K de Eddie Munster.",
+          "sha256": "c6f16c0823df4056cdfff6daf896c4072f84bfe7986ed9a3fa967ddf27f65e6f"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Eddie%20Munster",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Eddie%20Munster"
+    },
+    {
+      "slug": "abuelo-munster",
+      "title": "El Abuelo Munster",
+      "category": "collage",
+      "series": "The Munsters",
+      "technique": "Rotuladores de tinta, permanentes y acrílicos; frottage con grafito",
+      "support": "Papel con marco impreso vintage",
+      "dimensions": "A4 aprox.",
+      "materials": "Papel de bellas artes, rotuladores Uni-Posca, tintas permanentes y grafito frottage",
+      "year": 2022,
+      "story": "Retrato del Abuelo Munster con su icónica capa y sonrisa picaresca en trazos de tinta y frottage.",
+      "url": "https://naroagutierrezgil.com/obra/abuelo-munster/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/the-munsters-04-782e5e581de2-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/the-munsters-04.jpg",
+          "width": 590,
+          "height": 837,
+          "caption": "Retrato individual de El Abuelo Munster.",
+          "sha256": "782e5e581de224803d8dadf0b798d86a327efb5c176308456a45f7605383664a"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/abuelo-munster-4k.webp",
+          "width": 590,
+          "height": 837,
+          "caption": "Fotografía master 4K de El Abuelo Munster.",
+          "sha256": "ff0a7a1841e8f07196d2793857e91cce4a9bd5410c39eadd02c8ee740a6f86eb"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20El%20Abuelo%20Munster",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20El%20Abuelo%20Munster"
     },
     {
       "slug": "denbora-nora-zoaz",

@@ -352,6 +352,30 @@
       "explore": 0
     },
     {
+      "slug": "lily-munster",
+      "mode": "V",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "herman-munster",
+      "mode": "Z",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "eddie-munster",
+      "mode": "V",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "abuelo-munster",
+      "mode": "Z",
+      "hold": 25,
+      "explore": 0
+    },
+    {
       "slug": "denbora-nora-zoaz",
       "mode": "Z",
       "hold": 25,
