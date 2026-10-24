@@ -41,8 +41,9 @@ con un ataque breve derivado de las grabaciones CC0 indicadas arriba.
 La muestra se genera con `tools/compose_musicbox.py`; la melodía se interpreta
 en el navegador con alturas afinadas y desciende una octava dentro del iris.
 
-## Homenaje a David Bowie ("El hombre que susurraba a las estrellas")
+## Homenaje a David Bowie ("El hombre que susurraba a las estrellas") y "Denbora Nora Zoaz Eder Galant Hori?"
 
 Vocalización y diseño sonoro procesado con reverberación de placa y compresión
-estudio inspirada en las sesiones de Hansa Studios Berlín ("Heroes"), sintetizado
-y procesado para la obra de Naroa dedicada al artista.
+estudio inspirada en las sesiones de Hansa Studios Berlín ("We can be heroes" y
+"Just For One Day" en registro grave de barítono mayor), sintetizado
+y procesado para las obras de Naroa.

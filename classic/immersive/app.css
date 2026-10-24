@@ -85,16 +85,19 @@ html.motion-off .kinetic-title{display:none}
 .gallery-page .art-scene[data-work="i-got-you-babe"] img{transform-origin:38% 46%!important}
 .gallery-page .art-scene[data-work="jose-manuel-ezquerra"] img{transform-origin:62% 42%!important}
 .gallery-page .art-stage.has-bowie-zoom .art-scene.is-current img{transform:scale(2.45)!important;transition:transform .75s cubic-bezier(.16,1,.3,1)!important}
-@keyframes punch-impact-shake{0%{transform:translate3d(0,0,0)}18%{transform:translate3d(-18px,12px,0) rotate(-1.6deg)}36%{transform:translate3d(16px,-12px,0) rotate(1.3deg)}54%{transform:translate3d(-10px,8px,0) rotate(-0.8deg)}72%{transform:translate3d(6px,-4px,0) rotate(0.4deg)}88%{transform:translate3d(-2px,2px,0)}100%{transform:translate3d(0,0,0)}}
-.gallery-page .art-stage.has-punch-impact{animation:punch-impact-shake .42s cubic-bezier(.15,.9,.25,1) forwards}
-.gallery-page .art-stage.has-punch-impact:before{content:'';position:absolute;inset:0;z-index:8;pointer-events:none;background:radial-gradient(circle at 60% 45%,rgba(255,30,30,0.32) 0%,rgba(200,0,0,0.12) 45%,transparent 75%);animation:punch-flash .36s ease-out forwards}
-@keyframes punch-flash{0%{opacity:.95}100%{opacity:0}}
+@keyframes punch-impact-shake{0%{transform:translate3d(0,0,0) scale(1);filter:none}12%{transform:translate3d(-24px,14px,0) rotate(-2.4deg) scale(1.05);filter:drop-shadow(-8px 0 0 rgba(255,30,30,0.75)) drop-shadow(8px 0 0 rgba(0,220,255,0.75))}26%{transform:translate3d(22px,-16px,0) rotate(1.9deg) scale(0.97);filter:drop-shadow(6px -3px 0 rgba(255,20,20,0.6)) drop-shadow(-6px 3px 0 rgba(0,200,255,0.6))}42%{transform:translate3d(-14px,10px,0) rotate(-1.1deg) scale(1.02);filter:drop-shadow(-3px 0 0 rgba(255,30,30,0.35))}60%{transform:translate3d(8px,-6px,0) rotate(0.6deg);filter:none}78%{transform:translate3d(-3px,2px,0)}100%{transform:translate3d(0,0,0) scale(1);filter:none}}
+.gallery-page .art-stage.has-punch-impact{animation:punch-impact-shake .44s cubic-bezier(.15,.9,.25,1) forwards}
+.gallery-page .art-stage.has-punch-impact:before{content:'';position:absolute;inset:0;z-index:8;pointer-events:none;background:radial-gradient(circle at 62% 42%,rgba(255,255,255,0.92) 0%,rgba(255,80,40,0.6) 18%,rgba(255,20,20,0.3) 38%,transparent 68%),radial-gradient(circle at 62% 42%,transparent 0%,rgba(255,255,255,0.8) 12%,rgba(255,40,40,0.5) 24%,transparent 35%);animation:punch-flash .42s ease-out forwards}
+@keyframes punch-flash{0%{opacity:.98}100%{opacity:0}}
 .gallery-page .art-stage [data-art-copy],.gallery-page .art-controls,.gallery-page .art-index{transition:opacity .55s ease,translate .55s ease}
 .gallery-page .art-stage.is-camera-moving:not(:has(:focus-visible)) [data-art-copy]{opacity:calc(1 - var(--camera-veil,0))!important;translate:0 calc(var(--camera-veil,0)*6px);transition-duration:.18s}
 .gallery-page .art-stage.is-camera-moving:not(:has(:focus-visible)) .art-controls,.gallery-page .art-stage.is-camera-moving:not(:has(:focus-visible)) .art-index{opacity:calc(1 - var(--camera-veil,0)*.82);transition-duration:.18s}
 .gallery-page .art-stage.is-camera-moving:not(:has(:focus-visible)) .art-controls:hover,.gallery-page .art-stage.is-camera-moving:not(:has(:focus-visible)) .art-index:hover{opacity:1}
 .gallery-page .art-stage.is-camera-moving:not(:has(:focus-visible)) .art-shade{opacity:calc(1 - var(--camera-veil,0)*.55);transition-duration:.18s}
 .gallery-page .art-stage.is-camera-moving [data-art-copy]:hover{opacity:1!important;translate:0 0}
+.gallery-page .art-stage.is-camera-moving [data-art-title]{transform:skewX(var(--velocity-skew,0deg));transition:transform .16s cubic-bezier(.16,1,.3,1)}
+.art-progress{cursor:pointer;padding:8px 0;margin-bottom:-8px;background:linear-gradient(transparent 7px,#fffdf43b 7px,#fffdf43b 9px,transparent 9px)}
+.scrubber-tooltip{position:absolute;bottom:18px;transform:translateX(-50%);background:#11120ff2;border:1px solid #edbca466;color:#fffdf4;padding:5px 11px;border-radius:16px;font-size:10px;letter-spacing:.06em;white-space:nowrap;pointer-events:none;box-shadow:0 6px 20px #000a;backdrop-filter:blur(12px)}
 .has-motion .art-stage.has-travelled .art-layers,.has-motion .art-stage.has-travelled [data-art-title],.has-motion .art-stage.has-travelled .art-counter,.has-motion .art-stage.has-travelled .art-material{animation:none}
 
 /* The menu is another frame in the exhibition, with a stable route back. */

@@ -102,7 +102,7 @@
   function rest(immediate = false) {
     clearTimeout(idle); clearTimeout(suspension); generation++;
     active = false; lastMotion = null; lastGrain = -Infinity; pendingDistance = 0;
-    try { window.speechSynthesis?.cancel?.(); } catch {}
+    if (immediate) { try { window.speechSynthesis?.cancel?.(); } catch {} }
     if (engine) {
       if (immediate) {
         hold(engine.master.gain);
@@ -156,6 +156,55 @@
           gain.connect(target);
           osc.start(now);
           osc.stop(now + 2.5);
+        });
+      } catch {}
+    }
+  }
+  function speakDenbora() {
+    lastHeroSlug = 'denbora-nora-zoaz';
+    lastUtterance = 'Just For One Day';
+    if (typeof window.Audio === 'function' && !window.navigator.userAgent.includes('jsdom')) {
+      try {
+        const audioUrl = button?.dataset?.denboraSrc || '/audio/just-for-one-day.mp3';
+        const oldManAudio = new window.Audio(audioUrl);
+        oldManAudio.volume = 0.96;
+        oldManAudio.play().catch(() => {
+          try {
+            if (window.speechSynthesis && typeof window.SpeechSynthesisUtterance === 'function') {
+              window.speechSynthesis.cancel();
+              const utterance = new window.SpeechSynthesisUtterance('Just... for one day');
+              utterance.lang = 'en-GB'; utterance.rate = .72; utterance.pitch = .58; utterance.volume = 1.0;
+              window.speechSynthesis.speak(utterance);
+            }
+          } catch {}
+        });
+      } catch {}
+    } else {
+      try {
+        if (window.speechSynthesis && typeof window.SpeechSynthesisUtterance === 'function') {
+          window.speechSynthesis.cancel();
+          const utterance = new window.SpeechSynthesisUtterance('Just For One Day');
+          utterance.lang = 'en-GB'; utterance.rate = .72; utterance.pitch = .58; utterance.volume = 1.0;
+          window.speechSynthesis.speak(utterance);
+        }
+      } catch {}
+    }
+    if (context && engine && context.state === 'running') {
+      try {
+        const now = context.currentTime + 0.005;
+        const target = engine.compressor || engine.master;
+        [146.83, 185.00, 220.0, 293.66].forEach((freq, i) => {
+          const osc = context.createOscillator();
+          const gain = context.createGain();
+          osc.type = i % 2 === 0 ? 'triangle' : 'sine';
+          osc.frequency.setValueAtTime(freq, now);
+          gain.gain.setValueAtTime(0.001, now);
+          gain.gain.linearRampToValueAtTime(0.055 / (i + 1), now + 0.35);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.6);
+          osc.connect(gain);
+          gain.connect(target);
+          osc.start(now);
+          osc.stop(now + 2.7);
         });
       } catch {}
     }
@@ -227,67 +276,84 @@
   }
   function playPunchImpact() {
     lastPunchSlug = 'jose-manuel-ezquerra';
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      try { navigator.vibrate([35, 25, 60]); } catch {}
+    }
     if (!context || !engine || context.state !== 'running') return;
     try {
       const now = context.currentTime + 0.002;
       const target = engine.compressor || engine.master;
+      const panner = (typeof context.createStereoPanner === 'function') ? context.createStereoPanner() : null;
+      if (panner) {
+        panner.pan.setValueAtTime(0.18, now);
+        if (panner.pan.linearRampToValueAtTime) {
+          panner.pan.linearRampToValueAtTime(-0.12, now + 0.08);
+          panner.pan.linearRampToValueAtTime(0, now + 0.22);
+        }
+        panner.connect(target);
+      }
+      const impactTarget = panner || target;
+
+      // Layer 1: Sub-bass visceral chest thump
       const subOsc = context.createOscillator();
       const subGain = context.createGain();
       subOsc.type = 'sine';
-      subOsc.frequency.setValueAtTime(220, now);
+      subOsc.frequency.setValueAtTime(240, now);
       if (subOsc.frequency.exponentialRampToValueAtTime) {
-        subOsc.frequency.exponentialRampToValueAtTime(32, now + 0.16);
+        subOsc.frequency.exponentialRampToValueAtTime(28, now + 0.18);
       }
-      subGain.gain.setValueAtTime(0.88, now);
+      subGain.gain.setValueAtTime(0.96, now);
       if (subGain.gain.exponentialRampToValueAtTime) {
-        subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+        subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.24);
       }
       subOsc.connect(subGain);
-      subGain.connect(target);
+      subGain.connect(impactTarget);
       subOsc.start(now);
-      subOsc.stop(now + 0.24);
+      subOsc.stop(now + 0.26);
 
+      // Layer 2: Sharp knuckle crack & high-frequency air transient
       const sampleRate = context.sampleRate || 44100;
-      const snapLen = Math.round(sampleRate * 0.045);
+      const snapLen = Math.round(sampleRate * 0.055);
       const snapBuffer = context.createBuffer(1, snapLen, sampleRate);
       const snapData = snapBuffer.getChannelData(0);
       for (let i = 0; i < snapLen; i++) {
         const t = i / snapLen;
-        snapData[i] = (Math.random() * 2 - 1) * Math.exp(-t * 9);
+        snapData[i] = (Math.random() * 2 - 1) * Math.exp(-t * 11);
       }
       const snapSrc = context.createBufferSource();
       snapSrc.buffer = snapBuffer;
       const snapFilter = context.createBiquadFilter ? context.createBiquadFilter() : context.createGain();
       if (snapFilter.frequency) {
         snapFilter.type = 'bandpass';
-        snapFilter.frequency.value = 1650;
-        snapFilter.Q.value = 2.5;
+        snapFilter.frequency.value = 1850;
+        snapFilter.Q.value = 2.8;
       }
       const snapGain = context.createGain();
-      snapGain.gain.setValueAtTime(0.75, now);
+      snapGain.gain.setValueAtTime(0.85, now);
       if (snapGain.gain.exponentialRampToValueAtTime) {
-        snapGain.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
+        snapGain.gain.exponentialRampToValueAtTime(0.001, now + 0.055);
       }
       snapSrc.connect(snapFilter);
       snapFilter.connect(snapGain);
-      snapGain.connect(target);
+      snapGain.connect(impactTarget);
       snapSrc.start(now);
 
+      // Layer 3: Solid wood tabla knock resonance
       const woodOsc = context.createOscillator();
       const woodGain = context.createGain();
       woodOsc.type = 'triangle';
-      woodOsc.frequency.setValueAtTime(145, now + 0.005);
+      woodOsc.frequency.setValueAtTime(160, now + 0.004);
       if (woodOsc.frequency.exponentialRampToValueAtTime) {
-        woodOsc.frequency.exponentialRampToValueAtTime(68, now + 0.18);
+        woodOsc.frequency.exponentialRampToValueAtTime(54, now + 0.20);
       }
-      woodGain.gain.setValueAtTime(0.55, now + 0.005);
+      woodGain.gain.setValueAtTime(0.68, now + 0.004);
       if (woodGain.gain.exponentialRampToValueAtTime) {
-        woodGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.25);
+        woodGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.28);
       }
       woodOsc.connect(woodGain);
-      woodGain.connect(target);
-      woodOsc.start(now + 0.005);
-      woodOsc.stop(now + 0.26);
+      woodGain.connect(impactTarget);
+      woodOsc.start(now + 0.004);
+      woodOsc.stop(now + 0.30);
     } catch {}
   }
   function triggerPunchImpact(currentSlug, isPunchActive) {
@@ -306,7 +372,9 @@
     const scale = mode === 'still' ? .68 : 1;
     ramp(engine.master.gain, Math.min(.32, (.08 + energy * .24) * scale), .045);
     mix();
-    speakHero();
+    if (slug === 'el-hombre-que-susurraba-a-las-estrellas' && lastHeroSlug !== slug) speakHero();
+    else if (slug === 'denbora-nora-zoaz' && lastHeroSlug !== slug) speakDenbora();
+    else if (slug && slug !== 'el-hombre-que-susurraba-a-las-estrellas' && slug !== 'denbora-nora-zoaz') lastHeroSlug = '';
     playMelody(now);
     if (now - lastGrain < 150 - energy * 25 + depth * 15 || engine.voices.size > 10) return;
     lastGrain = now; seed += direction * .371;
@@ -477,6 +545,9 @@
     },
     speakHero() {
       speakHero();
+    },
+    speakDenbora() {
+      speakDenbora();
     },
     get lastUtterance() { return lastUtterance; },
     get lastFlashSlug() { return lastFlashSlug; },

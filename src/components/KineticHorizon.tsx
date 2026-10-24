@@ -81,7 +81,10 @@ export function KineticHorizon({
   const targetXRef = useRef(currentIndex * itemSpacing)
   const currentXRef = useRef(currentIndex * itemSpacing)
   const velocityRef = useRef(0)
+  const smoothVelRef = useRef(0)
+  const wheelSettleTimerRef = useRef<number | null>(null)
   const isDraggingRef = useRef(false)
+  const isScrubbingRef = useRef(false)
   const hasDraggedRef = useRef(false)
   const dragStartXRef = useRef(0)
   const dragStartTargetXRef = useRef(0)
@@ -89,12 +92,52 @@ export function KineticHorizon({
   const lastDragXRef = useRef(0)
   const activeIndexRef = useRef(currentIndex)
   const lastAnnouncedIndexRef = useRef(currentIndex)
+  const lastSpokenSlugRef = useRef<string>('')
   const animationFrameRef = useRef<number | null>(null)
 
   // Estado para la renderización sin acceso a refs en el ciclo de render
   const [activeIdx, setActiveIdx] = useState(currentIndex)
   const [isDragging, setIsDragging] = useState(false)
   const [renderPos, setRenderPos] = useState(currentIndex * itemSpacing)
+  const [velocitySkew, setVelocitySkew] = useState(0)
+  const [scrubberHoverIdx, setScrubberHoverIdx] = useState<number | null>(null)
+  const [scrubberHoverRatio, setScrubberHoverRatio] = useState<number>(0)
+
+  const triggerArtworkVocal = useCallback((idx: number) => {
+    const art = ARTWORKS[idx]
+    if (!art) return
+    const slug = art.slug || ''
+    if (slug === 'denbora-nora-zoaz' && lastSpokenSlugRef.current !== slug) {
+      lastSpokenSlugRef.current = slug
+      try {
+        const audio = new window.Audio('/audio/just-for-one-day.mp3')
+        audio.volume = 0.96
+        audio.play().catch(() => {
+          if (window.speechSynthesis && typeof window.SpeechSynthesisUtterance === 'function') {
+            window.speechSynthesis.cancel()
+            const u = new window.SpeechSynthesisUtterance('Just... for one day')
+            u.lang = 'en-GB'
+            u.rate = 0.72
+            u.pitch = 0.58
+            window.speechSynthesis.speak(u)
+          }
+        })
+      } catch {
+        // Ignore audio playback errors
+      }
+    } else if (slug === 'el-hombre-que-susurraba-a-las-estrellas' && lastSpokenSlugRef.current !== slug) {
+      lastSpokenSlugRef.current = slug
+      try {
+        const audio = new window.Audio('/audio/we-can-be-heroes.mp3')
+        audio.volume = 0.95
+        audio.play().catch(() => {})
+      } catch {
+        // Ignore audio playback errors
+      }
+    } else if (slug !== 'denbora-nora-zoaz' && slug !== 'el-hombre-que-susurraba-a-las-estrellas') {
+      lastSpokenSlugRef.current = ''
+    }
+  }, [])
 
   // Sincronizar tamaño de pantalla dinámico
   useEffect(() => {
@@ -136,12 +179,13 @@ export function KineticHorizon({
     const updatePhysics = (now: number) => {
       const dt = Math.min(32, now - lastTime) / 16.666
       lastTime = now
+      const prevX = currentXRef.current
 
       // Si el usuario no está arrastrando activamente, aplicar amortiguación inercial
       if (!isDraggingRef.current) {
-        // Suavizado Lerp de alta costura (easing factor 0.082)
+        // Suavizado Lerp de alta costura (easing factor 0.088)
         const diff = targetXRef.current - currentXRef.current
-        currentXRef.current += diff * 0.082 * dt
+        currentXRef.current += diff * 0.088 * dt
 
         // Cálculo de obra más próxima al centro focal
         const nearestIdx = Math.max(
@@ -160,12 +204,19 @@ export function KineticHorizon({
           activeIndexRef.current = nearestIdx
           setActiveIdx(nearestIdx)
           sound.playHapticClick(1.0 + (nearestIdx % 3) * 0.08)
+          triggerArtworkVocal(nearestIdx)
           onSelectArtwork(nearestIdx)
         }
       } else {
         // Durante el arrastre, seguir directamente a targetX con respuesta táctil inmediata
         currentXRef.current += (targetXRef.current - currentXRef.current) * 0.35 * dt
       }
+
+      // Velocidad instantánea suavizada para deformación cinética V3 (ds/dt)
+      const instVel = (currentXRef.current - prevX) / Math.max(0.5, dt)
+      smoothVelRef.current = smoothVelRef.current * 0.8 + instVel * 0.2
+      const clampedSkew = Math.max(-3.4, Math.min(3.4, -smoothVelRef.current * 0.085))
+      setVelocitySkew(Math.abs(clampedSkew) < 0.04 ? 0 : Number(clampedSkew.toFixed(2)))
 
       setRenderPos(currentXRef.current)
       animationFrameRef.current = requestAnimationFrame(updatePhysics)
@@ -177,8 +228,11 @@ export function KineticHorizon({
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current)
       }
+      if (wheelSettleTimerRef.current) {
+        window.clearTimeout(wheelSettleTimerRef.current)
+      }
     }
-  }, [itemSpacing, onSelectArtwork])
+  }, [itemSpacing, onSelectArtwork, triggerArtworkVocal])
 
   // Navegación secuencial suave (Prev / Next)
   const glideTo = useCallback(
@@ -188,9 +242,11 @@ export function KineticHorizon({
       targetXRef.current = clamped * itemSpacing
       lastAnnouncedIndexRef.current = clamped
       activeIndexRef.current = clamped
+      setActiveIdx(clamped)
+      triggerArtworkVocal(clamped)
       onSelectArtwork(clamped)
     },
-    [itemSpacing, onSelectArtwork]
+    [itemSpacing, onSelectArtwork, triggerArtworkVocal]
   )
 
   const handleNext = useCallback(() => {
@@ -217,7 +273,7 @@ export function KineticHorizon({
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [handleNext, handlePrev, onOpenLoupe])
 
-  // Evento Wheel: convierte el scroll vertical o de trackpad en deslizamiento continuo fluido
+  // Evento Wheel: convierte el scroll vertical o de trackpad en deslizamiento continuo fluido con asentamiento magnético (V1)
   const handleWheel = (e: React.WheelEvent) => {
     const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY
     const maxX = (ARTWORKS.length - 1) * itemSpacing
@@ -228,6 +284,15 @@ export function KineticHorizon({
 
     // Acumular desplazamiento continuo en el objetivo de inercia
     targetXRef.current = Math.max(0, Math.min(maxX, targetXRef.current + delta * 1.15))
+
+    // Asentamiento magnético suave al detener el gesto de rueda/trackpad
+    if (wheelSettleTimerRef.current) {
+      window.clearTimeout(wheelSettleTimerRef.current)
+    }
+    wheelSettleTimerRef.current = window.setTimeout(() => {
+      const snappedIdx = Math.max(0, Math.min(ARTWORKS.length - 1, Math.round(targetXRef.current / itemSpacing)))
+      targetXRef.current = snappedIdx * itemSpacing
+    }, 150)
   }
 
   // Interacción de Arrastre (Drag / Swipe con momentum)
@@ -523,7 +588,7 @@ export function KineticHorizon({
                 position: 'absolute',
                 left: `calc(50% + ${offset}px)`,
                 top: '50%',
-                transform: `translate(-50%, -50%) scale(${scale}) rotateX(${interactiveTiltX}deg) rotateY(${rotateY + interactiveTiltY}deg)`,
+                transform: `translate(-50%, -50%) scale(${scale}) rotateX(${interactiveTiltX}deg) rotateY(${rotateY + interactiveTiltY}deg) skewX(${velocitySkew}deg)`,
                 transformOrigin: 'center center',
                 transformStyle: 'preserve-3d',
                 opacity,
@@ -545,7 +610,7 @@ export function KineticHorizon({
                   position: 'absolute',
                   top: '38%',
                   left: '50%',
-                  transform: `translate(-50%, -50%) translateX(${offset * -0.15}px) translateZ(-60px)`,
+                  transform: `translate(-50%, -50%) translateX(${offset * -0.15}px) translateZ(-60px) skewX(${-velocitySkew * 1.3}deg)`,
                   fontFamily: 'var(--font-serif, "Cinzel", Georgia, serif)',
                   fontSize: 'clamp(180px, 26vw, 340px)',
                   fontWeight: 700,
@@ -727,10 +792,12 @@ export function KineticHorizon({
                     fontFamily: 'var(--font-serif, "Cinzel", Georgia, serif)',
                     fontSize: 'clamp(1.4rem, 2.6vw, 2.2rem)',
                     fontWeight: 600,
-                    letterSpacing: '0.16em',
+                    letterSpacing: `calc(0.16em + ${Math.min(0.08, Math.abs(velocitySkew) * 0.018).toFixed(3)}em)`,
+                    transform: `skewX(${(velocitySkew * 0.65).toFixed(2)}deg)`,
                     color: '#FFFFFF',
                     textTransform: 'uppercase',
                     textShadow: '0 2px 14px rgba(0, 0, 0, 0.9)',
+                    transition: 'letter-spacing 0.16s ease-out, transform 0.16s ease-out',
                   }}
                 >
                   {artwork.title}
@@ -797,19 +864,106 @@ export function KineticHorizon({
           data-cursor="ARRASTRAR"
           style={{
             position: 'relative',
-            width: 'clamp(280px, 44vw, 680px)',
-            height: '24px',
+            width: 'clamp(280px, 48vw, 720px)',
+            height: '28px',
             display: 'flex',
             alignItems: 'center',
             cursor: 'pointer',
           }}
-          onClick={(e) => {
+          onPointerDown={(e) => {
+            e.stopPropagation()
+            isScrubbingRef.current = true
+            e.currentTarget.setPointerCapture(e.pointerId)
             const rect = e.currentTarget.getBoundingClientRect()
             const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width))
             const targetIndex = Math.round(ratio * (ARTWORKS.length - 1))
+            setScrubberHoverRatio(ratio)
+            setScrubberHoverIdx(targetIndex)
             glideTo(targetIndex)
           }}
+          onPointerMove={(e) => {
+            e.stopPropagation()
+            const rect = e.currentTarget.getBoundingClientRect()
+            const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width))
+            const targetIndex = Math.round(ratio * (ARTWORKS.length - 1))
+            setScrubberHoverRatio(ratio)
+            setScrubberHoverIdx(targetIndex)
+            if (isScrubbingRef.current) {
+              glideTo(targetIndex)
+            }
+          }}
+          onPointerUp={(e) => {
+            e.stopPropagation()
+            if (isScrubbingRef.current) {
+              isScrubbingRef.current = false
+              e.currentTarget.releasePointerCapture(e.pointerId)
+            }
+          }}
+          onPointerLeave={() => {
+            isScrubbingRef.current = false
+            setScrubberHoverIdx(null)
+          }}
         >
+          {/* Micro-Preview Flotante Magnético (V2 Awwwards Timeline HUD) */}
+          {scrubberHoverIdx !== null && ARTWORKS[scrubberHoverIdx] && (
+            <div
+              style={{
+                position: 'absolute',
+                bottom: '34px',
+                left: `${scrubberHoverRatio * 100}%`,
+                transform: 'translateX(-50%)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                padding: '6px 12px 6px 6px',
+                background: 'rgba(8, 8, 12, 0.88)',
+                border: '1px solid rgba(212, 175, 55, 0.45)',
+                borderRadius: '12px',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                boxShadow: '0 10px 28px rgba(0, 0, 0, 0.85)',
+                pointerEvents: 'none',
+                whiteSpace: 'nowrap',
+                zIndex: 45,
+              }}
+            >
+              <img
+                src={ARTWORKS[scrubberHoverIdx].url}
+                alt=""
+                style={{
+                  width: '36px',
+                  height: '42px',
+                  objectFit: 'cover',
+                  borderRadius: '6px',
+                  border: '1px solid rgba(212, 175, 55, 0.35)',
+                }}
+              />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                <span
+                  style={{
+                    fontFamily: 'var(--font-mono, monospace)',
+                    fontSize: '0.58rem',
+                    letterSpacing: '0.16em',
+                    color: '#D4AF37',
+                  }}
+                >
+                  {String(scrubberHoverIdx + 1).padStart(2, '0')} / {String(ARTWORKS.length).padStart(2, '0')} · {ROMAN_NUMERALS[scrubberHoverIdx]}
+                </span>
+                <span
+                  style={{
+                    fontFamily: 'var(--font-serif, "Cinzel", Georgia, serif)',
+                    fontSize: '0.72rem',
+                    fontWeight: 600,
+                    letterSpacing: '0.08em',
+                    color: '#FFFFFF',
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  {ARTWORKS[scrubberHoverIdx].title}
+                </span>
+              </div>
+            </div>
+          )}
           {/* Línea base sutil */}
           <div
             style={{

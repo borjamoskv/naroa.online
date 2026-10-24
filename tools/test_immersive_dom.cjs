@@ -712,6 +712,9 @@ async function eyeMatch(ui, base, points) {
   const bowieIndex = works.findIndex(w => w.slug === 'el-hombre-que-susurraba-a-las-estrellas');
   galleryAudio.advance(150); reactiveGallery.scroll(bowieIndex + .35); await reactiveGallery.flush();
   assert.equal(reactiveGallery.w.NAROA_SOUND.lastUtterance, 'We can be heroes', 'Passing through Bowie triggers We can be heroes');
+  const denboraIndex = works.findIndex(w => w.slug === 'denbora-nora-zoaz');
+  galleryAudio.advance(150); reactiveGallery.scroll(denboraIndex); await reactiveGallery.flush();
+  assert.equal(reactiveGallery.w.NAROA_SOUND.lastUtterance, 'Just For One Day', 'Arriving at Denbora triggers Just For One Day in an elderly voice');
   const ajenjoIndex = works.findIndex(w => w.slug === 'ajenjo-cam');
   galleryAudio.advance(150); reactiveGallery.scroll(ajenjoIndex - 1 + .50); await reactiveGallery.flush();
   const flashLevel = Number(reactiveGallery.find('.art-stage').style.getPropertyValue('--camera-flash') || 0);

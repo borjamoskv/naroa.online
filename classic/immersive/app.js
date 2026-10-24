@@ -139,11 +139,12 @@
     document.documentElement.classList.add('gallery-scroll');
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     const pan = { x: 0, y: 0, tx: 0, ty: 0, frame: null };
-    let cameraRestTimer = null;
+    let cameraRestTimer = null, lastScrollPixels = 0;
     function restCamera() {
       clearTimeout(cameraRestTimer);
       cameraRestTimer = null;
       stage.classList.remove('is-camera-moving');
+      stage.style.setProperty('--velocity-skew', '0deg');
     }
     function travelCamera() {
       if (reduced.matches || state.fit) { restCamera(); return; }
@@ -285,7 +286,7 @@
         stage.classList.remove('has-flash-burst');
       }, 420);
     }
-    let bowieZoomTimer = null, bowieVisited = false;
+    let bowieZoomTimer = null, bowieVisited = false, denboraVisited = false;
     function fireBowieZoom() {
       soundscape?.speakHero?.();
       stage.classList.remove('has-bowie-zoom');
@@ -464,6 +465,14 @@
       } else {
         bowieVisited = false;
       }
+      if (works[base].slug === 'denbora-nora-zoaz' || works[incoming].slug === 'denbora-nora-zoaz') {
+        if (!denboraVisited && (works[state.index].slug === 'denbora-nora-zoaz' || (transition && works[incoming].slug === 'denbora-nora-zoaz' && fraction >= 0.25))) {
+          denboraVisited = true;
+          soundscape?.speakDenbora?.();
+        }
+      } else {
+        denboraVisited = false;
+      }
       const isPunchPair = (works[base].slug === 'i-got-you-babe' && works[incoming].slug === 'jose-manuel-ezquerra') ||
                           (works[base].slug === 'jose-manuel-ezquerra' && works[incoming].slug === 'i-got-you-babe');
       const isPunchActive = transition && isPunchPair && fraction >= 0.44 && fraction <= 0.64;
@@ -523,7 +532,12 @@
       const request = ++motion.request;
       motion.desired = position;
       if (motion.navigation !== null && Math.abs(position - motion.navigation) < .002) motion.navigation = null;
-      if (Math.abs(pose.distance - motion.pose.distance) > .002) { leaveFit(); resetPan(); travelCamera(); }
+      if (Math.abs(pose.distance - motion.pose.distance) > .002) {
+        const skew = clamp((pixels - lastScrollPixels) * 0.035, -3.2, 3.2);
+        stage.style.setProperty('--velocity-skew', `${skew.toFixed(2)}deg`);
+        leaveFit(); resetPan(); travelCamera();
+      }
+      lastScrollPixels = pixels;
       Promise.all([ensureImage(Math.floor(position)), ensureImage(Math.ceil(position))]).then(() => {
         if (request !== motion.request || document.querySelector('dialog[open]')) return;
         motion.pose = pose; motion.position = position;
@@ -662,6 +676,12 @@
         fireBowieZoom();
         soundscape?.speakHero?.();
       }
+      if (works[state.index]?.slug === 'denbora-nora-zoaz') {
+        soundscape?.speakDenbora?.();
+      }
+      if (works[state.index]?.slug === 'i-got-you-babe' || works[state.index]?.slug === 'jose-manuel-ezquerra') {
+        firePuñetazo();
+      }
       openWorkGallery(galleryTrigger);
     });
     scenes.forEach((sc, i) => {
@@ -671,7 +691,42 @@
           soundscape?.speakHero?.();
         });
       }
+      if (works[i]?.slug === 'denbora-nora-zoaz') {
+        sc.addEventListener('click', () => {
+          soundscape?.speakDenbora?.();
+        });
+      }
+      if (works[i]?.slug === 'i-got-you-babe' || works[i]?.slug === 'jose-manuel-ezquerra') {
+        sc.addEventListener('click', () => {
+          firePuñetazo();
+        });
+      }
     });
+    const progressBar = $('.art-progress', stage);
+    if (progressBar) {
+      const tooltip = createGalleryElement('div', 'scrubber-tooltip');
+      tooltip.hidden = true;
+      progressBar.append(tooltip);
+      const indexFromEvent = e => {
+        const rect = progressBar.getBoundingClientRect();
+        const ratio = clamp((e.clientX - rect.left) / Math.max(1, rect.width), 0, 1);
+        return { ratio, idx: Math.round(ratio * (works.length - 1)) };
+      };
+      progressBar.addEventListener('pointermove', e => {
+        const { ratio, idx } = indexFromEvent(e);
+        const w = works[idx];
+        if (!w) return;
+        tooltip.hidden = false;
+        tooltip.style.left = `${(ratio * 100).toFixed(2)}%`;
+        tooltip.textContent = `${String(idx + 1).padStart(2, '0')} / ${String(works.length).padStart(2, '0')} · ${w.title}`;
+        if (e.buttons === 1) change(idx);
+      });
+      progressBar.addEventListener('pointerleave', () => { tooltip.hidden = true; });
+      progressBar.addEventListener('click', e => {
+        const { idx } = indexFromEvent(e);
+        change(idx);
+      });
+    }
     $('[data-open-photos]', stage).addEventListener('click', event => openWorkGallery(event.currentTarget));
     $('[data-photo-prev]').addEventListener('click', () => photoStep(-1)); $('[data-photo-next]').addEventListener('click', () => photoStep(1));
     photosDialog.addEventListener('keydown', event => {
