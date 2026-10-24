@@ -183,6 +183,14 @@ def build(output):
                 "caption": ph.get("caption") or f"{p['title']} — {p.get('technique', '')} de Naroa Gutiérrez Gil",
                 "width": ph.get("width"),
                 "height": ph.get("height"),
+                "creator": {
+                    "@type": "Person",
+                    "@id": ORIGIN + "/#artist",
+                    "name": "Naroa Gutiérrez Gil",
+                },
+                "creditText": "Naroa Gutiérrez Gil",
+                "copyrightNotice": "© Naroa Gutiérrez Gil",
+                "acquireLicensePage": ORIGIN + "/retratos-por-encargo-bilbao/",
             }
             for ph in p["photos"]
         ]
@@ -276,7 +284,56 @@ def build(output):
         sources = ''.join(f'<a href="{esc(s["url"])}" target="_blank" rel="noopener noreferrer">{esc(s["label"])} ↗</a>' for s in x["sources"])
         career += f'''<article class="timeline-entry" data-exhibition-year="{x['year']}"><p>{esc(x['dateLabel'])}</p><div><h3>{esc(x['title'])}</h3><p class="timeline-location">{esc(x['location'])}</p><p>{esc(x['description'])}</p><div class="timeline-sources">{sources}</div></div></article>'''
     career += '</div></section>'
-    page("/trayectoria/", "Trayectoria", "Exposiciones, encuentros y espacios compartidos de Naroa Gutiérrez Gil. Una selección documentada de su trayectoria.", '<main id="main">' + career + '</main>', "/images/trayectoria/cantinflowers.jpg")
+    exhibition_events = []
+    for ex in exhibitions:
+        loc = ex.get("location", "")
+        city = "Bilbao" if "Bilbao" in loc else loc.split("·")[-1].strip() if "·" in loc else "Bizkaia"
+        ev = {
+            "@type": "ExhibitionEvent",
+            "name": ex["title"],
+            "startDate": ex["date"],
+            "location": {
+                "@type": "Place",
+                "name": loc,
+                "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": city,
+                    "addressRegion": "Bizkaia",
+                    "addressCountry": "ES",
+                },
+            },
+            "description": ex["description"],
+            "organizer": {
+                "@type": "Person",
+                "@id": ORIGIN + "/#artist",
+                "name": "Naroa Gutiérrez Gil",
+            },
+        }
+        if ex.get("endDate"):
+            ev["endDate"] = ex["endDate"]
+        if ex.get("sources"):
+            ev["subjectOf"] = [
+                {"@type": "WebPage", "name": s["label"], "url": s["url"]}
+                for s in ex["sources"]
+            ]
+        exhibition_events.append(ev)
+    career_schema = {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Trayectoria documentada · Naroa Gutiérrez Gil",
+        "url": ORIGIN + "/trayectoria/",
+        "description": "Exposiciones, encuentros y espacios compartidos de Naroa Gutiérrez Gil en Bilbao y Bizkaia.",
+        "mainEntity": {
+            "@type": "ItemList",
+            "name": "Exposiciones y encuentros de Naroa Gutiérrez Gil",
+            "numberOfItems": len(exhibition_events),
+            "itemListElement": [
+                {"@type": "ListItem", "position": i + 1, "item": ev}
+                for i, ev in enumerate(exhibition_events)
+            ],
+        },
+    }
+    page("/trayectoria/", "Trayectoria", "Exposiciones, encuentros y espacios compartidos de Naroa Gutiérrez Gil. Una selección documentada de su trayectoria.", '<main id="main">' + career + '</main>', "/images/trayectoria/cantinflowers.jpg", schema=career_schema)
 
     blog_data = read_data("blog")
     posts = blog_data["posts"]
@@ -289,7 +346,34 @@ def build(output):
         photo_html = f'''<a class="notebook-photo" href="{esc(x['url'])}" target="_blank" rel="noopener noreferrer"><img src="{esc(img_src)}" width="{im.get('width', 1080)}" height="{im.get('height', 1080)}" alt="{esc(im.get('alt') or x['title'])}" loading="lazy" decoding="async"></a>''' if img_src else ""
         notebook += f'''<article class="notebook-card" data-notebook-entry>{photo_html}<div class="notebook-card-body"><p class="eyebrow"><span>{esc(x.get('category', 'Del cuaderno de Naroa'))}</span> · <time datetime="{esc(x['date'])}">{esc(x['date_label'])}</time></p><h3><a href="{esc(x['url'])}" target="_blank" rel="noopener noreferrer">{esc(x['title'])} ↗</a></h3><p>{esc(x['summary'])}</p><a class="text-link" href="{esc(x['url'])}" target="_blank" rel="noopener noreferrer">Leer en el cuaderno de Naroa ↗</a></div></article>'''
     notebook += '</div><div class="notebook-actions"><a class="text-link" href="https://naroagutierrez.wordpress.com/" target="_blank" rel="noopener noreferrer">Seguir leyendo su cuaderno en WordPress ↗</a><a class="text-link" href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer">Publicaciones en Facebook ↗</a></div></section>'
-    page("/cuaderno/", "Cuaderno", "Historias de obras, procesos y encuentros. El cuaderno de la artista Naroa Gutiérrez Gil.", '<main id="main">' + notebook + '</main>', rara["photos"][0]["original"])
+    blog_schema = {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "name": "El cuaderno de Naroa",
+        "url": ORIGIN + "/cuaderno/",
+        "description": "Historias de obras, procesos y encuentros. El cuaderno de la artista Naroa Gutiérrez Gil.",
+        "author": {
+            "@type": "Person",
+            "@id": ORIGIN + "/#artist",
+            "name": "Naroa Gutiérrez Gil",
+        },
+        "blogPost": [
+            {
+                "@type": "BlogPosting",
+                "headline": post["title"],
+                "url": post["url"],
+                "datePublished": post["date"],
+                "description": post["summary"],
+                "author": {
+                    "@type": "Person",
+                    "@id": ORIGIN + "/#artist",
+                    "name": "Naroa Gutiérrez Gil",
+                },
+            }
+            for post in posts
+        ],
+    }
+    page("/cuaderno/", "Cuaderno", "Historias de obras, procesos y encuentros. El cuaderno de la artista Naroa Gutiérrez Gil.", '<main id="main">' + notebook + '</main>', rara["photos"][0]["original"], schema=blog_schema)
 
     commission_examples = [
         (amy, "Retrato sobre pizarra", "Acrílico, lápices, rotuladores y mica sobre el contorno natural de la piedra."),
@@ -297,10 +381,10 @@ def build(output):
         (amor, "Objetos con historia", "Cajas de madera, latas o soportes cotidianos transformados en piezas tridimensionales."),
     ]
     commission_faqs = [
-        ("¿Se puede encargar un retrato a partir de una fotografía?", "Sí. Puedes enviar una o varias fotografías como punto de partida junto con aquello que quieras contar de la persona retratada. Naroa no busca únicamente un parecido fotográfico, sino integrar su carácter, sus recuerdos o sus objetos en una obra original."),
-        ("¿Cuánto cuesta un retrato personalizado por encargo?", "El presupuesto depende del formato, la técnica (pizarra natural, dibujo y collage sobre madera o papel, o caja/objeto intervenido) y la complejidad de la pieza. Antes de empezar, Naroa prepara una propuesta cerrada con medidas, materiales y precio sin compromiso."),
-        ("¿Es buena opción para hacer un regalo personal o retrato de pareja y familia?", "Sí. Muchos encargos nacen como regalo especial de aniversario, celebración familiar o homenaje. Incorporar un objeto cotidiano, tela, recortes o una caja de madera convierte el retrato en una pieza única que no existe en una tienda convencional."),
-        ("¿Cuánto tarda y cómo se entrega en Bilbao o fuera?", "El plazo y la entrega se acuerdan antes de comenzar según la técnica y si tienes una fecha señalada. Puede entregarse en mano en Bilbao y Bizkaia o enviarse protegido a cualquier destino."),
+        ("¿Se puede encargar un retrato a partir de fotografías?", "Sí. Puedes enviar una o varias fotografías cotidianas (incluso de móvil) para estudiar la composición. Naroa no realiza una copia mecánica, sino una reinterpretación artística de autor que integra el carácter, los recuerdos y la historia de la persona en soportes como pizarra natural, collage sobre madera o cajas intervenidas."),
+        ("¿Cuánto cuesta un retrato personalizado por encargo?", "El presupuesto depende del formato y soporte: desde piezas en pizarra rústica (medidas habituales de 20 × 30 cm a 40 × 50 cm), obras mixtas con dibujo y collage sobre madera o tela, hasta cajas y objetos tridimensionales tipo caja de recuerdos. Antes de comenzar cualquier trabajo, Naroa prepara una propuesta cerrada con materiales, medidas exactas y precio sin compromiso."),
+        ("¿Es adecuado para regalos de aniversario, boda o homenajes de familia?", "Sí, es el encargo más habitual. Muchos proyectos nacen como regalo singular para fechas señaladas, retratos de pareja, aniversarios o homenajes. La posibilidad de incorporar telas, cartas, recortes u objetos personales convierte cada obra en una pieza irrepetible con carga emocional."),
+        ("¿Cuánto tarda el proceso y cómo se entrega en Bilbao o fuera?", "El plazo habitual se sitúa entre 2 y 4 semanas según la complejidad y el secado de materiales, aunque es posible adaptar fechas para ocasiones señaladas si se avisa con antelación. La entrega se realiza en mano en Bilbao y Bizkaia, o mediante envío protegido nacional e internacional."),
     ]
     examples_html = ''.join(f'''<article class="commission-example"><a class="commission-example-photo" href="/obra/{ex['slug']}/"><img src="{ex['cover']}" width="{ex['photos'][0]['width']}" height="{ex['photos'][0]['height']}" alt="{esc(work_alt(ex))}" loading="lazy" decoding="async"></a><div class="commission-example-copy"><p class="eyebrow">{esc(kind_label)}</p><h3><a href="/obra/{ex['slug']}/">{esc(ex['title'])} ↗</a></h3><p>{esc(note)}</p><small>{esc(ex['technique'])} · {esc(ex['support'])}</small></div></article>''' for ex, kind_label, note in commission_examples)
     faq_html = ''.join(f'''<details class="commission-faq-item"><summary>{esc(q)}</summary><p>{esc(a)}</p></details>''' for q, a in commission_faqs)
@@ -345,7 +429,7 @@ def build(output):
             imgs = ''.join(f'<image:image><image:loc>{ORIGIN}{esc(ph["original"])}</image:loc><image:title>{esc(w["title"])} · {esc(ph["caption"])}</image:title><image:caption>{esc(work_alt(w, ph["caption"]))}</image:caption></image:image>' for ph in w["photos"])
         else:
             imgs = f'<image:image><image:loc>{ORIGIN}{esc(image)}</image:loc></image:image>' if image else ''
-        sitemap_entries.append(f'<url><loc>{ORIGIN}{path}</loc>{imgs}</url>')
+        sitemap_entries.append(f'<url><loc>{ORIGIN}{path}</loc><lastmod>{catalogue["reviewed"]}</lastmod>{imgs}</url>')
     robots_content = (
         "User-agent: OAI-SearchBot\n"
         "Allow: /\n\n"
