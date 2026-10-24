@@ -499,6 +499,32 @@ class SoundEngine {
         try { navigator.vibrate([35, 25, 60]) } catch {}
       }
 
+      const sampleRate = this.ctx.sampleRate || 44100
+
+      // Pre-impact whoosh
+      const whooshLen = Math.round(sampleRate * 0.065)
+      const whooshBuffer = this.ctx.createBuffer(1, whooshLen, sampleRate)
+      const whooshData = whooshBuffer.getChannelData(0)
+      for (let i = 0; i < whooshLen; i++) {
+        const t = i / whooshLen
+        whooshData[i] = (Math.random() * 2 - 1) * Math.sin(t * Math.PI)
+      }
+      const whooshSrc = this.ctx.createBufferSource()
+      whooshSrc.buffer = whooshBuffer
+      const whooshFilter = this.ctx.createBiquadFilter()
+      whooshFilter.type = 'lowpass'
+      whooshFilter.frequency.setValueAtTime(320, now)
+      whooshFilter.frequency.exponentialRampToValueAtTime(1100, now + 0.038)
+      whooshFilter.frequency.exponentialRampToValueAtTime(180, now + 0.065)
+      const whooshGain = this.ctx.createGain()
+      whooshGain.gain.setValueAtTime(0.01, now)
+      whooshGain.gain.linearRampToValueAtTime(0.42, now + 0.032)
+      whooshGain.gain.exponentialRampToValueAtTime(0.001, now + 0.065)
+      whooshSrc.connect(whooshFilter)
+      whooshFilter.connect(whooshGain)
+      whooshGain.connect(this.ctx.destination)
+      whooshSrc.start(now)
+
       // Sub-bass body thump
       const subOsc = this.ctx.createOscillator()
       const subGain = this.ctx.createGain()
@@ -513,7 +539,6 @@ class SoundEngine {
       subOsc.stop(now + 0.26)
 
       // Knuckle snap transient
-      const sampleRate = this.ctx.sampleRate || 44100
       const snapLen = Math.round(sampleRate * 0.05)
       const snapBuffer = this.ctx.createBuffer(1, snapLen, sampleRate)
       const snapData = snapBuffer.getChannelData(0)

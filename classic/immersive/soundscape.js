@@ -341,6 +341,39 @@
       }
       const impactTarget = panner || target;
 
+      // Layer 0: Aerodynamic air whoosh preceding the impact
+      const sampleRate = context.sampleRate || 44100;
+      const whooshLen = Math.round(sampleRate * 0.065);
+      const whooshBuffer = context.createBuffer(1, whooshLen, sampleRate);
+      const whooshData = whooshBuffer.getChannelData(0);
+      for (let i = 0; i < whooshLen; i++) {
+        const t = i / whooshLen;
+        whooshData[i] = (Math.random() * 2 - 1) * Math.sin(t * Math.PI);
+      }
+      const whooshSrc = context.createBufferSource();
+      whooshSrc.buffer = whooshBuffer;
+      const whooshFilter = context.createBiquadFilter ? context.createBiquadFilter() : null;
+      if (whooshFilter) {
+        whooshFilter.type = 'lowpass';
+        whooshFilter.frequency.setValueAtTime(320, now);
+        if (whooshFilter.frequency.exponentialRampToValueAtTime) {
+          whooshFilter.frequency.exponentialRampToValueAtTime(1100, now + 0.038);
+          whooshFilter.frequency.exponentialRampToValueAtTime(180, now + 0.065);
+        }
+      }
+      const whooshGain = context.createGain();
+      whooshGain.gain.setValueAtTime(0.01, now);
+      if (whooshGain.gain.linearRampToValueAtTime) {
+        whooshGain.gain.linearRampToValueAtTime(0.48, now + 0.032);
+      }
+      if (whooshGain.gain.exponentialRampToValueAtTime) {
+        whooshGain.gain.exponentialRampToValueAtTime(0.001, now + 0.065);
+      }
+      whooshSrc.connect(whooshFilter || whooshGain);
+      if (whooshFilter) whooshFilter.connect(whooshGain);
+      whooshGain.connect(impactTarget);
+      whooshSrc.start(now);
+
       // Layer 1: Sub-bass visceral chest thump
       const subOsc = context.createOscillator();
       const subGain = context.createGain();
@@ -359,7 +392,6 @@
       subOsc.stop(now + 0.26);
 
       // Layer 2: Sharp knuckle crack & high-frequency air transient
-      const sampleRate = context.sampleRate || 44100;
       const snapLen = Math.round(sampleRate * 0.055);
       const snapBuffer = context.createBuffer(1, snapLen, sampleRate);
       const snapData = snapBuffer.getChannelData(0);

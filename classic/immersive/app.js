@@ -439,7 +439,16 @@
           let maxScale = 1.65;
           if (isBowie) maxScale = 2.45;
           else if (isBillToEzquerra) maxScale = 2.65;
-          image.style.transform = `scale(${Math.exp(Math.log(1.08) + Math.log(maxScale / 1.08) * close).toFixed(5)})`;
+          let transform = `scale(${Math.exp(Math.log(1.08) + Math.log(maxScale / 1.08) * close).toFixed(5)})`;
+          if (isBillToEzquerra && !outgoing && fraction >= 0.44 && fraction <= 0.72) {
+            const punchPhase = (fraction - 0.44) / 0.28;
+            const recoilAmt = Math.sin(punchPhase * Math.PI);
+            const recoilX = (-recoilAmt * 18).toFixed(2);
+            const recoilY = (recoilAmt * 12).toFixed(2);
+            const recoilRot = (-recoilAmt * 2.6).toFixed(2);
+            transform += ` translate3d(${recoilX}px,${recoilY}px,0) rotate(${recoilRot}deg)`;
+          }
+          image.style.transform = transform;
           if (!outgoing) scene.style.opacity = smooth((fraction - .40) / .20).toFixed(4);
         } else if (mode === 'P') {
           const exit = smooth((fraction - .80) / .20);
