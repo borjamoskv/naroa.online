@@ -1143,6 +1143,21 @@
     }
     plane.addEventListener('click', triggerInteractiveWink);
     plane.style.cursor = 'pointer';
+    let mouse = { x: 0, y: 0, tx: 0, ty: 0 };
+    function onPointerMove(e) {
+      if (reduced.matches) return;
+      const rect = hero.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      mouse.tx = clamp((e.clientX - rect.left) / rect.width - 0.5, -0.5, 0.5);
+      mouse.ty = clamp((e.clientY - rect.top) / rect.height - 0.5, -0.5, 0.5);
+      schedulePortrait();
+    }
+    function onPointerLeave() {
+      mouse.tx = 0; mouse.ty = 0;
+      schedulePortrait();
+    }
+    hero.addEventListener('pointermove', onPointerMove, { passive: true });
+    hero.addEventListener('pointerleave', onPointerLeave, { passive: true });
     const active = new Set([0]);
     function ready(index) { return decoded.has(index) && images[index]?.complete && !!images[index]?.naturalWidth; }
     function ensureScene(index) {
@@ -1291,12 +1306,27 @@
       } else if (closure < 0.1) {
         hasWinkedOnScroll = false;
       }
-      const visibility = 1 - smooth((progress - .12) / .16);
-      copy.style.opacity = visibility.toFixed(3);
-      copy.style.transform = reduced.matches ? '' : `translate3d(0,${(-smooth(progress / .24) * 40).toFixed(2)}px,0)`;
-      cue.style.opacity = visibility.toFixed(3); cue.style.pointerEvents = visibility < .1 ? 'none' : ''; cue.tabIndex = visibility < .1 ? -1 : 0;
       const reveal = mix * smooth((progress - .84) / .10);
-      showCaption(0, reveal); shade.style.opacity = (1 - approach * .90 + reveal * .65).toFixed(3);
+      const visibility = 1 - smooth((progress - .12) / .16);
+      mouse.x += (mouse.tx - mouse.x) * 0.15;
+      mouse.y += (mouse.ty - mouse.y) * 0.15;
+      const parallaxFactor = smooth(1 - progress / 0.28);
+      const copyPx = mouse.x * 24 * parallaxFactor;
+      const copyPy = mouse.y * 18 * parallaxFactor;
+      const copyScrollY = -smooth(progress / .24) * 45;
+      copy.style.opacity = visibility.toFixed(3);
+      copy.style.transform = reduced.matches ? '' : `translate3d(${copyPx.toFixed(2)}px,${(copyScrollY + copyPy).toFixed(2)}px,0)`;
+      const shadePx = -mouse.x * 16 * parallaxFactor;
+      const shadePy = -mouse.y * 12 * parallaxFactor;
+      const shadeScrollY = progress * 32;
+      shade.style.opacity = (1 - approach * .90 + reveal * .65).toFixed(3);
+      shade.style.transform = reduced.matches ? '' : `translate3d(${shadePx.toFixed(2)}px,${(shadeScrollY + shadePy).toFixed(2)}px,0)`;
+      const tiltX = -mouse.y * 3.5 * parallaxFactor;
+      const tiltY = mouse.x * 3.5 * parallaxFactor;
+      const portraitFrame = $('.portrait-frame', hero);
+      if (portraitFrame) portraitFrame.style.transform = reduced.matches ? '' : `rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg)`;
+      cue.style.opacity = visibility.toFixed(3); cue.style.pointerEvents = visibility < .1 ? 'none' : ''; cue.tabIndex = visibility < .1 ? -1 : 0;
+      showCaption(0, reveal);
       hero.dataset.transition = 'portrait';
       if (reduced.matches) soundscape?.frame({ distance: scrollY / Math.max(1, g.height), depth: 0, mode: 'still', phase: 'scroll', axisDirection: 1, slug: 'rara-avis' });
       else if (progress <= .44 || ready(0)) soundscape?.frame({ distance: travel / g.height, depth, mode: 'E', phase: progress > 0 && progress < .96 ? 'transition' : 'hold', axisDirection: 1, slug: 'rara-avis' });
@@ -1330,12 +1360,12 @@
         const target = $('.page-hero-image', section) || (section.matches('.contact-background') ? section : $('img', section));
         if (!target) return;
         const progress = clamp((vh - r.top) / (vh + r.height), 0, 1);
-        const shift = (progress - .5) * 2 * vh * .02;
-        target.style.transform = reduced.matches ? '' : `translate3d(0,${shift.toFixed(2)}px,0) scale(1.04)`;
+        const shift = (progress - .5) * 2 * vh * .07;
+        target.style.transform = reduced.matches ? '' : `translate3d(0,${shift.toFixed(2)}px,0) scale(1.08)`;
         const copy = $('.page-hero-copy', section);
         if (copy) {
           const exit = clamp(-r.top / vh, 0, 1);
-          copy.style.transform = reduced.matches ? '' : `translate3d(0,${(-exit * vh * .02).toFixed(2)}px,0)`;
+          copy.style.transform = reduced.matches ? '' : `translate3d(0,${(-exit * vh * .035).toFixed(2)}px,0)`;
           copy.style.opacity = reduced.matches ? '1' : (1 - exit * .75).toFixed(3);
         }
       });
