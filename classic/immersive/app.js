@@ -430,8 +430,9 @@
     const customUrl = btn.dataset.shareUrl;
     const customTitle = btn.dataset.shareTitle;
     const url = customUrl || (location.origin + (p ? '/obra/' + p.slug + '/' : location.pathname));
-    const title = customTitle || (p ? `${p.title} · Naroa Gutiérrez Gil` : document.title);
-    const text = `Descubre «${title}» de Naroa Gutiérrez Gil en su exposición inmersiva en Bilbao.`;
+    const rawTitle = customTitle || (p ? p.title : document.title);
+    const title = rawTitle.replace(/\s*·\s*Naroa Gutiérrez Gil.*$/i, '').trim();
+    const text = title;
     const encodedUrl = encodeURIComponent(url);
     const encodedText = encodeURIComponent(text);
 
