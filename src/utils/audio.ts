@@ -488,6 +488,70 @@ class SoundEngine {
     }
   }
 
+  public playPunch() {
+    if (!this.enabled) return
+    try {
+      this.initCtx()
+      if (!this.ctx) return
+      const now = this.ctx.currentTime + 0.002
+
+      if (typeof navigator !== 'undefined' && navigator.vibrate) {
+        try { navigator.vibrate([35, 25, 60]) } catch {}
+      }
+
+      // Sub-bass body thump
+      const subOsc = this.ctx.createOscillator()
+      const subGain = this.ctx.createGain()
+      subOsc.type = 'sine'
+      subOsc.frequency.setValueAtTime(240, now)
+      subOsc.frequency.exponentialRampToValueAtTime(28, now + 0.18)
+      subGain.gain.setValueAtTime(0.85, now)
+      subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.24)
+      subOsc.connect(subGain)
+      subGain.connect(this.ctx.destination)
+      subOsc.start(now)
+      subOsc.stop(now + 0.26)
+
+      // Knuckle snap transient
+      const sampleRate = this.ctx.sampleRate || 44100
+      const snapLen = Math.round(sampleRate * 0.05)
+      const snapBuffer = this.ctx.createBuffer(1, snapLen, sampleRate)
+      const snapData = snapBuffer.getChannelData(0)
+      for (let i = 0; i < snapLen; i++) {
+        const t = i / snapLen
+        snapData[i] = (Math.random() * 2 - 1) * Math.exp(-t * 11)
+      }
+      const snapSrc = this.ctx.createBufferSource()
+      snapSrc.buffer = snapBuffer
+      const snapFilter = this.ctx.createBiquadFilter()
+      snapFilter.type = 'bandpass'
+      snapFilter.frequency.value = 1850
+      snapFilter.Q.value = 2.8
+      const snapGain = this.ctx.createGain()
+      snapGain.gain.setValueAtTime(0.75, now)
+      snapGain.gain.exponentialRampToValueAtTime(0.001, now + 0.05)
+      snapSrc.connect(snapFilter)
+      snapFilter.connect(snapGain)
+      snapGain.connect(this.ctx.destination)
+      snapSrc.start(now)
+
+      // Wood tabla slap
+      const woodOsc = this.ctx.createOscillator()
+      const woodGain = this.ctx.createGain()
+      woodOsc.type = 'triangle'
+      woodOsc.frequency.setValueAtTime(160, now + 0.004)
+      woodOsc.frequency.exponentialRampToValueAtTime(54, now + 0.2)
+      woodGain.gain.setValueAtTime(0.55, now + 0.004)
+      woodGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.26)
+      woodOsc.connect(woodGain)
+      woodGain.connect(this.ctx.destination)
+      woodOsc.start(now + 0.004)
+      woodOsc.stop(now + 0.28)
+    } catch {
+      // Ignore audio errors
+    }
+  }
+
   public playVictory() {
     if (!this.enabled) return
     try {
