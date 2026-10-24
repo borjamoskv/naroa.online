@@ -441,7 +441,7 @@
       stage.style.setProperty('--camera-veil', (veil * .65).toFixed(4));
       if (still) restCamera();
       const cue = $('[data-journey-cue]', stage);
-      cue.textContent = still ? reduced.matches ? 'Activa los efectos para ver el viaje ↓' : 'Desplázate para recorrer ↕' : !transition ? phase === 'explore' ? 'Explora la superficie ↓' : 'Una pausa para mirar · sigue ↓' : ({ E: 'Entra en la mirada ↓', H: entry.direction > 0 ? 'Atravesar → · sigue bajando' : 'Atravesar ← · sigue bajando', V: 'Déjate llevar ↓', Z: 'Acércate ↓', P: 'Mezclar y volver a unir ↓' })[mode];
+      cue.textContent = still ? reduced.matches ? 'Activa los efectos para ver el viaje ↓' : 'Desplázate para recorrer ↕' : !transition ? phase === 'explore' ? 'Explora la superficie ↓' : 'Una pausa para mirar · sigue ↓' : ({ E: 'Entra en la mirada ↓', H: 'Atravesar · sigue bajando ↓', V: 'Déjate llevar ↓', Z: 'Acércate ↓', P: 'Mezclar y volver a unir ↓' })[mode];
       stage.classList.toggle('is-travelling', transition);
       stage.style.setProperty('--progress', (pose.distance / journey.total * (works.length - 1) * 100).toFixed(3) + '%');
     }
@@ -497,10 +497,22 @@
     addEventListener('scroll', scheduleScroll, { passive: true });
     // Preserve native inertia, browser zoom, touch scrolling and scroll-bar navigation.
     const interruptNavigation = () => { motion.navigation = null; };
-    addEventListener('wheel', interruptNavigation, { passive: true });
+    addEventListener('wheel', e => {
+      interruptNavigation();
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 4) {
+        window.scrollBy({ top: e.deltaX, behavior: 'auto' });
+      }
+    }, { passive: true });
     addEventListener('touchstart', interruptNavigation, { passive: true });
     $$('[data-select]', stage).forEach(b => b.addEventListener('click', () => change(Number(b.dataset.select))));
-    $('[data-prev]', stage).addEventListener('click', () => change(Math.round(motion.navigation ?? motion.desired) - 1)); $('[data-next]', stage).addEventListener('click', () => change(Math.round(motion.navigation ?? motion.desired) + 1));
+    $('[data-prev]', stage).addEventListener('click', () => {
+      const cur = motion.navigation ?? motion.desired;
+      change(Math.floor(cur) === Math.ceil(cur) ? Math.round(cur) - 1 : Math.floor(cur));
+    });
+    $('[data-next]', stage).addEventListener('click', () => {
+      const cur = motion.navigation ?? motion.desired;
+      change(Math.floor(cur) + 1);
+    });
     $('[data-fit]', stage).addEventListener('click', () => { pause(); state.fit = !state.fit; images[state.index].src = state.fit ? works[state.index].photos[0].src : works[state.index].cover; resetPan(); metadata(); render(); });
     $('[data-open-story]', stage).addEventListener('click', () => openDialog('#story-dialog'));
     function showPhoto() {
@@ -603,8 +615,16 @@
     document.addEventListener('keydown', e => {
       if (document.querySelector('dialog[open]') || e.target.closest?.('input,textarea,select,[contenteditable=true]')) return;
       if (e.key === 'Escape' && state.quiet) { e.preventDefault(); quiet(false); return; }
-      if (e.key === 'ArrowRight') { e.preventDefault(); change(Math.round(motion.navigation ?? motion.desired) + 1); }
-      if (e.key === 'ArrowLeft') { e.preventDefault(); change(Math.round(motion.navigation ?? motion.desired) - 1); }
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        const cur = motion.navigation ?? motion.desired;
+        change(Math.floor(cur) + 1);
+      }
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        const cur = motion.navigation ?? motion.desired;
+        change(Math.floor(cur) === Math.ceil(cur) ? Math.round(cur) - 1 : Math.floor(cur));
+      }
     });
     function resetPan() { if (pan.frame !== null) cancelAnimationFrame(pan.frame); pan.x = pan.y = pan.tx = pan.ty = 0; pan.frame = null; stage.style.setProperty('--pan-x', '0px'); stage.style.setProperty('--pan-y', '0px'); }
     reduced.addEventListener('change', () => { resetPan(); pause(); if (reduced.matches) $('.art-layers', stage).getAnimations?.().forEach(animation => animation.cancel()); });

@@ -163,6 +163,30 @@ def build(output):
 
     pages = []
 
+    artist_same_as = [
+        "https://www.facebook.com/naroa.artista.plastica",
+        "https://instagram.com/naroa_art/",
+        "https://naroagutierrez.wordpress.com/",
+        "https://www.deia.eus/bizkaia/vida-social/2026/06/05/bwall-collective-inaugura-exposicion-ocho-11159371.html",
+        "https://gara.naiz.eus/paperezkoa/20100305/186538/eu/Agenda",
+    ]
+    bilbao_place = {
+        "@type": "Place",
+        "name": "Bilbao, Bizkaia",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Bilbao",
+            "addressRegion": "Bizkaia",
+            "addressCountry": "ES",
+        },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 43.2630,
+            "longitude": -2.9350,
+        },
+        "hasMap": "https://www.google.com/maps?q=Bilbao,+Bizkaia",
+    }
+
     def page(path, title, description, body, image, gallery=False, schema=None, not_found=False, image_alt=None):
         canonical = ORIGIN + path
         im_w, im_h, im_mime = image_info(image)
@@ -278,16 +302,9 @@ def build(output):
                 "name": "Naroa Gutiérrez Gil",
                 "jobTitle": "Artista plástica y retratista",
                 "url": ORIGIN + "/",
-                "sameAs": [
-                    "https://www.facebook.com/naroa.artista.plastica",
-                    "https://instagram.com/naroa_art/",
-                    "https://naroagutierrez.wordpress.com/",
-                ],
+                "sameAs": artist_same_as,
             },
-            "locationCreated": {
-                "@type": "Place",
-                "name": "Bilbao, Bizkaia, España",
-            },
+            "locationCreated": bilbao_place,
             "artMedium": p.get("technique"),
             "artworkSurface": p.get("support"),
             "material": p.get("materials"),
@@ -329,15 +346,11 @@ def build(output):
             "name": "Naroa Gutiérrez Gil",
             "jobTitle": "Artista plástica y retratista",
             "url": ORIGIN + "/",
-            "homeLocation": {"@type": "Place", "name": "Bilbao, Bizkaia"},
+            "homeLocation": bilbao_place,
             "image": ORIGIN + "/images/sobre-mi/naroa-monoculo.jpg",
             "email": "naroa@naroa.eu",
             "telephone": "+34636060609",
-            "sameAs": [
-                "https://www.facebook.com/naroa.artista.plastica",
-                "https://instagram.com/naroa_art/",
-                "https://naroagutierrez.wordpress.com/",
-            ],
+            "sameAs": artist_same_as,
             "knowsAbout": [
                 "Retratos artísticos personalizados",
                 "Pintura sobre pizarra natural",
@@ -438,7 +451,7 @@ def build(output):
     amor = next(p for p in projects if p["slug"] == "amor-en-conserva")
     jaio = next(p for p in projects if p["slug"] == "custom-jaio")
     about += f'''<figure class="full-figure" data-parallax><a href="/obra/amor-en-conserva/"><img src="{amor['cover']}" alt="Amor en Conserva, retratos y objetos reunidos en una lata abierta" loading="lazy"></a><figcaption>Amor en Conserva · <a href="/obra/amor-en-conserva/">Entrar en la obra ↗</a></figcaption></figure><section class="chapter"><p class="eyebrow">02 · La propia mirada</p><div><h2>Al otro lado<br>del espejo.</h2><p>Después de años retratando a otras personas, Naroa cuenta que dibujarse directamente ante un espejo supuso un reto nuevo. En 2025 participó en el taller de autorretrato de Ana Rosa Arroyo, en la asociación Mujeres en la Diversidad.</p><p>Rara Avis reúne esa exploración en un autorretrato de pastel y collage. Mirarse se convierte, otra vez, en una oportunidad para experimentar.</p><div class="chapter-links"><a class="text-link" href="/obra/rara-avis/">Descubrir Rara Avis ↗</a><a class="text-link" href="https://naroagutierrez.wordpress.com/2026/05/14/autorretratos-mujeres-a-traves-del-espejo/" target="_blank" rel="noopener noreferrer">Leer cómo nació Rara Avis ↗</a></div></div></section><figure class="full-figure" data-parallax><a href="/obra/rara-avis/"><img src="{rara['cover']}" alt="Rara Avis: autorretrato entre marcos, papeles y reflejos" loading="lazy"></a><figcaption>Rara Avis · Pastel y collage</figcaption></figure><section class="chapter"><p class="eyebrow">03 · Compartir</p><div><h2>Crear también<br>es encontrarse.</h2><p>En Bilbao, sus convocatorias de Walking Gallery invitan a sacar las creaciones a la calle y conversar mientras se camina con ellas.</p><p>En 2024 presentó El ReCreo, un espacio de experimentación para personas de distintas edades. La curiosidad, el respeto y el disfrute del proceso atraviesan esta otra faceta de su práctica.</p><div class="chapter-links"><a class="text-link" href="/trayectoria/">Recorrer su trayectoria ↗</a><a class="text-link" href="https://naroagutierrez.wordpress.com/2022/10/04/walking-gallery-bilbao-octubre-2022-por-amor-al-arte/" target="_blank" rel="noopener noreferrer">Walking Gallery ↗</a><a class="text-link" href="https://naroagutierrez.wordpress.com/2024/01/12/el-recreo-espacio-de-creacion-para-recrearte/" target="_blank" rel="noopener noreferrer">Conocer El ReCreo ↗</a></div></div></section></article>'''
-    about_schema = {"@context": "https://schema.org", "@type": "ProfilePage", "name": "Sobre mí · Artista plástica y retratista en Bilbao y Bizkaia", "url": ORIGIN + "/sobre-mi/", "mainEntity": {"@type": "Person", "name": "Naroa Gutiérrez Gil", "jobTitle": "Artista plástica y retratista", "url": ORIGIN + "/", "homeLocation": {"@type": "Place", "name": "Bilbao, Bizkaia"}, "sameAs": ["https://www.facebook.com/naroa.artista.plastica", "https://instagram.com/naroa_art/", "https://naroagutierrez.wordpress.com/"]}}
+    about_schema = {"@context": "https://schema.org", "@type": "ProfilePage", "name": "Sobre mí · Artista plástica y retratista en Bilbao y Bizkaia", "url": ORIGIN + "/sobre-mi/", "mainEntity": {"@type": "Person", "@id": ORIGIN + "/#artist", "name": "Naroa Gutiérrez Gil", "jobTitle": "Artista plástica y retratista", "url": ORIGIN + "/", "homeLocation": bilbao_place, "sameAs": artist_same_as}}
     page("/sobre-mi/", "Sobre mí · Artista plástica y retratista en Bilbao", "Rostros, materia y ganas de jugar. La mirada y el proceso creativo de Naroa Gutiérrez Gil, artista plástica y retratista en Bilbao y Bizkaia.", '<main id="main">' + about + '</main>', "/images/sobre-mi/naroa-monoculo.jpg", schema=about_schema)
 
     exhibitions = read_data("exhibitions")["exhibitions"]
@@ -581,12 +594,26 @@ def build(output):
             "name": "Naroa Gutiérrez Gil",
             "jobTitle": "Artista plástica y retratista",
             "url": ORIGIN + "/",
+            "sameAs": artist_same_as,
+            "homeLocation": bilbao_place,
         },
         "providerMobility": "dynamic",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Bilbao",
+            "addressRegion": "Bizkaia",
+            "addressCountry": "ES",
+        },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 43.2630,
+            "longitude": -2.9350,
+        },
+        "hasMap": "https://www.google.com/maps?q=Bilbao,+Bizkaia",
         "areaServed": [
-            {"@type": "City", "name": "Bilbao"},
-            {"@type": "AdministrativeArea", "name": "Bizkaia"},
-            {"@type": "Country", "name": "España"},
+            {"@type": "City", "name": "Bilbao", "sameAs": "https://es.wikipedia.org/wiki/Bilbao"},
+            {"@type": "AdministrativeArea", "name": "Bizkaia", "sameAs": "https://es.wikipedia.org/wiki/Vizcaya"},
+            {"@type": "Country", "name": "España", "sameAs": "https://es.wikipedia.org/wiki/Espa%C3%B1a"},
         ],
         "knowsAbout": [
             "Retrato sobre pizarra natural rústica",
@@ -654,12 +681,8 @@ def build(output):
             "name": "Naroa Gutiérrez Gil",
             "email": "naroa@naroa.eu",
             "telephone": "+34636060609",
-            "homeLocation": {"@type": "Place", "name": "Bilbao, Bizkaia"},
-            "sameAs": [
-                "https://www.facebook.com/naroa.artista.plastica",
-                "https://instagram.com/naroa_art/",
-                "https://naroagutierrez.wordpress.com/",
-            ],
+            "homeLocation": bilbao_place,
+            "sameAs": artist_same_as,
         },
     }
     page("/contacto/", "Contacto", "Habla con Naroa Gutiérrez Gil sobre una obra o un retrato por encargo. Bilbao. Email, WhatsApp e Instagram.", contact, rara["photos"][0]["original"], schema=contact_schema)

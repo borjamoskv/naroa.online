@@ -88,6 +88,17 @@ def check(output):
         assert schema0.get("dateModified") == manifest["reviewed"], (file, "missing dateModified")
         assert schema0.get("primaryImageOfPage", {}).get("width", 0) > 0, (file, "missing primaryImageOfPage dimensions")
         assert "FAQPage" not in json.dumps(schema0), (file, "deprecated FAQPage schema present")
+        if route == "/retratos-por-encargo-bilbao/":
+            assert schema0.get("geo", {}).get("latitude") == 43.263, (file, "missing geo latitude in commissions")
+            assert schema0.get("address", {}).get("addressLocality") == "Bilbao", (file, "missing addressLocality in commissions")
+            assert any("deia.eus" in s for s in schema0.get("provider", {}).get("sameAs", [])), (file, "missing external entity citation in provider")
+        elif route == "/":
+            pub = schema0.get("publisher", {})
+            assert pub.get("homeLocation", {}).get("geo", {}).get("latitude") == 43.263, (file, "missing geo in publisher")
+            assert any("deia.eus" in s for s in pub.get("sameAs", [])), (file, "missing external entity citation in publisher")
+        elif route == "/sobre-mi/":
+            ent = schema0.get("mainEntity", {})
+            assert ent.get("homeLocation", {}).get("geo", {}).get("latitude") == 43.263, (file, "missing geo in artist entity")
         assert int(page.meta.get("og:image:width", "0")) > 0, (file, "missing og:image:width")
         assert int(page.meta.get("og:image:height", "0")) > 0, (file, "missing og:image:height")
         assert page.meta.get("og:image:alt"), (file, "missing og:image:alt")

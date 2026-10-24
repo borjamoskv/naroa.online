@@ -30,7 +30,7 @@ export default {
       }
     }
     const origin = new URL(incoming);
-    origin.hostname = 'naroaonline.vercel.app';
+    origin.hostname = 'naroagutierrezgil-com.pages.dev';
     try {
       const outgoing = new Request(origin, request);
       outgoing.headers.set('X-Forwarded-Host', primary);
