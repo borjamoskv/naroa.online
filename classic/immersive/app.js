@@ -2480,7 +2480,7 @@
     const ctaEl = $('[data-gaze-cta]', kintsugiEditorial);
     const workLinkEl = $('[data-gaze-work-link]', kintsugiEditorial);
 
-    // 1. Veta de Oro Kintsugi continua entre capítulos
+    // 1. Veta de Oro Kintsugi continua entre capítulos + grietas diagonales internas
     const seamSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     seamSvg.setAttribute('class', 'kintsugi-seam-svg');
     seamSvg.setAttribute('viewBox', '0 0 120 1200');
@@ -2499,6 +2499,22 @@
     `;
     kintsugiEditorial.prepend(seamSvg);
 
+    // Grieta de oro líquido diagonal dentro de cada brecha tectónica
+    chapters.forEach(ch => {
+      const chasm = $('[data-kintsugi-chasm]', ch);
+      if (!chasm) return;
+      const crackSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      crackSvg.setAttribute('class', 'kintsugi-chasm-crack');
+      crackSvg.setAttribute('viewBox', '0 0 800 72');
+      crackSvg.setAttribute('preserveAspectRatio', 'none');
+      crackSvg.setAttribute('aria-hidden', 'true');
+      crackSvg.innerHTML = `
+        <path class="kintsugi-crack-glow" d="M0,44 L145,22 L285,52 L440,18 L595,48 L715,24 L800,38" fill="none" stroke="#d4af37" stroke-width="3.2" stroke-linecap="round"/>
+        <path class="kintsugi-crack-core" d="M0,44 L145,22 L285,52 L440,18 L595,48 L715,24 L800,38" fill="none" stroke="#fffdf4" stroke-width="1.1" stroke-linecap="round"/>
+      `;
+      chasm.prepend(crackSvg);
+    });
+
     const kState = {
       targetY: scrollY || 0,
       currentY: scrollY || 0,
@@ -2506,10 +2522,23 @@
       peakVelocity: 0,
       scrollEvents: 0,
       dwellChapters: { mirada: 0, materia: 0, espejo: 0, compartir: 0 },
+      fractureStates: { mirada: 'tense', materia: 'tense', espejo: 'tense', compartir: 'tense' },
       xrayTouches: 0,
       seamProgress: 0,
+      micaX: 50,
+      micaY: 50,
       raf: null
     };
+
+    kintsugiEditorial.addEventListener('pointermove', e => {
+      if (reduced.matches) return;
+      const r = kintsugiEditorial.getBoundingClientRect();
+      if (!r.width || !r.height) return;
+      kState.micaX = clamp(((e.clientX - r.left) / r.width) * 100, 0, 100);
+      kState.micaY = clamp(((e.clientY - r.top) / r.height) * 100, 0, 100);
+      kintsugiEditorial.style.setProperty('--mica-x', `${kState.micaX.toFixed(1)}%`);
+      kintsugiEditorial.style.setProperty('--mica-y', `${kState.micaY.toFixed(1)}%`);
+    }, { passive: true });
 
     // 2. Lente de Rayos X del Monóculo sobre figuras a sangre
     xrays.forEach(fig => {
@@ -2618,9 +2647,32 @@
       chapters.forEach(ch => {
         const cr = ch.getBoundingClientRect();
         const centerDist = 1 - clamp(Math.abs((cr.top + cr.height * 0.5) - vh * 0.5) / (vh * 0.65), 0, 1);
+        // Progreso local de paso del capítulo por el viewport (0 = entra por abajo, 0.5 = centro, 1 = sale por arriba)
+        const localProgress = clamp((vh * 0.85 - cr.top) / Math.max(1, vh * 0.85 + cr.height * 0.55), 0, 1);
+        // Fase 1 (0..0.28): Tensión | Fase 2 (0.28..0.64): Brecha abierta | Fase 3 (0.64..1.0): Sutura Kintsugi dorada
+        let gap = 0;
+        let goldWeld = 0;
+        let phase = 'tense';
+        if (localProgress >= 0.22 && localProgress < 0.64) {
+          gap = Math.sin(((localProgress - 0.22) / 0.42) * Math.PI);
+          goldWeld = clamp((localProgress - 0.36) / 0.28, 0, 1);
+          phase = 'fractured';
+        } else if (localProgress >= 0.64) {
+          gap = Math.max(0.18, (1 - clamp((localProgress - 0.64) / 0.26, 0, 1)) * 0.45);
+          goldWeld = 1;
+          phase = 'sutured';
+        }
+        ch.dataset.kintsugiPhase = phase;
         ch.style.setProperty('--chapter-focus', centerDist.toFixed(3));
+        ch.style.setProperty('--fracture-gap', gap.toFixed(3));
+        ch.style.setProperty('--kintsugi-weld', goldWeld.toFixed(3));
         ch.classList.toggle('is-kintsugi-active', centerDist > 0.35);
+        ch.classList.toggle('is-kintsugi-fractured', phase === 'fractured');
+        ch.classList.toggle('is-kintsugi-sutured', phase === 'sutured');
         const key = ch.dataset.kintsugiChapter;
+        if (key) {
+          kState.fractureStates[key] = phase;
+        }
         if (centerDist > 0.45 && key && key in kState.dwellChapters) {
           kState.dwellChapters[key] += 1;
         }
@@ -2650,15 +2702,25 @@
         kState.targetY = y;
         kState.peakVelocity = Math.max(kState.peakVelocity, 55);
         kState.dwellChapters.espejo += 12;
+        kState.fractureStates.espejo = 'sutured';
+        const mirrorChapter = $('[data-kintsugi-chapter="espejo"]', kintsugiEditorial);
+        if (mirrorChapter) {
+          mirrorChapter.dataset.kintsugiPhase = 'sutured';
+          mirrorChapter.style.setProperty('--fracture-gap', '0.320');
+          mirrorChapter.style.setProperty('--kintsugi-weld', '1.000');
+          mirrorChapter.classList.add('is-kintsugi-sutured');
+        }
         stepKintsugiScroll();
+        kState.fractureStates.espejo = 'sutured';
         return this.getState();
       },
       getState: () => ({
-        backend: 'kintsugi-substep-inertial',
+        backend: 'kintsugi-tectonic-fracture-v8',
         seamProgress: kState.seamProgress,
         velocity: Number(kState.velocity.toFixed(3)),
         peakVelocity: Number(kState.peakVelocity.toFixed(3)),
         dwellChapters: { ...kState.dwellChapters },
+        fractureStates: { ...kState.fractureStates },
         xrayTouches: kState.xrayTouches
       })
     };
