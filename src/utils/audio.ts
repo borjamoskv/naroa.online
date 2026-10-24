@@ -4,52 +4,66 @@
 // Cadencia final inmutable: notas icónicas de SOUND OF SILENCE en Re menor microtonal
 // D5 (sound), [silencio], A4 (of), C5 (si-), F5 (-lence), E5 (resolución), [silencio], D5 (tónica final)
 export const SOUND_OF_SILENCE_CADENCE: (number | null)[] = [
-  74.00, null, 69.02, 71.74, 77.24, 75.86, null, 74.00
+  74.00, null, 69.02, 71.69, 77.16, 76.04, null, 74.00
 ]
 
-// Escala modal microtonal en Re menor (Dórico cantábrico / Peine de caja de música):
-// A4 (69.02), B4 (71.74), C5 (72.00), D5 (74.00), E5 (75.86), F5 (77.24), G5 (78.98), A5 (81.02), B5 (83.74), D6 (86.00)
-const MODAL_PITCHES = [69.02, 71.74, 72.00, 74.00, 75.86, 77.24, 78.98, 81.02, 83.74, 86.00]
-
-// Células motívicas de 4 pulsos para construcción arquitectónica de la melodía
-const MOTIF_CELLS_A = [
-  [74.00, 77.24, 81.02, 77.24],
-  [74.00, 69.02, 74.00, 77.24],
-  [74.00, 75.86, 77.24, 75.86],
-  [74.00, 71.74, 74.00, 77.24],
-  [74.00, null, 77.24, 75.86],
-  [69.02, 74.00, 75.86, 77.24],
-  [74.00, 78.98, 77.24, 74.00],
-  [74.00, 81.02, 77.24, 74.00]
+// Serie Armónica Microtonal Pura en Re (Entonación Justa Extendida: Pitagórica + Septimal 7/4 + Undecimal 11/8):
+// 69.02: A4 (3/4 quinta justa grave, +1.95c)
+// 70.84: B4 (5/6 sexta mayor justa de Huygens, -15.64c)
+// 71.69: C5 (7/8 séptima armónica natural / alboka, -31.17c)
+// 74.00: D5 (1/1 tónica fundamental, 587.33 Hz)
+// 75.82: E5b (10/9 tono menor justo, -17.6c)
+// 76.04: E5 (9/8 tono mayor justo, +3.91c)
+// 76.67: F5sub (7/6 tercera sub-menor septimal, -33.1c)
+// 77.16: F5 (6/5 tercera menor justa pura, +15.64c)
+// 78.51: G5+ (11/8 oncena espectral acústica, +51.3c)
+// 78.98: G5 (4/3 cuarta justa pura, -1.95c)
+// 81.02: A5 (3/2 quinta justa pura, +1.95c)
+// 82.84: B5 (5/3 sexta dórica justa, -15.64c)
+// 83.69: C6 (7/4 séptima menor armónica, -31.17c)
+// 86.00: D6 (2/1 octava pura)
+const MODAL_PITCHES = [
+  69.02, 70.84, 71.69, 74.00, 75.82, 76.04, 76.67, 77.16, 78.51, 78.98, 81.02, 82.84, 83.69, 86.00
 ]
 
-const MOTIF_CELLS_B = [
-  [78.98, 81.02, 86.00, 81.02],
-  [81.02, 78.98, 77.24, 75.86],
-  [77.24, 81.02, 83.74, 81.02],
-  [78.98, 77.24, 75.86, 74.00],
-  [81.02, null, 78.98, 77.24],
-  [74.00, 78.98, 81.02, 78.98],
-  [81.02, 83.74, 81.02, 77.24],
-  [77.24, 78.98, 81.02, 78.98]
+// Células motívicas polirrítmicas y asincopadas (acentos 3+3+2, Zortziko 5/8 y hemiola 3:2)
+const MOTIF_CELLS_A: (number | null)[][] = [
+  [74.00, null, 77.16, 81.02],
+  [74.00, 69.02, null, 77.16],
+  [74.00, 76.04, 77.16, null],
+  [74.00, null, 70.84, 74.00],
+  [69.02, 74.00, null, 76.67],
+  [74.00, 78.51, null, 77.16],
+  [74.00, null, 81.02, 77.16],
+  [71.69, 74.00, 76.04, null]
 ]
 
-const MOTIF_CELLS_C = [
-  [75.86, 74.00, 71.74, 69.02],
-  [71.74, 75.86, 78.98, 75.86],
-  [77.24, 75.86, 74.00, null],
-  [69.02, 71.74, 74.00, 75.86],
-  [75.86, 77.24, 75.86, 74.00],
-  [77.24, 78.98, 75.86, 71.74],
-  [74.00, 71.74, 69.02, null],
-  [75.86, 74.00, 69.02, 71.74]
+const MOTIF_CELLS_B: (number | null)[][] = [
+  [78.98, null, 81.02, 86.00],
+  [81.02, 78.51, null, 76.67],
+  [77.16, null, 82.84, 81.02],
+  [78.51, 77.16, 75.82, null],
+  [81.02, null, 83.69, 78.98],
+  [74.00, 78.98, null, 81.02],
+  [82.84, null, 81.02, 77.16],
+  [76.67, 78.51, null, 81.02]
+]
+
+const MOTIF_CELLS_C: (number | null)[][] = [
+  [76.04, null, 71.69, 69.02],
+  [70.84, 75.82, null, 78.98],
+  [77.16, 75.82, 74.00, null],
+  [69.02, null, 71.69, 75.82],
+  [76.67, 75.82, null, 74.00],
+  [77.16, null, 75.82, 70.84],
+  [74.00, 71.69, 69.02, null],
+  [75.82, null, 69.02, 71.69]
 ]
 
 /**
- * Generador procedural infinito de melodías para la caja de música.
- * Cada refresco de página produce una secuencia virgen e irrepetible,
- * gobernada por contrapunto modal en Re menor y auditada contra un buffer
- * FIFO en localStorage para garantizar formalmente cero repetición.
+ * Generador procedural infinito de melodías microtonales y polirrítmicas para la caja de música.
+ * Cada refresco de página produce una secuencia virgen e irrepetible en entonación justa,
+ * con síncopas de Zortziko (5/8) y hemiolas (3:2), auditada contra un buffer FIFO en localStorage.
  */
 export function generateInfiniteSessionMelody(): (number | null)[] {
   const HISTORY_KEY = 'naroa_musicbox_fingerprint_history'
@@ -63,17 +77,19 @@ export function generateInfiniteSessionMelody(): (number | null)[] {
 
   const getRandomChoice = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)]
 
-  // Función de mutación orgánica controlada sobre una célula
+  // Mutación orgánica asincopada sobre cada célula
   const mutateCell = (cell: (number | null)[], allowVariation = true): (number | null)[] => {
     const copy = [...cell]
-    if (!allowVariation || Math.random() > 0.45) return copy
-    // Muta levemente 1 sola nota hacia un grado adyacente o un silencio sutil
+    if (!allowVariation || Math.random() > 0.55) return copy
     const mutateIdx = 1 + Math.floor(Math.random() * (copy.length - 1))
     const current = copy[mutateIdx]
     if (current === null) {
       copy[mutateIdx] = getRandomChoice(MODAL_PITCHES)
-    } else if (Math.random() < 0.25) {
-      copy[mutateIdx] = null
+    } else if (Math.random() < 0.28) {
+      // Desplazamiento sincopado del silencio si los vecinos tienen nota
+      if (copy[mutateIdx - 1] !== null) {
+        copy[mutateIdx] = null
+      }
     } else {
       const pIdx = MODAL_PITCHES.indexOf(current)
       if (pIdx >= 0) {
@@ -85,13 +101,12 @@ export function generateInfiniteSessionMelody(): (number | null)[] {
     return copy
   }
 
-  // Genera con reintento si colisionara con alguna melodía del historial
   for (let attempt = 0; attempt < 25; attempt++) {
     const phraseA = [...mutateCell(getRandomChoice(MOTIF_CELLS_A)), ...mutateCell(getRandomChoice(MOTIF_CELLS_A), false)]
     const phraseB = [...mutateCell(getRandomChoice(MOTIF_CELLS_B)), ...mutateCell(getRandomChoice(MOTIF_CELLS_B))]
     const phraseC = [...mutateCell(getRandomChoice(MOTIF_CELLS_C)), ...mutateCell(getRandomChoice(MOTIF_CELLS_C))]
 
-    // Ensamblaje: 24 notas procedurales + 8 notas de la cadencia Sound of Silence = 32 pasos
+    // Ensamblaje: 24 pasos polirrítmicos + 8 pasos de la cadencia Sound of Silence = 32 pasos
     const candidate = [
       ...phraseA,
       ...phraseB,
@@ -99,7 +114,7 @@ export function generateInfiniteSessionMelody(): (number | null)[] {
       ...SOUND_OF_SILENCE_CADENCE
     ]
 
-    const fingerprint = candidate.map(n => (n === null ? 'S' : n.toFixed(1))).join('-')
+    const fingerprint = candidate.map(n => (n === null ? 'S' : n.toFixed(2))).join('-')
     if (!history.includes(fingerprint) || attempt === 24) {
       try {
         if (typeof window !== 'undefined' && window.localStorage) {
@@ -122,17 +137,17 @@ export interface WeekdayTheme {
   notes: (number | null)[]
 }
 
-// 7 TEMAS CANÓNICOS DE LA SEMANA (UNO PARA CADA DÍA)
+// 7 TEMAS CANÓNICOS DE LA SEMANA (ENTONACIÓN JUSTA MICROTONAL & FRASEO ASINCOPADO)
 export const WEEKDAY_THEMES: WeekdayTheme[] = [
   // 0. Lunes (Astelehena)
   {
     day: 'Lunes',
     name: 'Txoria Txori',
-    subtitle: 'Mikel Laboa · Bronce, libertad y memoria',
+    subtitle: 'Mikel Laboa · Bronce septimal, libertad y memoria',
     notes: [
-      74.00, null, 77.24, 75.86, 74.00, 71.74, 74.00, null,
-      69.02, 71.74, 74.00, 75.86, 77.24, 75.86, 74.00, null,
-      77.24, 81.02, 77.24, 75.86, 74.00, 69.02, 71.74, null,
+      74.00, null, 77.16, 76.04, null, 74.00, 71.69, 74.00,
+      null, 69.02, 71.69, null, 74.00, 76.67, 77.16, 75.82,
+      74.00, null, 81.02, 78.51, null, 76.67, 71.69, null,
       ...SOUND_OF_SILENCE_CADENCE
     ]
   },
@@ -140,11 +155,11 @@ export const WEEKDAY_THEMES: WeekdayTheme[] = [
   {
     day: 'Martes',
     name: 'Haurtxo Polita',
-    subtitle: 'Nana tradicional de cuna · Juguete de cuerda',
+    subtitle: 'Nana tradicional en Zortziko · Juguete de cuerda',
     notes: [
-      69.02, 74.00, 75.86, 77.24, 75.86, 74.00, null, 74.00,
-      77.24, 78.98, 81.02, 78.98, 77.24, 75.86, null, 75.86,
-      74.00, 71.74, 69.02, 71.74, 74.00, 77.24, 75.86, null,
+      69.02, null, 74.00, 76.04, 77.16, null, 75.82, 74.00,
+      77.16, null, 78.98, 81.02, null, 78.51, 77.16, 75.82,
+      null, 74.00, 70.84, 69.02, null, 71.69, 75.82, null,
       ...SOUND_OF_SILENCE_CADENCE
     ]
   },
@@ -152,11 +167,11 @@ export const WEEKDAY_THEMES: WeekdayTheme[] = [
   {
     day: 'Miércoles',
     name: 'Harria eta Marea',
-    subtitle: 'Arpegio circular minimalista · Piedra y marea',
+    subtitle: 'Polirritmia 3:2 Sakamoto · Piedra y marea',
     notes: [
-      74.00, 69.02, 77.24, 74.00, 78.98, 75.86, 74.00, null,
-      71.74, 74.00, 75.86, 74.00, 69.02, 71.74, 74.00, null,
-      77.24, 81.02, 86.00, 81.02, 77.24, 75.86, 74.00, null,
+      74.00, 69.02, null, 77.16, 74.00, null, 78.51, 75.82,
+      70.84, null, 74.00, 76.04, null, 69.02, 71.69, 74.00,
+      77.16, null, 81.02, 86.00, null, 82.84, 77.16, null,
       ...SOUND_OF_SILENCE_CADENCE
     ]
   },
@@ -164,11 +179,11 @@ export const WEEKDAY_THEMES: WeekdayTheme[] = [
   {
     day: 'Jueves',
     name: 'Landa / Alboka clásica',
-    subtitle: 'Melodía de Arratia · Tierra, cuerno y roble',
+    subtitle: 'Séptima de Arratia (7/4) · Tierra, cuerno y roble',
     notes: [
-      74.00, 77.24, 81.02, 77.24, 75.86, 74.00, 69.02, null,
-      71.74, 75.86, 78.98, 75.86, 74.00, 71.74, 69.02, null,
-      74.00, 77.24, 81.02, 83.74, 81.02, 77.24, 75.86, null,
+      74.00, 76.67, null, 81.02, 77.16, null, 74.00, 69.02,
+      71.69, null, 75.82, 78.51, 75.82, null, 71.69, 69.02,
+      74.00, null, 77.16, 82.84, null, 81.02, 76.67, null,
       ...SOUND_OF_SILENCE_CADENCE
     ]
   },
@@ -176,11 +191,11 @@ export const WEEKDAY_THEMES: WeekdayTheme[] = [
   {
     day: 'Viernes',
     name: 'Mi Gran Noche',
-    subtitle: 'Raphael en celesta modal · Qué misterio habrá',
+    subtitle: 'Raphael en celesta asincopada · Qué misterio habrá',
     notes: [
-      69.02, 74.00, 77.24, 75.86, null, 69.02, 74.00, 77.24,
-      75.86, null, 74.00, 75.86, 77.24, 78.98, 77.24, 75.86,
-      74.00, 77.24, 81.02, 78.98, 77.24, 75.86, 74.00, null,
+      69.02, 74.00, null, 77.16, 76.04, null, 69.02, 74.00,
+      77.16, 76.04, null, 74.00, 76.04, null, 78.98, 77.16,
+      74.00, null, 77.16, 81.02, null, 78.51, 76.04, null,
       ...SOUND_OF_SILENCE_CADENCE
     ]
   },
@@ -188,11 +203,11 @@ export const WEEKDAY_THEMES: WeekdayTheme[] = [
   {
     day: 'Sábado',
     name: 'Gaua / Nocturno de Bilbao',
-    subtitle: 'Chiaroscuro, penumbra de ría y silencio fértil',
+    subtitle: 'Chiaroscuro espectral, penumbra de ría y silencio',
     notes: [
-      74.00, 71.74, 69.02, null, 74.00, 77.24, 75.86, 74.00,
-      69.02, 74.00, 77.24, 78.98, 81.02, 77.24, 74.00, null,
-      81.02, 83.74, 81.02, 77.24, 75.86, 71.74, 69.02, null,
+      74.00, null, 71.69, 69.02, null, 74.00, 76.67, 74.00,
+      69.02, 74.00, null, 78.51, 81.02, null, 76.67, 74.00,
+      81.02, null, 83.69, 81.02, null, 75.82, 70.84, null,
       ...SOUND_OF_SILENCE_CADENCE
     ]
   },
@@ -200,11 +215,11 @@ export const WEEKDAY_THEMES: WeekdayTheme[] = [
   {
     day: 'Domingo',
     name: 'Haizea / Viento en los pinos',
-    subtitle: 'Cascada etérea en Dórico · Retorno al origen',
+    subtitle: 'Cascada undecimal (11/8) · Retorno al origen',
     notes: [
-      74.00, 77.24, 81.02, 86.00, 81.02, 77.24, 74.00, null,
-      78.98, 75.86, 74.00, 69.02, 71.74, 75.86, 74.00, null,
-      77.24, 81.02, 78.98, 77.24, 75.86, 74.00, 69.02, null,
+      74.00, 77.16, null, 81.02, 86.00, null, 82.84, 77.16,
+      78.51, null, 75.82, 74.00, 69.02, null, 71.69, 74.00,
+      76.67, null, 81.02, 78.51, null, 75.82, 69.02, null,
       ...SOUND_OF_SILENCE_CADENCE
     ]
   }
@@ -365,54 +380,82 @@ class SoundEngine {
   }
 
   /**
-   * Synthesize a warm modal acoustic music-box tine note (in D minor microtonal temperament).
+   * Síntesis modal de alta relojería (celesta Schiedmayer / peine suizo Reuge en bronce envejecido):
+   * - Doble lengüeta simpática binaural (±1.6 cents) con batimiento orgánico lento.
+   * - Resonador mineral sub-octava (0.5x f0) con entrada aterciopelada (24 ms).
+   * - Parciales Euler-Fokker en entonación justa con barrido de filtro de seda (2400 Hz -> 740 Hz).
+   * - Espacialización estéreo sutil y soporte de retardo polirrítmico asincopado.
    */
-  public playMusicBoxNote(midiNote: number = 74.00, volume: number = 0.5) {
+  public playMusicBoxNote(
+    midiNote: number = 74.00,
+    volume: number = 0.5,
+    delaySec: number = 0,
+    pan: number = 0,
+    detuneCents: number = 0
+  ) {
     if (!this.enabled) return
     try {
       this.initCtx()
       if (!this.ctx) return
 
-      const now = this.ctx.currentTime + 0.002
+      const now = this.ctx.currentTime + 0.003 + Math.max(0, delaySec)
       const out = this.getOut()
-      const rootHz = 440 * Math.pow(2, (midiNote - 69) / 12)
+      const rootHz = 440 * Math.pow(2, (midiNote + detuneCents / 100 - 69) / 12)
 
       const masterTineGain = this.ctx.createGain()
-      masterTineGain.gain.setValueAtTime(volume * 0.38, now)
-      masterTineGain.connect(out)
+      masterTineGain.gain.setValueAtTime(volume * 0.34, now)
 
-      // Warm acoustic lowpass filter to ensure silky chime tone
+      // Posicionamiento espacial estéreo de galería
+      if (typeof this.ctx.createStereoPanner === 'function') {
+        const panner = this.ctx.createStereoPanner()
+        panner.pan.setValueAtTime(Math.max(-0.65, Math.min(0.65, pan)), now)
+        masterTineGain.connect(panner)
+        panner.connect(out)
+      } else {
+        masterTineGain.connect(out)
+      }
+
+      // Filtro acústico dinámico: abre en el ataque del fieltro y decanta hacia madera cálida
       const filter = this.ctx.createBiquadFilter()
       filter.type = 'lowpass'
-      filter.frequency.setValueAtTime(Math.min(2200, rootHz * 3.0), now)
-      filter.Q.value = 1.0
+      const openCutoff = Math.min(2500, rootHz * 3.4)
+      const warmCutoff = Math.max(480, Math.min(920, rootHz * 1.35))
+      filter.frequency.setValueAtTime(openCutoff, now)
+      filter.frequency.exponentialRampToValueAtTime(warmCutoff, now + 0.65)
+      filter.Q.setValueAtTime(0.85, now)
       filter.connect(masterTineGain)
 
-      // Modal synthesis partials
+      // Parciales espectrales Euler-Fokker + doble fundamental binaural + sub-octava simpática
       const partials = [
-        { ratio: 1.0, level: 0.72, decay: 0.95 },
-        { ratio: 2.012, level: 0.22, decay: 0.48 },
-        { ratio: 3.994, level: 0.08, decay: 0.25 },
-        { ratio: 5.46, level: 0.04, decay: 0.15 }
+        { ratio: 0.5, detune: 0, level: 0.16, attack: 0.026, decay: 1.45 },       // Cuerpo mineral sub-octava
+        { ratio: 1.0, detune: -1.6, level: 0.52, attack: 0.008, decay: 1.25 },    // Lengüeta principal L
+        { ratio: 1.0, detune: 1.6, level: 0.44, attack: 0.011, decay: 1.28 },     // Lengüeta simpática R (batimiento cálido)
+        { ratio: 1.9985, detune: 0, level: 0.21, attack: 0.005, decay: 0.62 },    // 2º armónico dulce
+        { ratio: 2.997, detune: 1.95, level: 0.095, attack: 0.004, decay: 0.38 }, // Duodécima justa pura (3/1)
+        { ratio: 4.006, detune: 0, level: 0.042, attack: 0.003, decay: 0.21 },    // Destello de celesta
+        { ratio: 5.38, detune: -14, level: 0.018, attack: 0.002, decay: 0.11 }    // Transitorio de latón
       ]
 
-      partials.forEach(({ ratio, level, decay }) => {
+      partials.forEach(({ ratio, detune, level, attack, decay }) => {
         if (!this.ctx) return
         const osc = this.ctx.createOscillator()
         const gain = this.ctx.createGain()
 
         osc.type = 'sine'
-        osc.frequency.setValueAtTime(rootHz * ratio, now)
+        const targetFreq = rootHz * ratio * Math.pow(2, detune / 1200)
+        // Sutilísimo pitch-bloom físico de lengüeta al ser pulsada (+2.8 cents -> 0 en 16ms)
+        osc.frequency.setValueAtTime(targetFreq * 1.0016, now)
+        osc.frequency.exponentialRampToValueAtTime(targetFreq, now + 0.016)
 
         gain.gain.setValueAtTime(0.0001, now)
-        gain.gain.linearRampToValueAtTime(level, now + 0.003)
+        gain.gain.linearRampToValueAtTime(level, now + attack)
         gain.gain.exponentialRampToValueAtTime(0.0001, now + decay)
 
         osc.connect(gain)
         gain.connect(filter)
 
         osc.start(now)
-        osc.stop(now + decay + 0.02)
+        osc.stop(now + decay + 0.03)
       })
     } catch {
       // Ignore audio errors
@@ -420,8 +463,11 @@ class SoundEngine {
   }
 
   /**
-   * Plays or advances the user session melody note (32-step cycle).
-   * Steps 24..31 always sound the iconic Sound of Silence cadence.
+   * Motor Polirrítmico Asincopado y Armónico Microtonal (Ciclo de 32 pasos).
+   * - Pasos 0..23: Teje una constelación en Zortziko (5/8) + hemiola (3:2) donde la nota principal
+   *   despierta una segunda voz armónica en entonación justa (5ª pura 3/2, 6ª dórica 5/3 o 7ª natural 7/4)
+   *   con retardo asincopado áureo, más un destello espectral en contratiempo.
+   * - Pasos 24..31: Cadencia sagrada inmutable de SOUND OF SILENCE arropada por un pedal armónico profundo.
    */
   public playSessionStep(stepIndex?: number) {
     if (!this.enabled) return
@@ -431,9 +477,65 @@ class SoundEngine {
     } else {
       this.sessionStep = (this.sessionStep + 1) % mel.length
     }
-    const note = mel[this.sessionStep]
-    if (note !== null) {
-      this.playMusicBoxNote(note, 0.42)
+
+    const step = this.sessionStep
+    const isSilenceCadence = step >= mel.length - 8
+    const note = mel[step]
+
+    // Si el paso es silencio pero cae en contratiempo polirrítmico (fuera de Sound of Silence),
+    // susurra un armónico fantasma asincopado muy tenue para mantener el pulso vivo en el aire
+    if (note === null) {
+      if (!isSilenceCadence && step % 5 === 1) {
+        const ghostIntervals = [69.02, 71.69, 74.00, 78.51, 81.02]
+        const ghostNote = ghostIntervals[step % ghostIntervals.length]
+        this.playMusicBoxNote(ghostNote, 0.14, 0.065, -0.22, -3.5)
+      }
+      return
+    }
+
+    // Acentuación polirrítmica cruzada: Zortziko 5/8 (3+2) superpuesto a ciclo ternario (3:2)
+    const zortzikoSub = step % 5
+    const hemiolaSub = step % 3
+    const accent = zortzikoSub === 0 ? 1.0 : zortzikoSub === 3 ? 0.92 : hemiolaSub === 0 ? 0.86 : 0.76
+    const panMain = Math.sin(step * 1.15) * 0.24
+
+    // 1. VOZ PRINCIPAL (Cantus en t0)
+    this.playMusicBoxNote(note, 0.40 * accent, 0, panMain, 0)
+
+    if (isSilenceCadence) {
+      // En SOUND OF SILENCE: reverencia absoluta a la melodía, solo un cálido pedal armónico grave en la tónica y dominante
+      if (step === mel.length - 8 || step === mel.length - 1) {
+        this.playMusicBoxNote(62.00, 0.22, 0.025, 0, 0) // D4 pedal profundo
+      } else if (step === mel.length - 6) {
+        this.playMusicBoxNote(69.02, 0.18, 0.035, -0.15, 1.95) // A4 quinta pura
+      }
+      return
+    }
+
+    // 2. VOZ ARMÓNICA MICROTONAL EN SÍNCOPA (Off-beat polirrítmico 3:2 / 5:4)
+    // Retardos asincopados en proporción áurea y subdivisión quinaria (95ms, 142ms, 188ms)
+    const syncopatedDelays = [0.095, 0.142, 0.188, 0.118, 0.165]
+    const delayHarmony = syncopatedDelays[step % syncopatedDelays.length]
+
+    // Selección de intervalo microtonal justo según posición modal:
+    // -4.98 (5ª justa inferior 2/3), -3.16 (6ª mayor justa inferior 5/6), -2.31 (7ª armónica 7/8), +3.16 (3ª menor justa 6/5)
+    let harmonyNote = 69.02
+    if (note >= 78.0) {
+      harmonyNote = note - 4.9805 // Quinta justa pura hacia abajo
+    } else if (note >= 75.0) {
+      harmonyNote = zortzikoSub === 3 ? 70.84 : 69.02 // Sexta dórica de Huygens (B4) o Dominante (A4)
+    } else {
+      harmonyNote = hemiolaSub === 1 ? 77.16 : 71.69 // Tercera menor justa (F5) o Séptima de alboka (C5)
+    }
+
+    this.playMusicBoxNote(harmonyNote, 0.21 * accent, delayHarmony, -panMain * 1.2, -2.0)
+
+    // 3. TERCERA VOZ CRISTALINA (Campanilla polirrítmica 3:2 en pasos sincopados)
+    if (zortzikoSub === 2 || hemiolaSub === 2) {
+      const shimmerIntervals = [81.02, 82.84, 83.69, 86.00, 78.51] // A5(3/2), B5(5/3), C6(7/4), D6(2/1), G5+(11/8)
+      const shimmerNote = shimmerIntervals[(step * 2) % shimmerIntervals.length]
+      const delayShimmer = delayHarmony + (zortzikoSub === 2 ? 0.088 : 0.126)
+      this.playMusicBoxNote(shimmerNote, 0.135 * accent, delayShimmer, panMain * 0.85, 3.5)
     }
   }
 

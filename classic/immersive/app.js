@@ -1167,6 +1167,7 @@
       }, { passive: true });
     }
     function render() {
+      const munsterSlugs = ['lily-munster', 'herman-munster', 'eddie-munster', 'abuelo-munster'];
       const pose = motion.pose, { entry, phase, progress: fraction } = pose;
       const base = entry.index, incoming = Math.min(base + 1, works.length - 1);
       const still = state.fit || reduced.matches;
@@ -1200,6 +1201,7 @@
         const isJaioTo13n = transition && works[base]?.slug === 'custom-jaio' && works[incoming]?.slug === '13n';
         const isBowieToOlinga = transition && works[base]?.slug === 'el-hombre-que-susurraba-a-las-estrellas' && works[incoming]?.slug === 'olinga-a-la-naranja';
         const isDustinToGameOver = transition && works[base]?.slug === 'dustin' && works[incoming]?.slug === 'game-over';
+        const isMunsterFamily = transition && munsterSlugs.includes(works[base]?.slug) && munsterSlugs.includes(works[incoming]?.slug);
         paintedScenes.add(index);
         const isTopOutgoing = isRockaToHugo || isAmorToAmy || isJamesToMario || isJaioTo13n || isRaraToAmor || isBowieToOlinga || isDustinToGameOver;
         scene.style.visibility = 'visible'; scene.style.zIndex = isTopOutgoing ? (outgoing ? '2' : '1') : (outgoing ? '1' : '2');
@@ -1357,6 +1359,12 @@
               const unseam = smooth(fraction);
               image.style.filter = `contrast(${(1 + unseam * 0.22).toFixed(3)})`;
             }
+            image.style.transform = `translate3d(${mode === 'H' ? parallax.toFixed(3) : '0'}%,${mode === 'V' ? parallax.toFixed(3) : '0'}%,0) scale(${lens.toFixed(5)})`;
+          } else if (isMunsterFamily) {
+            const vignette = Math.sin(fraction * Math.PI) * 0.22;
+            const sep = (0.06 + vignette * 0.24).toFixed(3);
+            const ct = (1.04 + vignette * 0.18).toFixed(3);
+            image.style.filter = `contrast(${ct}) sepia(${sep})`;
             image.style.transform = `translate3d(${mode === 'H' ? parallax.toFixed(3) : '0'}%,${mode === 'V' ? parallax.toFixed(3) : '0'}%,0) scale(${lens.toFixed(5)})`;
           } else if (works[incoming]?.slug === 'el-armigo-atomico' || works[base]?.slug === 'el-armigo-atomico') {
             if (!outgoing && works[incoming]?.slug === 'el-armigo-atomico') {
@@ -1676,6 +1684,7 @@
       stage.style.setProperty('--camera-veil', (veil * .65).toFixed(4));
       if (still) restCamera();
       const cue = $('[data-journey-cue]', stage);
+      const isMunsterWork = munsterSlugs.includes(works[state.index]?.slug);
       if (works[state.index]?.slug === 'dustin' && !transition) {
         cue.textContent = 'La última nota ya es silencio · Sigue hacia el final ↓';
       } else if (works[state.index]?.slug === 'game-over' && !transition) {
@@ -1684,6 +1693,12 @@
         cue.textContent = 'GAME OVER · 8-BIT GLITCH ↓';
       } else if (works[state.index]?.slug === 'el-armigo-atomico' || isArmigoTransition) {
         cue.textContent = '¡Giro atómico 720°! · sigue ↓';
+      } else if (isMunsterWork && !transition) {
+        const mIdx = munsterSlugs.indexOf(works[state.index].slug) + 1;
+        const mNames = ['Lily Munster', 'Herman Munster', 'Eddie Munster', 'El Abuelo Munster'];
+        cue.textContent = mIdx < 4
+          ? `Familia Munster (${mIdx}/4) · ${mNames[mIdx - 1]} · Sigue horizontal →`
+          : 'Familia Munster (4/4) · El Abuelo Munster · Sigue hacia adelante ↓';
       } else {
         cue.textContent = still ? reduced.matches ? 'Activa los efectos para ver el viaje ↓' : 'Desplázate para recorrer ↕' : !transition ? phase === 'explore' ? 'Explora la superficie ↓' : 'Una pausa para mirar · sigue ↓' : isAjenjoPhoto ? 'Dispara y revela la foto ↓' : isRaraToAmor ? 'El azogue se disuelve · sigue ↓' : isAmorToAmy ? 'Abre la lata de conserva · sigue ↓' : isJamesToMario ? 'La cantera de pizarra se quiebra · sigue ↓' : isJaioTo13n ? 'Deshilachar las costuras · sigue ↓' : isBowieToOlinga ? 'Refracción de estrella · sigue ↓' : isSeriesPortal ? 'Atravesando portal de serie ↓' : ({ E: 'Entra en la mirada ↓', H: 'Atravesar · sigue bajando ↓', V: 'Déjate llevar ↓', Z: (transition && works[base]?.slug === 'hugo-box') ? 'Entra en la lente rosa ↓' : 'Acércate ↓', P: 'Mezclar y volver a unir ↓' })[mode];
       }
