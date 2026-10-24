@@ -731,6 +731,8 @@
       desired: state.index,
       current: initialDistance,
       target: initialDistance,
+      velocity: 0,
+      lastTime: 0,
       frame: null,
       request: 0,
       navigation: null
@@ -782,7 +784,15 @@
         group.append(svgNode('use', { href: `#puzzle-photo-${index}`, 'clip-path': `url(#puzzle-cut-${index}-${n})` }));
         svg.append(group);
         const destination = (n * 7 + 9) % 25;
-        pieces.push({ group, cx: x + 100, cy: y + 100, dx: ((destination % 5 - col) * 155 + Math.sin(n * 2.4) * 65) * .45, dy: (Math.floor(destination / 5) - row) * 155 * .45, turn: (n % 7 - 3) * 12 * .45, arc: Math.sin(n * 1.7) * 100 * .45 });
+        const destCol = destination % 5;
+        const destRow = Math.floor(destination / 5);
+        const relX = (col - 2) * 160;
+        const relY = (row - 2) * 160;
+        const dx = ((destCol - col) * 220 + Math.sin(n * 2.4) * 140 + relX * 1.35) * 1.15;
+        const dy = ((destRow - row) * 220 + Math.cos(n * 1.9) * 120 + relY * 1.35) * 1.15;
+        const turn = (n % 7 - 3) * 28 + Math.sin(n * 2.8) * 18;
+        const arc = Math.sin(n * 1.7) * 240 + Math.cos(n * 2.3) * 110;
+        pieces.push({ group, cx: x + 100, cy: y + 100, dx, dy, turn, arc });
       }
       const puzzle = { svg, picture, pieces };
       $('.art-pan', scenes[index]).append(svg); scenes[index].classList.add('is-puzzle');
@@ -795,6 +805,7 @@
       const scatter = still ? 0 : Math.pow(Math.sin(phase * Math.PI), 2);
       const amount = scatter < 1e-8 ? 0 : scatter;
       puzzle.svg.dataset.scatter = amount.toFixed(4);
+      puzzle.svg.style.setProperty('--puzzle-lift', amount.toFixed(3));
       puzzle.svg.style.visibility = still ? 'hidden' : 'visible';
       scenes[index].classList.toggle('puzzle-still', still);
       puzzle.pieces.forEach(({ group, cx, cy, dx, dy, turn, arc }) => {
@@ -877,7 +888,7 @@
       img.style.transform = `translate3d(${tx.toFixed(3)}px,${ty.toFixed(3)}px,0) scale(${zoom.toFixed(5)})`;
     }
     let dustinVisited = false, dustinEpilogueTimer = null;
-    let puzzleVisited = false, clockVisited = false, wineVisited = false, deltoyaVisited = false;
+    let puzzleVisited = false, puzzleReassembled = false, clockVisited = false, wineVisited = false, deltoyaVisited = false;
     let ajenjoVisited = false;
     let cameraFlashTimer = null, lastScrollFlashIndex = -1, lastScrollFlashTime = 0;
     function fireCameraFlash() {
@@ -1822,8 +1833,17 @@
           puzzleVisited = true;
           firePuzzleSnap();
         }
+        if (works[base].slug === 'saio-puzzle' && transition) {
+          if (fraction >= 0.74 && fraction <= 0.84 && !puzzleReassembled) {
+            puzzleReassembled = true;
+            firePuzzleSnap();
+          } else if (fraction < 0.40 || fraction > 0.90) {
+            puzzleReassembled = false;
+          }
+        }
       } else {
         puzzleVisited = false;
+        puzzleReassembled = false;
       }
       if (works[base].slug === 'julio-iglesias-como-un-reloj-suizo' || works[incoming].slug === 'julio-iglesias-como-un-reloj-suizo') {
         if (!clockVisited && (works[state.index].slug === 'julio-iglesias-como-un-reloj-suizo' || (transition && works[incoming].slug === 'julio-iglesias-como-un-reloj-suizo' && fraction >= 0.35))) {
@@ -2022,28 +2042,42 @@
     function scheduleMotion() {
       if (motion.frame === null) motion.frame = requestAnimationFrame(stepMotion);
     }
-    function stepMotion() {
+    function stepMotion(now = performance.now()) {
       motion.frame = null;
       if (document.querySelector('dialog[open]')) return;
       const still = state.fit || reduced.matches;
+      const dt = motion.lastTime > 0 ? clamp((now - motion.lastTime) / 16.6667, 0.5, 2.2) : 1;
+      motion.lastTime = now;
       const delta = motion.target - motion.current;
-      if (still || Math.abs(delta) < 0.00015) {
+      if (still || Math.abs(delta) < 0.00012) {
         motion.current = motion.target;
+        motion.velocity = 0;
+        motion.lastTime = 0;
         stage.style.setProperty('--scroll-energy', '0');
+        stage.style.setProperty('--velocity-skew', '0deg');
       } else {
-        // Adaptive sub-step damping (0.16..0.22 per frame) generates silky-smooth minipasos across any scroll gesture
-        const alpha = clamp(0.16 + Math.abs(delta) * 0.06, 0.16, 0.22);
-        motion.current += delta * alpha;
-        stage.style.setProperty('--scroll-energy', clamp(Math.abs(delta) * 2.2, 0, 1).toFixed(3));
+        // Amortiguamiento continuo invariante al framerate (60Hz / 120Hz ProMotion) — Ley 1 (INV_C5_SCROLL_SUBSTEP_DYNAMICS)
+        const currentBase = Math.floor(motion.desired || motion.position || 0);
+        const isPuzzle = works[currentBase]?.interaction === 'puzzle' || works[currentBase]?.slug === 'saio-puzzle';
+        const baseAlpha = isPuzzle
+          ? clamp(0.048 + Math.abs(delta) * 0.025, 0.042, 0.075)
+          : clamp(0.165 + Math.abs(delta) * 0.055, 0.165, 0.22);
+        const alpha = 1 - Math.pow(1 - baseAlpha, dt);
+        const step = delta * alpha;
+        motion.current += step;
+        motion.velocity = motion.velocity * 0.72 + (step / dt) * 0.28;
+        stage.style.setProperty('--scroll-energy', clamp(Math.abs(delta) * 2.4, 0, 1).toFixed(3));
       }
       const pose = journey.read(motion.current);
       const position = pose.position;
       motion.desired = position;
       if (motion.navigation !== null && Math.abs(position - motion.navigation) < .002) motion.navigation = null;
-      if (Math.abs(pose.distance - motion.pose.distance) > .0008) {
+      if (Math.abs(pose.distance - motion.pose.distance) > .0004) {
         const pixels = motion.current * geometry.unit;
-        const skew = clamp((pixels - lastScrollPixels) * 0.035, -3.2, 3.2);
-        stage.style.setProperty('--velocity-skew', `${skew.toFixed(2)}deg`);
+        const instSkew = ((pixels - lastScrollPixels) / Math.max(0.5, dt)) * 0.032;
+        const prevSkew = parseFloat(stage.style.getPropertyValue('--velocity-skew')) || 0;
+        const skew = clamp(prevSkew * 0.65 + instSkew * 0.35, -3.2, 3.2);
+        stage.style.setProperty('--velocity-skew', `${(Math.abs(skew) < 0.03 ? 0 : skew).toFixed(2)}deg`);
         leaveFit(); resetPan(); travelCamera();
         lastScrollPixels = pixels;
       }
@@ -2351,6 +2385,7 @@
     const images = scenes.map(scene => $('img', scene)), decoded = new Set(), pending = new Map(), failed = new Set();
     const smooth = value => { const t = clamp(value, 0, 1); return t * t * t * (t * (t * 6 - 15) + 10); };
     let frame = null, geometry = null, current = 0, captionIndex = -1;
+    let portraitTravelCurrent = 0, portraitTravelTarget = 0, portraitLastTime = 0;
     let interactiveWinkTimer = null, interactiveWinkVal = 0, hasWinkedOnScroll = false;
     function triggerInteractiveWink() {
       const travel = Math.max(0, -portraitTrack.getBoundingClientRect().top);
@@ -2431,6 +2466,7 @@
         return cover(aspect, i === 0 && width <= 760 ? .72 : .5, .42);
       });
       geometry = { width, height, portrait: cover(2201 / 3468, .5, .29), art: boxes[0], boxes };
+      portraitTravelCurrent = portraitTravelTarget = Math.max(0, -portraitTrack.getBoundingClientRect().top);
       [[plane, geometry.portrait], ...scenes.map((scene, i) => [scene, boxes[i]])].forEach(([element, box]) => {
         Object.assign(element.style, reduced.matches
           ? { width: '', height: '', left: '', top: '' }
@@ -2512,13 +2548,31 @@
       shade.style.opacity = '.75';
       releaseDistant(base);
     }
-    function renderPortrait() {
+    function renderPortrait(now = performance.now()) {
       frame = null;
       const g = geometry; if (!g || document.querySelector('dialog[open]')) return;
-      const travel = Math.max(0, -portraitTrack.getBoundingClientRect().top);
+      portraitTravelTarget = Math.max(0, -portraitTrack.getBoundingClientRect().top);
+      const dt = portraitLastTime > 0 ? clamp((now - portraitLastTime) / 16.6667, 0.5, 2.2) : 1;
+      portraitLastTime = now;
+      const deltaTravel = portraitTravelTarget - portraitTravelCurrent;
+      if (reduced.matches || Math.abs(deltaTravel) < 0.15) {
+        portraitTravelCurrent = portraitTravelTarget;
+        portraitLastTime = 0;
+      } else {
+        const baseAlpha = clamp(0.17 + Math.abs(deltaTravel / Math.max(1, g.height)) * 0.05, 0.17, 0.22);
+        const alpha = 1 - Math.pow(1 - baseAlpha, dt);
+        portraitTravelCurrent += deltaTravel * alpha;
+      }
+      const travel = portraitTravelCurrent;
       const progress = reduced.matches ? 0 : clamp(travel / (g.height * 2.8), 0, 1);
       const position = reduced.matches ? 0 : clamp((travel - g.height * 2.8) / (g.height * 1.1), 0, works.length - 1);
-      if (!reduced.matches && travel >= g.height * 2.8) { renderExhibition(position, travel / g.height); return; }
+      if (!reduced.matches && travel >= g.height * 2.8) {
+        renderExhibition(position, travel / g.height);
+        if (Math.abs(portraitTravelTarget - portraitTravelCurrent) >= 0.15) {
+          frame = requestAnimationFrame(renderPortrait);
+        }
+        return;
+      }
       ensureScene(0);
       active.clear(); active.add(0);
       scenes.forEach((scene, i) => { if (i) { scene.style.visibility = 'hidden'; scene.setAttribute('aria-hidden', 'true'); scene.classList.remove('is-visible'); } });
@@ -2563,6 +2617,9 @@
       if (reduced.matches) soundscape?.frame({ distance: scrollY / Math.max(1, g.height), depth: 0, mode: 'still', phase: 'scroll', axisDirection: 1, slug: 'rara-avis' });
       else if (progress <= .44 || ready(0)) soundscape?.frame({ distance: travel / g.height, depth, mode: 'E', phase: progress > 0 && progress < .96 ? 'transition' : 'hold', axisDirection: 1, slug: 'rara-avis' });
       if (!reduced.matches) releaseDistant(0);
+      if (!reduced.matches && (Math.abs(portraitTravelTarget - portraitTravelCurrent) >= 0.15 || Math.abs(mouse.tx - mouse.x) > 0.002 || Math.abs(mouse.ty - mouse.y) > 0.002)) {
+        frame = requestAnimationFrame(renderPortrait);
+      }
     }
     function schedulePortrait() { if (frame === null) frame = requestAnimationFrame(renderPortrait); }
     function goTo(index) {
@@ -2583,7 +2640,7 @@
     ensureScene(0); measurePortrait();
   }
   if (!stage) {
-    const sections = $$('[data-parallax]'); let frame = null;
+    const sections = $$('[data-parallax]'); let frame = null, parallaxCurrentY = scrollY || 0, parallaxTargetY = scrollY || 0, parallaxLastTime = 0;
     sections.forEach(section => {
       if (!section.matches('.page-hero')) return;
       section.addEventListener('pointermove', e => {
@@ -2604,19 +2661,33 @@
         section.style.setProperty('--hero-ry', '0deg');
       }, { passive: true });
     });
-    function pageParallax() {
+    function pageParallax(now = performance.now()) {
       frame = null;
       const vh = innerHeight || 800;
+      parallaxTargetY = scrollY || 0;
+      const dt = parallaxLastTime > 0 ? clamp((now - parallaxLastTime) / 16.6667, 0.5, 2.2) : 1;
+      parallaxLastTime = now;
+      const dy = parallaxTargetY - parallaxCurrentY;
+      if (reduced.matches || Math.abs(dy) < 0.25) {
+        parallaxCurrentY = parallaxTargetY;
+        parallaxLastTime = 0;
+      } else {
+        const alpha = 1 - Math.pow(1 - 0.165, dt);
+        parallaxCurrentY += dy * alpha;
+      }
+      const offsetDelta = parallaxCurrentY - parallaxTargetY;
       sections.forEach(section => {
-        const r = section.getBoundingClientRect(); if (r.bottom < -100 || r.top > vh + 100) return;
+        const r = section.getBoundingClientRect();
+        const virtualTop = r.top - offsetDelta;
+        if (r.bottom < -120 || r.top > vh + 120) return;
         const target = $('.page-hero-image', section) || (section.matches('.contact-background') ? section : $('img', section));
         if (!target) return;
-        const progress = clamp((vh - r.top) / (vh + r.height), 0, 1);
+        const progress = clamp((vh - virtualTop) / (vh + r.height), 0, 1);
         const shift = (progress - .5) * 2 * vh * .07;
         target.style.transform = reduced.matches ? '' : `translate3d(0,${shift.toFixed(2)}px,0) scale(1.08)`;
         const copy = $('.page-hero-copy', section);
         if (copy) {
-          const exit = clamp(-r.top / vh, 0, 1);
+          const exit = clamp(-virtualTop / vh, 0, 1);
           const splitEase = exit * exit * (3 - 2 * exit);
           copy.style.transform = reduced.matches ? '' : `translate3d(0,${(-exit * vh * .035).toFixed(2)}px,0)`;
           copy.style.opacity = reduced.matches ? '1' : (1 - exit * .75).toFixed(3);
@@ -2626,6 +2697,9 @@
         }
       });
       $('.site-nav').classList.toggle('is-scrolled', scrollY > vh * .72);
+      if (!reduced.matches && Math.abs(parallaxTargetY - parallaxCurrentY) >= 0.25) {
+        frame = requestAnimationFrame(pageParallax);
+      }
     }
     const schedule = () => { if (frame === null) frame = requestAnimationFrame(pageParallax); };
     addEventListener('scroll', schedule, { passive: true }); addEventListener('resize', schedule, { passive: true }); reduced.addEventListener('change', schedule); schedule();
