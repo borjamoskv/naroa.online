@@ -1382,6 +1382,34 @@
     syncNotebook();
     document.addEventListener('visibilitychange', () => { if (!document.hidden) syncNotebook(); });
   }
+  const detectAttribution = () => {
+    let source = 'direct', generative = false;
+    try {
+      const params = new URLSearchParams(location.search);
+      const utm = (params.get('utm_source') || params.get('ref') || params.get('source') || '').toLowerCase();
+      const ref = (document.referrer || '').toLowerCase();
+      const token = `${utm} ${ref}`;
+      if (/chatgpt|openai/.test(token)) { source = 'chatgpt'; generative = true; }
+      else if (/perplexity/.test(token)) { source = 'perplexity'; generative = true; }
+      else if (/copilot|bing\.com\/chat/.test(token)) { source = 'copilot'; generative = true; }
+      else if (/claude\.ai|anthropic/.test(token)) { source = 'claude'; generative = true; }
+      else if (/gemini\.google|google\.com\/search\?.*udm=50/.test(token)) { source = 'google_ai'; generative = true; }
+      else if (/google\.|bing\.|duckduckgo|ecosia|yahoo/.test(token)) { source = 'organic_search'; }
+      else if (utm) { source = utm.slice(0, 24); }
+      else if (ref && !ref.includes(location.hostname)) { source = 'referral'; }
+    } catch {}
+    try {
+      if (source !== 'direct') sessionStorage.setItem('naroa-attribution', JSON.stringify({ source, generative }));
+      else {
+        const saved = JSON.parse(sessionStorage.getItem('naroa-attribution') || 'null');
+        if (saved?.source) return saved;
+      }
+    } catch {}
+    return { source, generative };
+  };
+  const attribution = detectAttribution();
+  window.NAROA_ATTRIBUTION = attribution;
+
   const configurator = $('[data-commission-configurator]');
   let supportEl, motifEl, timingEl, updateLink = () => {};
   if (configurator) {
@@ -1389,16 +1417,55 @@
     motifEl = $('#cfg-motif');
     timingEl = $('#cfg-timing');
     const btn = $('#cfg-whatsapp-btn');
+    const emailBtn = $('#cfg-email-btn');
+    const previewEl = $('#cfg-preview');
     updateLink = () => {
       if (!supportEl || !motifEl || !timingEl || !btn) return;
       const s = supportEl.value;
       const m = motifEl.value;
       const t = timingEl.value;
-      const msg = `Hola Naroa, me gustaría consultar un encargo de retrato sobre ${s} para ${m} con plazo ${t}.`;
+      const refSuffix = attribution.generative ? ` [vía ${attribution.source}]` : '';
+      const msg = `Hola Naroa, me gustaría consultar un encargo de retrato sobre ${s} para ${m} con plazo ${t}.${refSuffix}`;
+      if (previewEl) previewEl.textContent = msg;
       btn.href = `https://wa.me/34636060609?text=${encodeURIComponent(msg)}`;
+      if (emailBtn) {
+        emailBtn.href = `mailto:naroa@naroa.eu?subject=${encodeURIComponent('Consulta encargo: ' + s)}&body=${encodeURIComponent(msg)}`;
+      }
     };
     [supportEl, motifEl, timingEl].forEach(el => el?.addEventListener('change', updateLink));
   }
+  const faqKnowledge = {
+    precios: {
+      intent: 'Precios y presupuestos de retratos por encargo',
+      question: '¿Cuánto cuesta un retrato personalizado por encargo?',
+      answer: 'Presupuesto cerrado previo por escrito según soporte y dimensiones (piezas de 20 × 30 cm a 40 × 50 cm en madera, collage, pizarra natural o cajas de memoria). Consulta inicial sin compromiso.',
+      canonical_url: 'https://naroagutierrezgil.com/retratos-por-encargo-bilbao/'
+    },
+    plazos: {
+      intent: 'Plazos de ejecución y tiempos de secado',
+      question: '¿Cuál es el plazo de entrega habitual?',
+      answer: 'Entre 2 y 4 semanas según complejidad y tiempos de secado de óleos, acrílicos, barnices y fijación mineral. Modalidad prioritaria disponible para aniversarios o fechas señaladas con aviso previo.',
+      canonical_url: 'https://naroagutierrezgil.com/retratos-por-encargo-bilbao/'
+    },
+    fotos: {
+      intent: 'Proceso de encargo a partir de fotografías',
+      question: '¿Cómo encargar un retrato personalizado a partir de fotografías?',
+      answer: 'Se envían una o varias fotografías de referencia (incluso tomadas con el móvil) por WhatsApp o email; Naroa estudia el gesto y la historia para crear una reinterpretación artística de autor.',
+      canonical_url: 'https://naroagutierrezgil.com/retratos-por-encargo-bilbao/'
+    },
+    soportes: {
+      intent: 'Comparativa de soportes y técnicas plásticas',
+      question: '¿Qué técnicas y soportes se pueden elegir para el encargo?',
+      answer: 'Collage textil y dibujo a grafito/pastel sobre madera noble, cajas tridimensionales de memoria e intervención de objetos, retrato al óleo sobre tabla y pizarra natural de cantera con mica mineral.',
+      canonical_url: 'https://naroagutierrezgil.com/retratos-por-encargo-bilbao/'
+    },
+    envios: {
+      intent: 'Entrega local en Bilbao y envíos asegurados',
+      question: '¿Dónde y cómo se entrega la obra?',
+      answer: 'Entrega personal en mano en Bilbao y Bizkaia, o envío rígido protegido y asegurado a cualquier destino de España e internacional.',
+      canonical_url: 'https://naroagutierrezgil.com/retratos-por-encargo-bilbao/'
+    }
+  };
   window.WebMCP = {
     manifestUrl: '/.well-known/mcp.json',
     callTool: async (name, params = {}) => {
@@ -1429,7 +1496,7 @@
           return p;
         }
         case 'configure_commission_inquiry': {
-          const s = params.support || 'Pizarra natural rústica';
+          const s = params.support || 'Collage textil sobre madera';
           const m = params.motif || 'Retrato individual';
           const t = params.timing || 'Sin prisa (2 a 4 semanas)';
           if (supportEl) { supportEl.value = s; }
@@ -1442,9 +1509,17 @@
             motif: m,
             timing: t,
             message: msg,
+            attribution: window.NAROA_ATTRIBUTION,
             whatsapp_url: `https://wa.me/34636060609?text=${encodeURIComponent(msg)}`,
             email_url: `mailto:naroa@naroa.eu?subject=${encodeURIComponent('Consulta encargo: ' + s)}&body=${encodeURIComponent(msg)}`
           };
+        }
+        case 'answer_commission_faq': {
+          const topic = (params.topic || 'todos').toLowerCase();
+          if (topic === 'todos' || !faqKnowledge[topic]) {
+            return { topics: Object.values(faqKnowledge) };
+          }
+          return faqKnowledge[topic];
         }
         case 'get_artist_profile': {
           return {

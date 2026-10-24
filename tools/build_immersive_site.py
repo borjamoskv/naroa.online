@@ -458,17 +458,19 @@ def build(output):
         structured.setdefault("inLanguage", "es-ES")
         structured.setdefault("dateModified", catalogue["reviewed"])
         if not not_found:
-            structured.setdefault(
-                "primaryImageOfPage",
-                {
-                    "@type": "ImageObject",
-                    "contentUrl": f"{ORIGIN}{image}",
-                    "width": im_w,
-                    "height": im_h,
-                    "encodingFormat": im_mime,
-                    "caption": im_alt,
-                },
-            )
+            primary_img = {
+                "@type": "ImageObject",
+                "contentUrl": f"{ORIGIN}{image}",
+                "width": im_w,
+                "height": im_h,
+                "encodingFormat": im_mime,
+                "caption": im_alt,
+            }
+            structured.setdefault("primaryImageOfPage", primary_img)
+            if "@graph" in structured and len(structured["@graph"]) > 0:
+                structured["@graph"][0].setdefault("primaryImageOfPage", primary_img)
+                structured["@graph"][0].setdefault("inLanguage", "es-ES")
+                structured["@graph"][0].setdefault("dateModified", catalogue["reviewed"])
         breadcrumb = None
         if not not_found and path != "/":
             section_name = "Obras" if path.startswith("/obra/") else "Vaivenes" if path.startswith("/series/vaivenes/") else title.split("·")[0].strip()
@@ -847,12 +849,33 @@ def build(output):
         ("Entrega y envíos", "Entrega en mano en Bilbao y Bizkaia, o envío protegido y asegurado a cualquier punto de España e internacional."),
     ]
     specs_html = "".join(f"<p><strong>{esc(k)}:</strong> {esc(v)}</p>" for k, v in specs_rows)
+    compare_rows = [
+        ("Collage textil y dibujo sobre madera", "20 × 30 cm a 40 × 50 cm (medidas adaptables)", "Grafito, pastel Conté, tela vaquera, costuras y madera noble", "2 a 4 semanas", "Custom Jaio · Entre Tantas Flores"),
+        ("Cajas tridimensionales y objetos", "Formatos de caja o lata intervenida a medida", "Madera tratada, pintura acrílica, ensamblaje y objetos de memoria", "2 a 4 semanas", "Amor en Conserva · Hugo Box"),
+        ("Pizarra natural de cantera", "20 × 30 cm a 40 × 50 cm (contorno rústico irregular)", "Acrílico, lápices, rotuladores, escamas de mica mineral y esmalte", "2 a 3 semanas", "Amy Rocks · Marilyn Rocks"),
+        ("Retrato al óleo o grafito clásico", "A partir de 20 × 30 cm sobre tabla o papel de algodón", "Óleo sobre tabla, grafito o carboncillo con fijación protectora", "2 a 4 semanas", "El Gran Dakari · Rara Avis"),
+    ]
+    compare_tbody = "".join(
+        f"<tr><th scope=\"row\">{esc(sup)}</th><td>{esc(dim)}</td><td>{esc(tech)}</td><td>{esc(turn)}</td><td>{esc(ex_ref)}</td></tr>"
+        for sup, dim, tech, turn, ex_ref in compare_rows
+    )
+    compare_table_html = (
+        '<div class="commission-compare-wrap">'
+        '<table class="commission-compare-table">'
+        '<caption>Comparativa técnica de soportes, plazos y obras de referencia</caption>'
+        '<thead><tr><th scope="col">Soporte plástico</th><th scope="col">Formatos habituales</th><th scope="col">Técnica y materiales</th><th scope="col">Plazo estimado</th><th scope="col">Ejemplos del archivo</th></tr></thead>'
+        f'<tbody>{compare_tbody}</tbody>'
+        '</table>'
+        '</div>'
+    )
+    specs_html += compare_table_html
+    default_cfg_msg = "Hola Naroa, me gustaría consultar un encargo de retrato sobre Collage textil sobre madera para Retrato individual con plazo Sin prisa (2 a 4 semanas)."
     configurator_html = (
         '<section class="commission-configurator" aria-labelledby="configurator-heading" data-commission-configurator>'
         '<div class="section-opening">'
         '<p class="eyebrow">Configura tu consulta directa</p>'
         '<h2 id="configurator-heading">¿Qué retrato imaginas?</h2>'
-        '<p>Elige soporte, motivo y ocasión para preparar un mensaje directo y personalizado a Naroa por WhatsApp.</p>'
+        '<p>Elige soporte, motivo y ocasión para preparar un mensaje directo y personalizado a Naroa por WhatsApp o correo electrónico.</p>'
         '</div>'
         '<div class="configurator-grid">'
         '<div class="configurator-field">'
@@ -882,17 +905,20 @@ def build(output):
         '</select>'
         '</div>'
         '</div>'
+        f'<p id="cfg-preview" class="configurator-preview" aria-live="polite">{esc(default_cfg_msg)}</p>'
         '<div class="configurator-action">'
-        '<a id="cfg-whatsapp-btn" class="commission-cta-btn" href="https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20un%20encargo%20de%20retrato%20sobre%20Collage%20textil%20sobre%20madera%20para%20Retrato%20individual%20con%20plazo%20Sin%20prisa%20%282%20a%204%20semanas%29." target="_blank" rel="noopener noreferrer">'
+        f'<a id="cfg-whatsapp-btn" class="commission-cta-btn" href="https://wa.me/34636060609?text={quote(default_cfg_msg)}" target="_blank" rel="noopener noreferrer">'
         '<span>Consultar esta idea por WhatsApp ↗</span>'
+        '</a>'
+        f'<a id="cfg-email-btn" class="commission-cta-secondary" href="mailto:naroa@naroa.eu?subject={quote("Consulta encargo: Collage textil sobre madera")}&body={quote(default_cfg_msg)}">'
+        '<span>Solicitar propuesta por email ↗</span>'
         '</a>'
         '</div>'
         '</section>'
     )
     commissions = hero(amor["cover"], "Retratos personalizados por encargo · Bilbao", "No retrato solo tu cara.<br><span>Retrato tu historia.</span>", "Tu historia convertida en una obra de arte original en dibujo, pintura, collage, madera u objetos con vida propia.", ("/contacto/", "Solicitar un retrato"), alt=work_alt(amor))
     commissions += f'''<article class="editorial" id="contenido"><section class="chapter"><p class="eyebrow">Retrato de autor a partir de tu historia</p><div><h2>Más allá de<br>una fotografía.</h2><p class="lead">Encarga un retrato personalizado en Bilbao con Naroa Gutiérrez Gil a partir de tu historia o fotografías. Obras originales de autor en dibujo, pintura, collage, madera y objetos intervenidos, con presupuesto cerrado previo y entrega local en mano o envío protegido.</p><p>Puedes partir de una fotografía, un recuerdo o un objeto con significado para encargar una pieza hecha a mano y pensada para quien la recibe. Es una práctica de retrato que continúa la exploración iniciada en muestras individuales en Bilbao como <em>Espejos del alma</em> (Colegio de Abogados de Bilbao), valorando en el taller el soporte que mejor cuente esa historia: composiciones de dibujo y tela vaquera, cajas de madera personalizadas o soportes recientes como la pizarra.</p></div></section><section class="commission-examples-section" aria-labelledby="commission-examples-heading"><div class="section-opening"><p class="eyebrow">Soportes reales del catálogo</p><h2 id="commission-examples-heading">Tres maneras de dar<br>forma a un retrato.</h2><p>Cada pieza cuenta con fotografías de conjunto, ángulo y detalle real del soporte en el archivo de Naroa.</p></div><div class="commission-examples">{examples_html}</div></section><section class="chapter" aria-labelledby="commission-specs-heading"><p class="eyebrow">Ficha técnica de encargos</p><div><h2 id="commission-specs-heading">Materiales, formatos<br>y condiciones reales.</h2>{specs_html}</div></section><section class="commission-steps" aria-label="Proceso de encargo"><article><span>01</span><h3>Me cuentas tu idea y tu foto.</h3><p>A quién quieres retratar, si es para regalar y qué historia u objetos le definen. Puedes adjuntar fotografías de referencia.</p></article><article><span>02</span><h3>Propuesta, materiales y presupuesto.</h3><p>Acordamos técnica, formato, orientación de precio y plazo de entrega antes de comenzar la obra.</p></article><article><span>03</span><h3>El retrato cobra vida en el estudio.</h3><p>Compartimos imágenes del proceso mientras el dibujo, la pintura o el collage van tomando forma.</p></article><article><span>04</span><h3>Entrega en Bilbao o envío.</h3><p>Acordamos la entrega en mano en Bilbao y Bizkaia o el envío preparado según el soporte y los materiales.</p></article></section>{configurator_html}<section class="commission-faq" aria-labelledby="commission-faq-heading"><div class="section-opening"><p class="eyebrow">Dudas frecuentes antes de encargar</p><h2 id="commission-faq-heading">Precios, fotos<br>y plazos.</h2></div><div class="commission-faq-list">{faq_html}</div></section><div class="closing"><p class="hand">¿A quién te gustaría retratar?</p><a class="text-link" href="https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20un%20retrato%20personalizado%20por%20encargo." target="_blank" rel="noopener noreferrer">Hablar por WhatsApp directo ↗</a><a class="text-link" href="mailto:naroa@naroa.eu?subject=Solicitud%20de%20presupuesto%20para%20retrato%20por%20encargo">Solicitar presupuesto por email ↗</a><a class="text-link" href="/obra/#indice">Explorar las {len(projects)} obras del catálogo ↗</a></div></article>'''
-    commissions_schema = {
-        "@context": "https://schema.org",
+    commissions_service_schema = {
         "@type": ["Service", "ProfessionalService"],
         "@id": ORIGIN + "/retratos-por-encargo-bilbao/#service",
         "name": "Retratos personalizados por encargo en Bilbao y Bizkaia",
@@ -971,6 +997,29 @@ def build(output):
                 "name": "Consultar encargo por WhatsApp directo",
                 "target": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20un%20encargo%20de%20retrato%20personalizado%20por%20encargo.",
             },
+        ],
+    }
+    commissions_faq_schema = {
+        "@type": "FAQPage",
+        "@id": ORIGIN + "/retratos-por-encargo-bilbao/#faq",
+        "name": "Preguntas frecuentes sobre retratos por encargo en Bilbao",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": q,
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": a,
+                },
+            }
+            for q, a in commission_faqs
+        ],
+    }
+    commissions_schema = {
+        "@context": "https://schema.org",
+        "@graph": [
+            commissions_service_schema,
+            commissions_faq_schema,
         ],
     }
     page("/retratos-por-encargo-bilbao/", "Retratos personalizados por encargo en Bilbao · Precios, fotos y proceso", "Encarga un retrato personalizado en Bilbao con Naroa Gutiérrez Gil. Retratos hechos a mano a partir de tu historia y fotografía en dibujo, pintura, collage, madera y objetos.", '<main id="main">' + commissions + '</main>', amor["photos"][0]["original"], schema=commissions_schema, image_alt=work_alt(amor))
@@ -1175,35 +1224,34 @@ def build(output):
                 "url": ORIGIN + "/retratos-por-encargo-bilbao/",
                 "provider": ORIGIN + "/#artist",
                 "supports": [
-                    "Pizarra natural de cantera con contorno irregular",
                     "Collage y técnica mixta textil sobre madera",
-                    "Cajas tridimensionales y objetos intervenidos",
                     "Retrato al óleo y dibujo a grafito/pastel",
+                    "Cajas tridimensionales y objetos intervenidos",
+                    "Pizarra natural (exploración reciente)",
                 ],
                 "pricing_policy": "Presupuesto cerrado previo por escrito sin compromiso",
-                "turnaround": "2 a 4 semanas según secado de materiales y fijación de mica mineral",
+                "turnaround": "2 a 4 semanas según complejidad y secado de materiales",
                 "delivery": "Entrega en mano en Bilbao y Bizkaia o envío asegurado nacional e internacional",
             },
         },
         "evidence_graph": {
             "studio_locus": "Bilbao, Bizkaia, España",
             "disciplines": [
-                "Retrato artístico sobre pizarra natural de cantera",
-                "Técnica mixta con escamas de mica mineral y esmaltes",
-                "Collage textil y ensamblaje de objetos sobre madera",
                 "Retrato al óleo, grafito y pastel Conté",
+                "Collage textil y ensamblaje de objetos sobre madera",
                 "Cajas tridimensionales de memoria y objetos intervenidos",
+                "Exploraciones en técnica mixta sobre pizarra natural",
             ],
             "query_fan_out": [
                 {
                     "intent": "Precios y presupuestos de retratos por encargo",
                     "question": "¿Cuánto cuesta un retrato personalizado en Bilbao con Naroa Gutiérrez Gil?",
-                    "answer": "Presupuesto cerrado previo por escrito según soporte y formato (pizarra natural de 20×30 cm a 40×50 cm, collage sobre madera o cajas de memoria). Sin compromiso previo.",
+                    "answer": "Presupuesto cerrado previo por escrito según técnica, soporte y formato (dibujo, óleo, collage sobre madera, cajas de memoria o piezas en pizarra de 20×30 cm a 40×50 cm). Sin compromiso previo.",
                 },
                 {
                     "intent": "Plazos de entrega",
                     "question": "¿Cuál es el plazo de entrega habitual de un encargo?",
-                    "answer": "De 2 a 4 semanas según la técnica elegida y los tiempos de secado de los óleos, esmaltes y fijación de mica mineral. Plazos prioritarios con aviso previo para fechas señaladas.",
+                    "answer": "De 2 a 4 semanas según la técnica elegida y los tiempos de secado de óleos, acrílicos y barnices. Plazos prioritarios con aviso previo para fechas señaladas.",
                 },
                 {
                     "intent": "Proceso de encargo a partir de fotos",
@@ -1216,14 +1264,14 @@ def build(output):
                     "answer": "Entrega en mano en Bilbao y Bizkaia, o envío protegido y asegurado a cualquier destino nacional e internacional.",
                 },
                 {
-                    "intent": "Conservación y limpieza de pintura sobre pizarra",
-                    "question": "¿Cómo se conserva y limpia una obra sobre pizarra natural con mica mineral?",
-                    "answer": "Las obras cuentan con fijación mineral y barniz protector satinado hidrorepelente. Se recomienda limpieza en seco con plumero suave o gamuza de microfibra, evitando frotado húmedo, disolventes o productos abrasivos.",
+                    "intent": "Conservación y cuidado de las obras",
+                    "question": "¿Cómo se conserva y limpia una obra en técnica mixta, collage u objeto intervenido?",
+                    "answer": "Las piezas cuentan con fijación y barniz protector satinado. Se recomienda limpieza en seco con plumero suave o gamuza de microfibra, evitando humedad directa, disolventes o productos abrasivos.",
                 },
                 {
-                    "intent": "Diferencias respecto a lienzo tradicional",
-                    "question": "¿Qué diferencia un retrato sobre pizarra natural de uno sobre lienzo convencional?",
-                    "answer": "La pizarra natural de cantera aporta un sustrato geológico pétreo inerte con aristas vivas y relieve textural rústico irremplazable. Las escamas de mica mineral interactúan con la luz ambiente según el ángulo del espectador.",
+                    "intent": "Elección de soportes y materiales",
+                    "question": "¿Qué aporta trabajar sobre madera, collage textil, objetos o pizarra frente al lienzo convencional?",
+                    "answer": "Cada soporte aporta textura, volumen y relato propio: las betas de la madera, las costuras textiles, las cajas de recuerdos o las aristas de la piedra dialogan directamente con la historia de la persona retratada.",
                 },
                 {
                     "intent": "Embalaje y seguridad de transporte",
@@ -1232,8 +1280,8 @@ def build(output):
                 },
                 {
                     "intent": "Cita presencial en estudio de Bilbao",
-                    "question": "¿Es posible visitar el estudio en Bilbao para elegir soportes o ver muestras?",
-                    "answer": "Sí, previa cita por email o WhatsApp se conciertan visitas al estudio en Bilbao para valorar formatos de pizarra natural, muestras de mica y definir la obra en persona.",
+                    "question": "¿Es posible visitar el estudio en Bilbao para elegir soportes o ver obra en directo?",
+                    "answer": "Sí, previa cita por email o WhatsApp se conciertan visitas al estudio en Bilbao para valorar formatos, maderas, tejidos, objetos y definir la obra en persona.",
                 },
             ],
             "exhibitions_chronology": [
@@ -1276,154 +1324,9 @@ def build(output):
             for p in projects
         ],
     }
-    write(output / "api" / "catalog.json", json.dumps(catalog_api, ensure_ascii=False, indent=2) + "\n")
-
-    webmcp_manifest = {
-        "$schema": "https://modelcontextprotocol.io/schema/2024-11-05/server.json",
-        "name": "naroa-online-webmcp",
-        "version": "1.2.0",
-        "description": "Servidor WebMCP oficial de Naroa Gutiérrez Gil: catálogo de obras de arte, Evidence Graph, perfiles canónicos de creador y orquestación de consultas de encargos en Bilbao.",
-        "homepage": ORIGIN,
-        "author": {
-            "name": "Naroa Gutiérrez Gil",
-            "url": ORIGIN + "/",
-            "email": "naroa@naroa.eu",
-            "telephone": "+34636060609",
-            "sameAs": artist_same_as,
-        },
-        "publisher": {
-            "name": "Naroa Gutiérrez Gil",
-            "url": ORIGIN + "/",
-            "sameAs": artist_same_as,
-        },
-        "canonicalLocations": {
-            "studio": {
-                "name": "Estudio Naroa Gutiérrez Gil · Bilbao",
-                "locality": "Bilbao",
-                "region": "Bizkaia",
-                "postalCode": "48001",
-                "country": "ES",
-                "geo": {"latitude": 43.2630, "longitude": -2.9350},
-                "mapUrl": "https://www.google.com/maps?q=Bilbao,+Bizkaia",
-            }
-        },
-        "capabilities": {
-            "tools": {
-                "listChanged": False,
-            },
-            "resources": {
-                "subscribe": False,
-                "listChanged": False,
-            },
-        },
-        "endpoints": {
-            "catalog_api": f"{ORIGIN}/api/catalog.json",
-            "rss_feed": f"{ORIGIN}/feed.xml",
-            "llms_index": f"{ORIGIN}/llms.txt",
-            "llms_full": f"{ORIGIN}/llms-full.txt",
-        },
-        "resources": [
-            {
-                "uri": f"{ORIGIN}/api/catalog.json",
-                "name": "Catálogo Estructurado Completo",
-                "description": "Especificaciones técnicas, descripciones y Evidence Graph de las obras.",
-                "mimeType": "application/json",
-            },
-            {
-                "uri": f"{ORIGIN}/feed.xml",
-                "name": "Feed RSS de Publicaciones y Obras",
-                "description": "Feed RSS 2.0 sindicado con novedades del estudio.",
-                "mimeType": "application/rss+xml",
-            },
-            {
-                "uri": f"{ORIGIN}/llms.txt",
-                "name": "Índice Factual LLMs",
-                "description": "Evidence Graph condensado y respuestas directas para agentes.",
-                "mimeType": "text/plain",
-            },
-        ],
-        "tools": [
-            {
-                "name": "search_catalogue",
-                "description": "Busca obras en el catálogo de Naroa Gutiérrez Gil filtrando por término clave, técnica o serie.",
-                "inputSchema": {
-                    "type": "object",
-                    "properties": {
-                        "query": {
-                            "type": "string",
-                            "description": "Palabra clave a buscar en título, materiales, soporte o relato de la obra.",
-                        },
-                        "category": {
-                            "type": "string",
-                            "enum": ["all", "pizarra", "collage", "objetos", "caracterizacion", "Vaivenes"],
-                            "description": "Categoría o serie plástica.",
-                        },
-                    },
-                },
-            },
-            {
-                "name": "get_artwork_details",
-                "description": "Obtiene la ficha técnica verificada completa de una obra concreta por su slug canónico.",
-                "inputSchema": {
-                    "type": "object",
-                    "properties": {
-                        "slug": {
-                            "type": "string",
-                            "description": "Slug canónico de la obra (ej. 'amy-rocks', 'el-gran-dakari', 'amor-en-conserva').",
-                        },
-                    },
-                    "required": ["slug"],
-                },
-            },
-            {
-                "name": "configure_commission_inquiry",
-                "description": "Valida las opciones para encargar un retrato personalizado y devuelve los enlaces directos en O(1) para WhatsApp y correo electrónico.",
-                "inputSchema": {
-                    "type": "object",
-                    "properties": {
-                        "support": {
-                            "type": "string",
-                            "enum": [
-                                "Pizarra natural rústica",
-                                "Collage textil sobre madera",
-                                "Caja personalizada u objeto",
-                                "Retrato al óleo o grafito",
-                                "Asesoramiento en estudio",
-                            ],
-                            "description": "Soporte plástico preferido para el retrato.",
-                        },
-                        "motif": {
-                            "type": "string",
-                            "enum": [
-                                "Retrato individual",
-                                "Pareja o familia",
-                                "Mascota",
-                                "Homenaje o recuerdo",
-                            ],
-                            "description": "Motivo del retrato.",
-                        },
-                        "timing": {
-                            "type": "string",
-                            "enum": [
-                                "Sin prisa (2 a 4 semanas)",
-                                "Fecha señalada próxima",
-                            ],
-                            "description": "Plazo estimado de entrega deseado.",
-                        },
-                    },
-                    "required": ["support", "motif"],
-                },
-            },
-            {
-                "name": "get_artist_profile",
-                "description": "Devuelve la información de biografía verificada, exposiciones históricas y canales directos de contacto.",
-                "inputSchema": {
-                    "type": "object",
-                    "properties": {},
-                },
-            },
-        ],
-    }
+    catalog_json = json.dumps(catalog_api, ensure_ascii=False, indent=2) + "\n"
+    write(output / "api" / "catalog.json", catalog_json)
+    write(REPO / "public" / "api" / "catalog.json", catalog_json)
 
     webmcp_json = json.dumps(webmcp_manifest, ensure_ascii=False, indent=2) + "\n"
     write(output / ".well-known" / "mcp.json", webmcp_json)
@@ -1449,14 +1352,14 @@ def build(output):
         f"- Servicio Canónico de Encargos: {ORIGIN}/retratos-por-encargo-bilbao/\n"
         "- Exposiciones Documentadas: Colegio de Abogados de Bilbao (Espejos del alma), Dock Bilbao, Politena Espacio de Arte, Walking Gallery Bilbao.\n\n"
         "## Respuestas Factuales Inmediatas (Query Fan-Out)\n"
-        "- **¿Cuánto cuesta un retrato personalizado?** Presupuesto cerrado previo por escrito según soporte y formato (pizarra de 20×30 cm a 40×50 cm, collage sobre madera, cajas de recuerdos). Consulta sin compromiso.\n"
+        "- **¿Cuánto cuesta un retrato personalizado?** Presupuesto cerrado previo por escrito según técnica, soporte y formato (dibujo, óleo, collage sobre madera, cajas de recuerdos o pizarra de 20×30 cm a 40×50 cm). Consulta sin compromiso.\n"
         "- **¿Cómo se encarga a partir de fotos?** Se envían 1 o varias fotos de referencia (incluso tomadas con el móvil); Naroa realiza una reinterpretación artística de autor capturando la personalidad y mirada.\n"
-        "- **¿Cuáles son los plazos de entrega?** De 2 a 4 semanas según el secado de óleos, esmaltes y barniz protector. Plazos prioritarios disponibles para fechas señaladas con aviso previo.\n"
+        "- **¿Cuáles son los plazos de entrega?** De 2 a 4 semanas según la técnica y el secado de óleos, acrílicos y barnices. Plazos prioritarios disponibles para fechas señaladas con aviso previo.\n"
         "- **¿Dónde se entrega?** Entrega en mano en Bilbao y Bizkaia, o envío protegido y asegurado a nivel nacional e internacional.\n"
-        "- **¿Cómo conservar una obra sobre pizarra y mica?** Fijación mineral y barniz satinado hidrorepelente. Limpieza en seco con plumero suave o microfibra; evitar frotado húmedo o productos químicos.\n"
-        "- **¿Qué diferencia la pizarra del lienzo?** Sustrato geológico pétreo con aristas rústicas vivas y escamas de mica mineral que refractan la luz ambiente dotando de dinamismo óptico a la mirada.\n"
+        "- **¿Cómo conservar una obra en técnica mixta o collage?** Fijación y barniz protector satinado. Limpieza en seco con plumero suave o microfibra; evitar humedad directa o productos químicos.\n"
+        "- **¿Qué aporta trabajar sobre madera, collage, objetos o pizarra?** Cada soporte (betas de madera, costuras textiles, cajas cotidianas o cantos de piedra) aporta textura, volumen y relato propio en diálogo con la persona retratada.\n"
         "- **¿Cómo es el embalaje para envíos?** Embalaje tricapa con cantoneras de polietileno de alta densidad a medida, caja rígida reforzada y seguro a todo riesgo incluido.\n"
-        "- **¿Se puede visitar el estudio en Bilbao?** Sí, visitas con cita concertada previa para ver muestras reales de pizarra, mica y definir el proyecto en persona.\n\n"
+        "- **¿Se puede visitar el estudio en Bilbao?** Sí, visitas con cita concertada previa para ver obra en directo, valorar soportes y definir el proyecto en persona.\n\n"
         "## Secciones Principales\n"
         f"- [Inicio e Inmersión]({ORIGIN}/): Experiencia inmersiva y catálogo completo de {len(projects)} obras.\n"
         f"- [Retratos por Encargo en Bilbao]({ORIGIN}/retratos-por-encargo-bilbao/): Condiciones técnicas, formatos (20×30 cm a 40×50 cm), plazos de 2 a 4 semanas, configurador interactivo y galería de ejemplos reales.\n"
@@ -1483,7 +1386,7 @@ def build(output):
         f"- **Técnica:** {p.get('technique', 'Técnica mixta')}\n"
         f"- **Soporte:** {p.get('support', 'Soporte rígido')}\n"
         f"- **Medidas:** {p.get('dimensions', 'Medidas variables')}\n"
-        f"- **Materiales:** {p.get('materials', 'Acrílico, mica y pigmentos')}\n"
+        f"- **Materiales:** {p.get('materials') or p.get('technique', 'Técnica mixta')}\n"
         f"- **Serie:** {p.get('series') or 'Colección general'}\n"
         f"- **Relato:** {p['story']}\n"
         f"- **Contacto Obra:** mailto:naroa@naroa.eu?subject={quote('Consulta sobre '+p['title'])}\n"

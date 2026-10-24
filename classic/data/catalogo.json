@@ -2363,6 +2363,350 @@
           "La pensadora: procesos cognitivos y dominio del pensamiento."
         ]
       }
+    },
+    {
+      "slug": "baroque-farrokh",
+      "title": "Baroque Farrokh",
+      "category": "collage",
+      "technique": "Lápiz de color sobre fondo floral, técnica mixta y collage",
+      "support": "Lámina sobre fondo floral en marco intervenido",
+      "story": "Farrokh —antes de ser Freddie— posa pensativo sobre un azul de flores, la chaqueta estallando en color y la mano sosteniendo la barbilla. El marco se vuelve altar: cenefa dorada de coronas, recortes y ornamentos como quien adelanta una coronación.",
+      "images": [
+        {
+          "src": "/images/catalogo/baroque-farrokh-4k.webp",
+          "width": 3810,
+          "height": 3090,
+          "caption": "Fotografía master 4K del retrato de Freddie Mercury en clave barroca contemporánea.",
+          "source": null,
+          "sha256": "52f8182de160a40ac84f44d7aecf627556fd982c32a17d0579f3e5f00f263f47"
+        },
+        {
+          "src": "/images/artworks/baroque-farrokh-mjg4ClA9.webp",
+          "width": 1024,
+          "height": 830,
+          "caption": "Detalle del marco intervenido y collage floral.",
+          "source": null,
+          "sha256": "88d967e7e56eafad3b0d8a1ef96670202ce7e63ce9e7a45ba782f1191b36d4f2"
+        }
+      ],
+      "dimensions": "45 × 36 cm",
+      "series": "Tributos",
+      "year": 2024,
+      "credit": null,
+      "selected": true,
+      "kind": "obra",
+      "source": null,
+      "editorial": {
+        "image_order": [
+          0,
+          1
+        ],
+        "captions": [
+          "La pieza completa: retrato barroco y cenefa de coronas.",
+          "Detalle de la textura y el collage sobre el marco."
+        ]
+      }
+    },
+    {
+      "slug": "el-gran-dakari",
+      "title": "El Gran Dakari",
+      "category": "pizarra",
+      "technique": "Acrílico y pigmentos minerales",
+      "support": "Plato de pizarra natural de cantera",
+      "story": "Fuerza animal hiperrealista inmortalizada sobre la dureza del soporte de pizarra. La mirada felina emerge de la roca con veladuras y texturas que aprovechan el relieve geológico de la pieza.",
+      "images": [
+        {
+          "src": "/images/catalogo/el-gran-dakari-4k.webp",
+          "width": 2876,
+          "height": 3840,
+          "caption": "Fotografía master 4K de El Gran Dakari sobre plato de pizarra natural.",
+          "source": null,
+          "sha256": "ca0fc32a256f7f07b3b3dc371460470489183bdeec96e872f11bd880f66fe73a"
+        },
+        {
+          "src": "/images/artworks/el-gran-dakari-C1tAWAhR.webp",
+          "width": 1498,
+          "height": 2000,
+          "caption": "Detalle de textura y relieve sobre la roca.",
+          "source": null,
+          "sha256": "0a4a77967d4278f5b880719f03019b8464018a6e85a9c70604997589260c34a1"
+        }
+      ],
+      "dimensions": "32 × 24 × 0,8 cm",
+      "series": "DiviNos",
+      "year": 2024,
+      "credit": null,
+      "selected": true,
+      "kind": "obra",
+      "source": null,
+      "editorial": {
+        "image_order": [
+          0,
+          1
+        ],
+        "captions": [
+          "El Gran Dakari completo sobre la superficie pétrea.",
+          "El canto irregular y la profundidad de la mirada felina."
+        ]
+      }
+    },
+    {
+      "slug": "audrey-hepburn",
+      "title": "Audrey Hepburn",
+      "category": "collage",
+      "technique": "Lápiz, acrílico, collage textil y mica mineral",
+      "support": "Arpillera sobre tabla con marco intervenido",
+      "story": "La delicadeza atemporal de Audrey contrapuesta con el carácter de la mica mineral y trazos pop. El brillo sutil de los minerales acompaña la elegancia cinematográfica de su mirada.",
+      "images": [
+        {
+          "src": "/images/catalogo/audrey-hepburn-4k.webp",
+          "width": 3840,
+          "height": 2872,
+          "caption": "Fotografía master 4K del retrato de Audrey Hepburn con mica mineral sobre arpillera.",
+          "source": null,
+          "sha256": "8ff642c0473c781394fb0ab5f7fc92b7d565a35f965a3d755cf85932959a47c3"
+        },
+        {
+          "src": "/images/artworks/audrey-hepburn-DbIBTtIp.webp",
+          "width": 768,
+          "height": 1024,
+          "caption": "Encuadre frontal de la pieza.",
+          "source": null,
+          "sha256": "ee00491f2d251e1edb72bfd9421809ddae9c27e6917c977126376238130c8e81"
+        }
+      ],
+      "dimensions": "40 × 30 cm",
+      "series": "Obras Individuales",
+      "year": 2023,
+      "credit": null,
+      "selected": true,
+      "kind": "obra",
+      "source": null,
+      "editorial": {
+        "image_order": [
+          0,
+          1
+        ],
+        "captions": [
+          "Retrato de Audrey Hepburn con incrustaciones de mica.",
+          "Detalle de la arpillera y la vibración textil."
+        ]
+      }
+    },
+    {
+      "slug": "geisha",
+      "title": "Geisha",
+      "category": "pizarra",
+      "technique": "Óleo, acrílico y pan de oro",
+      "support": "Plato de pizarra natural",
+      "story": "Tradición y modernidad en un retrato hipnótico con pigmentos tradicionales y toques dorados. El recogido ceremonial y la expresión serena dialogan con la materia oscura de la piedra.",
+      "images": [
+        {
+          "src": "/images/catalogo/geisha-4k.webp",
+          "width": 2660,
+          "height": 3200,
+          "caption": "Fotografía master 4K de Geisha en óleo y pan de oro sobre pizarra.",
+          "source": null,
+          "sha256": "d3cd2f5d76f3d94fa376c57dc7888be3aa9a794c0ade25f53bfb1be4e585b1ed"
+        },
+        {
+          "src": "/images/artworks/geisha-MfRtKWdu.webp",
+          "width": 1330,
+          "height": 1600,
+          "caption": "Vista completa del soporte de pizarra.",
+          "source": null,
+          "sha256": "85f771524123423f5b166436aea989c3f8fd6b866999f70ea36d62c893137e25"
+        }
+      ],
+      "dimensions": "30 × 25 × 0,6 cm",
+      "series": "DiviNos",
+      "year": 2023,
+      "credit": null,
+      "selected": true,
+      "kind": "obra",
+      "source": null,
+      "editorial": {
+        "image_order": [
+          0,
+          1
+        ],
+        "captions": [
+          "La pieza completa: serenidad oriental y pan de oro.",
+          "Detalle del tocado y textura mineral."
+        ]
+      }
+    },
+    {
+      "slug": "lagrimas-de-oro",
+      "title": "Lágrimas de Oro",
+      "category": "pizarra",
+      "technique": "Pan de oro de 24k, acrílico y mica mineral",
+      "support": "Plato de pizarra natural con canto irregular",
+      "story": "Detalle expresionista de mirada sobrecogedora con lágrimas de pan de oro genuino y mica mineral. La luz reflectante del oro resbala sobre la textura pétrea y oscura del soporte.",
+      "images": [
+        {
+          "src": "/images/catalogo/lagrimas-de-oro-4k.webp",
+          "width": 2880,
+          "height": 3840,
+          "caption": "Fotografía master 4K de Lágrimas de Oro con pan de oro de 24k sobre pizarra.",
+          "source": null,
+          "sha256": "f585c8dca309134f6037a3564f3eb00eb13b21ed03e5fe4f1adaeda11cd34305"
+        },
+        {
+          "src": "/images/catalogo/lagrimas-de-oro-01.webp",
+          "width": 1195,
+          "height": 1600,
+          "caption": "Detalle de los destellos dorados y relieve de la piedra.",
+          "source": null,
+          "sha256": "61fa5125f3c3c05be4a894d920c52b73b64493df89425ab94643ab6a3902edda"
+        }
+      ],
+      "dimensions": "28 × 21 × 0,5 cm",
+      "series": "DiviNos",
+      "year": 2023,
+      "credit": null,
+      "selected": true,
+      "kind": "obra",
+      "source": null,
+      "editorial": {
+        "image_order": [
+          0,
+          1
+        ],
+        "captions": [
+          "Lágrimas de Oro: la mirada intensa sobre fondo oscuro.",
+          "El brillo de las láminas de pan de oro de 24k."
+        ]
+      }
+    },
+    {
+      "slug": "love",
+      "title": "Love",
+      "category": "collage",
+      "technique": "Collage textil, acrílico y tipografía intervenida",
+      "support": "Madera entelada",
+      "story": "Composición tipográfica y figurativa sobre el afecto contemporáneo. Capas de papel, tela y acrílico estructuran un mensaje directo con la frescura e inmediatez del arte urbano.",
+      "images": [
+        {
+          "src": "/images/catalogo/love-01.webp",
+          "width": 1200,
+          "height": 1600,
+          "caption": "Composición completa de Love en collage textil y acrílico.",
+          "source": null,
+          "sha256": "3eb4ad82f6c6f85829e396f791afd390f69a296428a0c93c5db0cda0705bf778"
+        },
+        {
+          "src": "/images/artworks/love-DA7L_L5F.webp",
+          "width": 1200,
+          "height": 1600,
+          "caption": "Detalle de texturas y capas tipográficas.",
+          "source": null,
+          "sha256": "3eb4ad82f6c6f85829e396f791afd390f69a296428a0c93c5db0cda0705bf778"
+        }
+      ],
+      "dimensions": "30 × 22 cm",
+      "series": "Obras Individuales",
+      "year": 2023,
+      "credit": null,
+      "selected": true,
+      "kind": "obra",
+      "source": null,
+      "editorial": {
+        "image_order": [
+          0,
+          1
+        ],
+        "captions": [
+          "Love: collage pop y capas tipográficas.",
+          "Detalle de la textura textil sobre madera."
+        ]
+      }
+    },
+    {
+      "slug": "the-golden-couple",
+      "title": "The Golden Couple",
+      "category": "pizarra",
+      "technique": "Acrílico, rotuladores y pan de oro",
+      "support": "Pizarra natural de cantera",
+      "story": "Retrato doble con acentos de pan de oro sobre pizarra natural. El abrazo y la complicidad de la pareja quedan esculpidos entre el trazo gráfico contemporáneo y la nobleza mineral.",
+      "images": [
+        {
+          "src": "/images/catalogo/the-golden-couple-4k.webp",
+          "width": 3840,
+          "height": 2872,
+          "caption": "Fotografía master 4K de The Golden Couple sobre pizarra natural con pan de oro.",
+          "source": null,
+          "sha256": "737e48eb73d62800f2c2850284363af823e6b5bd7b83de5f64d3194231e3485b"
+        },
+        {
+          "src": "/images/artworks/the-golden-couple-C9C95N75.webp",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle de los trazos dorados y textura.",
+          "source": null,
+          "sha256": "1b1a3d2b2161424a7bd2133695f5ac109b6021c3db13b2a87b2a7e407792f7a5"
+        }
+      ],
+      "dimensions": "35 × 46 × 0,7 cm",
+      "series": "DiviNos",
+      "year": 2024,
+      "credit": null,
+      "selected": true,
+      "kind": "obra",
+      "source": null,
+      "editorial": {
+        "image_order": [
+          0,
+          1
+        ],
+        "captions": [
+          "The Golden Couple: retrato doble sobre soporte de cantera.",
+          "Detalle de las texturas de pan de oro y rotulador."
+        ]
+      }
+    },
+    {
+      "slug": "pink-and-sparkles",
+      "title": "Pink and Sparkles",
+      "category": "objetos",
+      "technique": "Acrílico neón, mica mineral pura y collage",
+      "support": "Objeto intervenido con marco volumétrico",
+      "story": "Vibración rosa pop con destellos de mica mineral pura. Una pieza que desafía los límites del soporte convencional jugando con el volumen, el brillo y la saturación cromática.",
+      "images": [
+        {
+          "src": "/images/catalogo/pink-and-sparkles-4k.webp",
+          "width": 3200,
+          "height": 3200,
+          "caption": "Fotografía master 4K de Pink and Sparkles con acrílico neón y mica mineral.",
+          "source": null,
+          "sha256": "69ad796cf0c6d9779786971d7cce814d982734373ea4d0c1a398e8e7593c3fc9"
+        },
+        {
+          "src": "/images/artworks/pink-and-sparkles-c4K6RUzC.webp",
+          "width": 1600,
+          "height": 1600,
+          "caption": "Detalle del relieve volumétrico y destellos.",
+          "source": null,
+          "sha256": "a75751066d986d6bdcdbc759e2acb1467a38667716aa41fb05413be93d5a06f5"
+        }
+      ],
+      "dimensions": "25 × 25 × 3 cm",
+      "series": "Facefood",
+      "year": 2024,
+      "credit": null,
+      "selected": true,
+      "kind": "obra",
+      "source": null,
+      "editorial": {
+        "image_order": [
+          0,
+          1
+        ],
+        "captions": [
+          "Pink and Sparkles: destellos minerales e intensidad cromática.",
+          "El volumen y los reflejos de la mica mineral."
+        ]
+      }
     }
   ]
 }

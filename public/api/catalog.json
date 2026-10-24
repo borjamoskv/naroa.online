@@ -1,0 +1,2743 @@
+{
+  "version": "1.2",
+  "entity_id": "https://naroagutierrezgil.com/#artist",
+  "studio_id": "https://naroagutierrezgil.com/#studio",
+  "artist": {
+    "name": "Naroa Gutiérrez Gil",
+    "role": "Artista plástica y retratista contemporánea",
+    "location": "Bilbao, Bizkaia, País Vasco, España",
+    "coordinates": {
+      "latitude": 43.263,
+      "longitude": -2.935
+    },
+    "url": "https://naroagutierrezgil.com/",
+    "sameAs": [
+      "https://www.facebook.com/naroa.artista.plastica",
+      "https://instagram.com/naroa_art/",
+      "https://naroagutierrez.wordpress.com/",
+      "https://www.deia.eus/bizkaia/vida-social/2026/06/05/bwall-collective-inaugura-exposicion-ocho-11159371.html",
+      "https://gara.naiz.eus/paperezkoa/20100305/186538/eu/Agenda",
+      "https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-476343.html",
+      "https://www.youtube.com/@naroagutierrezgil"
+    ],
+    "canonical_locations": {
+      "studio": {
+        "@id": "https://naroagutierrezgil.com/#studio",
+        "name": "Estudio Naroa Gutiérrez Gil · Bilbao",
+        "address_locality": "Bilbao",
+        "address_region": "Bizkaia",
+        "postal_code": "48001",
+        "country": "ES",
+        "coordinates": {
+          "latitude": 43.263,
+          "longitude": -2.935
+        },
+        "hasMap": "https://www.google.com/maps?q=Bilbao,+Bizkaia"
+      }
+    },
+    "contact": {
+      "email": "naroa@naroa.eu",
+      "whatsapp": "+34636060609",
+      "inquiry_form": "https://naroagutierrezgil.com/contacto/"
+    },
+    "commission_service": {
+      "@id": "https://naroagutierrezgil.com/retratos-por-encargo-bilbao/#service",
+      "url": "https://naroagutierrezgil.com/retratos-por-encargo-bilbao/",
+      "provider": "https://naroagutierrezgil.com/#artist",
+      "supports": [
+        "Collage y técnica mixta textil sobre madera",
+        "Retrato al óleo y dibujo a grafito/pastel",
+        "Cajas tridimensionales y objetos intervenidos",
+        "Pizarra natural (exploración reciente)"
+      ],
+      "pricing_policy": "Presupuesto cerrado previo por escrito sin compromiso",
+      "turnaround": "2 a 4 semanas según complejidad y secado de materiales",
+      "delivery": "Entrega en mano en Bilbao y Bizkaia o envío asegurado nacional e internacional"
+    }
+  },
+  "evidence_graph": {
+    "studio_locus": "Bilbao, Bizkaia, España",
+    "disciplines": [
+      "Retrato al óleo, grafito y pastel Conté",
+      "Collage textil y ensamblaje de objetos sobre madera",
+      "Cajas tridimensionales de memoria y objetos intervenidos",
+      "Exploraciones en técnica mixta sobre pizarra natural"
+    ],
+    "query_fan_out": [
+      {
+        "intent": "Precios y presupuestos de retratos por encargo",
+        "question": "¿Cuánto cuesta un retrato personalizado en Bilbao con Naroa Gutiérrez Gil?",
+        "answer": "Presupuesto cerrado previo por escrito según técnica, soporte y formato (dibujo, óleo, collage sobre madera, cajas de memoria o piezas en pizarra de 20×30 cm a 40×50 cm). Sin compromiso previo."
+      },
+      {
+        "intent": "Plazos de entrega",
+        "question": "¿Cuál es el plazo de entrega habitual de un encargo?",
+        "answer": "De 2 a 4 semanas según la técnica elegida y los tiempos de secado de óleos, acrílicos y barnices. Plazos prioritarios con aviso previo para fechas señaladas."
+      },
+      {
+        "intent": "Proceso de encargo a partir de fotos",
+        "question": "¿Cómo se encarga un retrato personalizado a partir de fotografías?",
+        "answer": "Se envían fotografías de referencia por WhatsApp o email comentando el carácter o anécdotas; Naroa realiza una reinterpretación artística de autor en el soporte acordado."
+      },
+      {
+        "intent": "Entrega local y envíos",
+        "question": "¿Dónde se entrega la obra?",
+        "answer": "Entrega en mano en Bilbao y Bizkaia, o envío protegido y asegurado a cualquier destino nacional e internacional."
+      },
+      {
+        "intent": "Conservación y cuidado de las obras",
+        "question": "¿Cómo se conserva y limpia una obra en técnica mixta, collage u objeto intervenido?",
+        "answer": "Las piezas cuentan con fijación y barniz protector satinado. Se recomienda limpieza en seco con plumero suave o gamuza de microfibra, evitando humedad directa, disolventes o productos abrasivos."
+      },
+      {
+        "intent": "Elección de soportes y materiales",
+        "question": "¿Qué aporta trabajar sobre madera, collage textil, objetos o pizarra frente al lienzo convencional?",
+        "answer": "Cada soporte aporta textura, volumen y relato propio: las betas de la madera, las costuras textiles, las cajas de recuerdos o las aristas de la piedra dialogan directamente con la historia de la persona retratada."
+      },
+      {
+        "intent": "Embalaje y seguridad de transporte",
+        "question": "¿Cómo se garantiza la seguridad en los envíos de obras con volumen o relieve?",
+        "answer": "Cada obra se embala con protección tricapa: lámina de barrera antiadherente, cantoneras de espuma de polietileno de alta densidad a medida y caja rígida reforzada con precinto de seguridad y seguro a todo riesgo."
+      },
+      {
+        "intent": "Cita presencial en estudio de Bilbao",
+        "question": "¿Es posible visitar el estudio en Bilbao para elegir soportes o ver obra en directo?",
+        "answer": "Sí, previa cita por email o WhatsApp se conciertan visitas al estudio en Bilbao para valorar formatos, maderas, tejidos, objetos y definir la obra en persona."
+      }
+    ],
+    "exhibitions_chronology": [
+      {
+        "year": 2026,
+        "title": "BWALL Collective",
+        "venue": "Colegio de Abogados de Bilbao",
+        "press": "DEIA"
+      },
+      {
+        "year": 2018,
+        "title": "Dock Bilbao Showcase",
+        "venue": "Dock Bilbao"
+      },
+      {
+        "year": 2014,
+        "title": "Politena Encuentros de Arte",
+        "venue": "Politena Espacio de Arte, Bilbao"
+      },
+      {
+        "year": 2010,
+        "title": "Espejos del alma",
+        "venue": "Colegio de Abogados de Bilbao",
+        "press": "GARA, El Correo"
+      },
+      {
+        "year": "2010+",
+        "title": "Walking Gallery Bilbao",
+        "venue": "Espacios públicos y galerías abiertas, Bilbao"
+      }
+    ]
+  },
+  "artworks_count": 64,
+  "reviewed": "2026-10-24",
+  "artworks": [
+    {
+      "slug": "marilyn-rocks",
+      "title": "Marilyn Rocks",
+      "category": "pizarra",
+      "series": "DiviNos",
+      "technique": "Técnica mixta con escamas de mica y esmalte con brillantina",
+      "support": "Plato de pizarra natural",
+      "dimensions": "18 × 10 × 0,6 cm",
+      "materials": null,
+      "year": null,
+      "story": "Marilyn Monroe sobre pizarra, con detalles dorados y escamas de mica encoladas. La luz revela la textura de los materiales añadidos.",
+      "url": "https://naroagutierrezgil.com/obra/marilyn-rocks/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/marilyn-rocks-original-03-2048-0b7e2cff277e-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/marilyn-rocks-hq-01.webp",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Pieza completa sobre pizarra",
+          "sha256": "203987738ce599a295eac22831a77aff873a81d44b3fbcc0856cedb42871e588"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/marilyn-rocks-hq-02.webp",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Detalle lateral",
+          "sha256": "ac74525705a3dc22c3ee3a202c496548b94b937c4a6c7464c4e88dac78ad49dc"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/marilyn-rocks-original-03-2048.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Detalle del retrato",
+          "sha256": "0b7e2cff277e5c7933464a833546389c23f276cd9cfeac2c6233ada612f9e511"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/marilyn-rocks-4k.webp",
+          "width": 2994,
+          "height": 3840,
+          "caption": "Fotografía master 4K de Marilyn Monroe con escamas de mica y brillantina sobre pizarra.",
+          "sha256": "c539cc8eb9ee060139a7222331fe0fce460fea5c083247738ae394e1e2c11c4e"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Marilyn%20Rocks",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Marilyn%20Rocks"
+    },
+    {
+      "slug": "rara-avis",
+      "title": "Rara Avis",
+      "category": "collage",
+      "series": null,
+      "technique": "Pastel Conté y collage",
+      "support": "Papel y ensamblaje de materiales",
+      "dimensions": "50 × 35 cm",
+      "materials": null,
+      "year": null,
+      "story": "Un autorretrato frente al espejo que se expande en marcos, reflejos, cintas y una pluma de pavo real. El dibujo se convierte en una composición de capas, creada en el taller de Ana Rosa Arroyo en Basauri.",
+      "url": "https://naroagutierrezgil.com/obra/rara-avis/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/rara-avis-original-4080-5933c4a68a81-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/rara-avis-original-4080.jpg",
+          "width": 4080,
+          "height": 3072,
+          "caption": "Ensamblaje completo: autorretrato, marcos y collage",
+          "sha256": "5933c4a68a815973e918dee4bf0246a6376c9d334acdf93cf6ecbce37f106484"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/rara-avis-original-02-2048.jpg",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Dibujo a pastel, antes del ensamblaje",
+          "sha256": "d62edb4bdfc73f85b420452f799a6336448b40cefbaadd082810251880e7141b"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/rara-avis-original-03-2048.jpg",
+          "width": 1542,
+          "height": 2048,
+          "caption": "Detalle del marco y los reflejos",
+          "sha256": "bdb3606cf3a5b057a926fba4d5628dbfae9c534a7965add0d7e8c271967d295f"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Rara%20Avis",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Rara%20Avis"
+    },
+    {
+      "slug": "amor-en-conserva",
+      "title": "Amor en Conserva",
+      "category": "objetos",
+      "series": null,
+      "technique": "Fotocollage por capas y ensamblaje",
+      "support": "Lata intervenida",
+      "dimensions": null,
+      "materials": null,
+      "year": null,
+      "story": "El retrato de Mary y Mala se construye con varias impresiones recortadas y montadas por capas. Flores, alambre y elementos de un collar acompañan la escena.",
+      "url": "https://naroagutierrezgil.com/obra/amor-en-conserva/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/amor-en-conserva-hq-01-fc52b02053bc-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/amor-en-conserva-hq-01.jpg",
+          "width": 2048,
+          "height": 1532,
+          "caption": "Conjunto completo",
+          "sha256": "fc52b02053bcb2781c8a3aa76042982fece154bb5e9eb0d52a9765282d6d06d8"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/amor-en-conserva-hq-02.jpg",
+          "width": 1532,
+          "height": 2048,
+          "caption": "Vista lateral y volumen",
+          "sha256": "3fddb7f16757a64c15d861d7c912946dee23d77f81f168cfad9b487ed6686ab8"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/amor-en-conserva-hq-03.jpg",
+          "width": 2048,
+          "height": 1532,
+          "caption": "Detalle de las capas",
+          "sha256": "6ae2c81999563d6b0a250c53ad01e44d9a880c99c4ecfc9b34ad6608ecde20f2"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/amor-en-conserva-4k.webp",
+          "width": 3840,
+          "height": 2872,
+          "caption": "Fotografía master 4K de Amor en Conserva: relieve tridimensional en lata intervenida.",
+          "sha256": "09efc6b14e7c1659d609e8374c3264c171fcb2a304ed5533a6342ca76d46c03c"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Amor%20en%20Conserva",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Amor%20en%20Conserva"
+    },
+    {
+      "slug": "amy-rocks",
+      "title": "Amy Rocks",
+      "category": "pizarra",
+      "series": "DiviNos",
+      "technique": "Acrílico, lápices y rotuladores",
+      "support": "Plato de pizarra natural",
+      "dimensions": "18 × 10 × 0,6 cm",
+      "materials": null,
+      "year": null,
+      "story": "Amy Winehouse en blanco, negro y grises, con acentos rojos y dorados. La forma y el canto de la pizarra participan en el retrato.",
+      "url": "https://naroagutierrezgil.com/obra/amy-rocks/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/amy-rocks-hq-01-bfde5d2cb730-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/amy-rocks-hq-01.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Vista completa",
+          "sha256": "bfde5d2cb7307054f1d84df907bdc70879e4cbf03993b8f943f3fcaa919b9e9b"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/amy-rocks-hq-02.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Vista oblicua",
+          "sha256": "1ac77c840ef4ded5818dbf70aff740b43c87e5d28ac38341e305ed7a21629aa2"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/amy-rocks-hq-03.jpg",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Detalle del soporte",
+          "sha256": "29a00186ab77d4603ab8774241c9867b7d28276ec80184350fc82b712647c7cc"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/amy-rocks-4k.webp",
+          "width": 3840,
+          "height": 2880,
+          "caption": "Fotografía master 4K del retrato de Amy Winehouse sobre plato de pizarra natural.",
+          "sha256": "28dc695129e36e5e2eba4cd1f052397444e9cc9468938f663b3b5bce3c5dba09"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Amy%20Rocks",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Amy%20Rocks"
+    },
+    {
+      "slug": "entre-tantas-flores-de-dia",
+      "title": "Entre Tantas Flores de Día",
+      "category": "collage",
+      "series": null,
+      "technique": "Ilustración reproducida e intervenida; collage textil y alambre",
+      "support": "Papel impreso sobre tela floral",
+      "dimensions": "Marco: 46 × 33 cm",
+      "materials": null,
+      "year": null,
+      "story": "El retrato de Robe parte de un dibujo a lápices sobre poliéster. Tras escanearlo e imprimirlo a mayor tamaño, la imagen se recorta, retoca y combina con tela floral y una frase en alambre.",
+      "url": "https://naroagutierrezgil.com/obra/entre-tantas-flores-de-dia/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/entre-tantas-flores-de-dia-hq-01-e419319adba0-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/entre-tantas-flores-de-dia-hq-01.webp",
+          "width": 1528,
+          "height": 2048,
+          "caption": "Obra completa enmarcada",
+          "sha256": "e419319adba02da28f3f51b0c414e6a053a9b4ba36265f16caa220487faab9c0"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/entre-tantas-flores-de-dia-hq-02.webp",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Detalle del alambre",
+          "sha256": "6897268c74336109a7d956c58b012ce1fbe1e3488721ffcbf2ded20df276d567"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/entre-tantas-flores-de-dia-hq-03.webp",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Vista oblicua de las capas",
+          "sha256": "d73b09ece6adaa370869476720b7ec0a0053fcd055fd4ea9961cf66ae02564b0"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Entre%20Tantas%20Flores%20de%20D%C3%ADa",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Entre%20Tantas%20Flores%20de%20D%C3%ADa"
+    },
+    {
+      "slug": "johnny-rocks",
+      "title": "Johnny Rocks",
+      "category": "pizarra",
+      "series": "DiviNos",
+      "technique": "Acrílico, lápices y rotuladores",
+      "support": "Plato de pizarra natural",
+      "dimensions": "18 × 10 × 0,6 cm",
+      "materials": null,
+      "year": null,
+      "story": "Un retrato de Johnny Depp con contrastes en blanco y negro y detalles dorados y rojizos. Forma parte de DiviNos.",
+      "url": "https://naroagutierrezgil.com/obra/johnny-rocks/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/johnny-rocks-hq-01-d850042bf419-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/johnny-rocks-hq-01.webp",
+          "width": 1530,
+          "height": 2048,
+          "caption": "Pieza completa sobre pizarra",
+          "sha256": "d850042bf41929f04ba385ec63c85b4b28d822104804dd2445ba06ec627914df"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/johnny-rocks-hq-02.webp",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Detalle del retrato",
+          "sha256": "7f044cfa7f86df93e3704cc3de8ee2fae586dfc965a0c61a5297c2103667e6bb"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/johnny-rocks-original-03-2048.jpg",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Escala de la pieza junto a un rotulador",
+          "sha256": "5612514fdd462044fac8d5c33aec88f438f0f8afe70a5e6e6a21cbd6165986a8"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/johnny-rocks-4k.webp",
+          "width": 2932,
+          "height": 3840,
+          "caption": "Fotografía master 4K del retrato de Johnny Depp sobre plato de pizarra.",
+          "sha256": "5221c7cc4efc1b2485e2817ff0ec2681a3ea8093612bc00d1ddcbb98b91ef566"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Johnny%20Rocks",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Johnny%20Rocks"
+    },
+    {
+      "slug": "rockagipsy",
+      "title": "RockaGipsy",
+      "category": "collage",
+      "series": null,
+      "technique": "Acrílico y collage textil",
+      "support": "Reverso de lienzo sin imprimar",
+      "dimensions": "Marco: 37,5 × 29,5 cm",
+      "materials": null,
+      "year": "2015",
+      "story": "Camarón aparece sobre el reverso del lienzo, rodeado por papeles de lunares y tela decorada. La silueta superpuesta añade profundidad al retrato.",
+      "url": "https://naroagutierrezgil.com/obra/rockagipsy/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/rockagipsy-hq-01-8d0838d38e76-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/rockagipsy-hq-01.jpg",
+          "width": 1597,
+          "height": 2048,
+          "caption": "Obra completa enmarcada",
+          "sha256": "8d0838d38e761dfb22558e39e62533f72ede6d44d3ae94968c389a31617b96e1"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/rockagipsy-hq-02.jpg",
+          "width": 1564,
+          "height": 2048,
+          "caption": "Composición y tejidos",
+          "sha256": "0a63851398217366ea94029e713feca4d75ce975fbb1dbeb50512161282fbccc"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/rockagipsy-hq-03.jpg",
+          "width": 2048,
+          "height": 1532,
+          "caption": "Vista oblicua de las capas",
+          "sha256": "4078d5f9fc66c71782aaed0d5c55bcaef4aeb29da5c505265c95916decbb9618"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20RockaGipsy",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20RockaGipsy"
+    },
+    {
+      "slug": "hugo-box",
+      "title": "Hugo Box",
+      "category": "objetos",
+      "series": null,
+      "technique": "Fotocopia intervenida y collage",
+      "support": "Caja de madera",
+      "dimensions": null,
+      "materials": null,
+      "year": null,
+      "story": "Una caja de cumpleaños que transforma una fotografía en retrato con volumen. La toalla, la montura recortada y las láminas metalizadas rosas construyen los detalles de la tapa.",
+      "url": "https://naroagutierrezgil.com/obra/hugo-box/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/hugo-box-frontal-2048-811c1136687e-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/hugo-box-frontal-2048.jpg",
+          "width": 2048,
+          "height": 2048,
+          "caption": "Vista frontal de la tapa completa",
+          "sha256": "811c1136687ef99c32a687d222b36615f8d7c3973e00694505ca912439f8498a"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/hugo-box-relieve-2048.jpg",
+          "width": 2048,
+          "height": 1532,
+          "caption": "Vista oblicua del relieve",
+          "sha256": "e4958b05f5a870f312575f30d38585ff778fc3002f1e57f9afb27d0811c59ca8"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/hugo-box-interior-2048.jpg",
+          "width": 1532,
+          "height": 2048,
+          "caption": "Interior de la caja",
+          "sha256": "37d7bd92478c9e7d9666613696dddaac7846707320b5191cc300681d3023c8e5"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Hugo%20Box",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Hugo%20Box"
+    },
+    {
+      "slug": "james-rocks",
+      "title": "James Rocks",
+      "category": "pizarra",
+      "series": "DiviNos",
+      "technique": "Técnica mixta y pintura dimensional",
+      "support": "Plato de pizarra natural",
+      "dimensions": "18 × 10 × 0,6 cm",
+      "materials": null,
+      "year": null,
+      "story": "James Dean sobre un fondo de rojos y motivos dorados. La pintura dimensional negra añade relieve a la superficie.",
+      "url": "https://naroagutierrezgil.com/obra/james-rocks/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/james-rocks-hq-01-285bc25f922e-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/james-rocks-hq-01.webp",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Pieza completa sobre pizarra",
+          "sha256": "285bc25f922eb9fd577980eb9dd70349a7d87a7d3d955d5ec73d2dfae897ccbe"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/james-rocks-hq-02.webp",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Detalle del retrato",
+          "sha256": "8658a9175555f098799f2287f7186f6df06c66dc40a640050ccff695fc124f11"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/james-rocks-original-03-2048.jpg",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Detalle del rostro",
+          "sha256": "67215656cf0f34170464bff19c3dd32d336f45294f2d907347d362a9837f508a"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/james-rocks-4k.webp",
+          "width": 2882,
+          "height": 3840,
+          "caption": "Fotografía master 4K de James Dean sobre plato de pizarra.",
+          "sha256": "61a3e416e1bb9abda79fdde1d2b8d1758d7f2baa4ea9d86fe62d31bfe53fdb0c"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20James%20Rocks",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20James%20Rocks"
+    },
+    {
+      "slug": "mario-moreno",
+      "title": "Mario Moreno",
+      "category": "collage",
+      "series": "Vaivenes",
+      "technique": "Acrílico, rotulador y collage textil",
+      "support": "Lienzo",
+      "dimensions": "Lienzo: 24 × 18 cm · Marco: 32 × 26 cm",
+      "materials": null,
+      "year": null,
+      "story": "Mario Moreno aparece en blanco y negro, atravesado por pequeñas intervenciones textiles: seda roja en la corbata, vaquero negro y un retal de lienzo como pañuelo.",
+      "url": "https://naroagutierrezgil.com/obra/mario-moreno/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/mario-moreno-hq-01-b0d9bf3e15f7-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/mario-moreno-hq-01.webp",
+          "width": 1564,
+          "height": 2048,
+          "caption": "Composición sin marco",
+          "sha256": "b0d9bf3e15f70d86be46d394ef6e079070836f057d552eb42e21cd6f7c3f1bad"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/mario-moreno-original-02-2048.jpg",
+          "width": 1668,
+          "height": 2048,
+          "caption": "Obra enmarcada",
+          "sha256": "95b1d8cbe5bd269356b6d981a23d17bae8097f2779f1f5e84ee6d27c81dc15e8"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/mario-moreno-original-03-2048.jpg",
+          "width": 2048,
+          "height": 1188,
+          "caption": "Detalle de corbata, solapa y pañuelo",
+          "sha256": "a1e804d5526516af981cac8ee91614d8839080d3664606e406e8dba47b34c35e"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/cantinflowers-4k.webp",
+          "width": 3656,
+          "height": 2456,
+          "caption": "Composición master 4K de Mario Moreno (Cantinflas) con flores y collage.",
+          "sha256": "9dd913cf1c42a8278cff1b1c2daa8cca4ea362f1e658353065bd5fadd142e3d8"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/mario-moreno-04.jpg",
+          "width": 720,
+          "height": 884,
+          "caption": "Detalle de los acabados, ojos y expresión de Cantinflas.",
+          "sha256": "90c2c8346e796e898d345c1f394a3abb23d34331c8a47b8e7169f680a931ed03"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Mario%20Moreno",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Mario%20Moreno"
+    },
+    {
+      "slug": "infusion-de-berto",
+      "title": "Infusión de Berto",
+      "category": "objetos",
+      "series": null,
+      "technique": "Acrílico, lápices, rotuladores y collage",
+      "support": "Rodaja de fresno sin tratar",
+      "dimensions": "18 cm de diámetro",
+      "materials": null,
+      "year": null,
+      "story": "Berto Romero, romero y una bolsita de infusión se encuentran en un mismo retrato. La corteza, los líquenes del fresno y los objetos añadidos prolongan el juego de palabras.",
+      "url": "https://naroagutierrezgil.com/obra/infusion-de-berto/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/infusion-de-berto-original-01-2048-b524bdc379f6-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/infusion-de-berto-original-01-2048.jpg",
+          "width": 2048,
+          "height": 2048,
+          "caption": "Vista completa",
+          "sha256": "b524bdc379f62f470fdf5cc68ac8f542b4f428ca1f3b78a34cccaee87220056d"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/infusion-de-berto-original-02-2048.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Detalle de corteza y materiales",
+          "sha256": "ddfce2c16f9a5cb13e9791d627de53c27d47f60e7528590c6eef65cfa2c1a33a"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/infusion-de-berto-original-03-2048.jpg",
+          "width": 1111,
+          "height": 2048,
+          "caption": "Bolsita de infusión y romero",
+          "sha256": "8fd11360e3ae06f718d9aff09137f8534709ce920e38d7a67da397c86a8ecd1d"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Infusi%C3%B3n%20de%20Berto",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Infusi%C3%B3n%20de%20Berto"
+    },
+    {
+      "slug": "buena-fuente",
+      "title": "Buena Fuente",
+      "category": "objetos",
+      "series": null,
+      "technique": "Lápices, rotuladores, acrílico y collage",
+      "support": "Plato de madera sin tratar",
+      "dimensions": "18 cm de diámetro",
+      "materials": null,
+      "year": null,
+      "story": "Un retrato colorista de Andreu Buenafuente con tipografía, una cabeza de tenedor y una etiqueta de pintura. El objeto cotidiano entra en la composición.",
+      "url": "https://naroagutierrezgil.com/obra/buena-fuente/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/buena-fuente-original-01-2048-c0db25aa2da2-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/buena-fuente-original-01-2048.jpg",
+          "width": 2048,
+          "height": 2048,
+          "caption": "Vista completa",
+          "sha256": "c0db25aa2da2a5c7d74dc91eb39739fc46d6ade6d8315ecad138a7964ca105b7"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/buena-fuente-original-02-2048.jpg",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Detalle de tipografía",
+          "sha256": "5a32689129e538c738f1bb36cc901ff9f0bad190c9be1ceeb75ff2829e0f4a3d"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/buena-fuente-original-03-2048.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Detalle del collage y el tenedor",
+          "sha256": "b5c27a28f218c21bbdb7125af08afd4466e0b2b8774fa959fb50f3464326795b"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Buena%20Fuente",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Buena%20Fuente"
+    },
+    {
+      "slug": "ajenjo-cam",
+      "title": "Ajenjo Cam",
+      "category": "objetos",
+      "series": null,
+      "technique": "Fotografías impresas, cartón y técnica mixta",
+      "support": "Caja de cerillas",
+      "dimensions": null,
+      "materials": null,
+      "year": null,
+      "story": "Un miniálbum desplegable que toma la forma de una cámara instantánea. Al abrirlo, la pequeña caja deja salir una secuencia de fotografías.",
+      "url": "https://naroagutierrezgil.com/obra/ajenjo-cam/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/ajenjo-cam-original-01-2048-9603a5824e39-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/ajenjo-cam-original-01-2048.jpg",
+          "width": 2048,
+          "height": 1532,
+          "caption": "Objeto cerrado",
+          "sha256": "9603a5824e39320d029af0704db6d04d78655afa34465f7ee3ddb6d3616e5f92"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/ajenjo-cam-original-02-2048.jpg",
+          "width": 1532,
+          "height": 2048,
+          "caption": "Álbum desplegado en la mano",
+          "sha256": "6244a5287ddba55e39ca63be204306f2dfd4d2afcc2f4efc675b87adf4462a85"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/ajenjo-cam-original-03-2048.jpg",
+          "width": 1532,
+          "height": 2048,
+          "caption": "Detalle del desplegable",
+          "sha256": "4d6dbf61e892f66cceb4a8a92627b06278aca210be9cc06894d5b015bf2e0b2a"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Ajenjo%20Cam",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Ajenjo%20Cam"
+    },
+    {
+      "slug": "beatriz-de-pandora",
+      "title": "Beatriz de Pandora",
+      "category": "objetos",
+      "series": null,
+      "technique": "Lápices de colores y collage textil",
+      "support": "Caja de madera",
+      "dimensions": "5 × 8 × 13 cm",
+      "materials": null,
+      "year": null,
+      "story": "El retrato de la tapa incorpora vaquero, encaje, cuerda y cinta en la gorra. El interior de la caja prolonga la composición con color y pequeños objetos de celebración.",
+      "url": "https://naroagutierrezgil.com/obra/beatriz-de-pandora/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/beatriz-de-pandora-original-01-2048-d2cc42c64616-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/beatriz-de-pandora-original-01-2048.jpg",
+          "width": 2048,
+          "height": 1532,
+          "caption": "Retrato en la tapa",
+          "sha256": "d2cc42c64616e5a85c163275d0bd918dba2b69e2c76e2a0b7b1699b0659f6d6c"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/beatriz-de-pandora-original-02-2048.jpg",
+          "width": 1532,
+          "height": 2048,
+          "caption": "Vista oblicua del collage",
+          "sha256": "65e81d61fb9dab969c5b86ec7946c652f445e983a1a71657e265af65a9b6c756"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/beatriz-de-pandora-original-03-2048.jpg",
+          "width": 1532,
+          "height": 2048,
+          "caption": "Caja abierta",
+          "sha256": "a3cfb6b6e4f872ede691bb5f21e2709c3727d5753fd74ead7f875412d5af5bdc"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Beatriz%20de%20Pandora",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Beatriz%20de%20Pandora"
+    },
+    {
+      "slug": "el-gato-que-es-kutxa",
+      "title": "El Gato que es Kutxa",
+      "category": "objetos",
+      "series": null,
+      "technique": "Fotocopia recortada, pintura y estampación",
+      "support": "Caja de madera",
+      "dimensions": "4,7 × 8,3 × 8,3 cm",
+      "materials": null,
+      "year": null,
+      "story": "Un gato emerge de una tapa pintada en rosa y turquesa. La imagen recortada se combina con huellas estampadas y un interior preparado para un regalo.",
+      "url": "https://naroagutierrezgil.com/obra/el-gato-que-es-kutxa/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/el-gato-que-es-kutxa-original-01-2048-28a9aca2976c-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/el-gato-que-es-kutxa-original-01-2048.jpg",
+          "width": 2048,
+          "height": 1532,
+          "caption": "Tapa terminada",
+          "sha256": "28a9aca2976cf5f6ee0f2d7eb62f58bbdcf18c7807086bce3468f4bf67bc5616"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/el-gato-que-es-kutxa-original-02-2048.jpg",
+          "width": 2048,
+          "height": 1532,
+          "caption": "Proceso: fondo e imagen recortada",
+          "sha256": "f869aca5cdf8e192299a0df36c32b2066f843a0451a744947e0a18b1fbda8b4e"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/el-gato-que-es-kutxa-original-03-2048.jpg",
+          "width": 1532,
+          "height": 2048,
+          "caption": "Interior de la caja",
+          "sha256": "32a3aeb1f28222dc297947535333089dce74e15575f2998e87942b9b06470b97"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20El%20Gato%20que%20es%20Kutxa",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20El%20Gato%20que%20es%20Kutxa"
+    },
+    {
+      "slug": "me-parto-de-risa",
+      "title": "Me Parto (de risa)",
+      "category": "collage",
+      "series": null,
+      "technique": "Lápices de colores, papel rasgado y collage textil",
+      "support": "Papel sobre salvamanteles textil",
+      "dimensions": null,
+      "materials": null,
+      "year": null,
+      "story": "Luciano Mellera aparece en una composición que se rasga y recompone. Un envoltorio dorado ocupa la grieta: una referencia expresiva al kintsugi trasladada al collage.",
+      "url": "https://naroagutierrezgil.com/obra/me-parto-de-risa/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/me-parto-de-risa-original-01-2048-22fdc51a6a13-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/me-parto-de-risa-original-01-2048.jpg",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Obra enmarcada",
+          "sha256": "22fdc51a6a13a5a4f6153a5c4caf9bd5b0fcf99afe1f6a2e68aec40cd97bf47c"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/me-parto-de-risa-original-02-2048.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Vista oblicua del conjunto",
+          "sha256": "08291423c7b8e510d34935977a15df2c847bda418d5d5cd24fc04b0e1b95642a"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/me-parto-de-risa-original-03-2048.jpg",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Detalle del retrato y los materiales",
+          "sha256": "b190ff07247269493e35440282a0f878c71a94a30ef685de7a6cf2db8af7ded0"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Me%20Parto%20%28de%20risa%29",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Me%20Parto%20%28de%20risa%29"
+    },
+    {
+      "slug": "red-red-wine",
+      "title": "Red Red Wine",
+      "category": "collage",
+      "series": null,
+      "technique": "Vino y lápiz magenta",
+      "support": "Papel de acuarela de 300 g/m²",
+      "dimensions": "Papel: A5",
+      "materials": null,
+      "year": null,
+      "story": "Un retrato experimental de Neil Diamond en el que el vino se convierte en material de dibujo. La pieza parte de la relación entre el músico y Red Red Wine.",
+      "url": "https://naroagutierrezgil.com/obra/red-red-wine/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/red-red-wine-original-01-2048-c7f25a47a52d-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/red-red-wine-original-01-2048.jpg",
+          "width": 2048,
+          "height": 1646,
+          "caption": "Obra enmarcada",
+          "sha256": "c7f25a47a52de61d558eb32651a59c66000d45bf0e3ecda0623f691dcbddf415"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/red-red-wine-original-02-2048.jpg",
+          "width": 2048,
+          "height": 1230,
+          "caption": "Detalle de la composición",
+          "sha256": "0ac10b611798de6e8e947bd76f681e71530f1eecd729fa5cb3b8aa0d570e48df"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/red-red-wine-03.jpg",
+          "width": 843,
+          "height": 678,
+          "caption": "Detalle de relieve, etiqueta y textura vinícola.",
+          "sha256": "f98706b4f8e9c343a22818884eca7d48a2df8bb682577069451fcce00ac4f571"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/red-red-wine-04.jpg",
+          "width": 843,
+          "height": 506,
+          "caption": "Vista en perspectiva del volumen y la botella.",
+          "sha256": "2ebcdf7c2c269daca96d19cb4a58c413bfe4f16284f4481124dd42d6d944a589"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Red%20Red%20Wine",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Red%20Red%20Wine"
+    },
+    {
+      "slug": "i-remember-when-your-head-caught-flame",
+      "title": "I Remember when your Head caught Flame",
+      "category": "collage",
+      "series": null,
+      "technique": "Reproducción recortada, celofán y papeles",
+      "support": "Collage enmarcado",
+      "dimensions": "Marco: 25 × 18 cm · Ventana: aproximadamente 7 × 11 cm",
+      "materials": null,
+      "year": null,
+      "story": "Una reproducción de la obra Carole Lombard se transforma en un nuevo collage. Papeles fluorescentes, celofán naranja y pequeños fragmentos impresos construyen otra escena alrededor del retrato.",
+      "url": "https://naroagutierrezgil.com/obra/i-remember-when-your-head-caught-flame/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/i-remember-when-your-head-caught-flame-original-01-2048-255a3649a75c-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/i-remember-when-your-head-caught-flame-original-01-2048.jpg",
+          "width": 1558,
+          "height": 2048,
+          "caption": "Conjunto enmarcado",
+          "sha256": "255a3649a75c7bf62ab71040b14ec09c039fef3bc36882db7613fc6478a3a9ad"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/i-remember-when-your-head-caught-flame-original-02-2048.jpg",
+          "width": 1532,
+          "height": 2048,
+          "caption": "Detalle del collage",
+          "sha256": "ad18ac150d7303ac31e41aed915b0d000d3cf77f64412e409a309bd0526b3f60"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/i-remember-when-your-head-caught-flame-original-03-2048.jpg",
+          "width": 1532,
+          "height": 2048,
+          "caption": "Vista oblicua",
+          "sha256": "81f5c5f6adc16390cf0b3337552dc3a769ca5f5df898b1d0c6c41c40b2e4d47d"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20I%20Remember%20when%20your%20Head%20caught%20Flame",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20I%20Remember%20when%20your%20Head%20caught%20Flame"
+    },
+    {
+      "slug": "julio-iglesias-como-un-reloj-suizo",
+      "title": "Julio Iglesias, como un Reloj Suizo",
+      "category": "objetos",
+      "series": null,
+      "technique": "Fotocollage articulado y ensamblaje",
+      "support": "Caja de reloj con compartimentos",
+      "dimensions": null,
+      "materials": null,
+      "year": null,
+      "story": "Un retrato tridimensional de Julio Iglesias que se puede accionar mediante hilos y tiradores. La caja contiene compartimentos y objetos que forman parte del relato.",
+      "url": "https://naroagutierrezgil.com/obra/julio-iglesias-como-un-reloj-suizo/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/julio-iglesias-como-un-reloj-suizo-original-01-2048-3eaa192fe528-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/julio-iglesias-como-un-reloj-suizo-original-01-2048.jpg",
+          "width": 1700,
+          "height": 2048,
+          "caption": "Caja abierta con figura articulada",
+          "sha256": "3eaa192fe528d2c532b6ad9c43686790d76bb7cee1c919edf4983c80f82c85ce"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/julio-iglesias-como-un-reloj-suizo-original-02-2048.jpg",
+          "width": 2048,
+          "height": 1524,
+          "caption": "Caja cerrada",
+          "sha256": "19a1a1d206e0525a084c26c20657fe73b35b71246d15ca0bf4cf52a14de47ba3"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/julio-iglesias-como-un-reloj-suizo-original-03-2048.jpg",
+          "width": 2048,
+          "height": 1532,
+          "caption": "Compartimento con libro y cassette",
+          "sha256": "a505da38de71f2513f58db75d841344095e4510a3b8e1a78b6b689929bbfb7a9"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Julio%20Iglesias%2C%20como%20un%20Reloj%20Suizo",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Julio%20Iglesias%2C%20como%20un%20Reloj%20Suizo"
+    },
+    {
+      "slug": "saio-puzzle",
+      "title": "Saio Puzzle",
+      "category": "objetos",
+      "series": null,
+      "technique": "Rotuladores permanentes y acrílicos",
+      "support": "Puzzle para dibujar",
+      "dimensions": null,
+      "materials": null,
+      "year": null,
+      "story": "Un retrato que también se puede construir por piezas. Las juntas del puzzle atraviesan la imagen en blanco y negro y su fondo de color.",
+      "url": "https://naroagutierrezgil.com/obra/saio-puzzle/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/saio-puzzle-original-2048-7800a05027f4-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/saio-puzzle-original-2048.png",
+          "width": 2048,
+          "height": 2047,
+          "caption": "El puzle completo, con el retrato y sus piezas encajadas.",
+          "sha256": "7800a05027f4c26a742b0b8761c8caed8d8ebcd1e0e1c8273bb904a9de01c734"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/saio-puzzle-original-01-2048.jpg",
+          "width": 2048,
+          "height": 2047,
+          "caption": "Puzzle completo",
+          "sha256": "95120f255b54e61f59af82a5cdffd067a235305a1360bd8ca8e68c0930b174bd"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/saio-puzzle-original-02-2048.jpg",
+          "width": 2048,
+          "height": 1532,
+          "caption": "Detalle de las piezas",
+          "sha256": "cfd180112d242a1a229a3d2afb8091ba6b8d821e7723b9663c1d31a3319cf0de"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/saio-puzzle-original-03-2048.jpg",
+          "width": 2048,
+          "height": 1532,
+          "caption": "Vista oblicua",
+          "sha256": "7370aebc35be3075018288018dd28537cb4d03bcce9a8a6fe28496ebca83e1c8"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Saio%20Puzzle",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Saio%20Puzzle"
+    },
+    {
+      "slug": "custom-jaio",
+      "title": "Custom Jaio",
+      "category": "collage",
+      "series": null,
+      "technique": "Acrílico, rotuladores, lápices y botones cosidos",
+      "support": "Vaquero negro en bastidor",
+      "dimensions": "Bastidor: 17 cm de diámetro",
+      "materials": null,
+      "year": null,
+      "story": "Un retrato sobre tela vaquera negra, preparada e intervenida con pintura y botones. El bastidor conserva su presencia como parte de la obra.",
+      "url": "https://naroagutierrezgil.com/obra/custom-jaio/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/custom-jaio-original-01-2048-a6c67781f679-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/custom-jaio-original-01-2048.jpg",
+          "width": 1532,
+          "height": 2048,
+          "caption": "Bastidor completo",
+          "sha256": "a6c67781f679a239c79751cc324e88356d55fc0c00f8fa4212248a0518b969c9"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/custom-jaio-original-02-2048.jpg",
+          "width": 2048,
+          "height": 1532,
+          "caption": "Vista oblicua del retrato",
+          "sha256": "040297a12a0a188b63844d965a0ebbb545232cf3ef071734d4b4dd850683d682"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/custom-jaio-original-03-2048.jpg",
+          "width": 2048,
+          "height": 1532,
+          "caption": "Detalle del tejido y los botones",
+          "sha256": "3d6ddc377621a51a5260d8c7eb4e48b633d2e2cf04857e288801504f81c4211b"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Custom%20Jaio",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Custom%20Jaio"
+    },
+    {
+      "slug": "13n",
+      "title": "13N",
+      "category": "objetos",
+      "series": null,
+      "technique": "Lápices, pastel, pan de oro, acrílico y collage",
+      "support": "Plato de madera con caja personalizada",
+      "dimensions": "Plato: 18 cm de diámetro",
+      "materials": null,
+      "year": null,
+      "story": "Un retrato doble sobre madera, acompañado de una caja intervenida. Letras de periódico, pan de oro y otros materiales conviven con el dibujo.",
+      "url": "https://naroagutierrezgil.com/obra/13n/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/13n-original-01-2048-422f47e10f3a-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/13n-original-01-2048.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Plato completo",
+          "sha256": "422f47e10f3a54e9b6f851fe7ae18e9d3e474bf39775d496b85566771678ab6a"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/13n-original-02-2048.jpg",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Tapa de la caja personalizada",
+          "sha256": "45e9abe56abd34491a568f19f122e6c9ac24521998336102f38a189e918f3dae"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/13n-original-03-2048.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Detalle del collage",
+          "sha256": "bed63cda053bdf69e7448f576539ae34201241ac2d90d88c0e4e139189e9b63d"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%2013N",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%2013N"
+    },
+    {
+      "slug": "patxi-en-su-pino",
+      "title": "Patxi en su-pino",
+      "category": "objetos",
+      "series": null,
+      "technique": "Lápices de colores, pastel y acrílico",
+      "support": "Rodaja de pino sin tratar",
+      "dimensions": null,
+      "materials": null,
+      "year": null,
+      "story": "El retrato sigue las vetas de una rodaja de pino. La corteza conserva el contorno natural del soporte y convierte el juego del título en materia.",
+      "url": "https://naroagutierrezgil.com/obra/patxi-en-su-pino/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/patxi-en-su-pino-original-01-2048-9ebeaaf7940c-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/patxi-en-su-pino-original-01-2048.jpg",
+          "width": 2048,
+          "height": 1532,
+          "caption": "Rodaja completa",
+          "sha256": "9ebeaaf7940c64e594c80401563dcadec1f730a6c5b4e972ed655555fad16b8d"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/patxi-en-su-pino-original-02-1600.jpg",
+          "width": 1600,
+          "height": 1200,
+          "caption": "Escala en las manos",
+          "sha256": "2b4d8df98d3b1c86abb138ddcc316406c9204f71c5721013a234c14b2ae5de75"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/patxi-en-su-pino-original-03-2048.jpg",
+          "width": 1532,
+          "height": 2048,
+          "caption": "Detalle del retrato",
+          "sha256": "2270df7510270ab0907806b85b57bdd79a3e51b2b86f22a66dc586b0a1c2d9e0"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Patxi%20en%20su-pino",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Patxi%20en%20su-pino"
+    },
+    {
+      "slug": "el-luengo-y-el-mar",
+      "title": "El Luengo y el Mar",
+      "category": "objetos",
+      "series": null,
+      "technique": "Acrílico, rotuladores, grattage y collage con mica",
+      "support": "Concha de vieira",
+      "dimensions": null,
+      "materials": null,
+      "year": null,
+      "story": "Un retrato marino sobre una concha. Hebras de mandarina coloreadas evocan algas y coral; la mica plateada recuerda las escamas y el nácar.",
+      "url": "https://naroagutierrezgil.com/obra/el-luengo-y-el-mar/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/el-luengo-y-el-mar-original-01-2048-fce93c751a34-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/el-luengo-y-el-mar-original-01-2048.jpg",
+          "width": 1818,
+          "height": 2048,
+          "caption": "Concha completa",
+          "sha256": "fce93c751a34a34a6aa1fe61ee0c64bfcfe895826d001c8544a02bc15c476d25"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/el-luengo-y-el-mar-original-02-2048.jpg",
+          "width": 2048,
+          "height": 1532,
+          "caption": "Escala en la mano",
+          "sha256": "d4bdcfd9ad34f0fede65b2d520a1de9d87065b186f7e381679785b55f1e3611d"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/el-luengo-y-el-mar-original-03-2048.jpg",
+          "width": 2048,
+          "height": 1608,
+          "caption": "Reverso de la concha",
+          "sha256": "550e64bdb9af12389f874c551153787094c51d0464ac44e48c67d6b667e85f26"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20El%20Luengo%20y%20el%20Mar",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20El%20Luengo%20y%20el%20Mar"
+    },
+    {
+      "slug": "el-armigo-atomico",
+      "title": "El Armigo Atómico",
+      "category": "objetos",
+      "series": null,
+      "technique": "Lápices, acrílico, pastel y mica",
+      "support": "Plato de madera",
+      "dimensions": "18 cm de diámetro",
+      "materials": null,
+      "year": null,
+      "story": "Un retrato humorístico que une un rostro realista y la figura de la Hormiga Atómica. La intervención continúa en el reverso del plato.",
+      "url": "https://naroagutierrezgil.com/obra/el-armigo-atomico/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/el-armigo-atomico-original-01-2048-7e9964ff527f-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/el-armigo-atomico-original-01-2048.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Plato completo",
+          "sha256": "7e9964ff527f6a44357f2f28f038d52ea5fb274c1fa0159194bb186a49a9ed61"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/el-armigo-atomico-original-02-2048.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Reverso intervenido",
+          "sha256": "4a0dbd0f8a6d7d61bcf5c6d6c45135be77c0a1490a4f78df2e97ce61d689dee5"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/el-armigo-atomico-original-03-2048.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Detalle del retrato",
+          "sha256": "fb920e8128772a2934f2eb55bb93c0d4fb7f3239436f3ea1feea1ede7176abdd"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20El%20Armigo%20At%C3%B3mico",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20El%20Armigo%20At%C3%B3mico"
+    },
+    {
+      "slug": "elene",
+      "title": "Elene",
+      "category": "objetos",
+      "series": null,
+      "technique": "Lápices, acrílico, pastel y flores añadidas",
+      "support": "Plato de madera",
+      "dimensions": "18 cm de diámetro",
+      "materials": null,
+      "year": null,
+      "story": "Un retrato acompañado de rosas de papel y calas de goma EVA. Los elementos florales aportan volumen alrededor de la figura.",
+      "url": "https://naroagutierrezgil.com/obra/elene/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/elene-original-01-2048-961446bd9744-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/elene-original-01-2048.jpg",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Plato completo",
+          "sha256": "961446bd9744b8e02ad835a8ef4a363511c00ed29170ee5cab36b5970e063a2a"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/elene-original-02-2048.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Vista oblicua y flores",
+          "sha256": "d8e7fd72fec7692f0fccd5a457f52b1af5358eab0d4525b5fe390dbdb42d767c"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/elene-original-03-1831.jpg",
+          "width": 1831,
+          "height": 1763,
+          "caption": "Detalle del rostro",
+          "sha256": "a6c7bd72a595c955d62bebc4b5ee6a928722c54cae6aca3c8a05884d44f9d300"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Elene",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Elene"
+    },
+    {
+      "slug": "dar-la-lata",
+      "title": "Dar la Lata",
+      "category": "objetos",
+      "series": null,
+      "technique": "Fotografías recortadas y ensamblaje",
+      "support": "Latas de conservas",
+      "dimensions": null,
+      "materials": null,
+      "year": null,
+      "story": "Dar la Lata reúne retratos tridimensionales realizados con fotografías y pequeñas latas. Cada recipiente se convierte en soporte, marco y escenario de una composición.",
+      "url": "https://naroagutierrezgil.com/obra/dar-la-lata/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/dar-la-lata-original-01-2048-b56177fb0e22-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/dar-la-lata-original-01-2048.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Una de las composiciones de la serie",
+          "sha256": "b56177fb0e22acad084396262f3c5302b99b578e6796012903feb82d05228283"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/dar-la-lata-original-03-2048.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Reverso de la lata",
+          "sha256": "7f52ebef12a026f67995d5ffebd3025f49eecfea0ff578c2b8767d9c0646a06f"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/dar-la-lata-04.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle del reverso y grabado de la lata.",
+          "sha256": "54a599f7815236e5234c07de657dbe2d854c067b477eb0ba1d5c9cc1dd74987d"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Dar%20la%20Lata",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Dar%20la%20Lata"
+    },
+    {
+      "slug": "marian-de-miranda-luciendo-la-pantorrilla",
+      "title": "Marian de Miranda Luciendo la Pantorrilla",
+      "category": "collage",
+      "series": null,
+      "technique": "Dibujo, collage físico y composición digital",
+      "support": "Papel, materiales encontrados y archivo digital",
+      "dimensions": "Dibujo: 20 × 10 cm · Collage físico: 23 × 18 cm",
+      "materials": null,
+      "year": null,
+      "story": "Proyecto PostalaK: el dibujo y el collage físico se escanean y combinan en variantes digitales. El retrato de Marian Puertas dialoga con la figura y el tocado de Carmen Miranda.",
+      "url": "https://naroagutierrezgil.com/obra/marian-de-miranda-luciendo-la-pantorrilla/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/marian-de-miranda-luciendo-la-pantorrilla-original-01-1457-8ffe5e299496-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/marian-de-miranda-luciendo-la-pantorrilla-original-01-1457.jpg",
+          "width": 971,
+          "height": 1457,
+          "caption": "Variante digital de la composición",
+          "sha256": "8ffe5e299496776b53a442c4dbd8b0cccb96847490b73b49973fc81638540e00"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/marian-de-miranda-luciendo-la-pantorrilla-original-02-2048.jpg",
+          "width": 1365,
+          "height": 2048,
+          "caption": "Otra variante de PostalaK",
+          "sha256": "668f5d1af2dcba2df5e09d91ab040a9a27785e02a836b3c97690dcb3dcbb2aec"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/marian-de-miranda-luciendo-la-pantorrilla-05.jpg",
+          "width": 552,
+          "height": 828,
+          "caption": "Detalle de encaje y pantorrilla con matices de época.",
+          "sha256": "2d7761657ef8a5d1f67ecd0db05d372c5af8f1e1f2bcc3ffcbd1f977475f43f1"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/marian-de-miranda-luciendo-la-pantorrilla-06.jpg",
+          "width": 552,
+          "height": 828,
+          "caption": "Detalle de textura, veladuras y color.",
+          "sha256": "2dee333ff68021fbd60fe85bcfa38c7a8a28c570421ea343cd4f27a3ed25687a"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Marian%20de%20Miranda%20Luciendo%20la%20Pantorrilla",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Marian%20de%20Miranda%20Luciendo%20la%20Pantorrilla"
+    },
+    {
+      "slug": "my-tiny-face",
+      "title": "My Tiny Face",
+      "category": "caracterizacion",
+      "series": null,
+      "technique": "Maquillaje tradicional y al agua",
+      "support": "Rostro",
+      "dimensions": null,
+      "materials": null,
+      "year": null,
+      "story": "Una ilusión de rostro pequeño creada sobre la cara parcialmente oculta. Los gestos y los accesorios completan la caracterización.",
+      "url": "https://naroagutierrezgil.com/obra/my-tiny-face/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/my-tiny-face-original-01-2048-31cc6566f7b1-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/my-tiny-face-original-01-2048.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Caracterización frontal",
+          "sha256": "31cc6566f7b1e9375804c8c40cd0f3b44f68b9907ae45935007978c49ad56b64"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/my-tiny-face-original-02-2048.jpg",
+          "width": 2013,
+          "height": 2048,
+          "caption": "Variante con gafas",
+          "sha256": "0b7abe415518435dccf72760af48615c56fd8ea8fe4a3940d1ed8b4810362ff8"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/my-tiny-face-original-03-2048.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Otra expresión del personaje",
+          "sha256": "c6b61495a60f3cc2d47afb474eec4b576e4e2505e1f8b12cb413b081d7e83b48"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20My%20Tiny%20Face",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20My%20Tiny%20Face"
+    },
+    {
+      "slug": "aaron",
+      "title": "Aaron",
+      "category": "caracterizacion",
+      "series": null,
+      "technique": "Maquillaje, vestuario y complementos",
+      "support": "Caracterización de Naroa",
+      "dimensions": null,
+      "materials": null,
+      "year": null,
+      "story": "Aaron es un anagrama de Naroa y el nombre de un personaje interpretado por la artista. Maquillaje, peinado y vestuario transforman su apariencia.",
+      "url": "https://naroagutierrezgil.com/obra/aaron/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/aaron-original-01-2048-e8cb84ad6230-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/aaron-original-01-2048.jpg",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Retrato del personaje",
+          "sha256": "e8cb84ad62306926422305cddef78c0390ff7224109e2de65fe65c53c72dd6a6"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/aaron-original-02-2048.jpg",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Caracterización con accesorios",
+          "sha256": "6c94d95b80f8baf209171f87c23f798763458b41567f7e2969785e36a13b72c8"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/aaron-original-03-2048.jpg",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Vista de perfil",
+          "sha256": "ee03cb872359296db7d01a5c7f792b780ee63485d057651322f2143a4defe633"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Aaron",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Aaron"
+    },
+    {
+      "slug": "pajarraca-azul",
+      "title": "Pajarraca Azul",
+      "category": "caracterizacion",
+      "series": null,
+      "technique": "Máscara de cartón, plumas y maquillaje",
+      "support": "Máscara y rostro",
+      "dimensions": null,
+      "materials": null,
+      "year": "2024",
+      "story": "Una máscara de pájara creada para el Carnaval de Bilbao y Santutxu de 2024. El antifaz pintado, las plumas y el maquillaje construyen el personaje.",
+      "url": "https://naroagutierrezgil.com/obra/pajarraca-azul/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/pajarraca-azul-original-01-2048-fb4c49306d01-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/pajarraca-azul-original-01-2048.jpg",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Máscara en uso",
+          "sha256": "fb4c49306d014b7006123c296b4ce53e934a0a8ac9bdc2849f0b1bdee73b6a90"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/pajarraca-azul-original-02-2048.jpg",
+          "width": 1532,
+          "height": 2048,
+          "caption": "Detalle de las plumas y el antifaz",
+          "sha256": "d866500f8d87a0589799573e9ed37191417c3b2772c12cdc324bed4ff5cf91d9"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/pajarraca-azul-original-03-2048.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Caracterización y maquillaje",
+          "sha256": "1a1e80a25c3318e6ff264778714d584e7e86c9f0a0d3a048176639d0a04ba9e5"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Pajarraca%20Azul",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Pajarraca%20Azul"
+    },
+    {
+      "slug": "flying-dragon",
+      "title": "Flying Dragon",
+      "category": "caracterizacion",
+      "series": null,
+      "technique": "Maquillaje tradicional y al agua",
+      "support": "Rostro y vestuario",
+      "dimensions": null,
+      "materials": null,
+      "year": "2023",
+      "story": "Caracterización de dragón para los carnavales de Uribarri y Santutxu de 2023. El dibujo del rostro se combina con el disfraz.",
+      "url": "https://naroagutierrezgil.com/obra/flying-dragon/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/flying-dragon-original-01-2048-8ca9502767b8-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/flying-dragon-original-01-2048.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Maquillaje y disfraz",
+          "sha256": "8ca9502767b855b257666fa365d82749a1e66a1e5db3cfa9226b7358a4925af5"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/flying-dragon-original-02-2048.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Vista lateral del maquillaje",
+          "sha256": "dd6d05a752400007bc7cd46ca4f5ba388724e3d151f933023d08cfaa1b2ac75e"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/flying-dragon-original-03-2048.jpg",
+          "width": 2048,
+          "height": 1404,
+          "caption": "Detalle de la frente",
+          "sha256": "6696af639992efbdac2fbd4ebe5ec6721ea5c6c77a81921427166f80f9ded16e"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Flying%20Dragon",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Flying%20Dragon"
+    },
+    {
+      "slug": "monster-dragon",
+      "title": "Monster Dragon",
+      "category": "caracterizacion",
+      "series": null,
+      "technique": "Maquillaje tradicional y al agua",
+      "support": "Rostro y vestuario",
+      "dimensions": null,
+      "materials": null,
+      "year": "2023",
+      "story": "Un rostro de reptil acompañado de un disfraz kigurumi. Proyecto de caracterización realizado para el Carnaval de Bilbao de 2023.",
+      "url": "https://naroagutierrezgil.com/obra/monster-dragon/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/monster-dragon-original-01-2048-4222e40b1f61-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/monster-dragon-original-01-2048.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Caracterización frontal",
+          "sha256": "4222e40b1f6131e65780f73c5939d93e4dfb833e653a73189b5a9373194e5b40"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/monster-dragon-original-02-2048.jpg",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Maquillaje y vestuario",
+          "sha256": "738cfebe2e60bcb74ab212b75ca437cc37926597279cd1fb3ae0e39196faa207"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/monster-dragon-original-03-2048.jpg",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Otra expresión del personaje",
+          "sha256": "e0c48e4960df4fb6c8ac9dba2fbf00b04c57ea315758c4a109968c87533f5d7e"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/monster-dragon-4k.webp",
+          "width": 3840,
+          "height": 2872,
+          "caption": "Fotografía master 4K de Monster Dragon con caracterización completa.",
+          "sha256": "6a153d1ee2fa74d2624d1ee55374ff32f738e18698bc86b68a83ff262d21ebeb"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Monster%20Dragon",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Monster%20Dragon"
+    },
+    {
+      "slug": "la-llorona",
+      "title": "La Llorona",
+      "category": "collage",
+      "series": null,
+      "technique": "Pintura acrílica y collage",
+      "support": "Lienzo",
+      "dimensions": "20 × 30 × 3,5 cm",
+      "materials": "Pintura acrílica, sal rosa, cubiertas de auriculares fucsias, hembrillas antiguas, pétalos negros, lentejuelas de colores con forma de corazón, eslabones de cadenas, pequeña pieza textil, recorte de rosa impresa plastificada, celo de doble cara deteriorado por el tiempo, pegamento y látex líquido.",
+      "year": null,
+      "story": "Retrato de Chavela Vargas en el que un ojo de sal rosa, las lágrimas y las flores revelan parte del simbolismo de la obra. «No sé qué tienen las flores, llorona, las flores del campo santo; que cuando las mueve el viento, llorona, parecen que están llorando».",
+      "url": "https://naroagutierrezgil.com/obra/la-llorona/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/la-llorona-frontal-535ea3a9ebd4-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/la-llorona-frontal.jpg",
+          "width": 1297,
+          "height": 960,
+          "caption": "La composición completa: Chavela Vargas y los ojos de sal rosa.",
+          "sha256": "535ea3a9ebd4e1a51ee1d72f4aee33d3ac1efcbeaa8c74cdf2bcc9727365b432"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/la-llorona-materia.jpg",
+          "width": 1280,
+          "height": 960,
+          "caption": "Vista rasante del lienzo: volumen, fucsia y textura.",
+          "sha256": "91dfd53649622d1d76c189044dc3e1d5ad3e33f51cadaeb5f9f45a635c376968"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/la-llorona-lienzo.jpg",
+          "width": 1205,
+          "height": 565,
+          "caption": "Otra perspectiva del lienzo y sus materiales.",
+          "sha256": "54a8dc942b3c70369bd0e92112f05a13e0fff2222a1825ddb16e3ec71af5c150"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20La%20Llorona",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20La%20Llorona"
+    },
+    {
+      "slug": "pablo",
+      "title": "Pablo",
+      "category": "collage",
+      "series": null,
+      "technique": "Lápices de colores Art & Graphic de Faber-Castell",
+      "support": "Papel poliéster",
+      "dimensions": null,
+      "materials": null,
+      "year": null,
+      "story": "El gran Pablo, admiración total. Retrato en el que el dibujo del rostro convive con el color de la camisa.",
+      "url": "https://naroagutierrezgil.com/obra/pablo/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/pablo-original-af0af17eaacd-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/pablo-original.png",
+          "width": 1362,
+          "height": 1835,
+          "caption": "Retrato completo de Pablo.",
+          "sha256": "af0af17eaacd9ecb7e8ba6469faee701a630325bc82012d7344d17b40e1ed1e3"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Pablo",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Pablo"
+    },
+    {
+      "slug": "euskolander-no-hay-mas-que-uno",
+      "title": "Euskolander no hay más que uno",
+      "category": "collage",
+      "series": null,
+      "technique": "Lápiz de color negro, bolígrafo y collage",
+      "support": "Papel poliéster e impresión en papel de 350 g/m²",
+      "dimensions": null,
+      "materials": null,
+      "year": null,
+      "story": "Del trazo al recorte: retrato dibujado con lápiz de color negro y bolígrafo sobre poliéster, diluido con alcohol en algunas zonas. Tras escanearlo e imprimirlo, Naroa vuelve a dibujar sus rasgos con lápiz Art & Graphic de Faber-Castell y recorta la silueta.",
+      "url": "https://naroagutierrezgil.com/obra/euskolander-no-hay-mas-que-uno/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/euskolander-original-ec2d2f834d1f-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/euskolander-original.png",
+          "width": 1280,
+          "height": 1808,
+          "caption": "La obra completa, sobre un fondo de estrellas rojas y blancas.",
+          "sha256": "ec2d2f834d1f5d07158148d076c76853bf5ab0acf771410a7144b6a7ee2d605f"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Euskolander%20no%20hay%20m%C3%A1s%20que%20uno",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Euskolander%20no%20hay%20m%C3%A1s%20que%20uno"
+    },
+    {
+      "slug": "idoia-arkatz-bihotz",
+      "title": "Idoia, Arkatz & Bihotz",
+      "category": "collage",
+      "series": null,
+      "technique": "Grafito, rotulador acrílico y collage de washi tapes",
+      "support": "Papel de 80 g/m²",
+      "dimensions": null,
+      "materials": null,
+      "year": null,
+      "story": "Un retrato que combina una figura en grises con pequeños acentos de color. Las cintas decoradas intervienen la composición y acompañan el gesto de la retratada.",
+      "url": "https://naroagutierrezgil.com/obra/idoia-arkatz-bihotz/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/idoia-arkatz-bihotz-5bb78ff52aa1-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/idoia-arkatz-bihotz.png",
+          "width": 1190,
+          "height": 1704,
+          "caption": "Retrato completo con los detalles de color de las pulseras y las cintas.",
+          "sha256": "5bb78ff52aa1f652b8fe2af94166e427eed1e933ece4117775106a357f0b7866"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Idoia%2C%20Arkatz%20%26%20Bihotz",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Idoia%2C%20Arkatz%20%26%20Bihotz"
+    },
+    {
+      "slug": "little-adi",
+      "title": "Little Adi",
+      "category": "collage",
+      "series": null,
+      "technique": "Grafito, lápices de colores y collage",
+      "support": "Papel de 80 g/m² recortado sobre papel de seda decorado",
+      "dimensions": null,
+      "materials": null,
+      "year": null,
+      "story": "La figura dibujada se recorta y superpone al fondo. El gris del retrato deja paso al verde de la pala y al contraste entre el naranja y los lunares fucsias.",
+      "url": "https://naroagutierrezgil.com/obra/little-adi/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/little-adi-completa-0a90eadba4d0-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/little-adi-completa.png",
+          "width": 1164,
+          "height": 1586,
+          "caption": "Composición completa sin marco.",
+          "sha256": "0a90eadba4d018800011517e93499f867732539fb76d593587a57790a161b350"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/little-adi-marco.png",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Presentación de la obra en su marco ornamental blanco.",
+          "sha256": "97cf4247e3fab8d65498fd98e10efc0342ee3ba100885b87fe55823980a3dc00"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Little%20Adi",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Little%20Adi"
+    },
+    {
+      "slug": "lauralore",
+      "title": "LauraLore",
+      "category": "collage",
+      "series": null,
+      "technique": "Lápiz de color negro y collage",
+      "support": "Papel de 350 g/m² en marco de profundidad",
+      "dimensions": "50 × 40 cm",
+      "materials": null,
+      "year": null,
+      "story": "El retrato dibujado se combina con fragmentos de cerámica decorada y elementos vegetales. La composición fue realizada como regalo de cumpleaños y juega con la idea del eguzkilore.",
+      "url": "https://naroagutierrezgil.com/obra/lauralore/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/lauralore-01-4k-24c1ca198fdd-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/lauralore-01-4k.jpg",
+          "width": 2400,
+          "height": 3200,
+          "caption": "Obra completa remasterizada en Ultra-HD.",
+          "sha256": "24c1ca198fdd9177e5b9281f3250c682be10b4005d5df891b33d0cd08339a4d9"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/lauralore-02.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Detalle o perspectiva 1 de la obra.",
+          "sha256": "8cdd6abdab5f4a8534b9635e6a365d779d496c3b3ad0c3985a8a5a903725d999"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/lauralore-03.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Detalle o perspectiva 2 de la obra.",
+          "sha256": "1836a394733383a9600eced5d098ae456169b2a7006a5e32e4e9f63baf2e0f7d"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/lauralore-04.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 3 de la obra.",
+          "sha256": "751a3e36f9b272a3e5ff2841d1e80afede3e5e44de2b44156b6309cf7d856e82"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/lauralore-05.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Detalle o perspectiva 4 de la obra.",
+          "sha256": "a51d758d45f4e7cf7ce0795e70f5e6f64f7144a71756d4f293d84c9e1c4a24c4"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/lauralore-06.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 5 de la obra.",
+          "sha256": "1fd153e473d85d7c03a8680423737d12e48631d45be67ce25222a5dd75bac852"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20LauraLore",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20LauraLore"
+    },
+    {
+      "slug": "can-dy-queen",
+      "title": "Can-dy Queen",
+      "category": "objetos",
+      "series": null,
+      "technique": "Fotografía por capas y ensamblaje",
+      "support": "Lata de conservas intervenida",
+      "dimensions": null,
+      "materials": null,
+      "year": null,
+      "story": "Retrato en relieve de Olatz, rodeado de colores y dulces. La lata incorpora patas de alambre, gominolas, papeles y una corona hecha con materiales cotidianos. Las capas de la fotografía aportan profundidad.",
+      "url": "https://naroagutierrezgil.com/obra/can-dy-queen/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/can-dy-queen-01-3cb0740291f4-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/can-dy-queen-01.jpg",
+          "width": 1500,
+          "height": 2000,
+          "caption": "Obra completa.",
+          "sha256": "3cb0740291f42b15d5951368c52a76f51af17b213b4d56e1b96ba7e77fc29ece"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/can-dy-queen-02.jpg",
+          "width": 720,
+          "height": 906,
+          "caption": "Detalle o perspectiva 1 de la obra.",
+          "sha256": "e0604fa776b7adbc3881bf8385e3a07d74fae06bdb853f84302de1460fcf6bbb"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/can-dy-queen-03.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Detalle o perspectiva 2 de la obra.",
+          "sha256": "d0de7ba2af37fbd91da22ab9ff1a6e806cd4fc3bc37afa21d2764b42e7511cf2"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/can-dy-queen-04.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Detalle o perspectiva 3 de la obra.",
+          "sha256": "01db830434ba38f3b8032de0c5b50f289ce770f99a90cc8b5da68a8829195d91"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/can-dy-queen-05.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Detalle o perspectiva 4 de la obra.",
+          "sha256": "165381ee71aebe7b167254d701f6e704ff146b539a0dcdb23f435923acca50c1"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/can-dy-queen-06.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 5 de la obra.",
+          "sha256": "161ea23ac0d38603473c5ea375bd6c5d3c79fcdc5eccc0c0864b0a046f8938e9"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Can-dy%20Queen",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Can-dy%20Queen"
+    },
+    {
+      "slug": "el-hombre-que-susurraba-a-las-estrellas",
+      "title": "El hombre que susurraba a las estrellas",
+      "category": "collage",
+      "series": null,
+      "technique": "Bolígrafo negro y collage",
+      "support": "Papel poliéster e impresión de 350 g/m²",
+      "dimensions": "A3",
+      "materials": null,
+      "year": null,
+      "story": "David Bowie aparece entre estrellas y un rayo de color. El dibujo se transforma mediante el escaneado, la impresión y el recorte; el tejido vaquero y los papeles metalizados añaden diferentes superficies.",
+      "url": "https://naroagutierrezgil.com/obra/el-hombre-que-susurraba-a-las-estrellas/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/el-hombre-que-susurraba-a-las-estrellas-01-a5111c684526-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/el-hombre-que-susurraba-a-las-estrellas-01.jpg",
+          "width": 2048,
+          "height": 1533,
+          "caption": "Obra completa.",
+          "sha256": "a5111c684526fc6fde242250af695c6c36eec74de28eef864788bb7fb3be6add"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/el-hombre-que-susurraba-a-las-estrellas-02.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 1 de la obra.",
+          "sha256": "ad7ec829fbc7ee536095914668219651b898888798528a050566ea20ca74edcc"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/el-hombre-que-susurraba-a-las-estrellas-03.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Detalle o perspectiva 2 de la obra.",
+          "sha256": "b08afc50012e102d6dbe55455329d9ac45eb915e090197a92dd9be827a58020c"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/el-hombre-que-susurraba-a-las-estrellas-04.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 3 de la obra.",
+          "sha256": "6d2187c05d24d02d2f8f0471ed89a037a877a96d97ecebf6310c9ba084551f5c"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/el-hombre-que-susurraba-a-las-estrellas-05.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 4 de la obra.",
+          "sha256": "3f98bec37bef7746cfca0ee52f838963f2565fb4c31597b81401a77c408500f6"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/el-hombre-que-susurraba-a-las-estrellas-06.jpg",
+          "width": 640,
+          "height": 856,
+          "caption": "Detalle o perspectiva 5 de la obra.",
+          "sha256": "7a258b8b338e081d30d6ee5545609d5f856422cff5c203c2a40c69ce2fc9363e"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20El%20hombre%20que%20susurraba%20a%20las%20estrellas",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20El%20hombre%20que%20susurraba%20a%20las%20estrellas"
+    },
+    {
+      "slug": "olinga-a-la-naranja",
+      "title": "Olinga a la Naranja",
+      "category": "collage",
+      "series": null,
+      "technique": "Lápices de colores y collage",
+      "support": "Marco con passepartout",
+      "dimensions": "45 × 55 cm",
+      "materials": null,
+      "year": null,
+      "story": "La figura dibujada se recorta y se integra en un fondo hecho con envoltorios de naranjas. Papel de seda, cuerda bicolor y celofán rosa prolongan el color más allá del retrato.",
+      "url": "https://naroagutierrezgil.com/obra/olinga-a-la-naranja/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/olinga-a-la-naranja-01-c8d7fb49311b-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/olinga-a-la-naranja-01.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Obra completa.",
+          "sha256": "c8d7fb49311ba5e3a86841a9a3c7f393823ca978524a649ccaa2cccb50ae0317"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/olinga-a-la-naranja-02.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Detalle o perspectiva 1 de la obra.",
+          "sha256": "82873d60ef465a8403f9136bbd6ef5e9b7b5a24c6ae49c9681aea4ebdab5c54c"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/olinga-a-la-naranja-03.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Detalle o perspectiva 2 de la obra.",
+          "sha256": "ad336e694c52c5468979b2fe66c392c612c253c45a56a49368e02c5f3f08c350"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/olinga-a-la-naranja-04.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 3 de la obra.",
+          "sha256": "322e65f15acc685e774d65d19137afe88c641a2f5586942a095c57fea455275d"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/olinga-a-la-naranja-05.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 4 de la obra.",
+          "sha256": "5bb9f4ca6aaa5f26f337f508883ad1aefac3739f849064685c9cb921f9e23333"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/olinga-a-la-naranja-06.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 5 de la obra.",
+          "sha256": "3025633436eb1e3b727bfb673f20ca7ff1976df00847bf8cf9d4665e0c1f4b39"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Olinga%20a%20la%20Naranja",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Olinga%20a%20la%20Naranja"
+    },
+    {
+      "slug": "i-got-you-babe",
+      "title": "I Got You Babe",
+      "category": "objetos",
+      "series": null,
+      "technique": "Pintura y ensamblaje",
+      "support": "Reloj de pared de bambú",
+      "dimensions": "30 cm de diámetro",
+      "materials": "Acrílico, ceras, engranajes y maquinaria de reloj, tela vaquera y algodón, virutas de lápices con brillantina dorada y triple capa de látex",
+      "year": 2020,
+      "story": "Un autorretrato colectivo del confinamiento realizado en abril de 2020. El rostro de Bill Murray y la referencia a Atrapado en el tiempo expresan la repetición de los días. La maquinaria desmontada del reloj pasa a formar parte de la superficie de la obra.",
+      "url": "https://naroagutierrezgil.com/obra/i-got-you-babe/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/i-got-you-babe-01-c2da0b046b4f-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/i-got-you-babe-01.jpg",
+          "width": 1874,
+          "height": 1405,
+          "caption": "Obra completa.",
+          "sha256": "c2da0b046b4fa8117d36c20524638743554e2007dacf98e83dc98a55ab02bcef"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/i-got-you-babe-02.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 1 de la obra.",
+          "sha256": "3c8e6e26c52f6931876f1b350bb3cb69b9ef689e43132a2a2567a7368283b338"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/i-got-you-babe-03.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 2 de la obra.",
+          "sha256": "55b5e2fda3b1494f042a813f4c6519840e1f458a4f0e192e36b9de53f38169fd"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/i-got-you-babe-04.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Detalle o perspectiva 3 de la obra.",
+          "sha256": "c7806cbbddec03b3b7f6aa07287922c3ecc66f0362ccd41d22755283d246f6f4"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/i-got-you-babe-05.jpg",
+          "width": 837,
+          "height": 640,
+          "caption": "Detalle o perspectiva 4 de la obra.",
+          "sha256": "47bdb92b929aee8a13ecbd347c627cad43a3797e20e911f36a1aa84b83d94ab3"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/i-got-you-babe-06.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 5 de la obra.",
+          "sha256": "08975db8e0eff581dfe1f205f9c86f35a3440a4b1294c253d42277f95ece02fb"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20I%20Got%20You%20Babe",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20I%20Got%20You%20Babe"
+    },
+    {
+      "slug": "jose-manuel-ezquerra",
+      "title": "Jose Manuel Ezquerra: t’abla con su mirada",
+      "category": "objetos",
+      "series": null,
+      "technique": "Lápices Art & Graphic, rotuladores Uni-Posca, permanentes y acrílico",
+      "support": "Tabla de cocina de madera sin tratar",
+      "dimensions": "25 × 35 cm",
+      "materials": null,
+      "year": null,
+      "story": "Un retrato lleno de trazos de color sobre una tabla de cocina. El dibujo y la pintura dejan visible la presencia cotidiana del soporte.",
+      "url": "https://naroagutierrezgil.com/obra/jose-manuel-ezquerra/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/jose-manuel-ezquerra-01-cb0d94ce2e34-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/jose-manuel-ezquerra-01.jpg",
+          "width": 1585,
+          "height": 2048,
+          "caption": "Obra completa.",
+          "sha256": "cb0d94ce2e348e6370d34c0aff95edd7bffa15f8751b2d341d4c84024338f66f"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/jose-manuel-ezquerra-02.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Detalle o perspectiva 1 de la obra.",
+          "sha256": "722ae579a29d3daa2aea1edf2314e7ee92f016586237958ac3ff47628a43a925"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/jose-manuel-ezquerra-03.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 2 de la obra.",
+          "sha256": "3fcfcecfee93cf95ef930e49d0a90163d9f2e32ea6850a458a2f9d51a3ca397e"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/jose-manuel-ezquerra-04.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 3 de la obra.",
+          "sha256": "35aecc9e94c885fda479e1750d41c98bc34db71fb2986cb236509fa37b71aa62"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/jose-manuel-ezquerra-05.jpg",
+          "width": 640,
+          "height": 853,
+          "caption": "Detalle o perspectiva 4 de la obra.",
+          "sha256": "ff5ddb7839cdcdecfdc70c395e8f77939e4d94c69d385f518879d7ddd0568f47"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/jose-manuel-ezquerra-06.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 5 de la obra.",
+          "sha256": "44b86060ab5051e6d0fb93ad6619a72cefc65ae1d94db26554eee500a88ec120"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Jose%20Manuel%20Ezquerra%3A%20t%E2%80%99abla%20con%20su%20mirada",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Jose%20Manuel%20Ezquerra%3A%20t%E2%80%99abla%20con%20su%20mirada"
+    },
+    {
+      "slug": "billy-saw",
+      "title": "Billy Saw",
+      "category": "caracterizacion",
+      "series": null,
+      "technique": "Caracterización",
+      "support": "Rostro",
+      "dimensions": null,
+      "materials": null,
+      "year": 2016,
+      "story": "Caracterización presentada para los carnavales de 2016: una transformación que explora el rostro como soporte artístico.",
+      "url": "https://naroagutierrezgil.com/obra/billy-saw/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/billy-saw-01-dbdc860c5ff1-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/billy-saw-01.jpg",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Obra completa.",
+          "sha256": "dbdc860c5ff1cb8af4d0d4d06aea43ad853ede392bf2df4e0db0cb9f88aa0f38"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/billy-saw-02.jpg",
+          "width": 590,
+          "height": 836,
+          "caption": "Detalle o perspectiva 1 de la obra.",
+          "sha256": "ce5bd48d6809b4ed80a484079dca03927f6b8a855e628c6a65d9762943e120e5"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/billy-saw-03.jpg",
+          "width": 590,
+          "height": 845,
+          "caption": "Detalle o perspectiva 2 de la obra.",
+          "sha256": "eee8a657913b62b5b0847c4dda65412f972b82c4134764280e68fee883a76b69"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/billy-saw-04.jpg",
+          "width": 640,
+          "height": 865,
+          "caption": "Detalle o perspectiva 3 de la obra.",
+          "sha256": "b3138c81871c3ce80794aa3eda71fbdc376ff0e8b83ca6e7ab5f86cda6dd6601"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/billy-saw-05.jpg",
+          "width": 600,
+          "height": 820,
+          "caption": "Detalle o perspectiva 4 de la obra.",
+          "sha256": "ee33484525af22654d7fd8d6f33d8ba87485b15ff48e5bff0cd5fe7a10e6e4ac"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/billy-saw-06.jpg",
+          "width": 640,
+          "height": 871,
+          "caption": "Detalle o perspectiva 5 de la obra.",
+          "sha256": "97630e8629327827ef4021c94e3a0a03ed8cd7f8773fae1e34094f6646a934ca"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Billy%20Saw",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Billy%20Saw"
+    },
+    {
+      "slug": "out-por-los-pelos",
+      "title": "OUT (por los pelos)",
+      "category": "collage",
+      "series": null,
+      "technique": "Lápices de colores y collage",
+      "support": "Marco con passepartout intervenido",
+      "dimensions": "50 × 40 cm",
+      "materials": null,
+      "year": null,
+      "story": "Andre Agassi en Roland Garros de 1990. El marco se convierte en pista: fieltro, redes y cabellos acompañan el retrato. El recorte del passepartout y las gotas de látex prolongan la tensión de la escena.",
+      "url": "https://naroagutierrezgil.com/obra/out-por-los-pelos/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/out-por-los-pelos-01-64f6fd12a965-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/out-por-los-pelos-01.jpg",
+          "width": 1356,
+          "height": 1684,
+          "caption": "Obra completa.",
+          "sha256": "64f6fd12a965e429b105d98b5a60aa1a8b0fff403d2460fe5af5cdb1723825ae"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/out-por-los-pelos-02.jpg",
+          "width": 832,
+          "height": 403,
+          "caption": "Detalle o perspectiva 1 de la obra.",
+          "sha256": "fc8db39ee7f1e130e8087d32103f54edd79027e07f2bad8ad398a19d9ba6b99f"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/out-por-los-pelos-03.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 2 de la obra.",
+          "sha256": "b3f4c213e2391b067d79f900abfc39a5d9e258ce949000b3d3549eafef0079aa"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/out-por-los-pelos-04.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 3 de la obra.",
+          "sha256": "46c3b98d9cec3593f7c3f49da8e641e2e69aa78cbf7b22b91703f92dc0ac75cf"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/out-por-los-pelos-05.jpg",
+          "width": 843,
+          "height": 637,
+          "caption": "Detalle o perspectiva 4 de la obra.",
+          "sha256": "8880e559af285c6e8296af10e7f28a7cb42008b836eca61c64936dadcc27b27e"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/out-por-los-pelos-06.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle o perspectiva 5 de la obra.",
+          "sha256": "5a1eab03024eb306d5bda401735937f11a852df97b719573b33918f0b991240e"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20OUT%20%28por%20los%20pelos%29",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20OUT%20%28por%20los%20pelos%29"
+    },
+    {
+      "slug": "the-munsters",
+      "title": "The Munsters",
+      "category": "collage",
+      "series": null,
+      "technique": "Rotuladores de tinta, permanentes y acrílicos; frottage con grafito",
+      "support": "Papel con marco impreso",
+      "dimensions": "A4",
+      "materials": null,
+      "year": null,
+      "story": "Una colección de cuatro retratos sobre un fondo de frottage. El dibujo, los contrastes de tinta y los marcos impresos reúnen a la familia Munster.",
+      "url": "https://naroagutierrezgil.com/obra/the-munsters/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/the-munsters-01-000d318e67d1-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/the-munsters-01.jpg",
+          "width": 1452,
+          "height": 2048,
+          "caption": "Lily Munster.",
+          "sha256": "000d318e67d1545bb6c117860b40ef68681138792f9526d5b0ec897e61a5627f"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/the-munsters-02.jpg",
+          "width": 590,
+          "height": 826,
+          "caption": "Herman Munster.",
+          "sha256": "3c51035361d744d101c1a38888520cdef70e289e14dccbeb98c554af24df677a"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/the-munsters-03.jpg",
+          "width": 590,
+          "height": 827,
+          "caption": "Eddie Munster.",
+          "sha256": "47c29f12a28bc0e0dcc820aed62a053887d18b75b23cf6a5ade7da9df3c7cb62"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/the-munsters-04.jpg",
+          "width": 590,
+          "height": 837,
+          "caption": "El abuelo Munster.",
+          "sha256": "782e5e581de224803d8dadf0b798d86a327efb5c176308456a45f7605383664a"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20The%20Munsters",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20The%20Munsters"
+    },
+    {
+      "slug": "denbora-nora-zoaz",
+      "title": "Denbora Nora Zoaz Eder Galant Hori?",
+      "category": "collage",
+      "series": null,
+      "technique": "Pintura acrílica y collage",
+      "support": "Lienzo",
+      "dimensions": "54 × 81 cm",
+      "materials": "Hojas de calendario impresas, pintura acrílica y barnices mate y brillante.",
+      "year": null,
+      "story": "Un rostro contempla el paso del tiempo entre hojas de calendario recortadas como vegetales y turnos de espera. Los tonos cálidos y los distintos barnices acompañan una reflexión sobre el afecto por la vida y la manera de habitar los días.",
+      "url": "https://naroagutierrezgil.com/obra/denbora-nora-zoaz/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/denbora-nora-zoaz-8ec25e352e26-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/denbora-nora-zoaz.jpg",
+          "width": 2048,
+          "height": 1366,
+          "caption": "El rostro y el collage de hojas de calendario.",
+          "sha256": "8ec25e352e263a6fe81f41a2451899bd68c53eb9a896c262e5c484abffb408cd"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Denbora%20Nora%20Zoaz%20Eder%20Galant%20Hori%3F",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Denbora%20Nora%20Zoaz%20Eder%20Galant%20Hori%3F"
+    },
+    {
+      "slug": "la-pensadora",
+      "title": "La pensadora",
+      "category": "collage",
+      "series": "Mundo Interior",
+      "technique": "Acrílico mate y metálico sobre lienzo 3D con laterales pintados. Barniz mate y satinado.",
+      "support": "Lienzo 3D con laterales pintados",
+      "dimensions": "50 × 70 cm",
+      "materials": null,
+      "year": "2023",
+      "story": "Esta obra, al igual que el renombrado ‘Pensador’ de Rodin, representa de alguna manera el mundo interior y los procesos cognitivos de la humanidad. A su vez pretende romper el tópico de que la belleza y la intelectualidad son excluyentes.\n\nTambién hace referencia a la importancia de ser dueños y no ignorantes o esclavos de nuestros propios pensamientos, controlando así los caminos hacia los que éstos nos conducen. Por qué ser víctima y verdugo, pudiendo ser el propio propulsor de nuestros sueños.\n\n«Qué pensarías si te digo\nque lo que piensas es sagrado\npues es detonante y testigo\nde lo que se te ha manifestado.\n\nNo importa si te ha dado abrigo\no en cambio te ha perjudicado;\ntodo es fruto de tu mente, amigo,\nde lo que sembraste y has regado».\n\nUn poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansado se puede escuchar mejor y distinguir así a profetas sabios o tunantes, de entre todos esos contertulios que viven a voces en nuestro interior.",
+      "url": "https://naroagutierrezgil.com/obra/la-pensadora/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/la-pensadora-original-01-2048-d00881c21fae-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/la-pensadora-original-01-2048.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Vista completa: La pensadora, procesos cognitivos y mundo interior.",
+          "sha256": "d00881c21faed4404688946cdb589a7a521ee3906705863b513c0860053a941e"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/la-pensadora-hq-02.webp",
+          "width": 1600,
+          "height": 1200,
+          "caption": "Detalle de texturas y acrílico sobre lienzo 3D con laterales pintados.",
+          "sha256": "6fcd81721c8182d91851457f8c0eb5312d7f2496b16a9fb8deda2843c900e09f"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20La%20pensadora",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20La%20pensadora"
+    },
+    {
+      "slug": "baroque-farrokh",
+      "title": "Baroque Farrokh",
+      "category": "collage",
+      "series": "Tributos",
+      "technique": "Lápiz de color sobre fondo floral, técnica mixta y collage",
+      "support": "Lámina sobre fondo floral en marco intervenido",
+      "dimensions": "45 × 36 cm",
+      "materials": null,
+      "year": 2024,
+      "story": "Farrokh —antes de ser Freddie— posa pensativo sobre un azul de flores, la chaqueta estallando en color y la mano sosteniendo la barbilla. El marco se vuelve altar: cenefa dorada de coronas, recortes y ornamentos como quien adelanta una coronación.",
+      "url": "https://naroagutierrezgil.com/obra/baroque-farrokh/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/baroque-farrokh-4k-52f8182de160-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/baroque-farrokh-4k.webp",
+          "width": 3810,
+          "height": 3090,
+          "caption": "Fotografía master 4K del retrato de Freddie Mercury en clave barroca contemporánea.",
+          "sha256": "52f8182de160a40ac84f44d7aecf627556fd982c32a17d0579f3e5f00f263f47"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/artworks/baroque-farrokh-mjg4ClA9.webp",
+          "width": 1024,
+          "height": 830,
+          "caption": "Detalle del marco intervenido y collage floral.",
+          "sha256": "88d967e7e56eafad3b0d8a1ef96670202ce7e63ce9e7a45ba782f1191b36d4f2"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Baroque%20Farrokh",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Baroque%20Farrokh"
+    },
+    {
+      "slug": "el-gran-dakari",
+      "title": "El Gran Dakari",
+      "category": "pizarra",
+      "series": "DiviNos",
+      "technique": "Acrílico y pigmentos minerales",
+      "support": "Plato de pizarra natural de cantera",
+      "dimensions": "32 × 24 × 0,8 cm",
+      "materials": null,
+      "year": 2024,
+      "story": "Fuerza animal hiperrealista inmortalizada sobre la dureza del soporte de pizarra. La mirada felina emerge de la roca con veladuras y texturas que aprovechan el relieve geológico de la pieza.",
+      "url": "https://naroagutierrezgil.com/obra/el-gran-dakari/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/el-gran-dakari-4k-ca0fc32a256f-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/el-gran-dakari-4k.webp",
+          "width": 2876,
+          "height": 3840,
+          "caption": "Fotografía master 4K de El Gran Dakari sobre plato de pizarra natural.",
+          "sha256": "ca0fc32a256f7f07b3b3dc371460470489183bdeec96e872f11bd880f66fe73a"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/artworks/el-gran-dakari-C1tAWAhR.webp",
+          "width": 1498,
+          "height": 2000,
+          "caption": "Detalle de textura y relieve sobre la roca.",
+          "sha256": "0a4a77967d4278f5b880719f03019b8464018a6e85a9c70604997589260c34a1"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20El%20Gran%20Dakari",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20El%20Gran%20Dakari"
+    },
+    {
+      "slug": "audrey-hepburn",
+      "title": "Audrey Hepburn",
+      "category": "collage",
+      "series": "Obras Individuales",
+      "technique": "Lápiz, acrílico, collage textil y mica mineral",
+      "support": "Arpillera sobre tabla con marco intervenido",
+      "dimensions": "40 × 30 cm",
+      "materials": null,
+      "year": 2023,
+      "story": "La delicadeza atemporal de Audrey contrapuesta con el carácter de la mica mineral y trazos pop. El brillo sutil de los minerales acompaña la elegancia cinematográfica de su mirada.",
+      "url": "https://naroagutierrezgil.com/obra/audrey-hepburn/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/audrey-hepburn-4k-8ff642c0473c-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/audrey-hepburn-4k.webp",
+          "width": 3840,
+          "height": 2872,
+          "caption": "Fotografía master 4K del retrato de Audrey Hepburn con mica mineral sobre arpillera.",
+          "sha256": "8ff642c0473c781394fb0ab5f7fc92b7d565a35f965a3d755cf85932959a47c3"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/artworks/audrey-hepburn-DbIBTtIp.webp",
+          "width": 768,
+          "height": 1024,
+          "caption": "Encuadre frontal de la pieza.",
+          "sha256": "ee00491f2d251e1edb72bfd9421809ddae9c27e6917c977126376238130c8e81"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Audrey%20Hepburn",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Audrey%20Hepburn"
+    },
+    {
+      "slug": "geisha",
+      "title": "Geisha",
+      "category": "pizarra",
+      "series": "DiviNos",
+      "technique": "Óleo, acrílico y pan de oro",
+      "support": "Plato de pizarra natural",
+      "dimensions": "30 × 25 × 0,6 cm",
+      "materials": null,
+      "year": 2023,
+      "story": "Tradición y modernidad en un retrato hipnótico con pigmentos tradicionales y toques dorados. El recogido ceremonial y la expresión serena dialogan con la materia oscura de la piedra.",
+      "url": "https://naroagutierrezgil.com/obra/geisha/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/geisha-4k-d3cd2f5d76f3-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/geisha-4k.webp",
+          "width": 2660,
+          "height": 3200,
+          "caption": "Fotografía master 4K de Geisha en óleo y pan de oro sobre pizarra.",
+          "sha256": "d3cd2f5d76f3d94fa376c57dc7888be3aa9a794c0ade25f53bfb1be4e585b1ed"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/artworks/geisha-MfRtKWdu.webp",
+          "width": 1330,
+          "height": 1600,
+          "caption": "Vista completa del soporte de pizarra.",
+          "sha256": "85f771524123423f5b166436aea989c3f8fd6b866999f70ea36d62c893137e25"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Geisha",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Geisha"
+    },
+    {
+      "slug": "lagrimas-de-oro",
+      "title": "Lágrimas de Oro",
+      "category": "pizarra",
+      "series": "DiviNos",
+      "technique": "Pan de oro de 24k, acrílico y mica mineral",
+      "support": "Plato de pizarra natural con canto irregular",
+      "dimensions": "28 × 21 × 0,5 cm",
+      "materials": null,
+      "year": 2023,
+      "story": "Detalle expresionista de mirada sobrecogedora con lágrimas de pan de oro genuino y mica mineral. La luz reflectante del oro resbala sobre la textura pétrea y oscura del soporte.",
+      "url": "https://naroagutierrezgil.com/obra/lagrimas-de-oro/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/lagrimas-de-oro-4k-f585c8dca309-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/lagrimas-de-oro-4k.webp",
+          "width": 2880,
+          "height": 3840,
+          "caption": "Fotografía master 4K de Lágrimas de Oro con pan de oro de 24k sobre pizarra.",
+          "sha256": "f585c8dca309134f6037a3564f3eb00eb13b21ed03e5fe4f1adaeda11cd34305"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/lagrimas-de-oro-01.webp",
+          "width": 1195,
+          "height": 1600,
+          "caption": "Detalle de los destellos dorados y relieve de la piedra.",
+          "sha256": "61fa5125f3c3c05be4a894d920c52b73b64493df89425ab94643ab6a3902edda"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20L%C3%A1grimas%20de%20Oro",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20L%C3%A1grimas%20de%20Oro"
+    },
+    {
+      "slug": "love",
+      "title": "Love",
+      "category": "collage",
+      "series": "Obras Individuales",
+      "technique": "Collage textil, acrílico y tipografía intervenida",
+      "support": "Madera entelada",
+      "dimensions": "30 × 22 cm",
+      "materials": null,
+      "year": 2023,
+      "story": "Composición tipográfica y figurativa sobre el afecto contemporáneo. Capas de papel, tela y acrílico estructuran un mensaje directo con la frescura e inmediatez del arte urbano.",
+      "url": "https://naroagutierrezgil.com/obra/love/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/love-01-3eb4ad82f6c6-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/love-01.webp",
+          "width": 1200,
+          "height": 1600,
+          "caption": "Composición completa de Love en collage textil y acrílico.",
+          "sha256": "3eb4ad82f6c6f85829e396f791afd390f69a296428a0c93c5db0cda0705bf778"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/artworks/love-DA7L_L5F.webp",
+          "width": 1200,
+          "height": 1600,
+          "caption": "Detalle de texturas y capas tipográficas.",
+          "sha256": "3eb4ad82f6c6f85829e396f791afd390f69a296428a0c93c5db0cda0705bf778"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Love",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Love"
+    },
+    {
+      "slug": "the-golden-couple",
+      "title": "The Golden Couple",
+      "category": "pizarra",
+      "series": "DiviNos",
+      "technique": "Acrílico, rotuladores y pan de oro",
+      "support": "Pizarra natural de cantera",
+      "dimensions": "35 × 46 × 0,7 cm",
+      "materials": null,
+      "year": 2024,
+      "story": "Retrato doble con acentos de pan de oro sobre pizarra natural. El abrazo y la complicidad de la pareja quedan esculpidos entre el trazo gráfico contemporáneo y la nobleza mineral.",
+      "url": "https://naroagutierrezgil.com/obra/the-golden-couple/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/the-golden-couple-4k-737e48eb73d6-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/the-golden-couple-4k.webp",
+          "width": 3840,
+          "height": 2872,
+          "caption": "Fotografía master 4K de The Golden Couple sobre pizarra natural con pan de oro.",
+          "sha256": "737e48eb73d62800f2c2850284363af823e6b5bd7b83de5f64d3194231e3485b"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/artworks/the-golden-couple-C9C95N75.webp",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle de los trazos dorados y textura.",
+          "sha256": "1b1a3d2b2161424a7bd2133695f5ac109b6021c3db13b2a87b2a7e407792f7a5"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20The%20Golden%20Couple",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20The%20Golden%20Couple"
+    },
+    {
+      "slug": "pink-and-sparkles",
+      "title": "Pink and Sparkles",
+      "category": "objetos",
+      "series": "Facefood",
+      "technique": "Acrílico neón, mica mineral pura y collage",
+      "support": "Objeto intervenido con marco volumétrico",
+      "dimensions": "25 × 25 × 3 cm",
+      "materials": null,
+      "year": 2024,
+      "story": "Vibración rosa pop con destellos de mica mineral pura. Una pieza que desafía los límites del soporte convencional jugando con el volumen, el brillo y la saturación cromática.",
+      "url": "https://naroagutierrezgil.com/obra/pink-and-sparkles/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/pink-and-sparkles-4k-69ad796cf0c6-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/pink-and-sparkles-4k.webp",
+          "width": 3200,
+          "height": 3200,
+          "caption": "Fotografía master 4K de Pink and Sparkles con acrílico neón y mica mineral.",
+          "sha256": "69ad796cf0c6d9779786971d7cce814d982734373ea4d0c1a398e8e7593c3fc9"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/artworks/pink-and-sparkles-c4K6RUzC.webp",
+          "width": 1600,
+          "height": 1600,
+          "caption": "Detalle del relieve volumétrico y destellos.",
+          "sha256": "a75751066d986d6bdcdbc759e2acb1467a38667716aa41fb05413be93d5a06f5"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Pink%20and%20Sparkles",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Pink%20and%20Sparkles"
+    },
+    {
+      "slug": "roisin",
+      "title": "Róisín",
+      "category": "collage",
+      "series": "Vaivenes",
+      "technique": "Pintura y collage",
+      "support": null,
+      "dimensions": null,
+      "materials": null,
+      "year": null,
+      "story": "El retrato se encuentra con las plumas, el tejido y los adornos. Fotografía publicada por Naroa en su relato de Vaivenes en Haika.",
+      "url": "https://naroagutierrezgil.com/obra/roisin/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/roisin-original-4160-f096f99f38d6-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/roisin-original-4160.jpg",
+          "width": 4160,
+          "height": 3120,
+          "caption": "Róisín, obra completa con plumas, tejido y adornos.",
+          "sha256": "f096f99f38d6b7da7913be35521dd0680ca979f0f5e43c12907bbca140c31651"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/roisin-dibujo-original.png",
+          "width": 1585,
+          "height": 1189,
+          "caption": "El dibujo de Róisín antes de incorporar el collage.",
+          "sha256": "6959ebc6a63402a7055a04c0e2d8a7886b960947444d48ee62d44c1297023500"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/roisin-otra-vista.png",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Otra vista de la obra terminada y sus materiales.",
+          "sha256": "bcff88e3ca2f636a96c8d1018cb581ccdacc1512b859cc7a936add9f9a3bd653"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20R%C3%B3is%C3%ADn",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20R%C3%B3is%C3%ADn"
+    },
+    {
+      "slug": "mr-fahrenheit",
+      "title": "Mr. Fahrenheit",
+      "category": "collage",
+      "series": "Vaivenes",
+      "technique": "Pintura y collage",
+      "support": null,
+      "dimensions": null,
+      "materials": null,
+      "year": null,
+      "story": "Retrato de Freddie Mercury. El dibujo a lápices de colores se combina con distintas capas de papel, recortes de periódico y una corona de roscón de Reyes.",
+      "url": "https://naroagutierrezgil.com/obra/mr-fahrenheit/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/vaivenes-mr-fahrenheit-3f2561c4f194-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/vaivenes-mr-fahrenheit.jpg",
+          "width": 1905,
+          "height": 1545,
+          "caption": "Retrato de Freddie Mercury enmarcado con collage y corona de roscón.",
+          "sha256": "3f2561c4f1948a8adc05a0bcdab6bdd2b11607475e3d820fc71ca43e7e580871"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/mr-fahrenheit-4k.webp",
+          "width": 3840,
+          "height": 2880,
+          "caption": "Fotografía master 4K del retrato de Freddie Mercury.",
+          "sha256": "e6f0a7cee96208da4b0c5a1595ecfa84889cf677ab98c922e54aa4a9c43a4810"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/baroque-farrokh-4k.webp",
+          "width": 3810,
+          "height": 3090,
+          "caption": "Composición de estudio Baroque Farrokh en resolución 4K.",
+          "sha256": "52f8182de160a40ac84f44d7aecf627556fd982c32a17d0579f3e5f00f263f47"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Mr.%20Fahrenheit",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Mr.%20Fahrenheit"
+    },
+    {
+      "slug": "audreys-lightning",
+      "title": "Audrey’s Lightning",
+      "category": "collage",
+      "series": "Vaivenes",
+      "technique": "Pintura y collage",
+      "support": null,
+      "dimensions": null,
+      "materials": null,
+      "year": null,
+      "story": "Detalle del retrato de Audrey Hepburn: el rayo sobre su ojo hace un guiño a David Bowie. La pieza combina pintura y collage y fue presentada en Vaivenes en el Copper Deli Museo.",
+      "url": "https://naroagutierrezgil.com/obra/audreys-lightning/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/vaivenes-audreys-lightning-db78e90d5426-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/vaivenes-audreys-lightning.webp",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Detalle del retrato de Audrey Hepburn: el rayo sobre su ojo hace un guiño a David Bowie.",
+          "sha256": "db78e90d5426abb9df6613064ce71171dd2be9099ce02603472f72d0529dd76b"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/audrey-hepburn-4k.webp",
+          "width": 3840,
+          "height": 2872,
+          "caption": "Fotografía master 4K del retrato completo de Audrey Hepburn con rayo Bowie.",
+          "sha256": "8ff642c0473c781394fb0ab5f7fc92b7d565a35f965a3d755cf85932959a47c3"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Audrey%E2%80%99s%20Lightning",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Audrey%E2%80%99s%20Lightning"
+    },
+    {
+      "slug": "cantinflowers",
+      "title": "Cantinflowers",
+      "category": "collage",
+      "series": "Vaivenes",
+      "technique": "Pintura y collage",
+      "support": null,
+      "dimensions": null,
+      "materials": null,
+      "year": null,
+      "story": "Pintura y collage en torno a Mario Moreno. Una obra que Naroa recupera al presentar el encuentro entre DiviNos y Vaivenes en 2026.",
+      "url": "https://naroagutierrezgil.com/obra/cantinflowers/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/cantinflowers-17689d7324a4-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/trayectoria/cantinflowers.jpg",
+          "width": 3656,
+          "height": 2456,
+          "caption": "Pintura y collage en torno a Mario Moreno. Una obra que Naroa recupera al presentar el encuentro entre DiviNos y Vaivenes en 2026.",
+          "sha256": null
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/cantinflowers-4k.webp",
+          "width": 3656,
+          "height": 2456,
+          "caption": "Composición master 4K de Cantinflowers con matices textiles y florales.",
+          "sha256": "9dd913cf1c42a8278cff1b1c2daa8cca4ea362f1e658353065bd5fadd142e3d8"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/vaivenes-cantinflowers-detalle.jpg",
+          "width": 2000,
+          "height": 1500,
+          "caption": "Detalle en alta resolución de textura, relieve y prensa.",
+          "sha256": null
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Cantinflowers",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Cantinflowers"
+    },
+    {
+      "slug": "pippilotta",
+      "title": "Loving Långstrump",
+      "category": "collage",
+      "series": "Vaivenes",
+      "technique": "Técnica mixta",
+      "support": "Marco con passepartout",
+      "dimensions": "50 × 40 cm",
+      "materials": null,
+      "year": null,
+      "story": "Retrato de Inger Nilsson como Pippilotta Viktualia Rullgardina Krusmynta Efraimsdotter Långstrump —Pippi Calzaslargas— y su mono, el Señor Nilsson. El dibujo se integra en un collage de cuadros, corazones y pequeños envoltorios.",
+      "url": "https://naroagutierrezgil.com/obra/pippilotta/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/loving-langstrump-completa-bb0c8e994714-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/loving-langstrump-completa.png",
+          "width": 1858,
+          "height": 1512,
+          "caption": "Loving Långstrump: collage terminado con corazones y fondo de cuadros.",
+          "sha256": "bb0c8e99471451b3ac6644f88ee552f6bb5a56784ad35f0f44214e72afe85b6a"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/loving-langstrump-dibujo.png",
+          "width": 1641,
+          "height": 1231,
+          "caption": "El dibujo de Pippi y el Señor Nilsson, antes del collage.",
+          "sha256": "954e7bf0ac209e7d4effa1dae8f275388aada6d3378367ad2ed9b4fc592a0859"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/vaivenes-pippilotta-completa.png",
+          "width": 1200,
+          "height": 1006,
+          "caption": "Otra versión de la composición, conservada en el archivo de Repóker de Reinas.",
+          "sha256": "43b2480b9e2ab8e5160b91d05c2e32d6079e4b7932005088c672250db7bea1d7"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Loving%20L%C3%A5ngstrump",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Loving%20L%C3%A5ngstrump"
+    },
+    {
+      "slug": "rosetta",
+      "title": "Rosetta no es de piedra",
+      "category": "collage",
+      "series": "Vaivenes",
+      "technique": "Lápices de colores Art & Graphic de Faber-Castell y collage",
+      "support": "Marco con passepartout",
+      "dimensions": "50 × 40 cm",
+      "materials": "Papel de seda, recortes de papeles impresos e hilo grueso.",
+      "year": null,
+      "story": "Retrato de Sister Rosetta Tharpe, la abuela del rock & roll. El dibujo con lápices de colores pasa por el escáner y vuelve al soporte físico para convivir con capas de collage. El papel de seda, los recortes y el hilo de las cuerdas crean un arcoíris alrededor de su guitarra.",
+      "url": "https://naroagutierrezgil.com/obra/rosetta/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/rosetta-no-es-de-piedra-dc8cf29352ed-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/rosetta-no-es-de-piedra.png",
+          "width": 1830,
+          "height": 1480,
+          "caption": "La obra terminada: Sister Rosetta Tharpe entre casetes, pájaros y cuerdas de arcoíris.",
+          "sha256": "dc8cf29352ed1d7791bce5af049d2209535a7e8704fb990f0e2f3a7eea9bfa88"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/vaivenes-rosetta.jpg",
+          "width": 1880,
+          "height": 1410,
+          "caption": "Dibujo inicial del retrato de Sister Rosetta Tharpe.",
+          "sha256": "b358b6720ac2cf022b90110d315b10a6a8ebf32c8f82e27c3c7a80ee2a907ba6"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Rosetta%20no%20es%20de%20piedra",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Rosetta%20no%20es%20de%20piedra"
+    },
+    {
+      "slug": "dustin",
+      "title": "Hello Darkness My Old Friend",
+      "category": "collage",
+      "series": "Vaivenes",
+      "technique": "Lápices de colores Art & Graphic de Faber-Castell y collage",
+      "support": "Marco con passepartout",
+      "dimensions": "50 × 40 cm",
+      "materials": "Papel de pared antiguo, plástico de burbujas, envoltorios, celofán, cerillas, pieza de puzle, goma eva, acetato impreso, poliespán y pajitas.",
+      "year": null,
+      "story": "Dustin Hoffman en El Graduado. El collage recoge alusiones a la película para hablar de las expectativas, el plástico y las oscilaciones del mundo interior. La figura dibujada se escanea, se imprime y se combina con materiales cotidianos de distintas texturas.",
+      "url": "https://naroagutierrezgil.com/obra/dustin/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/hello-darkness-my-old-friend-bf2d129d5bb3-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/hello-darkness-my-old-friend.png",
+          "width": 1866,
+          "height": 1511,
+          "caption": "La obra terminada: el retrato, el vaso y los materiales del collage.",
+          "sha256": "bf2d129d5bb3d37572635c3f22609a3fc0695a1ac09bc0b903aa88713c883edf"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/vaivenes-dustin.jpg",
+          "width": 1839,
+          "height": 1379,
+          "caption": "Dibujo inicial de Dustin Hoffman en El Graduado.",
+          "sha256": "058c80f442e8c5d8cd8f71c8c3c6be2ed2f53a12c2f0ad3928ad5a95d7c78362"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Hello%20Darkness%20My%20Old%20Friend",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Hello%20Darkness%20My%20Old%20Friend"
+    }
+  ]
+}

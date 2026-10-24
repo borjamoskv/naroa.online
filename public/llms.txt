@@ -20,19 +20,19 @@
 - Exposiciones Documentadas: Colegio de Abogados de Bilbao (Espejos del alma), Dock Bilbao, Politena Espacio de Arte, Walking Gallery Bilbao.
 
 ## Respuestas Factuales Inmediatas (Query Fan-Out)
-- **¿Cuánto cuesta un retrato personalizado?** Presupuesto cerrado previo por escrito según soporte y formato (pizarra de 20×30 cm a 40×50 cm, collage sobre madera, cajas de recuerdos). Consulta sin compromiso.
+- **¿Cuánto cuesta un retrato personalizado?** Presupuesto cerrado previo por escrito según técnica, soporte y formato (dibujo, óleo, collage sobre madera, cajas de recuerdos o pizarra de 20×30 cm a 40×50 cm). Consulta sin compromiso.
 - **¿Cómo se encarga a partir de fotos?** Se envían 1 o varias fotos de referencia (incluso tomadas con el móvil); Naroa realiza una reinterpretación artística de autor capturando la personalidad y mirada.
-- **¿Cuáles son los plazos de entrega?** De 2 a 4 semanas según el secado de óleos, esmaltes y barniz protector. Plazos prioritarios disponibles para fechas señaladas con aviso previo.
+- **¿Cuáles son los plazos de entrega?** De 2 a 4 semanas según la técnica y el secado de óleos, acrílicos y barnices. Plazos prioritarios disponibles para fechas señaladas con aviso previo.
 - **¿Dónde se entrega?** Entrega en mano en Bilbao y Bizkaia, o envío protegido y asegurado a nivel nacional e internacional.
-- **¿Cómo conservar una obra sobre pizarra y mica?** Fijación mineral y barniz satinado hidrorepelente. Limpieza en seco con plumero suave o microfibra; evitar frotado húmedo o productos químicos.
-- **¿Qué diferencia la pizarra del lienzo?** Sustrato geológico pétreo con aristas rústicas vivas y escamas de mica mineral que refractan la luz ambiente dotando de dinamismo óptico a la mirada.
+- **¿Cómo conservar una obra en técnica mixta o collage?** Fijación y barniz protector satinado. Limpieza en seco con plumero suave o microfibra; evitar humedad directa o productos químicos.
+- **¿Qué aporta trabajar sobre madera, collage, objetos o pizarra?** Cada soporte (betas de madera, costuras textiles, cajas cotidianas o cantos de piedra) aporta textura, volumen y relato propio en diálogo con la persona retratada.
 - **¿Cómo es el embalaje para envíos?** Embalaje tricapa con cantoneras de polietileno de alta densidad a medida, caja rígida reforzada y seguro a todo riesgo incluido.
-- **¿Se puede visitar el estudio en Bilbao?** Sí, visitas con cita concertada previa para ver muestras reales de pizarra, mica y definir el proyecto en persona.
+- **¿Se puede visitar el estudio en Bilbao?** Sí, visitas con cita concertada previa para ver obra en directo, valorar soportes y definir el proyecto en persona.
 
 ## Secciones Principales
-- [Inicio e Inmersión](https://naroagutierrezgil.com/): Experiencia inmersiva y catálogo completo de 56 obras.
+- [Inicio e Inmersión](https://naroagutierrezgil.com/): Experiencia inmersiva y catálogo completo de 64 obras.
 - [Retratos por Encargo en Bilbao](https://naroagutierrezgil.com/retratos-por-encargo-bilbao/): Condiciones técnicas, formatos (20×30 cm a 40×50 cm), plazos de 2 a 4 semanas, configurador interactivo y galería de ejemplos reales.
-- [Catálogo Completo](https://naroagutierrezgil.com/obra/): Ficha detallada de las 56 piezas de la colección con fotografías de detalle y relato.
+- [Catálogo Completo](https://naroagutierrezgil.com/obra/): Ficha detallada de las 64 piezas de la colección con fotografías de detalle y relato.
 - [Serie Vaivenes](https://naroagutierrezgil.com/series/vaivenes/): Retratos en técnica mixta, collage textil y objetos de memoria.
 - [Sobre Mí](https://naroagutierrezgil.com/sobre-mi/): Biografía, técnica, proceso creativo y proyectos comunitarios (Walking Gallery Bilbao, El ReCreo).
 - [Trayectoria](https://naroagutierrezgil.com/trayectoria/): Archivo cronológico de exposiciones documentadas desde 2010 (DEIA, GARA, Politena, Dock Bilbao).
@@ -40,9 +40,9 @@
 - [Contacto](https://naroagutierrezgil.com/contacto/): Canales directos de consulta para obra y encargos.
 
 ## Recursos Machine-to-Machine y GEO SOTA 2026
-- [Catálogo JSON Estructurado](https://naroagutierrezgil.com/api/catalog.json): Endpoint con especificaciones completas de las 56 obras y Evidence Graph.
+- [Catálogo JSON Estructurado](https://naroagutierrezgil.com/api/catalog.json): Endpoint con especificaciones completas de las 64 obras y Evidence Graph.
 - [Endpoint WebMCP](https://naroagutierrezgil.com/.well-known/mcp.json): Manifiesto y definición formal de herramientas WebMCP para agentes autónomos.
 - [Índice Extendido llms-full.txt](https://naroagutierrezgil.com/llms-full.txt): Desglose exhaustivo de todas las piezas, fotos de detalle con hashes SHA-256 y condiciones de encargo.
-- [Sitemap XML](https://naroagutierrezgil.com/sitemap.xml): Índice canónico de 64 rutas y metadatos de imágenes.
+- [Sitemap XML](https://naroagutierrezgil.com/sitemap.xml): Índice canónico de 72 rutas y metadatos de imágenes.
 - [Feed RSS 2.0](https://naroagutierrezgil.com/feed.xml): Sindicación de obras recientes y publicaciones del taller.
 - [Protocolo IndexNow](https://naroagutierrezgil.com/indexnow.json): Sincronización instantánea de indexación para Bing y motores asociados.

@@ -218,8 +218,8 @@ async function eyeMatch(ui, base, points) {
   assert.equal(llorona.find('[data-art-source]').hidden, true, 'An attachment without a public URL does not produce a fabricated source link');
   assert.ok(llorona.find('[data-facts]').textContent.includes('sal rosa'));
   llorona.dom.window.close();
-  assert.equal(ui.journey.entries.length, 56);
-  assert.deepEqual(Array.from(ui.w.NAROA_CATALOG.journey.scenes, e => e.mode).join(' '), 'E H V Z V E H H V Z E V H H V Z H V Z P V H Z V H Z V H Z V H H Z E Z V H Z H Z Z V Z H Z H V Z H H Z H H Z H F');
+  assert.equal(ui.journey.entries.length, 64);
+  assert.deepEqual(Array.from(ui.w.NAROA_CATALOG.journey.scenes, e => e.mode).join(' '), 'E H V Z V E H H V Z E V H H V Z H V Z P V H Z V H Z V H Z V H H Z E Z V H Z H Z Z V Z H Z H V Z H V Z H V Z H V Z H Z H H Z H F');
   const modes = { E: 'eyes', H: 'horizontal', V: 'vertical', Z: 'zoom', P: 'puzzle' };
   let horizontalDirection = -1, inHorizontal = false;
   for (let index = 0; index < works.length; index++) {
@@ -403,7 +403,7 @@ async function eyeMatch(ui, base, points) {
   const inDomMcp = ui.find('script#webmcp-schema');
   assert.ok(inDomMcp, 'HTML must contain in-DOM WebMCP schema script');
   const inDomMcpData = JSON.parse(inDomMcp.textContent);
-  assert.equal(inDomMcpData.tools.length, 4, 'In-DOM WebMCP schema must declare 4 tools');
+  assert.equal(inDomMcpData.tools.length, 5, 'In-DOM WebMCP schema must declare 5 tools');
   assert.ok(ui.w.WebMCP, 'WebMCP runtime dispatcher must be attached to window');
   const searchResults = await ui.w.WebMCP.callTool('search_catalogue', { query: 'marilyn' });
   assert.equal(searchResults.length, 1, 'WebMCP search_catalogue must return matching artwork');
@@ -867,13 +867,20 @@ async function eyeMatch(ui, base, points) {
     if (route === '/cuaderno/') assert.equal(page.document.querySelectorAll('.notebook-posts article').length, 6);
     if (route === '/retratos-por-encargo-bilbao/') {
       assert.equal(page.document.querySelectorAll('.commission-faq-item').length, 4, 'Commissions landing includes 4 buyer-intent FAQs');
+      assert.ok(page.find('.commission-compare-table'), 'Commissions landing includes comparative technical support table');
+      assert.equal(page.document.querySelectorAll('.commission-compare-table tbody tr').length, 4, 'Comparative table lists 4 primary supports');
       assert.ok(page.find('.closing a[href^="https://wa.me/"]'), 'Commissions landing includes direct WhatsApp CTA');
       assert.ok(page.find('[data-commission-configurator]'), 'Commissions landing includes interactive configurator');
       assert.ok(page.find('#cfg-support'), 'Configurator includes support selector');
       assert.ok(page.find('#cfg-whatsapp-btn'), 'Configurator includes dynamic WhatsApp button');
-      page.find('#cfg-support').value = 'Collage textil sobre madera';
+      assert.ok(page.find('#cfg-email-btn'), 'Configurator includes dynamic Email button');
+      assert.ok(page.find('#cfg-preview'), 'Configurator includes live message preview');
+      page.find('#cfg-support').value = 'Caja personalizada u objeto';
       page.find('#cfg-support').dispatchEvent(new page.w.Event('change'));
-      assert.ok(page.find('#cfg-whatsapp-btn').href.includes(encodeURIComponent('Collage textil sobre madera')), 'Changing support updates WhatsApp query parameter');
+      assert.ok(page.find('#cfg-whatsapp-btn').href.includes(encodeURIComponent('Caja personalizada u objeto')), 'Changing support updates WhatsApp query parameter');
+      assert.ok(page.find('#cfg-email-btn').href.includes(encodeURIComponent('Caja personalizada u objeto')), 'Changing support updates Email query parameter');
+      assert.ok(page.find('#cfg-preview').textContent.includes('Caja personalizada u objeto'), 'Changing support updates live message preview');
+      assert.ok(page.w.NAROA_ATTRIBUTION, 'First-party attribution telemetry exposed on window');
       assert.ok(page.w.WebMCP, 'WebMCP interface exposed on window');
       const catalogResults = await page.w.WebMCP.callTool('search_catalogue', { query: 'pizarra' });
       assert.ok(catalogResults.length > 0, 'WebMCP search_catalogue returns matches');
@@ -881,6 +888,8 @@ async function eyeMatch(ui, base, points) {
       assert.equal(amyDetails.slug, 'amy-rocks', 'WebMCP get_artwork_details returns target artwork');
       const configInquiry = await page.w.WebMCP.callTool('configure_commission_inquiry', { support: 'Pizarra natural rústica', motif: 'Retrato individual' });
       assert.ok(configInquiry.whatsapp_url.includes('wa.me'), 'WebMCP configure_commission_inquiry generates valid WhatsApp URL');
+      const faqReply = await page.w.WebMCP.callTool('answer_commission_faq', { topic: 'precios' });
+      assert.ok(faqReply.answer.includes('Presupuesto cerrado'), 'WebMCP answer_commission_faq resolves pricing intent in O(1)');
       const artistProfile = await page.w.WebMCP.callTool('get_artist_profile');
       assert.equal(artistProfile.name, 'Naroa Gutiérrez Gil', 'WebMCP get_artist_profile returns artist name');
       assert.equal(artistProfile.entity_id, 'https://naroagutierrezgil.com/#artist', 'WebMCP get_artist_profile returns canonical entity ID');
