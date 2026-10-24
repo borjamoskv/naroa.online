@@ -574,7 +574,27 @@ def build(output):
     page("/retratos-por-encargo-bilbao/", "Retratos personalizados por encargo en Bilbao · Precios, fotos y proceso", "Encarga un retrato personalizado en Bilbao con Naroa Gutiérrez Gil. Retratos hechos a mano a partir de tu historia y fotografía sobre pizarra, collage, madera y objetos.", '<main id="main">' + commissions + '</main>', amor["photos"][0]["original"], schema=commissions_schema)
 
     contact = f'''<main id="main" class="contact-page"><div class="contact-background" data-parallax><img src="{rara['cover']}" alt="Rara Avis, composición de retratos y reflejos" fetchpriority="high"></div><div class="contact-shade"></div><section class="contact-copy"><p class="eyebrow">Naroa Gutiérrez Gil · Bilbao</p><h1 class="hand">¿Hablamos?</h1><p>Una persona. Una historia. Una idea a medio hacer.<br>No hace falta traerlo todo pensado.</p><a class="contact-email" href="mailto:naroa@naroa.eu?subject=Retrato%20por%20encargo">naroa@naroa.eu ↗</a><div class="contact-channels" aria-label="Vías de contacto diferenciadas"><article class="contact-channel"><span class="eyebrow">Encargos y obra</span><a class="text-link" href="mailto:naroa@naroa.eu?subject=Consulta%20sobre%20obra%20o%20encargo">Escribir por correo ↗</a><p>Consultas sobre obras del catálogo, formatos y encargos personalizados.</p></article><article class="contact-channel"><span class="eyebrow">Trato directo</span><a class="text-link" href="https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20hablar%20sobre%20un%20encargo." target="_blank" rel="noopener noreferrer">También por WhatsApp ↗</a><p>Conversación ágil para comentar una idea inicial o concertar llamada.</p></article><article class="contact-channel"><span class="eyebrow">Redes y archivo</span><a class="text-link" href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer">Facebook · Naroa Artista Plástica ↗</a><p>Álbumes de proceso, exposiciones y archivo fotográfico de cada serie.</p></article></div><div class="contact-details"><a href="tel:+34636060609">+34 636 060 609</a><a href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer">Facebook ↗</a><a href="https://instagram.com/naroa_art/" target="_blank" rel="noopener noreferrer">@naroa_art ↗</a><a href="https://naroagutierrez.wordpress.com/" target="_blank" rel="noopener noreferrer">Cuaderno WordPress ↗</a><span>Bilbao · País Vasco</span></div></section></main>'''
-    page("/contacto/", "Contacto", "Habla con Naroa Gutiérrez Gil sobre una obra o un retrato por encargo. Bilbao. Email, WhatsApp e Instagram.", contact, rara["photos"][0]["original"])
+    contact_schema = {
+        "@context": "https://schema.org",
+        "@type": "ContactPage",
+        "name": "Contacto · Naroa Gutiérrez Gil",
+        "url": ORIGIN + "/contacto/",
+        "description": "Habla con Naroa Gutiérrez Gil sobre una obra o un retrato por encargo. Bilbao. Email, WhatsApp e Instagram.",
+        "mainEntity": {
+            "@type": "Person",
+            "@id": ORIGIN + "/#artist",
+            "name": "Naroa Gutiérrez Gil",
+            "email": "naroa@naroa.eu",
+            "telephone": "+34636060609",
+            "homeLocation": {"@type": "Place", "name": "Bilbao, Bizkaia"},
+            "sameAs": [
+                "https://www.facebook.com/naroa.artista.plastica",
+                "https://instagram.com/naroa_art/",
+                "https://naroagutierrez.wordpress.com/",
+            ],
+        },
+    }
+    page("/contacto/", "Contacto", "Habla con Naroa Gutiérrez Gil sobre una obra o un retrato por encargo. Bilbao. Email, WhatsApp e Instagram.", contact, rara["photos"][0]["original"], schema=contact_schema)
     page("/404/", "Esta página se ha ido de paseo", "Vuelve a la obra de Naroa Gutiérrez Gil.", '<main id="main" class="not-found"><p class="eyebrow">404</p><h1>Esta página<br>se ha ido de paseo.</h1><a class="text-link" href="/">Volver a la obra ↗</a></main>', amor["photos"][0]["original"], not_found=True)
     aliases = {"/bio/": "/sobre-mi/", "/exposiciones/": "/trayectoria/", "/encargos/": "/retratos-por-encargo-bilbao/", "/retratos-por-encargo/": "/retratos-por-encargo-bilbao/", "/prensa/": "/cuaderno/", "/blog/": "/cuaderno/"}
     for src, dest in aliases.items():
@@ -637,7 +657,7 @@ def build(output):
     )
     write(output / "robots.txt", robots_content)
     write(output / "sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">' + ''.join(sitemap_entries) + '</urlset>\n')
-    write(output / "_headers", '/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n  Cache-Control: public, max-age=0, must-revalidate\n/immersive/*\n  Cache-Control: public, max-age=31536000, immutable\n')
+    write(output / "_headers", '/*\n  X-Frame-Options: DENY\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload\n  Cache-Control: public, max-age=0, must-revalidate\n/immersive/*\n  Cache-Control: public, max-age=31536000, immutable\n')
     write(output / "_redirects", ''.join(f'{src.rstrip("/")} {dest} 301\n' for src, dest in aliases.items()) + '/landing-bilbao /retratos-por-encargo-bilbao/ 301\n')
     write(output / "immersive" / "build-manifest.json", json.dumps({"reviewed": catalogue["reviewed"], "projects": len(projects), "canonical_routes": [p for p, _ in pages], "media_files": len(jobs), "originals": len(originals), "assets": assets}, ensure_ascii=False, indent=2) + '\n')
     print(f'Built {len(projects)} artworks, {len(pages)} canonical routes, {len(jobs)} optimized images → {output}')
