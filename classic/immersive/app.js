@@ -1734,6 +1734,7 @@
       const isJamesToMario = transition && works[base]?.slug === 'james-rocks' && works[incoming]?.slug === 'mario-moreno';
       const isJaioTo13n = transition && works[base]?.slug === 'custom-jaio' && works[incoming]?.slug === '13n';
       const isBowieToOlinga = transition && works[base]?.slug === 'el-hombre-que-susurraba-a-las-estrellas' && works[incoming]?.slug === 'olinga-a-la-naranja';
+      const isSistaToMulti = transition && works[base]?.slug === 'sistashark' && works[incoming]?.slug === 'multi-dimensional-love';
       const isArmigoTransition = transition && (works[incoming]?.slug === 'el-armigo-atomico' || works[base]?.slug === 'el-armigo-atomico');
       if (works[base]?.slug === 'el-armigo-atomico' || works[incoming]?.slug === 'el-armigo-atomico') {
         const armigoIdx = works.findIndex(w => w.slug === 'el-armigo-atomico');
