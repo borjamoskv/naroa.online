@@ -30,9 +30,9 @@
 - **¿Se puede visitar el estudio en Bilbao?** Sí, visitas con cita concertada previa para ver obra en directo, valorar soportes y definir el proyecto en persona.
 
 ## Secciones Principales
-- [Inicio e Inmersión](https://naroagutierrezgil.com/): Experiencia inmersiva y catálogo completo de 73 obras.
+- [Inicio e Inmersión](https://naroagutierrezgil.com/): Experiencia inmersiva y catálogo completo de 79 obras.
 - [Retratos por Encargo en Bilbao](https://naroagutierrezgil.com/retratos-por-encargo-bilbao/): Condiciones técnicas, formatos (20×30 cm a 40×50 cm), plazos de 2 a 4 semanas, configurador interactivo y galería de ejemplos reales.
-- [Catálogo Completo](https://naroagutierrezgil.com/obra/): Ficha detallada de las 73 piezas de la colección con fotografías de detalle y relato.
+- [Catálogo Completo](https://naroagutierrezgil.com/obra/): Ficha detallada de las 79 piezas de la colección con fotografías de detalle y relato.
 - [Serie Vaivenes](https://naroagutierrezgil.com/series/vaivenes/): Retratos en técnica mixta, collage textil y objetos de memoria.
 - [Sobre Mí](https://naroagutierrezgil.com/sobre-mi/): Biografía, técnica, proceso creativo y proyectos comunitarios (Walking Gallery Bilbao, El ReCreo).
 - [Trayectoria](https://naroagutierrezgil.com/trayectoria/): Archivo cronológico de exposiciones documentadas desde 2010 (DEIA, GARA, Politena, Dock Bilbao).
@@ -40,14 +40,14 @@
 - [Contacto](https://naroagutierrezgil.com/contacto/): Canales directos de consulta para obra y encargos.
 
 ## Recursos Machine-to-Machine y GEO SOTA 2026
-- [Catálogo JSON Estructurado](https://naroagutierrezgil.com/api/catalog.json): Endpoint con especificaciones completas de las 73 obras y Evidence Graph.
+- [Catálogo JSON Estructurado](https://naroagutierrezgil.com/api/catalog.json): Endpoint con especificaciones completas de las 79 obras y Evidence Graph.
 - [Endpoint WebMCP](https://naroagutierrezgil.com/.well-known/mcp.json): Manifiesto y definición formal de herramientas WebMCP para agentes autónomos.
 - [Índice Extendido llms-full.txt](https://naroagutierrezgil.com/llms-full.txt): Desglose exhaustivo de todas las piezas, fotos de detalle con hashes SHA-256 y condiciones de encargo.
-- [Sitemap XML](https://naroagutierrezgil.com/sitemap.xml): Índice canónico de 81 rutas y metadatos de imágenes.
+- [Sitemap XML](https://naroagutierrezgil.com/sitemap.xml): Índice canónico de 87 rutas y metadatos de imágenes.
 - [Feed RSS 2.0](https://naroagutierrezgil.com/feed.xml): Sindicación de obras recientes y publicaciones del taller.
 - [Protocolo IndexNow](https://naroagutierrezgil.com/indexnow.json): Sincronización instantánea de indexación para Bing y motores asociados.
 
-## Catálogo Exhaustivo de Obras (73 Piezas Documentadas)
+## Catálogo Exhaustivo de Obras (79 Piezas Documentadas)
 
 ### Marilyn Rocks (None)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/marilyn-rocks/
@@ -458,6 +458,66 @@
 - **Serie:** Serie En.lata
 - **Relato:** Retrato 3D realizado a partir del fotograma de un vídeo con decorado de la canción infantil Babyshark, impreso por capas en papel fotográfico y montado con silicona caliente dentro de una lata de conservas. Corona superior de conchas marinas con alambre y esmalte dorado, interior con mica plateada y brillantina, y reverso con mini-faro ensamblado y rotuladora Dymo.
 - **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Sistashark
+
+### Multi-dimensional Love (2022)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/multi-dimensional-love/
+- **Técnica:** Fotocollage 3D por capas articuladas y ensamblaje
+- **Soporte:** Lata de conservas intervenida sobre caballete
+- **Medidas:** None
+- **Materiales:** Papel fotográfico, lata de conservas reciclada, lámina gruesa, aluminio adhesivo, anilla, silicona caliente, celofán de colores, pajita de papel dorada, cuerda, flores de papel, washi-tape, cristales adhesivos y rótulos Dymo
+- **Serie:** Serie En.lata
+- **Relato:** Retrato 3D doble realizado a partir de tres fotografías y capas articuladas. Retrato interior con relieve en silicona, gafas de sol a color sobre figuras en blanco y negro, flores, washi-tape y cristales adhesivos con las iniciales de sus nombres, cubierto por una tapa metálica labrada con anilla y rótulo Dymo Better Together. Retrato exterior con fondo holográfico plateado, estrellas de brillantina y gafas 3D abatibles de celofán bicolor bajo corona de rosas y alas doradas.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Multi-dimensional%20Love
+
+### Peru, pura natura (2022)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/peru-pura-natura/
+- **Técnica:** Fotocollage 3D, ensamblaje y elementos botánicos
+- **Soporte:** Lata de conservas intervenida con estuche botánico
+- **Medidas:** None
+- **Materiales:** Fotografía sobre papel fotográfico, lata de conservas ovalada, ramas naturales, caracolas y conchas terrestres, blíster farmacéutico, cartulina, etiqueta No Molestar y caja de infusión Equinácea
+- **Serie:** Serie En.lata
+- **Relato:** «Érase Saban que estaba sosegado y calmado en el monte tumbado... El bosque enlatado, la natura en el bote». Retrato 3D en lata de conservas ovalada: Saban (Peru) recostado en una hamaca azul entre ramas y caracoles reales sobre un fondo de blíster de cápsulas vitamínicas al.sol.ítico natural. La anilla de apertura luce una etiqueta roja con la advertencia No Molestar y se presenta en estuche botánico de infusión Equinácea.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Peru%2C%20pura%20natura
+
+### En.lata.das (2022)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/enlatadas/
+- **Técnica:** Fotocollage por capas y ensamblaje con patas de alambre
+- **Soporte:** Lata de conservas intervenida con soporte escultórico
+- **Medidas:** None
+- **Materiales:** Fotografías originales, lata de conservas metálica, alambre grueso galvanizado, cuerda de cáñamo, flores de papel y gomaeva, papel de seda, gatos de madera ilustrados, alambre fino, esmalte dorado y Dymo
+- **Serie:** Serie En.lata
+- **Relato:** «Lasaio, lanaro y cuatro gatas enlatadas en una lata con patas». Retrato 3D doble que fusiona fotografías de infancia de Naroa y Saioa Etxebarria montadas por capas con silicona caliente dentro de una lata de conservas dotada de patas de alambre grueso. Remate perimetral con cuerda, rosas de papel y gomaeva, cuatro gatos ilustrados en la cresta y globo de cómic con alambre que proclama I love you so mau.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20En.lata.das
+
+### Leire (2021)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/leire/
+- **Técnica:** Dibujo figurativo, pan de oro, mica plateada, brillantina y collage
+- **Soporte:** Papel con passepartout en marco blanco
+- **Medidas:** 40 × 50 cm aprox.
+- **Materiales:** Lápices de colores Faber-Castell, pan de oro, mica plateada pura, purpurina dorada y plateada, pegatinas holográficas, rotuladores y papel de acuarela
+- **Serie:** Colección general
+- **Relato:** «La dulzura que ella emana, tiñó mis trazos de vainilla y fresa. En su corazón planté un smiley con una sonrisa de oreja a oreja. De oro, brillantina y mica plateada he vestido su ropaje. Y la luz amorosa de su mirada, es la que me da coraje». Retrato figurativo en tonos cálidos sobre passepartout blanco, con ropaje texturizado en oro y mica y collage con corazón y smiley holográfico.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Leire
+
+### Eneko el Marino (2019)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/eneko-el-marino/
+- **Técnica:** Técnica mixta, lápices Art & Graphic y collage físico-digital-físico
+- **Soporte:** Marco vintage de 44 × 55 cm con passepartout envejecido
+- **Medidas:** 44 × 55 cm
+- **Materiales:** Lápices de colores Faber-Castell Art & Graphic, papel impreso, lámina antigua recortada, pegatina de cerveza Brutus y marco vintage dorado con passepartout
+- **Serie:** Colección general
+- **Relato:** Homenaje a Popeye a través del retrato de Eneko con pipa en la boca, bíceps flexionado y brazalete marinero. La artista investiga los sucesivos tránsitos entre lo físico y lo digital, aislando la figura y aplicando distintas capas de collage recortando una lámina antigua en tonos salmón y la gráfica de una cerveza artesanal Brutus.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Eneko%20el%20Marino
+
+### Aupas (2019)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/aupas/
+- **Técnica:** Lápices de colores y técnica mixta expresiva sobre papel
+- **Soporte:** Papel montado con passepartout en marco de 50 × 50 cm
+- **Medidas:** 50 × 50 cm
+- **Materiales:** Lápices de colores, rotulador y técnica mixta sobre papel de bellas artes montado con passepartout en marco cuadrado
+- **Serie:** Colección general
+- **Relato:** Retrato doble de padre e hijo en brazos («Aupas»). Realizado con enérgica trama de líneas en lápices de colores y trazos expresivos en tonos rojo, azul, verde y negro que transmiten el vínculo protector y afectivo de la escena familiar.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Aupas
 
 ### El hombre que susurraba a las estrellas (None)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/el-hombre-que-susurraba-a-las-estrellas/

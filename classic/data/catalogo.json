@@ -2947,6 +2947,336 @@
           "Reverso de la lata con mini-faro ensamblado y firma NARO.22 con Dymo."
         ]
       }
+    },
+    {
+      "slug": "multi-dimensional-love",
+      "title": "Multi-dimensional Love",
+      "category": "objetos",
+      "technique": "Fotocollage 3D por capas articuladas y ensamblaje",
+      "support": "Lata de conservas intervenida sobre caballete",
+      "story": "Retrato 3D doble realizado a partir de tres fotografías y capas articuladas. Retrato interior con relieve en silicona, gafas de sol a color sobre figuras en blanco y negro, flores, washi-tape y cristales adhesivos con las iniciales de sus nombres, cubierto por una tapa metálica labrada con anilla y rótulo Dymo Better Together. Retrato exterior con fondo holográfico plateado, estrellas de brillantina y gafas 3D abatibles de celofán bicolor bajo corona de rosas y alas doradas.",
+      "images": [
+        {
+          "src": "/images/catalogo/multi-dimensional-love-01.jpg",
+          "width": 1024,
+          "height": 768,
+          "caption": "Vista frontal con gafas 3D de celofán sobre caballete en la playa.",
+          "sha256": "7dec429f02a54b586566ae25e64ff23a195199f6840b90d712ff3bf0839e44c2"
+        },
+        {
+          "src": "/images/catalogo/multi-dimensional-love-02.jpg",
+          "width": 768,
+          "height": 1024,
+          "caption": "Gafas 3D alzadas mostrando los retratos sobre fondo holográfico con corazón y estrellas.",
+          "sha256": "4fdbb06a0c4279a139b7ad8b1c4c4b2fc07aa91a0be354f55f67d3f001e31d89"
+        },
+        {
+          "src": "/images/catalogo/multi-dimensional-love-03.jpg",
+          "width": 1024,
+          "height": 768,
+          "caption": "Tapa con rótulo Dymo Better Together abierta hacia el retrato interior con gafas a color.",
+          "sha256": "64a3a4058fe2840451bf3d3908d774ff5af18aea81942df0db54a7ecc35bee3f"
+        },
+        {
+          "src": "/images/catalogo/multi-dimensional-love-4k.webp",
+          "width": 1024,
+          "height": 768,
+          "caption": "Fotografía master 4K de multi-dimensional-love.",
+          "sha256": "755854b0120a61525614b4a8987830a92048be2cf598461f138d926fde2e890a"
+        }
+      ],
+      "source": null,
+      "dimensions": null,
+      "materials": "Papel fotográfico, lata de conservas reciclada, lámina gruesa, aluminio adhesivo, anilla, silicona caliente, celofán de colores, pajita de papel dorada, cuerda, flores de papel, washi-tape, cristales adhesivos y rótulos Dymo",
+      "series": "Serie En.lata",
+      "year": "2022",
+      "credit": "Cita de Friedrich Rückert: «El amor es el más viejo, a la vez que es el más nuevo y único acontecimiento del mundo».",
+      "selected": true,
+      "kind": "obra",
+      "editorial": {
+        "image_order": [
+          0,
+          1,
+          2
+        ],
+        "captions": [
+          "Retrato exterior con gafas 3D de celofán bajadas sobre caballete en la playa.",
+          "Gafas 3D alzadas mostrando los retratos individuales en fondo holográfico con estrellas de purpurina.",
+          "Tapa metálica con anilla y rótulo Better Together abierta hacia el relieve interior."
+        ]
+      }
+    },
+    {
+      "slug": "peru-pura-natura",
+      "title": "Peru, pura natura",
+      "category": "objetos",
+      "technique": "Fotocollage 3D, ensamblaje y elementos botánicos",
+      "support": "Lata de conservas intervenida con estuche botánico",
+      "story": "«Érase Saban que estaba sosegado y calmado en el monte tumbado... El bosque enlatado, la natura en el bote». Retrato 3D en lata de conservas ovalada: Saban (Peru) recostado en una hamaca azul entre ramas y caracoles reales sobre un fondo de blíster de cápsulas vitamínicas al.sol.ítico natural. La anilla de apertura luce una etiqueta roja con la advertencia No Molestar y se presenta en estuche botánico de infusión Equinácea.",
+      "images": [
+        {
+          "src": "/images/catalogo/peru-pura-natura-01.jpg",
+          "width": 1024,
+          "height": 768,
+          "caption": "Retrato 3D de Peru en la hamaca entre ramas y caracoles con fondo de cápsulas y cartel No Molestar.",
+          "sha256": "d3e0bbfd4d5c4f1af854473f98bb53804815fe111af51080079be9f690ecdc5d"
+        },
+        {
+          "src": "/images/catalogo/peru-pura-natura-02.jpg",
+          "width": 1024,
+          "height": 768,
+          "caption": "Tapa dorada de la lata cerrada con anilla y cartel No Molestar sobre la vegetación.",
+          "sha256": "017424beefe8743b6217b08f5a10d84f8d287073a98903ea9b5f92495ab51467"
+        },
+        {
+          "src": "/images/catalogo/peru-pura-natura-03.jpg",
+          "width": 1024,
+          "height": 768,
+          "caption": "Lata asomando de la caja de infusión Equinácea con goma elástica morada.",
+          "sha256": "7581bd5017660b79d988ed0028cefa20bb2c04321d16d2a6d2448bab6c98bbc4"
+        },
+        {
+          "src": "/images/catalogo/peru-pura-natura-4k.webp",
+          "width": 1024,
+          "height": 768,
+          "caption": "Fotografía master 4K de peru-pura-natura.",
+          "sha256": "b0f5966430d448eaec7bb8824c40c42be6e2a72fc9981c3f8c8f61e308044c76"
+        }
+      ],
+      "source": null,
+      "dimensions": null,
+      "materials": "Fotografía sobre papel fotográfico, lata de conservas ovalada, ramas naturales, caracolas y conchas terrestres, blíster farmacéutico, cartulina, etiqueta No Molestar y caja de infusión Equinácea",
+      "series": "Serie En.lata",
+      "year": "2022",
+      "credit": "Poema de la artista: «Érase Saban que estaba sosegado y calmado en el monte tumbado. Desde el horizonte incluso se le avistaba...».",
+      "selected": true,
+      "kind": "obra",
+      "editorial": {
+        "image_order": [
+          0,
+          1,
+          2
+        ],
+        "captions": [
+          "Retrato en relieve tridimensional de Peru descansando en la hamaca con caracoles y cápsulas.",
+          "Lata dorada cerrada con anilla y etiqueta No Molestar sobre la vegetación.",
+          "Lata asomando del estuche de medicina botánica Equinácea con goma morada."
+        ]
+      }
+    },
+    {
+      "slug": "enlatadas",
+      "title": "En.lata.das",
+      "category": "objetos",
+      "technique": "Fotocollage por capas y ensamblaje con patas de alambre",
+      "support": "Lata de conservas intervenida con soporte escultórico",
+      "story": "«Lasaio, lanaro y cuatro gatas enlatadas en una lata con patas». Retrato 3D doble que fusiona fotografías de infancia de Naroa y Saioa Etxebarria montadas por capas con silicona caliente dentro de una lata de conservas dotada de patas de alambre grueso. Remate perimetral con cuerda, rosas de papel y gomaeva, cuatro gatos ilustrados en la cresta y globo de cómic con alambre que proclama I love you so mau.",
+      "images": [
+        {
+          "src": "/images/catalogo/enlatadas-01.jpg",
+          "width": 768,
+          "height": 1024,
+          "caption": "Conjunto escultórico completo en lata con patas de alambre, los cuatro gatos y mensaje I love you so mau.",
+          "sha256": "d604970f23e8f934ae6da2124d133991d4963de13f694ce869aef0eadff30052"
+        },
+        {
+          "src": "/images/catalogo/enlatadas-02.jpg",
+          "width": 1024,
+          "height": 768,
+          "caption": "Primer plano frontal de las niñas enlatadas en relieve con rosas de papel.",
+          "sha256": "1116ac884fd30ef5f6a71217375d147d258aa698e9391f5e4c69ddaf672bdcb8"
+        },
+        {
+          "src": "/images/catalogo/enlatadas-4k.webp",
+          "width": 768,
+          "height": 1024,
+          "caption": "Fotografía master 4K de enlatadas.",
+          "sha256": "6b3c3c1bf756f892dd8887b3a62888312dc0d105f2087931598faaa978364d51"
+        }
+      ],
+      "source": null,
+      "dimensions": null,
+      "materials": "Fotografías originales, lata de conservas metálica, alambre grueso galvanizado, cuerda de cáñamo, flores de papel y gomaeva, papel de seda, gatos de madera ilustrados, alambre fino, esmalte dorado y Dymo",
+      "series": "Serie En.lata",
+      "year": "2022",
+      "credit": "Dedicado a Saioa Etxebarria: «Lasaio, lanaro y cuatro gatas enlatadas en una lata con patas».",
+      "selected": true,
+      "kind": "obra",
+      "editorial": {
+        "image_order": [
+          0,
+          1
+        ],
+        "captions": [
+          "Conjunto escultórico completo en lata con patas de alambre, gatos y mensaje I love you so mau.",
+          "Primer plano frontal de las niñas enlatadas en relieve con rosas de papel."
+        ]
+      }
+    },
+    {
+      "slug": "leire",
+      "title": "Leire",
+      "category": "collage",
+      "technique": "Dibujo figurativo, pan de oro, mica plateada, brillantina y collage",
+      "support": "Papel con passepartout en marco blanco",
+      "story": "«La dulzura que ella emana, tiñó mis trazos de vainilla y fresa. En su corazón planté un smiley con una sonrisa de oreja a oreja. De oro, brillantina y mica plateada he vestido su ropaje. Y la luz amorosa de su mirada, es la que me da coraje». Retrato figurativo en tonos cálidos sobre passepartout blanco, con ropaje texturizado en oro y mica y collage con corazón y smiley holográfico.",
+      "images": [
+        {
+          "src": "/images/catalogo/leire-01.jpg",
+          "width": 838,
+          "height": 1024,
+          "caption": "Retrato completo de Leire enmarcado en blanco con passepartout.",
+          "sha256": "9a7bf3a659f5c7e25516e1a8aa3a80186752a8d718cfba47a38eb9fe5a6f805b"
+        },
+        {
+          "src": "/images/catalogo/leire-02.jpg",
+          "width": 1024,
+          "height": 768,
+          "caption": "Detalle en perspectiva de las texturas de mica, oro y smiley holográfico.",
+          "sha256": "9abf561a87e159ebd8caff5ae6d198f445d7fa4bf0e175db63c8b83559ed3ada"
+        },
+        {
+          "src": "/images/catalogo/leire-03.jpg",
+          "width": 1024,
+          "height": 768,
+          "caption": "Detalle de la firma Naroa 2021, destellos de brillantina y estrella plateada.",
+          "sha256": "41a83e038a25bba1d3c6b35879635b9827d4c356d3081316a81e39a5c622fe41"
+        },
+        {
+          "src": "/images/catalogo/leire-4k.webp",
+          "width": 838,
+          "height": 1024,
+          "caption": "Fotografía master 4K de leire.",
+          "sha256": "35987086b2523805c25cd238ecfa6a136e6163ee6ef36ff7f4e4427208031a64"
+        }
+      ],
+      "source": null,
+      "dimensions": "40 × 50 cm aprox.",
+      "materials": "Lápices de colores Faber-Castell, pan de oro, mica plateada pura, purpurina dorada y plateada, pegatinas holográficas, rotuladores y papel de acuarela",
+      "series": null,
+      "year": "2021",
+      "credit": "Firmado Naroa 2021.",
+      "selected": true,
+      "kind": "obra",
+      "editorial": {
+        "image_order": [
+          0,
+          1,
+          2
+        ],
+        "captions": [
+          "Retrato completo de Leire enmarcado en blanco con passepartout.",
+          "Detalle en perspectiva de las texturas de mica, oro y smiley holográfico.",
+          "Detalle de la firma Naroa 2021 y destellos de brillantina mineral."
+        ]
+      }
+    },
+    {
+      "slug": "eneko-el-marino",
+      "title": "Eneko el Marino",
+      "category": "collage",
+      "technique": "Técnica mixta, lápices Art & Graphic y collage físico-digital-físico",
+      "support": "Marco vintage de 44 × 55 cm con passepartout envejecido",
+      "story": "Homenaje a Popeye a través del retrato de Eneko con pipa en la boca, bíceps flexionado y brazalete marinero. La artista investiga los sucesivos tránsitos entre lo físico y lo digital, aislando la figura y aplicando distintas capas de collage recortando una lámina antigua en tonos salmón y la gráfica de una cerveza artesanal Brutus.",
+      "images": [
+        {
+          "src": "/images/catalogo/eneko-el-marino-01.jpg",
+          "width": 1024,
+          "height": 768,
+          "caption": "Primer plano de Eneko el Marino con pipa, bíceps flexionado y collage de cerveza Brutus.",
+          "sha256": "8fd7bc3479d746df9bb04ad1a174c10e71c7b70845ad34dcd3b9d4aeef76360d"
+        },
+        {
+          "src": "/images/catalogo/eneko-el-marino-02.jpg",
+          "width": 1024,
+          "height": 797,
+          "caption": "Obra completa en marco vintage de 44x55 cm con passepartout envejecido.",
+          "sha256": "3ec1b90628a5b4df598095fa884b549474c734859c9fe6cd29619ee82c1335fd"
+        },
+        {
+          "src": "/images/catalogo/eneko-el-marino-4k.webp",
+          "width": 1024,
+          "height": 768,
+          "caption": "Fotografía master 4K de eneko-el-marino.",
+          "sha256": "0ef618d14202c6c8575405a90bf7fb77d718a09201555bae87c3fbc85e32fbb2"
+        }
+      ],
+      "source": null,
+      "dimensions": "44 × 55 cm",
+      "materials": "Lápices de colores Faber-Castell Art & Graphic, papel impreso, lámina antigua recortada, pegatina de cerveza Brutus y marco vintage dorado con passepartout",
+      "series": null,
+      "year": "2019",
+      "credit": "Firmado Naroa 2.19.",
+      "selected": true,
+      "kind": "obra",
+      "editorial": {
+        "image_order": [
+          0,
+          1
+        ],
+        "captions": [
+          "Primer plano de Eneko el Marino con pipa, músculo flexionado y collage de cerveza Brutus.",
+          "Obra enmarcada en marco vintage dorado con passepartout envejecido."
+        ]
+      }
+    },
+    {
+      "slug": "aupas",
+      "title": "Aupas",
+      "category": "collage",
+      "technique": "Lápices de colores y técnica mixta expresiva sobre papel",
+      "support": "Papel montado con passepartout en marco de 50 × 50 cm",
+      "story": "Retrato doble de padre e hijo en brazos («Aupas»). Realizado con enérgica trama de líneas en lápices de colores y trazos expresivos en tonos rojo, azul, verde y negro que transmiten el vínculo protector y afectivo de la escena familiar.",
+      "images": [
+        {
+          "src": "/images/catalogo/aupas-01.jpg",
+          "width": 1024,
+          "height": 1024,
+          "caption": "Retrato artístico Aupas: padre e hijo en técnica mixta expresiva.",
+          "sha256": "4974da8f528b64c647c0830519666c138780076c977439835996945d7f76a1bb"
+        },
+        {
+          "src": "/images/catalogo/aupas-02.jpg",
+          "width": 768,
+          "height": 1024,
+          "caption": "Obra enmarcada en formato 50x50 cm con passepartout firmado Naroa 2019.",
+          "sha256": "f42a77d8cd59ac1e156e84c6600de8c251c73a83868e114a73309ba4b4744f6a"
+        },
+        {
+          "src": "/images/catalogo/aupas-03.jpg",
+          "width": 1024,
+          "height": 576,
+          "caption": "El protagonista con el cuadro enmarcado.",
+          "sha256": "ab38a97689aeb78c1b238de2f5b46c07476bf2c4b400067b9f11d305fb68c72f"
+        },
+        {
+          "src": "/images/catalogo/aupas-4k.webp",
+          "width": 1024,
+          "height": 1024,
+          "caption": "Fotografía master 4K de aupas.",
+          "sha256": "f3ce320a349fa1b8e9a9fea9d64935a6084fd538fcb12e1f99610bc65937f7bb"
+        }
+      ],
+      "source": null,
+      "dimensions": "50 × 50 cm",
+      "materials": "Lápices de colores, rotulador y técnica mixta sobre papel de bellas artes montado con passepartout en marco cuadrado",
+      "series": null,
+      "year": "2019",
+      "credit": "Firmado Naroa 2019.",
+      "selected": true,
+      "kind": "obra",
+      "editorial": {
+        "image_order": [
+          0,
+          1,
+          2
+        ],
+        "captions": [
+          "Retrato artístico Aupas: padre e hijo en trazos de técnica mixta expresiva.",
+          "Obra enmarcada en formato cuadrado de 50x50 cm con passepartout firmado Naroa 2019.",
+          "El protagonista con el cuadro enmarcado."
+        ]
+      }
     }
   ]
 }
