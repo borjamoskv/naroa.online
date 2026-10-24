@@ -40,3 +40,9 @@ Timbre original por síntesis modal de una lámina metálica afinada en re5 (587
 con un ataque breve derivado de las grabaciones CC0 indicadas arriba.
 La muestra se genera con `tools/compose_musicbox.py`; la melodía se interpreta
 en el navegador con alturas afinadas y desciende una octava dentro del iris.
+
+## Homenaje a David Bowie ("El hombre que susurraba a las estrellas")
+
+Vocalización y diseño sonoro procesado con reverberación de placa y compresión
+estudio inspirada en las sesiones de Hansa Studios Berlín ("Heroes"), sintetizado
+y procesado para la obra de Naroa dedicada al artista.

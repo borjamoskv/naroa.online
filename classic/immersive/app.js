@@ -244,8 +244,8 @@
       galleryReturnFocus = null;
       scheduleScroll();
     });
-    const focals = { 'rara-avis': '56% 42%', 'amor-en-conserva': '50% 54%', 'entre-tantas-flores-de-dia': '50% 36%', 'johnny-rocks': '50% 42%', 'rockagipsy': '50% 43%', 'hugo-box': '50% 38%' };
-    const mobileFocals = { 'rara-avis': '61% 40%', 'amor-en-conserva': '48% 54%', 'denbora-nora-zoaz': '18% 45%', 'el-hombre-que-susurraba-a-las-estrellas': '74% 44%' };
+    const focals = { 'rara-avis': '56% 42%', 'amor-en-conserva': '50% 54%', 'entre-tantas-flores-de-dia': '50% 36%', 'johnny-rocks': '50% 42%', 'rockagipsy': '50% 43%', 'hugo-box': '50% 38%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%' };
+    const mobileFocals = { 'rara-avis': '61% 40%', 'amor-en-conserva': '48% 54%', 'denbora-nora-zoaz': '18% 45%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%' };
     // Pupil centres measured on the unaltered cover photographs, in source-image coordinates.
     const eyes = {
       'marilyn-rocks': { x: .635, y: .392, iris: .030 },
@@ -284,6 +284,17 @@
       ajenjoBurstTimer = setTimeout(() => {
         stage.classList.remove('has-flash-burst');
       }, 420);
+    }
+    let bowieZoomTimer = null, bowieVisited = false;
+    function fireBowieZoom() {
+      soundscape?.speakHero?.();
+      stage.classList.remove('has-bowie-zoom');
+      void stage.offsetWidth;
+      stage.classList.add('has-bowie-zoom');
+      clearTimeout(bowieZoomTimer);
+      bowieZoomTimer = setTimeout(() => {
+        stage.classList.remove('has-bowie-zoom');
+      }, 1600);
     }
     function focusPictures() { works.forEach((p, i) => scenes[i].style.setProperty('--position', (innerWidth < 760 && mobileFocals[p.slug]) || focals[p.slug] || '50% 44%')); }
     focusPictures();
@@ -376,7 +387,8 @@
         scene.style.visibility = 'visible'; scene.style.zIndex = outgoing ? '1' : '2';
         scene.style.willChange = transition ? 'opacity,transform' : 'auto'; image.style.willChange = still ? 'auto' : 'transform';
         scene.style.clipPath = 'inset(0)'; scene.style.opacity = '1'; scene.style.transform = 'translate3d(0px,0px,0)';
-        scene.style.maskImage = scene.style.webkitMaskImage = 'none'; image.style.transformOrigin = '50% 50%';
+        scene.style.maskImage = scene.style.webkitMaskImage = 'none';
+        image.style.transformOrigin = works[index].slug === 'el-hombre-que-susurraba-a-las-estrellas' ? '65.2% 57.4%' : '50% 50%';
         if (works[index].interaction === 'puzzle' && (!still || puzzles.has(index))) drawPuzzle(index, outgoing && transition ? fraction : 0, still);
         if (works[index].slug === 'custom-jaio' && !state.fit) {
           const step = outgoing && transition ? (fraction < .34 ? 0 : fraction < .67 ? 1 : 2) : 0;
@@ -385,7 +397,14 @@
         }
         if (still) { image.style.transform = ''; return; }
         if (!transition) {
-          image.style.transform = `translate3d(0,${(-smooth(pose.explore) * 3).toFixed(3)}%,0) scale(1.08000)`;
+          const isBowie = works[index].slug === 'el-hombre-que-susurraba-a-las-estrellas';
+          if (isBowie) {
+            image.style.transformOrigin = '65.2% 57.4%';
+            const holdZoom = 1.25 + smooth(pose.explore) * 0.50;
+            image.style.transform = `scale(${holdZoom.toFixed(5)})`;
+          } else {
+            image.style.transform = `translate3d(0,${(-smooth(pose.explore) * 3).toFixed(3)}%,0) scale(1.08000)`;
+          }
         } else if (mode === 'E') {
           eyePose(index, diameter, focus, outgoing && entry.explore ? -(geometry.height + 20) * .03 : 0);
           if (!outgoing) scene.style.opacity = smooth((fraction - .42) / .16).toFixed(4);
@@ -400,7 +419,9 @@
           image.style.transform = `translate3d(${mode === 'H' ? parallax.toFixed(3) : '0'}%,${mode === 'V' ? parallax.toFixed(3) : '0'}%,0) scale(${lens.toFixed(5)})`;
         } else if (mode === 'Z') {
           const close = outgoing ? smooth(fraction / .65) : 1 - smooth((fraction - .35) / .65);
-          image.style.transform = `scale(${Math.exp(Math.log(1.08) + Math.log(1.65 / 1.08) * close).toFixed(5)})`;
+          const isBowie = works[index].slug === 'el-hombre-que-susurraba-a-las-estrellas';
+          const maxScale = isBowie ? 2.45 : 1.65;
+          image.style.transform = `scale(${Math.exp(Math.log(1.08) + Math.log(maxScale / 1.08) * close).toFixed(5)})`;
           if (!outgoing) scene.style.opacity = smooth((fraction - .40) / .20).toFixed(4);
         } else if (mode === 'P') {
           const exit = smooth((fraction - .80) / .20);
@@ -417,6 +438,14 @@
         }
       } else {
         ajenjoVisited = false;
+      }
+      if (works[base].slug === 'el-hombre-que-susurraba-a-las-estrellas' || works[incoming].slug === 'el-hombre-que-susurraba-a-las-estrellas') {
+        if (!bowieVisited && (works[state.index].slug === 'el-hombre-que-susurraba-a-las-estrellas' || (transition && fraction >= 0.25))) {
+          bowieVisited = true;
+          soundscape?.speakHero?.();
+        }
+      } else {
+        bowieVisited = false;
       }
       const flash = transition && (works[base].slug === 'ajenjo-cam' || works[incoming].slug === 'ajenjo-cam')
         ? Math.exp(-Math.pow((fraction - 0.5) / 0.08, 2)) * 0.96
@@ -598,7 +627,19 @@
     function photoStep(d) { state.photo = clamp(state.photo + d, 0, works[state.index].photos.length - 1); showPhoto(); }
     galleryTrigger.addEventListener('click', () => {
       if (works[state.index]?.slug === 'ajenjo-cam') fireAjenjoFlash();
+      if (works[state.index]?.slug === 'el-hombre-que-susurraba-a-las-estrellas') {
+        fireBowieZoom();
+        soundscape?.speakHero?.();
+      }
       openWorkGallery(galleryTrigger);
+    });
+    scenes.forEach((sc, i) => {
+      if (works[i]?.slug === 'el-hombre-que-susurraba-a-las-estrellas') {
+        sc.addEventListener('click', () => {
+          fireBowieZoom();
+          soundscape?.speakHero?.();
+        });
+      }
     });
     $('[data-open-photos]', stage).addEventListener('click', event => openWorkGallery(event.currentTarget));
     $('[data-photo-prev]').addEventListener('click', () => photoStep(-1)); $('[data-photo-next]').addEventListener('click', () => photoStep(1));

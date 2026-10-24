@@ -121,19 +121,42 @@
     paint();
   }
   function speakHero() {
-    if (slug === 'el-hombre-que-susurraba-a-las-estrellas' && lastHeroSlug !== slug) {
-      lastHeroSlug = slug;
-      lastUtterance = 'We can be heroes';
+    lastHeroSlug = 'el-hombre-que-susurraba-a-las-estrellas';
+    lastUtterance = 'We can be heroes';
+    try {
+      if (window.speechSynthesis && typeof window.SpeechSynthesisUtterance === 'function') {
+        window.speechSynthesis.cancel();
+        const utterance = new window.SpeechSynthesisUtterance('We can be heroes');
+        utterance.lang = 'en-GB'; utterance.rate = .85; utterance.pitch = .92; utterance.volume = 1.0;
+        window.speechSynthesis.speak(utterance);
+      }
+    } catch {}
+    if (typeof window.Audio === 'function' && !window.navigator.userAgent.includes('jsdom')) {
       try {
-        if (window.speechSynthesis && typeof window.SpeechSynthesisUtterance === 'function') {
-          window.speechSynthesis.cancel();
-          const utterance = new window.SpeechSynthesisUtterance('We can be heroes');
-          utterance.lang = 'en-GB'; utterance.rate = .88; utterance.pitch = .92; utterance.volume = .28;
-          window.speechSynthesis.speak(utterance);
-        }
+        const audioUrl = button?.dataset?.heroSrc || '/audio/we-can-be-heroes.mp3';
+        const heroAudio = new window.Audio(audioUrl);
+        heroAudio.volume = 0.95;
+        heroAudio.play().catch(() => {});
       } catch {}
-    } else if (slug && slug !== 'el-hombre-que-susurraba-a-las-estrellas') {
-      lastHeroSlug = '';
+    }
+    if (context && engine && context.state === 'running') {
+      try {
+        const now = context.currentTime + 0.005;
+        const target = engine.compressor || engine.master;
+        [293.66, 369.99, 440.0, 659.25].forEach((freq, i) => {
+          const osc = context.createOscillator();
+          const gain = context.createGain();
+          osc.type = i % 2 === 0 ? 'sawtooth' : 'triangle';
+          osc.frequency.setValueAtTime(freq, now);
+          gain.gain.setValueAtTime(0.001, now);
+          gain.gain.linearRampToValueAtTime(0.05 / (i + 1), now + 0.25);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.4);
+          osc.connect(gain);
+          gain.connect(target);
+          osc.start(now);
+          osc.stop(now + 2.5);
+        });
+      } catch {}
     }
   }
   function playCameraFlash() {
@@ -371,6 +394,9 @@
     flash() {
       lastFlashSlug = 'ajenjo-cam';
       playCameraFlash();
+    },
+    speakHero() {
+      speakHero();
     },
     get lastUtterance() { return lastUtterance; },
     get lastFlashSlug() { return lastFlashSlug; }
