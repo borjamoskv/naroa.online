@@ -229,6 +229,7 @@
     clearReelTimer();
     activeReel = null;
     if (menuPicture) menuPicture.classList.remove('is-loupe-active', 'is-winking');
+    window.NAROA_SOUND?.resolveCadence?.();
     menuRequest++;
     menuButtons.forEach(button => button.setAttribute('aria-expanded', 'false'));
   });

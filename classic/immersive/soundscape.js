@@ -58,6 +58,21 @@
       waking = context.resume().then(() => { if (ticket === generation) strike(); }).catch(() => {}).finally(() => { waking = null; });
     }
   }
+  function resolveCadence() {
+    if (!enabled || !engine || !context || context.state !== 'running') return;
+    const note = 74.00;
+    const source = context.createBufferSource(), envelope = context.createGain();
+    const start = context.currentTime + .002;
+    const rate = Math.pow(2, (note - 74) / 12);
+    const duration = Math.min(1.2, engine.box.duration / rate - .02);
+    source.buffer = engine.box; source.loop = false; source.playbackRate.value = rate;
+    const curve = Float32Array.from(engine.noteEnvelope, level => level * .28);
+    envelope.gain.setValueCurveAtTime(curve, start, duration);
+    source.connect(envelope); envelope.connect(engine.music);
+    const voices = engine.voices, voice = { source, envelope, note }; voices.add(voice);
+    source.onended = () => { voices.delete(voice); source.disconnect(); envelope.disconnect(); };
+    source.start(start, 0); source.stop(start + duration);
+  }
   function message(text = '') { status.textContent = text; status.hidden = !text; }
   function paint() {
     button.setAttribute('aria-pressed', String(enabled));
@@ -973,6 +988,9 @@
     },
     menuNote(index) {
       playMenuNote(index);
+    },
+    resolveCadence() {
+      resolveCadence();
     },
     get lastUtterance() { return lastUtterance; },
     get lastFlashSlug() { return lastFlashSlug; },

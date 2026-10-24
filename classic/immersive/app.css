@@ -142,8 +142,9 @@ html:has(dialog[open]){overflow:hidden}
 .menu-preview-picture>img.is-visible{opacity:1;transform:scale(1)}
 .menu-preview-picture>img.menu-preview-wink{z-index:1;pointer-events:none;transform:scale(1);opacity:0;transition:opacity .24s ease;-webkit-mask-image:radial-gradient(ellipse 14% 9% at 46% 39.5%,#000 62%,transparent 100%);mask-image:radial-gradient(ellipse 14% 9% at 46% 39.5%,#000 62%,transparent 100%)}
 .menu-preview-picture.is-winking>img.menu-preview-wink{opacity:1}
-.menu-preview-loupe{position:absolute;inset:0;z-index:1;pointer-events:none;background:center 43%/cover no-repeat;opacity:0;transform:scale(1.48);transform-origin:var(--loupe-x,50%) var(--loupe-y,43%);clip-path:circle(66px at var(--loupe-x,50%) var(--loupe-y,43%));filter:contrast(1.08) brightness(1.05);transition:opacity .25s ease}
-.menu-preview-picture.is-loupe-active .menu-preview-loupe{opacity:1}
+.menu-preview-loupe{position:absolute;inset:0;z-index:1;pointer-events:none;background:center 43%/cover no-repeat;opacity:0;transform:scale(1.52);transform-origin:var(--loupe-x,50%) var(--loupe-y,43%);clip-path:circle(66px at var(--loupe-x,50%) var(--loupe-y,43%));filter:contrast(1.1) brightness(1.04);transition:opacity .25s ease}
+.menu-preview-picture:before{content:'';position:absolute;z-index:3;width:136px;height:136px;left:calc(var(--loupe-x,50%) - 68px);top:calc(var(--loupe-y,43%) - 68px);border-radius:50%;border:2px solid #edbca499;box-shadow:inset 0 0 16px rgba(0,0,0,.6),0 0 14px rgba(237,188,164,.4);pointer-events:none;opacity:0;transition:opacity .25s ease}
+.menu-preview-picture.is-loupe-active .menu-preview-loupe,.menu-preview-picture.is-loupe-active:before{opacity:1}
 .menu-preview-hand{position:absolute;z-index:2;bottom:20px;left:24px;right:16px;font:400 clamp(32px,3.6vw,56px)/1.05 'Caveat',cursive;color:#fffdf4;rotate:-4deg;text-shadow:0 2px 14px rgba(0,0,0,.78);pointer-events:none;transition:bottom .35s cubic-bezier(.16,1,.3,1),top .35s cubic-bezier(.16,1,.3,1),opacity .25s ease}
 .menu-preview-picture:has(.menu-preview-reel:not([hidden])) .menu-preview-hand{bottom:78px}
 .menu-preview-picture[data-portrait-mode=true] .menu-preview-hand{bottom:auto;top:20px;rotate:-2deg}
@@ -203,7 +204,9 @@ html:has(dialog[open]){overflow:hidden}
 .contact-channel p{font-size:12px;line-height:1.65;color:#c6c6b8}
 @media(max-width:760px){.commission-examples,.contact-channels{grid-template-columns:1fr;gap:18px}}
 .has-motion .menu-dialog[open]{animation:menu-arrival .45s cubic-bezier(.16,1,.3,1) both}
+.has-motion .menu-dialog.is-closing{animation:menu-depart .26s cubic-bezier(.4,0,.2,1) forwards;pointer-events:none}
 @keyframes menu-arrival{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes menu-depart{from{opacity:1;transform:scale(1)}to{opacity:0;transform:scale(.97)}}
 @media(max-width:760px){
  .menu-top{min-height:76px;padding:14px 6%;gap:16px}
  .menu-top .signature{display:block}.menu-top .signature>span{font-size:35px}.menu-top .signature small{display:block;margin-top:3px;font-size:7px}.menu-top>#menu-heading{display:none}
