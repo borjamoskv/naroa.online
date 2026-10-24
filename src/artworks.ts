@@ -1208,5 +1208,20 @@ export const ARTWORKS: Artwork[] = [
     medium: 'Pintura y collage sobre papel',
     description: 'Dustin Hoffman en El Graduado. El collage recoge alusiones a la película para hablar de las expectativas, el plástico y las oscilaciones del mundo interior. La figura dibujada se escanea, se imprime y se combina con materiales cotidianos de distintas texturas.',
     sizeCategory: 'large'
+  },
+  {
+    id: 80,
+    category: 'drawing',
+    kicker: 'Shine, baby, shine',
+    quote: 'Brilla en blanco y negro con destellos de purpurina dorada.',
+    slug: 'izei',
+    aspectRatio: 0.695,
+    url: '/images/catalogo/izei-dibujo-2048.jpg',
+    title: 'Izei',
+    href: '#obra-izei',
+    year: '2021',
+    medium: 'Lápices de colores Faber-Castell sobre poliéster, impresión en 350 gr/m², esmalte con brillantina dorada y rotulador Uni-Posca',
+    description: '«Shine, baby, shine». Retrato en blanco y negro con un toque de color, realizado mediante lápices de colores Art & Graphic de Faber-Castell sobre papel poliéster. Posteriormente escaneado e impreso en papel de 350 gr/m². Sobre el fondo de esta lámina se aplicaron pinceladas de esmalte transparente con brillantina dorada y un detalle de alas a rotulador acrílico Uni-Posca. Presentado en marco formato A3 con cristal.',
+    sizeCategory: 'medium'
   }
 ]

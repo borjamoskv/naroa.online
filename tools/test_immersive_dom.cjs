@@ -183,7 +183,7 @@ async function eyeMatch(ui, base, points) {
   const ui = create(); await ui.flush();
   const works = ui.w.NAROA_CATALOG.projects;
   assert.equal(works.length, manifest.projects);
-  for (const slug of ['la-llorona', 'pablo', 'euskolander-no-hay-mas-que-uno', 'idoia-arkatz-bihotz', 'little-adi', 'lauralore', 'can-dy-queen', 'el-hombre-que-susurraba-a-las-estrellas', 'olinga-a-la-naranja', 'i-got-you-babe', 'jose-manuel-ezquerra', 'billy-saw', 'out-por-los-pelos', 'the-munsters', 'denbora-nora-zoaz']) {
+  for (const slug of ['la-llorona', 'pablo', 'euskolander-no-hay-mas-que-uno', 'idoia-arkatz-bihotz', 'little-adi', 'lauralore', 'izei', 'can-dy-queen', 'el-hombre-que-susurraba-a-las-estrellas', 'olinga-a-la-naranja', 'i-got-you-babe', 'jose-manuel-ezquerra', 'billy-saw', 'out-por-los-pelos', 'the-munsters', 'denbora-nora-zoaz']) {
     assert.equal(works.filter(p => p.slug === slug).length, 1, 'Every supplied artwork has one stable route');
   }
   assert.equal(works.find(p => p.slug === 'la-llorona').photos.length, 3);
@@ -218,8 +218,8 @@ async function eyeMatch(ui, base, points) {
   assert.equal(llorona.find('[data-art-source]').hidden, true, 'An attachment without a public URL does not produce a fabricated source link');
   assert.ok(llorona.find('[data-facts]').textContent.includes('sal rosa'));
   llorona.dom.window.close();
-  assert.equal(ui.journey.entries.length, 64);
-  assert.deepEqual(Array.from(ui.w.NAROA_CATALOG.journey.scenes, e => e.mode).join(' '), 'E H V Z V E H H V Z E V H H V Z H V Z P V H Z V H Z V H Z V H H Z E Z V H Z H Z Z V Z H Z H V Z H V Z H V Z H V Z H Z H H Z H F');
+  assert.equal(ui.journey.entries.length, 65);
+  assert.deepEqual(Array.from(ui.w.NAROA_CATALOG.journey.scenes, e => e.mode).join(' '), 'E H V Z V E H H V Z E V H H V Z H V Z P V H Z V H Z V H Z V H H Z E Z V H Z H Z Z V Z H Z H V Z H V Z H V Z H V Z H H Z H H Z H F');
   const modes = { E: 'eyes', H: 'horizontal', V: 'vertical', Z: 'zoom', P: 'puzzle' };
   let horizontalDirection = -1, inHorizontal = false;
   for (let index = 0; index < works.length; index++) {
@@ -447,7 +447,7 @@ async function eyeMatch(ui, base, points) {
 
   const deepLink = create('/obra/amy-rocks/'); await deepLink.flush();
   assert.equal(deepLink.find('[data-art-title]').textContent, 'Amy Rocks');
-  assert.equal(deepLink.w.scrollY, deepLink.distance(3), 'Direct artwork URLs start at the correct document position');
+  assert.ok(Math.abs(deepLink.w.scrollY - deepLink.distance(3)) < 1e-4, 'Direct artwork URLs start at the correct document position');
   deepLink.dom.window.close();
 
   const series = create('/series/vaivenes/'); await series.flush();

@@ -135,7 +135,7 @@
       }
     ]
   },
-  "artworks_count": 64,
+  "artworks_count": 65,
   "reviewed": "2026-10-24",
   "artworks": [
     {
@@ -2493,6 +2493,45 @@
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Pink%20and%20Sparkles",
       "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Pink%20and%20Sparkles"
+    },
+    {
+      "slug": "izei",
+      "title": "Izei",
+      "category": "collage",
+      "series": null,
+      "technique": "Lápices de colores Faber-Castell sobre poliéster, impresión en 350 gr/m², esmalte con brillantina dorada y rotulador Uni-Posca",
+      "support": "Papel de 350 gr/m² en marco A3 con cristal",
+      "dimensions": "Formato A3 (42 × 29,7 cm)",
+      "materials": null,
+      "year": 2021,
+      "story": "«Shine, baby, shine». Retrato en blanco y negro con un toque de color, realizado mediante lápices de colores Art & Graphic de Faber-Castell sobre papel poliéster. Posteriormente escaneado e impreso en papel de 350 gr/m². Sobre el fondo de esta lámina se aplicaron pinceladas de esmalte transparente con brillantina dorada y un detalle de alas a rotulador acrílico Uni-Posca. Presentado en marco formato A3 con cristal.",
+      "url": "https://naroagutierrezgil.com/obra/izei/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/izei-dibujo-2048-a2fa744040fa-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/izei-dibujo-2048.jpg",
+          "width": 1424,
+          "height": 2048,
+          "caption": "Retrato original en blanco y negro con lápices Faber-Castell sobre papel poliéster.",
+          "sha256": "a2fa744040fa05a4a3757bb6880cfb06af5b0392c3576641c6eef336f382197d"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/izei-enmarcado-2048.jpg",
+          "width": 1504,
+          "height": 2048,
+          "caption": "Obra completa enmarcada en formato A3 con cristal, alas en Uni-Posca y reflejos de esmalte.",
+          "sha256": "cc39a85873ffce1087b6d024751965939d85c9c0cee512727f4be5df9ac844cf"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/izei-lamina-2048.jpg",
+          "width": 1580,
+          "height": 2048,
+          "caption": "Lámina impresa en papel de 350 gr/m² con pinceladas de esmalte y brillantina dorada.",
+          "sha256": "212d924da1aabc57081b7f194381aeda018396f74b53cd9c2e1da26996efe39f"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Izei",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Izei"
     },
     {
       "slug": "roisin",

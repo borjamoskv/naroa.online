@@ -2716,6 +2716,51 @@
           "El volumen y los reflejos de la mica mineral."
         ]
       }
+    },
+    {
+      "slug": "izei",
+      "title": "Izei",
+      "category": "collage",
+      "technique": "Lápices de colores Faber-Castell sobre poliéster, impresión en 350 gr/m², esmalte con brillantina dorada y rotulador Uni-Posca",
+      "support": "Papel de 350 gr/m² en marco A3 con cristal",
+      "story": "«Shine, baby, shine». Retrato en blanco y negro con un toque de color, realizado mediante lápices de colores Art & Graphic de Faber-Castell sobre papel poliéster. Posteriormente escaneado e impreso en papel de 350 gr/m². Sobre el fondo de esta lámina se aplicaron pinceladas de esmalte transparente con brillantina dorada y un detalle de alas a rotulador acrílico Uni-Posca. Presentado en marco formato A3 con cristal.",
+      "images": [
+        {
+          "src": "/images/catalogo/izei-dibujo-2048.jpg",
+          "width": 1424,
+          "height": 2048,
+          "caption": "Retrato original en blanco y negro con lápices Faber-Castell sobre papel poliéster.",
+          "source": null,
+          "sha256": "a2fa744040fa05a4a3757bb6880cfb06af5b0392c3576641c6eef336f382197d",
+          "source_local": "classic/images/catalogo/izei-dibujo-2048.jpg"
+        },
+        {
+          "src": "/images/catalogo/izei-enmarcado-2048.jpg",
+          "width": 1504,
+          "height": 2048,
+          "caption": "Obra completa enmarcada en formato A3 con cristal, alas en Uni-Posca y reflejos de esmalte.",
+          "source": null,
+          "sha256": "cc39a85873ffce1087b6d024751965939d85c9c0cee512727f4be5df9ac844cf",
+          "source_local": "classic/images/catalogo/izei-enmarcado-2048.jpg"
+        },
+        {
+          "src": "/images/catalogo/izei-lamina-2048.jpg",
+          "width": 1580,
+          "height": 2048,
+          "caption": "Lámina impresa en papel de 350 gr/m² con pinceladas de esmalte y brillantina dorada.",
+          "source": null,
+          "sha256": "212d924da1aabc57081b7f194381aeda018396f74b53cd9c2e1da26996efe39f",
+          "source_local": "classic/images/catalogo/izei-lamina-2048.jpg"
+        }
+      ],
+      "dimensions": "Formato A3 (42 × 29,7 cm)",
+      "materials": null,
+      "series": null,
+      "year": 2021,
+      "credit": null,
+      "selected": false,
+      "kind": "obra",
+      "source": null
     }
   ]
 }
