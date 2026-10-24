@@ -273,6 +273,7 @@ export default function App() {
           }}
           onOpen3D={() => {
             setIsMicaOpen(false)
+            setHasVisited3D(true)
             setActiveMode('3d')
             window.location.hash = '#/3d'
           }}
