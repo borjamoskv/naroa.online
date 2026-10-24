@@ -147,7 +147,17 @@ export function KineticHorizon({
       } catch {
         // Ignore audio playback errors
       }
-    } else if (slug !== 'denbora-nora-zoaz' && slug !== 'el-hombre-que-susurraba-a-las-estrellas' && slug !== 'jose-manuel-ezquerra' && slug !== 'i-got-you-babe' && slug !== 'dustin') {
+    } else if (slug === 'asucar-celia-cruz' && lastSpokenSlugRef.current !== slug) {
+      lastSpokenSlugRef.current = slug
+      sound.playSugarShaker()
+      try {
+        const audio = new window.Audio('/audio/asucar-celia.mp3')
+        audio.volume = 0.96
+        audio.play().catch(() => {})
+      } catch {
+        // Ignore audio playback errors
+      }
+    } else if (slug !== 'denbora-nora-zoaz' && slug !== 'el-hombre-que-susurraba-a-las-estrellas' && slug !== 'jose-manuel-ezquerra' && slug !== 'i-got-you-babe' && slug !== 'dustin' && slug !== 'asucar-celia-cruz') {
       lastSpokenSlugRef.current = ''
     }
   }, [])

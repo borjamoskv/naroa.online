@@ -309,6 +309,17 @@
         stage.classList.remove('has-punch-impact');
       }, 450);
     }
+    let sugarShakeTimer = null, sugarVisited = false;
+    function fireSugarShake() {
+      soundscape?.shaker?.();
+      stage.classList.remove('has-sugar-shake');
+      void stage.offsetWidth;
+      stage.classList.add('has-sugar-shake');
+      clearTimeout(sugarShakeTimer);
+      sugarShakeTimer = setTimeout(() => {
+        stage.classList.remove('has-sugar-shake');
+      }, 550);
+    }
     function focusPictures() { works.forEach((p, i) => scenes[i].style.setProperty('--position', (innerWidth < 760 && mobileFocals[p.slug]) || focals[p.slug] || '50% 44%')); }
     focusPictures();
     function ensureImage(i) {
@@ -502,6 +513,14 @@
         clearTimeout(dustinEpilogueTimer);
         stage.classList.remove('is-silent-epilogue');
         delete stage.dataset.finale;
+      }
+      if (works[base].slug === 'asucar-celia-cruz' || works[incoming].slug === 'asucar-celia-cruz') {
+        if (!sugarVisited && (works[state.index].slug === 'asucar-celia-cruz' || (transition && works[incoming].slug === 'asucar-celia-cruz' && fraction >= 0.35))) {
+          sugarVisited = true;
+          fireSugarShake();
+        }
+      } else {
+        sugarVisited = false;
       }
       const isPunchPair = (works[base].slug === 'i-got-you-babe' && works[incoming].slug === 'jose-manuel-ezquerra') ||
                           (works[base].slug === 'jose-manuel-ezquerra' && works[incoming].slug === 'i-got-you-babe');
@@ -720,6 +739,9 @@
       if (works[state.index]?.slug === 'dustin') {
         soundscape?.speakSilence?.();
       }
+      if (works[state.index]?.slug === 'asucar-celia-cruz') {
+        fireSugarShake();
+      }
       if (works[state.index]?.slug === 'i-got-you-babe' || works[state.index]?.slug === 'jose-manuel-ezquerra') {
         firePuñetazo();
       }
@@ -740,6 +762,11 @@
       if (works[i]?.slug === 'dustin') {
         sc.addEventListener('click', () => {
           soundscape?.speakSilence?.();
+        });
+      }
+      if (works[i]?.slug === 'asucar-celia-cruz') {
+        sc.addEventListener('click', () => {
+          fireSugarShake();
         });
       }
       if (works[i]?.slug === 'i-got-you-babe' || works[i]?.slug === 'jose-manuel-ezquerra') {

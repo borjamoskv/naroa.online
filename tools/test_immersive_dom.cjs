@@ -726,6 +726,10 @@ async function eyeMatch(ui, base, points) {
   const ezquerraIndex = works.findIndex(w => w.slug === 'jose-manuel-ezquerra');
   galleryAudio.advance(150); reactiveGallery.scroll(ezquerraIndex - 1 + .52); await reactiveGallery.flush();
   assert.equal(reactiveGallery.w.NAROA_SOUND.lastPunchSlug, 'jose-manuel-ezquerra', 'Audio engine registers punch impact between Bill Murray and Ezquerra');
+  const celiaIndex = works.findIndex(w => w.slug === 'asucar-celia-cruz');
+  galleryAudio.advance(150); reactiveGallery.scroll(celiaIndex); await reactiveGallery.flush();
+  assert.equal(reactiveGallery.w.NAROA_SOUND.lastShakerSlug, 'asucar-celia-cruz', 'Arriving at Celia Cruz triggers sugar shaker');
+  assert.equal(reactiveGallery.w.NAROA_SOUND.lastUtterance, '¡Azúcar!', 'Celia Cruz triggers ¡Azúcar! shout');
   reactiveGallery.click('[data-sound]'); galleryAudio.advance(600); reactiveGallery.dom.window.close();
   const boxAudio = audioBoundary();
   const box = create('/contacto/', false, { width: 1024, height: 768 }, boxAudio); await box.flush();

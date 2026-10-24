@@ -51,7 +51,7 @@ class Page(HTMLParser):
             self.scenes.append(a["data-scene"])
         if tag == "img":
             self.images.append(a)
-        for key in ["src", "href", "data-src", "data-preview-src", "data-nature-src", "data-iris-src", "data-musicbox-src", "data-hero-src", "data-denbora-src", "data-silence-src"]:
+        for key in ["src", "href", "data-src", "data-preview-src", "data-nature-src", "data-iris-src", "data-musicbox-src", "data-hero-src", "data-denbora-src", "data-silence-src", "data-asucar-src"]:
             if a.get(key, "").startswith("/") and not a[key].startswith("//"):
                 self.refs.append(a[key])
 

@@ -661,6 +661,62 @@ class SoundEngine {
       // Ignore audio errors
     }
   }
+
+  public playSugarShaker() {
+    if (!this.enabled) return
+    try {
+      this.initCtx()
+      if (!this.ctx) return
+
+      if (typeof navigator !== 'undefined' && navigator.vibrate) {
+        try { navigator.vibrate([15, 30, 15, 45, 20, 80, 45, 60]) } catch {}
+      }
+
+      const now = this.ctx.currentTime + 0.005
+      const sampleRate = this.ctx.sampleRate || 44100
+
+      // 4 Latin shaker strokes: "chik-chik-chiki-CHA!"
+      ;[0.00, 0.12, 0.24, 0.40].forEach((offset, idx) => {
+        if (!this.ctx) return
+        const strokeLen = Math.round(sampleRate * (idx === 3 ? 0.16 : 0.075))
+        const buffer = this.ctx.createBuffer(1, strokeLen, sampleRate)
+        const data = buffer.getChannelData(0)
+        for (let i = 0; i < strokeLen; i++) {
+          const t = i / strokeLen
+          data[i] = (Math.random() * 2 - 1) * Math.sin(t * Math.PI) * Math.exp(-t * (idx === 3 ? 4 : 7))
+        }
+        const src = this.ctx.createBufferSource()
+        src.buffer = buffer
+        const filter = this.ctx.createBiquadFilter()
+        filter.type = 'bandpass'
+        filter.frequency.value = idx === 3 ? 4800 : 5600
+        filter.Q.value = 3.2
+        const gain = this.ctx.createGain()
+        gain.gain.setValueAtTime(0.01, now + offset)
+        gain.gain.linearRampToValueAtTime(idx === 3 ? 0.75 : 0.48, now + offset + 0.018)
+        gain.gain.exponentialRampToValueAtTime(0.001, now + offset + (idx === 3 ? 0.16 : 0.075))
+        src.connect(filter)
+        filter.connect(gain)
+        gain.connect(this.ctx.destination)
+        src.start(now + offset)
+      })
+
+      // Accent palm tap on final stroke
+      const tapOsc = this.ctx.createOscillator()
+      const tapGain = this.ctx.createGain()
+      tapOsc.type = 'triangle'
+      tapOsc.frequency.setValueAtTime(140, now + 0.40)
+      tapOsc.frequency.exponentialRampToValueAtTime(45, now + 0.52)
+      tapGain.gain.setValueAtTime(0.45, now + 0.40)
+      tapGain.gain.exponentialRampToValueAtTime(0.001, now + 0.54)
+      tapOsc.connect(tapGain)
+      tapGain.connect(this.ctx.destination)
+      tapOsc.start(now + 0.40)
+      tapOsc.stop(now + 0.55)
+    } catch {
+      // Ignore audio errors
+    }
+  }
 }
 
 export const sound = new SoundEngine()

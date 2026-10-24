@@ -277,6 +277,73 @@
       } catch {}
     }
   }
+  let lastShakerSlug = '';
+  function playSugarShaker() {
+    lastShakerSlug = 'asucar-celia-cruz';
+    lastHeroSlug = 'asucar-celia-cruz';
+    lastUtterance = '¡Azúcar!';
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      try { navigator.vibrate([15, 30, 15, 45, 20, 80, 45, 60]); } catch {}
+    }
+    if (typeof window.Audio === 'function' && !window.navigator.userAgent.includes('jsdom')) {
+      try {
+        const audioUrl = button?.dataset?.asucarSrc || '/audio/asucar-celia.mp3';
+        const asucarAudio = new window.Audio(audioUrl);
+        asucarAudio.volume = 0.96;
+        asucarAudio.play().catch(() => {});
+      } catch {}
+    }
+    if (context && engine && context.state === 'running') {
+      try {
+        const now = context.currentTime + 0.005;
+        const target = engine.compressor || engine.master;
+        const sampleRate = context.sampleRate || 44100;
+        // 4 Latin syncopated shaker strokes: "chik-chik-chiki-CHA!"
+        [0.00, 0.12, 0.24, 0.40].forEach((offset, idx) => {
+          const strokeLen = Math.round(sampleRate * (idx === 3 ? 0.16 : 0.075));
+          const buffer = context.createBuffer(1, strokeLen, sampleRate);
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < strokeLen; i++) {
+            const t = i / strokeLen;
+            data[i] = (Math.random() * 2 - 1) * Math.sin(t * Math.PI) * Math.exp(-t * (idx === 3 ? 4 : 7));
+          }
+          const src = context.createBufferSource();
+          src.buffer = buffer;
+          const filter = context.createBiquadFilter ? context.createBiquadFilter() : null;
+          if (filter) {
+            filter.type = 'bandpass';
+            filter.frequency.value = idx === 3 ? 4800 : 5600;
+            filter.Q.value = 3.2;
+          }
+          const gain = context.createGain();
+          gain.gain.setValueAtTime(0.01, now + offset);
+          gain.gain.linearRampToValueAtTime(idx === 3 ? 0.75 : 0.48, now + offset + 0.018);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + offset + (idx === 3 ? 0.16 : 0.075));
+          src.connect(filter || gain);
+          if (filter) filter.connect(gain);
+          gain.connect(target);
+          src.start(now + offset);
+        });
+
+        // Accent palm tap on final stroke (0.40s)
+        const tapOsc = context.createOscillator();
+        const tapGain = context.createGain();
+        tapOsc.type = 'triangle';
+        tapOsc.frequency.setValueAtTime(140, now + 0.40);
+        if (tapOsc.frequency.exponentialRampToValueAtTime) {
+          tapOsc.frequency.exponentialRampToValueAtTime(45, now + 0.52);
+        }
+        tapGain.gain.setValueAtTime(0.45, now + 0.40);
+        if (tapGain.gain.exponentialRampToValueAtTime) {
+          tapGain.gain.exponentialRampToValueAtTime(0.001, now + 0.54);
+        }
+        tapOsc.connect(tapGain);
+        tapGain.connect(target);
+        tapOsc.start(now + 0.40);
+        tapOsc.stop(now + 0.55);
+      } catch {}
+    }
+  }
   function playCameraFlash() {
     if (!context || !engine || context.state !== 'running') return;
     try {
@@ -474,8 +541,9 @@
     mix();
     if (slug === 'el-hombre-que-susurraba-a-las-estrellas' && lastHeroSlug !== slug) speakHero();
     else if (slug === 'denbora-nora-zoaz' && lastHeroSlug !== slug) speakDenbora();
+    else if (slug === 'asucar-celia-cruz' && lastHeroSlug !== slug) playSugarShaker();
     else if (slug === 'dustin' && lastHeroSlug !== slug) speakSilence();
-    else if (slug && slug !== 'el-hombre-que-susurraba-a-las-estrellas' && slug !== 'denbora-nora-zoaz' && slug !== 'dustin') {
+    else if (slug && slug !== 'el-hombre-que-susurraba-a-las-estrellas' && slug !== 'denbora-nora-zoaz' && slug !== 'asucar-celia-cruz' && slug !== 'dustin') {
       if (lastHeroSlug === 'dustin' && context && engine && context.state === 'running') {
         const resetTime = context.currentTime;
         if (engine.filter && engine.filter.frequency && engine.filter.frequency.exponentialRampToValueAtTime) {
@@ -667,9 +735,13 @@
     speakSilence() {
       speakSilence();
     },
+    shaker() {
+      playSugarShaker();
+    },
     get lastUtterance() { return lastUtterance; },
     get lastFlashSlug() { return lastFlashSlug; },
-    get lastPunchSlug() { return lastPunchSlug; }
+    get lastPunchSlug() { return lastPunchSlug; },
+    get lastShakerSlug() { return lastShakerSlug; }
   });
   paint();
 })();
