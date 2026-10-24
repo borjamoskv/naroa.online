@@ -43,6 +43,8 @@ assets-src/
 *.key
 .env*
 classic/assets/backup_pre4k/
+**/backup_pre4k/
+classic/images/sobre-mi/backup_*/
 raw_artworks_facebook/
 classic/images/social/*.png
 tools/experimental/
