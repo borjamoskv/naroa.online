@@ -1,6 +1,15 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 export function CustomCursor() {
+  const [position, setPosition] = useState({ x: -100, y: -100 })
+  const [isPointer, setIsPointer] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
+  const [isClicking, setIsClicking] = useState(false)
+  const [cursorLabel, setCursorLabel] = useState<string | null>(null)
+
+  const trailingPos = useRef({ x: -100, y: -100 })
+  const [smoothPos, setSmoothPos] = useState({ x: -100, y: -100 })
+  const programmaticLabelRef = useRef<string | null>(null)
   const fluidCanvasRef = useRef<HTMLCanvasElement | null>(null)
 
   // Motor Euleriano de Fluidos Navier-Stokes & Advect-Curl (FBO Ping-Pong en WebGL)
