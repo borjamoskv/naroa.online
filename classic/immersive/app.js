@@ -815,8 +815,6 @@
       const cue = $('[data-journey-cue]', stage);
       if (works[state.index]?.slug === 'dustin' && !transition) {
         cue.textContent = 'La última nota ya es silencio · Volver al origen ↺';
-      } else if (ezquerraBrakeActive) {
-        cue.textContent = 'Una pausa para mirar · su mirada te detiene';
       } else {
         cue.textContent = still ? reduced.matches ? 'Activa los efectos para ver el viaje ↓' : 'Desplázate para recorrer ↕' : !transition ? phase === 'explore' ? 'Explora la superficie ↓' : 'Una pausa para mirar · sigue ↓' : ({ E: 'Entra en la mirada ↓', H: 'Atravesar · sigue bajando ↓', V: 'Déjate llevar ↓', Z: 'Acércate ↓', P: 'Mezclar y volver a unir ↓' })[mode];
       }
@@ -835,15 +833,6 @@
       motion.frame = null;
       if (document.querySelector('dialog[open]')) return;
       let pixels = scrollY - geometry.top;
-      if (ezquerraIndex >= 0 && ezquerraBrakeActive) {
-        const ezEntry = journey.entries[ezquerraIndex];
-        const ezStartPixels = ezEntry ? ezEntry.start * geometry.unit : 0;
-        if (pixels < ezStartPixels - 12) {
-          clearTimeout(ezquerraBrakeTimer);
-          ezquerraBrakeActive = false;
-          stage.classList.remove('has-ezquerra-brake');
-        }
-      }
       // Native scroll positions round to device pixels, including direct-link jumps.
       const boundary = journey.entries.find(entry => Math.abs(entry.start * geometry.unit - pixels) < 1);
       const pose = journey.read(boundary ? boundary.start : pixels / geometry.unit);
