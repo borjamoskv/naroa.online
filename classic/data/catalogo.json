@@ -2425,49 +2425,6 @@
       }
     },
     {
-      "slug": "audrey-hepburn",
-      "title": "Audrey Hepburn",
-      "category": "collage",
-      "technique": "Lápiz, acrílico, collage textil y mica mineral",
-      "support": "Arpillera sobre tabla con marco intervenido",
-      "story": "La delicadeza atemporal de Audrey contrapuesta con el carácter de la mica mineral y trazos pop. El brillo sutil de los minerales acompaña la elegancia cinematográfica de su mirada.",
-      "images": [
-        {
-          "src": "/images/catalogo/audrey-hepburn-4k.webp",
-          "width": 3840,
-          "height": 2872,
-          "caption": "Fotografía master 4K del retrato de Audrey Hepburn con mica mineral sobre arpillera.",
-          "source": null,
-          "sha256": "8ff642c0473c781394fb0ab5f7fc92b7d565a35f965a3d755cf85932959a47c3"
-        },
-        {
-          "src": "/images/artworks/audrey-hepburn-DbIBTtIp.webp",
-          "width": 768,
-          "height": 1024,
-          "caption": "Encuadre frontal de la pieza.",
-          "source": null,
-          "sha256": "ee00491f2d251e1edb72bfd9421809ddae9c27e6917c977126376238130c8e81"
-        }
-      ],
-      "dimensions": "40 × 30 cm",
-      "series": "Obras Individuales",
-      "year": 2023,
-      "credit": null,
-      "selected": true,
-      "kind": "obra",
-      "source": null,
-      "editorial": {
-        "image_order": [
-          0,
-          1
-        ],
-        "captions": [
-          "Retrato de Audrey Hepburn con incrustaciones de mica.",
-          "Detalle de la arpillera y la vibración textil."
-        ]
-      }
-    },
-    {
       "slug": "geisha",
       "title": "Geisha",
       "category": "pizarra",
@@ -2481,15 +2438,15 @@
           "height": 3200,
           "caption": "Fotografía master 4K de Geisha en óleo y pan de oro sobre pizarra.",
           "source": null,
-          "sha256": "d3cd2f5d76f3d94fa376c57dc7888be3aa9a794c0ade25f53bfb1be4e585b1ed"
+          "sha256": "ad3530c5cc58c0bd976a7d050b78709841966245484c9212066283394f246885"
         },
         {
           "src": "/images/artworks/geisha-MfRtKWdu.webp",
-          "width": 1330,
-          "height": 1600,
+          "width": 2660,
+          "height": 3200,
           "caption": "Vista completa del soporte de pizarra.",
           "source": null,
-          "sha256": "85f771524123423f5b166436aea989c3f8fd6b866999f70ea36d62c893137e25"
+          "sha256": "ad3530c5cc58c0bd976a7d050b78709841966245484c9212066283394f246885"
         }
       ],
       "dimensions": "30 × 25 × 0,6 cm",
@@ -2564,10 +2521,10 @@
         {
           "src": "/images/catalogo/the-golden-couple-4k.webp",
           "width": 3840,
-          "height": 2872,
+          "height": 2880,
           "caption": "Fotografía master 4K de The Golden Couple sobre pizarra natural con pan de oro.",
           "source": null,
-          "sha256": "737e48eb73d62800f2c2850284363af823e6b5bd7b83de5f64d3194231e3485b"
+          "sha256": "7d0ad9655f9578dc735db732bfeb34b69555c79f57390cf00132120acf3d0cfb"
         },
         {
           "src": "/images/artworks/the-golden-couple-C9C95N75.webp",
@@ -2606,19 +2563,19 @@
       "images": [
         {
           "src": "/images/catalogo/pink-and-sparkles-4k.webp",
-          "width": 3200,
-          "height": 3200,
+          "width": 3000,
+          "height": 3000,
           "caption": "Fotografía master 4K de Pink and Sparkles con acrílico neón y mica mineral.",
           "source": null,
-          "sha256": "69ad796cf0c6d9779786971d7cce814d982734373ea4d0c1a398e8e7593c3fc9"
+          "sha256": "afc905ab8d6d867da60fea52811c6f73d242e7e19f3955fbb7bd2b1be2970ca8"
         },
         {
           "src": "/images/artworks/pink-and-sparkles-c4K6RUzC.webp",
-          "width": 1600,
-          "height": 1600,
+          "width": 3000,
+          "height": 3000,
           "caption": "Detalle del relieve volumétrico y destellos.",
           "source": null,
-          "sha256": "a75751066d986d6bdcdbc759e2acb1467a38667716aa41fb05413be93d5a06f5"
+          "sha256": "afc905ab8d6d867da60fea52811c6f73d242e7e19f3955fbb7bd2b1be2970ca8"
         }
       ],
       "dimensions": "25 × 25 × 3 cm",

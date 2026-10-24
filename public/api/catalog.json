@@ -135,7 +135,7 @@
       }
     ]
   },
-  "artworks_count": 73,
+  "artworks_count": 72,
   "reviewed": "2026-10-24",
   "artworks": [
     {
@@ -2275,38 +2275,6 @@
       "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20El%20Gran%20Dakari"
     },
     {
-      "slug": "audrey-hepburn",
-      "title": "Audrey Hepburn",
-      "category": "collage",
-      "series": "Obras Individuales",
-      "technique": "Lápiz, acrílico, collage textil y mica mineral",
-      "support": "Arpillera sobre tabla con marco intervenido",
-      "dimensions": "40 × 30 cm",
-      "materials": null,
-      "year": 2023,
-      "story": "La delicadeza atemporal de Audrey contrapuesta con el carácter de la mica mineral y trazos pop. El brillo sutil de los minerales acompaña la elegancia cinematográfica de su mirada.",
-      "url": "https://naroagutierrezgil.com/obra/audrey-hepburn/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/audrey-hepburn-4k-8ff642c0473c-view.webp",
-      "photos": [
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/audrey-hepburn-4k.webp",
-          "width": 3840,
-          "height": 2872,
-          "caption": "Fotografía master 4K del retrato de Audrey Hepburn con mica mineral sobre arpillera.",
-          "sha256": "8ff642c0473c781394fb0ab5f7fc92b7d565a35f965a3d755cf85932959a47c3"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/artworks/audrey-hepburn-DbIBTtIp.webp",
-          "width": 768,
-          "height": 1024,
-          "caption": "Encuadre frontal de la pieza.",
-          "sha256": "ee00491f2d251e1edb72bfd9421809ddae9c27e6917c977126376238130c8e81"
-        }
-      ],
-      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Audrey%20Hepburn",
-      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Audrey%20Hepburn"
-    },
-    {
       "slug": "geisha",
       "title": "Geisha",
       "category": "pizarra",
@@ -2318,21 +2286,21 @@
       "year": 2023,
       "story": "Tradición y modernidad en un retrato hipnótico con pigmentos tradicionales y toques dorados. El recogido ceremonial y la expresión serena dialogan con la materia oscura de la piedra.",
       "url": "https://naroagutierrezgil.com/obra/geisha/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/geisha-4k-d3cd2f5d76f3-view.webp",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/geisha-4k-ad3530c5cc58-view.webp",
       "photos": [
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/geisha-4k.webp",
           "width": 2660,
           "height": 3200,
           "caption": "Fotografía master 4K de Geisha en óleo y pan de oro sobre pizarra.",
-          "sha256": "d3cd2f5d76f3d94fa376c57dc7888be3aa9a794c0ade25f53bfb1be4e585b1ed"
+          "sha256": "ad3530c5cc58c0bd976a7d050b78709841966245484c9212066283394f246885"
         },
         {
           "url": "https://naroagutierrezgil.com/images/artworks/geisha-MfRtKWdu.webp",
-          "width": 1330,
-          "height": 1600,
+          "width": 2660,
+          "height": 3200,
           "caption": "Vista completa del soporte de pizarra.",
-          "sha256": "85f771524123423f5b166436aea989c3f8fd6b866999f70ea36d62c893137e25"
+          "sha256": "ad3530c5cc58c0bd976a7d050b78709841966245484c9212066283394f246885"
         }
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Geisha",
@@ -2382,14 +2350,14 @@
       "year": 2024,
       "story": "Retrato doble con acentos de pan de oro sobre pizarra natural. El abrazo y la complicidad de la pareja quedan esculpidos entre el trazo gráfico contemporáneo y la nobleza mineral.",
       "url": "https://naroagutierrezgil.com/obra/the-golden-couple/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/the-golden-couple-4k-737e48eb73d6-view.webp",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/the-golden-couple-4k-7d0ad9655f95-view.webp",
       "photos": [
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/the-golden-couple-4k.webp",
           "width": 3840,
-          "height": 2872,
+          "height": 2880,
           "caption": "Fotografía master 4K de The Golden Couple sobre pizarra natural con pan de oro.",
-          "sha256": "737e48eb73d62800f2c2850284363af823e6b5bd7b83de5f64d3194231e3485b"
+          "sha256": "7d0ad9655f9578dc735db732bfeb34b69555c79f57390cf00132120acf3d0cfb"
         },
         {
           "url": "https://naroagutierrezgil.com/images/artworks/the-golden-couple-C9C95N75.webp",
@@ -2414,21 +2382,21 @@
       "year": 2024,
       "story": "Vibración rosa pop con destellos de mica mineral pura. Una pieza que desafía los límites del soporte convencional jugando con el volumen, el brillo y la saturación cromática.",
       "url": "https://naroagutierrezgil.com/obra/pink-and-sparkles/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/pink-and-sparkles-4k-69ad796cf0c6-view.webp",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/pink-and-sparkles-4k-afc905ab8d6d-view.webp",
       "photos": [
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/pink-and-sparkles-4k.webp",
-          "width": 3200,
-          "height": 3200,
+          "width": 3000,
+          "height": 3000,
           "caption": "Fotografía master 4K de Pink and Sparkles con acrílico neón y mica mineral.",
-          "sha256": "69ad796cf0c6d9779786971d7cce814d982734373ea4d0c1a398e8e7593c3fc9"
+          "sha256": "afc905ab8d6d867da60fea52811c6f73d242e7e19f3955fbb7bd2b1be2970ca8"
         },
         {
           "url": "https://naroagutierrezgil.com/images/artworks/pink-and-sparkles-c4K6RUzC.webp",
-          "width": 1600,
-          "height": 1600,
+          "width": 3000,
+          "height": 3000,
           "caption": "Detalle del relieve volumétrico y destellos.",
-          "sha256": "a75751066d986d6bdcdbc759e2acb1467a38667716aa41fb05413be93d5a06f5"
+          "sha256": "afc905ab8d6d867da60fea52811c6f73d242e7e19f3955fbb7bd2b1be2970ca8"
         }
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Pink%20and%20Sparkles",
@@ -2733,38 +2701,6 @@
       "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Rosetta%20no%20es%20de%20piedra"
     },
     {
-      "slug": "dustin",
-      "title": "Hello Darkness My Old Friend",
-      "category": "collage",
-      "series": "Vaivenes",
-      "technique": "Lápices de colores Art & Graphic de Faber-Castell y collage",
-      "support": "Marco con passepartout",
-      "dimensions": "50 × 40 cm",
-      "materials": "Papel de pared antiguo, plástico de burbujas, envoltorios, celofán, cerillas, pieza de puzle, goma eva, acetato impreso, poliespán y pajitas.",
-      "year": null,
-      "story": "Dustin Hoffman en El Graduado. El collage recoge alusiones a la película para hablar de las expectativas, el plástico y las oscilaciones del mundo interior. La figura dibujada se escanea, se imprime y se combina con materiales cotidianos de distintas texturas.",
-      "url": "https://naroagutierrezgil.com/obra/dustin/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/hello-darkness-my-old-friend-bf2d129d5bb3-view.webp",
-      "photos": [
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/hello-darkness-my-old-friend.png",
-          "width": 1866,
-          "height": 1511,
-          "caption": "La obra terminada: el retrato, el vaso y los materiales del collage.",
-          "sha256": "bf2d129d5bb3d37572635c3f22609a3fc0695a1ac09bc0b903aa88713c883edf"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/vaivenes-dustin.jpg",
-          "width": 1839,
-          "height": 1379,
-          "caption": "Dibujo inicial de Dustin Hoffman en El Graduado.",
-          "sha256": "058c80f442e8c5d8cd8f71c8c3c6be2ed2f53a12c2f0ad3928ad5a95d7c78362"
-        }
-      ],
-      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Hello%20Darkness%20My%20Old%20Friend",
-      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Hello%20Darkness%20My%20Old%20Friend"
-    },
-    {
       "slug": "la-famiglia",
       "title": "La Famiglia",
       "category": "collage",
@@ -2963,6 +2899,38 @@
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Las%20RosaL%C3%ADas",
       "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Las%20RosaL%C3%ADas"
+    },
+    {
+      "slug": "dustin",
+      "title": "Hello Darkness My Old Friend",
+      "category": "collage",
+      "series": "Vaivenes",
+      "technique": "Lápices de colores Art & Graphic de Faber-Castell y collage",
+      "support": "Marco con passepartout",
+      "dimensions": "50 × 40 cm",
+      "materials": "Papel de pared antiguo, plástico de burbujas, envoltorios, celofán, cerillas, pieza de puzle, goma eva, acetato impreso, poliespán y pajitas.",
+      "year": null,
+      "story": "Dustin Hoffman en El Graduado. El collage recoge alusiones a la película para hablar de las expectativas, el plástico y las oscilaciones del mundo interior. La figura dibujada se escanea, se imprime y se combina con materiales cotidianos de distintas texturas.",
+      "url": "https://naroagutierrezgil.com/obra/dustin/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/hello-darkness-my-old-friend-bf2d129d5bb3-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/hello-darkness-my-old-friend.png",
+          "width": 1866,
+          "height": 1511,
+          "caption": "La obra terminada: el retrato, el vaso y los materiales del collage.",
+          "sha256": "bf2d129d5bb3d37572635c3f22609a3fc0695a1ac09bc0b903aa88713c883edf"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/vaivenes-dustin.jpg",
+          "width": 1839,
+          "height": 1379,
+          "caption": "Dibujo inicial de Dustin Hoffman en El Graduado.",
+          "sha256": "058c80f442e8c5d8cd8f71c8c3c6be2ed2f53a12c2f0ad3928ad5a95d7c78362"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Hello%20Darkness%20My%20Old%20Friend",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Hello%20Darkness%20My%20Old%20Friend"
     }
   ]
 }

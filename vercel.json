@@ -55,6 +55,16 @@
       "permanent": true
     },
     {
+      "source": "/retrato-por-encargo",
+      "destination": "/retratos-por-encargo-bilbao/",
+      "permanent": true
+    },
+    {
+      "source": "/retrato-por-encargo-bilbao",
+      "destination": "/retratos-por-encargo-bilbao/",
+      "permanent": true
+    },
+    {
       "source": "/encargos",
       "destination": "/retratos-por-encargo-bilbao/",
       "permanent": true

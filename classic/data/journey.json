@@ -322,12 +322,6 @@
       "explore": 0
     },
     {
-      "slug": "audrey-hepburn",
-      "mode": "H",
-      "hold": 25,
-      "explore": 0
-    },
-    {
       "slug": "geisha",
       "mode": "V",
       "hold": 25,
@@ -400,12 +394,6 @@
       "explore": 0
     },
     {
-      "slug": "dustin",
-      "mode": "F",
-      "hold": 25,
-      "explore": 0
-    },
-    {
       "slug": "la-famiglia",
       "mode": "H",
       "hold": 25,
@@ -450,6 +438,12 @@
     {
       "slug": "las-rosalias",
       "mode": "V",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "dustin",
+      "mode": "F",
       "hold": 25,
       "explore": 0
     }

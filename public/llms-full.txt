@@ -30,9 +30,9 @@
 - **¿Se puede visitar el estudio en Bilbao?** Sí, visitas con cita concertada previa para ver obra en directo, valorar soportes y definir el proyecto en persona.
 
 ## Secciones Principales
-- [Inicio e Inmersión](https://naroagutierrezgil.com/): Experiencia inmersiva y catálogo completo de 73 obras.
+- [Inicio e Inmersión](https://naroagutierrezgil.com/): Experiencia inmersiva y catálogo completo de 72 obras.
 - [Retratos por Encargo en Bilbao](https://naroagutierrezgil.com/retratos-por-encargo-bilbao/): Condiciones técnicas, formatos (20×30 cm a 40×50 cm), plazos de 2 a 4 semanas, configurador interactivo y galería de ejemplos reales.
-- [Catálogo Completo](https://naroagutierrezgil.com/obra/): Ficha detallada de las 73 piezas de la colección con fotografías de detalle y relato.
+- [Catálogo Completo](https://naroagutierrezgil.com/obra/): Ficha detallada de las 72 piezas de la colección con fotografías de detalle y relato.
 - [Serie Vaivenes](https://naroagutierrezgil.com/series/vaivenes/): Retratos en técnica mixta, collage textil y objetos de memoria.
 - [Sobre Mí](https://naroagutierrezgil.com/sobre-mi/): Biografía, técnica, proceso creativo y proyectos comunitarios (Walking Gallery Bilbao, El ReCreo).
 - [Trayectoria](https://naroagutierrezgil.com/trayectoria/): Archivo cronológico de exposiciones documentadas desde 2010 (DEIA, GARA, Politena, Dock Bilbao).
@@ -40,14 +40,14 @@
 - [Contacto](https://naroagutierrezgil.com/contacto/): Canales directos de consulta para obra y encargos.
 
 ## Recursos Machine-to-Machine y GEO SOTA 2026
-- [Catálogo JSON Estructurado](https://naroagutierrezgil.com/api/catalog.json): Endpoint con especificaciones completas de las 73 obras y Evidence Graph.
+- [Catálogo JSON Estructurado](https://naroagutierrezgil.com/api/catalog.json): Endpoint con especificaciones completas de las 72 obras y Evidence Graph.
 - [Endpoint WebMCP](https://naroagutierrezgil.com/.well-known/mcp.json): Manifiesto y definición formal de herramientas WebMCP para agentes autónomos.
 - [Índice Extendido llms-full.txt](https://naroagutierrezgil.com/llms-full.txt): Desglose exhaustivo de todas las piezas, fotos de detalle con hashes SHA-256 y condiciones de encargo.
-- [Sitemap XML](https://naroagutierrezgil.com/sitemap.xml): Índice canónico de 81 rutas y metadatos de imágenes.
+- [Sitemap XML](https://naroagutierrezgil.com/sitemap.xml): Índice canónico de 80 rutas y metadatos de imágenes.
 - [Feed RSS 2.0](https://naroagutierrezgil.com/feed.xml): Sindicación de obras recientes y publicaciones del taller.
 - [Protocolo IndexNow](https://naroagutierrezgil.com/indexnow.json): Sincronización instantánea de indexación para Bing y motores asociados.
 
-## Catálogo Exhaustivo de Obras (73 Piezas Documentadas)
+## Catálogo Exhaustivo de Obras (72 Piezas Documentadas)
 
 ### Marilyn Rocks (None)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/marilyn-rocks/
@@ -573,16 +573,6 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
 - **Relato:** Fuerza animal hiperrealista inmortalizada sobre la dureza del soporte de pizarra. La mirada felina emerge de la roca con veladuras y texturas que aprovechan el relieve geológico de la pieza.
 - **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20El%20Gran%20Dakari
 
-### Audrey Hepburn (2023)
-- **URL Canónica:** https://naroagutierrezgil.com/obra/audrey-hepburn/
-- **Técnica:** Lápiz, acrílico, collage textil y mica mineral
-- **Soporte:** Arpillera sobre tabla con marco intervenido
-- **Medidas:** 40 × 30 cm
-- **Materiales:** Lápiz, acrílico, collage textil y mica mineral
-- **Serie:** Obras Individuales
-- **Relato:** La delicadeza atemporal de Audrey contrapuesta con el carácter de la mica mineral y trazos pop. El brillo sutil de los minerales acompaña la elegancia cinematográfica de su mirada.
-- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Audrey%20Hepburn
-
 ### Geisha (2023)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/geisha/
 - **Técnica:** Óleo, acrílico y pan de oro
@@ -703,16 +693,6 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
 - **Relato:** Retrato de Sister Rosetta Tharpe, la abuela del rock & roll. El dibujo con lápices de colores pasa por el escáner y vuelve al soporte físico para convivir con capas de collage. El papel de seda, los recortes y el hilo de las cuerdas crean un arcoíris alrededor de su guitarra.
 - **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Rosetta%20no%20es%20de%20piedra
 
-### Hello Darkness My Old Friend (None)
-- **URL Canónica:** https://naroagutierrezgil.com/obra/dustin/
-- **Técnica:** Lápices de colores Art & Graphic de Faber-Castell y collage
-- **Soporte:** Marco con passepartout
-- **Medidas:** 50 × 40 cm
-- **Materiales:** Papel de pared antiguo, plástico de burbujas, envoltorios, celofán, cerillas, pieza de puzle, goma eva, acetato impreso, poliespán y pajitas.
-- **Serie:** Vaivenes
-- **Relato:** Dustin Hoffman en El Graduado. El collage recoge alusiones a la película para hablar de las expectativas, el plástico y las oscilaciones del mundo interior. La figura dibujada se escanea, se imprime y se combina con materiales cotidianos de distintas texturas.
-- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Hello%20Darkness%20My%20Old%20Friend
-
 ### La Famiglia (2021)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/la-famiglia/
 - **Técnica:** Lápices de colores y pintura acrílica
@@ -792,6 +772,16 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
 - **Serie:** Colección general
 - **Relato:** Rara avis que destaca entre las obras enmarcadas por la riqueza de materiales y capas de significado. Los pies descansando en la barandilla de Copper Deli, las rosas plastificadas, los elefantes, el paisaje de fieltro y el cielo de celofán conforman un puzzle textil y afectivo en perfecto equilibrio.
 - **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Las%20RosaL%C3%ADas
+
+### Hello Darkness My Old Friend (None)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/dustin/
+- **Técnica:** Lápices de colores Art & Graphic de Faber-Castell y collage
+- **Soporte:** Marco con passepartout
+- **Medidas:** 50 × 40 cm
+- **Materiales:** Papel de pared antiguo, plástico de burbujas, envoltorios, celofán, cerillas, pieza de puzle, goma eva, acetato impreso, poliespán y pajitas.
+- **Serie:** Vaivenes
+- **Relato:** Dustin Hoffman en El Graduado. El collage recoge alusiones a la película para hablar de las expectativas, el plástico y las oscilaciones del mundo interior. La figura dibujada se escanea, se imprime y se combina con materiales cotidianos de distintas texturas.
+- **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Hello%20Darkness%20My%20Old%20Friend
 
 
 ## Condiciones del Servicio de Encargos en Bilbao (Evidence Base)

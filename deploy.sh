@@ -120,7 +120,6 @@ Allow: /
 Disallow: /test/
 Disallow: /assets/backup_pre4k/
 
-Sitemap: https://naroa.online/sitemap.xml
 Sitemap: https://naroagutierrezgil.com/sitemap.xml
 EOF
   ok "robots.txt creado"
