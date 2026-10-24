@@ -730,6 +730,10 @@ async function eyeMatch(ui, base, points) {
   galleryAudio.advance(150); reactiveGallery.scroll(celiaIndex); await reactiveGallery.flush();
   assert.equal(reactiveGallery.w.NAROA_SOUND.lastShakerSlug, 'asucar-celia-cruz', 'Arriving at Celia Cruz triggers sugar shaker');
   assert.equal(reactiveGallery.w.NAROA_SOUND.lastUtterance, '¡Azúcar!', 'Celia Cruz triggers ¡Azúcar! shout');
+  const robeIndex = works.findIndex(w => w.slug === 'entre-tantas-flores-de-dia');
+  galleryAudio.advance(150); reactiveGallery.scroll(robeIndex); await reactiveGallery.flush();
+  assert.equal(reactiveGallery.w.NAROA_SOUND.lastDeltoyaSlug, 'entre-tantas-flores-de-dia', 'Arriving at Robe triggers Deltoya');
+  assert.equal(reactiveGallery.w.NAROA_SOUND.lastUtterance, '¡DELTOYA!', 'Robe triggers ¡DELTOYA! shout');
   reactiveGallery.click('[data-sound]'); galleryAudio.advance(600); reactiveGallery.dom.window.close();
   const boxAudio = audioBoundary();
   const box = create('/contacto/', false, { width: 1024, height: 768 }, boxAudio); await box.flush();
