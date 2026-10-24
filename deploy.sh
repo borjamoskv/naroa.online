@@ -139,6 +139,12 @@ if [ "$BRANCH" = "--build-only" ]; then
   exit 0
 fi
 
+if [ "$BRANCH" = "production" ] && command -v c5_biometric_gate >/dev/null 2>&1; then
+  log "Solicitando atestación biométrica Touch ID en Secure Enclave..."
+  c5_biometric_gate --action deploy --agent naroa --scope production --causal-hash "$(git rev-parse HEAD)" --no-sound || fail "Atestación biométrica requerida para despliegue en producción"
+  ok "Atestación biométrica verificada en silicio"
+fi
+
 if [ -n "${CLOUDFLARE_API_TOKEN:-}" ]; then
   export CLOUDFLARE_API_TOKEN
 fi
