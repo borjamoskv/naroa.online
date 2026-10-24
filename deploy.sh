@@ -128,6 +128,13 @@ fi
 # Build the approved immersive design directly from reviewed source data.
 # Original catalogue, photographs and legacy generators are preserved.
 log "Compilando portfolio inmersivo completo..."
+if ! python3 -c "import PIL" 2>/dev/null; then
+  log "Instalando dependencia Python Pillow para pipeline de assets..."
+  python3 -m pip install --quiet --break-system-packages -r requirements.txt 2>/dev/null || \
+  python3 -m pip install --quiet -r requirements.txt 2>/dev/null || \
+  python3 -m pip install --quiet --break-system-packages Pillow 2>/dev/null || \
+  python3 -m pip install --quiet Pillow 2>/dev/null || fail "Error instalando Pillow para build_immersive_site.py"
+fi
 python3 tools/build_immersive_site.py || fail "Compilación del portfolio falló"
 python3 tools/check_immersive_site.py || fail "Validación del portfolio falló"
 node tools/test_immersive_dom.cjs || fail "Validación de interacciones falló"
