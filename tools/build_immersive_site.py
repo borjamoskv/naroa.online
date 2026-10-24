@@ -380,6 +380,13 @@ def build(output):
         for cf in cursors_src.glob("*.*"):
             shutil.copy2(cf, cursors_dest / cf.name)
 
+    fonts_src = SOURCE / "assets" / "fonts"
+    if fonts_src.exists():
+        fonts_dest = output / "assets" / "fonts"
+        fonts_dest.mkdir(parents=True, exist_ok=True)
+        for ff in fonts_src.glob("*.*"):
+            shutil.copy2(ff, fonts_dest / ff.name)
+
     manifest_data = {
         "name": "Naroa Gutiérrez Gil · Arte y Retratos",
         "short_name": "Naroa",

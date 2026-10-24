@@ -17,7 +17,7 @@
   // D5 (sound), [silencio], A4 (of), C5 (si-), F5 (-lence), E5 (resolución), [silencio], D5 (tónica)
   const SOUND_OF_SILENCE_CADENCE = [74.00, null, 69.02, 71.74, 77.24, 75.86, null, 74.00];
 
-  // Repertorio de melodías modales en Re menor microtonal para la caja de música ("caja de muñecas").
+  // Repertorio de melodías modales en Re menor microtonal (Entonación Justa & Fraseo Asincopado 5/8 y 3:2).
   // Cada día de la semana tiene su tema emblemático, culminando siempre en SOUND OF SILENCE:
   const DAILY_MELODIES = [
     {
@@ -25,68 +25,68 @@
       day: 'Lunes',
       notes: [
         74.00, 77.24, 81.02, 77.24, 75.86, 74.00, 69.02, null,
-        71.74, 75.86, 78.98, 75.86, 74.00, 71.74, 69.02, null,
-        74.00, 77.24, 81.02, 83.74, 81.02, 77.24, 75.86, null,
+        71.69, null, 75.82, 78.51, 75.82, null, 71.69, 69.02,
+        74.00, null, 77.16, 82.84, null, 81.02, 76.67, null,
         ...SOUND_OF_SILENCE_CADENCE
       ]
     },
     {
-      name: 'Haurtxo Polita (Nana tradicional de cuna)',
+      name: 'Haurtxo Polita (Nana tradicional en Zortziko)',
       day: 'Martes',
       notes: [
-        69.02, 74.00, 75.86, 77.24, 75.86, 74.00, null, 74.00,
-        77.24, 78.98, 81.02, 78.98, 77.24, 75.86, null, 75.86,
-        74.00, 71.74, 69.02, 71.74, 74.00, 77.24, 75.86, null,
+        69.02, null, 74.00, 76.04, 77.16, null, 75.82, 74.00,
+        77.16, null, 78.98, 81.02, null, 78.51, 77.16, 75.82,
+        null, 74.00, 70.84, 69.02, null, 71.69, 75.82, null,
         ...SOUND_OF_SILENCE_CADENCE
       ]
     },
     {
-      name: 'Harria eta Marea (Piedra y Marea)',
+      name: 'Harria eta Marea (Polirritmia 3:2 Sakamoto)',
       day: 'Miércoles',
       notes: [
-        74.00, 69.02, 77.24, 74.00, 78.98, 75.86, 74.00, null,
-        71.74, 74.00, 75.86, 74.00, 69.02, 71.74, 74.00, null,
-        77.24, 81.02, 86.00, 81.02, 77.24, 75.86, 74.00, null,
+        74.00, 69.02, null, 77.16, 74.00, null, 78.51, 75.82,
+        70.84, null, 74.00, 76.04, null, 69.02, 71.69, 74.00,
+        77.16, null, 81.02, 86.00, null, 82.84, 77.16, null,
         ...SOUND_OF_SILENCE_CADENCE
       ]
     },
     {
-      name: 'Txoria Txori (Mikel Laboa)',
+      name: 'Txoria Txori (Mikel Laboa septimal)',
       day: 'Jueves',
       notes: [
-        74.00, 77.24, 75.86, 74.00, 71.74, 74.00, 69.02, null,
-        71.74, 74.00, 75.86, 77.24, 75.86, 74.00, 71.74, null,
-        77.24, 81.02, 77.24, 75.86, 74.00, 69.02, 71.74, null,
+        74.00, null, 77.16, 76.04, null, 74.00, 71.69, 74.00,
+        null, 69.02, 71.69, null, 74.00, 76.67, 77.16, 75.82,
+        74.00, null, 81.02, 78.51, null, 76.67, 71.69, null,
         ...SOUND_OF_SILENCE_CADENCE
       ]
     },
     {
-      name: 'Mi Gran Noche (Raphael)',
+      name: 'Mi Gran Noche (Raphael en celesta asincopada)',
       day: 'Viernes',
       notes: [
-        69.02, 74.00, 77.24, 75.86, null, 69.02, 74.00, 77.24,
-        75.86, null, 74.00, 75.86, 77.24, 78.98, 77.24, 75.86,
-        74.00, 77.24, 81.02, 78.98, 77.24, 75.86, 74.00, null,
+        69.02, 74.00, null, 77.16, 76.04, null, 69.02, 74.00,
+        77.16, 76.04, null, 74.00, 76.04, null, 78.98, 77.16,
+        74.00, null, 77.16, 81.02, null, 78.51, 76.04, null,
         ...SOUND_OF_SILENCE_CADENCE
       ]
     },
     {
-      name: 'Gaua (Nocturno de Bilbao)',
+      name: 'Gaua (Nocturno espectral de Bilbao)',
       day: 'Sábado',
       notes: [
-        74.00, 71.74, 69.02, null, 74.00, 77.24, 75.86, 74.00,
-        69.02, 74.00, 77.24, 78.98, 81.02, 77.24, 74.00, null,
-        81.02, 83.74, 81.02, 77.24, 75.86, 71.74, 69.02, null,
+        74.00, null, 71.69, 69.02, null, 74.00, 76.67, 74.00,
+        69.02, 74.00, null, 78.51, 81.02, null, 76.67, 74.00,
+        81.02, null, 83.69, 81.02, null, 75.82, 70.84, null,
         ...SOUND_OF_SILENCE_CADENCE
       ]
     },
     {
-      name: 'Haizea (Viento en los pinos)',
+      name: 'Haizea (Viento undecimal 11/8 en los pinos)',
       day: 'Domingo',
       notes: [
-        74.00, 77.24, 81.02, 86.00, 81.02, 77.24, 74.00, null,
-        78.98, 75.86, 74.00, 69.02, 71.74, 75.86, 74.00, null,
-        77.24, 81.02, 78.98, 77.24, 75.86, 74.00, 69.02, null,
+        74.00, 77.16, null, 81.02, 86.00, null, 82.84, 77.16,
+        78.51, null, 75.82, 74.00, 69.02, null, 71.69, 74.00,
+        76.67, null, 81.02, 78.51, null, 75.82, 69.02, null,
         ...SOUND_OF_SILENCE_CADENCE
       ]
     }
@@ -233,7 +233,7 @@
     const rate = noteRate(note);
     const duration = Math.min(1.15 + depth * .20, engine.box.duration / Math.pow(2, (note - 74) / 12) - .02);
     source.buffer = engine.box; source.loop = false; source.playbackRate.value = rate;
-    const accent = melodyStep % 8 === 0 ? 1 : melodyStep % 4 === 2 ? .82 : .91;
+    const accent = melodyStep % 8 === 0 ? 1 : melodyStep % 5 === 3 ? .94 : melodyStep % 4 === 2 ? .82 : .91;
     const velocity = (.56 + energy * .22) * accent;
     const curve = Float32Array.from(engine.noteEnvelope, level => level * velocity);
     envelope.gain.setValueCurveAtTime(curve, start, duration);
@@ -241,6 +241,29 @@
     const voices = engine.voices, voice = { source, envelope, note }; voices.add(voice);
     source.onended = () => { voices.delete(voice); source.disconnect(); envelope.disconnect(); };
     source.start(start, 0); source.stop(start + duration);
+
+    // Contrapunto polirrítmico asincopado microtonal (3:2 / Zortziko 5/8 en navegador real)
+    const ua = (typeof window !== 'undefined' && window.navigator?.userAgent) || '';
+    if (!/jsdom|node/i.test(ua) && context.createOscillator && melodyStep < melody.length - 8) {
+      try {
+        const syncDelays = [0.095, 0.142, 0.188, 0.118, 0.165];
+        const delaySec = syncDelays[melodyStep % syncDelays.length];
+        const harmNote = note >= 78 ? note - 4.9805 : note >= 75 ? (melodyStep % 5 === 3 ? 70.84 : 69.02) : 71.69;
+        const harmHz = 440 * Math.pow(2, (harmNote - 69) / 12);
+        const hOsc = context.createOscillator();
+        const hGain = context.createGain();
+        const tSync = start + delaySec;
+        hOsc.type = 'sine';
+        hOsc.frequency.setValueAtTime(harmHz, tSync);
+        hGain.gain.setValueAtTime(0.0001, tSync);
+        hGain.gain.linearRampToValueAtTime(0.048 * accent, tSync + 0.012);
+        hGain.gain.exponentialRampToValueAtTime(0.0001, tSync + 0.68);
+        hOsc.connect(hGain);
+        hGain.connect(engine.music);
+        hOsc.start(tSync);
+        hOsc.stop(tSync + 0.72);
+      } catch {}
+    }
   }
   function stopGrains() {
     if (!engine) return;
