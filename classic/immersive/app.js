@@ -727,6 +727,8 @@
       $('[data-prev]', stage).disabled = state.index === 0; $('[data-next]', stage).disabled = state.index === works.length - 1;
       const ouroboros = $('[data-ouroboros]', stage);
       if (ouroboros) ouroboros.hidden = (state.index !== works.length - 1);
+      const finaleShare = $('[data-finale-share]', stage);
+      if (finaleShare) finaleShare.hidden = (state.index !== works.length - 1);
       stage.style.setProperty('--count', works.length);
       stage.classList.toggle('is-fit', state.fit); document.body.classList.toggle('is-quiet', state.quiet);
       $('[data-restore]', stage).hidden = !state.quiet;
@@ -764,6 +766,12 @@
       $('meta[name="description"]').content = p.story;
       $('meta[property="og:title"]').content = document.title; $('meta[property="og:description"]').content = p.story; $('meta[property="og:url"]').content = 'https://naroagutierrezgil.com' + url;
       $('meta[property="og:image"]').content = 'https://naroagutierrezgil.com' + p.photos[0].original;
+      const twImg = $('meta[name="twitter:image"]');
+      if (twImg) twImg.content = 'https://naroagutierrezgil.com' + p.photos[0].original;
+      const twTitle = $('meta[name="twitter:title"]');
+      if (twTitle) twTitle.content = document.title;
+      const twDesc = $('meta[name="twitter:description"]');
+      if (twDesc) twDesc.content = p.story;
       $('#page-schema').textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'VisualArtwork', name: p.title, url: 'https://naroagutierrezgil.com' + url, description: p.story, image: p.photos.map(ph => 'https://naroagutierrezgil.com' + ph.original), creator: { '@type': 'Person', name: 'Naroa Gutiérrez Gil' } });
     }
     const SCENE_ACCENTS = ['#edbca4', '#f7d594', '#ff69b4', '#93c572', '#6897ff', '#f4d06f', '#e07a5f'];
@@ -823,6 +831,7 @@
       const mode = entry.mode, progress = smooth(fraction), eyeMatch = transition && mode === 'E';
       stage.dataset.transition = still ? 'still' : phase === 'explore' ? 'explore' : !transition ? 'hold' : ({ E: 'eyes', H: 'horizontal', V: 'vertical', Z: 'zoom', P: 'puzzle' })[mode];
       stage.dataset.journeyPhase = phase;
+      const isDustinToGameOver = transition && works[base]?.slug === 'dustin' && works[incoming]?.slug === 'game-over';
       const heroThreshold = $('[data-hero-threshold]', stage);
       const visible = new Set(still ? [state.index] : transition ? [base, incoming] : [base]);
       paintedScenes.forEach(index => {
@@ -1546,6 +1555,35 @@
         });
       } else {
         window.prompt('Copia el enlace directo:', url);
+      }
+    });
+    document.addEventListener('click', e => {
+      const btn = e.target.closest('[data-share-network]');
+      if (!btn) return;
+      e.preventDefault();
+      const network = btn.dataset.shareNetwork;
+      const p = works[state.index];
+      const customUrl = btn.dataset.shareUrl;
+      const customTitle = btn.dataset.shareTitle;
+      const url = customUrl || (location.origin + (p ? '/obra/' + p.slug + '/' : location.pathname));
+      const title = customTitle || (p ? `${p.title} · Naroa Gutiérrez Gil` : document.title);
+      const text = `Descubre «${title}» de Naroa Gutiérrez Gil en su exposición inmersiva en Bilbao.`;
+      const encodedUrl = encodeURIComponent(url);
+      const encodedText = encodeURIComponent(text);
+
+      if (network === 'facebook') {
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`, '_blank', 'noopener,noreferrer,width=640,height=560');
+      } else if (network === 'x') {
+        window.open(`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`, '_blank', 'noopener,noreferrer,width=640,height=560');
+      } else if (network === 'instagram' || network === 'tiktok') {
+        if (navigator.share) {
+          navigator.share({ title, text, url }).catch(() => {});
+        } else if (navigator.clipboard?.writeText) {
+          navigator.clipboard.writeText(url).then(() => {
+            const netLabel = network === 'instagram' ? 'Instagram Stories' : 'TikTok';
+            window.alert(`¡Enlace copiado al portapapeles listo para compartir en ${netLabel}!`);
+          });
+        }
       }
     });
     function showPhoto() {

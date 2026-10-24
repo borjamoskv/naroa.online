@@ -1553,5 +1553,20 @@ export const ARTWORKS: Artwork[] = [
     medium: 'Rotuladores de tinta, permanentes y frottage con grafito',
     description: 'Retrato del Abuelo Munster con su icónica capa y sonrisa picaresca.',
     sizeCategory: 'medium'
+  },
+  {
+    id: 104,
+    category: 'kintsugi',
+    kicker: '8-bit retro arcade epilogue',
+    quote: 'Insert coin to continue.',
+    slug: 'game-over',
+    aspectRatio: 1.333,
+    url: '/images/catalogo/dar-la-lata-game-over-2048.jpg',
+    title: 'Game Over',
+    href: '#obra-game-over',
+    year: '2026',
+    medium: 'Fotografías recortadas y ensamblaje pixel art 8-bit',
+    description: 'En Game Over, la lata de conservas clausura el viaje con un guiño retro arcade tras el silencio de El Graduado. Entre rosas y calas de papel, la pantalla pixelada se despide en 8 bits.',
+    sizeCategory: 'medium'
   }
 ]

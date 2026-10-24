@@ -17,7 +17,7 @@ from html import escape as esc
 from pathlib import Path
 from urllib.parse import quote
 
-from PIL import Image, ImageOps
+from PIL import Image, ImageOps, ImageDraw, ImageFont, ImageFilter
 
 REPO = Path(__file__).resolve().parents[1]
 SOURCE = REPO / "classic"
@@ -125,6 +125,155 @@ def build(output):
     menu_img_iloveyou = derivative("/images/menu/menu-06-iloveyou.jpg", 900)
     menu_img_frankenstein = derivative("/images/menu/menu-07-frankenstein.jpg", 900)
     menu_img_pepa = derivative("/images/menu/menu-08-pepa-glitter.jpg", 900)
+
+    def generate_social_cards(source_dir, output_dir):
+        social_dir = source_dir / "images/social"
+        social_dir.mkdir(parents=True, exist_ok=True)
+        target_social_dir = output_dir / "images/social"
+        target_social_dir.mkdir(parents=True, exist_ok=True)
+
+        font_bold_path = "/System/Library/Fonts/Supplemental/Arial Bold.ttf"
+        font_reg_path = "/System/Library/Fonts/Helvetica.ttc"
+        try:
+            font_eyebrow = ImageFont.truetype(font_reg_path, 16)
+            font_h1 = ImageFont.truetype(font_bold_path, 38)
+            font_body = ImageFont.truetype(font_reg_path, 21)
+            font_pill = ImageFont.truetype(font_bold_path, 15)
+            font_foot = ImageFont.truetype(font_reg_path, 15)
+        except Exception:
+            font_eyebrow = font_h1 = font_body = font_pill = font_foot = ImageFont.load_default()
+
+        def create_card(filename, main_img_path, tile1_path, tile2_path, eyebrow, title, lead, badge_text, badge_bg, badge_fg, accent_hex):
+            W, H = 1200, 630
+            card = Image.new("RGB", (W, H), "#0b0c0a")
+
+            halo = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+            hdraw = ImageDraw.Draw(halo)
+            hdraw.ellipse([640, -120, 1380, 620], fill=(46, 80, 144, 130))
+            hdraw.ellipse([-100, 180, 520, 800], fill=(247, 213, 148, 45))
+            halo = halo.filter(ImageFilter.GaussianBlur(80))
+            card.paste(Image.alpha_composite(Image.new("RGBA", (W, H), (11, 12, 10, 255)), halo).convert("RGB"))
+
+            if Path(main_img_path).exists():
+                main_im = Image.open(main_img_path).convert("RGB")
+                main_crop = ImageOps.fit(main_im, (380, 530), centering=(0.5, 0.3))
+                mask = Image.new("L", (380, 530), 0)
+                ImageDraw.Draw(mask).rounded_rectangle([0, 0, 380, 530], radius=24, fill=255)
+                card.paste(main_crop, (50, 50), mask)
+
+            if Path(tile1_path).exists():
+                t1 = Image.open(tile1_path).convert("RGB")
+                t1_crop = ImageOps.fit(t1, (240, 255), centering=(0.5, 0.45))
+                m1 = Image.new("L", (240, 255), 0)
+                ImageDraw.Draw(m1).rounded_rectangle([0, 0, 240, 255], radius=18, fill=255)
+                card.paste(t1_crop, (450, 50), m1)
+
+            if Path(tile2_path).exists():
+                t2 = Image.open(tile2_path).convert("RGB")
+                t2_crop = ImageOps.fit(t2, (240, 255), centering=(0.5, 0.4))
+                m2 = Image.new("L", (240, 255), 0)
+                ImageDraw.Draw(m2).rounded_rectangle([0, 0, 240, 255], radius=18, fill=255)
+                card.paste(t2_crop, (450, 325), m2)
+
+            draw = ImageDraw.Draw(card)
+            draw.text((720, 75), eyebrow, fill=accent_hex, font=font_eyebrow)
+            draw.text((720, 115), title, fill="#fffdf4", font=font_h1, spacing=8)
+            draw.text((720, 285), lead, fill="#d1cfc7", font=font_body, spacing=6)
+
+            badge_w = 270
+            draw.rounded_rectangle([720, 395, 720 + badge_w, 435], radius=12, fill=badge_bg)
+            draw.text((735, 405), badge_text, fill=badge_fg, font=font_pill)
+
+            draw.rounded_rectangle([720, 455, 980, 495], radius=12, outline="#f7d594", width=1)
+            draw.text((735, 465), "ESTUDIO EN BILBAO · 2026", fill="#f7d594", font=font_pill)
+
+            draw.text((720, 545), "naroagutierrezgil.com", fill="#9ca3af", font=font_foot)
+            draw.text((1000, 545), "BILBAO · BIZKAIA", fill="#6b7280", font=font_foot)
+
+            dest_src = social_dir / filename
+            card.save(dest_src, quality=94, optimize=True)
+            dest_deploy = target_social_dir / filename
+            shutil.copy2(dest_src, dest_deploy)
+
+        create_card(
+            "naroa-share-card-home.jpg",
+            source_dir / "images/sobre-mi/naroa-monoculo.jpg",
+            source_dir / "images/catalogo/marilyn-rocks-4k.webp",
+            source_dir / "images/menu/menu-01-luz.jpg",
+            "NAROA GUTIÉRREZ GIL · BILBAO",
+            "LA MIRADA\nQUE ATRAVIESA\nLA MATERIA",
+            f"Pintura, collage contemporáneo y retratos\nsobre pizarra, madera y memoria · {len(projects)} obras.",
+            f"{len(projects)} OBRAS CANÓNICAS",
+            "#2E5090", "#fffdf4", "#f7d594"
+        )
+        create_card(
+            "naroa-share-card-cuaderno.jpg",
+            source_dir / "images/menu/menu-05-homer-pepe.jpg",
+            source_dir / "images/menu/menu-01-luz.jpg",
+            source_dir / "images/menu/menu-04-bastidor-flores.jpg",
+            "CUADERNO DE ESTUDIO · BILBAO",
+            "HISTORIAS,\nPROCESOS Y\nENCUENTROS",
+            "Apuntes, textos y exploraciones visuales\ndesde el estudio de Naroa Gutiérrez Gil.",
+            "CUADERNO DE ARTISTA",
+            "#93C572", "#162410", "#93C572"
+        )
+        create_card(
+            "naroa-share-card-trayectoria.jpg",
+            source_dir / "images/trayectoria/cantinflowers.jpg",
+            source_dir / "images/menu/menu-04-bastidor-flores.jpg",
+            source_dir / "images/sobre-mi/naroa-monoculo.jpg",
+            "TRAYECTORIA DOCUMENTADA",
+            "EL CAMINO\nDE LAS OBRAS\nY ENCUENTROS",
+            "Exposiciones colectivas e individuales,\nWalking Gallery y proyectos compartidos.",
+            "EXPOSICIONES Y HITOS",
+            "#F4D06F", "#231a07", "#F4D06F"
+        )
+        create_card(
+            "naroa-share-card-sobre-mi.jpg",
+            source_dir / "images/sobre-mi/naroa-monoculo.jpg",
+            source_dir / "images/menu/menu-03-manostijeras.jpg",
+            source_dir / "images/catalogo/marilyn-rocks-4k.webp",
+            "LA ARTISTA · BILBAO",
+            "NAROA\nGUTIÉRREZ GIL\nRETRATISTA",
+            "«Me encontré a mí en los demás».\nUn recorrido biográfico por su mirada plástica.",
+            "BIOGRAFÍA Y ESTUDIO",
+            "#FF69B4", "#11120f", "#FF69B4"
+        )
+        create_card(
+            "naroa-share-card-encargos.jpg",
+            source_dir / "images/menu/menu-06-iloveyou.jpg",
+            source_dir / "images/catalogo/marilyn-rocks-4k.webp",
+            source_dir / "images/sobre-mi/naroa-monoculo.jpg",
+            "RETRATOS POR ENCARGO · BILBAO",
+            "UN RETRATO\nCON TU PROPIA\nHISTORIA",
+            "Retratos artísticos personalizados en dibujo,\nóleo, collage contemporáneo y pizarra rústica.",
+            "CONSULTA PERSONALIZADA",
+            "#2E5090", "#fffdf4", "#f7d594"
+        )
+        create_card(
+            "naroa-share-card-vaivenes.jpg",
+            source_dir / "images/menu/menu-02-celia.jpg",
+            source_dir / "images/menu/menu-08-pepa-glitter.jpg",
+            source_dir / "images/menu/menu-05-homer-pepe.jpg",
+            "SERIE VAIVENES · COLLAGE",
+            "DIBUJO, MATERIA\nY TRANSFORMACIÓN",
+            "Serie plástica de collages y emociones\ncon materiales reutilizados y memoria.",
+            "SERIE VAIVENES",
+            "#f4c430", "#11120f", "#f7d594"
+        )
+        create_card(
+            "naroa-share-card-contacto.jpg",
+            source_dir / "images/menu/menu-07-frankenstein.jpg",
+            source_dir / "images/sobre-mi/naroa-monoculo.jpg",
+            source_dir / "images/menu/menu-06-iloveyou.jpg",
+            "ESTUDIO EN BILBAO · CONTACTO",
+            "HABLEMOS\nDE TU PROYECTO\nO ENCARGO",
+            "Contacto directo por email o WhatsApp con la\nartista para encargos, visitas o exposiciones.",
+            "CONTACTO DIRECTO",
+            "#2E5090", "#fffdf4", "#f7d594"
+        )
+
+    generate_social_cards(SOURCE, output)
     assets = {}
     for name in ("app.css", "app.js", "journey.js", "soundscape.js"):
         src = SOURCE / "immersive" / name
@@ -133,7 +282,7 @@ def build(output):
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src, dest)
         assets[name] = "/" + str(dest.relative_to(output))
-    for name in ("naroa-naturaleza.mp3", "naroa-iris.mp3", "naroa-caja-musica.mp3", "we-can-be-heroes.mp3", "just-for-one-day.mp3", "sound-of-silence.mp3", "asucar-celia.mp3", "deltoya.mp3"):
+    for name in ("naroa-naturaleza.mp3", "naroa-iris.mp3", "naroa-caja-musica.mp3", "we-can-be-heroes.mp3", "just-for-one-day.mp3", "sound-of-silence.mp3", "asucar-celia.mp3", "deltoya.mp3", "polaroid-shutter.mp3"):
         src = SOURCE / "audio" / name
         digest = hashlib.sha256(src.read_bytes()).hexdigest()[:12]
         dest = output / "immersive/audio" / f"{src.stem}-{digest}{src.suffix}"
@@ -226,8 +375,23 @@ def build(output):
         ]
         return ''.join(f'''<a href="{href}" data-menu-item data-menu-index="{i-1}" data-preview-src="{src}" data-preview-title="{esc(title)}" data-preview-label="{esc(label)}" data-preview-quote="{esc(quote_text)}" data-preview-meta="{esc(meta_text)}"{' data-preview-wink="true"' if wink else ''}{reel_attr(reel)}><span class="menu-number" aria-hidden="true">{i:02}</span><span class="menu-name">{label}<small>{detail}</small></span><span class="menu-arrow" aria-hidden="true">↗</span></a>''' for i, (href, label, detail, src, title, quote_text, meta_text, wink, reel) in enumerate(items, 1))
 
+    share_svgs = {
+        "instagram": '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>',
+        "facebook": '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>',
+        "tiktok": '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5v3a8 8 0 0 1-5-1.7V16a7 7 0 1 1-7-7c.7 0 1.4.1 2 .3V12z"/></svg>',
+        "x": '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
+    }
+
+    def social_share_dock(url="", title="", is_finale=False):
+        cls = "art-finale-share" if is_finale else "social-share-dock"
+        attr = ' data-finale-share hidden' if is_finale else ''
+        label = "Compartir recorrido:" if is_finale else "Compartir:"
+        data_url = f' data-share-url="{esc(url)}"' if url else ''
+        data_title = f' data-share-title="{esc(title)}"' if title else ''
+        return f'''<div class="{cls}"{attr} role="group" aria-label="{label}"><span class="share-dock-label">{label}</span><div class="share-dock-buttons"><button type="button" class="share-btn share-btn--instagram" data-share-network="instagram"{data_url}{data_title} aria-label="Compartir en Instagram">{share_svgs["instagram"]}<span>Instagram</span></button><button type="button" class="share-btn share-btn--facebook" data-share-network="facebook"{data_url}{data_title} aria-label="Compartir en Facebook">{share_svgs["facebook"]}<span>Facebook</span></button><button type="button" class="share-btn share-btn--tiktok" data-share-network="tiktok"{data_url}{data_title} aria-label="Compartir en TikTok">{share_svgs["tiktok"]}<span>TikTok</span></button><button type="button" class="share-btn share-btn--x" data-share-network="x"{data_url}{data_title} aria-label="Compartir en X">{share_svgs["x"]}<span>X</span></button></div></div>'''
+
     def header(gallery=False):
-        return f'''<header class="site-nav"><a class="signature" href="/" aria-label="Naroa Gutiérrez Gil, inicio"><span>Naroa</span><small>GUTIÉRREZ GIL</small></a><nav aria-label="Principal"><a href="/obra/#indice" data-open-index>Obras</a><a class="desktop-link" href="/retratos-por-encargo-bilbao/">Encargos</a>{'<button type="button" data-quiet>Solo obra</button>' if gallery else '<a class="desktop-link" href="/sobre-mi/">La artista</a>'}<button type="button" class="sound-toggle" data-sound data-nature-src="{assets['naroa-naturaleza.mp3']}" data-iris-src="{assets['naroa-iris.mp3']}" data-musicbox-src="{assets['naroa-caja-musica.mp3']}" data-hero-src="{assets['we-can-be-heroes.mp3']}" data-denbora-src="{assets['just-for-one-day.mp3']}" data-silence-src="{assets['sound-of-silence.mp3']}" data-asucar-src="{assets['asucar-celia.mp3']}" data-deltoya-src="{assets['deltoya.mp3']}" aria-label="Activar caja de música reactiva" title="Caja de música: desplázate para tocar" aria-pressed="false"><svg viewBox="0 0 18 20" aria-hidden="true"><path d="M3 7v6M9 3v14M15 6v8"/></svg><span>Sonido</span></button><button type="button" data-open-menu aria-haspopup="dialog" aria-controls="menu-dialog" aria-expanded="false">Menú <span aria-hidden="true">+</span></button></nav><span class="sound-status" data-sound-status role="status" hidden></span></header>'''
+        return f'''<header class="site-nav"><a class="signature" href="/" aria-label="Naroa Gutiérrez Gil, inicio"><span>Naroa</span><small>GUTIÉRREZ GIL</small></a><nav aria-label="Principal"><a href="/obra/#indice" data-open-index>Obras</a><a class="desktop-link" href="/retratos-por-encargo-bilbao/">Encargos</a>{'<button type="button" data-quiet>Solo obra</button>' if gallery else '<a class="desktop-link" href="/sobre-mi/">La artista</a>'}<button type="button" class="sound-toggle" data-sound data-nature-src="{assets['naroa-naturaleza.mp3']}" data-iris-src="{assets['naroa-iris.mp3']}" data-musicbox-src="{assets['naroa-caja-musica.mp3']}" data-hero-src="{assets['we-can-be-heroes.mp3']}" data-denbora-src="{assets['just-for-one-day.mp3']}" data-silence-src="{assets['sound-of-silence.mp3']}" data-asucar-src="{assets['asucar-celia.mp3']}" data-deltoya-src="{assets['deltoya.mp3']}" data-camera-src="{assets['polaroid-shutter.mp3']}" aria-label="Activar caja de música reactiva" title="Caja de música: desplázate para tocar" aria-pressed="false"><svg viewBox="0 0 18 20" aria-hidden="true"><path d="M3 7v6M9 3v14M15 6v8"/></svg><span>Sonido</span></button><button type="button" data-open-menu aria-haspopup="dialog" aria-controls="menu-dialog" aria-expanded="false">Menú <span aria-hidden="true">+</span></button></nav><span class="sound-status" data-sound-status role="status" hidden></span></header>'''
 
     def dialogs():
         index = ''.join(f'''<a class="index-work" href="/obra/{p['slug']}/" data-work="{p['slug']}" data-category="{p['category']}" data-series="{esc(p['series'] or '')}" data-search="{esc(' '.join(str(p[k] or '') for k in ['title','technique','support','series','story','materials']))}"><img src="{p['thumb']}" width="92" height="100" alt="{esc(p['title'])}" loading="lazy"><span><small>{esc(p['label'])}</small><strong>{esc(p['title'])}</strong><em>{esc(p['support'] or p['technique'] or '')}</em></span><span aria-hidden="true">↗</span></a>''' for p in projects)
@@ -235,7 +399,7 @@ def build(output):
 <dialog id="index-dialog" class="index-dialog" aria-labelledby="index-heading"><div class="dialog-top"><h2 id="index-heading">La obra</h2><button type="button" data-close-dialog>Cerrar ×</button></div><div class="index-controls"><label for="art-search">Buscar obra<input type="search" id="art-search" placeholder="Título, material o retratado…" autocomplete="off"></label><div class="index-filters" role="group" aria-label="Filtrar obras"><button type="button" data-filter="all" aria-pressed="true">Todas</button><button type="button" data-filter="pizarra" aria-pressed="false">Pizarra</button><button type="button" data-filter="collage" aria-pressed="false">Collage</button><button type="button" data-filter="objetos" aria-pressed="false">Objetos</button><button type="button" data-filter="caracterizacion" aria-pressed="false">Caracterización</button><button type="button" data-filter="Vaivenes" aria-pressed="false">Vaivenes</button></div></div><p class="index-count" role="status" aria-live="polite">{len(projects)} proyectos</p><div class="index-list">{index}</div><p class="index-empty" hidden>No hay obras que coincidan con esta búsqueda. <button type="button" data-reset-index>Ver todas</button></p></dialog>'''
 
     def footer():
-        return '''<footer class="site-footer"><a class="signature" href="/">Naroa</a><a href="mailto:naroa@naroa.eu">naroa@naroa.eu ↗</a><a href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer">Facebook ↗</a><a href="https://instagram.com/naroa_art/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="/contacto/">¿Hablamos? ↗</a><span>Bilbao · © 2026</span></footer>'''
+        return f'''<footer class="site-footer"><a class="signature" href="/">Naroa</a>{social_share_dock()}<a href="mailto:naroa@naroa.eu">naroa@naroa.eu ↗</a><a href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer">Facebook ↗</a><a href="https://instagram.com/naroa_art/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="/contacto/">¿Hablamos? ↗</a><span>Bilbao · © 2026</span></footer>'''
 
     pages = []
 
@@ -471,6 +635,18 @@ def build(output):
         canonical = ORIGIN + path
         im_w, im_h, im_mime = image_info(image)
         im_alt = image_alt or f"{title} · Naroa Gutiérrez Gil"
+        og_card_map = {
+            "/": "/images/social/naroa-share-card-home.jpg",
+            "/obra/": "/images/social/naroa-share-card-home.jpg",
+            "/cuaderno/": "/images/social/naroa-share-card-cuaderno.jpg",
+            "/trayectoria/": "/images/social/naroa-share-card-trayectoria.jpg",
+            "/sobre-mi/": "/images/social/naroa-share-card-sobre-mi.jpg",
+            "/retratos-por-encargo-bilbao/": "/images/social/naroa-share-card-encargos.jpg",
+            "/series/vaivenes/": "/images/social/naroa-share-card-vaivenes.jpg",
+            "/contacto/": "/images/social/naroa-share-card-contacto.jpg",
+        }
+        og_img_path = og_card_map.get(path, image)
+        og_w, og_h, og_mime = (1200, 630, "image/jpeg") if og_img_path.startswith("/images/social/naroa-share-card") else (im_w, im_h, im_mime)
         structured = dict(schema or {"@context": "https://schema.org", "@type": "WebPage", "name": title, "url": canonical, "description": description})
         structured.setdefault("inLanguage", "es-ES")
         structured.setdefault("dateModified", catalogue["reviewed"])
@@ -507,7 +683,7 @@ def build(output):
             }
         breadcrumb_tag = f'<script type="application/ld+json" id="seo-breadcrumb">{data_json(breadcrumb)}</script>' if breadcrumb else ''
         slug_class = "page-" + (path.strip("/").replace("/", "-") or "home")
-        html = f'''<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>{esc(title)} · Naroa Gutiérrez Gil</title><meta name="description" content="{esc(description)}"><meta name="robots" content="index, follow, max-image-preview:large"><meta name="theme-color" content="#11120f"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Naroa"><link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/assets/naroa-icon-180-v1.png"><link rel="alternate" type="application/rss+xml" title="Naroa Gutiérrez Gil · Obras y Cuaderno" href="{ORIGIN}/feed.xml"><link rel="mcp" type="application/json" href="{ORIGIN}/.well-known/mcp.json" title="WebMCP Model Context Protocol"><link rel="canonical" href="{canonical}"><meta property="og:site_name" content="Naroa Gutiérrez Gil"><meta property="og:locale" content="es_ES"><meta property="og:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{canonical}"><meta property="og:type" content="{'article' if gallery else 'website'}"><meta property="og:image" content="{ORIGIN}{image}"><meta property="og:image:secure_url" content="{ORIGIN}{image}"><meta property="og:image:width" content="{im_w}"><meta property="og:image:height" content="{im_h}"><meta property="og:image:type" content="{im_mime}"><meta property="og:image:alt" content="{esc(im_alt)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta name="twitter:description" content="{esc(description)}"><meta name="twitter:image" content="{ORIGIN}{image}"><meta name="twitter:image:alt" content="{esc(im_alt)}"><link rel="icon" href="{favicon_path}" type="image/svg+xml" sizes="any"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="{assets['app.css']}"><script type="application/ld+json" id="page-schema">{data_json(structured)}</script>{breadcrumb_tag}<script type="application/vnd.mcp+json" id="webmcp-schema">{data_json(webmcp_manifest)}</script><script defer src="{catalog_path}"></script><script defer src="{assets['soundscape.js']}"></script><script defer src="{assets['journey.js']}"></script><script defer src="{assets['app.js']}"></script></head><body class="{'gallery-page' if gallery else 'editorial-page'} {slug_class}"><a class="skip-link" href="#main">Ir al contenido</a>{header(gallery)}{body}{'' if gallery else footer()}{dialogs()}</body></html>'''
+        html = f'''<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>{esc(title)} · Naroa Gutiérrez Gil</title><meta name="description" content="{esc(description)}"><meta name="robots" content="index, follow, max-image-preview:large"><meta name="theme-color" content="#11120f"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Naroa"><link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/assets/naroa-icon-180-v1.png"><link rel="alternate" type="application/rss+xml" title="Naroa Gutiérrez Gil · Obras y Cuaderno" href="{ORIGIN}/feed.xml"><link rel="mcp" type="application/json" href="{ORIGIN}/.well-known/mcp.json" title="WebMCP Model Context Protocol"><link rel="canonical" href="{canonical}"><meta property="og:site_name" content="Naroa Gutiérrez Gil"><meta property="og:locale" content="es_ES"><meta property="og:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{canonical}"><meta property="og:type" content="{'article' if gallery else 'website'}"><meta property="og:image" content="{ORIGIN}{og_img_path}"><meta property="og:image:secure_url" content="{ORIGIN}{og_img_path}"><meta property="og:image:width" content="{og_w}"><meta property="og:image:height" content="{og_h}"><meta property="og:image:type" content="{og_mime}"><meta property="og:image:alt" content="{esc(im_alt)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta name="twitter:description" content="{esc(description)}"><meta name="twitter:image" content="{ORIGIN}{og_img_path}"><meta name="twitter:image:alt" content="{esc(im_alt)}"><link rel="icon" href="{favicon_path}" type="image/svg+xml" sizes="any"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="{assets['app.css']}"><script type="application/ld+json" id="page-schema">{data_json(structured)}</script>{breadcrumb_tag}<script type="application/vnd.mcp+json" id="webmcp-schema">{data_json(webmcp_manifest)}</script><script defer src="{catalog_path}"></script><script defer src="{assets['soundscape.js']}"></script><script defer src="{assets['journey.js']}"></script><script defer src="{assets['app.js']}"></script></head><body class="{'gallery-page' if gallery else 'editorial-page'} {slug_class}"><a class="skip-link" href="#main">Ir al contenido</a>{header(gallery)}{body}{'' if gallery else footer()}{dialogs()}</body></html>'''
         dest = output / ("404.html" if not_found else path.lstrip("/") + "index.html")
         write(dest, html)
         if not not_found:
@@ -539,8 +715,8 @@ def build(output):
         threshold_html = ""
         if path == "/" and initial == 0:
             threshold_html = f'''<div class="hero-threshold" data-hero-threshold data-threshold-enter aria-hidden="true" style="--monocle-preview:url('{p['cover']}')"><div class="hero-threshold-plane" data-threshold-plane><img class="hero-threshold-portrait" src="{portrait}" srcset="{menu_portrait} 900w, {portrait} 2201w" sizes="100vw" width="2201" height="3468" alt="Naroa Gutiérrez Gil con chistera y monóculo en el umbral del estudio" fetchpriority="high" decoding="sync"><img class="hero-threshold-wink" data-threshold-wink src="{portrait_wink}" srcset="{menu_portrait_wink} 900w, {portrait_wink} 2201w" sizes="100vw" width="2201" height="3468" alt="Guiño de bienvenida de Naroa Gutiérrez Gil" decoding="async"><div class="hero-monocle-portal" data-monocle-portal><div class="hero-monocle-lens"><div class="hero-monocle-marilyn" data-monocle-marilyn></div><div class="hero-monocle-caustics"></div></div><svg class="hero-monocle-ring" viewBox="0 0 220 220" focusable="false" aria-hidden="true"><defs><path id="hero-monocle-text-path" d="M 110,110 m -86,0 a 86,86 0 1,1 172,0 a 86,86 0 1,1 -172,0"/></defs><circle class="hero-monocle-bezel" cx="110" cy="110" r="98"/><circle class="hero-monocle-inner-ring" cx="110" cy="110" r="74"/><text class="hero-monocle-svg-text"><textPath href="#hero-monocle-text-path" startOffset="0%">ENTRA EN LA MIRADA · {len(projects)} OBRAS · BILBAO · </textPath></text></svg></div></div><div class="hero-threshold-shade"></div><div class="hero-spotlight" data-hero-spotlight></div><div class="hero-shards" data-hero-shards><span class="hero-shard hero-shard--1" data-shard-depth="1.4"></span><span class="hero-shard hero-shard--2" data-shard-depth="-1.1"></span><span class="hero-shard hero-shard--3" data-shard-depth="1.8"></span><span class="hero-shard hero-shard--4" data-shard-depth="-1.5"></span><span class="hero-shard hero-shard--5" data-shard-depth="0.9"></span><span class="hero-shard hero-shard--6" data-shard-depth="2.1"></span></div><div class="hero-telemetry" data-hero-telemetry><span>43.2630° N · 2.9350° W · BILBAO</span><span data-hero-zoom-readout>LENTE ÓPTICA 1.00×</span></div><div class="hero-kinetic-split" data-threshold-split><div class="hero-kinetic-row hero-kinetic-row--top" data-split-left><span class="hero-kinetic-eyebrow">UMBRAL DE ESTUDIO · BILBAO</span><span class="hero-kinetic-editorial">LA MIRADA</span></div><div class="hero-kinetic-row hero-kinetic-row--bottom" data-split-right><span class="hero-kinetic-hand">que atraviesa la materia</span><span class="hero-kinetic-cta"><span class="hero-kinetic-cta-dot"></span>Cruzar el monóculo ↘</span></div></div></div>'''
-        body = f'''<main id="main" class="art-scroll" style="--steps:{len(selected)-1}"><section class="art-stage" data-gallery data-initial="{initial}" data-subset="{subset}"><div class="art-layers">{stages}</div>{threshold_html}<div class="art-shade" aria-hidden="true"></div><div class="art-stickman" data-stickman aria-hidden="true" hidden><div class="stickman-runner" data-stick-runner><svg viewBox="0 0 110 120" class="stickman-svg" aria-hidden="true"><path data-stick-scarf d="M54,32 Q34,28 16,36" stroke="#fffdf4" stroke-width="2.6" stroke-linecap="round" fill="none" opacity="0.88" /><polyline data-stick-hair points="49,10 54,3 57,10 63,4 62,12" stroke="#fffdf4" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none" /><circle data-stick-head cx="58" cy="20" r="9.5" stroke="#fffdf4" stroke-width="3.2" fill="#070706" /><circle data-stick-eye cx="62" cy="18.5" r="1.8" fill="#fffdf4" /><line data-stick-torso x1="56" y1="29" x2="50" y2="62" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" /><polyline data-stick-arm-l points="55,36 39,48 29,39" stroke="#fffdf4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none" /><polyline data-stick-arm-r points="55,36 69,46 81,34" stroke="#fffdf4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none" /><polyline data-stick-leg-l points="50,62 34,82 22,102" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" fill="none" /><polyline data-stick-leg-r points="50,62 68,80 80,100" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" fill="none" /><line data-stick-dust-1 x1="26" y1="98" x2="6" y2="98" stroke="rgba(255,253,244,0.82)" stroke-width="2.6" stroke-linecap="round" /><line data-stick-dust-2 x1="32" y1="105" x2="12" y2="105" stroke="rgba(255,253,244,0.55)" stroke-width="2.2" stroke-linecap="round" /><circle data-stick-spark cx="18" cy="93" r="2.2" fill="rgba(255,253,244,0.75)" /></svg></div></div><div class="art-punch-impact" data-punch-impact aria-hidden="true" hidden><div class="punch-burst"><svg viewBox="0 0 160 160" class="punch-svg" aria-hidden="true"><polygon points="80,8 100,52 152,38 120,80 154,120 106,118 94,158 74,120 26,144 44,98 6,76 56,60" fill="#d93829" stroke="#fffdf4" stroke-width="4" stroke-linejoin="round" /><circle cx="80" cy="80" r="28" fill="#f4c430" stroke="#11120f" stroke-width="2" /><text x="80" y="88" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="20" fill="#11120f" letter-spacing="1">¡ZAS!</text><line x1="8" y1="18" x2="38" y2="44" stroke="#fffdf4" stroke-width="3" stroke-linecap="round" /><line x1="142" y1="20" x2="118" y2="46" stroke="#fffdf4" stroke-width="3" stroke-linecap="round" /><line x1="152" y1="144" x2="126" y2="120" stroke="#fffdf4" stroke-width="3" stroke-linecap="round" /><line x1="16" y1="142" x2="40" y2="116" stroke="#fffdf4" stroke-width="3" stroke-linecap="round" /></svg></div></div><div class="kinetic-title" data-kinetic-title aria-hidden="true"></div><nav class="art-index" aria-label="Recorrido de obras">{nav}</nav><div class="art-bottom"><div><div data-art-copy aria-live="polite"><p class="art-counter"><span data-counter>{initial+1:02d} / {len(selected):02d}</span><small data-journey-cue>Desplázate para recorrer ↕</small></p><h1 data-art-title>{esc(p['title'])}</h1><p class="art-material" data-art-material>{esc(p['label'])}</p></div><button type="button" class="art-story-link" data-open-story>Sobre esta obra <span aria-hidden="true">+</span></button></div><div class="art-controls"><div class="art-view-actions"><button type="button" data-effects aria-pressed="false">Activar efectos</button><button type="button" data-fit aria-pressed="false">Ver imagen completa ↗</button><button type="button" data-open-photos>Otras miradas ↗</button><button type="button" class="ouroboros-loop-btn" data-ouroboros hidden aria-label="Volver al origen de la exposición">Volver al origen ↺</button></div><div class="art-arrows"><button type="button" data-prev aria-label="Obra anterior"{' disabled' if initial==0 else ''}>←</button><button type="button" data-next aria-label="Obra siguiente"{' disabled' if initial==len(selected)-1 else ''}>→</button></div></div></div><button type="button" class="restore-ui" data-restore hidden>Volver a la navegación ↙</button><div class="art-progress" aria-hidden="true"><span></span></div></section></main>
-<dialog id="story-dialog" class="story-dialog" aria-labelledby="story-title"><div class="dialog-top"><span data-story-category>{esc(p['label'])}</span><button type="button" data-close-dialog>Cerrar ×</button></div><div class="story-body"><h2 id="story-title">{esc(p['title'])}</h2><p data-story>{esc(p['story'])}</p><dl data-facts>{facts_html}</dl><p class="art-credit" data-credit>{esc(p['credit'] or '')}</p><div class="story-actions"><a class="text-link" data-art-email href="mailto:naroa@naroa.eu?subject={quote('Consulta sobre '+p['title'])}">Consultar por email ↗</a><a class="text-link" data-art-whatsapp href="https://wa.me/34636060609?text={quote('Hola Naroa, me gustaría consultar sobre la obra ' + p['title'])}" target="_blank" rel="noopener noreferrer">Consultar por WhatsApp ↗</a><button type="button" class="text-link" data-share-link>Compartir enlace directo ↗</button></div><a class="source-link" data-art-video{' hidden' if not p.get('video') else ''} href="{esc(p.get('video') or '')}" target="_blank" rel="noopener noreferrer">Ver proceso en YouTube ↗</a><a class="source-link" data-art-source{' hidden' if not p['source'] else ''} href="{esc(p['source'] or '')}" target="_blank" rel="noopener noreferrer">Ver publicación de la artista ↗</a></div><a class="story-footer" href="/retratos-por-encargo-bilbao/">Tu propio retrato empieza aquí ↗</a></dialog>
+        body = f'''<main id="main" class="art-scroll" style="--steps:{len(selected)-1}"><section class="art-stage" data-gallery data-initial="{initial}" data-subset="{subset}"><div class="art-layers">{stages}</div>{threshold_html}<div class="art-shade" aria-hidden="true"></div><div class="art-stickman" data-stickman aria-hidden="true" hidden><div class="stickman-runner" data-stick-runner><svg viewBox="0 0 110 120" class="stickman-svg" aria-hidden="true"><path data-stick-scarf d="M54,32 Q34,28 16,36" stroke="#fffdf4" stroke-width="2.6" stroke-linecap="round" fill="none" opacity="0.88" /><polyline data-stick-hair points="49,10 54,3 57,10 63,4 62,12" stroke="#fffdf4" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none" /><circle data-stick-head cx="58" cy="20" r="9.5" stroke="#fffdf4" stroke-width="3.2" fill="#070706" /><circle data-stick-eye cx="62" cy="18.5" r="1.8" fill="#fffdf4" /><line data-stick-torso x1="56" y1="29" x2="50" y2="62" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" /><polyline data-stick-arm-l points="55,36 39,48 29,39" stroke="#fffdf4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none" /><polyline data-stick-arm-r points="55,36 69,46 81,34" stroke="#fffdf4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none" /><polyline data-stick-leg-l points="50,62 34,82 22,102" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" fill="none" /><polyline data-stick-leg-r points="50,62 68,80 80,100" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" fill="none" /><line data-stick-dust-1 x1="26" y1="98" x2="6" y2="98" stroke="rgba(255,253,244,0.82)" stroke-width="2.6" stroke-linecap="round" /><line data-stick-dust-2 x1="32" y1="105" x2="12" y2="105" stroke="rgba(255,253,244,0.55)" stroke-width="2.2" stroke-linecap="round" /><circle data-stick-spark cx="18" cy="93" r="2.2" fill="rgba(255,253,244,0.75)" /></svg></div></div><div class="art-punch-impact" data-punch-impact aria-hidden="true" hidden><div class="punch-burst"><svg viewBox="0 0 160 160" class="punch-svg" aria-hidden="true"><polygon points="80,8 100,52 152,38 120,80 154,120 106,118 94,158 74,120 26,144 44,98 6,76 56,60" fill="#d93829" stroke="#fffdf4" stroke-width="4" stroke-linejoin="round" /><circle cx="80" cy="80" r="28" fill="#f4c430" stroke="#11120f" stroke-width="2" /><text x="80" y="88" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="20" fill="#11120f" letter-spacing="1">¡ZAS!</text><line x1="8" y1="18" x2="38" y2="44" stroke="#fffdf4" stroke-width="3" stroke-linecap="round" /><line x1="142" y1="20" x2="118" y2="46" stroke="#fffdf4" stroke-width="3" stroke-linecap="round" /><line x1="152" y1="144" x2="126" y2="120" stroke="#fffdf4" stroke-width="3" stroke-linecap="round" /><line x1="16" y1="142" x2="40" y2="116" stroke="#fffdf4" stroke-width="3" stroke-linecap="round" /></svg></div></div><div class="kinetic-title" data-kinetic-title aria-hidden="true"></div><nav class="art-index" aria-label="Recorrido de obras">{nav}</nav><div class="art-bottom"><div><div data-art-copy aria-live="polite"><p class="art-counter"><span data-counter>{initial+1:02d} / {len(selected):02d}</span><small data-journey-cue>Desplázate para recorrer ↕</small></p><h1 data-art-title>{esc(p['title'])}</h1><p class="art-material" data-art-material>{esc(p['label'])}</p></div><button type="button" class="art-story-link" data-open-story>Sobre esta obra <span aria-hidden="true">+</span></button></div><div class="art-controls"><div class="art-view-actions"><button type="button" data-effects aria-pressed="false">Activar efectos</button><button type="button" data-fit aria-pressed="false">Ver imagen completa ↗</button><button type="button" data-open-photos>Otras miradas ↗</button><button type="button" class="ouroboros-loop-btn" data-ouroboros hidden aria-label="Volver al origen de la exposición">Volver al origen ↺</button>{social_share_dock(is_finale=True)}</div><div class="art-arrows"><button type="button" data-prev aria-label="Obra anterior"{' disabled' if initial==0 else ''}>←</button><button type="button" data-next aria-label="Obra siguiente"{' disabled' if initial==len(selected)-1 else ''}>→</button></div></div></div><button type="button" class="restore-ui" data-restore hidden>Volver a la navegación ↙</button><div class="art-progress" aria-hidden="true"><span></span></div></section></main>
+<dialog id="story-dialog" class="story-dialog" aria-labelledby="story-title"><div class="dialog-top"><span data-story-category>{esc(p['label'])}</span><button type="button" data-close-dialog>Cerrar ×</button></div><div class="story-body"><h2 id="story-title">{esc(p['title'])}</h2><p data-story>{esc(p['story'])}</p><dl data-facts>{facts_html}</dl><p class="art-credit" data-credit>{esc(p['credit'] or '')}</p><div class="story-actions"><a class="text-link" data-art-email href="mailto:naroa@naroa.eu?subject={quote('Consulta sobre '+p['title'])}">Consultar por email ↗</a><a class="text-link" data-art-whatsapp href="https://wa.me/34636060609?text={quote('Hola Naroa, me gustaría consultar sobre la obra ' + p['title'])}" target="_blank" rel="noopener noreferrer">Consultar por WhatsApp ↗</a><button type="button" class="text-link" data-share-link>Compartir enlace directo ↗</button>{social_share_dock(url=ORIGIN + '/obra/' + p['slug'] + '/', title=p['title'])}</div><a class="source-link" data-art-video{' hidden' if not p.get('video') else ''} href="{esc(p.get('video') or '')}" target="_blank" rel="noopener noreferrer">Ver proceso en YouTube ↗</a><a class="source-link" data-art-source{' hidden' if not p['source'] else ''} href="{esc(p['source'] or '')}" target="_blank" rel="noopener noreferrer">Ver publicación de la artista ↗</a></div><a class="story-footer" href="/retratos-por-encargo-bilbao/">Tu propio retrato empieza aquí ↗</a></dialog>
 <dialog id="photos-dialog" class="photos-dialog" aria-labelledby="photos-heading"><div class="dialog-top"><span id="photos-heading">{esc(p['title'])}</span><button type="button" data-close-dialog>Cerrar ×</button></div><div class="photo-view"><button type="button" data-photo-prev aria-label="Fotografía anterior">←</button><img data-photo-image data-src="{p['photos'][0]['src']}" alt="{esc(work_alt(p, p['photos'][0]['caption']))}" decoding="async"><button type="button" data-photo-next aria-label="Fotografía siguiente">→</button></div><p data-photo-caption aria-live="polite"></p></dialog>'''
         artwork_photos = []
         for idx, ph in enumerate(p["photos"]):

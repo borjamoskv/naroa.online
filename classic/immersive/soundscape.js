@@ -428,55 +428,121 @@
     // Cero sintetizador 8-bit arcade, respeto a la quietud y el reposo del museo.
   }
   function playCameraFlash() {
+    lastFlashSlug = 'ajenjo-cam';
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      try { navigator.vibrate([18, 25, 14, 60, 45]); } catch {}
+    }
+    const audioSrc = button?.dataset?.cameraSrc || '/audio/polaroid-shutter.mp3';
+    try {
+      const audio = new window.Audio(audioSrc);
+      audio.volume = 0.95;
+      audio.play().catch(() => {});
+    } catch {}
     if (!context || !engine || context.state !== 'running') return;
     try {
       const now = context.currentTime + 0.002;
-      const sampleRate = context.sampleRate || 44100;
-      const clickLen = Math.round(sampleRate * 0.075);
-      const clickBuffer = context.createBuffer(1, clickLen, sampleRate);
-      const data = clickBuffer.getChannelData(0);
-      for (let i = 0; i < clickLen; i++) {
-        const t1 = i / sampleRate;
-        const env1 = Math.exp(-t1 / 0.0025) * (Math.random() * 2 - 1);
-        const t2 = (i - sampleRate * 0.026) / sampleRate;
-        const env2 = t2 >= 0 ? Math.exp(-t2 / 0.0035) * (Math.random() * 2 - 1) * 0.85 : 0;
-        data[i] = env1 + env2;
-      }
-      const clickSrc = context.createBufferSource();
-      clickSrc.buffer = clickBuffer;
-      const clickFilter = context.createBiquadFilter?.() || context.createGain();
-      if (clickFilter.frequency) {
-        clickFilter.type = 'bandpass';
-        clickFilter.frequency.value = 2800;
-        clickFilter.Q.value = 3.2;
-      }
-      const clickGain = context.createGain();
-      clickGain.gain.setValueAtTime(0.55, now);
-      if (clickGain.gain.exponentialRampToValueAtTime) {
-        clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.075);
-      }
       const target = engine.compressor || engine.master;
-      clickSrc.connect(clickFilter);
-      clickFilter.connect(clickGain);
-      clickGain.connect(target);
-      clickSrc.start(now);
+      const sampleRate = context.sampleRate || 44100;
 
+      // Stage 1: Mirror slap & initial mechanical latch (t = 0.000s)
+      const mirrorLen = Math.round(sampleRate * 0.045);
+      const mirrorBuffer = context.createBuffer(1, mirrorLen, sampleRate);
+      const mirrorData = mirrorBuffer.getChannelData(0);
+      for (let i = 0; i < mirrorLen; i++) {
+        const t = i / sampleRate;
+        const thump = Math.sin(2 * Math.PI * (140 - 80 * (t / 0.045)) * t) * Math.exp(-t / 0.022);
+        const metallic = (Math.sin(2 * Math.PI * 1850 * t) * 0.6 + Math.sin(2 * Math.PI * 3420 * t) * 0.4) * Math.exp(-t / 0.005);
+        mirrorData[i] = thump * 0.45 + metallic * 0.75;
+      }
+      const mirrorSrc = context.createBufferSource();
+      mirrorSrc.buffer = mirrorBuffer;
+      const mirrorGain = context.createGain();
+      mirrorGain.gain.setValueAtTime(0.85, now);
+      if (mirrorGain.gain.exponentialRampToValueAtTime) {
+        mirrorGain.gain.exponentialRampToValueAtTime(0.001, now + 0.045);
+      }
+      mirrorSrc.connect(mirrorGain);
+      mirrorGain.connect(target);
+      mirrorSrc.start(now);
+
+      // Stage 2: Xenon flash arc pop + capacitor whine (t = 0.012s)
       if (typeof context.createOscillator === 'function') {
         const popOsc = context.createOscillator();
         const popGain = context.createGain();
         popOsc.type = 'sine';
-        popOsc.frequency.setValueAtTime(3400, now + 0.006);
+        popOsc.frequency.setValueAtTime(2880, now + 0.012);
         if (popOsc.frequency.exponentialRampToValueAtTime) {
-          popOsc.frequency.exponentialRampToValueAtTime(120, now + 0.055);
+          popOsc.frequency.exponentialRampToValueAtTime(160, now + 0.055);
         }
-        popGain.gain.setValueAtTime(0.38, now + 0.006);
+        popGain.gain.setValueAtTime(0.55, now + 0.012);
         if (popGain.gain.exponentialRampToValueAtTime) {
           popGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.065);
         }
         popOsc.connect(popGain);
         popGain.connect(target);
-        popOsc.start(now + 0.006);
+        popOsc.start(now + 0.012);
         popOsc.stop(now + 0.07);
+
+        // Capacitor recharge whine
+        const whineOsc = context.createOscillator();
+        const whineGain = context.createGain();
+        whineOsc.type = 'triangle';
+        whineOsc.frequency.setValueAtTime(2160, now + 0.025);
+        if (whineOsc.frequency.linearRampToValueAtTime) {
+          whineOsc.frequency.linearRampToValueAtTime(5800, now + 0.12);
+        }
+        whineGain.gain.setValueAtTime(0.001, now + 0.025);
+        if (whineGain.gain.linearRampToValueAtTime) {
+          whineGain.gain.linearRampToValueAtTime(0.12, now + 0.06);
+          whineGain.gain.linearRampToValueAtTime(0.0001, now + 0.12);
+        }
+        whineOsc.connect(whineGain);
+        whineGain.connect(target);
+        whineOsc.start(now + 0.025);
+        whineOsc.stop(now + 0.125);
+      }
+
+      // Stage 3: Second curtain latch snap (t = 0.038s)
+      const latchLen = Math.round(sampleRate * 0.035);
+      const latchBuffer = context.createBuffer(1, latchLen, sampleRate);
+      const latchData = latchBuffer.getChannelData(0);
+      for (let i = 0; i < latchLen; i++) {
+        const t = i / sampleRate;
+        latchData[i] = (Math.sin(2 * Math.PI * 2160 * t) * 0.6 + Math.sin(2 * Math.PI * 4320 * t) * 0.4) * Math.exp(-t / 0.005);
+      }
+      const latchSrc = context.createBufferSource();
+      latchSrc.buffer = latchBuffer;
+      const latchGain = context.createGain();
+      latchGain.gain.setValueAtTime(0.70, now + 0.038);
+      if (latchGain.gain.exponentialRampToValueAtTime) {
+        latchGain.gain.exponentialRampToValueAtTime(0.001, now + 0.073);
+      }
+      latchSrc.connect(latchGain);
+      latchGain.connect(target);
+      latchSrc.start(now + 0.038);
+
+      // Stage 4: Polaroid SX-70 motorized film ejection rollers (t = 0.075s .. 0.420s)
+      if (typeof context.createOscillator === 'function') {
+        const motorOsc = context.createOscillator();
+        const motorGain = context.createGain();
+        motorOsc.type = 'sawtooth';
+        motorOsc.frequency.setValueAtTime(180, now + 0.075);
+        const motorFilter = context.createBiquadFilter ? context.createBiquadFilter() : null;
+        if (motorFilter) {
+          motorFilter.type = 'lowpass';
+          motorFilter.frequency.setValueAtTime(950, now + 0.075);
+        }
+        motorGain.gain.setValueAtTime(0.001, now + 0.075);
+        if (motorGain.gain.linearRampToValueAtTime) {
+          motorGain.gain.linearRampToValueAtTime(0.26, now + 0.14);
+          motorGain.gain.linearRampToValueAtTime(0.24, now + 0.36);
+          motorGain.gain.linearRampToValueAtTime(0.0001, now + 0.44);
+        }
+        motorOsc.connect(motorFilter || motorGain);
+        if (motorFilter) motorFilter.connect(motorGain);
+        motorGain.connect(target);
+        motorOsc.start(now + 0.075);
+        motorOsc.stop(now + 0.46);
       }
     } catch {}
   }
