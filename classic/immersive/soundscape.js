@@ -10,6 +10,7 @@
   let mode = 'V', phase = 'hold', axisDirection = 1, slug = '';
   let active = false, pageActive = true, idle = null, suspension = null, waking = null, generation = 0;
   let lastY = scrollY, lastDistance = null, lastPhase = 'hold', lastSlug = '', lastHeroSlug = '', lastUtterance = '';
+  let lastCameraFlashTime = 0, lastFlashSlug = '';
   let lastMotion = null, lastGrain = -Infinity, energy = 0, direction = 1, seed = 0, pendingDistance = 0;
   // Original four-phrase motif in D minor. Null steps let the mechanism breathe.
   const melody = [74,77,81,77,76,74,69,null,72,76,79,76,74,72,69,null,74,77,81,84,81,77,76,null,74,null,69,72,77,76,null,74];
@@ -129,6 +130,70 @@
       lastHeroSlug = '';
     }
   }
+  function playCameraFlash() {
+    if (!context || !engine || context.state !== 'running') return;
+    try {
+      const now = context.currentTime + 0.002;
+      const sampleRate = context.sampleRate || 44100;
+      const clickLen = Math.round(sampleRate * 0.075);
+      const clickBuffer = context.createBuffer(1, clickLen, sampleRate);
+      const data = clickBuffer.getChannelData(0);
+      for (let i = 0; i < clickLen; i++) {
+        const t1 = i / sampleRate;
+        const env1 = Math.exp(-t1 / 0.0025) * (Math.random() * 2 - 1);
+        const t2 = (i - sampleRate * 0.026) / sampleRate;
+        const env2 = t2 >= 0 ? Math.exp(-t2 / 0.0035) * (Math.random() * 2 - 1) * 0.85 : 0;
+        data[i] = env1 + env2;
+      }
+      const clickSrc = context.createBufferSource();
+      clickSrc.buffer = clickBuffer;
+      const clickFilter = context.createBiquadFilter?.() || context.createGain();
+      if (clickFilter.frequency) {
+        clickFilter.type = 'bandpass';
+        clickFilter.frequency.value = 2800;
+        clickFilter.Q.value = 3.2;
+      }
+      const clickGain = context.createGain();
+      clickGain.gain.setValueAtTime(0.55, now);
+      if (clickGain.gain.exponentialRampToValueAtTime) {
+        clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.075);
+      }
+      clickSrc.connect(clickFilter);
+      clickFilter.connect(clickGain);
+      clickGain.connect(engine.master);
+      clickSrc.start(now);
+
+      if (typeof context.createOscillator === 'function') {
+        const popOsc = context.createOscillator();
+        const popGain = context.createGain();
+        popOsc.type = 'sine';
+        popOsc.frequency.setValueAtTime(3400, now + 0.006);
+        if (popOsc.frequency.exponentialRampToValueAtTime) {
+          popOsc.frequency.exponentialRampToValueAtTime(120, now + 0.055);
+        }
+        popGain.gain.setValueAtTime(0.32, now + 0.006);
+        if (popGain.gain.exponentialRampToValueAtTime) {
+          popGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.065);
+        }
+        popOsc.connect(popGain);
+        popGain.connect(engine.master);
+        popOsc.start(now + 0.006);
+        popOsc.stop(now + 0.07);
+      }
+    } catch {}
+  }
+  function triggerCameraFlash(currentSlug, flashLevel) {
+    if ((currentSlug === 'ajenjo-cam' || slug === 'ajenjo-cam') && flashLevel >= 0.45) {
+      lastFlashSlug = 'ajenjo-cam';
+      const now = performance.now();
+      if (now - lastCameraFlashTime > 1100) {
+        lastCameraFlashTime = now;
+        playCameraFlash();
+      }
+    } else if (currentSlug && currentSlug !== 'ajenjo-cam' && slug !== 'ajenjo-cam') {
+      lastFlashSlug = '';
+    }
+  }
   function excite() {
     const now = performance.now();
     if (!enabled || !engine || !pageActive || document.hidden || lastMotion === null || now - lastMotion > 180) return;
@@ -156,12 +221,13 @@
     });
     message();
   }
-  function advance(nextDistance, nextDepth = depth, nextMode = mode, nextPhase = phase, nextAxis = axisDirection, nextSlug = slug) {
+  function advance(nextDistance, nextDepth = depth, nextMode = mode, nextPhase = phase, nextAxis = axisDirection, nextSlug = slug, nextFlash = 0) {
     depth = Math.max(0, Math.min(1, Number(nextDepth) || 0));
     mode = nextMode || mode;
     phase = nextPhase || phase;
     axisDirection = nextAxis === -1 ? -1 : 1;
     if (nextSlug !== undefined) slug = nextSlug;
+    triggerCameraFlash(slug, Number(nextFlash) || 0);
     if (typeof nextDistance !== 'number' || Number.isNaN(nextDistance)) {
       if (enabled) mix();
       return;
@@ -293,9 +359,10 @@
     depth(value) { depth = Math.max(0, Math.min(1, value)); if (enabled) mix(); },
     frame(state = {}) {
       if (!state || typeof state !== 'object') return;
-      advance(state.distance, state.depth, state.mode, state.phase, state.axisDirection, state.slug);
+      advance(state.distance, state.depth, state.mode, state.phase, state.axisDirection, state.slug, state.flash);
     },
-    get lastUtterance() { return lastUtterance; }
+    get lastUtterance() { return lastUtterance; },
+    get lastFlashSlug() { return lastFlashSlug; }
   });
   paint();
 })();

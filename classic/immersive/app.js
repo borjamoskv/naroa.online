@@ -399,13 +399,18 @@
         }
       });
       const activeSlug = transition && fraction >= .5 ? works[incoming].slug : works[base].slug;
+      const flash = transition && (works[base].slug === 'ajenjo-cam' || works[incoming].slug === 'ajenjo-cam')
+        ? Math.exp(-Math.pow((fraction - 0.5) / 0.08, 2)) * 0.96
+        : 0;
+      stage.style.setProperty('--camera-flash', flash.toFixed(4));
       soundscape?.frame({
         distance: still ? scrollY / Math.max(1, geometry.height) : pose.distance,
         depth: still ? 0 : depth,
         mode: still ? 'still' : mode,
         phase: still ? 'scroll' : transition ? 'transition' : phase === 'explore' ? 'explore' : 'hold',
         axisDirection: mode === 'H' ? entry.direction : 1,
-        slug: activeSlug
+        slug: activeSlug,
+        flash: Number(flash.toFixed(4))
       });
       if (kineticTitle.textContent) kineticTitle.textContent = '';
       kineticTitle.style.opacity = '0';
@@ -415,8 +420,6 @@
       // Attenuate reading controls down to a minimum of 35% opacity while moving, recovering to 100% at rest.
       const veil = transition ? Math.sin(fraction * Math.PI) : phase === 'explore' ? Math.sin(pose.explore * Math.PI) * .5 : 0;
       stage.style.setProperty('--camera-veil', (veil * .65).toFixed(4));
-      const flash = transition && (works[base].slug === 'ajenjo-cam' || works[incoming].slug === 'ajenjo-cam') ? Math.pow(Math.sin(fraction * Math.PI), 4) * .55 : 0;
-      stage.style.setProperty('--camera-flash', flash.toFixed(4));
       if (still) restCamera();
       const cue = $('[data-journey-cue]', stage);
       cue.textContent = still ? reduced.matches ? 'Activa los efectos para ver el viaje ↓' : 'Desplázate para recorrer ↕' : !transition ? phase === 'explore' ? 'Explora la superficie ↓' : 'Una pausa para mirar · sigue ↓' : ({ E: 'Entra en la mirada ↓', H: entry.direction > 0 ? 'Atravesar → · sigue bajando' : 'Atravesar ← · sigue bajando', V: 'Déjate llevar ↓', Z: 'Acércate ↓', P: 'Mezclar y volver a unir ↓' })[mode];

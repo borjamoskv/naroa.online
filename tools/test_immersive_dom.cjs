@@ -131,6 +131,7 @@ function audioBoundary() {
     createBuffer(channels, length, sampleRate) { const data = Array.from({ length: channels }, () => new Float32Array(length)); return { length, sampleRate, getChannelData: channel => data[channel] }; }
     createConvolver() { const node = { connect(target) { this.target = target; }, disconnect() {} }; this.rooms.push(node); return node; }
     createDynamicsCompressor() { const node = { threshold: parameter(0), knee: parameter(0), ratio: parameter(0), attack: parameter(0), release: parameter(0), connect() {}, disconnect() {} }; this.compressors.push(node); return node; }
+    createOscillator() { return { frequency: parameter(440), connect() {}, disconnect() {}, start() {}, stop() {} }; }
     createBufferSource() {
       const context = this;
       return { playbackRate: parameter(1), connect(node) { this.target = node; }, disconnect() {},
@@ -711,6 +712,11 @@ async function eyeMatch(ui, base, points) {
   const bowieIndex = works.findIndex(w => w.slug === 'el-hombre-que-susurraba-a-las-estrellas');
   galleryAudio.advance(150); reactiveGallery.scroll(bowieIndex + .35); await reactiveGallery.flush();
   assert.equal(reactiveGallery.w.NAROA_SOUND.lastUtterance, 'We can be heroes', 'Passing through Bowie triggers We can be heroes');
+  const ajenjoIndex = works.findIndex(w => w.slug === 'ajenjo-cam');
+  galleryAudio.advance(150); reactiveGallery.scroll(ajenjoIndex - 1 + .50); await reactiveGallery.flush();
+  const flashLevel = Number(reactiveGallery.find('.art-stage').style.getPropertyValue('--camera-flash') || 0);
+  assert.ok(flashLevel > 0.85, 'Passing through Ajenjo Cam triggers intense camera flashazo: ' + flashLevel);
+  assert.equal(reactiveGallery.w.NAROA_SOUND.lastFlashSlug, 'ajenjo-cam', 'Audio engine registers camera flash trigger on Ajenjo Cam');
   reactiveGallery.click('[data-sound]'); galleryAudio.advance(600); reactiveGallery.dom.window.close();
   const boxAudio = audioBoundary();
   const box = create('/contacto/', false, { width: 1024, height: 768 }, boxAudio); await box.flush();

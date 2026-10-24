@@ -78,7 +78,7 @@ html.motion-off .kinetic-title{display:none}
 
 /* Give the camera the frame; bring reading controls back when the gesture rests. */
 .gallery-page .art-shade{transition:opacity .6s}
-.gallery-page .art-stage:after{content:'';position:absolute;inset:0;z-index:4;pointer-events:none;background:radial-gradient(circle at 50% 46%,#fffdf4e6 0%,#edbca466 42%,transparent 76%);opacity:var(--camera-flash,0);mix-blend-mode:screen;transition:opacity .12s ease-out}
+.gallery-page .art-stage:after{content:'';position:absolute;inset:0;z-index:7;pointer-events:none;background:radial-gradient(circle at 50% 50%,#ffffff 0%,#ffffff 68%,rgba(255,255,250,0.94) 100%);opacity:var(--camera-flash,0);mix-blend-mode:normal;will-change:opacity}
 .gallery-page .art-stage [data-art-copy],.gallery-page .art-controls,.gallery-page .art-index{transition:opacity .55s ease,translate .55s ease}
 .gallery-page .art-stage.is-camera-moving:not(:has(:focus-visible)) [data-art-copy]{opacity:calc(1 - var(--camera-veil,0))!important;translate:0 calc(var(--camera-veil,0)*6px);transition-duration:.18s}
 .gallery-page .art-stage.is-camera-moving:not(:has(:focus-visible)) .art-controls,.gallery-page .art-stage.is-camera-moving:not(:has(:focus-visible)) .art-index{opacity:calc(1 - var(--camera-veil,0)*.82);transition-duration:.18s}
