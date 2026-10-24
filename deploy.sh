@@ -88,8 +88,39 @@ ok "_headers y _redirects inyectados"
 # ── 4. Robots.txt ───────────────────────────────────────────
 if [ ! -f "$BUILD_DIR/robots.txt" ]; then
   cat > "$BUILD_DIR/robots.txt" << 'EOF'
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
 User-agent: *
 Allow: /
+Disallow: /test/
+Disallow: /assets/backup_pre4k/
+
+Sitemap: https://naroa.online/sitemap.xml
 Sitemap: https://naroagutierrezgil.com/sitemap.xml
 EOF
   ok "robots.txt creado"
