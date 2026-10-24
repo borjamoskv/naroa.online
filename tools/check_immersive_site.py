@@ -2,6 +2,8 @@
 """Check generated routes, content, structured data and local assets offline."""
 import argparse
 import json
+import base64
+import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
@@ -21,6 +23,7 @@ class Page(HTMLParser):
         self.json_blocks = []
         self.json_text = None
         self.gallery = None
+        self.favicon = None
         self.scenes = []
 
     def handle_starttag(self, tag, pairs):
@@ -33,6 +36,8 @@ class Page(HTMLParser):
             self.headings += 1
         if tag == "link" and a.get("rel") == "canonical":
             self.canonical = a.get("href")
+        if tag == "link" and a.get("rel") == "icon":
+            self.favicon = a.get("href")
         if tag == "script" and a.get("type") == "application/ld+json":
             self.json_text = ""
         if "data-gallery" in a:
@@ -41,7 +46,7 @@ class Page(HTMLParser):
             self.scenes.append(a["data-scene"])
         if tag == "img":
             self.images.append(a)
-        for key in ["src", "href", "data-src", "data-nature-src", "data-iris-src", "data-musicbox-src"]:
+        for key in ["src", "href", "data-src", "data-preview-src", "data-nature-src", "data-iris-src", "data-musicbox-src"]:
             if a.get(key, "").startswith("/") and not a[key].startswith("//"):
                 self.refs.append(a[key])
 
@@ -71,6 +76,7 @@ def check(output):
         assert page.headings == 1, (file, page.headings)
         assert len(page.ids) == len(set(page.ids)), (file, "duplicate ID")
         assert page.canonical == "https://naroagutierrezgil.com" + route, file
+        assert page.favicon and page.favicon.startswith("/immersive/favicon-amy-"), file
         assert page.json_blocks and page.json_blocks[0].get("@type"), file
         if page.gallery:
             assert int(page.gallery["data-initial"]) < len(page.scenes), file
@@ -87,6 +93,11 @@ def check(output):
                 dest /= "index.html"
             assert dest.is_file(), (file, "missing target", ref)
     assert (output / "404.html").is_file()
+    icon = ET.parse(output / page.favicon.lstrip("/")).getroot()
+    assert icon.find("{http://www.w3.org/2000/svg}title").text == "Amy Rocks · Naroa"
+    picture = icon.find("{http://www.w3.org/2000/svg}image").attrib["href"]
+    assert picture.startswith("data:image/webp;base64,")
+    assert base64.b64decode(picture.split(",", 1)[1], validate=True).startswith(b"RIFF")
     assert (output / "robots.txt").is_file()
     for file in output.rglob("*"):
         if file.is_file():

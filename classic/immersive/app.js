@@ -47,6 +47,7 @@
     if (!dialog || dialog.open) return;
     if (gallery) gallery.pause();
     dialog.showModal();
+    if (selector === '#menu-dialog') refreshMenu();
     if (selector === '#index-dialog') $('#art-search').focus();
   }
   $$('[data-close-dialog]').forEach(b => b.addEventListener('click', () => b.closest('dialog').close()));
@@ -55,7 +56,48 @@
     const r = d.getBoundingClientRect();
     if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) d.close();
   }));
-  $$('[data-open-menu]').forEach(b => b.addEventListener('click', () => openDialog('#menu-dialog')));
+  const menu = $('#menu-dialog'), menuLinks = $$('[data-menu-item]', menu), menuImages = $$('[data-menu-image]', menu);
+  const menuButtons = $$('[data-open-menu]');
+  let menuRequest = 0, menuImageIndex = -1;
+  function currentMenuLink() {
+    const path = location.pathname;
+    return path === '/' ? menuLinks[0] : menuLinks.find(link => path.startsWith(new URL(link.href).pathname));
+  }
+  function labelMenu(link) {
+    $('[data-menu-preview-title]', menu).textContent = link.dataset.previewTitle;
+    $('[data-menu-preview-label]', menu).textContent = link.dataset.previewLabel;
+  }
+  async function previewMenu(link) {
+    if (!link || !menu.open) return;
+    const source = link.dataset.previewSrc, request = ++menuRequest;
+    if (menuImages.some(image => image.classList.contains('is-visible') && image.getAttribute('src') === source)) { labelMenu(link); return; }
+    const picture = new Image(); picture.src = source;
+    try {
+      if (picture.decode) await picture.decode();
+      else if (!picture.complete) await new Promise((resolve, reject) => { picture.onload = resolve; picture.onerror = reject; });
+    } catch { return; }
+    if (request !== menuRequest || !menu.open) return;
+    menuImageIndex = (menuImageIndex + 1) % menuImages.length;
+    const image = menuImages[menuImageIndex];
+    image.src = source; image.alt = link.dataset.previewTitle;
+    menuImages.forEach(item => item.classList.toggle('is-visible', item === image));
+    labelMenu(link);
+  }
+  function refreshMenu() {
+    const current = currentMenuLink();
+    menuLinks.forEach(link => { if (link === current) link.setAttribute('aria-current', 'location'); else link.removeAttribute('aria-current'); });
+    menuButtons.forEach(button => button.setAttribute('aria-expanded', 'true'));
+    previewMenu(current || menuLinks[0]);
+  }
+  menuLinks.forEach(link => {
+    link.addEventListener('pointerenter', () => previewMenu(link));
+    link.addEventListener('focus', () => previewMenu(link));
+  });
+  menu.addEventListener('close', () => {
+    menuRequest++;
+    menuButtons.forEach(button => button.setAttribute('aria-expanded', 'false'));
+  });
+  menuButtons.forEach(button => button.addEventListener('click', () => openDialog('#menu-dialog')));
   $$('[data-open-index]').forEach(b => b.addEventListener('click', e => { e.preventDefault(); openDialog('#index-dialog'); }));
   const search = $('#art-search'), filters = $$('[data-filter]'), indexItems = $$('.index-work');
   let filter = 'all';

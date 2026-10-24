@@ -4,6 +4,7 @@
 No network calls, no edits to reviewed data or original photographs.
 """
 import argparse
+import base64
 import hashlib
 import json
 import re
@@ -86,6 +87,12 @@ def build(output):
     assert [scene["slug"] for scene in journey["scenes"]] == [p["slug"] for p in projects], "Camera score must cover the ordered catalogue exactly"
     assert all(scene["mode"] in journey["durations"] for scene in journey["scenes"])
     content = {"journey": journey, "projects": projects, "reviewed": catalogue["reviewed"], "labels": LABELS}
+    amy = next(p for p in projects if p["slug"] == "amy-rocks")
+    icon_viewbox = "131 56 223 223"
+    icon_hash = hashlib.sha256((SOURCE / amy["photos"][0]["original"].lstrip("/")).read_bytes() + icon_viewbox.encode()).hexdigest()[:12]
+    favicon_path = f"/immersive/favicon-amy-{icon_hash}.svg"
+    menu_portrait = derivative("/images/sobre-mi/naroa-monoculo.jpg", 900)
+    menu_flowers = derivative("/images/trayectoria/cantinflowers.jpg", 900)
     assets = {}
     for name in ("app.css", "app.js", "journey.js", "soundscape.js"):
         src = SOURCE / "immersive" / name
@@ -108,14 +115,25 @@ def build(output):
     write(output / catalog_path.lstrip("/"), encoded)
 
     def links():
-        return '<a href="/obra/">Obra</a><a href="/series/vaivenes/">Vaivenes</a><a href="/sobre-mi/">Naroa</a><a href="/trayectoria/">Trayectoria</a><a href="/cuaderno/">Cuaderno</a><a href="/retratos-por-encargo-bilbao/">Encargos</a><a href="/contacto/">Contacto</a>'
+        work = {p["slug"]: p for p in projects}
+        vaiven = next(p for p in projects if p["series"] == "Vaivenes")
+        items = [
+            ("/obra/", "Obras", "55 retratos · Un viaje", amy["thumb"], "Amy Rocks"),
+            ("/series/vaivenes/", "Vaivenes", "Dibujo, materia y transformación", vaiven["thumb"], vaiven["title"]),
+            ("/sobre-mi/", "Naroa", "La artista", menu_portrait, "Naroa Gutiérrez Gil"),
+            ("/trayectoria/", "Trayectoria", "Exposiciones y encuentros", menu_flowers, "Cantinflowers"),
+            ("/cuaderno/", "Cuaderno", "Historias desde el estudio", work["rara-avis"]["thumb"], "Rara Avis"),
+            ("/retratos-por-encargo-bilbao/", "Encargos", "Un retrato con tu historia", work["amor-en-conserva"]["thumb"], "Amor en Conserva"),
+            ("/contacto/", "Contacto", "Hablemos de tu idea", menu_portrait, "Naroa Gutiérrez Gil"),
+        ]
+        return ''.join(f'''<a href="{href}" data-menu-item data-preview-src="{src}" data-preview-title="{esc(title)}" data-preview-label="{esc(label)}"><span class="menu-number" aria-hidden="true">{i:02}</span><span class="menu-name">{label}<small>{detail}</small></span><span class="menu-arrow" aria-hidden="true">↗</span></a>''' for i, (href, label, detail, src, title) in enumerate(items, 1))
 
     def header(gallery=False):
-        return f'''<header class="site-nav"><a class="signature" href="/" aria-label="Naroa Gutiérrez Gil, inicio"><span>Naroa</span><small>GUTIÉRREZ GIL</small></a><nav aria-label="Principal"><a href="/obra/#indice" data-open-index>Obras</a>{'<button type="button" data-quiet>Solo obra</button>' if gallery else '<a class="desktop-link" href="/sobre-mi/">La artista</a>'}<button type="button" class="sound-toggle" data-sound data-nature-src="{assets['naroa-naturaleza.mp3']}" data-iris-src="{assets['naroa-iris.mp3']}" data-musicbox-src="{assets['naroa-caja-musica.mp3']}" aria-label="Activar caja de música reactiva" title="Caja de música: desplázate para tocar" aria-pressed="false"><svg viewBox="0 0 18 20" aria-hidden="true"><path d="M3 7v6M9 3v14M15 6v8"/></svg><span>Sonido</span></button><button type="button" data-open-menu aria-haspopup="dialog">Menú <span aria-hidden="true">+</span></button></nav><span class="sound-status" data-sound-status role="status" hidden></span></header>'''
+        return f'''<header class="site-nav"><a class="signature" href="/" aria-label="Naroa Gutiérrez Gil, inicio"><span>Naroa</span><small>GUTIÉRREZ GIL</small></a><nav aria-label="Principal"><a href="/obra/#indice" data-open-index>Obras</a>{'<button type="button" data-quiet>Solo obra</button>' if gallery else '<a class="desktop-link" href="/sobre-mi/">La artista</a>'}<button type="button" class="sound-toggle" data-sound data-nature-src="{assets['naroa-naturaleza.mp3']}" data-iris-src="{assets['naroa-iris.mp3']}" data-musicbox-src="{assets['naroa-caja-musica.mp3']}" aria-label="Activar caja de música reactiva" title="Caja de música: desplázate para tocar" aria-pressed="false"><svg viewBox="0 0 18 20" aria-hidden="true"><path d="M3 7v6M9 3v14M15 6v8"/></svg><span>Sonido</span></button><button type="button" data-open-menu aria-haspopup="dialog" aria-controls="menu-dialog" aria-expanded="false">Menú <span aria-hidden="true">+</span></button></nav><span class="sound-status" data-sound-status role="status" hidden></span></header>'''
 
     def dialogs():
         index = ''.join(f'''<a class="index-work" href="/obra/{p['slug']}/" data-work="{p['slug']}" data-category="{p['category']}" data-series="{esc(p['series'] or '')}" data-search="{esc(' '.join(str(p[k] or '') for k in ['title','technique','support','series','story','materials']))}"><img src="{p['thumb']}" width="92" height="100" alt="{esc(p['title'])}" loading="lazy"><span><small>{esc(p['label'])}</small><strong>{esc(p['title'])}</strong><em>{esc(p['support'] or p['technique'] or '')}</em></span><span aria-hidden="true">↗</span></a>''' for p in projects)
-        return f'''<dialog id="menu-dialog" class="menu-dialog" aria-labelledby="menu-heading"><div class="dialog-top"><span id="menu-heading">Naroa Gutiérrez Gil</span><button type="button" data-close-dialog>Cerrar ×</button></div><nav aria-label="Todas las páginas">{links()}</nav><div class="menu-foot"><a href="mailto:naroa@naroa.eu">naroa@naroa.eu ↗</a><a href="https://instagram.com/naroa_art/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="/immersive/audio/creditos.txt">Créditos del sonido ↗</a><span>Bilbao · País Vasco</span></div></dialog>
+        return f'''<dialog id="menu-dialog" class="menu-dialog" aria-labelledby="menu-heading"><div class="dialog-top menu-top"><a class="signature" href="/" aria-label="Naroa Gutiérrez Gil, inicio"><span>Naroa</span><small>GUTIÉRREZ GIL</small></a><span id="menu-heading">Otra manera de mirar</span><button type="button" data-close-dialog autofocus>Cerrar <span aria-hidden="true">×</span></button></div><div class="menu-layout"><figure class="menu-preview"><div class="menu-preview-picture"><img data-menu-image alt="Amy Rocks" aria-hidden="true" width="480" height="360"><img data-menu-image alt="Amy Rocks" aria-hidden="true" width="480" height="360"><span class="menu-preview-hand" aria-hidden="true">Mirar es entrar.</span></div><figcaption><span data-menu-preview-label>Obras</span><span data-menu-preview-title>Amy Rocks</span></figcaption></figure><nav class="menu-pages" aria-label="Todas las páginas">{links()}</nav></div><div class="menu-foot"><span>Desde Bilbao, con otra mirada.</span><a href="mailto:naroa@naroa.eu">naroa@naroa.eu ↗</a><a href="https://instagram.com/naroa_art/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="/immersive/audio/creditos.txt">Créditos del sonido ↗</a></div></dialog>
 <dialog id="index-dialog" class="index-dialog" aria-labelledby="index-heading"><div class="dialog-top"><h2 id="index-heading">La obra</h2><button type="button" data-close-dialog>Cerrar ×</button></div><div class="index-controls"><label>Buscar obra<input type="search" id="art-search" placeholder="Título, material o retratado…" autocomplete="off"></label><div class="index-filters" role="group" aria-label="Filtrar obras"><button type="button" data-filter="all" aria-pressed="true">Todas</button><button type="button" data-filter="pizarra" aria-pressed="false">Pizarra</button><button type="button" data-filter="collage" aria-pressed="false">Collage</button><button type="button" data-filter="objetos" aria-pressed="false">Objetos</button><button type="button" data-filter="caracterizacion" aria-pressed="false">Caracterización</button><button type="button" data-filter="Vaivenes" aria-pressed="false">Vaivenes</button></div></div><p class="index-count" role="status" aria-live="polite">{len(projects)} proyectos</p><div class="index-list">{index}</div><p class="index-empty" hidden>No hay obras que coincidan con esta búsqueda. <button type="button" data-reset-index>Ver todas</button></p></dialog>'''
 
     def footer():
@@ -126,7 +144,7 @@ def build(output):
     def page(path, title, description, body, image, gallery=False, schema=None, not_found=False):
         canonical = ORIGIN + path
         structured = schema or {"@context": "https://schema.org", "@type": "WebPage", "name": title, "url": canonical, "description": description}
-        html = f'''<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>{esc(title)} · Naroa Gutiérrez Gil</title><meta name="description" content="{esc(description)}"><link rel="canonical" href="{canonical}"><meta property="og:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{canonical}"><meta property="og:type" content="{'article' if gallery else 'website'}"><meta property="og:image" content="{ORIGIN}{image}"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="{assets['app.css']}"><script type="application/ld+json" id="page-schema">{data_json(structured)}</script><script defer src="{catalog_path}"></script><script defer src="{assets['soundscape.js']}"></script><script defer src="{assets['journey.js']}"></script><script defer src="{assets['app.js']}"></script></head><body class="{'gallery-page' if gallery else 'editorial-page'}"><a class="skip-link" href="#main">Ir al contenido</a>{header(gallery)}{body}{'' if gallery else footer()}{dialogs()}</body></html>'''
+        html = f'''<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>{esc(title)} · Naroa Gutiérrez Gil</title><meta name="description" content="{esc(description)}"><link rel="canonical" href="{canonical}"><meta property="og:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{canonical}"><meta property="og:type" content="{'article' if gallery else 'website'}"><meta property="og:image" content="{ORIGIN}{image}"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="{favicon_path}" type="image/svg+xml" sizes="any"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="{assets['app.css']}"><script type="application/ld+json" id="page-schema">{data_json(structured)}</script><script defer src="{catalog_path}"></script><script defer src="{assets['soundscape.js']}"></script><script defer src="{assets['journey.js']}"></script><script defer src="{assets['app.js']}"></script></head><body class="{'gallery-page' if gallery else 'editorial-page'}"><a class="skip-link" href="#main">Ir al contenido</a>{header(gallery)}{body}{'' if gallery else footer()}{dialogs()}</body></html>'''
         dest = output / ("404.html" if not_found else path.lstrip("/") + "index.html")
         write(dest, html)
         if not not_found:
@@ -220,7 +238,12 @@ def build(output):
         dest.parent.mkdir(parents=True, exist_ok=True)
         if not dest.exists():
             shutil.copy2(SOURCE / src.lstrip("/"), dest)
-    write(output / "favicon.svg", '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#11120f"/><text x="32" y="46" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-size="48" fill="#fffdf4">N</text></svg>')
+    # Reframe the existing thumbnail inside SVG; the reviewed artwork is untouched.
+    icon_image = base64.b64encode((output / amy["thumb"].lstrip("/")).read_bytes()).decode("ascii")
+    icon = f'<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="{icon_viewbox}"><title>Amy Rocks · Naroa</title><image width="480" height="360" href="data:image/webp;base64,{icon_image}"/></svg>'
+    write(output / favicon_path.lstrip("/"), icon)
+    write(output / "favicon.svg", icon)
+
     write(output / "robots.txt", "User-agent: *\nAllow: /\nSitemap: " + ORIGIN + "/sitemap.xml\n")
     write(output / "sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + ''.join('<url><loc>' + ORIGIN + path + '</loc></url>' for path, _ in pages) + '</urlset>\n')
     write(output / "_headers", '/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n  Cache-Control: public, max-age=0, must-revalidate\n/immersive/*\n  Cache-Control: public, max-age=31536000, immutable\n')

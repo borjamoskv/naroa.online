@@ -282,10 +282,21 @@ async function eyeMatch(ui, base, points) {
   assert.equal(ui.key('ArrowUp'), true);
   const heldPosition = ui.w.scrollY, heldPose = ui.find('[data-scene="1"] img').style.transform;
   ui.click('[data-open-menu]'); await ui.flush();
+  assert.equal(ui.find('[data-open-menu]').getAttribute('aria-expanded'), 'true');
+  assert.equal(ui.find('[data-menu-item][aria-current]').getAttribute('href'), '/obra/');
+  assert.equal(ui.document.querySelectorAll('[data-menu-item]').length, 7);
+  assert.equal(ui.find('[data-menu-preview-title]').textContent, 'Amy Rocks');
+  const artistMenu = ui.find('[data-menu-item][href="/sobre-mi/"]');
+  artistMenu.dispatchEvent(new ui.w.Event('pointerenter')); await ui.flush();
+  assert.equal(ui.find('[data-menu-preview-title]').textContent, 'Naroa Gutiérrez Gil', 'Preview follows the requested menu item');
+  assert.equal(ui.find('[data-menu-item][aria-current]').getAttribute('href'), '/obra/', 'A preview never changes the current location');
+  ui.find('[data-menu-item][href="/contacto/"]').focus(); await ui.flush();
+  assert.equal(ui.find('[data-menu-preview-label]').textContent, 'Contacto', 'A shared photograph still updates the focused section label');
   assert.equal(ui.w.scrollY, heldPosition, 'Opening a panel preserves the exact scroll position');
   assert.equal(ui.find('[data-scene="1"] img').style.transform, heldPose, 'Opening a panel preserves the camera pose');
   ui.click('#menu-dialog [data-close-dialog]'); await ui.flush();
   assert.equal(ui.w.scrollY, heldPosition, 'Closing a panel does not snap to an artwork');
+  assert.equal(ui.find('[data-open-menu]').getAttribute('aria-expanded'), 'false');
   const distantWrites = [];
   const distantObserver = new ui.w.MutationObserver(records => distantWrites.push(...records));
   distantObserver.observe(ui.find('[data-scene="37"]'), { attributes: true, attributeFilter: ['style'] });
@@ -735,7 +746,10 @@ async function eyeMatch(ui, base, points) {
   assert.equal(deniedMusic.find('[data-sound]').disabled, false); deniedMusic.dom.window.close();
 
   for (const route of ['/sobre-mi/', '/trayectoria/', '/cuaderno/', '/retratos-por-encargo-bilbao/', '/contacto/']) {
-    const page = create(route); await page.flush(); page.click('[data-open-menu]'); assert.equal(page.find('#menu-dialog').open, true); page.click('#menu-dialog [data-close-dialog]');
+    const page = create(route); await page.flush(); page.click('[data-open-menu]'); await page.flush();
+    assert.equal(page.find('#menu-dialog').open, true);
+    assert.equal(page.find('[data-menu-item][aria-current]').getAttribute('href'), route, 'The menu identifies the current editorial section');
+    page.click('#menu-dialog [data-close-dialog]');
     const reveals = Array.from(page.document.querySelectorAll('.motion-reveal'));
     assert.ok(reveals.length, 'Editorial content participates in viewport reveals');
     page.observers.forEach(observer => observer.callback(Array.from(observer.targets, target => ({ target, isIntersecting: true }))));
