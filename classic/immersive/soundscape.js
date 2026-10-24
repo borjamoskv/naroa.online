@@ -560,7 +560,7 @@
     } catch {}
   }
   function triggerCameraFlash(currentSlug, flashLevel) {
-    if (flashLevel >= 0.35 || currentSlug === 'ajenjo-cam' || slug === 'ajenjo-cam') {
+    if ((currentSlug === 'ajenjo-cam' || slug === 'ajenjo-cam') && flashLevel >= 0.45) {
       lastFlashSlug = 'ajenjo-cam';
       const now = performance.now();
       if (now - lastCameraFlashTime > 650) {

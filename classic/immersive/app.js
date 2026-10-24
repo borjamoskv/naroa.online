@@ -890,8 +890,8 @@
     let dustinVisited = false, dustinEpilogueTimer = null;
     let puzzleVisited = false, puzzleReassembled = false, clockVisited = false, wineVisited = false, deltoyaVisited = false;
     let ajenjoVisited = false;
-    let cameraFlashTimer = null, lastScrollFlashIndex = -1, lastScrollFlashTime = 0;
-    function fireCameraFlash() {
+    let cameraFlashTimer = null;
+    function fireAjenjoFlash() {
       soundscape?.flash?.();
       stage.classList.remove('has-flash-burst');
       void stage.offsetWidth;
@@ -900,9 +900,6 @@
       cameraFlashTimer = setTimeout(() => {
         stage.classList.remove('has-flash-burst');
       }, 420);
-    }
-    function fireAjenjoFlash() {
-      fireCameraFlash();
     }
     function firePuzzleSnap() {
       soundscape?.puzzleSnap?.();
@@ -1953,14 +1950,6 @@
             portalRing.classList.remove('is-portal-open');
           }
           delete stage.dataset.portalTransition;
-        }
-      }
-      if (!still && pose.distance > 0.04 && base !== lastScrollFlashIndex) {
-        lastScrollFlashIndex = base;
-        const now = performance.now();
-        if (now - lastScrollFlashTime > 750) {
-          lastScrollFlashTime = now;
-          fireCameraFlash();
         }
       }
       const flash = isAjenjoPhoto
