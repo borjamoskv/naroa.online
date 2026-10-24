@@ -1,8 +1,8 @@
 import { Suspense, useState, useRef, useEffect, useMemo } from 'react'
-import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { Canvas, useFrame } from '@react-three/fiber'
 import { Preload, PerformanceMonitor, OrbitControls } from '@react-three/drei'
 import * as THREE from 'three'
-import { easing } from 'maath'
+import * as easing from 'maath/easing'
 
 import { Gallery } from './Gallery'
 import { EnvironmentLevel } from './EnvironmentLevel'
@@ -19,7 +19,6 @@ interface CameraGlideControllerProps {
 }
 
 function CameraGlideController({ selectedIndex, onSelectArtwork }: CameraGlideControllerProps) {
-  const { camera } = useThree()
   const controlsRef = useRef<any>(null)
   const isTransitioningRef = useRef(false)
   const prevIndexRef = useRef<number | null>(null)
@@ -115,7 +114,8 @@ function CameraGlideController({ selectedIndex, onSelectArtwork }: CameraGlideCo
     prevIndexRef.current = selectedIndex
   }, [selectedIndex])
 
-  useFrame((_, delta) => {
+  useFrame((state, delta) => {
+    const cam = state.camera
     const sp = splineStateRef.current
 
     // Sub-step inertial follow a lo largo de la curva Catmull-Rom 3D (alpha = 0.16)
@@ -159,18 +159,18 @@ function CameraGlideController({ selectedIndex, onSelectArtwork }: CameraGlideCo
       if (controlsRef.current.autoRotate) {
         controlsRef.current.autoRotate = false
       }
-      easing.damp3(camera.position, targetCamPos.current, 0.24, delta)
+      easing.damp3(cam.position, targetCamPos.current, 0.24, delta)
       easing.damp3(controlsRef.current.target, targetLookAt.current, 0.24, delta)
       controlsRef.current.update()
-      camera.rotation.z = sp.rollCurrent
+      cam.rotation.z = sp.rollCurrent
 
       if (
         !sp.active &&
-        camera.position.distanceTo(targetCamPos.current) < 0.05 &&
+        cam.position.distanceTo(targetCamPos.current) < 0.05 &&
         controlsRef.current.target.distanceTo(targetLookAt.current) < 0.05
       ) {
         isTransitioningRef.current = false
-        camera.rotation.z = 0
+        cam.rotation.z = 0
       }
     } else if (controlsRef.current && selectedIndex === null) {
       const idleTime = lastInteractionRef.current > 0 ? Date.now() - lastInteractionRef.current : 0

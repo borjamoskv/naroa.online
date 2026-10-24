@@ -926,15 +926,19 @@
     let dustinVisited = false, dustinEpilogueTimer = null;
     let puzzleVisited = false, clockVisited = false, wineVisited = false, deltoyaVisited = false;
     let ajenjoBurstTimer = null, ajenjoVisited = false;
-    function fireAjenjoFlash() {
+    let cameraFlashTimer = null, lastScrollFlashIndex = -1, lastScrollFlashTime = 0;
+    function fireCameraFlash() {
       soundscape?.flash?.();
       stage.classList.remove('has-flash-burst');
       void stage.offsetWidth;
       stage.classList.add('has-flash-burst');
-      clearTimeout(ajenjoBurstTimer);
-      ajenjoBurstTimer = setTimeout(() => {
+      clearTimeout(cameraFlashTimer);
+      cameraFlashTimer = setTimeout(() => {
         stage.classList.remove('has-flash-burst');
       }, 420);
+    }
+    function fireAjenjoFlash() {
+      fireCameraFlash();
     }
     function firePuzzleSnap() {
       soundscape?.puzzleSnap?.();
@@ -1225,6 +1229,177 @@
     const SCENE_ACCENTS = ['#edbca4', '#f7d594', '#ff69b4', '#93c572', '#6897ff', '#f4d06f', '#e07a5f'];
     const heroPointer = { x: 0, y: 0, tx: 0, ty: 0, raf: null };
     const heroThresholdEl = $('[data-hero-threshold]', stage);
+
+    function initMonocleAnamorphicShader(container) {
+      if (!container || typeof window === 'undefined') return null;
+      const canvas = container.querySelector('[data-monocle-canvas]');
+      if (!canvas || !canvas.getContext) return null;
+      let gl = null;
+      try {
+        gl = canvas.getContext('webgl', { alpha: true, antialias: true, premultipliedAlpha: false, depth: false }) ||
+             canvas.getContext('experimental-webgl');
+      } catch {}
+      if (!gl) return null;
+
+      const vsSource = `
+        attribute vec2 aPosition;
+        varying vec2 vUv;
+        void main() {
+          vUv = aPosition * 0.5 + 0.5;
+          gl_Position = vec4(aPosition, 0.0, 1.0);
+        }
+      `;
+
+      const fsSource = `
+        precision mediump float;
+        varying vec2 vUv;
+        uniform sampler2D uTexture;
+        uniform vec2 uMouse;
+        uniform float uTime;
+        uniform float uHasTexture;
+
+        void main() {
+          vec2 p = (vUv - 0.5) * 2.0;
+          vec2 pAnamorphic = vec2(p.x * 1.25, p.y);
+          float r = length(pAnamorphic);
+          if (r > 1.0) {
+            gl_FragColor = vec4(0.0);
+            return;
+          }
+          float z = sqrt(max(0.0, 1.0 - r * r));
+          vec3 N = normalize(vec3(pAnamorphic.x, pAnamorphic.y, z * 1.85));
+          vec3 I = normalize(vec3(uMouse * 0.45, -1.0));
+
+          float iorR = 1.0 / 1.492;
+          float iorG = 1.0 / 1.520;
+          float iorB = 1.0 / 1.548;
+
+          vec3 refrR = refract(I, N, iorR);
+          vec3 refrG = refract(I, N, iorG);
+          vec3 refrB = refract(I, N, iorB);
+
+          vec2 uvR = clamp(vUv + refrR.xy * 0.28, 0.001, 0.999);
+          vec2 uvG = clamp(vUv + refrG.xy * 0.28, 0.001, 0.999);
+          vec2 uvB = clamp(vUv + refrB.xy * 0.28, 0.001, 0.999);
+
+          vec3 texCol = vec3(0.0);
+          if (uHasTexture > 0.5) {
+            float rCol = texture2D(uTexture, uvR).r;
+            float gCol = texture2D(uTexture, uvG).g;
+            float bCol = texture2D(uTexture, uvB).b;
+            texCol = vec3(rCol, gCol, bCol);
+          } else {
+            texCol = vec3(0.92, 0.74, 0.58) * (0.8 + 0.2 * sin(uTime + r * 6.0));
+          }
+
+          float fresnel = pow(1.0 - clamp(dot(-I, N), 0.0, 1.0), 2.8);
+          vec3 goldCaustic = vec3(0.968, 0.835, 0.58);
+          vec3 rimHighlight = vec3(1.0, 0.98, 0.92) * pow(fresnel, 3.0) * 1.4;
+
+          float causticRing = smoothstep(0.72, 0.88, r) * (1.0 - smoothstep(0.88, 0.98, r));
+          float wave = sin(atan(p.y, p.x) * 6.0 + uTime * 1.5) * 0.5 + 0.5;
+          vec3 causticColor = goldCaustic * (fresnel * 0.85 + causticRing * wave * 0.65);
+
+          float edgeAlpha = smoothstep(1.0, 0.95, r);
+          vec3 finalColor = texCol * 1.15 + causticColor + rimHighlight;
+
+          gl_FragColor = vec4(finalColor * edgeAlpha, edgeAlpha * 0.96);
+        }
+      `;
+
+      function compileShader(type, src) {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, src);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+          gl.deleteShader(shader);
+          return null;
+        }
+        return shader;
+      }
+
+      const vs = compileShader(gl.VERTEX_SHADER, vsSource);
+      const fs = compileShader(gl.FRAGMENT_SHADER, fsSource);
+      if (!vs || !fs) return null;
+
+      const program = gl.createProgram();
+      gl.attachShader(program, vs);
+      gl.attachShader(program, fs);
+      gl.linkProgram(program);
+      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        return null;
+      }
+      gl.useProgram(program);
+
+      const buffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+        -1, -1,
+         1, -1,
+        -1,  1,
+        -1,  1,
+         1, -1,
+         1,  1
+      ]), gl.STATIC_DRAW);
+
+      const aPosition = gl.getAttribLocation(program, 'aPosition');
+      gl.enableVertexAttribArray(aPosition);
+      gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
+
+      const uMouse = gl.getUniformLocation(program, 'uMouse');
+      const uTime = gl.getUniformLocation(program, 'uTime');
+      const uHasTexture = gl.getUniformLocation(program, 'uHasTexture');
+      const uTexture = gl.getUniformLocation(program, 'uTexture');
+
+      gl.uniform1i(uTexture, 0);
+      gl.uniform1f(uHasTexture, 0.0);
+
+      const texture = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([247, 213, 148, 255]));
+
+      let textureLoaded = false;
+      const previewAttr = container.style.getPropertyValue('--monocle-preview') || '';
+      const previewUrl = previewAttr.replace(/^url\(["']?|["']?\)$/g, '').trim() || (works && works[0] && works[0].cover);
+      if (previewUrl) {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+          try {
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+            textureLoaded = true;
+            render(0, 0, 0);
+          } catch {}
+        };
+        img.src = previewUrl;
+      }
+
+      function render(mx, my, time) {
+        if (!gl || gl.isContextLost?.()) return;
+        gl.viewport(0, 0, canvas.width, canvas.height);
+        gl.useProgram(program);
+        gl.uniform2f(uMouse, mx || 0, my || 0);
+        gl.uniform1f(uTime, time || 0);
+        gl.uniform1f(uHasTexture, textureLoaded ? 1.0 : 0.0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+      }
+
+      render(0, 0, 0);
+
+      return {
+        render,
+        canvas
+      };
+    }
+
+    const monocleShader = initMonocleAnamorphicShader(heroThresholdEl);
+
     function stepHeroPointer() {
       heroPointer.raf = null;
       if (!heroThresholdEl || reduced.matches || state.fit || motion.pose.distance >= 0.36) return;
@@ -1241,6 +1416,7 @@
       heroThresholdEl.style.setProperty('--hero-ry', `${(mx * 8.5).toFixed(3)}deg`);
       heroThresholdEl.style.setProperty('--spot-x', `${(46 + mx * 34).toFixed(1)}%`);
       heroThresholdEl.style.setProperty('--spot-y', `${(39.5 + my * 34).toFixed(1)}%`);
+      if (monocleShader) monocleShader.render(mx, my, performance.now() * 0.001);
       const cta = $('.hero-kinetic-cta', heroThresholdEl);
       if (cta) {
         cta.style.setProperty('--magnet-x', `${(mx * 18).toFixed(2)}px`);
@@ -1342,6 +1518,10 @@
               const t = smooth(tRaw);
               const enterScale = Math.exp(Math.log(3.8) * (1 - t) + Math.log(1.08) * t);
               image.style.transform = `scale(${enterScale.toFixed(5)})`;
+              if (monocleShader) {
+                const damp = clamp(1 - pose.distance / 0.36, 0, 1);
+                monocleShader.render(heroPointer.x * damp, heroPointer.y * damp, performance.now() * 0.001);
+              }
             } else {
               const lipsZoom = 1.08 + smooth(pose.explore) * 0.40;
               image.style.transform = `scale(${lipsZoom.toFixed(5)})`;
@@ -1800,6 +1980,14 @@
             portalRing.classList.remove('is-portal-open');
           }
           delete stage.dataset.portalTransition;
+        }
+      }
+      if (!still && pose.distance > 0.04 && base !== lastScrollFlashIndex) {
+        lastScrollFlashIndex = base;
+        const now = performance.now();
+        if (now - lastScrollFlashTime > 750) {
+          lastScrollFlashTime = now;
+          fireCameraFlash();
         }
       }
       const flash = isAjenjoPhoto
