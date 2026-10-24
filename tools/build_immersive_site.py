@@ -134,6 +134,9 @@ def build(output):
         dest = output / "immersive/audio" / f"{src.stem}-{digest}{src.suffix}"
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src, dest)
+        static_dest = output / "audio" / name
+        static_dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src, static_dest)
         assets[name] = "/" + str(dest.relative_to(output))
     shutil.copy2(SOURCE / "audio/CREDITS.md", output / "immersive/audio/creditos.txt")
     encoded = "window.NAROA_CATALOG=" + data_json(content) + ";\n"
