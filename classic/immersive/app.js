@@ -7,7 +7,36 @@
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
   const soundscape = window.NAROA_SOUND;
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const systemMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const galleryPage = !!$('[data-gallery]'), motionListeners = new Set();
+  const effectsKey = 'naroa-effects';
+  let effectsPreference = null;
+  try { effectsPreference = localStorage.getItem(effectsKey); } catch {}
+  const reduced = {
+    get matches() { return galleryPage && effectsPreference === 'on' ? false : galleryPage && effectsPreference === 'off' ? true : systemMotion.matches; },
+    addEventListener(type, listener) { if (type === 'change') motionListeners.add(listener); }
+  };
+  function paintEffects() {
+    const active = !reduced.matches;
+    document.documentElement.classList.toggle('motion-opt-in', galleryPage && active);
+    document.documentElement.classList.toggle('motion-off', galleryPage && !active);
+    $$('[data-effects]').forEach(button => {
+      button.setAttribute('aria-pressed', String(active));
+      button.textContent = active ? 'Pausar efectos' : 'Activar efectos';
+      button.title = active ? 'Mostrar las obras sin movimiento' : 'Activar el viaje de scroll en esta web';
+    });
+  }
+  function motionChanged() {
+    paintEffects();
+    motionListeners.forEach(listener => listener({ matches: reduced.matches }));
+  }
+  $$('[data-effects]').forEach(button => button.addEventListener('click', () => {
+    effectsPreference = reduced.matches ? 'on' : 'off';
+    try { localStorage.setItem(effectsKey, effectsPreference); } catch {}
+    motionChanged();
+  }));
+  systemMotion.addEventListener('change', motionChanged);
+  paintEffects();
   // Enable enhancements only after JavaScript has successfully initialized.
   document.documentElement.classList.add('has-motion');
   const legacy = { '#/destacada': '/obra/', '#/about': '/sobre-mi/', '#/trayectoria': '/trayectoria/', '#/blog': '/cuaderno/', '#/contacto': '/contacto/' };
@@ -314,7 +343,7 @@
       caption.style.opacity = transition ? (.45 + .55 * Math.pow(Math.abs(fraction - .5) * 2, .6)).toFixed(3) : '1';
       caption.style.transform = transition ? `translateY(${(-Math.sin(fraction * Math.PI * 2) * 10).toFixed(3)}px)` : '';
       const cue = $('[data-journey-cue]', stage);
-      cue.textContent = still ? 'Desplázate para recorrer ↕' : !transition ? phase === 'explore' ? 'Explora la superficie ↓' : 'Una pausa para mirar · sigue ↓' : ({ E: 'Entra en la mirada ↓', H: entry.direction > 0 ? 'Atravesar → · sigue bajando' : 'Atravesar ← · sigue bajando', V: 'Déjate llevar ↓', Z: 'Acércate ↓', P: 'Mezclar y volver a unir ↓' })[mode];
+      cue.textContent = still ? reduced.matches ? 'Activa los efectos para ver el viaje ↓' : 'Desplázate para recorrer ↕' : !transition ? phase === 'explore' ? 'Explora la superficie ↓' : 'Una pausa para mirar · sigue ↓' : ({ E: 'Entra en la mirada ↓', H: entry.direction > 0 ? 'Atravesar → · sigue bajando' : 'Atravesar ← · sigue bajando', V: 'Déjate llevar ↓', Z: 'Acércate ↓', P: 'Mezclar y volver a unir ↓' })[mode];
       stage.classList.toggle('is-travelling', transition);
       stage.style.setProperty('--progress', (pose.distance / journey.total * (works.length - 1) * 100).toFixed(3) + '%');
     }

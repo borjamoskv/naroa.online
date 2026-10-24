@@ -8,7 +8,7 @@ const manifest = JSON.parse(fs.readFileSync(path.join(output, 'immersive/build-m
 const errors = [];
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-function create(route = '/', reduce = false, viewport = { width: 1024, height: 768 }, audio = null) {
+function create(route = '/', reduce = false, viewport = { width: 1024, height: 768 }, audio = null, effects = null, storageDenied = false) {
   const file = path.join(output, route, 'index.html');
   let time = 0, id = 0;
   const observers = [];
@@ -20,6 +20,8 @@ function create(route = '/', reduce = false, viewport = { width: 1024, height: 7
       Object.defineProperty(w, 'innerWidth', { value: viewport.width, configurable: true });
       Object.defineProperty(w, 'innerHeight', { value: viewport.height, configurable: true });
       w.matchMedia = () => ({ matches: reduce, addEventListener() {} });
+      if (effects) w.localStorage.setItem('naroa-effects', effects);
+      if (storageDenied) Object.defineProperty(w, 'localStorage', { get() { throw new Error('Storage unavailable'); } });
       if (audio) {
         w.AudioContext = audio.Context; w.fetch = audio.fetch;
         w.performance.now = () => audio.now;
@@ -370,6 +372,34 @@ async function eyeMatch(ui, base, points) {
   assert.equal(reduced.find('[data-scene="1"] img').style.transform, '');
   assert.equal(reduced.find('[data-kinetic-title]').textContent, '');
   assert.equal(reduced.find('[data-art-copy]').style.opacity, '1'); reduced.dom.window.close();
+
+  const effectsUI = create('/', true); await effectsUI.flush();
+  assert.equal(effectsUI.find('[data-effects]').textContent, 'Activar efectos');
+  assert.equal(effectsUI.find('[data-effects]').getAttribute('aria-pressed'), 'false');
+  effectsUI.click('[data-effects]'); await effectsUI.flush();
+  assert.equal(effectsUI.w.matchMedia('(prefers-reduced-motion: reduce)').matches, true, 'The visitor’s system preference is not modified');
+  assert.equal(effectsUI.w.localStorage.getItem('naroa-effects'), 'on');
+  assert.ok(effectsUI.document.documentElement.classList.contains('motion-opt-in'));
+  effectsUI.scroll(1.5); await effectsUI.flush();
+  assert.equal(effectsUI.find('[data-gallery]').dataset.transition, 'horizontal', 'Explicit opt-in enables the complete camera score even under system reduction');
+  effectsUI.click('[data-effects]'); await effectsUI.flush();
+  assert.equal(effectsUI.find('[data-gallery]').dataset.transition, 'still');
+  assert.equal(effectsUI.w.localStorage.getItem('naroa-effects'), 'off');
+  effectsUI.dom.window.close();
+  const savedEffects = create('/obra/custom-jaio/', true, { width: 390, height: 844 }, null, 'on'); await savedEffects.flush();
+  assert.equal(savedEffects.find('[data-effects]').textContent, 'Pausar efectos');
+  savedEffects.scroll(20.5); await savedEffects.flush();
+  assert.equal(savedEffects.find('[data-gallery]').dataset.transition, 'vertical', 'The choice persists on a direct artwork URL');
+  savedEffects.dom.window.close();
+  const savedPause = create('/', false, { width: 1024, height: 768 }, null, 'off'); await savedPause.flush();
+  savedPause.scroll(.5); await savedPause.flush();
+  assert.equal(savedPause.find('[data-gallery]').dataset.transition, 'still', 'An explicit pause also works without system reduction'); savedPause.dom.window.close();
+  const privateEffects = create('/', true, { width: 1024, height: 768 }, null, null, true); await privateEffects.flush();
+  privateEffects.click('[data-effects]'); privateEffects.scroll(.5); await privateEffects.flush();
+  assert.equal(privateEffects.find('[data-gallery]').dataset.transition, 'eyes', 'Storage restrictions do not prevent activation'); privateEffects.dom.window.close();
+  const unchangedArtist = create('/sobre-mi/', true, { width: 1024, height: 768 }, null, 'on'); await unchangedArtist.flush();
+  assert.equal(unchangedArtist.find('[data-effects]'), null);
+  assert.equal(unchangedArtist.document.documentElement.classList.contains('motion-opt-in'), false, 'The gallery override does not alter the artist page'); unchangedArtist.dom.window.close();
 
   for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 }]) {
     const portrait = create('/sobre-mi/', false, viewport); await portrait.flush();
