@@ -183,9 +183,15 @@ def check(output):
     assert webmcp_path.is_file(), "missing .well-known/mcp.json"
     webmcp_data = json.loads(webmcp_path.read_text())
     assert webmcp_data.get("author", {}).get("name") == "Naroa Gutiérrez Gil", "missing canonical author in WebMCP"
-    assert len(webmcp_data.get("tools", [])) >= 4, "missing WebMCP tools"
-    assert "configure_commission_inquiry" in [t["name"] for t in webmcp_data["tools"]], "missing configure_commission_inquiry tool"
+    assert len(webmcp_data.get("tools", [])) >= 5, "missing WebMCP tools"
+    tool_names = [t["name"] for t in webmcp_data["tools"]]
+    assert "configure_commission_inquiry" in tool_names, "missing configure_commission_inquiry tool"
+    assert "answer_commission_faq" in tool_names, "missing answer_commission_faq tool"
     assert "catalog_api" in webmcp_data.get("endpoints", {}), "missing catalog_api endpoint in WebMCP"
+    commissions_doc = (output / "retratos-por-encargo-bilbao" / "index.html").read_text()
+    assert 'class="commission-compare-table"' in commissions_doc, "missing comparative support table in commissions page"
+    assert 'id="cfg-email-btn"' in commissions_doc, "missing secondary email CTA in configurator"
+    assert 'id="cfg-preview"' in commissions_doc, "missing live preview in configurator"
     assert (output / "6621e1f1c138eeb14922f7804f61ae34.txt").is_file(), "missing IndexNow key file"
     assert (output / "indexnow.json").is_file(), "missing indexnow.json"
     indexnow_data = json.loads((output / "indexnow.json").read_text())
