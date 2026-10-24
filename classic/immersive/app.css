@@ -276,3 +276,19 @@ html:has(dialog[open]){overflow:hidden}
 @keyframes stickman-chalk-pulse{0%{filter:drop-shadow(0 0 8px rgba(255,253,244,0.88)) drop-shadow(0 0 20px rgba(255,253,244,0.4))}100%{filter:drop-shadow(0 0 11px rgba(255,253,244,0.96)) drop-shadow(0 0 26px rgba(255,253,244,0.52))}}
 .art-stickman[hidden]{display:none!important}
 
+/* Puñetazo de Bill Murray a Ezkerra (transición I Got You Babe -> Jose Manuel Ezquerra) */
+.art-punch-impact{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.6);width:220px;height:220px;z-index:10;pointer-events:none;opacity:0;visibility:hidden;will-change:transform,opacity;transition:opacity .15s ease,transform .22s cubic-bezier(.175,.885,.32,1.275)}
+.art-punch-impact.is-punching{opacity:1;visibility:visible;transform:translate(-50%,-50%) scale(1.18) rotate(-4deg)}
+.punch-burst{width:100%;height:100%;filter:drop-shadow(0 0 16px rgba(217,56,41,0.85)) drop-shadow(0 0 35px rgba(244,196,48,0.65));animation:punch-burst-pulse .18s steps(2,end) infinite}
+@keyframes punch-burst-pulse{0%{transform:scale(1) rotate(0deg)}50%{transform:scale(1.08) rotate(2deg)}100%{transform:scale(0.96) rotate(-2deg)}}
+.punch-svg{width:100%;height:100%;overflow:visible}
+.art-punch-impact[hidden]{display:none!important}
+
+/* Pantalla congelada (2 segundos de parón) */
+.art-stage.is-punch-frozen::after{content:"";position:absolute;inset:0;border:4px solid rgba(217,56,41,0.45);box-shadow:inset 0 0 60px rgba(217,56,41,0.35);pointer-events:none;z-index:9;animation:punch-freeze-flash .3s ease-out}
+@keyframes punch-freeze-flash{0%{opacity:0;transform:scale(1.04)}30%{opacity:1;transform:scale(1)}100%{opacity:.85}}
+
+/* Sacudida de pantalla (Screenshake) */
+.art-stage.has-punch-shake{animation:punch-screen-shake .45s cubic-bezier(.36,.07,.19,.97) both}
+@keyframes punch-screen-shake{10%,90%{transform:translate3d(-4px,2px,0)}20%,80%{transform:translate3d(5px,-3px,0)}30%,50%,70%{transform:translate3d(-6px,4px,0)}40%,60%{transform:translate3d(6px,-4px,0)}}
+

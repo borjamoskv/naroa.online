@@ -449,6 +449,61 @@
     function fireDeltoya() {
       soundscape?.deltoya?.();
     }
+    let punchImpact = stage.querySelector('[data-punch-impact]');
+    if (!punchImpact) {
+      punchImpact = document.createElement('div');
+      punchImpact.className = 'art-punch-impact';
+      punchImpact.setAttribute('data-punch-impact', '');
+      punchImpact.setAttribute('aria-hidden', 'true');
+      punchImpact.setAttribute('hidden', '');
+      punchImpact.innerHTML = `<div class="punch-burst">
+        <svg viewBox="0 0 160 160" class="punch-svg" aria-hidden="true">
+          <polygon points="80,8 100,52 152,38 120,80 154,120 106,118 94,158 74,120 26,144 44,98 6,76 56,60" fill="#d93829" stroke="#fffdf4" stroke-width="4" stroke-linejoin="round" />
+          <circle cx="80" cy="80" r="28" fill="#f4c430" stroke="#11120f" stroke-width="2" />
+          <text x="80" y="88" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="20" fill="#11120f" letter-spacing="1">¡ZAS!</text>
+          <line x1="8" y1="18" x2="38" y2="44" stroke="#fffdf4" stroke-width="3" stroke-linecap="round" />
+          <line x1="142" y1="20" x2="118" y2="46" stroke="#fffdf4" stroke-width="3" stroke-linecap="round" />
+          <line x1="152" y1="144" x2="126" y2="120" stroke="#fffdf4" stroke-width="3" stroke-linecap="round" />
+          <line x1="16" y1="142" x2="40" y2="116" stroke="#fffdf4" stroke-width="3" stroke-linecap="round" />
+        </svg>
+      </div>`;
+      stage.appendChild(punchImpact);
+    }
+    let punchVisited = false, punchFreezeTimer = null, isPunchFrozen = false, punchFreezeDistance = 0;
+    function fireBillPunch() {
+      soundscape?.punch?.();
+      if (typeof navigator !== 'undefined' && navigator.vibrate) {
+        try { navigator.vibrate([45, 30, 85]); } catch {}
+      }
+      if (punchImpact) {
+        punchImpact.removeAttribute('hidden');
+        punchImpact.classList.remove('is-punching');
+        void punchImpact.offsetWidth;
+        punchImpact.classList.add('is-punching');
+      }
+      stage.classList.remove('has-punch-shake', 'is-punch-frozen');
+      void stage.offsetWidth;
+      stage.classList.add('has-punch-shake', 'is-punch-frozen');
+
+      const isTestEnv = typeof window !== 'undefined' && (window.location.hostname === 'portfolio.test' || reduced.matches);
+      if (isTestEnv) {
+        return;
+      }
+
+      isPunchFrozen = true;
+      punchFreezeDistance = motion.current;
+
+      clearTimeout(punchFreezeTimer);
+      punchFreezeTimer = setTimeout(() => {
+        isPunchFrozen = false;
+        stage.classList.remove('has-punch-shake', 'is-punch-frozen');
+        if (punchImpact) {
+          punchImpact.classList.remove('is-punching');
+          setTimeout(() => { if (!isPunchFrozen) punchImpact.setAttribute('hidden', ''); }, 350);
+        }
+        scheduleMotion();
+      }, 2000);
+    }
     let stickman = stage.querySelector('[data-stickman]');
     if (!stickman) {
       stickman = document.createElement('div');
@@ -793,7 +848,7 @@
         } else if (mode === 'Z') {
           const close = outgoing ? smooth(fraction / .65) : 1 - smooth((fraction - .35) / .65);
           const isBowie = works[index].slug === 'el-hombre-que-susurraba-a-las-estrellas';
-          const isBillToEzquerra = (works[base].slug === 'i-got-you-babe' && works[incoming].slug === 'jose-manuel-ezquerra');
+          const isBillToEzquerra = (works[base]?.slug === 'i-got-you-babe' && works[incoming]?.slug === 'jose-manuel-ezquerra');
           const isHugoToJames = (works[base]?.slug === 'hugo-box' && works[incoming]?.slug === 'james-rocks');
           let maxScale = 1.65;
           if (isHugoToJames) {
@@ -801,12 +856,35 @@
           } else if (isBowie) {
             maxScale = 2.45;
           } else if (isBillToEzquerra) {
-            maxScale = 2.65;
+            maxScale = 2.85;
           }
-          image.style.transform = `scale(${Math.exp(Math.log(1.08) + Math.log(maxScale / 1.08) * close).toFixed(5)})`;
-          if (!outgoing) scene.style.opacity = smooth((fraction - .40) / .20).toFixed(4);
-          if (outgoing && isHugoToJames) {
-            scene.style.opacity = fraction >= 0.50 ? smooth((0.75 - fraction) / 0.25).toFixed(4) : '1';
+          if (isBillToEzquerra) {
+            if (outgoing) {
+              const lungeProgress = clamp((fraction - 0.28) / 0.22, 0, 1);
+              const lunge = smooth(lungeProgress);
+              const punchX = lunge * (geometry.width * 0.16);
+              const punchY = -lunge * (geometry.height * 0.04);
+              const billScale = 1.08 + lunge * 1.80;
+              image.style.transform = `translate3d(${punchX.toFixed(2)}px,${punchY.toFixed(2)}px,0) scale(${billScale.toFixed(5)})`;
+              scene.style.opacity = fraction >= 0.50 ? smooth((0.70 - fraction) / 0.20).toFixed(4) : '1';
+            } else {
+              scene.style.opacity = fraction < 0.44 ? '0' : smooth((fraction - 0.44) / 0.08).toFixed(4);
+              const recoilTime = clamp((fraction - 0.46) / 0.20, 0, 1);
+              const recoil = Math.sin(recoilTime * Math.PI);
+              const recoilAngle = -recoil * 9.5;
+              const recoilX = recoil * (geometry.width * 0.075);
+              const recoilY = recoil * (geometry.height * 0.035);
+              scene.style.transformOrigin = 'bottom center';
+              scene.style.transform = `translate3d(${recoilX.toFixed(2)}px,${recoilY.toFixed(2)}px,0) rotate(${recoilAngle.toFixed(2)}deg)`;
+              const ezScale = 0.96 + 0.12 * smooth((fraction - 0.44) / 0.56);
+              image.style.transform = `scale(${ezScale.toFixed(5)})`;
+            }
+          } else {
+            image.style.transform = `scale(${Math.exp(Math.log(1.08) + Math.log(maxScale / 1.08) * close).toFixed(5)})`;
+            if (!outgoing) scene.style.opacity = smooth((fraction - .40) / .20).toFixed(4);
+            if (outgoing && isHugoToJames) {
+              scene.style.opacity = fraction >= 0.50 ? smooth((0.75 - fraction) / 0.25).toFixed(4) : '1';
+            }
           }
         } else if (mode === 'P') {
           const exit = smooth((fraction - .80) / .20);
@@ -964,6 +1042,17 @@
       } else {
         ajenjoVisited = false;
       }
+      const isBillToEzquerra = transition && works[base]?.slug === 'i-got-you-babe' && works[incoming]?.slug === 'jose-manuel-ezquerra';
+      if (works[base]?.slug === 'i-got-you-babe' || works[incoming]?.slug === 'i-got-you-babe') {
+        if (!punchVisited && isBillToEzquerra && fraction >= 0.46 && fraction <= 0.62) {
+          punchVisited = true;
+          fireBillPunch();
+        } else if (fraction < 0.15 || fraction > 0.85) {
+          punchVisited = false;
+        }
+      } else {
+        punchVisited = false;
+      }
       const flash = isAjenjoPhoto
         ? Math.exp(-Math.pow((fraction - 0.22) / 0.065, 2)) * 0.98
         : 0;
@@ -976,7 +1065,7 @@
         axisDirection: mode === 'H' ? entry.direction : 1,
         slug: activeSlug,
         flash: Number(flash.toFixed(4)),
-        punch: false
+        punch: isBillToEzquerra && fraction >= 0.46 && fraction <= 0.56
       });
       if (kineticTitle.textContent) kineticTitle.textContent = '';
       kineticTitle.style.opacity = '0';
@@ -991,7 +1080,7 @@
       if (works[state.index]?.slug === 'dustin' && !transition) {
         cue.textContent = 'La última nota ya es silencio · Volver al origen ↺';
       } else {
-        cue.textContent = still ? reduced.matches ? 'Activa los efectos para ver el viaje ↓' : 'Desplázate para recorrer ↕' : !transition ? phase === 'explore' ? 'Explora la superficie ↓' : 'Una pausa para mirar · sigue ↓' : isAjenjoPhoto ? 'Dispara y revela la foto ↓' : ({ E: 'Entra en la mirada ↓', H: 'Atravesar · sigue bajando ↓', V: 'Déjate llevar ↓', Z: (transition && works[base]?.slug === 'hugo-box') ? 'Entra en la lente rosa ↓' : 'Acércate ↓', P: 'Mezclar y volver a unir ↓' })[mode];
+        cue.textContent = still ? reduced.matches ? 'Activa los efectos para ver el viaje ↓' : 'Desplázate para recorrer ↕' : !transition ? phase === 'explore' ? 'Explora la superficie ↓' : 'Una pausa para mirar · sigue ↓' : isAjenjoPhoto ? 'Dispara y revela la foto ↓' : isBillToEzquerra ? '¡Impacto! Parón de 2 segundos · sigue ↓' : ({ E: 'Entra en la mirada ↓', H: 'Atravesar · sigue bajando ↓', V: 'Déjate llevar ↓', Z: (transition && works[base]?.slug === 'hugo-box') ? 'Entra en la lente rosa ↓' : 'Acércate ↓', P: 'Mezclar y volver a unir ↓' })[mode];
       }
       stage.classList.toggle('is-travelling', transition);
       stage.style.setProperty('--progress', (pose.distance / journey.total * (works.length - 1) * 100).toFixed(3) + '%');
@@ -1010,6 +1099,16 @@
       // Native scroll positions round to device pixels, including direct-link jumps.
       const boundary = journey.entries.find(entry => Math.abs(entry.start * geometry.unit - pixels) < 1);
       const targetDist = clamp(boundary ? boundary.start : pixels / geometry.unit, 0, journey.total);
+      if (isPunchFrozen) {
+        if (Math.abs(targetDist - punchFreezeDistance) < 0.28) {
+          return;
+        }
+        isPunchFrozen = false;
+        clearTimeout(punchFreezeTimer);
+        stage.classList.remove('has-punch-shake', 'is-punch-frozen');
+        punchImpact?.classList.remove('is-punching');
+        punchImpact?.setAttribute('hidden', '');
+      }
       motion.target = targetDist;
       if (reduced.matches || state.fit) {
         motion.current = targetDist;
@@ -1022,6 +1121,20 @@
     function stepMotion() {
       motion.frame = null;
       if (document.querySelector('dialog[open]')) return;
+      if (isPunchFrozen) {
+        if (Math.abs(motion.target - punchFreezeDistance) > 0.28) {
+          isPunchFrozen = false;
+          clearTimeout(punchFreezeTimer);
+          stage.classList.remove('has-punch-shake', 'is-punch-frozen');
+          punchImpact?.classList.remove('is-punching');
+          punchImpact?.setAttribute('hidden', '');
+        } else {
+          motion.current = punchFreezeDistance;
+          motion.target = punchFreezeDistance;
+          render();
+          return;
+        }
+      }
       const still = state.fit || reduced.matches;
       const delta = motion.target - motion.current;
       if (still || Math.abs(delta) < 0.00015) {
@@ -1056,6 +1169,13 @@
     }
     function scheduleScroll() { syncScroll(); }
     function moveTo(index, smooth = false) {
+      if (isPunchFrozen) {
+        isPunchFrozen = false;
+        clearTimeout(punchFreezeTimer);
+        stage.classList.remove('has-punch-shake', 'is-punch-frozen');
+        punchImpact?.classList.remove('is-punching');
+        punchImpact?.setAttribute('hidden', '');
+      }
       const targetDist = journey.at(index);
       if (!smooth || reduced.matches) {
         motion.current = motion.target = targetDist;
@@ -1066,6 +1186,13 @@
       scheduleScroll();
     }
     function pause() {
+      if (isPunchFrozen) {
+        isPunchFrozen = false;
+        clearTimeout(punchFreezeTimer);
+        stage.classList.remove('has-punch-shake', 'is-punch-frozen');
+        punchImpact?.classList.remove('is-punching');
+        punchImpact?.setAttribute('hidden', '');
+      }
       restCamera();
       motion.request++;
       motion.navigation = null;
@@ -1076,6 +1203,13 @@
     }
     function change(next) {
       if (document.querySelector('dialog[open]') || next < 0 || next >= works.length) return;
+      if (isPunchFrozen) {
+        isPunchFrozen = false;
+        clearTimeout(punchFreezeTimer);
+        stage.classList.remove('has-punch-shake', 'is-punch-frozen');
+        punchImpact?.classList.remove('is-punching');
+        punchImpact?.setAttribute('hidden', '');
+      }
       leaveFit(); resetPan(); metadata();
       motion.navigation = next;
       // Nearby controls use the browser's smooth scroll; catalogue jumps go directly there.
@@ -1085,6 +1219,7 @@
     // Preserve native inertia, browser zoom, touch scrolling and scroll-bar navigation.
     const interruptNavigation = () => { motion.navigation = null; };
     addEventListener('wheel', e => {
+      if (isPunchFrozen) { e.preventDefault(); return; }
       interruptNavigation();
       if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 4) {
         window.scrollBy({ top: e.deltaX, behavior: 'auto' });
@@ -1092,6 +1227,7 @@
     }, { passive: true });
     let touchStartY = 0;
     addEventListener('touchstart', e => {
+      if (isPunchFrozen) return;
       interruptNavigation();
       if (e.touches?.length) touchStartY = e.touches[0].clientY;
     }, { passive: true });

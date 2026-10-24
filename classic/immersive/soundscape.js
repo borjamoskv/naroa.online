@@ -762,7 +762,7 @@
     depth(value) { depth = Math.max(0, Math.min(1, value)); if (enabled) mix(); },
     frame(state = {}) {
       if (!state || typeof state !== 'object') return;
-      advance(state.distance, state.depth, state.mode, state.phase, state.axisDirection, state.slug, state.flash);
+      advance(state.distance, state.depth, state.mode, state.phase, state.axisDirection, state.slug, state.flash, state.punch);
     },
     flash() {
       lastFlashSlug = 'ajenjo-cam';

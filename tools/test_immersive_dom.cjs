@@ -266,6 +266,12 @@ async function eyeMatch(ui, base, points) {
       assert.ok(runner.style.transform.includes('translate3d('), 'Stickman runner translates horizontally across the black void');
       assert.ok(ui.find('[data-stick-scarf]')?.getAttribute('d')?.startsWith('M'), 'Stickman scarf waves dynamically during sprint');
     }
+    if (entry.slug === 'i-got-you-babe') {
+      const punchEl = ui.find('[data-punch-impact]');
+      assert.ok(punchEl, 'Punch impact element is present in DOM');
+      const outgoingImg = ui.find(`[data-scene="${index}"] img`);
+      assert.ok(outgoingImg.style.transform.includes('scale('), 'Bill Murray lunges with punch scale');
+    }
     if (entry.mode === 'H') {
       const specDir = ui.w.NAROA_CATALOG.journey.scenes.find(s => s.slug === entry.slug)?.direction;
       if (specDir !== undefined) {
