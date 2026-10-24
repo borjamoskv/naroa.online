@@ -1282,7 +1282,7 @@
       artwork.style.visibility = mix > 0 ? 'visible' : 'hidden'; artwork.classList.toggle('is-visible', mix > 0);
       artwork.setAttribute('aria-hidden', String(mix < .5));
       plane.style.visibility = mix === 1 ? 'hidden' : 'visible'; plane.setAttribute('aria-hidden', String(mix >= .5));
-      const closure = smooth((progress - .20) / .027) * (1 - smooth((progress - .235) / .035));
+      const closure = smooth((progress - .10) / .08) * (1 - smooth((progress - .28) / .10));
       const effectiveClosure = Math.max(closure, interactiveWinkVal);
       wink.setAttribute('opacity', effectiveClosure.toFixed(4));
       if (closure >= 0.8 && !hasWinkedOnScroll) {
@@ -1291,9 +1291,9 @@
       } else if (closure < 0.1) {
         hasWinkedOnScroll = false;
       }
-      const visibility = 1 - smooth(progress / .13);
+      const visibility = 1 - smooth((progress - .12) / .16);
       copy.style.opacity = visibility.toFixed(3);
-      copy.style.transform = reduced.matches ? '' : `translate3d(0,${(-smooth(progress / .18) * 40).toFixed(2)}px,0)`;
+      copy.style.transform = reduced.matches ? '' : `translate3d(0,${(-smooth(progress / .24) * 40).toFixed(2)}px,0)`;
       cue.style.opacity = visibility.toFixed(3); cue.style.pointerEvents = visibility < .1 ? 'none' : ''; cue.tabIndex = visibility < .1 ? -1 : 0;
       const reveal = mix * smooth((progress - .84) / .10);
       showCaption(0, reveal); shade.style.opacity = (1 - approach * .90 + reveal * .65).toFixed(3);
