@@ -736,6 +736,16 @@ async function eyeMatch(ui, base, points) {
   galleryAudio.advance(150); reactiveGallery.scroll(robeIndex); await reactiveGallery.flush();
   assert.equal(reactiveGallery.w.NAROA_SOUND.lastDeltoyaSlug, 'entre-tantas-flores-de-dia', 'Arriving at Robe triggers Deltoya');
   assert.equal(reactiveGallery.w.NAROA_SOUND.lastUtterance, '¡DELTOYA!', 'Robe triggers ¡DELTOYA! shout');
+  const saioIdx = works.findIndex(w => w.slug === 'saio-puzzle');
+  if (saioIdx >= 0) {
+    galleryAudio.advance(150); reactiveGallery.scroll(saioIdx); await reactiveGallery.flush();
+    assert.equal(reactiveGallery.w.NAROA_SOUND.lastPuzzleSlug, 'saio-puzzle', 'Arriving at Saio Puzzle triggers puzzle snap');
+  }
+  const swissIdx = works.findIndex(w => w.slug === 'julio-iglesias-como-un-reloj-suizo');
+  if (swissIdx >= 0) {
+    galleryAudio.advance(150); reactiveGallery.scroll(swissIdx); await reactiveGallery.flush();
+    assert.equal(reactiveGallery.w.NAROA_SOUND.lastClockSlug, 'julio-iglesias-como-un-reloj-suizo', 'Arriving at Julio Iglesias triggers Swiss clock escapement');
+  }
   reactiveGallery.click('[data-sound]'); galleryAudio.advance(600); reactiveGallery.dom.window.close();
   const boxAudio = audioBoundary();
   const box = create('/contacto/', false, { width: 1024, height: 768 }, boxAudio); await box.flush();

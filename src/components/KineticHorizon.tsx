@@ -167,7 +167,13 @@ export function KineticHorizon({
       } catch {
         // Ignore audio playback errors
       }
-    } else if (slug !== 'denbora-nora-zoaz' && slug !== 'el-hombre-que-susurraba-a-las-estrellas' && slug !== 'jose-manuel-ezquerra' && slug !== 'i-got-you-babe' && slug !== 'dustin' && slug !== 'asucar-celia-cruz' && slug !== 'entre-tantas-flores-de-dia') {
+    } else if (slug === 'saio-puzzle' && lastSpokenSlugRef.current !== slug) {
+      lastSpokenSlugRef.current = slug
+      sound.playPuzzleSnap()
+    } else if (slug === 'julio-iglesias-como-un-reloj-suizo' && lastSpokenSlugRef.current !== slug) {
+      lastSpokenSlugRef.current = slug
+      sound.playSwissClock()
+    } else if (slug !== 'denbora-nora-zoaz' && slug !== 'el-hombre-que-susurraba-a-las-estrellas' && slug !== 'jose-manuel-ezquerra' && slug !== 'i-got-you-babe' && slug !== 'dustin' && slug !== 'asucar-celia-cruz' && slug !== 'entre-tantas-flores-de-dia' && slug !== 'saio-puzzle' && slug !== 'julio-iglesias-como-un-reloj-suizo') {
       lastSpokenSlugRef.current = ''
     }
   }, [])
