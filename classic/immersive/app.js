@@ -564,9 +564,19 @@
             const holdZoom = 1.25 + smooth(pose.explore) * 0.50;
             image.style.transform = `scale(${holdZoom.toFixed(5)})`;
           } else if (isMarilyn) {
-            image.style.transformOrigin = '50.4% 51.7%';
-            const lipsZoom = 1.08 + smooth(pose.explore) * 0.40;
-            image.style.transform = `scale(${lipsZoom.toFixed(5)})`;
+            if (!still && heroThreshold && pose.distance < 0.36) {
+              const tRaw = clamp(pose.distance / 0.36, 0, 1);
+              const t = smooth(tRaw);
+              const point = eyeGeometry(0);
+              const deep = Math.hypot(geometry.width, geometry.height) * 1.02;
+              const diameter = Math.exp(Math.log(deep) + Math.log((point.iris * 1.08) / deep) * t);
+              const focus = 1 - t;
+              eyePose(0, diameter, focus, 0);
+            } else {
+              image.style.transformOrigin = '50.4% 51.7%';
+              const lipsZoom = 1.08 + smooth(pose.explore) * 0.40;
+              image.style.transform = `scale(${lipsZoom.toFixed(5)})`;
+            }
           } else {
             image.style.transform = `translate3d(0,${(-smooth(pose.explore) * 3).toFixed(3)}%,0) scale(1.08000)`;
           }

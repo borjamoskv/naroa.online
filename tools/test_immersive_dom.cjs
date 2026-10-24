@@ -266,8 +266,9 @@ async function eyeMatch(ui, base, points) {
   assert.equal(Number(ui.find('[data-hero-threshold]').style.opacity), 1);
   assert.equal(ui.find('[data-threshold-plane]').style.transform, 'scale(1.0000)');
   assert.equal(ui.find('[data-threshold-wink]').style.opacity, '0');
-  const mLipsOrigin = ui.find('[data-scene="0"] img').style.transformOrigin;
-  assert.ok(mLipsOrigin.includes('50.4%') || mLipsOrigin.includes('51.7%'), 'Marilyn enters through her iconic red lips');
+  const mEyeOrigin = ui.find('[data-scene="0"] img').style.transformOrigin;
+  assert.equal(mEyeOrigin, '0px 0px', 'Marilyn enters through her eye pupil in reverse zoom');
+  assert.ok(ui.find('[data-scene="0"] img').style.transform.includes('translate3d'), 'Marilyn camera is positioned deep in the eye');
   ui.w.scrollTo({ top: 0.09 * ui.w.innerHeight }); await ui.flush();
   assert.equal(ui.find('[data-threshold-wink]').style.opacity, '1', 'Naroa winks as the viewer crosses the monocle threshold');
   assert.notEqual(ui.find('[data-threshold-plane]').style.transform, 'scale(1.0000)', 'Monocle plane zooms exponentially into the lens');
