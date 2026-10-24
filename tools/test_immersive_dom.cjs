@@ -244,7 +244,7 @@ async function eyeMatch(ui, base, points) {
     const before = ui.find(`[data-scene="${index}"]`).style.cssText;
     ui.scroll(index + .7); await ui.flush(); ui.scroll(index + .3); await ui.flush();
     assert.equal(ui.find(`[data-scene="${index}"]`).style.cssText, before, 'Every camera pass reverses along the same path');
-    if ((entry.mode === 'H' || entry.mode === 'V') && entry.slug !== 'rockagipsy') {
+    if ((entry.mode === 'H' || entry.mode === 'V') && entry.slug !== 'rockagipsy' && entry.slug !== 'ajenjo-cam') {
       const translation = scene => /translate3d\(([-\d.]+)px,([-\d.]+)px,0\)/.exec(scene.style.transform).slice(1).map(Number);
       const from = translation(ui.find(`[data-scene="${index}"]`)), to = translation(ui.find(`[data-scene="${index + 1}"]`));
       const axis = entry.mode === 'H' ? 0 : 1, size = axis ? ui.w.innerHeight : ui.w.innerWidth;
@@ -252,6 +252,10 @@ async function eyeMatch(ui, base, points) {
     } else if (entry.slug === 'rockagipsy') {
       const rockaScene = ui.find(`[data-scene="${index}"]`);
       assert.ok(rockaScene.style.transform.includes('rotate('), 'RockaGipsy tilts and falls laterally to reveal Hugo Box');
+    } else if (entry.slug === 'ajenjo-cam') {
+      const nextImg = ui.find(`[data-scene="${index + 1}"] img`);
+      assert.ok(nextImg.style.filter.includes('brightness(') && nextImg.style.filter.includes('saturate('), 'Ajenjo Cam snaps a photo and chemically develops Beatriz de Pandora');
+      assert.ok(parseFloat(ui.find('[data-gallery]').style.getPropertyValue('--camera-flash')) > 0, 'Ajenjo Cam emits a camera flash during transition');
     }
     if (entry.slug === 'entre-tantas-flores-de-dia') {
       const stickman = ui.find('[data-stickman]');

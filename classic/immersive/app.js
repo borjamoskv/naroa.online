@@ -426,6 +426,17 @@
     }
     let dustinVisited = false, dustinEpilogueTimer = null;
     let puzzleVisited = false, clockVisited = false, wineVisited = false, deltoyaVisited = false;
+    let ajenjoBurstTimer = null, ajenjoVisited = false;
+    function fireAjenjoFlash() {
+      soundscape?.flash?.();
+      stage.classList.remove('has-flash-burst');
+      void stage.offsetWidth;
+      stage.classList.add('has-flash-burst');
+      clearTimeout(ajenjoBurstTimer);
+      ajenjoBurstTimer = setTimeout(() => {
+        stage.classList.remove('has-flash-burst');
+      }, 420);
+    }
     function firePuzzleSnap() {
       soundscape?.puzzleSnap?.();
     }
@@ -656,6 +667,7 @@
       visible.forEach(index => {
         const scene = scenes[index], image = images[index], outgoing = index === base;
         const isRockaToHugo = transition && works[base]?.slug === 'rockagipsy' && works[incoming]?.slug === 'hugo-box';
+        const isAjenjoToBeatriz = transition && works[base]?.slug === 'ajenjo-cam' && works[incoming]?.slug === 'beatriz-de-pandora';
         paintedScenes.add(index);
         scene.style.visibility = 'visible'; scene.style.zIndex = isRockaToHugo ? (outgoing ? '2' : '1') : (outgoing ? '1' : '2');
         scene.style.willChange = transition ? 'opacity,transform' : 'auto'; image.style.willChange = still ? 'auto' : 'transform';
@@ -731,6 +743,31 @@
             scene.style.opacity = '1';
             const revealScale = 0.94 + 0.14 * smooth(fraction);
             image.style.transform = `scale(${revealScale.toFixed(5)})`;
+          }
+        } else if (isAjenjoToBeatriz) {
+          if (outgoing) {
+            const shutterPress = smooth(fraction / 0.24);
+            const shutterDip = Math.sin(clamp((fraction - 0.12) / 0.12, 0, 1) * Math.PI) * 6;
+            const camScale = 1.08 + shutterPress * 0.14;
+            scene.style.transform = `translate3d(0px,${shutterDip.toFixed(3)}px,0)`;
+            scene.style.opacity = fraction >= 0.20 ? smooth((0.32 - fraction) / 0.12).toFixed(4) : '1';
+            image.style.transform = `scale(${camScale.toFixed(5)})`;
+          } else {
+            const eject = smooth((fraction - 0.18) / 0.44);
+            const slideY = (1 - eject) * -geometry.height * 0.06;
+            scene.style.transform = `translate3d(0px,${slideY.toFixed(3)}px,0)`;
+            scene.style.opacity = smooth((fraction - 0.16) / 0.10).toFixed(4);
+            const printScale = 0.94 + 0.14 * smooth((fraction - 0.18) / 0.82);
+            image.style.transform = `scale(${printScale.toFixed(5)})`;
+            const develop = smooth((fraction - 0.22) / 0.74);
+            if (develop < 0.999) {
+              const br = (1 + (1 - develop) * 1.85).toFixed(3);
+              const ct = (0.38 + develop * 0.62).toFixed(3);
+              const sat = (0.04 + Math.pow(develop, 1.35) * 0.96).toFixed(3);
+              const sep = ((1 - develop) * 0.28).toFixed(3);
+              const bl = ((1 - smooth((fraction - 0.22) / 0.46)) * 5.5).toFixed(2);
+              image.style.filter = `brightness(${br}) contrast(${ct}) saturate(${sat}) sepia(${sep}) blur(${bl}px)`;
+            }
           }
         } else if (mode === 'H' || mode === 'V') {
           const displacement = outgoing ? -progress : 1 - progress;
@@ -916,6 +953,21 @@
           stickman.classList.remove('is-running');
         }
       }
+      const isAjenjoPhoto = transition && works[base]?.slug === 'ajenjo-cam' && works[incoming]?.slug === 'beatriz-de-pandora';
+      if (works[base]?.slug === 'ajenjo-cam' || works[incoming]?.slug === 'ajenjo-cam') {
+        if (!ajenjoVisited && isAjenjoPhoto && fraction >= 0.16 && fraction <= 0.42) {
+          ajenjoVisited = true;
+          fireAjenjoFlash();
+        } else if (fraction < 0.08 || fraction > 0.65) {
+          ajenjoVisited = false;
+        }
+      } else {
+        ajenjoVisited = false;
+      }
+      const flash = isAjenjoPhoto
+        ? Math.exp(-Math.pow((fraction - 0.22) / 0.065, 2)) * 0.98
+        : 0;
+      stage.style.setProperty('--camera-flash', flash.toFixed(4));
       soundscape?.frame({
         distance: still ? scrollY / Math.max(1, geometry.height) : pose.distance,
         depth: still ? 0 : depth,
@@ -923,7 +975,7 @@
         phase: still ? 'scroll' : transition ? 'transition' : phase === 'explore' ? 'explore' : 'hold',
         axisDirection: mode === 'H' ? entry.direction : 1,
         slug: activeSlug,
-        flash: 0,
+        flash: Number(flash.toFixed(4)),
         punch: false
       });
       if (kineticTitle.textContent) kineticTitle.textContent = '';
@@ -939,7 +991,7 @@
       if (works[state.index]?.slug === 'dustin' && !transition) {
         cue.textContent = 'La última nota ya es silencio · Volver al origen ↺';
       } else {
-        cue.textContent = still ? reduced.matches ? 'Activa los efectos para ver el viaje ↓' : 'Desplázate para recorrer ↕' : !transition ? phase === 'explore' ? 'Explora la superficie ↓' : 'Una pausa para mirar · sigue ↓' : ({ E: 'Entra en la mirada ↓', H: 'Atravesar · sigue bajando ↓', V: 'Déjate llevar ↓', Z: (transition && works[base]?.slug === 'hugo-box') ? 'Entra en la lente rosa ↓' : 'Acércate ↓', P: 'Mezclar y volver a unir ↓' })[mode];
+        cue.textContent = still ? reduced.matches ? 'Activa los efectos para ver el viaje ↓' : 'Desplázate para recorrer ↕' : !transition ? phase === 'explore' ? 'Explora la superficie ↓' : 'Una pausa para mirar · sigue ↓' : isAjenjoPhoto ? 'Dispara y revela la foto ↓' : ({ E: 'Entra en la mirada ↓', H: 'Atravesar · sigue bajando ↓', V: 'Déjate llevar ↓', Z: (transition && works[base]?.slug === 'hugo-box') ? 'Entra en la lente rosa ↓' : 'Acércate ↓', P: 'Mezclar y volver a unir ↓' })[mode];
       }
       stage.classList.toggle('is-travelling', transition);
       stage.style.setProperty('--progress', (pose.distance / journey.total * (works.length - 1) * 100).toFixed(3) + '%');
