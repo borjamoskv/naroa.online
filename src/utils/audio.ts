@@ -1,6 +1,66 @@
 // Sound FX Engine powered by Web Audio API (Zero external assets required)
 // Calibrated for warm, organic, acoustic resonance (wood, mineral, brass, analog tape)
 
+// Cadencia final inmutable: notas icónicas de SOUND OF SILENCE en Re menor microtonal
+// D5 (sound), [silencio], A4 (of), C5 (si-), F5 (-lence), E5 (resolución), [silencio], D5 (tónica final)
+export const SOUND_OF_SILENCE_CADENCE: (number | null)[] = [
+  74.00, null, 69.02, 71.74, 77.24, 75.86, null, 74.00
+]
+
+// Repertorio modal en Re menor para cada nueva sesión de usuario.
+// Todas arrancan en 74.00 (D5) y culminan siempre en la cadencia de SOUND OF SILENCE.
+export const SESSION_MELODIES: (number | null)[][] = [
+  // 0. Landa / Alboka clásica de Arratia
+  [
+    74.00, 77.24, 81.02, 77.24, 75.86, 74.00, 69.02, null,
+    71.74, 75.86, 78.98, 75.86, 74.00, 71.74, 69.02, null,
+    74.00, 77.24, 81.02, 83.74, 81.02, 77.24, 75.86, null,
+    ...SOUND_OF_SILENCE_CADENCE
+  ],
+  // 1. Olatua / Marejada cantábrica (arpegios amplios en ascenso)
+  [
+    74.00, 69.02, 74.00, 77.24, 81.02, 78.98, 77.24, null,
+    77.24, 81.02, 83.74, 81.02, 78.98, 77.24, 74.00, null,
+    74.00, 78.98, 81.02, 86.00, 83.74, 81.02, 77.24, null,
+    ...SOUND_OF_SILENCE_CADENCE
+  ],
+  // 2. Mika / Mineral íntimo (campanas y destellos de celesta)
+  [
+    74.00, 81.02, 77.24, 74.00, 75.86, 77.24, 74.00, null,
+    69.02, 74.00, 77.24, 81.02, 78.98, 75.86, 74.00, null,
+    77.24, 78.98, 81.02, 78.98, 77.24, 75.86, 71.74, null,
+    ...SOUND_OF_SILENCE_CADENCE
+  ],
+  // 3. Eskuak / Gesto de taller (ritmo pausado y contemplativo)
+  [
+    74.00, 75.86, 77.24, 74.00, 81.02, null, 78.98, 77.24,
+    75.86, 74.00, 71.74, 69.02, 74.00, 77.24, 75.86, null,
+    81.02, 77.24, 74.00, 78.98, 81.02, 83.74, 81.02, null,
+    ...SOUND_OF_SILENCE_CADENCE
+  ],
+  // 4. Argia / Luz de ría (apertura diurna brillante)
+  [
+    74.00, 77.24, 74.00, 81.02, 77.24, 83.74, 81.02, null,
+    78.98, 81.02, 77.24, 75.86, 74.00, 69.02, 71.74, null,
+    74.00, 77.24, 81.02, 78.98, 75.86, 77.24, 74.00, null,
+    ...SOUND_OF_SILENCE_CADENCE
+  ],
+  // 5. Gaua / Nocturno de Bilbao (graves densos y silencio envolvente)
+  [
+    74.00, 71.74, 69.02, null, 74.00, 77.24, 75.86, 74.00,
+    69.02, 74.00, 77.24, 78.98, 81.02, 77.24, 74.00, null,
+    81.02, 83.74, 81.02, 77.24, 75.86, 71.74, 69.02, null,
+    ...SOUND_OF_SILENCE_CADENCE
+  ],
+  // 6. Haizea / Viento en los pinos (arpegios etéreos en cascada)
+  [
+    74.00, 77.24, 81.02, 86.00, 81.02, 77.24, 74.00, null,
+    78.98, 75.86, 74.00, 69.02, 71.74, 75.86, 74.00, null,
+    77.24, 81.02, 78.98, 77.24, 75.86, 74.00, 69.02, null,
+    ...SOUND_OF_SILENCE_CADENCE
+  ]
+]
+
 class SoundEngine {
   private ctx: AudioContext | null = null
   private enabled: boolean = true
@@ -17,7 +77,12 @@ class SoundEngine {
   private lastHapticClickTime = 0
   private noiseBuffer: AudioBuffer | null = null
 
+  private sessionMelodyIndex: number = 0
+  private sessionStep: number = -1
+
   constructor() {
+    this.sessionMelodyIndex = this.pickSessionMelodyIndex()
+
     // Lazy init audio context on first user interaction
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('naroa_audio_enabled')
@@ -37,6 +102,42 @@ class SoundEngine {
       window.addEventListener('pointerdown', handleUserInteraction, { once: true })
       window.addEventListener('keydown', handleUserInteraction, { once: true })
     }
+  }
+
+  private pickSessionMelodyIndex(): number {
+    const key = 'naroa_session_melody_idx'
+    try {
+      if (typeof window !== 'undefined' && window.sessionStorage) {
+        const stored = window.sessionStorage.getItem(key)
+        if (stored !== null) {
+          const idx = parseInt(stored, 10)
+          if (!isNaN(idx) && idx >= 0 && idx < SESSION_MELODIES.length) {
+            return idx
+          }
+        }
+        let lastIdx = -1
+        try {
+          const lastStr = window.localStorage.getItem('naroa_last_session_melody')
+          if (lastStr !== null) lastIdx = parseInt(lastStr, 10)
+        } catch {}
+        let nextIdx = Math.floor(Math.random() * SESSION_MELODIES.length)
+        if (lastIdx >= 0 && SESSION_MELODIES.length > 1) {
+          nextIdx = (lastIdx + 1 + Math.floor(Math.random() * (SESSION_MELODIES.length - 1))) % SESSION_MELODIES.length
+        }
+        window.sessionStorage.setItem(key, String(nextIdx))
+        try { window.localStorage.setItem('naroa_last_session_melody', String(nextIdx)) } catch {}
+        return nextIdx
+      }
+    } catch {}
+    return 0
+  }
+
+  public getSessionMelodyIndex(): number {
+    return this.sessionMelodyIndex
+  }
+
+  public getSessionMelody(): (number | null)[] {
+    return SESSION_MELODIES[this.sessionMelodyIndex] || SESSION_MELODIES[0]
   }
 
   private initCtx() {
@@ -97,6 +198,79 @@ class SoundEngine {
 
   private getOut(): AudioNode {
     return this.warmBus || this.ctx!.destination
+  }
+
+  /**
+   * Synthesize a warm modal acoustic music-box tine note (in D minor microtonal temperament).
+   */
+  public playMusicBoxNote(midiNote: number = 74.00, volume: number = 0.5) {
+    if (!this.enabled) return
+    try {
+      this.initCtx()
+      if (!this.ctx) return
+
+      const now = this.ctx.currentTime + 0.002
+      const out = this.getOut()
+      const rootHz = 440 * Math.pow(2, (midiNote - 69) / 12)
+
+      const masterTineGain = this.ctx.createGain()
+      masterTineGain.gain.setValueAtTime(volume * 0.38, now)
+      masterTineGain.connect(out)
+
+      // Warm acoustic lowpass filter to ensure silky chime tone
+      const filter = this.ctx.createBiquadFilter()
+      filter.type = 'lowpass'
+      filter.frequency.setValueAtTime(Math.min(2200, rootHz * 3.0), now)
+      filter.Q.value = 1.0
+      filter.connect(masterTineGain)
+
+      // Modal synthesis partials
+      const partials = [
+        { ratio: 1.0, level: 0.72, decay: 0.95 },
+        { ratio: 2.012, level: 0.22, decay: 0.48 },
+        { ratio: 3.994, level: 0.08, decay: 0.25 },
+        { ratio: 5.46, level: 0.04, decay: 0.15 }
+      ]
+
+      partials.forEach(({ ratio, level, decay }) => {
+        if (!this.ctx) return
+        const osc = this.ctx.createOscillator()
+        const gain = this.ctx.createGain()
+
+        osc.type = 'sine'
+        osc.frequency.setValueAtTime(rootHz * ratio, now)
+
+        gain.gain.setValueAtTime(0.0001, now)
+        gain.gain.linearRampToValueAtTime(level, now + 0.003)
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + decay)
+
+        osc.connect(gain)
+        gain.connect(filter)
+
+        osc.start(now)
+        osc.stop(now + decay + 0.02)
+      })
+    } catch {
+      // Ignore audio errors
+    }
+  }
+
+  /**
+   * Plays or advances the user session melody note (32-step cycle).
+   * Steps 24..31 always sound the iconic Sound of Silence cadence.
+   */
+  public playSessionStep(stepIndex?: number) {
+    if (!this.enabled) return
+    const mel = this.getSessionMelody()
+    if (typeof stepIndex === 'number') {
+      this.sessionStep = ((stepIndex % mel.length) + mel.length) % mel.length
+    } else {
+      this.sessionStep = (this.sessionStep + 1) % mel.length
+    }
+    const note = mel[this.sessionStep]
+    if (note !== null) {
+      this.playMusicBoxNote(note, 0.42)
+    }
   }
 
   public playMusic() {

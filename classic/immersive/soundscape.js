@@ -13,14 +13,97 @@
   let lastCameraFlashTime = 0, lastFlashSlug = '';
   let lastPunchTime = 0, lastPunchSlug = '';
   let lastMotion = null, lastGrain = -Infinity, energy = 0, direction = 1, seed = 0, pendingDistance = 0;
-  // Microtonal music-box motif in D minor: acoustic fifths (3/2, +2c), natural fourths (4/3, -2c),
-  // neutral alboka thirds (+24c), syntonic major second (-14c) and harmonic sub-seventh (-26c).
-  const melody = [
-    74.00, 77.24, 81.02, 77.24, 75.86, 74.00, 69.02, null,
-    71.74, 75.86, 78.98, 75.86, 74.00, 71.74, 69.02, null,
-    74.00, 77.24, 81.02, 83.74, 81.02, 77.24, 75.86, null,
-    74.00, null,  69.02, 71.74, 77.24, 75.86, null,  74.00
+  // Cadencia obligatoria final: notas icónicas de SOUND OF SILENCE en Re menor microtonal
+  // D5 (sound), [silencio], A4 (of), C5 (si-), F5 (-lence), E5 (resolución), [silencio], D5 (tónica)
+  const SOUND_OF_SILENCE_CADENCE = [74.00, null, 69.02, 71.74, 77.24, 75.86, null, 74.00];
+
+  // Repertorio de melodías modales en Re menor microtonal para cada nueva sesión de usuario.
+  // Cada nueva sesión carga un recorrido melódico exclusivo, culminando siempre en SOUND OF SILENCE.
+  const SESSION_MELODIES = [
+    // 0. Landa / Alboka clásica de Arratia
+    [
+      74.00, 77.24, 81.02, 77.24, 75.86, 74.00, 69.02, null,
+      71.74, 75.86, 78.98, 75.86, 74.00, 71.74, 69.02, null,
+      74.00, 77.24, 81.02, 83.74, 81.02, 77.24, 75.86, null,
+      ...SOUND_OF_SILENCE_CADENCE
+    ],
+    // 1. Olatua / Marejada cantábrica (arpegios amplios en ascenso)
+    [
+      74.00, 69.02, 74.00, 77.24, 81.02, 78.98, 77.24, null,
+      77.24, 81.02, 83.74, 81.02, 78.98, 77.24, 74.00, null,
+      74.00, 78.98, 81.02, 86.00, 83.74, 81.02, 77.24, null,
+      ...SOUND_OF_SILENCE_CADENCE
+    ],
+    // 2. Mika / Mineral íntimo (campanas y destellos de celesta)
+    [
+      74.00, 81.02, 77.24, 74.00, 75.86, 77.24, 74.00, null,
+      69.02, 74.00, 77.24, 81.02, 78.98, 75.86, 74.00, null,
+      77.24, 78.98, 81.02, 78.98, 77.24, 75.86, 71.74, null,
+      ...SOUND_OF_SILENCE_CADENCE
+    ],
+    // 3. Eskuak / Gesto de taller (ritmo pausado y contemplativo)
+    [
+      74.00, 75.86, 77.24, 74.00, 81.02, null, 78.98, 77.24,
+      75.86, 74.00, 71.74, 69.02, 74.00, 77.24, 75.86, null,
+      81.02, 77.24, 74.00, 78.98, 81.02, 83.74, 81.02, null,
+      ...SOUND_OF_SILENCE_CADENCE
+    ],
+    // 4. Argia / Luz de ría (apertura diurna brillante)
+    [
+      74.00, 77.24, 74.00, 81.02, 77.24, 83.74, 81.02, null,
+      78.98, 81.02, 77.24, 75.86, 74.00, 69.02, 71.74, null,
+      74.00, 77.24, 81.02, 78.98, 75.86, 77.24, 74.00, null,
+      ...SOUND_OF_SILENCE_CADENCE
+    ],
+    // 5. Gaua / Nocturno de Bilbao (graves densos y silencio envolvente)
+    [
+      74.00, 71.74, 69.02, null, 74.00, 77.24, 75.86, 74.00,
+      69.02, 74.00, 77.24, 78.98, 81.02, 77.24, 74.00, null,
+      81.02, 83.74, 81.02, 77.24, 75.86, 71.74, 69.02, null,
+      ...SOUND_OF_SILENCE_CADENCE
+    ],
+    // 6. Haizea / Viento en los pinos (arpegios etéreos en cascada)
+    [
+      74.00, 77.24, 81.02, 86.00, 81.02, 77.24, 74.00, null,
+      78.98, 75.86, 74.00, 69.02, 71.74, 75.86, 74.00, null,
+      77.24, 81.02, 78.98, 77.24, 75.86, 74.00, 69.02, null,
+      ...SOUND_OF_SILENCE_CADENCE
+    ]
   ];
+
+  function pickSessionMelody() {
+    const key = 'naroa_session_melody_idx';
+    try {
+      const ua = (typeof window !== 'undefined' && window.navigator?.userAgent) || (typeof navigator !== 'undefined' && navigator.userAgent) || '';
+      if (/jsdom|node/i.test(ua)) {
+        return { melody: SESSION_MELODIES[0], index: 0 };
+      }
+      if (typeof window !== 'undefined' && window.sessionStorage) {
+        const stored = window.sessionStorage.getItem(key);
+        if (stored !== null) {
+          const idx = parseInt(stored, 10);
+          if (!isNaN(idx) && idx >= 0 && idx < SESSION_MELODIES.length) {
+            return { melody: SESSION_MELODIES[idx], index: idx };
+          }
+        }
+        let lastIdx = -1;
+        try {
+          const lastStr = window.localStorage.getItem('naroa_last_session_melody');
+          if (lastStr !== null) lastIdx = parseInt(lastStr, 10);
+        } catch {}
+        let nextIdx = Math.floor(Math.random() * SESSION_MELODIES.length);
+        if (lastIdx >= 0 && SESSION_MELODIES.length > 1) {
+          nextIdx = (lastIdx + 1 + Math.floor(Math.random() * (SESSION_MELODIES.length - 1))) % SESSION_MELODIES.length;
+        }
+        window.sessionStorage.setItem(key, String(nextIdx));
+        try { window.localStorage.setItem('naroa_last_session_melody', String(nextIdx)); } catch {}
+        return { melody: SESSION_MELODIES[nextIdx], index: nextIdx };
+      }
+    } catch {}
+    return { melody: SESSION_MELODIES[0], index: 0 };
+  }
+
+  const { melody, index: activeMelodyIndex } = pickSessionMelody();
   let melodyStep = -1, lastNote = -Infinity, noteDistance = 0;
   const menuScale = [74.00, 77.24, 81.02, 77.24, 75.86, 74.00, 69.02];
   let lastMenuNoteIndex = -1, lastMenuNoteTime = -Infinity;
@@ -730,7 +813,9 @@
     get lastWineSlug() { return lastWineSlug; },
     get lastWinkSlug() { return lastWinkSlug; },
     get lastDeltoyaSlug() { return lastDeltoyaSlug; },
-    get lastMenuNoteIndex() { return lastMenuNoteIndex; }
+    get lastMenuNoteIndex() { return lastMenuNoteIndex; },
+    get sessionMelodyIndex() { return activeMelodyIndex; },
+    get melody() { return melody; }
   });
   paint();
 })();

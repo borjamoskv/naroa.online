@@ -392,8 +392,8 @@
       galleryReturnFocus = null;
       scheduleScroll();
     });
-    const focals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '56% 42%', 'amor-en-conserva': '50% 54%', 'entre-tantas-flores-de-dia': '50% 36%', 'johnny-rocks': '50% 42%', 'rockagipsy': '50% 43%', 'hugo-box': '50% 38%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '54% 44%', 'lauralore': '46% 44%', 'izei': '48% 42%' };
-    const mobileFocals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '61% 40%', 'amor-en-conserva': '48% 54%', 'denbora-nora-zoaz': '18% 45%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '56% 44%', 'lauralore': '48% 44%', 'izei': '48% 42%' };
+    const focals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '56% 42%', 'amor-en-conserva': '50% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'johnny-rocks': '50% 42%', 'rockagipsy': '50% 43%', 'hugo-box': '50% 38%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '54% 44%', 'lauralore': '46% 44%', 'izei': '48% 42%' };
+    const mobileFocals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '61% 40%', 'amor-en-conserva': '48% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'denbora-nora-zoaz': '18% 45%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '56% 44%', 'lauralore': '48% 44%', 'izei': '48% 42%' };
     // Pupil centres measured on the unaltered cover photographs, in source-image coordinates.
     const eyes = {
       'marilyn-rocks': { x: .635, y: .392, iris: .030 },
@@ -580,6 +580,17 @@
               const lipsZoom = 1.08 + smooth(pose.explore) * 0.40;
               image.style.transform = `scale(${lipsZoom.toFixed(5)})`;
             }
+          } else if (works[index].slug === 'entre-tantas-flores-de-dia') {
+            const naturalWidth = image.naturalWidth || 2457, naturalHeight = image.naturalHeight || 3072;
+            const isMobile = innerWidth < 760;
+            const mobileScale = isMobile ? 1.35 : 1.04;
+            const cover = Math.max((geometry.width + 20) / naturalWidth, (geometry.height + 20) / naturalHeight);
+            const pictureHeight = naturalHeight * cover * mobileScale;
+            const overflowY = Math.max(0, pictureHeight - (geometry.height + 20));
+            const travelProgress = smooth(pose.explore);
+            const travelY = -travelProgress * overflowY;
+            image.style.transformOrigin = '50% 0%';
+            image.style.transform = `translate3d(0,${travelY.toFixed(3)}px,0) scale(${mobileScale.toFixed(5)})`;
           } else {
             image.style.transform = `translate3d(0,${(-smooth(pose.explore) * 3).toFixed(3)}%,0) scale(1.08000)`;
           }
@@ -594,7 +605,19 @@
           // Subtle interior parallax (max 2%) and lens scale between 1.08 and 1.12.
           const parallax = displacement * 2;
           const lens = 1.08 + .04 * (outgoing ? progress : 1 - progress);
-          image.style.transform = `translate3d(${mode === 'H' ? parallax.toFixed(3) : '0'}%,${mode === 'V' ? parallax.toFixed(3) : '0'}%,0) scale(${lens.toFixed(5)})`;
+          if (works[index].slug === 'entre-tantas-flores-de-dia') {
+            const naturalWidth = image.naturalWidth || 2457, naturalHeight = image.naturalHeight || 3072;
+            const isMobile = innerWidth < 760;
+            const mobileScale = isMobile ? 1.35 : 1.04;
+            const cover = Math.max((geometry.width + 20) / naturalWidth, (geometry.height + 20) / naturalHeight);
+            const pictureHeight = naturalHeight * cover * mobileScale;
+            const overflowY = Math.max(0, pictureHeight - (geometry.height + 20));
+            const yPose = outgoing ? -overflowY : 0;
+            image.style.transformOrigin = '50% 0%';
+            image.style.transform = `translate3d(0,${yPose.toFixed(3)}px,0) scale(${mobileScale.toFixed(5)})`;
+          } else {
+            image.style.transform = `translate3d(${mode === 'H' ? parallax.toFixed(3) : '0'}%,${mode === 'V' ? parallax.toFixed(3) : '0'}%,0) scale(${lens.toFixed(5)})`;
+          }
         } else if (mode === 'Z') {
           const close = outgoing ? smooth(fraction / .65) : 1 - smooth((fraction - .35) / .65);
           const isBowie = works[index].slug === 'el-hombre-que-susurraba-a-las-estrellas';

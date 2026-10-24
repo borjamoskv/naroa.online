@@ -246,6 +246,7 @@ export function KineticHorizon({
           activeIndexRef.current = nearestIdx
           setActiveIdx(nearestIdx)
           sound.playHapticClick(1.0 + (nearestIdx % 3) * 0.08)
+          sound.playSessionStep(nearestIdx)
           triggerArtworkVocal(nearestIdx)
           onSelectArtwork(nearestIdx)
         }
@@ -281,6 +282,7 @@ export function KineticHorizon({
     (newIndex: number) => {
       const clamped = Math.max(0, Math.min(ARTWORKS.length - 1, newIndex))
       sound.playHapticClick(1.1)
+      sound.playSessionStep(clamped)
       targetXRef.current = clamped * itemSpacing
       lastAnnouncedIndexRef.current = clamped
       activeIndexRef.current = clamped
