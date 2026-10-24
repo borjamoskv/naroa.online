@@ -255,9 +255,12 @@ async function eyeMatch(ui, base, points) {
     }
     if (entry.slug === 'entre-tantas-flores-de-dia') {
       const stickman = ui.find('[data-stickman]');
-      assert.ok(stickman, 'White stickman element is present in DOM');
+      const runner = ui.find('[data-stick-runner]');
+      assert.ok(stickman && runner, 'White stickman runway and runner elements are present in DOM');
       assert.ok(stickman.classList.contains('is-running'), 'Stickman runs during Flores to Johnny transition');
       assert.ok(!stickman.hasAttribute('hidden'), 'Stickman is visible during the black void transition');
+      assert.ok(runner.style.transform.includes('translate3d('), 'Stickman runner translates horizontally across the black void');
+      assert.ok(ui.find('[data-stick-scarf]')?.getAttribute('d')?.startsWith('M'), 'Stickman scarf waves dynamically during sprint');
     }
     if (entry.mode === 'H') {
       const specDir = ui.w.NAROA_CATALOG.journey.scenes.find(s => s.slug === entry.slug)?.direction;

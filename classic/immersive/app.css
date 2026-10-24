@@ -264,8 +264,12 @@ html:has(dialog[open]){overflow:hidden}
 }
 
 /* Monigote blanco corriendo por lo negro (transición Flores -> Johnny) */
-.art-stickman{position:absolute;top:0;left:0;width:90px;height:110px;z-index:7;pointer-events:none;opacity:0;visibility:hidden;will-change:transform,opacity;transition:opacity .15s ease}
+.art-stickman{position:absolute;top:0;left:0;width:100%;height:136px;z-index:7;pointer-events:none;opacity:0;visibility:hidden;will-change:transform,opacity;transition:opacity .16s ease}
+.art-stickman::before{content:"";position:absolute;inset:-28px 0 -24px;background:linear-gradient(180deg,rgba(7,7,6,0) 0%,rgba(7,7,6,0.92) 28%,#060605 56%,rgba(7,7,6,0.94) 80%,rgba(7,7,6,0) 100%);pointer-events:none}
+.art-stickman::after{content:"";position:absolute;left:0;right:0;top:103px;height:1.5px;background:linear-gradient(90deg,rgba(255,253,244,0) 0%,rgba(255,253,244,0.28) 20%,rgba(255,253,244,0.52) 50%,rgba(255,253,244,0.28) 80%,rgba(255,253,244,0) 100%);pointer-events:none}
 .art-stickman.is-running{opacity:1;visibility:visible}
-.art-stickman svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 0 10px rgba(255,255,255,0.75)) drop-shadow(0 0 20px rgba(255,255,255,0.35))}
+.stickman-runner{position:absolute;top:0;left:0;width:110px;height:120px;will-change:transform}
+.art-stickman svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 0 8px rgba(255,253,244,0.85)) drop-shadow(0 0 22px rgba(255,253,244,0.42));animation:stickman-chalk-pulse .24s steps(2,end) infinite}
+@keyframes stickman-chalk-pulse{0%{filter:drop-shadow(0 0 8px rgba(255,253,244,0.88)) drop-shadow(0 0 20px rgba(255,253,244,0.4))}100%{filter:drop-shadow(0 0 11px rgba(255,253,244,0.96)) drop-shadow(0 0 26px rgba(255,253,244,0.52))}}
 .art-stickman[hidden]{display:none!important}
 

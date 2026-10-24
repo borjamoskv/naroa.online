@@ -445,63 +445,110 @@
       stickman.setAttribute('data-stickman', '');
       stickman.setAttribute('aria-hidden', 'true');
       stickman.setAttribute('hidden', '');
-      stickman.innerHTML = `<svg viewBox="0 0 80 100" class="stickman-svg" aria-hidden="true">
-        <circle cx="38" cy="18" r="9" stroke="#fff" stroke-width="3" fill="#11120f" />
-        <circle cx="41" cy="17" r="1.5" fill="#fff" />
-        <line x1="38" y1="27" x2="36" y2="54" stroke="#fff" stroke-width="3.5" stroke-linecap="round" />
-        <polyline data-stick-arm-l points="38,34 26,44 18,36" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-        <polyline data-stick-arm-r points="38,34 50,42 60,50" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-        <polyline data-stick-leg-l points="36,54 24,70 34,88" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-        <polyline data-stick-leg-r points="36,54 50,68 44,88" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-        <line data-stick-dust-1 x1="14" y1="86" x2="2" y2="86" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linecap="round" />
-        <line data-stick-dust-2 x1="18" y1="92" x2="6" y2="92" stroke="rgba(255,255,255,0.4)" stroke-width="2" stroke-linecap="round" />
-      </svg>`;
+      stickman.innerHTML = `<div class="stickman-runner" data-stick-runner><svg viewBox="0 0 110 120" class="stickman-svg" aria-hidden="true">
+        <path data-stick-scarf d="M54,32 Q34,28 16,36" stroke="#fffdf4" stroke-width="2.6" stroke-linecap="round" fill="none" opacity="0.88" />
+        <polyline data-stick-hair points="49,10 54,3 57,10 63,4 62,12" stroke="#fffdf4" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+        <circle data-stick-head cx="58" cy="20" r="9.5" stroke="#fffdf4" stroke-width="3.2" fill="#070706" />
+        <circle data-stick-eye cx="62" cy="18.5" r="1.8" fill="#fffdf4" />
+        <line data-stick-torso x1="56" y1="29" x2="50" y2="62" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" />
+        <polyline data-stick-arm-l points="55,36 39,48 29,39" stroke="#fffdf4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+        <polyline data-stick-arm-r points="55,36 69,46 81,34" stroke="#fffdf4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+        <polyline data-stick-leg-l points="50,62 34,82 22,102" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+        <polyline data-stick-leg-r points="50,62 68,80 80,100" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+        <line data-stick-dust-1 x1="26" y1="98" x2="6" y2="98" stroke="rgba(255,253,244,0.82)" stroke-width="2.6" stroke-linecap="round" />
+        <line data-stick-dust-2 x1="32" y1="105" x2="12" y2="105" stroke="rgba(255,253,244,0.55)" stroke-width="2.2" stroke-linecap="round" />
+        <circle data-stick-spark cx="18" cy="93" r="2.2" fill="rgba(255,253,244,0.75)" />
+      </svg></div>`;
       stage.appendChild(stickman);
     }
+    const stickRunner = stickman.querySelector('[data-stick-runner]') || stickman;
+    const stickHead = stickman.querySelector('[data-stick-head]');
+    const stickEye = stickman.querySelector('[data-stick-eye]');
+    const stickHair = stickman.querySelector('[data-stick-hair]');
+    const stickTorso = stickman.querySelector('[data-stick-torso]');
+    const stickScarf = stickman.querySelector('[data-stick-scarf]');
     const stickArmL = stickman.querySelector('[data-stick-arm-l]');
     const stickArmR = stickman.querySelector('[data-stick-arm-r]');
     const stickLegL = stickman.querySelector('[data-stick-leg-l]');
     const stickLegR = stickman.querySelector('[data-stick-leg-r]');
     const stickDust1 = stickman.querySelector('[data-stick-dust-1]');
     const stickDust2 = stickman.querySelector('[data-stick-dust-2]');
+    const stickSpark = stickman.querySelector('[data-stick-spark]');
     let lastStickFraction = 0;
     let stickDirection = 1;
 
     function updateStickmanPose(phase) {
-      const hipX = 36, hipY = 54;
-      const thighL = Math.sin(phase) * 0.75 + 0.2;
-      const kneeLX = hipX + Math.sin(thighL) * 16;
-      const kneeLY = hipY + Math.cos(thighL) * 16;
-      const calfL = thighL - Math.max(0, Math.sin(phase - 0.5) * 1.2);
-      const footLX = kneeLX + Math.sin(calfL) * 16;
-      const footLY = kneeLY + Math.cos(calfL) * 16;
+      const bob = Math.sin(phase * 2) * 2.2;
+      const headX = 58 + Math.cos(phase) * 1.4;
+      const headY = 20 + bob;
+      const shX = 55 + Math.cos(phase) * 1.1;
+      const shY = 35 + bob;
+      const hipX = 49, hipY = 62 + bob * 0.6;
 
-      const thighR = Math.sin(phase + Math.PI) * 0.75 + 0.2;
-      const kneeRX = hipX + Math.sin(thighR) * 16;
-      const kneeRY = hipY + Math.cos(thighR) * 16;
-      const calfR = thighR - Math.max(0, Math.sin(phase + Math.PI - 0.5) * 1.2);
-      const footRX = kneeRX + Math.sin(calfR) * 16;
-      const footRY = kneeRY + Math.cos(calfR) * 16;
+      if (stickHead) {
+        stickHead.setAttribute('cx', headX.toFixed(1));
+        stickHead.setAttribute('cy', headY.toFixed(1));
+      }
+      if (stickEye) {
+        stickEye.setAttribute('cx', (headX + 4).toFixed(1));
+        stickEye.setAttribute('cy', (headY - 1.5).toFixed(1));
+      }
+      if (stickHair) {
+        const hw = Math.sin(phase * 1.5) * 2.4;
+        stickHair.setAttribute('points', `${(headX - 9).toFixed(1)},${(headY - 9).toFixed(1)} ${(headX - 4 + hw).toFixed(1)},${(headY - 17).toFixed(1)} ${(headX - 1).toFixed(1)},${(headY - 10).toFixed(1)} ${(headX + 5 + hw).toFixed(1)},${(headY - 16).toFixed(1)} ${(headX + 4).toFixed(1)},${(headY - 8).toFixed(1)}`);
+      }
+      if (stickTorso) {
+        stickTorso.setAttribute('x1', (headX - 2).toFixed(1));
+        stickTorso.setAttribute('y1', (headY + 9).toFixed(1));
+        stickTorso.setAttribute('x2', hipX.toFixed(1));
+        stickTorso.setAttribute('y2', hipY.toFixed(1));
+      }
+      if (stickScarf) {
+        const wave1 = Math.sin(phase * 1.8) * 6;
+        const wave2 = Math.cos(phase * 1.8) * 8;
+        stickScarf.setAttribute('d', `M${(shX - 1).toFixed(1)},${(shY - 2).toFixed(1)} Q${(shX - 20).toFixed(1)},${(shY - 7 + wave1).toFixed(1)} ${(shX - 39).toFixed(1)},${(shY + 2 + wave2).toFixed(1)}`);
+      }
 
-      const shX = 38, shY = 34;
-      const armL = -Math.sin(phase) * 0.85;
-      const elbLX = shX + Math.sin(armL) * 12;
-      const elbLY = shY + Math.cos(armL) * 12;
-      const handLX = elbLX + Math.sin(armL - 0.8) * 12;
-      const handLY = elbLY + Math.cos(armL - 0.8) * 12;
+      const thighL = Math.sin(phase) * 0.88 + 0.24;
+      const kneeLX = hipX + Math.sin(thighL) * 20;
+      const kneeLY = hipY + Math.cos(thighL) * 20;
+      const calfL = thighL - Math.max(0.08, (Math.sin(phase - 0.65) + 0.45) * 0.95);
+      const footLX = kneeLX + Math.sin(calfL) * 20;
+      const footLY = kneeLY + Math.cos(calfL) * 20;
+      const toeLX = footLX + Math.cos(calfL) * 6;
+      const toeLY = footLY - Math.sin(calfL) * 4;
 
-      const armR = -Math.sin(phase + Math.PI) * 0.85;
-      const elbRX = shX + Math.sin(armR) * 12;
-      const elbRY = shY + Math.cos(armR) * 12;
-      const handRX = elbRX + Math.sin(armR - 0.8) * 12;
-      const handRY = elbRY + Math.cos(armR - 0.8) * 12;
+      const thighR = Math.sin(phase + Math.PI) * 0.88 + 0.24;
+      const kneeRX = hipX + Math.sin(thighR) * 20;
+      const kneeRY = hipY + Math.cos(thighR) * 20;
+      const calfR = thighR - Math.max(0.08, (Math.sin(phase + Math.PI - 0.65) + 0.45) * 0.95);
+      const footRX = kneeRX + Math.sin(calfR) * 20;
+      const footRY = kneeRY + Math.cos(calfR) * 20;
+      const toeRX = footRX + Math.cos(calfR) * 6;
+      const toeRY = footRY - Math.sin(calfR) * 4;
 
-      if (stickLegL) stickLegL.setAttribute('points', `${hipX},${hipY} ${kneeLX.toFixed(1)},${kneeLY.toFixed(1)} ${footLX.toFixed(1)},${footLY.toFixed(1)}`);
-      if (stickLegR) stickLegR.setAttribute('points', `${hipX},${hipY} ${kneeRX.toFixed(1)},${kneeRY.toFixed(1)} ${footRX.toFixed(1)},${footRY.toFixed(1)}`);
-      if (stickArmL) stickArmL.setAttribute('points', `${shX},${shY} ${elbLX.toFixed(1)},${elbLY.toFixed(1)} ${handLX.toFixed(1)},${handLY.toFixed(1)}`);
-      if (stickArmR) stickArmR.setAttribute('points', `${shX},${shY} ${elbRX.toFixed(1)},${elbRY.toFixed(1)} ${handRX.toFixed(1)},${handRY.toFixed(1)}`);
-      if (stickDust1) stickDust1.style.opacity = (Math.abs(Math.sin(phase)) * 0.9).toFixed(2);
-      if (stickDust2) stickDust2.style.opacity = (Math.abs(Math.cos(phase)) * 0.8).toFixed(2);
+      const armL = -Math.sin(phase) * 0.95;
+      const elbLX = shX + Math.sin(armL) * 15;
+      const elbLY = shY + Math.cos(armL) * 15;
+      const handLX = elbLX + Math.sin(armL + 0.95) * 15;
+      const handLY = elbLY + Math.cos(armL + 0.95) * 15;
+
+      const armR = -Math.sin(phase + Math.PI) * 0.95;
+      const elbRX = shX + Math.sin(armR) * 15;
+      const elbRY = shY + Math.cos(armR) * 15;
+      const handRX = elbRX + Math.sin(armR + 0.95) * 15;
+      const handRY = elbRY + Math.cos(armR + 0.95) * 15;
+
+      if (stickLegL) stickLegL.setAttribute('points', `${hipX.toFixed(1)},${hipY.toFixed(1)} ${kneeLX.toFixed(1)},${kneeLY.toFixed(1)} ${footLX.toFixed(1)},${footLY.toFixed(1)} ${toeLX.toFixed(1)},${toeLY.toFixed(1)}`);
+      if (stickLegR) stickLegR.setAttribute('points', `${hipX.toFixed(1)},${hipY.toFixed(1)} ${kneeRX.toFixed(1)},${kneeRY.toFixed(1)} ${footRX.toFixed(1)},${footRY.toFixed(1)} ${toeRX.toFixed(1)},${toeRY.toFixed(1)}`);
+      if (stickArmL) stickArmL.setAttribute('points', `${shX.toFixed(1)},${shY.toFixed(1)} ${elbLX.toFixed(1)},${elbLY.toFixed(1)} ${handLX.toFixed(1)},${handLY.toFixed(1)}`);
+      if (stickArmR) stickArmR.setAttribute('points', `${shX.toFixed(1)},${shY.toFixed(1)} ${elbRX.toFixed(1)},${elbRY.toFixed(1)} ${handRX.toFixed(1)},${handRY.toFixed(1)}`);
+      if (stickDust1) stickDust1.style.opacity = (0.25 + Math.abs(Math.sin(phase)) * 0.72).toFixed(2);
+      if (stickDust2) stickDust2.style.opacity = (0.2 + Math.abs(Math.cos(phase)) * 0.65).toFixed(2);
+      if (stickSpark) {
+        stickSpark.setAttribute('cx', (14 + (phase * 7) % 16).toFixed(1));
+        stickSpark.setAttribute('cy', (96 - Math.abs(Math.sin(phase * 1.5)) * 12).toFixed(1));
+      }
     }
     let lastQuartile = 0;
     function checkMilestone(ratio) {
@@ -855,12 +902,14 @@
         if (fraction > lastStickFraction + 0.002) stickDirection = 1;
         else if (fraction < lastStickFraction - 0.002) stickDirection = -1;
         lastStickFraction = fraction;
-        const posX = -90 + fraction * (stageW + 180);
-        const bounce = Math.abs(Math.sin(fraction * 36)) * 6;
+        const posX = -110 + fraction * (stageW + 220);
+        const phaseAngle = fraction * 42;
+        const bounce = Math.abs(Math.sin(phaseAngle)) * 7.5;
         const floorY = (1 - progress) * stageH;
-        const posY = floorY - 94 - bounce;
-        stickman.style.transform = `translate3d(${posX.toFixed(2)}px,${posY.toFixed(2)}px,0) scaleX(${stickDirection})`;
-        updateStickmanPose(fraction * 36);
+        const runwayY = floorY - 104;
+        stickman.style.transform = `translate3d(0px,${runwayY.toFixed(2)}px,0)`;
+        stickRunner.style.transform = `translate3d(${posX.toFixed(2)}px,${(-bounce).toFixed(2)}px,0) scaleX(${stickDirection})`;
+        updateStickmanPose(phaseAngle);
       } else {
         if (!stickman.hasAttribute('hidden')) {
           stickman.setAttribute('hidden', '');
