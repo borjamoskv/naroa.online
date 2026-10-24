@@ -412,9 +412,9 @@
   function playDeltoya() {
     lastDeltoyaSlug = 'entre-tantas-flores-de-dia';
     if (typeof navigator !== 'undefined' && navigator.vibrate) {
-      try { navigator.vibrate([15, 35, 20]); } catch {}
+      try { navigator.vibrate([20, 40, 20]); } catch {}
     }
-    const audioSrc = button?.dataset?.deltoyaSrc || '/audio/deltoya.mp3';
+    const audioSrc = button?.dataset?.deltoyaSrc || '/audio/robe-riff.mp3';
     try {
       const audio = new window.Audio(audioSrc);
       audio.volume = 0.95;
