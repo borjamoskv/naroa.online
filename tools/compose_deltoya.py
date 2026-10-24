@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Synthesize the authentic Extremoduro electric guitar crunch power chord and Robe Iniesta's '¡DELTOYA!' vocal shout."""
+"""Synthesize the authentic Extremoduro electric guitar crunch power chord and Robe Iniesta's '¡DELTOYA!' vocal shout with Hard-Tune / Auto-Tune."""
 import math
 import os
 import random
@@ -7,6 +7,8 @@ import struct
 import subprocess
 import wave
 from pathlib import Path
+import librosa
+import numpy as np
 
 REPO = Path(__file__).resolve().parents[1]
 SAMPLE_RATE = 44100
@@ -79,6 +81,79 @@ def generate_rock_guitar_chord():
     max_val = max(abs(x) for x in filtered) or 1.0
     return [x / max_val * 0.95 for x in filtered]
 
+def process_autotuned_vocal(vocal_raw: Path, vocal_out: Path):
+    """Apply hard-tune pitch quantization (0 ms retune speed, E minor scale snapping) and robotic formant sheen."""
+    y, sr = librosa.load(str(vocal_raw), sr=SAMPLE_RATE)
+    hop = 256
+    f0, voiced, _ = librosa.pyin(y, fmin=librosa.note_to_hz('C2'), fmax=librosa.note_to_hz('C5'), sr=sr, hop_length=hop)
+    times = librosa.times_like(f0, sr=sr, hop_length=hop)
+
+    # Scale: E Minor Pentatonic scale degrees: E2, G2, A2, B2, D3, E3, G3
+    scale = np.array([82.41, 98.00, 110.00, 123.47, 146.83, 164.81, 196.00])
+    base_shift = 7.0  # Transpose to B2 center, yielding distinct B2 -> A2 -> B2 -> A2 -> G2 stair-stepping
+
+    shifts = []
+    for idx, (t, f, v) in enumerate(zip(times, f0, voiced)):
+        if v and not np.isnan(f) and f > 40.0:
+            shifted_f = f * (2.0 ** (base_shift / 12.0))
+            target = scale[np.argmin(np.abs(12 * np.log2(scale / shifted_f)))]
+            shift = 12 * np.log2(target / f)
+        else:
+            shift = 0.0
+        shifts.append(shift)
+
+    # Instantaneous square-step quantization (0 ms retune speed)
+    pitchmap_lines = []
+    for idx in range(len(shifts)):
+        frame = idx * hop
+        curr = shifts[idx]
+        if idx > 0 and abs(curr - shifts[idx-1]) > 0.05:
+            pitchmap_lines.append(f'{frame - 1} {shifts[idx-1]:.4f}')
+            pitchmap_lines.append(f'{frame} {curr:.4f}')
+        else:
+            pitchmap_lines.append(f'{frame} {curr:.4f}')
+
+    pitchmap_path = REPO / "classic/audio/temp_deltoya_pitchmap.txt"
+    pitchmap_path.write_text('\n'.join(pitchmap_lines) + '\n')
+
+    # Rubberband R3 pitch-shift with formant preservation
+    tuned_wav = REPO / "classic/audio/temp_vocal_tuned.wav"
+    subprocess.run([
+        'rubberband', '-3', '-F', '--pitchmap', str(pitchmap_path), str(vocal_raw), str(tuned_wav)
+    ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    # Pre-process autotune lead: bright presence EQ + metallic robotic flanger/chorus
+    tuned_proc = REPO / "classic/audio/temp_tuned_proc.wav"
+    subprocess.run([
+        'ffmpeg', '-y', '-i', str(tuned_wav),
+        '-af', 'highpass=f=110,lowpass=f=9500,equalizer=f=2800:t=q:w=1.8:g=5.0,equalizer=f=4500:t=q:w=2.0:g=4.0,flanger=delay=2.0:depth=1.2:regen=35:width=85:speed=0.4,afade=t=in:ss=0:d=0.03,afade=t=out:st=2.15:d=0.25,volume=2.4',
+        str(tuned_proc)
+    ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    # Pre-process raw rock rasp: highpass 80, punch at 1.8kHz
+    raw_proc = REPO / "classic/audio/temp_raw_proc.wav"
+    subprocess.run([
+        'ffmpeg', '-y', '-i', str(vocal_raw),
+        '-af', 'highpass=f=80,lowpass=f=8000,equalizer=f=1800:t=q:w=1.2:g=3.0,afade=t=in:ss=0:d=0.03,afade=t=out:st=2.15:d=0.25,volume=1.2',
+        str(raw_proc)
+    ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    # Combine autotuned lead with raw body for high-exergy rock autotune punch
+    subprocess.run([
+        'ffmpeg', '-y',
+        '-i', str(tuned_proc),
+        '-i', str(raw_proc),
+        '-filter_complex',
+        '[0:a][1:a]amix=inputs=2:weights=1.0 0.50,alimiter=limit=0.98:attack=5:release=50[out]',
+        '-map', '[out]',
+        str(vocal_out)
+    ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    # Cleanup intermediate vocal files
+    for p in [pitchmap_path, tuned_wav, tuned_proc, raw_proc]:
+        if p.exists():
+            p.unlink()
+
 def main():
     guitar_wav = REPO / "classic/audio/temp_guitar.wav"
     vocal_raw = REPO / "classic/audio/robe_vocal.wav"
@@ -96,15 +171,9 @@ def main():
             val = int(max(-32767, min(32767, s * 32767)))
             wf.writeframes(struct.pack("<h", val))
 
-    # If authentic Robe vocal sample is present, process it with studio analog warmth
+    # If authentic Robe vocal sample is present, process it with Hard-Tune / Auto-Tune
     if vocal_raw.exists():
-        # Highpass sub-rumble, presence eq on vocal formants (1.8 kHz & 3.2 kHz), subtle slapback
-        cmd_vocal = [
-            "ffmpeg", "-y", "-i", str(vocal_raw),
-            "-af", "highpass=f=95,lowpass=f=8000,equalizer=f=1800:width_type=q:w=1.2:g=4,equalizer=f=3200:width_type=q:w=1.5:g=3.5,afade=t=in:ss=0:d=0.03,afade=t=out:st=2.15:d=0.25,volume=1.9",
-            str(vocal_processed)
-        ]
-        subprocess.run(cmd_vocal, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        process_autotuned_vocal(vocal_raw, vocal_processed)
     else:
         # Fallback to synthesized voice
         vocal_aiff = REPO / "classic/audio/temp_vocal.aiff"
@@ -117,14 +186,14 @@ def main():
         if vocal_aiff.exists():
             vocal_aiff.unlink()
 
-    # Mix guitar chord and Robe's genuine vocal:
-    # Guitar pick hit at 0.0s, Robe vocal explodes at 0.12s
+    # Mix guitar chord and Robe's autotuned vocal:
+    # Guitar pick hit at 0.0s, Robe vocal explodes at 0.11s
     cmd_mix = [
         "ffmpeg", "-y",
         "-i", str(guitar_wav),
         "-i", str(vocal_processed),
         "-filter_complex",
-        "[1:a]adelay=120|120,volume=1.65[vocal];[0:a][vocal]amix=inputs=2:duration=longest:dropout_transition=2,volume=1.18,lowpass=f=4600,highpass=f=80,equalizer=f=164:t=q:w=2.0:g=3.0,equalizer=f=220:t=q:w=1.8:g=2.5,equalizer=f=3800:t=q:w=2.0:g=-3.5,alimiter=limit=0.96:attack=5:release=50[out]",
+        "[1:a]adelay=110|110[vocal];[0:a][vocal]amix=inputs=2:duration=longest:dropout_transition=2,volume=1.20,lowpass=f=5400,highpass=f=75,equalizer=f=164:t=q:w=2.0:g=3.0,equalizer=f=3200:t=q:w=1.8:g=2.0,alimiter=limit=0.96:attack=5:release=50[out]",
         "-map", "[out]",
         "-codec:a", "libmp3lame",
         "-q:a", "1",

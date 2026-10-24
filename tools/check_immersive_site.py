@@ -169,6 +169,7 @@ def check(output):
     assert len(catalog_data.get("artworks", [])) == len(expected), "mismatched artworks list in api/catalog.json"
     assert catalog_data.get("entity_id") == "https://naroagutierrezgil.com/#artist", "missing or invalid entity_id in catalog.json"
     assert catalog_data.get("studio_id") == "https://naroagutierrezgil.com/#studio", "missing or invalid studio_id in catalog.json"
+    assert len(catalog_data.get("evidence_graph", {}).get("query_fan_out", [])) >= 8, "query_fan_out must contain at least 8 SOTA 2026 intent queries"
     assert (output / "llms.txt").is_file(), "missing llms.txt"
     assert (output / "llms-full.txt").is_file(), "missing llms-full.txt"
     assert "https://naroagutierrezgil.com" in (output / "llms.txt").read_text(), "llms.txt missing canonical domain"

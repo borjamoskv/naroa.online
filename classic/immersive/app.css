@@ -209,14 +209,24 @@ html:has(dialog[open]){overflow:hidden}
 .commission-faq-item[open] summary:after{rotate:45deg}
 .commission-faq-item p{margin-top:16px;font-size:14px;line-height:1.85;color:#c6c6b8;max-width:760px}
 .commission-configurator{padding:20px 0 36px;border-top:1px solid #fffdf424;margin-top:10px}
-.configurator-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin:24px 0 28px}
+.configurator-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin:24px 0 20px}
 .configurator-field{display:grid;gap:8px}
 .configurator-field label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#edbca4}
 .configurator-select{background:#171814;color:#fffdf4;border:1px solid #fffdf42e;padding:12px 14px;font:inherit;font-size:13px;border-radius:2px;outline:none;cursor:pointer}
 .configurator-select:focus-visible{border-color:#edbca4;outline:2px solid #edbca4;outline-offset:2px}
-.configurator-action{display:flex;align-items:center;justify-content:flex-start}
+.configurator-preview{margin:0 0 20px;padding:14px 18px;background:#171814b3;border-left:2px solid #edbca4;font-size:13px;line-height:1.65;color:#d8d8cc}
+.configurator-action{display:flex;flex-wrap:wrap;align-items:center;gap:14px;justify-content:flex-start}
 .commission-cta-btn{display:inline-flex;align-items:center;gap:12px;background:#edbca4;color:#11120f;font-weight:500;padding:14px 24px;font-size:13px;letter-spacing:.02em;transition:background .25s,transform .2s}
 .commission-cta-btn:hover{background:#fffdf4;transform:translateY(-2px)}
+.commission-cta-secondary{display:inline-flex;align-items:center;gap:10px;background:transparent;color:#fffdf4;border:1px solid #fffdf438;font-weight:500;padding:13px 22px;font-size:13px;letter-spacing:.02em;transition:border-color .25s,background .25s,transform .2s}
+.commission-cta-secondary:hover{border-color:#edbca4;background:#fffdf40d;transform:translateY(-2px)}
+.commission-compare-wrap{overflow-x:auto;margin:22px 0 10px;border:1px solid #fffdf424;background:#171814b3}
+.commission-compare-table{width:100%;border-collapse:collapse;font-size:13px;line-height:1.6;text-align:left}
+.commission-compare-table caption{text-align:left;padding:14px 18px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#edbca4;border-bottom:1px solid #fffdf424}
+.commission-compare-table th,.commission-compare-table td{padding:14px 18px;border-bottom:1px solid #fffdf417;vertical-align:top}
+.commission-compare-table thead th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#edbca4;background:#11120f80;font-weight:500}
+.commission-compare-table tbody th{color:#fffdf4;font-weight:500;white-space:nowrap}
+.commission-compare-table tbody td{color:#c6c6b8}
 @media(max-width:760px){.configurator-grid{grid-template-columns:1fr;gap:16px}}
 .contact-channels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin:28px 0 10px}
 .contact-channel{padding:20px 22px;background:#171814d9;border:1px solid #fffdf424;display:grid;gap:8px;align-content:start}

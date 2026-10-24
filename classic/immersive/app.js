@@ -425,7 +425,7 @@
       img.style.transform = `translate3d(${tx.toFixed(3)}px,${ty.toFixed(3)}px,0) scale(${zoom.toFixed(5)})`;
     }
     let dustinVisited = false, dustinEpilogueTimer = null;
-    let puzzleVisited = false, clockVisited = false, wineVisited = false;
+    let puzzleVisited = false, clockVisited = false, wineVisited = false, deltoyaVisited = false;
     function firePuzzleSnap() {
       soundscape?.puzzleSnap?.();
     }
@@ -434,6 +434,9 @@
     }
     function fireWineClink() {
       soundscape?.wineClink?.();
+    }
+    function fireDeltoya() {
+      soundscape?.deltoya?.();
     }
     let lastQuartile = 0;
     function checkMilestone(ratio) {
@@ -677,6 +680,14 @@
         }
       } else {
         wineVisited = false;
+      }
+      if (works[base].slug === 'entre-tantas-flores-de-dia' || works[incoming].slug === 'entre-tantas-flores-de-dia') {
+        if (!deltoyaVisited && (works[state.index].slug === 'entre-tantas-flores-de-dia' || (transition && works[incoming].slug === 'entre-tantas-flores-de-dia' && fraction >= 0.35))) {
+          deltoyaVisited = true;
+          fireDeltoya();
+        }
+      } else {
+        deltoyaVisited = false;
       }
       soundscape?.frame({
         distance: still ? scrollY / Math.max(1, geometry.height) : pose.distance,

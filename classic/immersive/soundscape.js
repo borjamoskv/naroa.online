@@ -311,6 +311,19 @@
       }
     } catch {}
   }
+  let lastDeltoyaSlug = '';
+  function playDeltoya() {
+    lastDeltoyaSlug = 'entre-tantas-flores-de-dia';
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      try { navigator.vibrate([15, 35, 20]); } catch {}
+    }
+    const audioSrc = button?.dataset?.deltoyaSrc || '/audio/deltoya.mp3';
+    try {
+      const audio = new window.Audio(audioSrc);
+      audio.volume = 0.95;
+      audio.play().catch(() => {});
+    } catch {}
+  }
   function playCameraFlash() {
     if (!context || !engine || context.state !== 'running') return;
     try {
@@ -699,6 +712,9 @@
     portraitWink() {
       playPortraitWink();
     },
+    deltoya() {
+      playDeltoya();
+    },
     menuNote(index) {
       playMenuNote(index);
     },
@@ -713,6 +729,7 @@
     get lastClockSlug() { return lastClockSlug; },
     get lastWineSlug() { return lastWineSlug; },
     get lastWinkSlug() { return lastWinkSlug; },
+    get lastDeltoyaSlug() { return lastDeltoyaSlug; },
     get lastMenuNoteIndex() { return lastMenuNoteIndex; }
   });
   paint();
