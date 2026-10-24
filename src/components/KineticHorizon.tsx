@@ -173,7 +173,10 @@ export function KineticHorizon({
     } else if (slug === 'julio-iglesias-como-un-reloj-suizo' && lastSpokenSlugRef.current !== slug) {
       lastSpokenSlugRef.current = slug
       sound.playSwissClock()
-    } else if (slug !== 'denbora-nora-zoaz' && slug !== 'el-hombre-que-susurraba-a-las-estrellas' && slug !== 'jose-manuel-ezquerra' && slug !== 'i-got-you-babe' && slug !== 'dustin' && slug !== 'asucar-celia-cruz' && slug !== 'entre-tantas-flores-de-dia' && slug !== 'saio-puzzle' && slug !== 'julio-iglesias-como-un-reloj-suizo') {
+    } else if (slug === 'red-red-wine' && lastSpokenSlugRef.current !== slug) {
+      lastSpokenSlugRef.current = slug
+      sound.playWineGlassClink()
+    } else if (slug !== 'denbora-nora-zoaz' && slug !== 'el-hombre-que-susurraba-a-las-estrellas' && slug !== 'jose-manuel-ezquerra' && slug !== 'i-got-you-babe' && slug !== 'dustin' && slug !== 'asucar-celia-cruz' && slug !== 'entre-tantas-flores-de-dia' && slug !== 'saio-puzzle' && slug !== 'julio-iglesias-como-un-reloj-suizo' && slug !== 'red-red-wine') {
       lastSpokenSlugRef.current = ''
     }
   }, [])

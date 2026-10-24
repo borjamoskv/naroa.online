@@ -331,12 +331,25 @@
         stage.classList.remove('has-deltoya-pulse');
       }, 700);
     }
-    let puzzleVisited = false, clockVisited = false;
+    let puzzleVisited = false, clockVisited = false, wineVisited = false;
     function firePuzzleSnap() {
       soundscape?.puzzleSnap?.();
     }
     function fireSwissClock() {
       soundscape?.swissClock?.();
+    }
+    function fireWineClink() {
+      soundscape?.wineClink?.();
+    }
+    let lastQuartile = 0;
+    function checkMilestone(ratio) {
+      const q = Math.floor(ratio * 4) / 4;
+      if (q > 0 && q !== lastQuartile && ratio >= q) {
+        lastQuartile = q;
+        if (typeof navigator !== 'undefined' && navigator.vibrate) {
+          try { navigator.vibrate(q >= 1 ? [20, 40, 30] : [15]); } catch {}
+        }
+      }
     }
     function focusPictures() { works.forEach((p, i) => scenes[i].style.setProperty('--position', (innerWidth < 760 && mobileFocals[p.slug]) || focals[p.slug] || '50% 44%')); }
     focusPictures();
@@ -564,6 +577,14 @@
       } else {
         clockVisited = false;
       }
+      if (works[base].slug === 'red-red-wine' || works[incoming].slug === 'red-red-wine') {
+        if (!wineVisited && (works[state.index].slug === 'red-red-wine' || (transition && works[incoming].slug === 'red-red-wine' && fraction >= 0.35))) {
+          wineVisited = true;
+          fireWineClink();
+        }
+      } else {
+        wineVisited = false;
+      }
       const isPunchPair = (works[base].slug === 'i-got-you-babe' && works[incoming].slug === 'jose-manuel-ezquerra') ||
                           (works[base].slug === 'jose-manuel-ezquerra' && works[incoming].slug === 'i-got-you-babe');
       const isPunchActive = transition && isPunchPair && fraction >= 0.44 && fraction <= 0.64;
@@ -608,6 +629,7 @@
       }
       stage.classList.toggle('is-travelling', transition);
       stage.style.setProperty('--progress', (pose.distance / journey.total * (works.length - 1) * 100).toFixed(3) + '%');
+      checkMilestone(pose.distance / Math.max(1, journey.total));
     }
     function measure() {
       const bounds = track.getBoundingClientRect(), viewport = stage.getBoundingClientRect(), height = viewport.height || innerHeight;
@@ -688,6 +710,22 @@
     });
     $('[data-fit]', stage).addEventListener('click', () => { pause(); state.fit = !state.fit; images[state.index].src = state.fit ? works[state.index].photos[0].src : works[state.index].cover; resetPan(); metadata(); render(); });
     $('[data-open-story]', stage).addEventListener('click', () => openDialog('#story-dialog'));
+    document.querySelector('[data-share-link]')?.addEventListener('click', e => {
+      const p = works[state.index];
+      const url = location.origin + '/obra/' + p.slug + '/';
+      const btn = e.currentTarget;
+      if (navigator.clipboard?.writeText) {
+        navigator.clipboard.writeText(url).then(() => {
+          const prev = btn.textContent;
+          btn.textContent = '¡Enlace copiado! ✓';
+          setTimeout(() => { btn.textContent = prev; }, 2000);
+        }).catch(() => {
+          window.prompt('Copia el enlace directo:', url);
+        });
+      } else {
+        window.prompt('Copia el enlace directo:', url);
+      }
+    });
     function showPhoto() {
       const p = works[state.index];
       state.photo = clamp(state.photo, 0, p.photos.length - 1);

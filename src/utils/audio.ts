@@ -837,6 +837,39 @@ class SoundEngine {
       // Ignore audio errors
     }
   }
+
+  playWineGlassClink() {
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      try { navigator.vibrate([10, 30, 15]) } catch {}
+    }
+    if (!this.ctx) return
+    try {
+      if (this.ctx.state === 'suspended') {
+        this.ctx.resume()
+      }
+      const now = this.ctx.currentTime + 0.002
+      ;[
+        { freq: 2093.0, vol: 0.55, decay: 1.35 },
+        { freq: 2793.8, vol: 0.38, decay: 0.95 },
+        { freq: 4186.0, vol: 0.22, decay: 0.55 }
+      ].forEach(({ freq, vol, decay }) => {
+        if (!this.ctx) return
+        const osc = this.ctx.createOscillator()
+        const gain = this.ctx.createGain()
+        osc.type = 'sine'
+        osc.frequency.setValueAtTime(freq, now)
+        gain.gain.setValueAtTime(0.001, now)
+        gain.gain.linearRampToValueAtTime(vol, now + 0.003)
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + decay)
+        osc.connect(gain)
+        gain.connect(this.ctx.destination)
+        osc.start(now)
+        osc.stop(now + decay + 0.05)
+      })
+    } catch {
+      // Ignore audio errors
+    }
+  }
 }
 
 export const sound = new SoundEngine()

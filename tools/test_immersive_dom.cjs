@@ -746,6 +746,11 @@ async function eyeMatch(ui, base, points) {
     galleryAudio.advance(150); reactiveGallery.scroll(swissIdx); await reactiveGallery.flush();
     assert.equal(reactiveGallery.w.NAROA_SOUND.lastClockSlug, 'julio-iglesias-como-un-reloj-suizo', 'Arriving at Julio Iglesias triggers Swiss clock escapement');
   }
+  const wineIdx = works.findIndex(w => w.slug === 'red-red-wine');
+  if (wineIdx >= 0) {
+    galleryAudio.advance(150); reactiveGallery.scroll(wineIdx); await reactiveGallery.flush();
+    assert.equal(reactiveGallery.w.NAROA_SOUND.lastWineSlug, 'red-red-wine', 'Arriving at Red Red Wine triggers crystal glass clink');
+  }
   reactiveGallery.click('[data-sound]'); galleryAudio.advance(600); reactiveGallery.dom.window.close();
   const boxAudio = audioBoundary();
   const box = create('/contacto/', false, { width: 1024, height: 768 }, boxAudio); await box.flush();

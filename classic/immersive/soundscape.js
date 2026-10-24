@@ -462,6 +462,39 @@
       });
     } catch {}
   }
+  let lastWineSlug = '';
+  function playWineGlassClink() {
+    lastWineSlug = 'red-red-wine';
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      try { navigator.vibrate([10, 30, 15]); } catch {}
+    }
+    if (!context || !engine || context.state !== 'running') return;
+    try {
+      const now = context.currentTime + 0.002;
+      const target = engine.compressor || engine.master;
+      [
+        { freq: 2093.0, vol: 0.55, decay: 1.35 },
+        { freq: 2793.8, vol: 0.38, decay: 0.95 },
+        { freq: 4186.0, vol: 0.22, decay: 0.55 }
+      ].forEach(({ freq, vol, decay }) => {
+        if (typeof context.createOscillator === 'function') {
+          const osc = context.createOscillator();
+          const gain = context.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now);
+          gain.gain.setValueAtTime(0.001, now);
+          gain.gain.linearRampToValueAtTime(vol, now + 0.003);
+          if (gain.gain.exponentialRampToValueAtTime) {
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + decay);
+          }
+          osc.connect(gain);
+          gain.connect(target);
+          osc.start(now);
+          osc.stop(now + decay + 0.05);
+        }
+      });
+    } catch {}
+  }
   function playCameraFlash() {
     if (!context || !engine || context.state !== 'running') return;
     try {
@@ -866,13 +899,17 @@
     swissClock() {
       playSwissClock();
     },
+    wineClink() {
+      playWineGlassClink();
+    },
     get lastUtterance() { return lastUtterance; },
     get lastFlashSlug() { return lastFlashSlug; },
     get lastPunchSlug() { return lastPunchSlug; },
     get lastShakerSlug() { return lastShakerSlug; },
     get lastDeltoyaSlug() { return lastDeltoyaSlug; },
     get lastPuzzleSlug() { return lastPuzzleSlug; },
-    get lastClockSlug() { return lastClockSlug; }
+    get lastClockSlug() { return lastClockSlug; },
+    get lastWineSlug() { return lastWineSlug; }
   });
   paint();
 })();
