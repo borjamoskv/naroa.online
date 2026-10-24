@@ -291,7 +291,7 @@
       "category": "collage",
       "technique": "Acrílico, rotulador y collage textil",
       "support": "Lienzo",
-      "story": "Mario Moreno aparece en blanco y negro, atravesado por pequeñas intervenciones textiles: seda roja en la corbata, vaquero negro y un retal de lienzo como pañuelo.",
+      "story": "En este retrato de Mario Moreno, Naroa sostiene una mirada penetrante a grafito y carboncillo en blanco y negro, rasgada de improviso por una tridimensionalidad táctil: seda roja con lunares blancos en la corbata, tela vaquera negra en las solapas y un retal de lienzo crudo como pañuelo de bolsillo. Un tributo sobrio donde la elegancia clásica del cómico dialoga con el volumen textil.",
       "images": [
         {
           "src": "/images/catalogo/mario-moreno-hq-01.webp",
@@ -317,18 +317,10 @@
           "caption": "Detalle de corbata, solapa y pañuelo",
           "source": "https://www.facebook.com/photo/?fbid=1580323013447114&set=a.1580369216775827",
           "sha256": "a1e804d5526516af981cac8ee91614d8839080d3664606e406e8dba47b34c35e"
-        },
-        {
-          "src": "/images/catalogo/cantinflowers-4k.webp",
-          "width": 3656,
-          "height": 2456,
-          "caption": "Composición master 4K de Mario Moreno (Cantinflas) con flores y collage.",
-          "source": null,
-          "sha256": "9dd913cf1c42a8278cff1b1c2daa8cca4ea362f1e658353065bd5fadd142e3d8"
         }
       ],
       "dimensions": "Lienzo: 24 × 18 cm · Marco: 32 × 26 cm",
-      "series": "VaiVenes",
+      "series": "Tributos",
       "year": null,
       "credit": null,
       "selected": true,
@@ -2227,7 +2219,7 @@
       "source": "https://www.facebook.com/media/set/?set=a.4622940807780595&type=3",
       "dimensions": "50 × 40 cm",
       "materials": "Pelota de tenis de fieltro, cabello anudado, papeles Canson, acetato impreso publicitario (“Do they match?”), marcador washi-tape con las letras OUT, redes cosidas y gotas de látex líquido a modo de sudor.",
-      "series": null,
+      "series": "VaiVenes",
       "year": null,
       "credit": null,
       "selected": false,

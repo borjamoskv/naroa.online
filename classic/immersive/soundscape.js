@@ -11,7 +11,7 @@
   let active = false, pageActive = true, idle = null, suspension = null, waking = null, generation = 0;
   let lastDistance = null, lastPhase = 'hold', lastSlug = '', lastUtterance = '';
   let lastCameraFlashTime = 0, lastFlashSlug = '';
-  let lastPunchSlug = '';
+  let lastPunchSlug = '', lastPunchTime = 0;
   let lastMotion = null, lastGrain = -Infinity, energy = 0, direction = 1, seed = 0, pendingDistance = 0;
   // Cadencia obligatoria final: notas icónicas de SOUND OF SILENCE en Re menor microtonal
   // D5 (sound), [silencio], A4 (of), C5 (si-), F5 (-lence), E5 (resolución), [silencio], D5 (tónica)
@@ -711,10 +711,86 @@
     }
   }
   function playPunchImpact() {
-    return;
+    lastPunchSlug = 'jose-manuel-ezquerra';
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      try { navigator.vibrate([35, 25, 20]); } catch {}
+    }
+    if (!context || !engine || context.state !== 'running') return;
+    try {
+      const now = context.currentTime + 0.002;
+      const target = engine.compressor || engine.master;
+      const gallery = getGalleryReverb();
+      const sampleRate = context.sampleRate || 44100;
+
+      // 1. Meat / flesh slap transient: fast burst of shaped filtered noise
+      const slapLen = Math.round(sampleRate * 0.075);
+      const slapBuffer = context.createBuffer(1, slapLen, sampleRate);
+      const slapData = slapBuffer.getChannelData(0);
+      for (let i = 0; i < slapLen; i++) {
+        const t = i / sampleRate;
+        const noise = (Math.random() * 2 - 1) * Math.exp(-t / 0.016);
+        const lowThump = Math.sin(2 * Math.PI * (140 - 80 * (t / 0.075)) * t) * Math.exp(-t / 0.025);
+        slapData[i] = noise * 0.65 + lowThump * 0.75;
+      }
+      const slapSrc = context.createBufferSource();
+      slapSrc.buffer = slapBuffer;
+      const slapFilter = context.createBiquadFilter();
+      slapFilter.type = 'bandpass';
+      slapFilter.frequency.setValueAtTime(1400, now);
+      slapFilter.Q.setValueAtTime(1.8, now);
+      const slapGain = context.createGain();
+      slapGain.gain.setValueAtTime(0.75, now);
+      slapGain.gain.exponentialRampToValueAtTime(0.001, now + 0.075);
+      slapSrc.connect(slapFilter);
+      slapFilter.connect(slapGain);
+      slapGain.connect(target);
+      if (gallery) slapGain.connect(gallery);
+      slapSrc.start(now);
+
+      // 2. Punch sub-bass body thump
+      const subOsc = context.createOscillator();
+      const subGain = context.createGain();
+      subOsc.type = 'sine';
+      subOsc.frequency.setValueAtTime(125, now);
+      subOsc.frequency.exponentialRampToValueAtTime(42, now + 0.12);
+      subGain.gain.setValueAtTime(0.65, now);
+      subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+      subOsc.connect(subGain);
+      subGain.connect(target);
+      subOsc.start(now);
+      subOsc.stop(now + 0.12);
+
+      // 3. Dazed harmonic wobble ringing (3 seconds decay)
+      const dazeOsc = context.createOscillator();
+      const dazeGain = context.createGain();
+      const dazeLFO = context.createOscillator();
+      const dazeLFOGain = context.createGain();
+      dazeLFO.frequency.setValueAtTime(4.5, now);
+      dazeLFOGain.gain.setValueAtTime(18, now);
+      dazeLFOGain.gain.exponentialRampToValueAtTime(1, now + 2.8);
+      dazeLFO.connect(dazeOsc.frequency);
+      dazeOsc.type = 'triangle';
+      dazeOsc.frequency.setValueAtTime(587.33, now);
+      dazeGain.gain.setValueAtTime(0.18, now + 0.04);
+      dazeGain.gain.exponentialRampToValueAtTime(0.001, now + 2.9);
+      dazeOsc.connect(dazeGain);
+      dazeGain.connect(target);
+      if (gallery) dazeGain.connect(gallery);
+      dazeLFO.start(now);
+      dazeLFO.stop(now + 3.0);
+      dazeOsc.start(now);
+      dazeOsc.stop(now + 3.0);
+    } catch {}
   }
-  function triggerPunchImpact() {
-    return;
+  function triggerPunchImpact(currentSlug, hasPunch) {
+    if (!hasPunch) return;
+    const now = performance.now();
+    if (currentSlug === 'i-got-you-babe' || currentSlug === 'jose-manuel-ezquerra') {
+      if (now - lastPunchTime > 800) {
+        lastPunchTime = now;
+        playPunchImpact();
+      }
+    }
   }
   function excite() {
     const now = performance.now();

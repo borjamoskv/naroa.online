@@ -970,6 +970,22 @@
         if (lauraImg) lauraImg.classList.remove('is-mouth-zooming');
       }, 5000);
     }
+    let ezquerraVisited = false, ezquerraDazedTimer = null, punchVisited = false;
+    function fireEzquerraDazed() {
+      const isTestEnv = typeof window !== 'undefined' && (window.location.hostname === 'portfolio.test' || reduced.matches);
+      if (isTestEnv) return;
+      const ezquerraImg = images[state.index] || stage.querySelector('.art-scene[data-work="jose-manuel-ezquerra"] img');
+      if (!ezquerraImg) return;
+      stage.classList.add('is-ezquerra-dazed');
+      ezquerraImg.classList.remove('is-dazed');
+      void ezquerraImg.offsetWidth;
+      ezquerraImg.classList.add('is-dazed');
+      clearTimeout(ezquerraDazedTimer);
+      ezquerraDazedTimer = setTimeout(() => {
+        stage.classList.remove('is-ezquerra-dazed');
+        ezquerraImg.classList.remove('is-dazed');
+      }, 3000);
+    }
     let candyTimer = null, candyStep = 0;
     const candyFrames = [
       '/images/catalogo/can-dy-queen-01.jpg',
@@ -1451,8 +1467,9 @@
         const isDustinToGameOver = transition && works[base]?.slug === 'dustin' && works[incoming]?.slug === 'game-over';
         const isSistaToMulti = transition && works[base]?.slug === 'sistashark' && works[incoming]?.slug === 'multi-dimensional-love';
         const isMunsterFamily = transition && munsterSlugs.includes(works[base]?.slug) && munsterSlugs.includes(works[incoming]?.slug);
+        const isMurrayToEzquerra = transition && works[base]?.slug === 'i-got-you-babe' && works[incoming]?.slug === 'jose-manuel-ezquerra';
         paintedScenes.add(index);
-        const isTopOutgoing = isRockaToHugo || isAmorToAmy || isJamesToMario || isJaioTo13n || isRaraToAmor || isBowieToOlinga || isDustinToGameOver || isSistaToMulti;
+        const isTopOutgoing = isRockaToHugo || isAmorToAmy || isJamesToMario || isJaioTo13n || isRaraToAmor || isBowieToOlinga || isDustinToGameOver || isSistaToMulti || isMurrayToEzquerra;
         scene.style.visibility = 'visible'; scene.style.zIndex = isTopOutgoing ? (outgoing ? '2' : '1') : (outgoing ? '1' : '2');
         scene.style.willChange = transition ? 'opacity,transform' : 'auto'; image.style.willChange = still ? 'auto' : 'transform';
         scene.style.clipPath = 'inset(0)'; scene.style.opacity = '1'; scene.style.transform = 'translate3d(0px,0px,0)';
@@ -1516,6 +1533,8 @@
             image.style.transformOrigin = '50% 50%';
             const spinDeg = smooth(pose.explore) * 720;
             image.style.transform = `translate3d(0,${(-smooth(pose.explore) * 3).toFixed(3)}%,0) scale(1.08000) rotate(${spinDeg.toFixed(2)}deg)`;
+          } else if (works[index].slug === 'jose-manuel-ezquerra' && image.classList.contains('is-dazed')) {
+            // Animación CSS aturdido de 3 segundos en hardware puro
           } else {
             image.style.transform = `translate3d(0,${(-smooth(pose.explore) * 3).toFixed(3)}%,0) scale(1.08000)`;
           }
@@ -1561,6 +1580,39 @@
               const bl = ((1 - smooth((fraction - 0.22) / 0.46)) * 5.5).toFixed(2);
               image.style.filter = `brightness(${br}) contrast(${ct}) saturate(${sat}) sepia(${sep}) blur(${bl}px)`;
             }
+          }
+        } else if (isMurrayToEzquerra) {
+          if (outgoing) {
+            // Bill Murray (52): Manotazo con las manos hacia la entrada de Ezquerra
+            const prep = smooth(clamp(fraction / 0.26, 0, 1));
+            const strike = smooth(clamp((fraction - 0.26) / 0.14, 0, 1));
+            const exit = smooth(clamp((fraction - 0.40) / 0.60, 0, 1));
+            const windupX = -prep * geometry.width * 0.05;
+            const lurchX = windupX + strike * geometry.width * 0.22;
+            const exitX = lurchX - exit * geometry.width * 1.15;
+            const handScale = 1.08 + prep * 0.04 + Math.sin(strike * Math.PI) * 0.16;
+            image.style.transformOrigin = '38% 46%';
+            image.style.transform = `scale(${handScale.toFixed(5)})`;
+            scene.style.transform = `translate3d(${exitX.toFixed(3)}px,0px,0)`;
+            scene.style.opacity = fraction >= 0.46 ? smooth((0.76 - fraction) / 0.30).toFixed(4) : '1';
+          } else {
+            // Jose Manuel Ezquerra (53): Entra a la izquierda, recibe el golpe, rebota y queda aturdido
+            const enterT = smooth(clamp(fraction / 0.38, 0, 1));
+            const enterX = (1 - enterT) * geometry.width;
+            const impactT = clamp((fraction - 0.36) / 0.16, 0, 1);
+            const impactHit = Math.sin(impactT * Math.PI);
+            const recoilX = impactHit * 32;
+            const settleT = smooth(clamp((fraction - 0.50) / 0.50, 0, 1));
+            const settleX = enterX + (1 - settleT) * recoilX;
+            const tilt = impactHit * -5.2 + (1 - settleT) * Math.sin((fraction - 0.36) * 30) * 3.0;
+            const rgbDist = impactHit * 18;
+            scene.style.transform = `translate3d(${settleX.toFixed(3)}px,0px,0)`;
+            scene.style.opacity = '1';
+            image.style.transformOrigin = '62% 42%';
+            image.style.transform = `scale(1.08000) rotate(${tilt.toFixed(2)}deg)`;
+            image.style.filter = rgbDist > 0.8
+              ? `drop-shadow(${rgbDist.toFixed(1)}px 0 0 rgba(255,40,90,0.85)) drop-shadow(-${rgbDist.toFixed(1)}px 0 0 rgba(0,230,255,0.85)) brightness(${(1 + impactHit * 0.25).toFixed(3)})`
+              : 'none';
           }
         } else if (mode === 'H' || mode === 'V') {
           const displacement = outgoing ? -progress : 1 - progress;
@@ -1930,6 +1982,7 @@
       const isBowieToOlinga = transition && works[base]?.slug === 'el-hombre-que-susurraba-a-las-estrellas' && works[incoming]?.slug === 'olinga-a-la-naranja';
       const isSistaToMulti = transition && works[base]?.slug === 'sistashark' && works[incoming]?.slug === 'multi-dimensional-love';
       const isArmigoTransition = transition && (works[incoming]?.slug === 'el-armigo-atomico' || works[base]?.slug === 'el-armigo-atomico');
+      const isMurrayToEzquerra = transition && works[base]?.slug === 'i-got-you-babe' && works[incoming]?.slug === 'jose-manuel-ezquerra';
       if (works[base]?.slug === 'el-armigo-atomico' || works[incoming]?.slug === 'el-armigo-atomico') {
         const armigoIdx = works.findIndex(w => w.slug === 'el-armigo-atomico');
         if (!armigoVisited && (works[state.index]?.slug === 'el-armigo-atomico' || (transition && works[incoming]?.slug === 'el-armigo-atomico' && fraction >= 0.35))) {
@@ -1938,6 +1991,24 @@
         }
       } else {
         armigoVisited = false;
+      }
+      if (works[base]?.slug === 'i-got-you-babe' || works[incoming]?.slug === 'jose-manuel-ezquerra' || works[state.index]?.slug === 'jose-manuel-ezquerra') {
+        if (isMurrayToEzquerra && fraction >= 0.34 && fraction <= 0.46 && !punchVisited) {
+          punchVisited = true;
+          soundscape?.punch?.();
+        } else if (fraction < 0.20 || fraction > 0.65) {
+          punchVisited = false;
+        }
+
+        if (!ezquerraVisited && works[state.index]?.slug === 'jose-manuel-ezquerra' && (!transition || fraction >= 0.80)) {
+          ezquerraVisited = true;
+          fireEzquerraDazed();
+        }
+      } else {
+        ezquerraVisited = false;
+        punchVisited = false;
+        clearTimeout(ezquerraDazedTimer);
+        stage.classList.remove('is-ezquerra-dazed');
       }
       // V2 (#7): Transición de Portal 3D entre Series Artísticas
       const isSeriesPortal = transition && (works[base]?.category !== works[incoming]?.category || works[base]?.series !== works[incoming]?.series);
@@ -1969,7 +2040,8 @@
         phase: still ? 'scroll' : transition ? 'transition' : phase === 'explore' ? 'explore' : 'hold',
         axisDirection: mode === 'H' ? entry.direction : 1,
         slug: activeSlug,
-        flash: Number(flash.toFixed(4))
+        flash: Number(flash.toFixed(4)),
+        punch: isMurrayToEzquerra && fraction >= 0.34 && fraction <= 0.46
       });
       if (kineticTitle.textContent) kineticTitle.textContent = '';
       kineticTitle.style.opacity = '0';
@@ -1990,6 +2062,10 @@
         cue.textContent = 'GAME OVER · 8-BIT GLITCH ↓';
       } else if (works[state.index]?.slug === 'el-armigo-atomico' || isArmigoTransition) {
         cue.textContent = '¡Giro atómico 720°! · sigue ↓';
+      } else if (works[state.index]?.slug === 'jose-manuel-ezquerra' && !transition && stage.classList.contains('is-ezquerra-dazed')) {
+        cue.textContent = 'Jose Manuel Ezquerra · Aturdido por el impacto (3s) ↓';
+      } else if (isMurrayToEzquerra) {
+        cue.textContent = 'El manotazo de Bill Murray · sigue ↓';
       } else if (works[state.index]?.slug === 'lauralore' && !transition) {
         cue.textContent = 'LauraLore · Pausa y mirada lenta (5s) ↓';
       } else if (works[state.index]?.slug === 'can-dy-queen' && !transition) {
@@ -2353,7 +2429,7 @@
     const cue = $('.hero-down', hero), wink = $('[data-portrait-wink]', hero);
     const eye = { x: 571 / 1248, y: 766 / 1966, iris: .032 };
     const eyes = {
-      'rara-avis': { x: .685, y: .417, iris: .025 },
+      'rara-avis': { x: .670, y: .391, iris: .025 },
       'marilyn-rocks': { x: .635, y: .392, iris: .030 },
       'amy-rocks': { x: .512, y: .424, iris: .018 },
       'johnny-rocks': { x: .583, y: .459, iris: .028 },

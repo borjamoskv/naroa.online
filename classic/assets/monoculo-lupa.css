@@ -1,0 +1,588 @@
+/* ════════════════════════════════════════════════════════════════════════════
+   MONÓCULO LUPA MACRO 4K — classic/assets/monoculo-lupa.css
+   Estándar C5-REAL · Cero Dependencias · Hardware-Accelerated Optics
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Anclaje en el Hero (Hotspot del Monóculo en Retrato Inaugural) ── */
+.monocle-hero-hotspot {
+  position: absolute;
+  z-index: 5;
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  cursor: grab;
+  touch-action: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  outline: none;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.18) 0%, rgba(212, 175, 55, 0.04) 65%, transparent 70%);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s ease;
+}
+
+.monocle-hero-hotspot:hover,
+.monocle-hero-hotspot:focus-visible {
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+.monocle-hero-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(212, 175, 55, 0.85);
+  box-shadow:
+    0 0 16px rgba(212, 175, 55, 0.45),
+    inset 0 0 12px rgba(212, 175, 55, 0.3);
+  animation: monocle-pulse-ring 3.4s ease-in-out infinite;
+}
+
+@keyframes monocle-pulse-ring {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 14px rgba(212, 175, 55, 0.4), inset 0 0 10px rgba(212, 175, 55, 0.25);
+    border-color: rgba(212, 175, 55, 0.75);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 24px rgba(212, 175, 55, 0.65), inset 0 0 16px rgba(212, 175, 55, 0.45);
+    border-color: rgba(247, 213, 148, 0.95);
+  }
+}
+
+.monocle-hero-glare {
+  position: absolute;
+  top: 14%;
+  left: 20%;
+  width: 32%;
+  height: 24%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.65) 0%, transparent 80%);
+  transform: rotate(-35deg);
+  pointer-events: none;
+}
+
+.monocle-hero-badge {
+  position: absolute;
+  top: calc(100% + 14px);
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  background: rgba(16, 17, 16, 0.94);
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  color: #f7d594;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-family: Inter, sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.65);
+  pointer-events: none;
+  opacity: 0.92;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.monocle-hero-hotspot:hover .monocle-hero-badge {
+  opacity: 1;
+  transform: translateX(-50%) translateY(2px);
+  border-color: #d4af37;
+  color: #fff;
+}
+
+/* Ocultar sutilmente el hotspot del hero cuando el monóculo está desacoplado */
+body.monocle-active .monocle-hero-hotspot {
+  opacity: 0.35;
+  filter: grayscale(0.6);
+  pointer-events: auto;
+}
+
+/* ── 2. Cadena de Oro y Latón Interactiva (Catenaria SVG) ── */
+.monocle-chain-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9997;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+body.monocle-active .monocle-chain-canvas {
+  opacity: 1;
+}
+
+.monocle-chain-path {
+  fill: none;
+  stroke: url(#monocle-chain-grad);
+  stroke-width: 2.2px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 4 3;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.65));
+}
+
+.monocle-chain-glow {
+  fill: none;
+  stroke: rgba(212, 175, 55, 0.22);
+  stroke-width: 6px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ── 3. Botón Disparador en las Fichas de Obras (Amor en Conserva / Rara Avis) ── */
+.monocle-trigger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(26, 27, 23, 0.85);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  color: #f7d594;
+  padding: 7px 16px;
+  border-radius: 24px;
+  font-family: Inter, sans-serif;
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  margin-left: auto;
+}
+
+.monocle-trigger-btn:hover {
+  background: rgba(212, 175, 55, 0.18);
+  border-color: #d4af37;
+  color: #fffdf5;
+  transform: translateY(-1.5px);
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.28);
+}
+
+.monocle-trigger-btn .monocle-icon {
+  font-size: 14px;
+  color: #d4af37;
+  line-height: 1;
+}
+
+/* ── 4. El Monóculo Lupa Macro 4K Flotante (Desacoplado) ── */
+.monocle-loupe {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 226px;
+  height: 226px;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -50%) scale(0.85);
+  transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1), transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.32s;
+  will-change: transform, left, top;
+}
+
+body.monocle-active .monocle-loupe {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Marco cilíndrico de latón artesanal */
+.monocle-frame {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  cursor: grab;
+  touch-action: none;
+  filter: drop-shadow(0 20px 50px rgba(0, 0, 0, 0.85));
+}
+
+.monocle-frame:active {
+  cursor: grabbing;
+}
+
+/* Anillo exterior de latón bruñido con tornillos / bisel */
+.monocle-rim {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 4px solid #b89047;
+  background:
+    radial-gradient(circle at 35% 25%, rgba(247, 213, 148, 0.45) 0%, transparent 40%),
+    conic-gradient(from 180deg at 50% 50%, #8c7850 0deg, #d4af37 60deg, #6b5530 120deg, #f7d594 180deg, #8c7850 240deg, #d4af37 300deg, #6b5530 360deg);
+  box-shadow:
+    inset 0 0 10px rgba(0, 0, 0, 0.8),
+    inset 0 0 2px rgba(255, 255, 255, 0.4),
+    0 0 0 1.5px rgba(26, 27, 23, 0.9),
+    0 0 18px rgba(212, 175, 55, 0.35),
+    0 4px 22px rgba(0, 0, 0, 0.7);
+}
+
+/* Aberración cromática periférica sutil en el borde exterior */
+.monocle-rim::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  box-shadow:
+    2px 0 0 rgba(255, 0, 85, 0.35),
+    -2px 0 0 rgba(0, 240, 255, 0.35);
+  pointer-events: none;
+}
+
+/* Bisel interior oscuro de relojero */
+.monocle-rim::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(26, 27, 23, 0.85);
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.9);
+}
+
+/* Lente de cristal de aumento */
+.monocle-glass {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #090a09;
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.9);
+}
+
+/* Superficie de la imagen 4K de alta resolución */
+.monocle-lens-surface {
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  transform-origin: center center;
+  filter: contrast(1.08) brightness(1.03);
+  will-change: background-position, background-size;
+}
+
+/* Curvatura óptica / Viñeteado esférico de lente convexa */
+.monocle-vignette {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, transparent 52%, rgba(0, 0, 0, 0.38) 82%, rgba(10, 11, 10, 0.88) 100%);
+  pointer-events: none;
+}
+
+/* Reflejo especular dinámico del cristal dependiente de aceleración */
+.monocle-glare {
+  position: absolute;
+  top: 6%;
+  left: 12%;
+  width: 76%;
+  height: 48%;
+  border-radius: 50%;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.36) 0%, rgba(255, 255, 255, 0.06) 45%, transparent 70%);
+  transform: rotate(-25deg);
+  pointer-events: none;
+  transition: transform 0.12s ease-out;
+  will-change: transform;
+}
+
+/* Retícula o microrregla óptica de peritaje */
+.monocle-reticle {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.4) 1.5px, transparent 2px),
+    linear-gradient(to right, transparent calc(50% - 0.5px), rgba(212, 175, 55, 0.2) calc(50% - 0.5px), rgba(212, 175, 55, 0.2) calc(50% + 0.5px), transparent calc(50% + 0.5px)),
+    linear-gradient(to bottom, transparent calc(50% - 0.5px), rgba(212, 175, 55, 0.2) calc(50% - 0.5px), rgba(212, 175, 55, 0.2) calc(50% + 0.5px), transparent calc(50% + 0.5px));
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Mango / Asa inferior de latón con anilla de anclaje de cadena */
+.monocle-stem {
+  position: absolute;
+  bottom: -34px;
+  right: 18px;
+  width: 14px;
+  height: 48px;
+  transform-origin: top center;
+  transform: rotate(-35deg);
+  pointer-events: none;
+}
+
+.monocle-stem-grip {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #6b5530 0%, #d4af37 40%, #f7d594 60%, #8c7850 100%);
+  border: 1px solid #4a381c;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+}
+
+.monocle-stem-ring {
+  position: absolute;
+  bottom: -7px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2.5px solid #d4af37;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+/* ── 5. Telemetría HUD y Controles de Zoom ── */
+.monocle-hud {
+  position: absolute;
+  top: calc(100% + 18px);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 260px;
+  max-width: 330px;
+  background: rgba(14, 15, 14, 0.95);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 14px;
+  padding: 10px 14px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.85), 0 0 1px rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  pointer-events: auto;
+  user-select: none;
+  font-family: Inter, sans-serif;
+  color: #eeeae2;
+  text-align: left;
+  transition: border-color 0.25s ease;
+}
+
+.monocle-hud-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.monocle-hud-tag {
+  font-family: Outfit, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #d4af37;
+  text-transform: uppercase;
+}
+
+.monocle-hud-zoom {
+  font-family: Outfit, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #f7d594;
+  background: rgba(212, 175, 55, 0.15);
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  transition: all 0.15s ease;
+}
+
+.monocle-hud-title {
+  font-family: Outfit, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #fff;
+  letter-spacing: -0.01em;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.monocle-hud-detail {
+  font-size: 11px;
+  line-height: 1.4;
+  color: #bdb6a7;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.2s ease;
+}
+
+.monocle-hud-detail strong {
+  color: #f7d594;
+  font-weight: 500;
+}
+
+.monocle-hud-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 8px;
+}
+
+.monocle-btn-zoom {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #c9c5bb;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 10.5px;
+  font-family: Outfit, sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.monocle-btn-zoom:hover {
+  background: rgba(212, 175, 55, 0.2);
+  border-color: #d4af37;
+  color: #fff;
+}
+
+.monocle-btn-zoom.is-active {
+  background: rgba(212, 175, 55, 0.3);
+  border-color: #d4af37;
+  color: #f7d594;
+  font-weight: 600;
+}
+
+.monocle-btn-dock {
+  margin-left: auto;
+  background: none;
+  border: 1px solid rgba(255, 120, 120, 0.3);
+  color: #e8a5a5;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 10.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.monocle-btn-dock:hover {
+  background: rgba(255, 80, 80, 0.18);
+  border-color: #ff6b6b;
+  color: #fff;
+}
+
+/* ── 6. Barra Dock de Control Flotante (Inferior Pantalla) ── */
+.monocle-dock-bar {
+  position: fixed;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  z-index: 9998;
+  background: rgba(14, 15, 14, 0.94);
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 30px;
+  padding: 8px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  opacity: 0;
+  visibility: hidden;
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.32s ease, visibility 0.32s;
+}
+
+body.monocle-active .monocle-dock-bar {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+.monocle-dock-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: Inter, sans-serif;
+  font-size: 12px;
+  color: #eeeae2;
+}
+
+.monocle-dock-info strong {
+  color: #f7d594;
+  font-weight: 600;
+}
+
+.monocle-dock-hint {
+  font-size: 10.5px;
+  color: #9c978b;
+  margin-left: 4px;
+}
+
+.monocle-dock-dock-btn {
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  color: #f7d594;
+  padding: 5px 14px;
+  border-radius: 16px;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.monocle-dock-dock-btn:hover {
+  background: rgba(212, 175, 55, 0.32);
+  border-color: #d4af37;
+  color: #fff;
+}
+
+/* ── 7. Respeto a Accesibilidad y Dispositivos Móviles ── */
+@media (max-width: 768px) {
+  .monocle-loupe {
+    width: 164px;
+    height: 164px;
+  }
+  .monocle-stem {
+    bottom: -24px;
+    right: 12px;
+    width: 11px;
+    height: 36px;
+  }
+  .monocle-hud {
+    min-width: 220px;
+    max-width: 270px;
+    padding: 8px 10px;
+    top: calc(100% + 12px);
+  }
+  .monocle-hud-title {
+    font-size: 13px;
+  }
+  .monocle-hud-detail {
+    font-size: 10px;
+  }
+  .monocle-dock-bar {
+    bottom: 12px;
+    padding: 6px 14px;
+    gap: 8px;
+    font-size: 11px;
+  }
+  .monocle-dock-hint {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .monocle-hero-ring {
+    animation: none;
+  }
+  .monocle-loupe {
+    transition: none;
+  }
+  .monocle-hero-hotspot {
+    transition: none;
+  }
+  .monocle-dock-bar {
+    transition: none;
+  }
+  .monocle-chain-canvas {
+    display: none;
+  }
+}

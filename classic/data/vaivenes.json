@@ -233,34 +233,56 @@
       "eye_tone": "red"
     },
     {
-      "src": "/images/catalogo/mario-moreno-hq-01.webp",
-      "width": 1564,
-      "height": 2048,
-      "caption": "El rostro en blanco y negro convive con la corbata roja y las intervenciones textiles.",
-      "source": "https://www.facebook.com/media/set/?set=a.1580369216775827&type=3",
-      "sha256": "b0d9bf3e15f70d86be46d394ef6e079070836f057d552eb42e21cd6f7c3f1bad",
-      "source_local": "classic/images/artworks/616822144_1580323063447109_589182952237233174_n.webp",
-      "title": "Mario Moreno",
-      "link": "/obra/mario-moreno/",
-      "original": "https://www.facebook.com/media/set/?set=a.1580369216775827&type=3",
-      "slug": "mario-moreno",
+      "src": "/images/catalogo/out-por-los-pelos-master-4k.jpg",
+      "width": 2000,
+      "height": 2435,
+      "caption": "Andre Agassi en Roland Garros de 1990. El marco se convierte en pista: fieltro, redes y cabellos acompañan el retrato.",
+      "source": "https://www.facebook.com/media/set/?set=a.4622940807780595&type=3",
+      "sha256": "92aad807f4dadd2efceb409302869f3650d37e20e199c7cafbeb67a405369d2f",
+      "title": "OUT (por los pelos)",
+      "link": "/obra/out-por-los-pelos/",
+      "original": "https://www.facebook.com/media/set/?set=a.4622940807780595&type=3",
+      "slug": "out-por-los-pelos",
       "stage": "obra",
-      "work_slug": "mario-moreno",
+      "work_slug": "out-por-los-pelos",
       "irises": [
         [
-          0.318,
-          0.332,
-          0.013,
-          0.007
+          0.329,
+          0.369,
+          0.012,
+          0.008
         ],
         [
-          0.498,
-          0.332,
-          0.014,
+          0.585,
+          0.317,
+          0.012,
           0.008
         ]
       ],
-      "eye_tone": "red"
+      "eye_tone": "blue",
+      "images": [
+        {
+          "src": "/images/catalogo/out-por-los-pelos-master-4k.jpg",
+          "width": 2000,
+          "height": 2435,
+          "caption": "OUT (por los pelos) — Fotografía master de la obra enmarcada completa.",
+          "sha256": "92aad807f4dadd2efceb409302869f3650d37e20e199c7cafbeb67a405369d2f"
+        },
+        {
+          "src": "/images/catalogo/out-por-los-pelos-01.jpg",
+          "width": 1356,
+          "height": 1684,
+          "caption": "Obra completa.",
+          "sha256": "64f6fd12a965e429b105d98b5a60aa1a8b0fff403d2460fe5af5cdb1723825ae"
+        },
+        {
+          "src": "/images/catalogo/out-por-los-pelos-02.jpg",
+          "width": 832,
+          "height": 403,
+          "caption": "Detalle del passepartout y el fieltro de tenis.",
+          "sha256": "fc8db39ee7f1e130e8087d32103f54edd79027e07f2bad8ad398a19d9ba6b99f"
+        }
+      ]
     },
     {
       "slug": "pippilotta",

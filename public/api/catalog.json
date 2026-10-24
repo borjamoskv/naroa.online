@@ -542,13 +542,13 @@
       "slug": "mario-moreno",
       "title": "Mario Moreno",
       "category": "collage",
-      "series": "Vaivenes",
+      "series": "Tributos",
       "technique": "Acrílico, rotulador y collage textil",
       "support": "Lienzo",
       "dimensions": "Lienzo: 24 × 18 cm · Marco: 32 × 26 cm",
       "materials": null,
       "year": null,
-      "story": "Mario Moreno aparece en blanco y negro, atravesado por pequeñas intervenciones textiles: seda roja en la corbata, vaquero negro y un retal de lienzo como pañuelo.",
+      "story": "En este retrato de Mario Moreno, Naroa sostiene una mirada penetrante a grafito y carboncillo en blanco y negro, rasgada de improviso por una tridimensionalidad táctil: seda roja con lunares blancos en la corbata, tela vaquera negra en las solapas y un retal de lienzo crudo como pañuelo de bolsillo. Un tributo sobrio donde la elegancia clásica del cómico dialoga con el volumen textil.",
       "url": "https://naroagutierrezgil.com/obra/mario-moreno/",
       "cover_url": "https://naroagutierrezgil.com/immersive/media/mario-moreno-hq-01-b0d9bf3e15f7-view.webp",
       "photos": [
@@ -572,13 +572,6 @@
           "height": 1188,
           "caption": "Detalle de corbata, solapa y pañuelo",
           "sha256": "a1e804d5526516af981cac8ee91614d8839080d3664606e406e8dba47b34c35e"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/cantinflowers-4k.webp",
-          "width": 3656,
-          "height": 2456,
-          "caption": "Composición master 4K de Mario Moreno (Cantinflas) con flores y collage.",
-          "sha256": "9dd913cf1c42a8278cff1b1c2daa8cca4ea362f1e658353065bd5fadd142e3d8"
         }
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Mario%20Moreno",
@@ -2500,7 +2493,7 @@
       "slug": "out-por-los-pelos",
       "title": "OUT (por los pelos)",
       "category": "collage",
-      "series": null,
+      "series": "Vaivenes",
       "technique": "Lápices de colores y collage",
       "support": "Marco con passepartout intervenido",
       "dimensions": "50 × 40 cm",

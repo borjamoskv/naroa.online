@@ -323,7 +323,8 @@
     },
     {
       "slug": "i-got-you-babe",
-      "mode": "Z",
+      "mode": "H",
+      "direction": 1,
       "hold": 25,
       "explore": 0
     },
