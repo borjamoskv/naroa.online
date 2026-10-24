@@ -82,8 +82,9 @@ def check(output):
         assert len(page.ids) == len(set(page.ids)), (file, "duplicate ID")
         assert page.canonical == "https://naroagutierrezgil.com" + route, file
         assert page.favicon and page.favicon.startswith("/immersive/favicon-amy-"), file
-        assert page.json_blocks and page.json_blocks[0].get("@type"), file
-        schema0 = page.json_blocks[0]
+        raw_schema = page.json_blocks[0]
+        schema0 = raw_schema["@graph"][0] if "@graph" in raw_schema else raw_schema
+        assert schema0.get("@type"), file
         assert schema0.get("inLanguage") == "es-ES", (file, "missing inLanguage")
         assert schema0.get("dateModified") == manifest["reviewed"], (file, "missing dateModified")
         assert schema0.get("primaryImageOfPage", {}).get("width", 0) > 0, (file, "missing primaryImageOfPage dimensions")

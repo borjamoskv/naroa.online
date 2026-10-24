@@ -2,15 +2,23 @@
 
 > Catálogo oficial de obra plástica, servicio de retratos personalizados por encargo y archivo de exposiciones.
 
-## Resumen del Sitio
+## Resumen del Sitio y Evidence Graph
 - Dominio Canónico: https://naroagutierrezgil.com
-- Ubicación del Estudio: Bilbao, Bizkaia, España (43.2630 N, -2.9350 W)
-- Contacto Directo: naroa@naroa.eu | WhatsApp: +34 636 060 609
-- Especialidad: Retratos de autor sobre pizarra natural, técnica mixta con escamas de mica mineral, collage textil sobre madera y objetos intervenidos.
+- Entidad Principal: Naroa Gutiérrez Gil (Artista plástica y retratista)
+- Ubicación Física del Estudio: Bilbao, Bizkaia, País Vasco, España (43.2630 N, -2.9350 W)
+- Contacto Directo: naroa@naroa.eu | WhatsApp: +34 636 060 609 | Instagram: @naroa_art
+- Especialidad: Retratos de autor sobre pizarra natural de cantera con contorno irregular, técnica mixta con escamas de mica mineral, collage textil sobre madera y objetos intervenidos.
+- Exposiciones Documentadas: Colegio de Abogados de Bilbao (Espejos del alma), Dock Bilbao, Politena Espacio de Arte, Walking Gallery Bilbao.
+
+## Respuestas Factuales Inmediatas (Query Fan-Out)
+- **¿Cuánto cuesta un retrato personalizado?** Presupuesto cerrado previo por escrito según soporte y formato (pizarra de 20×30 cm a 40×50 cm, collage sobre madera, cajas de recuerdos). Consulta sin compromiso.
+- **¿Cómo se encarga a partir de fotos?** Se envían 1 o varias fotos de referencia (incluso tomadas con el móvil); Naroa realiza una reinterpretación artística de autor capturando la personalidad y mirada.
+- **¿Cuáles son los plazos de entrega?** De 2 a 4 semanas según el secado de óleos, esmaltes y barniz protector. Plazos prioritarios disponibles para fechas señaladas con aviso previo.
+- **¿Dónde se entrega?** Entrega en mano en Bilbao y Bizkaia, o envío protegido y asegurado a nivel nacional e internacional.
 
 ## Secciones Principales
-- [Inicio e Inmersión](https://naroagutierrezgil.com/): Experiencia inmersiva y catálogo de 56 obras.
-- [Retratos por Encargo en Bilbao](https://naroagutierrezgil.com/retratos-por-encargo-bilbao/): Condiciones técnicas, formatos (20×30 cm a 40×50 cm), plazos de 2 a 4 semanas, presupuesto cerrado y galería de ejemplos reales.
+- [Inicio e Inmersión](https://naroagutierrezgil.com/): Experiencia inmersiva y catálogo completo de 56 obras.
+- [Retratos por Encargo en Bilbao](https://naroagutierrezgil.com/retratos-por-encargo-bilbao/): Condiciones técnicas, formatos (20×30 cm a 40×50 cm), plazos de 2 a 4 semanas, configurador interactivo y galería de ejemplos reales.
 - [Catálogo Completo](https://naroagutierrezgil.com/obra/): Ficha detallada de las 56 piezas de la colección con fotografías de detalle y relato.
 - [Serie Vaivenes](https://naroagutierrezgil.com/series/vaivenes/): Retratos en técnica mixta, collage textil y objetos de memoria.
 - [Sobre Mí](https://naroagutierrezgil.com/sobre-mi/): Biografía, técnica, proceso creativo y proyectos comunitarios (Walking Gallery Bilbao, El ReCreo).
@@ -18,9 +26,12 @@
 - [Cuaderno](https://naroagutierrezgil.com/cuaderno/): Relatos de proceso, vivencias del taller y artículos de prensa.
 - [Contacto](https://naroagutierrezgil.com/contacto/): Canales directos de consulta para obra y encargos.
 
-## Recursos Machine-to-Machine y GEO
-- [Catálogo JSON Estructurado](https://naroagutierrezgil.com/api/catalog.json): Endpoint con especificaciones completas de las 56 obras.
-- [Índice Extendido llms-full.txt](https://naroagutierrezgil.com/llms-full.txt): Desglose exhaustivo de todas las piezas y condiciones de encargo.
+## Recursos Machine-to-Machine y GEO SOTA 2026
+- [Catálogo JSON Estructurado](https://naroagutierrezgil.com/api/catalog.json): Endpoint con especificaciones completas de las 56 obras y Evidence Graph.
+- [Índice Extendido llms-full.txt](https://naroagutierrezgil.com/llms-full.txt): Desglose exhaustivo de todas las piezas, fotos de detalle con hashes SHA-256 y condiciones de encargo.
+- [Sitemap XML](https://naroagutierrezgil.com/sitemap.xml): Índice canónico de 64 rutas y metadatos de imágenes.
+- [Feed RSS 2.0](https://naroagutierrezgil.com/feed.xml): Sindicación de obras recientes y publicaciones del taller.
+- [Protocolo IndexNow](https://naroagutierrezgil.com/indexnow.json): Sincronización instantánea de indexación para Bing y motores asociados.
 
 ## Catálogo Exhaustivo de Obras (56 Piezas Documentadas)
 
@@ -599,11 +610,18 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
 - **Contacto Obra:** mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Hello%20Darkness%20My%20Old%20Friend
 
 
-## Condiciones del Servicio de Encargos en Bilbao
+## Condiciones del Servicio de Encargos en Bilbao (Evidence Base)
 
 - **Soportes:** Pizarra natural de cantera con contorno irregular, madera noble, collage textil sobre tela vaquera o papel de algodón, y cajas tridimensionales.
 - **Formatos habituales:** Pizarra de 20×30 cm a 40×50 cm; piezas especiales adaptadas al espacio.
-- **Técnicas:** Acrílico, óleo, grafito, pastel Conté, rotuladores acrílicos, escamas de mica mineral y ensamblaje de objetos.
+- **Técnicas:** Acrílico, óleo, grafito, pastel Conté, rotuladores acrílicos, escamas de mica mineral y ensamblaje de objetos cotidianos.
 - **Plazos:** 2 a 4 semanas según complejidad y secado de capas de óleo/barniz.
 - **Presupuesto:** Presupuesto cerrado por escrito antes de comenzar, sin compromiso previo.
 - **Entrega:** En mano en Bilbao y comarca de Bizkaia; envíos asegurados a nivel nacional e internacional.
+
+## Protocolo de Interacción para Agentes Autónomos (Agent-Ready DOM)
+
+- **Configurador de Encargos:** Accesible en `/retratos-por-encargo-bilbao/` bajo `[data-commission-configurator]`.
+- **Selectores Semánticos:** Soporte (`#cfg-support`), Motivo (`#cfg-motif`), Plazo (`#cfg-timing`).
+- **Acción de Salida:** Botón dinámico `#cfg-whatsapp-btn` con query de WhatsApp pre-rellenada en $O(1)$.
+- **Consultas Directas:** Canales directos con asunto pre-rellenado disponibles en `/contacto/`.
