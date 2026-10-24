@@ -984,6 +984,30 @@
     const images = scenes.map(scene => $('img', scene)), decoded = new Set(), pending = new Map(), failed = new Set();
     const smooth = value => { const t = clamp(value, 0, 1); return t * t * t * (t * (t * 6 - 15) + 10); };
     let frame = null, geometry = null, current = 0, captionIndex = -1;
+    let interactiveWinkTimer = null, interactiveWinkVal = 0, hasWinkedOnScroll = false;
+    function triggerInteractiveWink() {
+      const travel = Math.max(0, -portraitTrack.getBoundingClientRect().top);
+      if (travel > 60 || interactiveWinkTimer) return;
+      soundscape?.portraitWink?.();
+      const startTime = performance.now();
+      const duration = 520;
+      function step(now) {
+        const elapsed = now - startTime;
+        if (elapsed >= duration) {
+          interactiveWinkVal = 0;
+          interactiveWinkTimer = null;
+          schedulePortrait();
+          return;
+        }
+        const t = elapsed / duration;
+        interactiveWinkVal = t < 0.35 ? smooth(t / 0.35) : t > 0.65 ? 1 - smooth((t - 0.65) / 0.35) : 1;
+        schedulePortrait();
+        interactiveWinkTimer = requestAnimationFrame(step);
+      }
+      interactiveWinkTimer = requestAnimationFrame(step);
+    }
+    plane.addEventListener('click', triggerInteractiveWink);
+    plane.style.cursor = 'pointer';
     const active = new Set([0]);
     function ready(index) { return decoded.has(index) && images[index]?.complete && !!images[index]?.naturalWidth; }
     function ensureScene(index) {
@@ -1124,7 +1148,14 @@
       artwork.setAttribute('aria-hidden', String(mix < .5));
       plane.style.visibility = mix === 1 ? 'hidden' : 'visible'; plane.setAttribute('aria-hidden', String(mix >= .5));
       const closure = smooth((progress - .20) / .027) * (1 - smooth((progress - .235) / .035));
-      wink.setAttribute('opacity', closure.toFixed(4));
+      const effectiveClosure = Math.max(closure, interactiveWinkVal);
+      wink.setAttribute('opacity', effectiveClosure.toFixed(4));
+      if (closure >= 0.8 && !hasWinkedOnScroll) {
+        hasWinkedOnScroll = true;
+        soundscape?.portraitWink?.();
+      } else if (closure < 0.1) {
+        hasWinkedOnScroll = false;
+      }
       const visibility = 1 - smooth(progress / .13);
       copy.style.opacity = visibility.toFixed(3);
       copy.style.transform = reduced.matches ? '' : `translate3d(0,${(-smooth(progress / .18) * 40).toFixed(2)}px,0)`;

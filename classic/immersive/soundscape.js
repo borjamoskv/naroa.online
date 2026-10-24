@@ -495,6 +495,36 @@
       });
     } catch {}
   }
+  let lastWinkSlug = '';
+  function playPortraitWink() {
+    lastWinkSlug = 'naroa-monoculo';
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      try { navigator.vibrate([8, 20, 12]); } catch {}
+    }
+    if (!context || !engine || context.state !== 'running') return;
+    try {
+      const now = context.currentTime + 0.002;
+      const target = engine.compressor || engine.master;
+      if (typeof context.createOscillator === 'function') {
+        const osc = context.createOscillator();
+        const gain = context.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(2400, now);
+        if (osc.frequency.exponentialRampToValueAtTime) {
+          osc.frequency.exponentialRampToValueAtTime(1400, now + 0.035);
+        }
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.linearRampToValueAtTime(0.24, now + 0.003);
+        if (gain.gain.exponentialRampToValueAtTime) {
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.045);
+        }
+        osc.connect(gain);
+        gain.connect(target);
+        osc.start(now);
+        osc.stop(now + 0.05);
+      }
+    } catch {}
+  }
   function playCameraFlash() {
     if (!context || !engine || context.state !== 'running') return;
     try {
@@ -902,6 +932,9 @@
     wineClink() {
       playWineGlassClink();
     },
+    portraitWink() {
+      playPortraitWink();
+    },
     get lastUtterance() { return lastUtterance; },
     get lastFlashSlug() { return lastFlashSlug; },
     get lastPunchSlug() { return lastPunchSlug; },
@@ -909,7 +942,8 @@
     get lastDeltoyaSlug() { return lastDeltoyaSlug; },
     get lastPuzzleSlug() { return lastPuzzleSlug; },
     get lastClockSlug() { return lastClockSlug; },
-    get lastWineSlug() { return lastWineSlug; }
+    get lastWineSlug() { return lastWineSlug; },
+    get lastWinkSlug() { return lastWinkSlug; }
   });
   paint();
 })();
