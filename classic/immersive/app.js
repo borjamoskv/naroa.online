@@ -659,6 +659,30 @@
         }
       });
       const activeSlug = transition && fraction >= .5 ? works[incoming].slug : works[base].slug;
+      const heroThreshold = $('[data-hero-threshold]', stage);
+      if (heroThreshold) {
+        const thresholdPlane = $('[data-threshold-plane]', heroThreshold);
+        const thresholdWink = $('[data-threshold-wink]', heroThreshold);
+        const thresholdCopy = $('[data-threshold-copy]', heroThreshold);
+        if (still || pose.distance >= 0.36) {
+          heroThreshold.style.visibility = 'hidden';
+          heroThreshold.style.opacity = '0';
+          if (thresholdCopy) thresholdCopy.style.pointerEvents = 'none';
+        } else {
+          const tRaw = clamp(pose.distance / 0.36, 0, 1);
+          const t = smooth(tRaw);
+          const scale = Math.exp(Math.log(7.2) * t);
+          const fade = 1 - smooth((tRaw - 0.45) / 0.55);
+          heroThreshold.style.visibility = 'visible';
+          heroThreshold.style.opacity = fade.toFixed(4);
+          if (thresholdPlane) thresholdPlane.style.transform = `scale(${scale.toFixed(4)})`;
+          if (thresholdWink) thresholdWink.style.opacity = (tRaw >= 0.08 && tRaw <= 0.48) ? '1' : '0';
+          if (thresholdCopy) {
+            thresholdCopy.style.opacity = (1 - smooth(tRaw / 0.32)).toFixed(4);
+            thresholdCopy.style.pointerEvents = tRaw < 0.25 ? 'auto' : 'none';
+          }
+        }
+      }
       if (works[base].slug === 'ajenjo-cam' || works[incoming].slug === 'ajenjo-cam') {
         if (!ajenjoVisited && (works[state.index].slug === 'ajenjo-cam' || (transition && fraction >= 0.25))) {
           ajenjoVisited = true;
@@ -914,6 +938,11 @@
       if (works[state.index]?.slug === 'dustin') change(0);
     });
     $('[data-fit]', stage).addEventListener('click', () => { pause(); state.fit = !state.fit; images[state.index].src = state.fit ? works[state.index].photos[0].src : works[state.index].cover; resetPan(); metadata(); render(); });
+    $('[data-threshold-enter]', stage)?.addEventListener('click', () => {
+      window.NAROA_SOUND?.menuNote?.(0);
+      window.scrollTo({ top: Math.ceil(geometry.top + 0.38 * geometry.unit), behavior: reduced.matches ? 'auto' : 'smooth' });
+      scheduleScroll();
+    });
     $('[data-open-story]', stage).addEventListener('click', () => openDialog('#story-dialog'));
     document.querySelector('[data-share-link]')?.addEventListener('click', e => {
       const p = works[state.index];

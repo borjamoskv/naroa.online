@@ -37,6 +37,14 @@
           "source": "https://www.facebook.com/media/set/?set=a.1571125317700217&type=3",
           "sha256": "29a00186ab77d4603ab8774241c9867b7d28276ec80184350fc82b712647c7cc",
           "source_local": "raw_artworks_facebook/rocks/1571120761034006.jpg"
+        },
+        {
+          "src": "/images/catalogo/amy-rocks-4k.webp",
+          "width": 3840,
+          "height": 2880,
+          "caption": "Fotografía master 4K del retrato de Amy Winehouse sobre plato de pizarra natural.",
+          "source": null,
+          "sha256": "28dc695129e36e5e2eba4cd1f052397444e9cc9468938f663b3b5bce3c5dba09"
         }
       ],
       "dimensions": "18 × 10 × 0,6 cm",
@@ -92,6 +100,14 @@
           "caption": "Detalle del retrato",
           "source": "https://www.facebook.com/photo/?fbid=1552126032933479&set=a.1552149902931092",
           "sha256": "0b7e2cff277e5c7933464a833546389c23f276cd9cfeac2c6233ada612f9e511"
+        },
+        {
+          "src": "/images/catalogo/marilyn-rocks-4k.webp",
+          "width": 2994,
+          "height": 3840,
+          "caption": "Fotografía master 4K de Marilyn Monroe con escamas de mica y brillantina sobre pizarra.",
+          "source": null,
+          "sha256": "c539cc8eb9ee060139a7222331fe0fce460fea5c083247738ae394e1e2c11c4e"
         }
       ],
       "dimensions": "18 × 10 × 0,6 cm",
@@ -135,6 +151,14 @@
           "caption": "Escala de la pieza junto a un rotulador",
           "source": "https://www.facebook.com/photo/?fbid=1562089398603809&set=a.1562090265270389",
           "sha256": "5612514fdd462044fac8d5c33aec88f438f0f8afe70a5e6e6a21cbd6165986a8"
+        },
+        {
+          "src": "/images/catalogo/johnny-rocks-4k.webp",
+          "width": 2932,
+          "height": 3840,
+          "caption": "Fotografía master 4K del retrato de Johnny Depp sobre plato de pizarra.",
+          "source": null,
+          "sha256": "5221c7cc4efc1b2485e2817ff0ec2681a3ea8093612bc00d1ddcbb98b91ef566"
         }
       ],
       "dimensions": "18 × 10 × 0,6 cm",
@@ -178,6 +202,14 @@
           "caption": "Detalle del rostro",
           "source": "https://www.facebook.com/photo/?fbid=1543115983834484&set=a.1543127323833350",
           "sha256": "67215656cf0f34170464bff19c3dd32d336f45294f2d907347d362a9837f508a"
+        },
+        {
+          "src": "/images/catalogo/james-rocks-4k.webp",
+          "width": 2882,
+          "height": 3840,
+          "caption": "Fotografía master 4K de James Dean sobre plato de pizarra.",
+          "source": null,
+          "sha256": "61a3e416e1bb9abda79fdde1d2b8d1758d7f2baa4ea9d86fe62d31bfe53fdb0c"
         }
       ],
       "dimensions": "18 × 10 × 0,6 cm",
@@ -276,6 +308,22 @@
           "caption": "Detalle de corbata, solapa y pañuelo",
           "source": "https://www.facebook.com/photo/?fbid=1580323013447114&set=a.1580369216775827",
           "sha256": "a1e804d5526516af981cac8ee91614d8839080d3664606e406e8dba47b34c35e"
+        },
+        {
+          "src": "/images/catalogo/cantinflowers-4k.webp",
+          "width": 3656,
+          "height": 2456,
+          "caption": "Composición master 4K de Mario Moreno (Cantinflas) con flores y collage.",
+          "source": null,
+          "sha256": "9dd913cf1c42a8278cff1b1c2daa8cca4ea362f1e658353065bd5fadd142e3d8"
+        },
+        {
+          "src": "/images/catalogo/mario-moreno-04.jpg",
+          "width": 720,
+          "height": 884,
+          "caption": "Detalle de los acabados, ojos y expresión de Cantinflas.",
+          "source": null,
+          "sha256": "90c2c8346e796e898d345c1f394a3abb23d34331c8a47b8e7169f680a931ed03"
         }
       ],
       "dimensions": "Lienzo: 24 × 18 cm · Marco: 32 × 26 cm",
@@ -364,6 +412,14 @@
           "source": "https://www.facebook.com/media/set/?set=a.858798248932931&type=3",
           "sha256": "6ae2c81999563d6b0a250c53ad01e44d9a880c99c4ecfc9b34ad6608ecde20f2",
           "source_local": "raw_artworks_facebook/enlatas/858771938935562.jpg"
+        },
+        {
+          "src": "/images/catalogo/amor-en-conserva-4k.webp",
+          "width": 3840,
+          "height": 2872,
+          "caption": "Fotografía master 4K de Amor en Conserva: relieve tridimensional en lata intervenida.",
+          "source": null,
+          "sha256": "09efc6b14e7c1659d609e8374c3264c171fcb2a304ed5533a6342ca76d46c03c"
         }
       ],
       "dimensions": null,
@@ -738,6 +794,22 @@
           "caption": "Detalle de la composición",
           "source": "https://www.facebook.com/photo/?fbid=1069042134575207&set=a.1069042964575124",
           "sha256": "0ac10b611798de6e8e947bd76f681e71530f1eecd729fa5cb3b8aa0d570e48df"
+        },
+        {
+          "src": "/images/catalogo/red-red-wine-03.jpg",
+          "width": 843,
+          "height": 678,
+          "caption": "Detalle de relieve, etiqueta y textura vinícola.",
+          "source": null,
+          "sha256": "f98706b4f8e9c343a22818884eca7d48a2df8bb682577069451fcce00ac4f571"
+        },
+        {
+          "src": "/images/catalogo/red-red-wine-04.jpg",
+          "width": 843,
+          "height": 506,
+          "caption": "Vista en perspectiva del volumen y la botella.",
+          "source": null,
+          "sha256": "2ebcdf7c2c269daca96d19cb4a58c413bfe4f16284f4481124dd42d6d944a589"
         }
       ],
       "dimensions": "Papel: A5",
@@ -1150,6 +1222,14 @@
           "caption": "Reverso de la lata",
           "source": "https://www.facebook.com/photo/?fbid=606809277465164&set=a.606818890797536",
           "sha256": "7f52ebef12a026f67995d5ffebd3025f49eecfea0ff578c2b8767d9c0646a06f"
+        },
+        {
+          "src": "/images/catalogo/dar-la-lata-04.jpg",
+          "width": 843,
+          "height": 632,
+          "caption": "Detalle del reverso y grabado de la lata.",
+          "source": null,
+          "sha256": "54a599f7815236e5234c07de657dbe2d854c067b477eb0ba1d5c9cc1dd74987d"
         }
       ],
       "dimensions": null,
@@ -1183,6 +1263,22 @@
           "caption": "Otra variante de PostalaK",
           "source": "https://www.facebook.com/photo/?fbid=1087698802709540&set=a.1087704452708975",
           "sha256": "668f5d1af2dcba2df5e09d91ab040a9a27785e02a836b3c97690dcb3dcbb2aec"
+        },
+        {
+          "src": "/images/catalogo/marian-de-miranda-luciendo-la-pantorrilla-05.jpg",
+          "width": 552,
+          "height": 828,
+          "caption": "Detalle de encaje y pantorrilla con matices de época.",
+          "source": null,
+          "sha256": "2d7761657ef8a5d1f67ecd0db05d372c5af8f1e1f2bcc3ffcbd1f977475f43f1"
+        },
+        {
+          "src": "/images/catalogo/marian-de-miranda-luciendo-la-pantorrilla-06.jpg",
+          "width": 552,
+          "height": 828,
+          "caption": "Detalle de textura, veladuras y color.",
+          "source": null,
+          "sha256": "2dee333ff68021fbd60fe85bcfa38c7a8a28c570421ea343cd4f27a3ed25687a"
         }
       ],
       "dimensions": "Dibujo: 20 × 10 cm · Collage físico: 23 × 18 cm",
@@ -1388,6 +1484,14 @@
           "caption": "Otra expresión del personaje",
           "source": "https://www.facebook.com/photo/?fbid=765382171607873&set=a.765384181607672",
           "sha256": "e0c48e4960df4fb6c8ac9dba2fbf00b04c57ea315758c4a109968c87533f5d7e"
+        },
+        {
+          "src": "/images/catalogo/monster-dragon-4k.webp",
+          "width": 3840,
+          "height": 2872,
+          "caption": "Fotografía master 4K de Monster Dragon con caracterización completa.",
+          "source": null,
+          "sha256": "6a153d1ee2fa74d2624d1ee55374ff32f738e18698bc86b68a83ff262d21ebeb"
         }
       ],
       "dimensions": null,
@@ -2234,6 +2338,14 @@
           "source": null,
           "sha256": "d00881c21faed4404688946cdb589a7a521ee3906705863b513c0860053a941e",
           "source_local": "classic/images/catalogo/la-pensadora-original-01-2048.jpg"
+        },
+        {
+          "src": "/images/catalogo/la-pensadora-hq-02.webp",
+          "width": 1600,
+          "height": 1200,
+          "caption": "Detalle de texturas y acrílico sobre lienzo 3D con laterales pintados.",
+          "source": null,
+          "sha256": "6fcd81721c8182d91851457f8c0eb5312d7f2496b16a9fb8deda2843c900e09f"
         }
       ],
       "source": null,
