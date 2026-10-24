@@ -512,6 +512,13 @@
     function fireDeltoya() {
       soundscape?.deltoya?.();
     }
+    let gameOverVisited = false;
+    function fireGameOver8Bit() {
+      soundscape?.gameOver?.();
+      if (!soundscape?.gameOver) {
+        window.NAROA_SOUND?.gameOver?.();
+      }
+    }
     let punchImpact = stage.querySelector('[data-punch-impact]');
     if (!punchImpact) {
       punchImpact = document.createElement('div');
@@ -840,8 +847,9 @@
         const isJamesToMario = transition && works[base]?.slug === 'james-rocks' && works[incoming]?.slug === 'mario-moreno';
         const isJaioTo13n = transition && works[base]?.slug === 'custom-jaio' && works[incoming]?.slug === '13n';
         const isBowieToOlinga = transition && works[base]?.slug === 'el-hombre-que-susurraba-a-las-estrellas' && works[incoming]?.slug === 'olinga-a-la-naranja';
+        const isDustinToGameOver = transition && works[base]?.slug === 'dustin' && works[incoming]?.slug === 'game-over';
         paintedScenes.add(index);
-        const isTopOutgoing = isRockaToHugo || isAmorToAmy || isJamesToMario || isJaioTo13n || isRaraToAmor || isBowieToOlinga;
+        const isTopOutgoing = isRockaToHugo || isAmorToAmy || isJamesToMario || isJaioTo13n || isRaraToAmor || isBowieToOlinga || isDustinToGameOver;
         scene.style.visibility = 'visible'; scene.style.zIndex = isTopOutgoing ? (outgoing ? '2' : '1') : (outgoing ? '1' : '2');
         scene.style.willChange = transition ? 'opacity,transform' : 'auto'; image.style.willChange = still ? 'auto' : 'transform';
         scene.style.clipPath = 'inset(0)'; scene.style.opacity = '1'; scene.style.transform = 'translate3d(0px,0px,0)';
@@ -1062,6 +1070,26 @@
               const olingaScale = 0.95 + 0.13 * smooth(fraction);
               image.style.transform = `scale(${olingaScale.toFixed(5)})`;
             }
+          } else if (isDustinToGameOver) {
+            stage.classList.add('is-glitching');
+            if (outgoing) {
+              const glitchJitterX = (Math.sin(fraction * 65.0) * (8.0 + fraction * 22.0)).toFixed(2);
+              const glitchJitterY = (Math.cos(fraction * 45.0) * (3.0 + fraction * 10.0)).toFixed(2);
+              const rgbDist = (fraction * 20.0).toFixed(2);
+              const dustinScale = 1.08 + fraction * 0.35;
+              scene.style.transform = `translate3d(${glitchJitterX}px,${glitchJitterY}px,0)`;
+              image.style.transform = `scale(${dustinScale.toFixed(5)})`;
+              image.style.filter = `drop-shadow(${rgbDist}px 0 0 #ff0055) drop-shadow(-${rgbDist}px 0 0 #00f0ff) brightness(${(1 + Math.sin(fraction * 30.0) * 0.45).toFixed(3)}) contrast(${(1 + fraction * 0.6).toFixed(3)})`;
+              scene.style.opacity = fraction >= 0.75 ? smooth((1 - fraction) / 0.25).toFixed(4) : '1';
+            } else {
+              const inGlitchX = (Math.sin((1 - fraction) * 50.0) * ((1 - fraction) * 16.0)).toFixed(2);
+              const inRgb = ((1 - fraction) * 14.0).toFixed(2);
+              const gameScale = 0.94 + 0.14 * smooth((fraction - 0.25) / 0.75);
+              scene.style.transform = `translate3d(${inGlitchX}px,0,0)`;
+              scene.style.opacity = fraction < 0.25 ? '0' : smooth((fraction - 0.25) / 0.35).toFixed(4);
+              image.style.transform = `scale(${gameScale.toFixed(5)})`;
+              image.style.filter = `drop-shadow(${inRgb}px 0 0 #ff0055) drop-shadow(-${inRgb}px 0 0 #00f0ff) brightness(${(1 + (1 - fraction) * 0.35).toFixed(3)})`;
+            }
           } else {
             image.style.transform = `scale(${Math.exp(Math.log(1.08) + Math.log(maxScale / 1.08) * close).toFixed(5)})`;
             if (!outgoing) scene.style.opacity = smooth((fraction - .40) / .20).toFixed(4);
@@ -1175,11 +1203,27 @@
           }, 2400);
         }
         stage.dataset.finale = 'silence';
+      } else if (works[base].slug === 'game-over' || works[incoming].slug === 'game-over') {
+        stage.dataset.finale = 'gameover';
+        stage.classList.remove('is-silent-epilogue');
+        dustinVisited = false;
+        clearTimeout(dustinEpilogueTimer);
       } else {
         dustinVisited = false;
         clearTimeout(dustinEpilogueTimer);
         stage.classList.remove('is-silent-epilogue');
         delete stage.dataset.finale;
+      }
+      if (works[base].slug === 'game-over' || works[incoming].slug === 'game-over') {
+        if (!gameOverVisited && (works[state.index].slug === 'game-over' || (transition && works[incoming].slug === 'game-over' && fraction >= 0.35))) {
+          gameOverVisited = true;
+          fireGameOver8Bit();
+        }
+      } else {
+        gameOverVisited = false;
+      }
+      if (!isDustinToGameOver && works[state.index]?.slug !== 'game-over') {
+        stage.classList.remove('is-glitching');
       }
       if (works[base].slug === 'saio-puzzle' || works[incoming].slug === 'saio-puzzle') {
         if (!puzzleVisited && (works[state.index].slug === 'saio-puzzle' || (transition && works[incoming].slug === 'saio-puzzle' && fraction >= 0.70))) {
@@ -1317,7 +1361,11 @@
       if (still) restCamera();
       const cue = $('[data-journey-cue]', stage);
       if (works[state.index]?.slug === 'dustin' && !transition) {
-        cue.textContent = 'La última nota ya es silencio · Volver al origen ↺';
+        cue.textContent = 'La última nota ya es silencio · Sigue hacia el final ↓';
+      } else if (works[state.index]?.slug === 'game-over' && !transition) {
+        cue.textContent = 'GAME OVER · INSERT COIN · Volver al origen ↺';
+      } else if (isDustinToGameOver) {
+        cue.textContent = 'GAME OVER · 8-BIT GLITCH ↓';
       } else if (works[state.index]?.slug === 'el-armigo-atomico' || isArmigoTransition) {
         cue.textContent = '¡Giro atómico 720°! · sigue ↓';
       } else {

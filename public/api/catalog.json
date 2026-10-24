@@ -135,7 +135,7 @@
       }
     ]
   },
-  "artworks_count": 85,
+  "artworks_count": 86,
   "reviewed": "2026-10-24",
   "artworks": [
     {
@@ -3515,6 +3515,38 @@
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Hello%20Darkness%20My%20Old%20Friend",
       "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Hello%20Darkness%20My%20Old%20Friend"
+    },
+    {
+      "slug": "game-over",
+      "title": "Game Over",
+      "category": "objetos",
+      "series": "Dar la Lata",
+      "technique": "Fotografías recortadas y ensamblaje pixel art 8-bit",
+      "support": "Lata de conservas",
+      "dimensions": null,
+      "materials": "Lata de conservas, fotografías recortadas, papel plegado, collage y flores artificiales.",
+      "year": 2026,
+      "story": "En Game Over, la lata de conservas clausura el viaje con un guiño retro arcade tras el silencio de El Graduado. Entre rosas y calas de papel, la pantalla pixelada se despide en 8 bits.",
+      "url": "https://naroagutierrezgil.com/obra/game-over/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/dar-la-lata-game-over-2048-5815aca2cc0f-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/dar-la-lata-game-over-2048.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Ensamblaje final de la serie Dar la Lata con tipografía pixel art 8-bit GAME OVER.",
+          "sha256": "5815aca2cc0f479ea6e188d12301f2261862350c6c4b93700e8d7238d5dfa8b5"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/dar-la-lata-original-03-2048.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Reverso de la lata de conservas.",
+          "sha256": "7f52ebef12a026f67995d5ffebd3025f49eecfea0ff578c2b8767d9c0646a06f"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Game%20Over",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Game%20Over"
     }
   ]
 }

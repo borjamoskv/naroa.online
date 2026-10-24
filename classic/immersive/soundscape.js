@@ -18,10 +18,10 @@
   const SOUND_OF_SILENCE_CADENCE = [74.00, null, 69.02, 71.74, 77.24, 75.86, null, 74.00];
 
   // Repertorio de melodías modales en Re menor microtonal para la caja de música ("caja de muñecas").
-  // Cada día del calendario la melodía cambia de forma determinista, culminando siempre en SOUND OF SILENCE.
+  // Cada día de la semana tiene su tema emblemático, culminando siempre en SOUND OF SILENCE:
   const DAILY_MELODIES = [
     {
-      name: 'Landa (Alboka clásica)',
+      name: 'Landa (Alboka clásica de Arratia)',
       day: 'Lunes',
       notes: [
         74.00, 77.24, 81.02, 77.24, 75.86, 74.00, 69.02, null,
@@ -31,42 +31,42 @@
       ]
     },
     {
-      name: 'Olatua (Marejada cantábrica)',
+      name: 'Haurtxo Polita (Nana tradicional de cuna)',
       day: 'Martes',
       notes: [
-        74.00, 69.02, 74.00, 77.24, 81.02, 78.98, 77.24, null,
-        77.24, 81.02, 83.74, 81.02, 78.98, 77.24, 74.00, null,
-        74.00, 78.98, 81.02, 86.00, 83.74, 81.02, 77.24, null,
+        69.02, 74.00, 75.86, 77.24, 75.86, 74.00, null, 74.00,
+        77.24, 78.98, 81.02, 78.98, 77.24, 75.86, null, 75.86,
+        74.00, 71.74, 69.02, 71.74, 74.00, 77.24, 75.86, null,
         ...SOUND_OF_SILENCE_CADENCE
       ]
     },
     {
-      name: 'Mika (Mineral íntimo)',
+      name: 'Harria eta Marea (Piedra y Marea)',
       day: 'Miércoles',
       notes: [
-        74.00, 81.02, 77.24, 74.00, 75.86, 77.24, 74.00, null,
-        69.02, 74.00, 77.24, 81.02, 78.98, 75.86, 74.00, null,
-        77.24, 78.98, 81.02, 78.98, 77.24, 75.86, 71.74, null,
+        74.00, 69.02, 77.24, 74.00, 78.98, 75.86, 74.00, null,
+        71.74, 74.00, 75.86, 74.00, 69.02, 71.74, 74.00, null,
+        77.24, 81.02, 86.00, 81.02, 77.24, 75.86, 74.00, null,
         ...SOUND_OF_SILENCE_CADENCE
       ]
     },
     {
-      name: 'Eskuak (Gesto de taller)',
+      name: 'Txoria Txori (Mikel Laboa)',
       day: 'Jueves',
       notes: [
-        74.00, 75.86, 77.24, 74.00, 81.02, null, 78.98, 77.24,
-        75.86, 74.00, 71.74, 69.02, 74.00, 77.24, 75.86, null,
-        81.02, 77.24, 74.00, 78.98, 81.02, 83.74, 81.02, null,
+        74.00, 77.24, 75.86, 74.00, 71.74, 74.00, 69.02, null,
+        71.74, 74.00, 75.86, 77.24, 75.86, 74.00, 71.74, null,
+        77.24, 81.02, 77.24, 75.86, 74.00, 69.02, 71.74, null,
         ...SOUND_OF_SILENCE_CADENCE
       ]
     },
     {
-      name: 'Argia (Luz de ría)',
+      name: 'Mi Gran Noche (Raphael)',
       day: 'Viernes',
       notes: [
-        74.00, 77.24, 74.00, 81.02, 77.24, 83.74, 81.02, null,
-        78.98, 81.02, 77.24, 75.86, 74.00, 69.02, 71.74, null,
-        74.00, 77.24, 81.02, 78.98, 75.86, 77.24, 74.00, null,
+        69.02, 74.00, 77.24, 75.86, null, 69.02, 74.00, 77.24,
+        75.86, null, 74.00, 75.86, 77.24, 78.98, 77.24, 75.86,
+        74.00, 77.24, 81.02, 78.98, 77.24, 75.86, 74.00, null,
         ...SOUND_OF_SILENCE_CADENCE
       ]
     },
@@ -420,6 +420,12 @@
       audio.volume = 0.95;
       audio.play().catch(() => {});
     } catch {}
+  }
+  let lastGameOverSlug = '';
+  function play8BitGameOver() {
+    lastGameOverSlug = 'game-over';
+    // Game Over clausura el recorrido en silencio contemplativo absoluto:
+    // Cero sintetizador 8-bit arcade, respeto a la quietud y el reposo del museo.
   }
   function playCameraFlash() {
     if (!context || !engine || context.state !== 'running') return;
@@ -817,6 +823,9 @@
     deltoya() {
       playDeltoya();
     },
+    gameOver() {
+      play8BitGameOver();
+    },
     menuNote(index) {
       playMenuNote(index);
     },
@@ -832,6 +841,7 @@
     get lastWineSlug() { return lastWineSlug; },
     get lastWinkSlug() { return lastWinkSlug; },
     get lastDeltoyaSlug() { return lastDeltoyaSlug; },
+    get lastGameOverSlug() { return lastGameOverSlug; },
     get lastMenuNoteIndex() { return lastMenuNoteIndex; },
     get sessionMelodyIndex() { return activeMelodyIndex; },
     get melody() { return melody; }

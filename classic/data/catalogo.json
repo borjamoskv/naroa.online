@@ -3656,6 +3656,40 @@
           "Master de El Abuelo Munster."
         ]
       }
+    },
+    {
+      "slug": "game-over",
+      "title": "Game Over",
+      "category": "objetos",
+      "technique": "Fotografías recortadas y ensamblaje pixel art 8-bit",
+      "support": "Lata de conservas",
+      "story": "En Game Over, la lata de conservas clausura el viaje con un guiño retro arcade tras el silencio de El Graduado. Entre rosas y calas de papel, la pantalla pixelada se despide en 8 bits.",
+      "images": [
+        {
+          "src": "/images/catalogo/dar-la-lata-game-over-2048.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Ensamblaje final de la serie Dar la Lata con tipografía pixel art 8-bit GAME OVER.",
+          "source": null,
+          "sha256": "5815aca2cc0f479ea6e188d12301f2261862350c6c4b93700e8d7238d5dfa8b5"
+        },
+        {
+          "src": "/images/catalogo/dar-la-lata-original-03-2048.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Reverso de la lata de conservas.",
+          "source": "https://www.facebook.com/photo/?fbid=606809277465164&set=a.606818890797536",
+          "sha256": "7f52ebef12a026f67995d5ffebd3025f49eecfea0ff578c2b8767d9c0646a06f"
+        }
+      ],
+      "source": null,
+      "dimensions": null,
+      "materials": "Lata de conservas, fotografías recortadas, papel plegado, collage y flores artificiales.",
+      "series": "Dar la Lata",
+      "year": 2026,
+      "credit": null,
+      "selected": true,
+      "kind": "obra"
     }
   ]
 }

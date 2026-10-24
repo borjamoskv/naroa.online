@@ -521,6 +521,12 @@
     },
     {
       "slug": "dustin",
+      "mode": "Z",
+      "hold": 25,
+      "explore": 0
+    },
+    {
+      "slug": "game-over",
       "mode": "F",
       "hold": 25,
       "explore": 0

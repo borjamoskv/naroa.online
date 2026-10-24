@@ -115,86 +115,109 @@ export function generateInfiniteSessionMelody(): (number | null)[] {
   return [...MOTIF_CELLS_A[0], ...MOTIF_CELLS_A[1], ...MOTIF_CELLS_B[0], ...MOTIF_CELLS_B[1], ...MOTIF_CELLS_C[0], ...MOTIF_CELLS_C[1], ...SOUND_OF_SILENCE_CADENCE]
 }
 
-// Repertorio modal histórico preservado como referencia
-export const SESSION_MELODIES: (number | null)[][] = [
-  // 0. Landa / Alboka clásica de Arratia
-  [
-    74.00, 77.24, 81.02, 77.24, 75.86, 74.00, 69.02, null,
-    71.74, 75.86, 78.98, 75.86, 74.00, 71.74, 69.02, null,
-    74.00, 77.24, 81.02, 83.74, 81.02, 77.24, 75.86, null,
-    ...SOUND_OF_SILENCE_CADENCE
-  ],
-  // 1. Olatua / Marejada cantábrica (arpegios amplios en ascenso)
-  [
-    74.00, 69.02, 74.00, 77.24, 81.02, 78.98, 77.24, null,
-    77.24, 81.02, 83.74, 81.02, 78.98, 77.24, 74.00, null,
-    74.00, 78.98, 81.02, 86.00, 83.74, 81.02, 77.24, null,
-    ...SOUND_OF_SILENCE_CADENCE
-  ],
-  // 2. Mika / Mineral íntimo (campanas y destellos de celesta)
-  [
-    74.00, 81.02, 77.24, 74.00, 75.86, 77.24, 74.00, null,
-    69.02, 74.00, 77.24, 81.02, 78.98, 75.86, 74.00, null,
-    77.24, 78.98, 81.02, 78.98, 77.24, 75.86, 71.74, null,
-    ...SOUND_OF_SILENCE_CADENCE
-  ],
-  // 3. Eskuak / Gesto de taller (ritmo pausado y contemplativo)
-  [
-    74.00, 75.86, 77.24, 74.00, 81.02, null, 78.98, 77.24,
-    75.86, 74.00, 71.74, 69.02, 74.00, 77.24, 75.86, null,
-    81.02, 77.24, 74.00, 78.98, 81.02, 83.74, 81.02, null,
-    ...SOUND_OF_SILENCE_CADENCE
-  ],
-  // 4. Argia / Luz de ría (apertura diurna brillante)
-  [
-    74.00, 77.24, 74.00, 81.02, 77.24, 83.74, 81.02, null,
-    78.98, 81.02, 77.24, 75.86, 74.00, 69.02, 71.74, null,
-    74.00, 77.24, 81.02, 78.98, 75.86, 77.24, 74.00, null,
-    ...SOUND_OF_SILENCE_CADENCE
-  ],
-  // 5. Gaua / Nocturno de Bilbao (graves densos y silencio envolvente)
-  [
-    74.00, 71.74, 69.02, null, 74.00, 77.24, 75.86, 74.00,
-    69.02, 74.00, 77.24, 78.98, 81.02, 77.24, 74.00, null,
-    81.02, 83.74, 81.02, 77.24, 75.86, 71.74, 69.02, null,
-    ...SOUND_OF_SILENCE_CADENCE
-  ],
-  // 6. Haizea / Viento en los pinos (arpegios etéreos en cascada)
-  [
-    74.00, 77.24, 81.02, 86.00, 81.02, 77.24, 74.00, null,
-    78.98, 75.86, 74.00, 69.02, 71.74, 75.86, 74.00, null,
-    77.24, 81.02, 78.98, 77.24, 75.86, 74.00, 69.02, null,
-    ...SOUND_OF_SILENCE_CADENCE
-  ],
-  // 7. Txoria Txori / Homenaje a Mikel Laboa (bronce y memoria)
-  [
-    74.00, null, 77.24, 75.86, 74.00, 71.74, 74.00, null,
-    69.02, 71.74, 74.00, 75.86, 77.24, 75.86, 74.00, null,
-    77.24, 81.02, 77.24, 75.86, 74.00, 69.02, 71.74, null,
-    ...SOUND_OF_SILENCE_CADENCE
-  ],
-  // 8. Haurtxo Polita / Nana tradicional de cuna (caja de cuerda pura)
-  [
-    69.02, 74.00, 75.86, 77.24, 75.86, 74.00, null, 74.00,
-    77.24, 78.98, 81.02, 78.98, 77.24, 75.86, null, 75.86,
-    74.00, 71.74, 69.02, 71.74, 74.00, 77.24, 75.86, null,
-    ...SOUND_OF_SILENCE_CADENCE
-  ],
-  // 9. Harria eta Marea / Arpegio circular minimalista (Sakamoto / Tiersen)
-  [
-    74.00, 69.02, 77.24, 74.00, 78.98, 75.86, 74.00, null,
-    71.74, 74.00, 75.86, 74.00, 69.02, 71.74, 74.00, null,
-    77.24, 81.02, 86.00, 81.02, 77.24, 75.86, 74.00, null,
-    ...SOUND_OF_SILENCE_CADENCE
-  ],
-  // 10. Mi Gran Noche / Raphael (adaptación modal celesta / "Qué misterio habrá...")
-  [
-    69.02, 74.00, 77.24, 75.86, null, 69.02, 74.00, 77.24,
-    75.86, null, 74.00, 75.86, 77.24, 78.98, 77.24, 75.86,
-    74.00, 77.24, 81.02, 78.98, 77.24, 75.86, 74.00, null,
-    ...SOUND_OF_SILENCE_CADENCE
-  ]
+export interface WeekdayTheme {
+  day: 'Lunes' | 'Martes' | 'Miércoles' | 'Jueves' | 'Viernes' | 'Sábado' | 'Domingo'
+  name: string
+  subtitle: string
+  notes: (number | null)[]
+}
+
+// 7 TEMAS CANÓNICOS DE LA SEMANA (UNO PARA CADA DÍA)
+export const WEEKDAY_THEMES: WeekdayTheme[] = [
+  // 0. Lunes (Astelehena)
+  {
+    day: 'Lunes',
+    name: 'Txoria Txori',
+    subtitle: 'Mikel Laboa · Bronce, libertad y memoria',
+    notes: [
+      74.00, null, 77.24, 75.86, 74.00, 71.74, 74.00, null,
+      69.02, 71.74, 74.00, 75.86, 77.24, 75.86, 74.00, null,
+      77.24, 81.02, 77.24, 75.86, 74.00, 69.02, 71.74, null,
+      ...SOUND_OF_SILENCE_CADENCE
+    ]
+  },
+  // 1. Martes (Asteartea)
+  {
+    day: 'Martes',
+    name: 'Haurtxo Polita',
+    subtitle: 'Nana tradicional de cuna · Juguete de cuerda',
+    notes: [
+      69.02, 74.00, 75.86, 77.24, 75.86, 74.00, null, 74.00,
+      77.24, 78.98, 81.02, 78.98, 77.24, 75.86, null, 75.86,
+      74.00, 71.74, 69.02, 71.74, 74.00, 77.24, 75.86, null,
+      ...SOUND_OF_SILENCE_CADENCE
+    ]
+  },
+  // 2. Miércoles (Asteazkena)
+  {
+    day: 'Miércoles',
+    name: 'Harria eta Marea',
+    subtitle: 'Arpegio circular minimalista · Piedra y marea',
+    notes: [
+      74.00, 69.02, 77.24, 74.00, 78.98, 75.86, 74.00, null,
+      71.74, 74.00, 75.86, 74.00, 69.02, 71.74, 74.00, null,
+      77.24, 81.02, 86.00, 81.02, 77.24, 75.86, 74.00, null,
+      ...SOUND_OF_SILENCE_CADENCE
+    ]
+  },
+  // 3. Jueves (Osteguna)
+  {
+    day: 'Jueves',
+    name: 'Landa / Alboka clásica',
+    subtitle: 'Melodía de Arratia · Tierra, cuerno y roble',
+    notes: [
+      74.00, 77.24, 81.02, 77.24, 75.86, 74.00, 69.02, null,
+      71.74, 75.86, 78.98, 75.86, 74.00, 71.74, 69.02, null,
+      74.00, 77.24, 81.02, 83.74, 81.02, 77.24, 75.86, null,
+      ...SOUND_OF_SILENCE_CADENCE
+    ]
+  },
+  // 4. Viernes (Ostirala)
+  {
+    day: 'Viernes',
+    name: 'Mi Gran Noche',
+    subtitle: 'Raphael en celesta modal · Qué misterio habrá',
+    notes: [
+      69.02, 74.00, 77.24, 75.86, null, 69.02, 74.00, 77.24,
+      75.86, null, 74.00, 75.86, 77.24, 78.98, 77.24, 75.86,
+      74.00, 77.24, 81.02, 78.98, 77.24, 75.86, 74.00, null,
+      ...SOUND_OF_SILENCE_CADENCE
+    ]
+  },
+  // 5. Sábado (Larunbata)
+  {
+    day: 'Sábado',
+    name: 'Gaua / Nocturno de Bilbao',
+    subtitle: 'Chiaroscuro, penumbra de ría y silencio fértil',
+    notes: [
+      74.00, 71.74, 69.02, null, 74.00, 77.24, 75.86, 74.00,
+      69.02, 74.00, 77.24, 78.98, 81.02, 77.24, 74.00, null,
+      81.02, 83.74, 81.02, 77.24, 75.86, 71.74, 69.02, null,
+      ...SOUND_OF_SILENCE_CADENCE
+    ]
+  },
+  // 6. Domingo (Igandea)
+  {
+    day: 'Domingo',
+    name: 'Haizea / Viento en los pinos',
+    subtitle: 'Cascada etérea en Dórico · Retorno al origen',
+    notes: [
+      74.00, 77.24, 81.02, 86.00, 81.02, 77.24, 74.00, null,
+      78.98, 75.86, 74.00, 69.02, 71.74, 75.86, 74.00, null,
+      77.24, 81.02, 78.98, 77.24, 75.86, 74.00, 69.02, null,
+      ...SOUND_OF_SILENCE_CADENCE
+    ]
+  }
 ]
+
+export function getTodayWeekdayTheme(): WeekdayTheme {
+  const now = new Date()
+  const dayOfWeek = (now.getDay() + 6) % 7 // Monday = 0 .. Sunday = 6
+  return WEEKDAY_THEMES[dayOfWeek] || WEEKDAY_THEMES[0]
+}
+
+// Repertorio modal histórico preservado como referencia
+export const SESSION_MELODIES: (number | null)[][] = WEEKDAY_THEMES.map(t => t.notes)
 
 class SoundEngine {
   private ctx: AudioContext | null = null
