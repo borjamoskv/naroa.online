@@ -1882,6 +1882,11 @@
     }
     function scheduleScroll() { syncScroll(); }
     function moveTo(index, smooth = false) {
+      if (isLauraZooming) {
+        isLauraZooming = false;
+        clearTimeout(lauraTimer);
+        images[state.index]?.classList.remove('is-mouth-zooming');
+      }
       const targetDist = journey.at(index);
       if (!smooth || reduced.matches) {
         motion.current = motion.target = targetDist;
