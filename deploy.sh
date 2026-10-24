@@ -173,7 +173,16 @@ if command -v npx >/dev/null 2>&1; then
   ok "Mirror Vercel actualizado"
 fi
 
-# ── 9. Finalización ─────────────────────────────────────────
+# ── 9. Notificación Instantánea IndexNow (Bing / Copilot / Perplexity) ──
+if [ "$BRANCH" = "production" ] && [ -f ".deploy/indexnow.json" ]; then
+  log "Notificando a IndexNow (Bing, Copilot, Perplexity, ChatGPT Search)..."
+  curl -s -X POST "https://api.indexnow.org/indexnow" \
+    -H "Content-Type: application/json; charset=utf-8" \
+    --data-binary "@.deploy/indexnow.json" > /dev/null 2>&1 || true
+  ok "IndexNow notificado con 63 rutas canónicas"
+fi
+
+# ── 10. Finalización ─────────────────────────────────────────
 ok "Despliegue finalizado exitosamente"
 
 echo ""
