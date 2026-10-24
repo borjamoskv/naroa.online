@@ -392,8 +392,8 @@
       galleryReturnFocus = null;
       scheduleScroll();
     });
-    const focals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '56% 42%', 'amor-en-conserva': '50% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'johnny-rocks': '50% 42%', 'rockagipsy': '50% 43%', 'hugo-box': '50% 38%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '54% 44%', 'lauralore': '46% 44%', 'izei': '48% 42%' };
-    const mobileFocals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '61% 40%', 'amor-en-conserva': '48% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'denbora-nora-zoaz': '18% 45%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '56% 44%', 'lauralore': '48% 44%', 'izei': '48% 42%' };
+    const focals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '56% 42%', 'amor-en-conserva': '50% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'johnny-rocks': '50% 42%', 'rockagipsy': '50% 43%', 'hugo-box': '50% 38%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '54% 44%', 'lauralore': '46% 44%', 'izei': '48% 42%', 'the-love-boat': '50% 44%' };
+    const mobileFocals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '61% 40%', 'amor-en-conserva': '48% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'denbora-nora-zoaz': '18% 45%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '56% 44%', 'lauralore': '48% 44%', 'izei': '48% 42%', 'the-love-boat': '50% 44%' };
     // Pupil centres measured on the unaltered cover photographs, in source-image coordinates.
     const eyes = {
       'marilyn-rocks': { x: .635, y: .392, iris: .030 },
@@ -543,8 +543,9 @@
       } else if (transition && mode === 'Z') depth = smooth(fraction / .55) * (1 - smooth((fraction - .55) / .45));
       visible.forEach(index => {
         const scene = scenes[index], image = images[index], outgoing = index === base;
+        const isRockaToHugo = transition && works[base]?.slug === 'rockagipsy' && works[incoming]?.slug === 'hugo-box';
         paintedScenes.add(index);
-        scene.style.visibility = 'visible'; scene.style.zIndex = outgoing ? '1' : '2';
+        scene.style.visibility = 'visible'; scene.style.zIndex = isRockaToHugo ? (outgoing ? '2' : '1') : (outgoing ? '1' : '2');
         scene.style.willChange = transition ? 'opacity,transform' : 'auto'; image.style.willChange = still ? 'auto' : 'transform';
         scene.style.clipPath = 'inset(0)'; scene.style.opacity = '1'; scene.style.transform = 'translate3d(0px,0px,0)';
         scene.style.maskImage = scene.style.webkitMaskImage = 'none';
@@ -597,6 +598,21 @@
         } else if (mode === 'E') {
           eyePose(index, diameter, focus, outgoing && entry.explore ? -(geometry.height + 20) * .03 : 0);
           if (!outgoing) scene.style.opacity = smooth((fraction - .42) / .16).toFixed(4);
+        } else if (isRockaToHugo) {
+          if (outgoing) {
+            scene.style.transformOrigin = 'bottom left';
+            const fallRot = -smooth(fraction) * 36;
+            const fallX = -smooth(fraction) * geometry.width * 1.15;
+            const fallY = fraction * fraction * geometry.height * 0.95;
+            scene.style.transform = `translate3d(${fallX.toFixed(3)}px,${fallY.toFixed(3)}px,0) rotate(${fallRot.toFixed(3)}deg)`;
+            scene.style.opacity = fraction >= 0.70 ? smooth((1 - fraction) / 0.30).toFixed(4) : '1';
+            image.style.transform = 'scale(1.08000)';
+          } else {
+            scene.style.transform = 'translate3d(0px,0px,0)';
+            scene.style.opacity = '1';
+            const revealScale = 0.94 + 0.14 * smooth(fraction);
+            image.style.transform = `scale(${revealScale.toFixed(5)})`;
+          }
         } else if (mode === 'H' || mode === 'V') {
           const displacement = outgoing ? -progress : 1 - progress;
           const x = mode === 'H' ? displacement * geometry.width * entry.direction : 0;

@@ -183,7 +183,7 @@ async function eyeMatch(ui, base, points) {
   const ui = create(); await ui.flush();
   const works = ui.w.NAROA_CATALOG.projects;
   assert.equal(works.length, manifest.projects);
-  for (const slug of ['la-llorona', 'pablo', 'euskolander-no-hay-mas-que-uno', 'idoia-arkatz-bihotz', 'little-adi', 'lauralore', 'izei', 'can-dy-queen', 'el-hombre-que-susurraba-a-las-estrellas', 'olinga-a-la-naranja', 'i-got-you-babe', 'jose-manuel-ezquerra', 'billy-saw', 'out-por-los-pelos', 'the-munsters', 'denbora-nora-zoaz']) {
+  for (const slug of ['la-llorona', 'pablo', 'euskolander-no-hay-mas-que-uno', 'idoia-arkatz-bihotz', 'little-adi', 'lauralore', 'izei', 'the-love-boat', 'can-dy-queen', 'el-hombre-que-susurraba-a-las-estrellas', 'olinga-a-la-naranja', 'i-got-you-babe', 'jose-manuel-ezquerra', 'billy-saw', 'out-por-los-pelos', 'the-munsters', 'denbora-nora-zoaz']) {
     assert.equal(works.filter(p => p.slug === slug).length, 1, 'Every supplied artwork has one stable route');
   }
   assert.equal(works.find(p => p.slug === 'la-llorona').photos.length, 3);
@@ -218,8 +218,8 @@ async function eyeMatch(ui, base, points) {
   assert.equal(llorona.find('[data-art-source]').hidden, true, 'An attachment without a public URL does not produce a fabricated source link');
   assert.ok(llorona.find('[data-facts]').textContent.includes('sal rosa'));
   llorona.dom.window.close();
-  assert.equal(ui.journey.entries.length, 65);
-  assert.deepEqual(Array.from(ui.w.NAROA_CATALOG.journey.scenes, e => e.mode).join(' '), 'E H V Z V E H H V Z E V H H V Z H V Z P V H Z V H Z V H Z V H H Z E Z V H Z H Z Z V Z H Z H V Z H V Z H V Z H V Z H H Z H H Z H F');
+  assert.equal(ui.journey.entries.length, 66);
+  assert.deepEqual(Array.from(ui.w.NAROA_CATALOG.journey.scenes, e => e.mode).join(' '), 'E H V Z V E H H V Z E V H H V Z H V Z P V H Z V H Z V H Z V H H Z E Z V H Z H Z Z V Z H Z H V Z H V Z H V Z H V Z H V H Z H H Z H F');
   const modes = { E: 'eyes', H: 'horizontal', V: 'vertical', Z: 'zoom', P: 'puzzle' };
   let horizontalDirection = -1, inHorizontal = false;
   for (let index = 0; index < works.length; index++) {
@@ -244,11 +244,14 @@ async function eyeMatch(ui, base, points) {
     const before = ui.find(`[data-scene="${index}"]`).style.cssText;
     ui.scroll(index + .7); await ui.flush(); ui.scroll(index + .3); await ui.flush();
     assert.equal(ui.find(`[data-scene="${index}"]`).style.cssText, before, 'Every camera pass reverses along the same path');
-    if (entry.mode === 'H' || entry.mode === 'V') {
+    if ((entry.mode === 'H' || entry.mode === 'V') && entry.slug !== 'rockagipsy') {
       const translation = scene => /translate3d\(([-\d.]+)px,([-\d.]+)px,0\)/.exec(scene.style.transform).slice(1).map(Number);
       const from = translation(ui.find(`[data-scene="${index}"]`)), to = translation(ui.find(`[data-scene="${index + 1}"]`));
       const axis = entry.mode === 'H' ? 0 : 1, size = axis ? ui.w.innerHeight : ui.w.innerWidth;
       assert.ok(Math.abs(Math.abs(to[axis] - from[axis]) - size) < .002, 'Full-screen panels meet exactly without an uncovered seam');
+    } else if (entry.slug === 'rockagipsy') {
+      const rockaScene = ui.find(`[data-scene="${index}"]`);
+      assert.ok(rockaScene.style.transform.includes('rotate('), 'RockaGipsy tilts and falls laterally to reveal Hugo Box');
     }
     if (entry.mode === 'H') {
       const specDir = ui.w.NAROA_CATALOG.journey.scenes.find(s => s.slug === entry.slug)?.direction;
