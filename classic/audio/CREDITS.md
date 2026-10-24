@@ -41,9 +41,10 @@ con un ataque breve derivado de las grabaciones CC0 indicadas arriba.
 La muestra se genera con `tools/compose_musicbox.py`; la melodía se interpreta
 en el navegador con alturas afinadas y desciende una octava dentro del iris.
 
-## Homenaje a David Bowie ("El hombre que susurraba a las estrellas") y "Denbora Nora Zoaz Eder Galant Hori?"
+## Homenaje a David Bowie ("El hombre que susurraba a las estrellas"), "Denbora Nora Zoaz Eder Galant Hori?" y "Hello Darkness My Old Friend"
 
 Vocalización y diseño sonoro procesado con reverberación de placa y compresión
 estudio inspirada en las sesiones de Hansa Studios Berlín ("We can be heroes" y
-"Just For One Day" en registro grave de barítono mayor), sintetizado
-y procesado para las obras de Naroa.
+"Just For One Day" en registro grave de barítono mayor), más cadencia final
+de caja de música ("The Sound of Silence") que resuelve en la última nota
+suspendida al cerrar la exposición en la obra 55/55.

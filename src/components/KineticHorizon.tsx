@@ -137,7 +137,16 @@ export function KineticHorizon({
     } else if ((slug === 'jose-manuel-ezquerra' || slug === 'i-got-you-babe') && lastSpokenSlugRef.current !== slug) {
       lastSpokenSlugRef.current = slug
       sound.playPunch()
-    } else if (slug !== 'denbora-nora-zoaz' && slug !== 'el-hombre-que-susurraba-a-las-estrellas' && slug !== 'jose-manuel-ezquerra' && slug !== 'i-got-you-babe') {
+    } else if (slug === 'dustin' && lastSpokenSlugRef.current !== slug) {
+      lastSpokenSlugRef.current = slug
+      try {
+        const audio = new window.Audio('/audio/sound-of-silence.mp3')
+        audio.volume = 0.95
+        audio.play().catch(() => {})
+      } catch {
+        // Ignore audio playback errors
+      }
+    } else if (slug !== 'denbora-nora-zoaz' && slug !== 'el-hombre-que-susurraba-a-las-estrellas' && slug !== 'jose-manuel-ezquerra' && slug !== 'i-got-you-babe' && slug !== 'dustin') {
       lastSpokenSlugRef.current = ''
     }
   }, [])
