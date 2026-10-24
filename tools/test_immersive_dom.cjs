@@ -216,10 +216,17 @@ async function eyeMatch(ui, base, points) {
     const entry = ui.journey.entries[index];
     assert.equal(entry.hold, index ? .25 : .45, 'Every artwork has the agreed viewing pause');
     if (index) assert.ok(Math.abs(entry.start - ui.journey.entries[index - 1].end) < 1e-8, 'Camera sections join with no scroll gap');
-    ui.w.scrollTo({ top: (entry.start + entry.hold * .25) * ui.w.innerHeight }); await ui.flush();
-    const image = ui.find(`[data-scene="${index}"] img`), fixedPose = image.style.transform;
-    ui.w.scrollTo({ top: (entry.start + entry.hold * .75) * ui.w.innerHeight }); await ui.flush();
-    assert.equal(image.style.transform, fixedPose, 'Scrolling during the viewing pause leaves the camera fixed');
+    if (index > 0) {
+      ui.w.scrollTo({ top: (entry.start + entry.hold * .25) * ui.w.innerHeight }); await ui.flush();
+      const image = ui.find(`[data-scene="${index}"] img`), fixedPose = image.style.transform;
+      ui.w.scrollTo({ top: (entry.start + entry.hold * .75) * ui.w.innerHeight }); await ui.flush();
+      assert.equal(image.style.transform, fixedPose, 'Scrolling during the viewing pause leaves the camera fixed');
+    } else {
+      ui.w.scrollTo({ top: 0.38 * ui.w.innerHeight }); await ui.flush();
+      const image = ui.find(`[data-scene="${index}"] img`), fixedPose = image.style.transform;
+      ui.w.scrollTo({ top: 0.44 * ui.w.innerHeight }); await ui.flush();
+      assert.equal(image.style.transform, fixedPose, 'Scrolling during the post-threshold pause leaves Marilyn fixed');
+    }
     assert.equal(ui.find('[data-art-title]').textContent, works[index].title);
     if (index === works.length - 1) continue;
     ui.scroll(index + .3); await ui.flush();
@@ -259,11 +266,14 @@ async function eyeMatch(ui, base, points) {
   assert.equal(Number(ui.find('[data-hero-threshold]').style.opacity), 1);
   assert.equal(ui.find('[data-threshold-plane]').style.transform, 'scale(1.0000)');
   assert.equal(ui.find('[data-threshold-wink]').style.opacity, '0');
+  const mEyeStart = ui.find('[data-scene="0"] img').style.transform;
+  assert.ok(mEyeStart.includes('translate3d'), 'Marilyn enters through the eye zoomed deep into pupil');
   ui.w.scrollTo({ top: 0.09 * ui.w.innerHeight }); await ui.flush();
   assert.equal(ui.find('[data-threshold-wink]').style.opacity, '1', 'Naroa winks as the viewer crosses the monocle threshold');
   assert.notEqual(ui.find('[data-threshold-plane]').style.transform, 'scale(1.0000)', 'Monocle plane zooms exponentially into the lens');
   ui.click('[data-threshold-enter]'); await ui.flush();
   assert.equal(ui.find('[data-hero-threshold]').style.visibility, 'hidden', 'Clicking threshold CTA crosses into Marilyn Rocks');
+  assert.equal(ui.find('[data-scene="0"] img').style.transform, 'scale(1.08000)', 'Marilyn reveals full portrait in reverse zoom-out');
   ui.scroll(0); await ui.flush();
   assert.ok(ui.document.querySelectorAll('.art-scene img[src]').length <= 3, 'Do not eagerly decode the complete catalogue');
   const originalTransform = ui.find('.art-scene img').style.transform;
