@@ -883,27 +883,73 @@ export function KineticHorizon({
                 </p>
 
                 {isCentered && (
-                  <span
+                  <div
                     style={{
-                      display: 'inline-flex',
+                      display: 'flex',
+                      gap: '8px',
                       alignItems: 'center',
-                      gap: '5px',
                       marginTop: '8px',
-                      fontFamily: 'var(--font-mono, monospace)',
-                      fontSize: '0.62rem',
-                      letterSpacing: '0.18em',
-                      color: 'rgba(255, 255, 255, 0.55)',
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      border: '1px solid rgba(212, 175, 55, 0.28)',
-                      padding: '3px 12px',
-                      borderRadius: '20px',
-                      backdropFilter: 'blur(10px)',
-                      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.6)',
+                      flexWrap: 'wrap',
+                      justifyContent: 'center',
                     }}
                   >
-                    <span>🔍</span>
-                    <span>PULSA PARA LUPA DE ALTA RESOLUCIÓN</span>
-                  </span>
+                    <span
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                        fontFamily: 'var(--font-mono, monospace)',
+                        fontSize: '0.62rem',
+                        letterSpacing: '0.18em',
+                        color: 'rgba(255, 255, 255, 0.55)',
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid rgba(212, 175, 55, 0.28)',
+                        padding: '3px 12px',
+                        borderRadius: '20px',
+                        backdropFilter: 'blur(10px)',
+                        boxShadow: '0 4px 15px rgba(0, 0, 0, 0.6)',
+                      }}
+                    >
+                      <span>🔍</span>
+                      <span>PULSA PARA LUPA DE ALTA RESOLUCIÓN</span>
+                    </span>
+                    {idx === ARTWORKS.length - 1 && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          glideTo(0)
+                        }}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          fontFamily: 'var(--font-mono, monospace)',
+                          fontSize: '0.62rem',
+                          letterSpacing: '0.18em',
+                          color: '#D4AF37',
+                          background: 'rgba(212, 175, 55, 0.12)',
+                          border: '1px solid #D4AF37',
+                          padding: '3px 14px',
+                          borderRadius: '20px',
+                          cursor: 'pointer',
+                          backdropFilter: 'blur(10px)',
+                          boxShadow: '0 0 18px rgba(212, 175, 55, 0.35)',
+                          transition: 'all 0.25s ease',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = 'rgba(212, 175, 55, 0.3)'
+                          e.currentTarget.style.color = '#FFFDF4'
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = 'rgba(212, 175, 55, 0.12)'
+                          e.currentTarget.style.color = '#D4AF37'
+                        }}
+                      >
+                        <span>LA ÚLTIMA NOTA YA ES SILENCIO · VOLVER AL ORIGEN</span>
+                        <span>↺</span>
+                      </button>
+                    )}
+                  </div>
                 )}
               </div>
             </div>
