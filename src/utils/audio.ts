@@ -598,12 +598,13 @@ class SoundEngine {
   }
 
   /**
-   * Warm wooden/mineral tactile tap (like precision Leica shutter or carved wood switch).
+   * Escape de relojería suiza de alta complicación (Patek / Leica M):
+   * Doble micro-pulso asincopado en entonación justa de Re menor (3/2 y 7/4) filtrado en seda.
    */
   public playHapticClick(pitchMultiplier: number = 1.0) {
     if (!this.enabled) return
     const nowMs = performance.now()
-    if (nowMs - this.lastHapticClickTime < 35) return // Throttling 35ms
+    if (nowMs - this.lastHapticClickTime < 35) return
     this.lastHapticClickTime = nowMs
 
     try {
@@ -613,45 +614,38 @@ class SoundEngine {
       const now = this.ctx.currentTime
       const out = this.getOut()
 
-      // Primary warm body oscillator (sine for round warm mass)
-      const osc = this.ctx.createOscillator()
-      const oscGain = this.ctx.createGain()
+      // Fundamental cálida en Re4 justo (293.66 Hz) + armónico septimal 7/4 en contratiempo de 14ms
+      const root = 293.66 * pitchMultiplier
+      const voices = [
+        { fStart: root * 1.5, fEnd: root * 0.5, delay: 0, dur: 0.032, gain: 0.048 },
+        { fStart: root * 1.75, fEnd: root * 0.75, delay: 0.014, dur: 0.026, gain: 0.026 }
+      ]
 
-      // Subtle tactile snap oscillator (filtered soft triangle for organic texture)
-      const snapOsc = this.ctx.createOscillator()
-      const snapGain = this.ctx.createGain()
-      const filter = this.ctx.createBiquadFilter()
+      voices.forEach(({ fStart, fEnd, delay, dur, gain: gVal }) => {
+        if (!this.ctx) return
+        const osc = this.ctx.createOscillator()
+        const gain = this.ctx.createGain()
+        const filter = this.ctx.createBiquadFilter()
 
-      const baseFreq = 380 * pitchMultiplier
-      osc.type = 'sine'
-      osc.frequency.setValueAtTime(baseFreq, now)
-      osc.frequency.exponentialRampToValueAtTime(115 * pitchMultiplier, now + 0.024)
+        osc.type = 'sine'
+        osc.frequency.setValueAtTime(fStart, now + delay)
+        osc.frequency.exponentialRampToValueAtTime(fEnd, now + delay + dur)
 
-      oscGain.gain.setValueAtTime(0.065, now)
-      oscGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.026)
+        filter.type = 'lowpass'
+        filter.frequency.setValueAtTime(980 * pitchMultiplier, now + delay)
+        filter.Q.setValueAtTime(0.9, now + delay)
 
-      snapOsc.type = 'triangle'
-      snapOsc.frequency.setValueAtTime(baseFreq * 1.5, now)
-      snapOsc.frequency.exponentialRampToValueAtTime(160 * pitchMultiplier, now + 0.018)
+        gain.gain.setValueAtTime(0.0001, now + delay)
+        gain.gain.linearRampToValueAtTime(gVal, now + delay + 0.003)
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + delay + dur)
 
-      filter.type = 'lowpass'
-      filter.frequency.setValueAtTime(1200 * pitchMultiplier, now)
-      filter.Q.setValueAtTime(1.2, now)
+        osc.connect(filter)
+        filter.connect(gain)
+        gain.connect(out)
 
-      snapGain.gain.setValueAtTime(0.035, now)
-      snapGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.018)
-
-      osc.connect(oscGain)
-      oscGain.connect(out)
-
-      snapOsc.connect(filter)
-      filter.connect(snapGain)
-      snapGain.connect(out)
-
-      osc.start(now)
-      osc.stop(now + 0.028)
-      snapOsc.start(now)
-      snapOsc.stop(now + 0.02)
+        osc.start(now + delay)
+        osc.stop(now + delay + dur + 0.005)
+      })
     } catch {
       // Ignore audio errors
     }
@@ -713,7 +707,8 @@ class SoundEngine {
   }
 
   /**
-   * Warm celesta/Rhodes mineral bloom with low D anchor and velvety sustain.
+   * Floración espectral microtonal en Re Dórico Justo (1/1, 3/2, 6/5, 7/4, 9/4, 11/4)
+   * con arpegio asincopado en proporción áurea al abrir la lupa.
    */
   public playLoupeReveal() {
     if (!this.enabled) return
@@ -724,32 +719,40 @@ class SoundEngine {
       const now = this.ctx.currentTime
       const out = this.getOut()
 
-      // D3, A3, F#4, A4, C#5 (warm open Dmaj9 chord)
-      const chord = [146.83, 220.00, 369.99, 440.00, 554.37]
-      chord.forEach((freq, idx) => {
+      const d3 = 146.832
+      // Intervalos puros sobre D3 con retardos asincopados no uniformes
+      const spectralVoices = [
+        { freq: d3 * 1.0, delay: 0.000, dur: 1.05, level: 0.036 },     // 1/1 D3
+        { freq: d3 * 1.5, delay: 0.055, dur: 0.95, level: 0.028 },     // 3/2 A3 justa
+        { freq: d3 * 2.4, delay: 0.135, dur: 0.85, level: 0.022 },     // 12/5 F4 menor justa
+        { freq: d3 * 3.5, delay: 0.195, dur: 0.78, level: 0.018 },     // 7/2 C5 séptima armónica
+        { freq: d3 * 4.5, delay: 0.285, dur: 0.72, level: 0.014 },     // 9/2 E5 novena pura
+        { freq: d3 * 5.5, delay: 0.350, dur: 0.64, level: 0.010 }      // 11/2 G5+ oncena espectral
+      ]
+
+      spectralVoices.forEach(({ freq, delay, dur, level }) => {
         if (!this.ctx) return
         const osc = this.ctx.createOscillator()
         const gain = this.ctx.createGain()
         const filter = this.ctx.createBiquadFilter()
 
-        osc.type = idx === 0 ? 'sine' : 'triangle'
-        osc.frequency.setValueAtTime(freq, now)
+        osc.type = 'sine'
+        osc.frequency.setValueAtTime(freq, now + delay)
 
         filter.type = 'lowpass'
-        filter.frequency.setValueAtTime(Math.min(1400, freq * 2.2), now)
-        filter.Q.setValueAtTime(1.5, now)
+        filter.frequency.setValueAtTime(Math.min(1600, freq * 2.1), now + delay)
+        filter.Q.setValueAtTime(1.1, now + delay)
 
-        const delay = idx * 0.04
         gain.gain.setValueAtTime(0.0001, now + delay)
-        gain.gain.linearRampToValueAtTime(idx === 0 ? 0.038 : 0.024, now + delay + 0.04)
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + delay + 0.65)
+        gain.gain.linearRampToValueAtTime(level, now + delay + 0.032)
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + delay + dur)
 
         osc.connect(filter)
         filter.connect(gain)
         gain.connect(out)
 
         osc.start(now + delay)
-        osc.stop(now + delay + 0.7)
+        osc.stop(now + delay + dur + 0.03)
       })
     } catch {
       // Ignore audio errors
@@ -762,7 +765,7 @@ class SoundEngine {
   }
 
   /**
-   * Warm acoustic ghost note / marimba aura.
+   * Susurro armónico microtonal en díada justa (5/6 -> 1/1) con eco asincopado.
    */
   public playHover() {
     if (!this.enabled) return
@@ -773,31 +776,31 @@ class SoundEngine {
       const now = this.ctx.currentTime
       const out = this.getOut()
 
-      // Warm sine fundamental (A3 -> C#4 warm major third)
+      // D4 (293.66 Hz) y su sexta dórica justa B3 (244.72 Hz, 5/6) + séptima armónica C4 (256.95 Hz, 7/8)
       const osc = this.ctx.createOscillator()
       const osc2 = this.ctx.createOscillator()
       const filter = this.ctx.createBiquadFilter()
       const gain = this.ctx.createGain()
 
       osc.type = 'sine'
-      osc.frequency.setValueAtTime(220, now)
-      osc.frequency.exponentialRampToValueAtTime(277.18, now + 0.065)
+      osc.frequency.setValueAtTime(244.72, now)
+      osc.frequency.exponentialRampToValueAtTime(293.66, now + 0.085)
 
-      // Subtle octave overtone
       osc2.type = 'sine'
-      osc2.frequency.setValueAtTime(440, now)
-      osc2.frequency.exponentialRampToValueAtTime(554.37, now + 0.065)
+      osc2.frequency.setValueAtTime(513.91, now + 0.028) // C5 séptima natural 7/4 en síncopa
+      osc2.frequency.exponentialRampToValueAtTime(587.33, now + 0.095)
 
       filter.type = 'lowpass'
-      filter.frequency.setValueAtTime(750, now)
+      filter.frequency.setValueAtTime(820, now)
 
       gain.gain.setValueAtTime(0.0001, now)
-      gain.gain.linearRampToValueAtTime(0.026, now + 0.008)
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.075)
+      gain.gain.linearRampToValueAtTime(0.022, now + 0.012)
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.11)
 
       const gain2 = this.ctx.createGain()
-      gain2.gain.setValueAtTime(0.008, now)
-      gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.065)
+      gain2.gain.setValueAtTime(0.0001, now + 0.028)
+      gain2.gain.linearRampToValueAtTime(0.011, now + 0.038)
+      gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.11)
 
       osc.connect(filter)
       osc2.connect(gain2)
@@ -806,16 +809,16 @@ class SoundEngine {
       gain.connect(out)
 
       osc.start(now)
-      osc.stop(now + 0.08)
-      osc2.start(now)
-      osc2.stop(now + 0.08)
+      osc.stop(now + 0.12)
+      osc2.start(now + 0.028)
+      osc2.stop(now + 0.12)
     } catch {
       // Ignore audio errors
     }
   }
 
   /**
-   * Warm ambient acoustic opening swell (D major modal resonance).
+   * Apertura modal en Re menor septimal (1/1, 7/6, 3/2, 7/4) con entrada polirrítmica 3:2.
    */
   public playOpen() {
     if (!this.enabled) return
@@ -826,36 +829,42 @@ class SoundEngine {
       const now = this.ctx.currentTime
       const out = this.getOut()
 
-      // D3 (146.83), A3 (220.00), F#4 (369.99) - warm luminous triad
-      const notes = [146.83, 220.00, 369.99]
+      const d3 = 146.832
+      // Acorde microtonal justo: D3 (1/1), A3 (3/2), F4 septimal (7/3), C5 armónica (7/2)
+      const notes = [
+        { f: d3 * 1.0, delay: 0.000, weight: 0.34 },
+        { f: d3 * 1.5, delay: 0.038, weight: 0.24 },
+        { f: d3 * (7 / 3), delay: 0.092, weight: 0.16 },
+        { f: d3 * 3.5, delay: 0.138, weight: 0.11 }
+      ]
       const filter = this.ctx.createBiquadFilter()
       filter.type = 'lowpass'
-      filter.frequency.setValueAtTime(900, now)
-      filter.frequency.exponentialRampToValueAtTime(1400, now + 0.12)
-      filter.frequency.exponentialRampToValueAtTime(600, now + 0.28)
+      filter.frequency.setValueAtTime(860, now)
+      filter.frequency.exponentialRampToValueAtTime(1450, now + 0.14)
+      filter.frequency.exponentialRampToValueAtTime(540, now + 0.42)
 
       const masterGain = this.ctx.createGain()
       masterGain.gain.setValueAtTime(0.0001, now)
-      masterGain.gain.linearRampToValueAtTime(0.055, now + 0.035)
-      masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.28)
+      masterGain.gain.linearRampToValueAtTime(0.052, now + 0.04)
+      masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.44)
 
       filter.connect(masterGain)
       masterGain.connect(out)
 
-      notes.forEach((freq, idx) => {
+      notes.forEach(({ f, delay, weight }) => {
         if (!this.ctx) return
         const osc = this.ctx.createOscillator()
         const oscGain = this.ctx.createGain()
-        osc.type = idx === 0 ? 'sine' : 'triangle'
-        osc.frequency.setValueAtTime(freq * 0.96, now)
-        osc.frequency.exponentialRampToValueAtTime(freq, now + 0.08)
+        osc.type = 'sine'
+        osc.frequency.setValueAtTime(f * 0.992, now + delay)
+        osc.frequency.exponentialRampToValueAtTime(f, now + delay + 0.065)
 
-        oscGain.gain.setValueAtTime(0.3 / (idx + 1), now)
+        oscGain.gain.setValueAtTime(weight, now + delay)
         osc.connect(oscGain)
         oscGain.connect(filter)
 
-        osc.start(now + idx * 0.015)
-        osc.stop(now + 0.3)
+        osc.start(now + delay)
+        osc.stop(now + delay + 0.45)
       })
     } catch {
       // Ignore audio errors
@@ -863,7 +872,7 @@ class SoundEngine {
   }
 
   /**
-   * Soft velvet settle (descending fifth into warm sub cushion).
+   * Pliegue de terciopelo en cadencia plagal/septimal descendente (7/4 -> 3/2 -> 1/1).
    */
   public playClose() {
     if (!this.enabled) return
@@ -879,22 +888,23 @@ class SoundEngine {
       const filter = this.ctx.createBiquadFilter()
       const gain = this.ctx.createGain()
 
-      // Warm downward fifth: 220 Hz (A3) -> 146.83 Hz (D3)
+      // Caída justa: 256.95 Hz (C4 7/4) -> 220.25 Hz (A3 3/2) -> 146.83 Hz (D3 1/1)
       osc.type = 'sine'
-      osc.frequency.setValueAtTime(220, now)
-      osc.frequency.exponentialRampToValueAtTime(146.83, now + 0.14)
+      osc.frequency.setValueAtTime(256.95, now)
+      osc.frequency.exponentialRampToValueAtTime(220.25, now + 0.065)
+      osc.frequency.exponentialRampToValueAtTime(146.83, now + 0.19)
 
       subOsc.type = 'sine'
-      subOsc.frequency.setValueAtTime(110, now)
-      subOsc.frequency.exponentialRampToValueAtTime(73.4, now + 0.14)
+      subOsc.frequency.setValueAtTime(110.12, now + 0.024)
+      subOsc.frequency.exponentialRampToValueAtTime(73.416, now + 0.19)
 
       filter.type = 'lowpass'
-      filter.frequency.setValueAtTime(520, now)
-      filter.frequency.exponentialRampToValueAtTime(240, now + 0.15)
+      filter.frequency.setValueAtTime(560, now)
+      filter.frequency.exponentialRampToValueAtTime(220, now + 0.2)
 
       gain.gain.setValueAtTime(0.0001, now)
-      gain.gain.linearRampToValueAtTime(0.048, now + 0.012)
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.16)
+      gain.gain.linearRampToValueAtTime(0.044, now + 0.015)
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.21)
 
       osc.connect(filter)
       subOsc.connect(filter)
@@ -902,9 +912,9 @@ class SoundEngine {
       gain.connect(out)
 
       osc.start(now)
-      subOsc.start(now)
-      osc.stop(now + 0.16)
-      subOsc.stop(now + 0.16)
+      subOsc.start(now + 0.024)
+      osc.stop(now + 0.22)
+      subOsc.stop(now + 0.22)
     } catch {
       // Ignore audio errors
     }
