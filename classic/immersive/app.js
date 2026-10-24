@@ -1853,7 +1853,7 @@
     precios: {
       intent: 'Precios y presupuestos de retratos por encargo',
       question: '¿Cuánto cuesta un retrato personalizado por encargo?',
-      answer: 'Presupuesto cerrado previo por escrito según soporte y dimensiones (piezas de 20 × 30 cm a 40 × 50 cm en madera, collage, pizarra natural o cajas de memoria). Consulta inicial sin compromiso.',
+      answer: 'Tarifas orientativas desde 300 € – 350 € en pequeños formatos o cajas y desde 800 € en óleo o gran formato. Presupuesto cerrado previo por escrito según soporte y dimensiones (piezas de 20 × 30 cm a 40 × 50 cm en madera, collage, pizarra natural o cajas de memoria). Consulta inicial sin compromiso.',
       canonical_url: 'https://naroagutierrezgil.com/retratos-por-encargo-bilbao/'
     },
     plazos: {
