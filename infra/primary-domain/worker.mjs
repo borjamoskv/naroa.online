@@ -25,7 +25,7 @@ export default {
           'Cache-Control':'public, max-age=300, stale-while-revalidate=600',
           'X-Content-Type-Options':'nosniff'
         }});
-      } catch (_) {
+      } catch {
         return new Response('{"error":"WordPress unavailable"}', {status:502, headers:{'Content-Type':'application/json', 'Cache-Control':'no-store'}});
       }
     }
@@ -49,7 +49,7 @@ export default {
         statusText: upstream.statusText,
         headers
       });
-    } catch (error) {
+    } catch {
       console.error(JSON.stringify({event: 'portfolio_origin_unavailable', path: incoming.pathname}));
       return new Response('La web no está disponible en este momento. Inténtalo de nuevo en unos instantes.', {
         status: 502,
