@@ -42,12 +42,13 @@ def generate_rock_guitar_chord():
             
             buffer[idx] += val * env * 0.32
 
-    # Pick scrape transient
-    scrape_len = int(SAMPLE_RATE * 0.035)
+    # Pick scrape transient (filtered resonant pick-attack on wound nickel string)
+    scrape_len = int(SAMPLE_RATE * 0.025)
     for i in range(scrape_len):
         t = i / scrape_len
-        noise = (random.random() * 2.0 - 1.0) * math.exp(-t * 9.0) * (1.0 - t)
-        buffer[i] += noise * 0.50
+        tone = math.sin(2.0 * math.pi * 2200.0 * (i / SAMPLE_RATE))
+        noise = ((random.random() * 2.0 - 1.0) * 0.4 + tone * 0.6) * math.exp(-t * 12.0)
+        buffer[i] += noise * 0.22
 
     # Low-end kick punch (55 Hz)
     kick_len = int(SAMPLE_RATE * 0.30)
@@ -123,7 +124,7 @@ def main():
         "-i", str(guitar_wav),
         "-i", str(vocal_processed),
         "-filter_complex",
-        "[1:a]adelay=120|120,volume=1.65[vocal];[0:a][vocal]amix=inputs=2:duration=longest:dropout_transition=2,volume=1.22,alimiter=limit=0.98:attack=5:release=50[out]",
+        "[1:a]adelay=120|120,volume=1.65[vocal];[0:a][vocal]amix=inputs=2:duration=longest:dropout_transition=2,volume=1.18,lowpass=f=6200,highpass=f=80,alimiter=limit=0.96:attack=5:release=50[out]",
         "-map", "[out]",
         "-codec:a", "libmp3lame",
         "-q:a", "1",
