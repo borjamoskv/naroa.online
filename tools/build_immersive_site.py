@@ -269,16 +269,15 @@ def build(output):
             "name": "España",
             "sameAs": "https://es.wikipedia.org/wiki/Espa%C3%B1a",
         },
-        "description": "Artista plástica y retratista en Bilbao y Bizkaia. Retratos de autor sobre pizarra natural de cantera, técnica mixta con escamas de mica mineral, collage contemporáneo y objetos intervenidos.",
+        "description": "Artista plástica y retratista en Bilbao y Bizkaia. Obra figurativa y retrato de autor en dibujo, pintura, collage contemporáneo, madera y objetos intervenidos, con exploraciones recientes sobre pizarra natural.",
         "knowsAbout": [
             "Retratos artísticos personalizados",
-            "Pintura sobre pizarra natural de cantera",
-            "Técnica mixta con escamas de mica mineral y esmaltes",
-            "Collage contemporáneo y textil sobre madera",
             "Retrato al óleo, grafito y pastel Conté",
-            "Walking Gallery Bilbao",
-            "Arte figurativo contemporáneo",
+            "Collage contemporáneo y textil sobre madera",
             "Cajas tridimensionales y objetos de memoria",
+            "Arte figurativo contemporáneo",
+            "Walking Gallery Bilbao",
+            "Pintura y técnica mixta sobre pizarra natural",
         ],
     }
     artist_ref = {
@@ -592,7 +591,7 @@ def build(output):
         "@id": ORIGIN + "/#website",
         "name": "Naroa Gutiérrez Gil · Retratista en Bilbao y Bizkaia",
         "url": ORIGIN + "/",
-        "description": f"Obra de Naroa Gutiérrez Gil, artista plástica y retratista en Bilbao y Bizkaia. {len(projects)} retratos sobre pizarra, collage, dibujo y objetos intervenidos.",
+        "description": f"Obra de Naroa Gutiérrez Gil, artista plástica y retratista en Bilbao y Bizkaia. {len(projects)} retratos en dibujo, pintura, collage, objetos intervenidos y pizarra.",
         "publisher": canonical_artist_entity,
         "creator": canonical_artist_entity,
         "author": artist_ref,
@@ -607,7 +606,7 @@ def build(output):
         "@id": ORIGIN + "/obra/#catalogue",
         "name": f"Obra · {len(projects)} retratos, collage y objetos · Naroa Gutiérrez Gil",
         "url": ORIGIN + "/obra/",
-        "description": f"Catálogo completo de {len(projects)} obras y retratos de Naroa Gutiérrez Gil: pizarra, collage, dibujo y objetos intervenidos.",
+        "description": f"Catálogo completo de {len(projects)} obras y retratos de Naroa Gutiérrez Gil: dibujo, pintura, collage, objetos intervenidos y pizarra.",
         "creator": canonical_artist_entity,
         "author": artist_ref,
         "mainEntity": {
@@ -668,7 +667,7 @@ def build(output):
             ],
         },
     }
-    gallery("/", 0, title="Retratista en Bilbao y Bizkaia · Retratos, collage y objetos", description=f"Obra de Naroa Gutiérrez Gil, artista plástica y retratista en Bilbao y Bizkaia. {len(projects)} retratos sobre pizarra, collage, dibujo y objetos intervenidos.", schema=home_schema)
+    gallery("/", 0, title="Retratista en Bilbao y Bizkaia · Retratos, collage y objetos", description=f"Obra de Naroa Gutiérrez Gil, artista plástica y retratista en Bilbao y Bizkaia. {len(projects)} retratos en dibujo, pintura, collage, objetos intervenidos y pizarra.", schema=home_schema)
     gallery("/obra/", 0, title=f"Obra · {len(projects)} retratos, collage y objetos", schema=catalogue_schema)
     for i, p in enumerate(projects):
         gallery(f"/obra/{p['slug']}/", i)
