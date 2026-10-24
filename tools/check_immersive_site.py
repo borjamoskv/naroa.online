@@ -141,6 +141,11 @@ def check(output):
     assert (output / "llms-full.txt").is_file(), "missing llms-full.txt"
     assert "https://naroagutierrezgil.com" in (output / "llms.txt").read_text(), "llms.txt missing canonical domain"
     assert "https://naroagutierrezgil.com" in (output / "llms-full.txt").read_text(), "llms-full.txt missing canonical domain"
+    assert (output / "feed.xml").is_file(), "missing feed.xml"
+    assert (output / "manifest.webmanifest").is_file(), "missing manifest.webmanifest"
+    assert (output / "6621e1f1c138eeb14922f7804f61ae34.txt").is_file(), "missing IndexNow key file"
+    assert (output / "indexnow.json").is_file(), "missing indexnow.json"
+    assert (output / "apple-touch-icon.png").is_file(), "missing apple-touch-icon.png"
     for file in output.rglob("*"):
         if file.is_file():
             assert file.stat().st_size < 25 * 1024 * 1024, ("asset exceeds hosting limit", file)

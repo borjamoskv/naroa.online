@@ -828,6 +828,12 @@ async function eyeMatch(ui, base, points) {
     if (route === '/retratos-por-encargo-bilbao/') {
       assert.equal(page.document.querySelectorAll('.commission-faq-item').length, 4, 'Commissions landing includes 4 buyer-intent FAQs');
       assert.ok(page.find('.closing a[href^="https://wa.me/"]'), 'Commissions landing includes direct WhatsApp CTA');
+      assert.ok(page.find('[data-commission-configurator]'), 'Commissions landing includes interactive configurator');
+      assert.ok(page.find('#cfg-support'), 'Configurator includes support selector');
+      assert.ok(page.find('#cfg-whatsapp-btn'), 'Configurator includes dynamic WhatsApp button');
+      page.find('#cfg-support').value = 'Collage textil sobre madera';
+      page.find('#cfg-support').dispatchEvent(new page.w.Event('change'));
+      assert.ok(page.find('#cfg-whatsapp-btn').href.includes(encodeURIComponent('Collage textil sobre madera')), 'Changing support updates WhatsApp query parameter');
     }
     page.dom.window.close();
   }
