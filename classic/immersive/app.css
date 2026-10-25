@@ -430,15 +430,167 @@ body.page-sobre-mi .site-footer{color:#14080e;border-top:1px solid rgba(20,8,14,
 input[type="text"], input[type="email"], input[type="search"], textarea {
   cursor: text !important;
 }
-.commission-trust-pills{display:flex;flex-wrap:wrap;gap:10px 14px;margin-top:24px;padding-top:18px;border-top:1px solid rgba(255,253,244,0.14)}
-.commission-trust-pills span{font-size:12px;letter-spacing:.02em;color:#f7d594;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.28);padding:6px 14px;border-radius:999px}
-.commission-pick-btn{margin-top:6px;justify-self:start;background:transparent;border:0;padding:0;color:#edbca4;font:inherit;font-size:12px;letter-spacing:.03em;border-bottom:1px solid rgba(237,188,164,0.45)}
-.commission-pick-btn:hover{color:#fffdf4;border-bottom-color:#fffdf4}
-.commission-example.is-selected-support{border-color:#d4af37;box-shadow:0 0 0 1px rgba(212,175,55,0.45),0 18px 40px rgba(0,0,0,0.45)}
+.commission-trust-pills{display:flex;flex-wrap:wrap;gap:10px 14px;margin-top:24px;padding-top:18px;border-top:1px solid rgba(35,20,12,0.14)}
+.commission-trust-pills span{font-size:12px;font-weight:500;letter-spacing:.02em;color:#fffdf8;background:#23140c;border:1px solid rgba(212,175,55,0.45);padding:7px 15px;border-radius:999px;box-shadow:0 4px 12px rgba(35,20,12,0.16)}
+
+/* ═══ 4. /retratos-por-encargo-bilbao/ · TERRACOTA DE TALLER, PAPEL CANSON & ORO KINTSUGI ═══ */
+html:has(body.page-retratos-por-encargo-bilbao),body.page-retratos-por-encargo-bilbao{background:#E89973;background:radial-gradient(circle at 18% 12%,#f5b895 0%,#E89973 48%,#c96f46 100%);color:#1e120a}
+body.page-retratos-por-encargo-bilbao .site-nav.is-scrolled{background:rgba(232,153,115,0.92);color:#1e120a;border-bottom:1px solid rgba(30,18,10,0.14);text-shadow:none}
+body.page-retratos-por-encargo-bilbao .atelier-hero{min-height:92svh;height:auto;padding:120px 6% 70px;display:flex;align-items:center;border-radius:0 0 64px 38px / 0 0 42px 56px;box-shadow:0 26px 64px rgba(30,18,10,0.32)}
+body.page-retratos-por-encargo-bilbao .atelier-hero-shade{background:linear-gradient(105deg,rgba(14,9,6,0.92) 0%,rgba(18,11,7,0.78) 52%,rgba(22,13,8,0.48) 100%)}
+body.page-retratos-por-encargo-bilbao .atelier-hero-grid{position:relative;z-index:2;width:100%;max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1.15fr 0.85fr;gap:48px;align-items:center}
+body.page-retratos-por-encargo-bilbao .atelier-hero-copy{position:static;max-width:680px}
+body.page-retratos-por-encargo-bilbao .atelier-hero-copy .eyebrow{color:#f7d594}
+body.page-retratos-por-encargo-bilbao .atelier-hero-copy h1{color:#fffdf4;font-size:clamp(46px,6.2vw,88px);margin-top:14px}
+body.page-retratos-por-encargo-bilbao .atelier-hero-copy h1 span{color:#f7d594}
+body.page-retratos-por-encargo-bilbao .atelier-hero-copy .hero-lead{color:#efe6d8;font-size:16px;max-width:540px;margin-top:20px}
+body.page-retratos-por-encargo-bilbao .atelier-hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:28px}
+body.page-retratos-por-encargo-bilbao .atelier-hero-polaroids{position:relative;height:430px;display:flex;align-items:center;justify-content:center}
+body.page-retratos-por-encargo-bilbao .atelier-polaroid{position:absolute;width:215px;background:#fffdf7;padding:10px 10px 16px;border-radius:6px;box-shadow:0 20px 44px rgba(0,0,0,0.55);color:#1e120a;transition:transform .38s cubic-bezier(.16,1,.3,1),box-shadow .38s ease,z-index 0s}
+body.page-retratos-por-encargo-bilbao .atelier-polaroid::before{content:'';position:absolute;top:-8px;left:50%;transform:translateX(-50%) rotate(-2deg);width:64px;height:18px;background:rgba(245,222,179,0.82);box-shadow:0 2px 5px rgba(0,0,0,0.25)}
+body.page-retratos-por-encargo-bilbao .atelier-polaroid img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:3px}
+body.page-retratos-por-encargo-bilbao .polaroid-caption{display:block;margin-top:9px;font-family:'Caveat',cursive;font-size:19px;line-height:1.1;text-align:center;color:#23140c}
+body.page-retratos-por-encargo-bilbao .atelier-polaroid--1{transform:translate(-95px,-42px) rotate(-7deg);z-index:2}
+body.page-retratos-por-encargo-bilbao .atelier-polaroid--2{transform:translate(82px,-12px) rotate(6deg);z-index:3}
+body.page-retratos-por-encargo-bilbao .atelier-polaroid--3{transform:translate(-12px,86px) rotate(-2.5deg);z-index:4}
+body.page-retratos-por-encargo-bilbao .atelier-polaroid:hover{transform:translate(0,0) scale(1.08) rotate(0deg);z-index:10;box-shadow:0 28px 60px rgba(0,0,0,0.75)}
+
+/* Contenedores orgánicos en Papel Canson Crema (#FFFDF8) y Carbón de Estudio (#1A1512) */
+body.page-retratos-por-encargo-bilbao .atelier-manifesto,
+body.page-retratos-por-encargo-bilbao .atelier-specs-chapter{background:#fffdf8!important;color:#1e120a;border:1px solid rgba(30,18,10,0.14)!important;border-radius:46px 22px 42px 26px / 24px 42px 22px 46px;box-shadow:0 24px 58px rgba(84,34,12,0.18);padding:64px 52px}
+body.page-retratos-por-encargo-bilbao .atelier-manifesto>.eyebrow,
+body.page-retratos-por-encargo-bilbao .atelier-specs-chapter>.eyebrow{color:#9e3e16;font-weight:700}
+body.page-retratos-por-encargo-bilbao .atelier-manifesto h2,
+body.page-retratos-por-encargo-bilbao .atelier-specs-chapter h2{color:#1e120a}
+body.page-retratos-por-encargo-bilbao .atelier-manifesto h2 span,
+body.page-retratos-por-encargo-bilbao .atelier-specs-chapter h2 span{color:#b84314}
+body.page-retratos-por-encargo-bilbao .atelier-manifesto p.lead{color:#1e120a;font-weight:500}
+body.page-retratos-por-encargo-bilbao .atelier-manifesto p:not(.eyebrow){color:#3b2618}
+
+/* Mesa de Encargos Interactiva (#configurador) */
+body.page-retratos-por-encargo-bilbao .commission-configurator{background:linear-gradient(145deg,#1b1512 0%,#120e0c 100%);color:#fffdf4;border:2px solid rgba(212,175,55,0.42);border-radius:48px 24px 44px 28px / 26px 44px 24px 48px;padding:56px 48px;margin:42px 0;box-shadow:0 28px 68px rgba(24,11,5,0.42)}
+body.page-retratos-por-encargo-bilbao .configurator-header{max-width:760px;margin-bottom:36px}
+body.page-retratos-por-encargo-bilbao .configurator-header .eyebrow{color:#f7d594}
+body.page-retratos-por-encargo-bilbao .configurator-header h2{font-size:clamp(38px,5vw,64px);margin:12px 0 16px;color:#fffdf4}
+body.page-retratos-por-encargo-bilbao .configurator-header h2 span{font-family:'Caveat',cursive;color:#f7d594;font-size:1.08em}
+body.page-retratos-por-encargo-bilbao .configurator-header p{color:#d8cfc4;font-size:15px}
+body.page-retratos-por-encargo-bilbao .atelier-workbench{display:grid;grid-template-columns:1.25fr 0.85fr;gap:38px;align-items:start}
+body.page-retratos-por-encargo-bilbao .atelier-controls{display:grid;gap:28px}
+body.page-retratos-por-encargo-bilbao .configurator-field label{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#f7d594;margin-bottom:4px}
+body.page-retratos-por-encargo-bilbao .cfg-pill-group{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:10px}
+body.page-retratos-por-encargo-bilbao .cfg-pill-group--compact{grid-template-columns:repeat(4,minmax(0,1fr))}
+body.page-retratos-por-encargo-bilbao .cfg-pill-group--two{grid-template-columns:repeat(2,minmax(0,1fr))}
+body.page-retratos-por-encargo-bilbao .cfg-pill{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:3px;text-align:left;padding:13px 16px;border-radius:16px 10px 16px 10px;background:rgba(255,253,244,0.05);border:1.5px solid rgba(255,253,244,0.16);color:#fffdf4;transition:all .22s cubic-bezier(.16,1,.3,1)}
+body.page-retratos-por-encargo-bilbao .cfg-pill strong{font-size:13px;font-weight:600;color:#fffdf4}
+body.page-retratos-por-encargo-bilbao .cfg-pill small{font-size:11px;color:#b8afa4;line-height:1.35}
+body.page-retratos-por-encargo-bilbao .cfg-pill:hover{background:rgba(255,253,244,0.1);border-color:rgba(247,213,148,0.55);transform:translateY(-2px)}
+body.page-retratos-por-encargo-bilbao .cfg-pill.is-active{background:linear-gradient(135deg,rgba(212,175,55,0.24),rgba(232,153,115,0.18));border-color:#f7d594;box-shadow:0 8px 22px rgba(0,0,0,0.35),0 0 0 1px rgba(247,213,148,0.35)}
+body.page-retratos-por-encargo-bilbao .cfg-pill.is-active strong{color:#f7d594}
+body.page-retratos-por-encargo-bilbao .cfg-pill.is-active small{color:#f3e9d7}
+body.page-retratos-por-encargo-bilbao .configurator-select{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+
+/* Tarjeta de Orden de Taller en Vivo */
+body.page-retratos-por-encargo-bilbao .atelier-OrderCard{background:#fffdf8;color:#1e120a;border-radius:28px 16px 26px 18px;padding:22px;box-shadow:0 22px 50px rgba(0,0,0,0.5);border:2px solid #d4af37;position:sticky;top:100px}
+body.page-retratos-por-encargo-bilbao .atelier-card-stamp{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:10px;font-weight:800;letter-spacing:.12em;color:#9e3e16;background:rgba(232,153,115,0.22);border:1px dashed #9e3e16;padding:4px 10px;border-radius:4px;width:fit-content;margin-bottom:14px}
+body.page-retratos-por-encargo-bilbao .atelier-card-visual{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:16/10;background:#141210;margin-bottom:16px;border:1px solid rgba(30,18,10,0.14)}
+body.page-retratos-por-encargo-bilbao .atelier-card-visual img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+body.page-retratos-por-encargo-bilbao .atelier-card-caption{position:absolute;inset:auto 0 0 0;padding:12px 14px;background:linear-gradient(transparent,rgba(14,10,8,0.92));color:#fffdf4;display:grid;gap:2px}
+body.page-retratos-por-encargo-bilbao .atelier-card-caption span{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#f7d594}
+body.page-retratos-por-encargo-bilbao .atelier-card-caption strong{font-size:14px}
+body.page-retratos-por-encargo-bilbao .atelier-msg-label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#6e4f3a;margin-bottom:6px}
+body.page-retratos-por-encargo-bilbao .configurator-preview{background:#f5efe4;border-left:3px solid #b84314;color:#1e120a;font-size:13px;padding:12px 14px;border-radius:0 10px 10px 0;margin-bottom:16px}
+body.page-retratos-por-encargo-bilbao .atelier-OrderCard .configurator-action{display:grid;grid-template-columns:1fr;gap:10px}
+body.page-retratos-por-encargo-bilbao .atelier-OrderCard .commission-cta-btn{justify-content:center;background:#1e120a;color:#f7d594;border-radius:999px;font-weight:600;padding:14px 20px;box-shadow:0 8px 20px rgba(30,18,10,0.24)}
+body.page-retratos-por-encargo-bilbao .atelier-OrderCard .commission-cta-btn:hover{background:#b84314;color:#fffdf4}
+body.page-retratos-por-encargo-bilbao .atelier-OrderCard .commission-cta-secondary{justify-content:center;color:#1e120a;border-color:rgba(30,18,10,0.28);border-radius:999px;padding:12px 18px}
+body.page-retratos-por-encargo-bilbao .atelier-OrderCard .commission-cta-secondary:hover{background:rgba(30,18,10,0.06);border-color:#1e120a}
+body.page-retratos-por-encargo-bilbao .atelier-card-guarantee{font-size:11px;color:#5a4130;text-align:center;margin-top:12px}
+
+/* Muestrario de 4 Soportes con estética Collage / Cinta de Carrocero */
+body.page-retratos-por-encargo-bilbao .commission-examples-section{background:rgba(255,253,248,0.45);border:1px solid rgba(30,18,10,0.16);border-radius:48px 22px 44px 26px;padding:56px 44px 42px;backdrop-filter:blur(8px);box-shadow:0 22px 54px rgba(84,34,12,0.14)}
+body.page-retratos-por-encargo-bilbao .commission-examples-section .section-opening{padding:10px 0 36px}
+body.page-retratos-por-encargo-bilbao .commission-examples-section .section-opening .eyebrow{color:#7a2b0c;font-weight:700}
+body.page-retratos-por-encargo-bilbao .commission-examples-section .section-opening h2{color:#1e120a}
+body.page-retratos-por-encargo-bilbao .commission-examples-section .section-opening h2 span{font-family:'Caveat',cursive;color:#9e3e16}
+body.page-retratos-por-encargo-bilbao .commission-examples-section .section-opening p:not(.eyebrow){color:#2e1c10}
+body.page-retratos-por-encargo-bilbao .commission-examples{grid-template-columns:repeat(2,minmax(0,1fr));gap:32px;padding:10px 0}
+body.page-retratos-por-encargo-bilbao .commission-example{position:relative;background:#fffdf8;color:#1e120a;border:1px solid rgba(30,18,10,0.14);border-radius:30px 16px 28px 18px;box-shadow:0 18px 42px rgba(30,18,10,0.14);overflow:visible;transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s ease}
+body.page-retratos-por-encargo-bilbao .commission-example:nth-child(odd){transform:rotate(-0.45deg)}
+body.page-retratos-por-encargo-bilbao .commission-example:nth-child(even){transform:rotate(0.45deg)}
+body.page-retratos-por-encargo-bilbao .commission-example:hover{transform:translateY(-6px) rotate(0deg);box-shadow:0 26px 56px rgba(30,18,10,0.24)}
+body.page-retratos-por-encargo-bilbao .commission-tape{position:absolute;top:-11px;left:28px;z-index:3;background:#f3dfb6;color:#4a3319;font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:9px;font-weight:800;letter-spacing:.12em;padding:4px 12px;transform:rotate(-2.5deg);box-shadow:0 3px 8px rgba(0,0,0,0.18)}
+body.page-retratos-por-encargo-bilbao .commission-example-photo{position:relative;border-radius:28px 14px 0 0;overflow:hidden;aspect-ratio:16/10}
+body.page-retratos-por-encargo-bilbao .commission-photo-tag{position:absolute;right:14px;bottom:12px;background:rgba(18,14,12,0.84);color:#fffdf4;padding:5px 12px;border-radius:999px;font-size:11px;backdrop-filter:blur(6px)}
+body.page-retratos-por-encargo-bilbao .commission-example-copy{padding:24px 28px 28px}
+body.page-retratos-por-encargo-bilbao .commission-example-copy .eyebrow{color:#9e3e16;font-weight:700}
+body.page-retratos-por-encargo-bilbao .commission-example-copy h3 a{color:#1e120a}
+body.page-retratos-por-encargo-bilbao .commission-example-copy p:not(.eyebrow){color:#3b2618;font-size:14px}
+body.page-retratos-por-encargo-bilbao .commission-swatch-meta{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-top:10px;padding-top:14px;border-top:1px solid rgba(30,18,10,0.12)}
+body.page-retratos-por-encargo-bilbao .commission-swatch-meta small{color:#5e422f;border:0;padding:0;font-weight:500}
+body.page-retratos-por-encargo-bilbao .commission-pick-btn{background:#1e120a;color:#f7d594;padding:8px 16px;border-radius:999px;border:0;font-size:11px;font-weight:600;transition:background .22s,transform .22s}
+body.page-retratos-por-encargo-bilbao .commission-pick-btn:hover{background:#b84314;color:#fffdf4;transform:translateY(-2px)}
+
+/* Los 4 pasos del proceso */
+body.page-retratos-por-encargo-bilbao .commission-steps{display:block;background:#1b1512;color:#fffdf4;border:1px solid rgba(212,175,55,0.28);border-radius:42px 20px 44px 24px;padding:56px 48px}
+body.page-retratos-por-encargo-bilbao .commission-steps-header{margin-bottom:36px}
+body.page-retratos-por-encargo-bilbao .commission-steps-header .eyebrow{color:#f7d594}
+body.page-retratos-por-encargo-bilbao .commission-steps-header h2{font-size:clamp(36px,4.8vw,60px);margin-top:10px}
+body.page-retratos-por-encargo-bilbao .commission-steps-header h2 span{font-family:'Caveat',cursive;color:#f7d594}
+body.page-retratos-por-encargo-bilbao .commission-steps-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px}
+body.page-retratos-por-encargo-bilbao .commission-steps-grid article{background:rgba(255,253,244,0.04);border:1px solid rgba(255,253,244,0.12);border-radius:24px 14px 22px 16px;padding:26px 22px}
+body.page-retratos-por-encargo-bilbao .commission-steps-grid article>span{display:inline-block;font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:10px;font-weight:700;letter-spacing:.1em;color:#1e120a;background:#f7d594;padding:3px 9px;border-radius:999px}
+body.page-retratos-por-encargo-bilbao .commission-steps-grid h3{font-size:22px;margin:16px 0 10px;color:#fffdf4}
+body.page-retratos-por-encargo-bilbao .commission-steps-grid p{font-size:13px;line-height:1.75;color:#d2c8bc}
+
+/* Grid de Especificaciones + Tabla Comparativa en claro */
+body.page-retratos-por-encargo-bilbao .commission-specs-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-bottom:28px}
+body.page-retratos-por-encargo-bilbao .commission-spec-card{background:#f7f1e6;border:1px solid rgba(30,18,10,0.12);border-radius:20px 12px 18px 14px;padding:18px 20px}
+body.page-retratos-por-encargo-bilbao .spec-label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#9e3e16;margin-bottom:6px}
+body.page-retratos-por-encargo-bilbao .commission-spec-card p{font-size:13px;line-height:1.65;color:#2c1b10;margin:0}
+body.page-retratos-por-encargo-bilbao .commission-compare-wrap{background:#1b1512;border-radius:22px;border:1px solid rgba(30,18,10,0.2);overflow:hidden}
+
+/* FAQs y Cierre */
+body.page-retratos-por-encargo-bilbao .commission-faq{background:#fffdf8;color:#1e120a;border:1px solid rgba(30,18,10,0.15);border-radius:44px 20px 40px 24px}
+body.page-retratos-por-encargo-bilbao .commission-faq .section-opening{padding:10px 0 28px}
+body.page-retratos-por-encargo-bilbao .commission-faq .section-opening .eyebrow{color:#9e3e16;font-weight:700}
+body.page-retratos-por-encargo-bilbao .commission-faq .section-opening h2{color:#1e120a}
+body.page-retratos-por-encargo-bilbao .commission-faq .section-opening h2 span{font-family:'Caveat',cursive;color:#b84314}
+body.page-retratos-por-encargo-bilbao .commission-faq-list{border-top-color:rgba(30,18,10,0.16)}
+body.page-retratos-por-encargo-bilbao .commission-faq-item{border-bottom-color:rgba(30,18,10,0.14)}
+body.page-retratos-por-encargo-bilbao .commission-faq-item summary{color:#1e120a;font-weight:500}
+body.page-retratos-por-encargo-bilbao .commission-faq-item summary:after{color:#b84314}
+body.page-retratos-por-encargo-bilbao .commission-faq-item p{color:#3b2618}
+body.page-retratos-por-encargo-bilbao .closing{background:#1b1512;color:#fffdf4;border:1px solid rgba(212,175,55,0.32);border-radius:42px 20px 44px 22px}
+body.page-retratos-por-encargo-bilbao .site-footer{color:#1e120a;border-top:1px solid rgba(30,18,10,0.18)}
+body.page-retratos-por-encargo-bilbao .site-footer .signature{color:#1e120a}
+body.page-retratos-por-encargo-bilbao .site-footer .share-dock-label{color:#3b2618}
+body.page-retratos-por-encargo-bilbao .site-footer .share-btn{background:rgba(30,18,10,0.08);border-color:rgba(30,18,10,0.2);color:#1e120a}
+
+@media(max-width:960px){
+  body.page-retratos-por-encargo-bilbao .atelier-hero-grid,
+  body.page-retratos-por-encargo-bilbao .atelier-workbench{grid-template-columns:1fr}
+  body.page-retratos-por-encargo-bilbao .atelier-hero-polaroids{display:none}
+  body.page-retratos-por-encargo-bilbao .commission-examples,
+  body.page-retratos-por-encargo-bilbao .commission-specs-grid{grid-template-columns:1fr}
+  body.page-retratos-por-encargo-bilbao .commission-steps-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  body.page-retratos-por-encargo-bilbao .cfg-pill-group--compact{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:640px){
+  body.page-retratos-por-encargo-bilbao .commission-configurator,
+  body.page-retratos-por-encargo-bilbao .atelier-manifesto,
+  body.page-retratos-por-encargo-bilbao .atelier-specs-chapter,
+  body.page-retratos-por-encargo-bilbao .commission-examples-section,
+  body.page-retratos-por-encargo-bilbao .commission-steps,
+  body.page-retratos-por-encargo-bilbao .commission-faq{padding:34px 20px}
+  body.page-retratos-por-encargo-bilbao .commission-steps-grid,
+  body.page-retratos-por-encargo-bilbao .cfg-pill-group--two{grid-template-columns:1fr}
+}
+
+.commission-example.is-selected-support{border-color:#d4af37;box-shadow:0 0 0 2px #d4af37,0 18px 40px rgba(0,0,0,0.35)}
 .commission-compare-table tbody tr[data-compare-support]{transition:background .2s ease}
 .commission-compare-table tbody tr[data-compare-support]:hover{background:rgba(237,188,164,0.08)}
-.commission-compare-table tbody tr.is-selected-support{background:rgba(212,175,55,0.14)}
-.configurator-seed-banner{margin-top:12px;padding:8px 14px;border-radius:8px;background:rgba(212,175,55,0.14);border:1px solid rgba(212,175,55,0.38);color:#f7d594;font-size:12px;display:inline-block}
+.commission-compare-table tbody tr.is-selected-support{background:rgba(212,175,55,0.18)}
+.configurator-seed-banner{margin-top:12px;padding:8px 14px;border-radius:8px;background:rgba(212,175,55,0.16);border:1px solid rgba(212,175,55,0.45);color:#f7d594;font-size:12px;display:inline-block}
 
 /* Micro-gota de pintura dorada reactiva en click (Tactilidad de Bellas Artes) */
 .naroa-brush-touch {
