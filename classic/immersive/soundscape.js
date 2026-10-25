@@ -1143,7 +1143,16 @@
       playStencilRollerWipe(filterCategory);
     },
     async createStoryLoopStream(durationSec = 6) {
-      if (!Audio) return null;
+      const loopNotes = melody.filter(n => n !== null).slice(0, 7);
+      loopNotes.push(74.00); // Tónica final D5 (Sound of Silence / Re menor)
+      const fallbackResult = {
+        stream: null,
+        melodyName: activeMelodyMeta.name,
+        melodyDay: activeMelodyMeta.day,
+        notesScheduled: loopNotes.length,
+        stop() {}
+      };
+      if (!Audio) return fallbackResult;
       try {
         if (!context) context = new Audio();
         if (context.state !== 'running') {
@@ -1153,9 +1162,9 @@
           engine = await prepare();
         }
       } catch {
-        return null;
+        return fallbackResult;
       }
-      if (!context || !engine) return null;
+      if (!context || !engine) return fallbackResult;
       const streamDest = typeof context.createMediaStreamDestination === 'function'
         ? context.createMediaStreamDestination()
         : null;
@@ -1172,9 +1181,6 @@
         engine.master.gain.setValueAtTime(Math.max(prevGain, 0.26), now);
       } catch {}
 
-      // Secuencia hipnótica de 6s: 8 pasos del motivo del día + resolución cálida en Re menor
-      const loopNotes = melody.filter(n => n !== null).slice(0, 7);
-      loopNotes.push(74.00); // Tónica final D5 (Sound of Silence / Re menor)
       const stepTime = (durationSec - 0.55) / loopNotes.length;
       const scheduledVoices = [];
 

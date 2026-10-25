@@ -107,10 +107,14 @@
       if (!src) return reject(new Error('Empty src'));
       const img = new Image();
       img.crossOrigin = 'anonymous';
-      img.onload = () => resolve(img);
-      img.onerror = () => reject(new Error('Failed to load: ' + src));
+      const timer = setTimeout(() => resolve(null), 120);
+      img.onload = () => { clearTimeout(timer); resolve(img); };
+      img.onerror = () => { clearTimeout(timer); reject(new Error('Failed to load: ' + src)); };
       img.src = src;
-      if (img.complete && (img.naturalWidth || img.width)) resolve(img);
+      if (img.complete && (img.naturalWidth || img.width)) {
+        clearTimeout(timer);
+        resolve(img);
+      }
     });
   }
 
