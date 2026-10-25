@@ -230,7 +230,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-la-pensadora',
     year: '2023',
     medium: 'Acrílico mate y metálico sobre lienzo 3D con laterales pintados. Barniz mate y satinado.',
-    description: 'Esta obra, al igual que el renombrado ‘Pensador’ de Rodin, representa de alguna manera el mundo interior y los procesos cognitivos de la humanidad. A su vez pretende romper el tópico de que la belleza y la intelectualidad son excluyentes.
+    description: `Esta obra, al igual que el renombrado ‘Pensador’ de Rodin, representa de alguna manera el mundo interior y los procesos cognitivos de la humanidad. A su vez pretende romper el tópico de que la belleza y la intelectualidad son excluyentes.
 
 También hace referencia a la importancia de ser dueños y no ignorantes o esclavos de nuestros propios pensamientos, controlando así los caminos hacia los que éstos nos conducen. Por qué ser víctima y verdugo, pudiendo ser el propio propulsor de nuestros sueños.
 
@@ -244,7 +244,7 @@ o en cambio te ha perjudicado;
 todo es fruto de tu mente, amigo,
 de lo que sembraste y has regado».
 
-Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansado se puede escuchar mejor y distinguir así a profetas sabios o tunantes, de entre todos esos contertulios que viven a voces en nuestro interior.',
+Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansado se puede escuchar mejor y distinguir así a profetas sabios o tunantes, de entre todos esos contertulios que viven a voces en nuestro interior.`,
     dimensions: '50 × 70 cm',
     sizeCategory: 'small'
   },
