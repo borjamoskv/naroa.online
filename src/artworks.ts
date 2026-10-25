@@ -492,7 +492,7 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
     id: 32,
     category: 'kintsugi',
     kicker: 'El problema hecho trampolín',
-    quote: 'Las grietas florecen en resina dorada kintsugi.',
+    quote: 'Puro kintsugi, el problema hecho trampolín.',
     slug: 'cantinflas-kintsugi',
     aspectRatio: 1.491,
     url: '/assets/cantinflas-kintsugi.webp',
@@ -500,7 +500,7 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
     href: '#obra-cantinflas-kintsugi',
     year: '2024',
     medium: 'Acrílico, Cola, Textura de Fractura y Pan de Oro',
-    description: 'El problema hecho trampolín: rasgado experimental sobre soporte rígido donde las grietas florecen en resina dorada kintsugi.',
+    description: '«Durante la pandemia, mientras creaba la obra “Cantinflowers”, me vi sumida en una ardua lucha entre el acrílico y la cola, la transparencia y la grieta. En lugar de claudicar, comienzo a rascar sobre una base que no me permitía difuminar y ¡premio!, encuentro una textura inédita. Una actitud que es como las flores que rompen el asfalto y brotan de sus fisuras; puro “kintsugi”, el problema hecho trampolín».',
     sizeCategory: 'colossal'
   },
   {
@@ -1567,5 +1567,21 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
     medium: 'Fotografías recortadas y ensamblaje pixel art 8-bit',
     description: 'En Game Over, la lata de conservas clausura el viaje con un guiño retro arcade tras el silencio de El Graduado. Entre rosas y calas de papel, la pantalla pixelada se despide en 8 bits.',
     sizeCategory: 'medium'
+  },
+  {
+    id: 105,
+    category: 'drawing',
+    kicker: 'La elegancia del cómico que desafió a la retórica',
+    quote: 'Ahí está el detalle: no es ni lo uno ni lo otro, sino todo lo contrario.',
+    slug: 'mario-moreno',
+    aspectRatio: 0.764,
+    url: '/images/catalogo/mario-moreno-hq-01.webp',
+    title: 'Mario Moreno',
+    href: '#obra-mario-moreno',
+    year: '2020',
+    medium: 'Acrílico, rotulador y collage textil sobre Lienzo',
+    description: 'Retrato a grafito y carboncillo en blanco y negro, atravesado por la tridimensionalidad táctil de una corbata de seda roja con lunares, solapa vaquera y pañuelo de lienzo.',
+    sizeCategory: 'medium',
+    dimensions: 'Lienzo: 24 × 18 cm · Marco: 32 × 26 cm'
   }
 ]
