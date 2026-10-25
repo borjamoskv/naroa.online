@@ -938,6 +938,11 @@ async function eyeMatch(ui, base, points) {
       assert.ok(page.find('#cfg-whatsapp-btn'), 'Configurator includes dynamic WhatsApp button');
       assert.ok(page.find('#cfg-email-btn'), 'Configurator includes dynamic Email button');
       assert.ok(page.find('#cfg-preview'), 'Configurator includes live message preview');
+      assert.ok(page.find('.commission-trust-pills'), 'Commissions landing includes local Bilbao trust pills');
+      assert.ok(page.w.NAROA_COMMISSION, 'NAROA_COMMISSION API exposed on window');
+      page.click('[data-pick-support="Pizarra natural rústica"]');
+      assert.equal(page.find('#cfg-support').value, 'Pizarra natural rústica', 'Clicking support example card preselects support in configurator');
+      assert.ok(page.find('[data-support-card="Pizarra natural rústica"]').classList.contains('is-selected-support'), 'Selected support card highlights visually');
       page.find('#cfg-support').value = 'Caja personalizada u objeto';
       page.find('#cfg-support').dispatchEvent(new page.w.Event('change'));
       assert.ok(page.find('#cfg-whatsapp-btn').href.includes(encodeURIComponent('Caja personalizada u objeto')), 'Changing support updates WhatsApp query parameter');

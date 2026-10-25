@@ -1,6 +1,6 @@
 {
-  "reviewed": "2026-10-20",
-  "scope": "Selección documentada; no es un inventario exhaustivo. Las fechas corresponden a las muestras, no a la publicación de las entradas.",
+  "reviewed": "2026-10-25",
+  "scope": "«Porque las exposiciones colectivas son como el corro de las patatas o el pilla-pilla de la vida artística: es enseñarnos los nuevos cromos al reunirnos con las amigas; es pegar en la misma pared todas nuestras pegatinas».",
   "exhibitions": [
     {
       "id": "3055",
@@ -9,7 +9,7 @@
       "dateLabel": "Junio de 2026 · inauguración el 4",
       "location": "Dock · Bilbao",
       "type": "group",
-      "description": "Participación en la muestra colectiva comisariada por Olatz Arrese, junto a otras creadoras visuales del entorno de Bilbao.",
+      "description": "«Lo ha vuelto a hacer. La comisaria Olatz Arrese nos ha embarcado en una nueva exposición colectiva organizada por la asociación Bwall Collective, cuyo objetivo es dar visibilidad a artistas residentes en Bilbao y sus alrededores mediante el impulso de proyectos culturales… ondeando, como siempre, la bandera del arte. En la actual convocatoria también seremos nosotras quienes abracemos sus muros con los brotes de nuestras almas y manos: obras que germinaron en múltiples jardines mediante una variedad de técnicas, a través de nuestras diferentes formas de percibir la realidad».",
       "endDate": null,
       "year": 2026,
       "sources": [
@@ -31,7 +31,7 @@
       "dateLabel": "27 de abril — 8 de junio de 2026",
       "location": "Marienea · Basauri",
       "type": "group",
-      "description": "Participa con Rara Avis en la muestra surgida del taller de autorretrato de Ana Rosa Arroyo. El proyecto se presentó primero en Mujeres en la Diversidad, desde diciembre de 2025, y después en Marienea.",
+      "description": "«Mis queridos espejitos de miradas cándidas y reflejos mágicos. Hoy me cuelo por vuestras pupilas para invitaros a una muestra colectiva esbozada en femenino por el sendero del “me veo y me quiero” para evitar el enredo del miedo. A finales del año pasado tuve la suerte de asistir al Taller de Autorretrato, impartido por Ana Rosa Arroyo Ruiz en la asociación “Mujeres en la Diversidad”, liderada por mujeres migradas y con sede en Basauri».",
       "endDate": "2026-06-08",
       "year": 2026,
       "sources": [
@@ -50,7 +50,7 @@
       "dateLabel": "30 de enero de 2026 · inauguración",
       "location": "Politena, espacio de arte · Bilbao",
       "type": "solo",
-      "description": "Encuentro entre los retratos de DiviNos y los collages de Vaivenes. La pizarra, las texturas y los materiales reutilizados enlazan iconos del cine, la música y la televisión.",
+      "description": "«El 2026 quiero que sea un año de abrazos: abrazar a seres queridos, acoger a nuevos amigos y conciliar a mis luces y tinieblas, para que de ellas emerjan mágicas sinergias. Esta fusión constructiva que anhelo y labro —que no son sino recordatorios personales de mis propias tomas de conciencia—, la he aplicado también a mis obras. Así ha nacido la muestra que aquí os presento: «DiviNos VaiVenes», un hermanamiento entre mis dos últimas danzas con las artes plásticas».",
       "endDate": null,
       "year": 2026,
       "sources": [
@@ -68,7 +68,7 @@
       "dateLabel": "25 de mayo de 2025",
       "location": "Lataska · Sopela",
       "type": "market",
-      "description": "Presentación de obra y reproducciones: cuatro iconos sobre pizarra, AmazOna y las versiones de día y de noche de Entre Tantas Flores.",
+      "description": "«Domingueras, domingueros… ¡estamos de enhorabuena! El próximo domingo 25 de Mayo volvemos a celebrar el arte con aroma costero y sabor a hogar, arropados en esta ocasión por la Azoka de Artesanía de Lataska de Sopela. Como veis, lo que os cuento no es sino un plan perfecto: un montón de piezas únicas acompañadas de quienes las hicieron nacer».",
       "endDate": null,
       "year": 2025,
       "sources": [
@@ -86,7 +86,7 @@
       "dateLabel": "18 de mayo de 2025",
       "location": "Sopela",
       "type": "market",
-      "description": "Participación en el mercado de arte y artesanía de la fiesta de primavera.",
+      "description": "«Este año Amalur acunó un poco más de la cuenta a la primavera, así que esta quiso quedarse un poco más en su regazo. Y junto a las floraciones y los días más largos, emergen también nuestras ganas de acercarnos a la costa buscando esos rayitos de luz aliñados con mar, que tan bien nos nutren, nos sonrosan y nos mecen».",
       "endDate": null,
       "year": 2025,
       "sources": [
@@ -104,7 +104,7 @@
       "dateLabel": "20 de diciembre de 2022 · inauguración",
       "location": "Harilka elkartea · Bilbao",
       "type": "group",
-      "description": "Muestra multidisciplinar de mujeres creadoras reunidas en torno a la sororidad y la participación cultural.",
+      "description": "«Porque no sostengo muchas certezas en esta vida, mas no me cabe duda alguna de que envolverme en un gran abrazo entre mujeres arropadas por su arte es algo para no perderme… que me invita también a encontrarme».",
       "endDate": null,
       "year": 2022,
       "sources": [
@@ -122,7 +122,7 @@
       "dateLabel": "Noviembre de 2022 · inauguración el 12",
       "location": "Dock · Bilbao",
       "type": "group",
-      "description": "Obra visual en una exposición colectiva que reunió también música, poesía y performance.",
+      "description": "«Contando estrellas, me salió una docena, que abracé con mi alma y atesoré en su alacena. Todas a su manera decoraron el aparador, algunas esparciéndose por las paredes, otras aportando luz y color… llenando también el recoveco de arte poético, musical y performativo».",
       "endDate": null,
       "year": 2022,
       "sources": [
@@ -140,7 +140,7 @@
       "dateLabel": "23 de octubre de 2022",
       "location": "Calles de Bilbao",
       "type": "street",
-      "description": "Convocatoria abierta para pasear con obras por la ciudad, desde el entorno del Museo de Bellas Artes hasta el Casco Viejo. Una forma de compartir el arte fuera de la sala de exposiciones.",
+      "description": "«Porque la galería más movida del planeta está de vuelta entre nosotros, sedienta de vuestro arsenal emocional, para empaparse de esa vena artística que nos da la vida y mostrarla a los cuatro vientos, una vez más, con el arte como estandarte».",
       "endDate": null,
       "year": 2022,
       "sources": [
@@ -158,7 +158,7 @@
       "dateLabel": "4 — 29 de abril de 2022",
       "location": "Siarte Leku · Bilbao",
       "type": "solo",
-      "description": "Selección de cinco retratos de Vaivenes: figuras reconocibles que dan forma a emociones y experiencias personales.",
+      "description": "«Cinco obras que nacieron con la intención de visibilizar las turbulencias internas del ser humano a través de facciones ilustres para, aprovechando la cercanía que nos proporciona lo cognoscible —esa familiaridad y descanso, ese acogimiento que recogemos y proyectamos—, poder mirarlas a los ojos y de este modo abrazarlas, que no es sino abrazarnos a nosotr@s mism@s».",
       "endDate": "2022-04-29",
       "year": 2022,
       "sources": [
@@ -176,7 +176,7 @@
       "dateLabel": "2 — 28 de octubre de 2020",
       "location": "Casa de Cultura Clara Campoamor · Barakaldo",
       "type": "group",
-      "description": "Retratos en distintas técnicas junto a Vanessa Gredilla Espiña, Carmen Ortiz de Urbina y Piedad Ortiz de Urbina.",
+      "description": "«Tres ilustres artivistas y servidora colgarán en un muro —de veintinueve metros de largo— algunas de sus obras. A esta retahíla de rostros la hemos denominado “ICONOS POP”, nuestro particular juego visual con el tablero en vertical. El resultado: una exposición de retratos realizados mediante diferentes técnicas, mas con un mismo corazón».",
       "endDate": "2020-10-28",
       "year": 2020,
       "sources": [
@@ -194,7 +194,7 @@
       "dateLabel": "30 de septiembre — 27 de octubre de 2020",
       "location": "Haika · Sodupe",
       "type": "solo",
-      "description": "Muestra individual que utiliza figuras de la música, el cine, la literatura y la televisión para explorar estados emocionales.",
+      "description": "«Mientras sacaba a la luz mis entresijos internos, de manera natural iba destilando el antídoto de mis turbulencias y decelerando la velocidad de mi centrifugado interno, como una pócima mágica diseñada minuciosamente para mí o un melódico mantra que recitar para avanzar, pasito a pasito, con él de la mano hasta el sosiego del ojo del huracán. Y funcionó».",
       "endDate": "2020-10-27",
       "year": 2020,
       "sources": [
@@ -212,7 +212,7 @@
       "dateLabel": "28 de noviembre de 2019 · inauguración",
       "location": "Copper Deli Museo · Bilbao",
       "type": "solo",
-      "description": "La exposición reúne nuevos rostros y composiciones nacidas de los contrastes de la experiencia cotidiana.",
+      "description": "«La vida es como un muro contra el que a menudo me doy de bruces. En ocasiones, el mero hecho de estamparme, desata mi carcajada, haciéndome llorar de la risa. En cambio, otras veces me lastimo de veras y, lo mire por donde lo mire, no le encuentro gracia alguna a dicho dolor. Entonces enjugo mi llanto y lo guardo como oro en paño, para terminar exponiéndolo como el mayor de los tesoros».",
       "endDate": null,
       "year": 2019,
       "sources": [
@@ -230,7 +230,7 @@
       "dateLabel": "28 de junio — 31 de julio de 2018",
       "location": "Baserri Antzoki · Derio",
       "type": "group",
-      "description": "Colectiva multidisciplinar comisariada por Germán de los Ríos, con fotografía, pintura, escultura y poesía visual.",
+      "description": "«Bajo el nombre de una txiriwelta completa, un puñado de artivistas nos congregaremos en menos de lo que canta un gallo en el Baserri Antzoki de Derio bajo la excusa perfecta, una vez más, de celebrarnos. Con nuestras almas desperdigadas por las paredes, cristaleras, columnas, peanas, vigas e incluso el escenario de este caserío, conformaremos una Exposición Colectiva Multidisciplinar a la que hemos bautizado como “360°”».",
       "endDate": "2018-07-31",
       "year": 2018,
       "sources": [
@@ -248,7 +248,7 @@
       "dateLabel": "5 — 24 de septiembre de 2017",
       "location": "Sarean · Bilbao",
       "type": "group",
-      "description": "Participación en la muestra comisariada por Txema Agiriano, centrada en la convivencia, la diferencia y los vínculos entre las personas.",
+      "description": "«Sarean es un espacio de encuentro vecinal abierto a todo tipo de expresiones culturales ubicado en la bilbaína Plaza del Corazón de María. Se trata de un ambiente lúdico de carácter experimental y pedagógico que alberga una programación sociocultural diseñada a través de la participación ciudadana».",
       "endDate": "2017-09-24",
       "year": 2017,
       "sources": [
@@ -270,7 +270,7 @@
       "dateLabel": "Diciembre de 2016",
       "location": "Tegobi · Bilbao",
       "type": "solo",
-      "description": "Una colección de retratos que explora el rostro a través de un color intenso y expresivo.",
+      "description": "«Pero por qué quedarse en el envoltorio, si rascamos un poquito la superficie: ¡premio!, tod@s somos seres multicolores. Que de verdad somos así, puros espectros de luz con patitas y brazos; os aseguro que portamos el pantone más completo en nuestro interior».",
       "endDate": null,
       "year": 2016,
       "sources": [
@@ -288,7 +288,7 @@
       "dateLabel": "28 de mayo — 24 de julio de 2015",
       "location": "Colegio de Abogados · Bilbao",
       "type": "solo",
-      "description": "Pinturas sobre lienzo y platos de madera: una investigación del rostro como lugar de reconocimiento entre quien mira y quien es mirado.",
+      "description": "«El Ilustre Colegio de Abogados del Señorío de Vizcaya me ha abierto las puertas de su sala de exposiciones y yo —sin ánimo de competir con la de Versalles— he decidido convertirla durante un par de lunas en mi particular Galería de los Espejos para ti. Una milhoja de lienzos, media docena de platos de madera y algún que otro postre».",
       "endDate": "2015-07-24",
       "year": 2015,
       "sources": [
@@ -310,7 +310,7 @@
       "dateLabel": "16 de mayo de 2015",
       "location": "Calles de Bilbao · salida desde Galería Kalao",
       "type": "street",
-      "description": "Encuentro abierto de artistas que transportan y muestran sus creaciones durante un recorrido urbano.",
+      "description": "«De vez en cuando, las ciudades cobran vida y se celebran. Por unos momentos, la urbe que te engulle mientras la serpenteas con prisa de un lado a otro, parece como si se dispusiese a emanar una especie de líquido amniótico capaz de satisfacer con creces todos los caprichos de tu multidimensional ser».",
       "endDate": null,
       "year": 2015,
       "sources": [
@@ -328,7 +328,7 @@
       "dateLabel": "Julio — 31 de agosto de 2014",
       "location": "Torre Salazar · Portugalete",
       "type": "solo",
-      "description": "La muestra ocupa la casa-torre con pinturas sobre lienzo y trabajos sobre madera. La inauguración se celebró el 17 de julio.",
+      "description": "«El pasado 1 de Julio terminé de montar mi actual exposición de pintura “Espejos del Alma” en la Torre Salazar de Portugalete. El cuerpo, como torre y como mundo… Y el mundo… un laberinto de espejos».",
       "endDate": "2014-08-31",
       "year": 2014,
       "sources": [
@@ -346,7 +346,7 @@
       "dateLabel": "20 de mayo de 2013 · inauguración",
       "location": "Spazio Grossi · Bilbao",
       "type": "solo",
-      "description": "Exposición anunciada por la artista en su archivo personal.",
+      "description": "«¡Hola a tod@s! Me complace invitaros a la inauguración de mi exposición “La Bolsa y la Vida” que tendrá lugar mañana lunes 20 de Mayo a las 19:30h. en Spazio Grossi (C/ Manuel Allende 12, Bilbao). ¡Recibid un saludo y mis mejores deseos!»",
       "endDate": null,
       "year": 2013,
       "sources": [
@@ -364,7 +364,7 @@
       "dateLabel": "Septiembre de 2011 · hasta el día 30",
       "location": "Gaztebulegoa · Barakaldo",
       "type": "solo",
-      "description": "La agenda cultural local recoge una exposición de pintura de Naroa Gutiérrez Gil.",
+      "description": "Documentada en la agenda cultural de Barakaldo Digital (septiembre de 2011).",
       "endDate": "2011-09-30",
       "year": 2011,
       "sources": [
@@ -382,7 +382,7 @@
       "dateLabel": "Marzo de 2010 · hasta el día 31",
       "location": "Hegoak · Bilbao",
       "type": "solo",
-      "description": "La agenda de GARA documenta la muestra de Naroa bajo este título. Es la referencia más antigua incluida en esta selección.",
+      "description": "Documentada en la agenda cultural de GARA (marzo de 2010).",
       "endDate": "2010-03-31",
       "year": 2010,
       "sources": [
@@ -399,7 +399,7 @@
     "width": 3656,
     "height": 2456,
     "alt": "Cantinflowers: retrato de Cantinflas rodeado de formas y colores vivos",
-    "caption": "Cantinflowers · Imagen publicada por Naroa en el relato de DiviNos VaiVenes, 2026.",
+    "caption": "«Durante la pandemia, mientras creaba la obra “Cantinflowers”, me vi sumida en una ardua lucha entre el acrílico y la cola, la transparencia y la grieta. Puro “kintsugi”, el problema hecho trampolín».",
     "source": "https://naroagutierrez.wordpress.com/2026/01/15/divinos-vaivenes-muestra-plastica-en-politena-espacio-de-arte/",
     "original": "https://naroagutierrez.wordpress.com/wp-content/uploads/2026/01/1-2.jpg"
   }

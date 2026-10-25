@@ -103,6 +103,16 @@
         "intent": "Cita presencial en estudio de Bilbao",
         "question": "¿Es posible visitar el estudio en Bilbao para elegir soportes o ver obra en directo?",
         "answer": "Sí, previa cita por email o WhatsApp se conciertan visitas al estudio en Bilbao para valorar formatos, maderas, tejidos, objetos y definir la obra en persona."
+      },
+      {
+        "intent": "Combinar varias fotografías en un retrato",
+        "question": "¿Se puede encargar un retrato en Bilbao uniendo a varias personas de fotografías distintas?",
+        "answer": "Sí, Naroa compone retratos conjuntos a partir de fotografías separadas (de distintas épocas, familiares o mascotas), integrándolas con coherencia cromática y narrativa en una misma obra de autor."
+      },
+      {
+        "intent": "Regalos de boda, aniversario, jubilación u homenaje",
+        "question": "¿Qué formato de retrato personalizado se recomienda para un regalo de boda, aniversario o jubilación en Bilbao?",
+        "answer": "Para bodas, aniversarios o jubilaciones destacan las composiciones en collage textil sobre madera noble (30×40 cm o 40×50 cm) y las cajas de memoria tridimensionales intervenidas con objetos biográficos."
       }
     ],
     "exhibitions_chronology": [

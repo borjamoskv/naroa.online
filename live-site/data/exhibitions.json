@@ -1,86 +1,99 @@
 {
   "exhibitions": [
     {
-      "id": "espejos-del-alma-2024",
-      "title": "Espejos del Alma",
-      "subtitle": "Retrospectiva Emocional",
-      "location": "Galería Vanguardia, Bilbao",
-      "year": 2024,
-      "month": "Noviembre",
-      "day": 15,
-      "type": "solo",
-      "description": "Una inmersión profunda en la psique humana a través de 15 retratos de gran formato. La exposición explora cómo la mirada construye identidad.",
-      "image": "images/artworks/espejos-del-alma.webp",
-      "url": "#/galeria"
-    },
-    {
-      "id": "identity-fragments-2024",
-      "title": "Identity Fragments",
-      "subtitle": "Colectiva Contemporánea",
-      "location": "Espacio Oculto, Madrid",
-      "year": 2024,
-      "month": "Mayo",
-      "day": 22,
-      "type": "group",
-      "description": "Participación con la obra 'Fragmentación IV' en una muestra sobre la identidad digital y física en la era moderna.",
-      "image": "images/artworks/kintsugi-gold-1.webp",
-      "url": "https://espaciooculto.madrid"
-    },
-    {
-      "id": "pop-icons-2023",
-      "title": "POP Culture Icons",
-      "subtitle": "Virtual Exhibition",
-      "location": "Artsy Online",
-      "year": 2023,
-      "month": "Septiembre",
-      "type": "online",
-      "description": "Muestra digital curada seleccionando las mejores reinterpretaciones del pop art actual. Naroa presentó su serie 'Neon Dreams'.",
-      "url": "https://artsy.net"
-    },
-    {
-      "id": "retratos-vivos-2022",
-      "title": "Retratos Vivos",
-      "location": "Kursaala, Donostia",
-      "year": 2022,
-      "month": "Febrero",
-      "type": "solo",
-      "description": "Primera gran exposición individual presentando la técnica de hiperrealismo con texturas mixtas. Un éxito de crítica local."
-    },
-    {
-      "id": "emergentes-2021",
-      "title": "Artistas Emergentes Euskadi",
-      "location": "Sala Rekalde, Bilbao",
-      "year": 2021,
-      "month": "Julio",
-      "type": "group",
-      "description": "Seleccionada como una de las 10 artistas revelación del año. Obra expuesta: 'La Mirada Ausente'."
-    },
-    {
-      "id": "art-market-2020",
-      "title": "Bilbao Art Market",
-      "location": "Ensanche, Bilbao",
-      "year": 2020,
-      "month": "Diciembre",
-      "type": "market",
-      "description": "Stand propio en la feria de arte navideña, con venta directa de obra pequeña y láminas limitadas."
-    },
-    {
-      "id": "mujeres-creadoras-2019",
-      "title": "Mujeres Creadoras",
-      "location": "Casa de Cultura de Getxo",
-      "year": 2019,
-      "month": "Marzo",
-      "type": "group",
-      "description": "Exposición colectiva celebrando el mes de la mujer. Participación con tríptico sobre la maternidad."
-    },
-    {
-      "id": "bbaa-final-2018",
-      "title": "Grado BBAA Final Show",
-      "location": "UPV/EHU Leoia",
-      "year": 2018,
+      "id": "3055",
+      "title": "Bwall Collective",
+      "subtitle": "Brotes de alma y manos",
+      "location": "Dock, Bilbao",
+      "year": 2026,
       "month": "Junio",
+      "day": 4,
       "type": "group",
-      "description": "Exposición de fin de grado. Presentación del proyecto 'Génesis de la Forma'."
+      "description": "«Lo ha vuelto a hacer. La comisaria Olatz Arrese nos ha embarcado en una nueva exposición colectiva organizada por la asociación Bwall Collective, cuyo objetivo es dar visibilidad a artistas residentes en Bilbao y sus alrededores mediante el impulso de proyectos culturales… ondeando, como siempre, la bandera del arte».",
+      "url": "https://naroagutierrez.wordpress.com/2026/06/01/bwall-collective-en-el-dock-brotes-de-alma-y-manos/"
+    },
+    {
+      "id": "2995",
+      "title": "Autorretratos: Mujeres a través del Espejo",
+      "subtitle": "Muestra Colectiva",
+      "location": "Marienea, Basauri",
+      "year": 2026,
+      "month": "Abril",
+      "day": 27,
+      "type": "group",
+      "description": "«Mis queridos espejitos de miradas cándidas y reflejos mágicos. Hoy me cuelo por vuestras pupilas para invitaros a una muestra colectiva esbozada en femenino por el sendero del “me veo y me quiero” para evitar el enredo del miedo».",
+      "url": "https://naroagutierrez.wordpress.com/2026/05/14/autorretratos-mujeres-a-traves-del-espejo/"
+    },
+    {
+      "id": "2917",
+      "title": "DiviNos VaiVenes",
+      "subtitle": "Muestra Plástica Individual",
+      "location": "Politena Espacio de Arte, Bilbao",
+      "year": 2026,
+      "month": "Enero",
+      "day": 30,
+      "type": "solo",
+      "description": "«El 2026 quiero que sea un año de abrazos: abrazar a seres queridos, acoger a nuevos amigos y conciliar a mis luces y tinieblas, para que de ellas emerjan mágicas sinergias. Así ha nacido la muestra que aquí os presento: «DiviNos VaiVenes», un hermanamiento entre mis dos últimas danzas con las artes plásticas».",
+      "url": "https://naroagutierrez.wordpress.com/2026/01/15/divinos-vaivenes-muestra-plastica-en-politena-espacio-de-arte/"
+    },
+    {
+      "id": "2359",
+      "title": "Repóker de Reinas · Vaivenes",
+      "subtitle": "Muestra Individual",
+      "location": "Siarte Leku, Bilbao",
+      "year": 2022,
+      "month": "Abril",
+      "day": 4,
+      "type": "solo",
+      "description": "«Cinco obras que nacieron con la intención de visibilizar las turbulencias internas del ser humano a través de facciones ilustres para, aprovechando la cercanía que nos proporciona lo cognoscible, poder mirarlas a los ojos y de este modo abrazarlas, que no es sino abrazarnos a nosotr@s mism@s».",
+      "url": "https://naroagutierrez.wordpress.com/2022/03/22/repoker-de-reinas-vaivenes-en-siarte/"
+    },
+    {
+      "id": "2254",
+      "title": "Iconos Pop",
+      "subtitle": "Muestra Colectiva de Retratos",
+      "location": "Casa de Cultura Clara Campoamor, Barakaldo",
+      "year": 2020,
+      "month": "Octubre",
+      "day": 2,
+      "type": "group",
+      "description": "«Tres ilustres artivistas y servidora colgarán en un muro —de veintinueve metros de largo— algunas de sus obras. A esta retahíla de rostros la hemos denominado “ICONOS POP”, nuestro particular juego visual con el tablero en vertical».",
+      "url": "https://naroagutierrez.wordpress.com/2020/09/27/iconos-pop-muestra-colectiva-de-retratos/"
+    },
+    {
+      "id": "2127",
+      "title": "Vaivenes",
+      "subtitle": "Muestra Individual",
+      "location": "Copper Deli Museo, Bilbao",
+      "year": 2019,
+      "month": "Noviembre",
+      "day": 28,
+      "type": "solo",
+      "description": "«La vida es como un muro contra el que a menudo me doy de bruces. En ocasiones, el mero hecho de estamparme, desata mi carcajada, haciéndome llorar de la risa. Entonces enjugo mi llanto y lo guardo como oro en paño, para terminar exponiéndolo como el mayor de los tesoros».",
+      "url": "https://naroagutierrez.wordpress.com/2019/11/25/vaivenes-en-el-copper-deli-museo/"
+    },
+    {
+      "id": "1356",
+      "title": "Sácame los Colores",
+      "subtitle": "Muestra Individual",
+      "location": "Tegobi, Bilbao",
+      "year": 2016,
+      "month": "Diciembre",
+      "type": "solo",
+      "description": "«Pero por qué quedarse en el envoltorio, si rascamos un poquito la superficie: ¡premio!, tod@s somos seres multicolores. Que de verdad somos así, puros espectros de luz con patitas y brazos; os aseguro que portamos el pantone más completo en nuestro interior».",
+      "url": "https://naroagutierrez.wordpress.com/2016/11/30/sacame-los-colores-en-tegobi/"
+    },
+    {
+      "id": "414",
+      "title": "Espejos del Alma",
+      "subtitle": "Muestra Individual",
+      "location": "Colegio de Abogados, Bilbao",
+      "year": 2015,
+      "month": "Mayo",
+      "day": 28,
+      "type": "solo",
+      "description": "«Con Espejos del Alma pretendo evidenciar la esencia común del ser humano. Creo que todos somos lo mismo con distintas apariencias, que formamos parte de una misma inmensa (id)entidad, ese dragón de mil cabezas al que llamamos ‘presente’ y que en efecto es un regalo».",
+      "url": "https://naroagutierrez.wordpress.com/2015/05/24/espejos-del-alma-en-el-colegio-de-abogados-de-bilbao/"
     }
   ]
 }

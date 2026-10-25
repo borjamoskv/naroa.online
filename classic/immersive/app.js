@@ -3481,6 +3481,14 @@
 
   const configurator = $('[data-commission-configurator]');
   let supportEl, motifEl, timingEl, updateLink = () => {};
+  const commissionState = {
+    backend: 'commission-atelier-configurator-v2',
+    selectedSupport: 'Collage textil sobre madera',
+    selectedMotif: 'Retrato individual',
+    selectedTiming: 'Sin prisa (2 a 4 semanas)',
+    seededFromUrl: false,
+    seedSupport: null
+  };
   if (configurator) {
     supportEl = $('#cfg-support');
     motifEl = $('#cfg-motif');
@@ -3488,11 +3496,29 @@
     const btn = $('#cfg-whatsapp-btn');
     const emailBtn = $('#cfg-email-btn');
     const previewEl = $('#cfg-preview');
+    const seedBanner = $('#cfg-seed-banner');
+    const supportCards = $$('[data-support-card]');
+    const compareRows = $$('[data-compare-support]');
+    const pickBtns = $$('[data-pick-support]');
+
+    const syncActiveSupportUI = supportVal => {
+      supportCards.forEach(card => {
+        card.classList.toggle('is-selected-support', card.dataset.supportCard === supportVal);
+      });
+      compareRows.forEach(row => {
+        row.classList.toggle('is-selected-support', row.dataset.compareSupport === supportVal);
+      });
+    };
+
     updateLink = () => {
       if (!supportEl || !motifEl || !timingEl || !btn) return;
       const s = supportEl.value;
       const m = motifEl.value;
       const t = timingEl.value;
+      commissionState.selectedSupport = s;
+      commissionState.selectedMotif = m;
+      commissionState.selectedTiming = t;
+      syncActiveSupportUI(s);
       const refSuffix = attribution.generative ? ` [vía ${attribution.source}]` : '';
       const msg = `Hola Naroa, me gustaría consultar un encargo de retrato sobre ${s} para ${m} con plazo ${t}.${refSuffix}`;
       if (previewEl) previewEl.textContent = msg;
@@ -3501,7 +3527,74 @@
         emailBtn.href = `mailto:naroa@naroa.eu?subject=${encodeURIComponent('Consulta encargo: ' + s)}&body=${encodeURIComponent(msg)}`;
       }
     };
+
+    const selectSupport = (targetSupport, fromSeed = false) => {
+      if (!supportEl || !targetSupport) return false;
+      const options = Array.from(supportEl.options);
+      const exact = options.find(opt => opt.value.toLowerCase() === targetSupport.toLowerCase());
+      const fuzzy = exact || options.find(opt =>
+        opt.value.toLowerCase().includes(targetSupport.toLowerCase()) ||
+        targetSupport.toLowerCase().includes(opt.value.toLowerCase())
+      );
+      if (!fuzzy) return false;
+      supportEl.value = fuzzy.value;
+      if (fromSeed) {
+        commissionState.seededFromUrl = true;
+        commissionState.seedSupport = fuzzy.value;
+        if (seedBanner) {
+          seedBanner.hidden = false;
+          seedBanner.textContent = `✦ Soporte preseleccionado desde tu recorrido: ${fuzzy.value}`;
+        }
+      }
+      updateLink();
+      return true;
+    };
+
+    try {
+      const params = new URLSearchParams(location.search);
+      const urlSupport = params.get('soporte') || params.get('support');
+      const urlMotif = params.get('motivo') || params.get('motif');
+      if (urlMotif && motifEl) {
+        const mOpt = Array.from(motifEl.options).find(o => o.value.toLowerCase().includes(urlMotif.toLowerCase()));
+        if (mOpt) motifEl.value = mOpt.value;
+      }
+      if (urlSupport) {
+        selectSupport(urlSupport, true);
+      } else {
+        updateLink();
+      }
+    } catch {
+      updateLink();
+    }
+
+    pickBtns.forEach(pickBtn => {
+      pickBtn.addEventListener('click', () => {
+        const sup = pickBtn.dataset.pickSupport;
+        if (selectSupport(sup, false)) {
+          if (seedBanner) {
+            seedBanner.hidden = false;
+            seedBanner.textContent = `✦ Soporte elegido en el archivo: ${supportEl.value}`;
+          }
+          configurator.scrollIntoView?.({ behavior: 'smooth', block: 'center' });
+        }
+      });
+    });
+
+    compareRows.forEach(row => {
+      row.addEventListener('click', () => {
+        const sup = row.dataset.compareSupport;
+        if (selectSupport(sup, false) && seedBanner) {
+          seedBanner.hidden = false;
+          seedBanner.textContent = `✦ Soporte seleccionado de la tabla técnica: ${supportEl.value}`;
+        }
+      });
+    });
+
     [supportEl, motifEl, timingEl].forEach(el => el?.addEventListener('change', updateLink));
+    window.NAROA_COMMISSION = {
+      selectSupport,
+      getState: () => ({ ...commissionState })
+    };
   }
   const faqKnowledge = {
     precios: {

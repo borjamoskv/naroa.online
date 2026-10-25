@@ -420,13 +420,25 @@ body.page-sobre-mi .site-footer{color:#14080e;border-top:1px solid rgba(20,8,14,
 @keyframes stickman-chalk-pulse{0%{filter:drop-shadow(0 0 8px rgba(255,253,244,0.88)) drop-shadow(0 0 20px rgba(255,253,244,0.4))}100%{filter:drop-shadow(0 0 11px rgba(255,253,244,0.96)) drop-shadow(0 0 26px rgba(255,253,244,0.52))}}
 .art-stickman[hidden]{display:none!important}
 
-/* Puntero Invisible: Sólo se visualiza el humo de simulación Euleriana Navier-Stokes */
-html, body, *, *::before, *::after {
+/* Puntero personalizado solo en escenario de galería; en páginas editoriales/formularios mantenemos puntero nativo para máxima conversión */
+.gallery-page, .gallery-page * {
   cursor: none !important;
+}
+.editorial-page a, .editorial-page button, .editorial-page select, .editorial-page summary, .editorial-page [data-compare-support] {
+  cursor: pointer !important;
 }
 input[type="text"], input[type="email"], input[type="search"], textarea {
   cursor: text !important;
 }
+.commission-trust-pills{display:flex;flex-wrap:wrap;gap:10px 14px;margin-top:24px;padding-top:18px;border-top:1px solid rgba(255,253,244,0.14)}
+.commission-trust-pills span{font-size:12px;letter-spacing:.02em;color:#f7d594;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.28);padding:6px 14px;border-radius:999px}
+.commission-pick-btn{margin-top:6px;justify-self:start;background:transparent;border:0;padding:0;color:#edbca4;font:inherit;font-size:12px;letter-spacing:.03em;border-bottom:1px solid rgba(237,188,164,0.45)}
+.commission-pick-btn:hover{color:#fffdf4;border-bottom-color:#fffdf4}
+.commission-example.is-selected-support{border-color:#d4af37;box-shadow:0 0 0 1px rgba(212,175,55,0.45),0 18px 40px rgba(0,0,0,0.45)}
+.commission-compare-table tbody tr[data-compare-support]{transition:background .2s ease}
+.commission-compare-table tbody tr[data-compare-support]:hover{background:rgba(237,188,164,0.08)}
+.commission-compare-table tbody tr.is-selected-support{background:rgba(212,175,55,0.14)}
+.configurator-seed-banner{margin-top:12px;padding:8px 14px;border-radius:8px;background:rgba(212,175,55,0.14);border:1px solid rgba(212,175,55,0.38);color:#f7d594;font-size:12px;display:inline-block}
 
 /* Micro-gota de pintura dorada reactiva en click (Tactilidad de Bellas Artes) */
 .naroa-brush-touch {

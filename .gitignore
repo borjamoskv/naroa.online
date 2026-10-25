@@ -51,6 +51,8 @@ tools/experimental/
 tools/render_*.py
 *.wav
 .vercel_python_packages/
+.cache/
+posts_detail.json
 
 
 
