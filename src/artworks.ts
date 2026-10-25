@@ -33,7 +33,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-marilyn-rocks',
     year: '2024',
     medium: 'Óleo y Acrílico sobre Lienzo',
-    description: 'Reinterpretación hiperrealista con textura gestual y capas de fricción sobre la iconografía de Marilyn Monroe.',
+    description: 'Marilyn Monroe sobre pizarra, con detalles dorados y escamas de mica encoladas. La luz revela la textura de los materiales añadidos.',
     sizeCategory: 'colossal',
     splatUrl: 'https://huggingface.co/datasets/dylanebert/3dgs/resolve/main/shoe/shoe.splat'
   },
@@ -49,7 +49,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-amy-rocks',
     year: '2024',
     medium: 'Acrílico y Posca sobre Pizarra Natural con Mica Mineral',
-    description: 'Retrato de Amy Winehouse capturando la crudeza emocional y la vibración del alma soul a través de trazos viscerales sobre pizarra negra.',
+    description: 'Amy Winehouse en blanco, negro y grises, con acentos rojos y dorados. La forma y el canto de la pizarra participan en el retrato.',
     sizeCategory: 'colossal',
     splatUrl: 'https://huggingface.co/datasets/dylanebert/3dgs/resolve/main/chair/chair.splat'
   },
@@ -65,7 +65,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-james-rocks',
     year: '2024',
     medium: 'Óleo sobre Lienzo de Gran Formato',
-    description: 'Estudio de mirada y rebeldía de James Dean en tonos contrastantes e iluminación dramática.',
+    description: 'James Dean sobre un fondo de rojos y motivos dorados. La pintura dimensional negra añade relieve a la superficie.',
     sizeCategory: 'large'
   },
   {
@@ -80,7 +80,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-johnny-rocks',
     year: '2024',
     medium: 'Óleo y Grafito Compreso sobre Pizarra',
-    description: 'Texturas profundas y matices oscuros en la efigie de Johnny Depp, fusionando realismo y expresionismo.',
+    description: 'Un retrato de Johnny Depp con contrastes en blanco y negro y detalles dorados y rojizos. Forma parte de DiviNos.',
     sizeCategory: 'large'
   },
   {
@@ -110,7 +110,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-baroque-farrokh',
     year: '2024',
     medium: 'Técnica Mixta Barroca Contemporánea',
-    description: 'Freddie Mercury en clave barroca industrial, combinando la magnificencia operística con el espíritu del rock.',
+    description: 'Farrokh —antes de ser Freddie— posa pensativo sobre un azul de flores, la chaqueta estallando en color y la mano sosteniendo la barbilla. El marco se vuelve altar: cenefa dorada de coronas, recortes y ornamentos como quien adelanta una coronación.',
     sizeCategory: 'large'
   },
   {
@@ -170,7 +170,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-el-gran-dakari',
     year: '2024',
     medium: 'Acrílico sobre Pizarra Natural',
-    description: 'Fuerza animal hiperrealista inmortalizada sobre la dureza del soporte de pizarra.',
+    description: 'Fuerza animal hiperrealista inmortalizada sobre la dureza del soporte de pizarra. La mirada felina emerge de la roca con veladuras y texturas que aprovechan el relieve geológico de la pieza.',
     sizeCategory: 'medium'
   },
   {
@@ -200,7 +200,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-geisha',
     year: '2023',
     medium: 'Óleo y Pan de Oro sobre Pizarra',
-    description: 'Tradición y modernidad en un retrato hipnótico con pigmentos tradicionales y toques dorados.',
+    description: 'Tradición y modernidad en un retrato hipnótico con pigmentos tradicionales y toques dorados. El recogido ceremonial y la expresión serena dialogan con la materia oscura de la piedra.',
     sizeCategory: 'medium'
   },
   {
@@ -215,7 +215,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-lagrimas-de-oro',
     year: '2023',
     medium: 'Pan de Oro de 24k y Acrílico',
-    description: 'Detalle expresionista de mirada sobrecogedora con lágrimas de pan de oro genuino.',
+    description: 'Detalle expresionista de mirada sobrecogedora con lágrimas de pan de oro genuino y mica mineral. La luz reflectante del oro resbala sobre la textura pétrea y oscura del soporte.',
     sizeCategory: 'small'
   },
   {
@@ -230,7 +230,21 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-la-pensadora',
     year: '2023',
     medium: 'Acrílico mate y metálico sobre lienzo 3D con laterales pintados. Barniz mate y satinado.',
-    description: 'Inspirada en ‘El Pensador’ de Rodin, representa los procesos cognitivos rompiendo el tópico de que la belleza y la intelectualidad son excluyentes: «Todo es fruto de tu mente, amigo, de lo que sembraste y has regado».',
+    description: 'Esta obra, al igual que el renombrado ‘Pensador’ de Rodin, representa de alguna manera el mundo interior y los procesos cognitivos de la humanidad. A su vez pretende romper el tópico de que la belleza y la intelectualidad son excluyentes.
+
+También hace referencia a la importancia de ser dueños y no ignorantes o esclavos de nuestros propios pensamientos, controlando así los caminos hacia los que éstos nos conducen. Por qué ser víctima y verdugo, pudiendo ser el propio propulsor de nuestros sueños.
+
+«Qué pensarías si te digo
+que lo que piensas es sagrado
+pues es detonante y testigo
+de lo que se te ha manifestado.
+
+No importa si te ha dado abrigo
+o en cambio te ha perjudicado;
+todo es fruto de tu mente, amigo,
+de lo que sembraste y has regado».
+
+Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansado se puede escuchar mejor y distinguir así a profetas sabios o tunantes, de entre todos esos contertulios que viven a voces en nuestro interior.',
     dimensions: '50 × 70 cm',
     sizeCategory: 'small'
   },
@@ -246,7 +260,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-amor-en-conserva',
     year: '2024',
     medium: 'Serie En.lata — Reciclaje Artístico',
-    description: 'Lata metálica reciclada convertida en escultura de memoria y afectos.',
+    description: 'El retrato de Mary y Mala se construye con varias impresiones recortadas y montadas por capas. Flores, alambre y elementos de un collar acompañan la escena.',
     sizeCategory: 'small'
   },
   {
@@ -276,7 +290,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-dar-la-lata',
     year: '2024',
     medium: 'Serie En.lata — Escultura Mixta',
-    description: 'El arte de reutilizar objetos cotidianos y dotarlos de carga poética.',
+    description: 'Dar la Lata reúne retratos tridimensionales realizados con fotografías y pequeñas latas. Cada recipiente se convierte en soporte, marco y escenario de una composición.',
     sizeCategory: 'medium'
   },
   {
@@ -381,7 +395,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-the-golden-couple',
     year: '2024',
     medium: 'Retrato Doble — Técnica Mixta, Collage Floral & Marco Vitrina',
-    description: 'Retrato de pareja por encargo en técnica mixta y collage sobre fondo floral de crisantemos, celosía dorada y gominolas en relieve.',
+    description: 'Retrato doble técnica mixta mediante collage.',
     sizeCategory: 'medium'
   },
   {
@@ -396,7 +410,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-boy',
     year: '2005',
     medium: 'Grafito, Acrílico Neón & Mica Mineral sobre Lienzo',
-    description: 'Homenaje a la portada del álbum debut de U2, «Boy» (1980), con la mirada de Peter Rowen envuelta en mica mineral pura rubí.',
+    description: 'Homenaje a la célebre portada del álbum debut de U2, «Boy» (1980), protagonizada por Peter Rowen. La mirada penetrante e inocente del niño emerge entre el trazo sutil de grafito y un fondo vibrante de mica mineral rubí pura y acrílico neón.',
     sizeCategory: 'medium'
   },
   {
@@ -411,7 +425,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-monster-dragon',
     year: '2024',
     medium: 'Ilustración Texturizada sobre Pizarra',
-    description: 'Fantaseo figurativo con trazo agresivo y contornos neón.',
+    description: 'Un rostro de reptil acompañado de un disfraz kigurumi. Proyecto de caracterización realizado para el Carnaval de Bilbao de 2023.',
     sizeCategory: 'small'
   },
   {
@@ -456,7 +470,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-la-famiglia',
     year: '2024',
     medium: 'Óleo, Grafito y Rosa Carmesí sobre Pizarra',
-    description: 'Marlon Brando como El Padrino; claroscuro dramático sobre piedra natural con la icónica rosa roja brotando del relieve mineral.',
+    description: 'Si te encomendaran la misión de realizar una felicitación familiar, ¿qué mejor portavoz para verbalizar esta misiva colectiva que Don Vito Corleone? Al fin y al cabo «La famiglia è la famiglia...». Retrato de Marlon Brando interpretando el personaje Vito Corleone en la película El Padrino, trazado en negro y gris sobre un fondo multicolor. Materiales utilizados: lápices de colores Art & Graphic de Faber-Castell y pintura acrílica muy diluida en agua sobre papel de acuarela (300 gr/m²) de 18×24 cm.',
     sizeCategory: 'colossal'
   },
   {
@@ -1116,7 +1130,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-out-por-los-pelos',
     year: '2022',
     medium: 'Lápices de colores y collage sobre Marco con passepartout intervenido',
-    description: 'Andre Agassi en Roland Garros de 1990. El marco se convierte en pista: fieltro, redes y cabellos acompañan el retrato. El recorte del passepartout y las gotas de látex prolongan la tensión de la escena.',
+    description: 'Dentro de la colección ‘Vaivenes’, esta obra narra un “con-movedor” hecho: la derrota de una figura internacional del tenis durante el principal torneo celebrado sobre tierra batida en el mundo, debido al miedo de (con tanto zarandeo) perder la peluca que usó para disputarlo, con intención de ocultar su alopecia. Retrato realista realizado en blanco y negro con algo de color del tenista Andre Agassi durante el Roland Garros de 1990, realizado mediante técnica mixta y presentado en marco de 50×40 cm con passepartout intervenido. En «OUT» he seccionado el passepartout no solo para enmarcar la figura, sino también para representar la línea de pista, donde he colocado una pelota de tenis realizada con fieltro; y como ventana para mostrar pelo anudado a punto de soltarse. En la parte posterior de la cabeza el encuadre se desgarra, como imagino que lo hizo el tenista por dentro al presenciar su derrota. También he utilizado papeles Canson para recrear la cancha, así como acetato impreso simulando la publicidad del fondo donde se puede leer una alusión humorística a Andre y su peluca: “Do they match?”. Con 3 trocitos de washi-tape he escrito, letra a letra, el nombre de la obra, como si del marcador de puntuaciones se tratara. Además, he adherido y cosido distintos tipos de redes en la composición, utilizando algunos de estos filamentos para simular cabellos en lo alto de la cabeza de Agassi, donde he escrito la frase “Por los pelos” e incorporado gotas de látex líquido a modo de sudor.',
     sizeCategory: 'medium'
   },
   {
@@ -1191,7 +1205,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-izei',
     year: '2021',
     medium: 'Lápices de colores Faber-Castell sobre poliéster, impresión en 350 gr/m², esmalte con brillantina dorada y rotulador Uni-Posca',
-    description: '«Shine, baby, shine». Retrato en blanco y negro con un toque de color, realizado mediante lápices de colores Art & Graphic de Faber-Castell sobre papel poliéster. Posteriormente escaneado e impreso en papel de 350 gr/m². Sobre el fondo de esta lámina se aplicaron pinceladas de esmalte transparente con brillantina dorada y un detalle de alas a rotulador acrílico Uni-Posca. Presentado en marco formato A3 con cristal.',
+    description: '«Shine, baby, shine». Retrato en blanco y negro con un toque de color, realizado mediante lápices de colores Art & Graphic de Faber-Castell sobre papel poliéster. Posteriormente escaneado e impreso en papel de 350 gr/m². Sobre el fondo de esta lámina he aplicado pinceladas de esmalte transparente con brillantina dorada y un detalle a rotulador acrílico Uni-Posca. Presentado en marco formato A3 con cristal.',
     sizeCategory: 'medium'
   },
   {
@@ -1206,7 +1220,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-the-love-boat',
     year: '2021',
     medium: 'Técnica mixta, acrílico, rotuladores Uni-Posca y collage sobre tabla de madera de 50 × 50 cm barnizada con látex líquido',
-    description: '«Mare mía, mecachisenlamar, que no me puedo imaginar algo más espectacular que junto a ti pasar unas vacaciones en el mar». Retrato colorista doble realizado mediante técnica mixta sobre tabla de madera de 50 × 50 cm barnizada con látex líquido. La pieza combina pintura acrílica a pincel y rotuladores Uni-Posca con recortes de papel de seda, papel de regalo plastificado con mensaje, telas, celofán, aluminio y plástico decorado.',
+    description: '«Mare mía, mecachisenlamar, que no me puedo imaginar algo más espectacular que junto a ti pasar unas vacaciones en el mar». Retrato colorista doble realizado mediante técnica mixta sobre tabla de madera de 50×50 cm barnizada con látex líquido. Materiales utilizados: pintura acrílica (pincel y rotuladores Uni-Posca), papel (de seda, de regalo y de alto gramaje plastificado con mensaje impreso), telas, celofán, aluminio, plástico decorado y toneladas de amor.',
     sizeCategory: 'medium'
   },
   {
@@ -1221,7 +1235,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-marian-de-miranda',
     year: '2024',
     medium: 'Dibujo a lápices de colores, collage tangible sobre caja de sardinas de chocolate y retoques digitales con tocado de gildas',
-    description: '«La femme fatale es una construcción masculina y cinematográfica, pero que a menudo termina explotando en liberación femenina». Retrato de Marian Puertas caracterizada con el cuerpo y el tocado de Carmen Miranda, combinando ilustración física a lápices de colores Faber-Castell, collage tangible a partir de una caja de sardinas de chocolate con celofán, concha, redes y flores secas, y composición digital con un tocado de tres gildas bilbaínas en homenaje cruzado a Bilbao, Carmen Miranda y Rita Hayworth en Gilda para el proyecto Postalak.',
+    description: '“La femme fatal es una construcción masculina y cinematográfica, pero que a menudo termina explotando en liberación femenina. Porque de los tres arquetipos con que el patriarcado ha configurado a la mujer, madre/esposa/puta, la que descoloca a la masculinidad tradicional, la que hace derrumbarse hasta el más sólido empotrador, es la tercera; por eso la bofetada a Gilda”. (Pedro A. Curto). Retrato de Marian Puertas, utilizando el cuerpo y el tocado de Carmen Miranda, realizado en blanco y negro con algo de color mediante técnica mixta. El objetivo de esta obra ha sido materializar una visión personal de Bilbao y así colaborar en el proyecto “Postalak”. Para ello, como es habitual en mí, me he enfocado en la faceta humana. Esta composición la he desarrollado haciendo uso de más técnicas mixtas que nunca. A la hora de crear esta pieza, me he valido tanto de ilustración y collages analógicos, como de collage y retoques digitales: El dibujo físico lo he realizado mediante lápices de colores Art & Graphic de Faber-Castell sobre papel blanco de 80 gr/m², dimensiones 20×10 cm. Al trazarlo, he adaptado la silueta de Carmen de Miranda a la de Marian Puertas. El collage tangible está compuesto por otro collage —a partir de una caja de sardinas de chocolate, el envoltorio de una de estas piezas y celofán azul—, una concha, masilla adhesiva, brillantes, red amarilla, pedacitos de otra red azul, cinta de carrocero, cinta adhesiva doble cara, plástico metalizado dorado, pétalos y una especie de liquen o alga seca. Todo sobre papel azul claro de 80 gr/m², tamaño 23×18 cm. He escaneado ambas piezas y, ya en formato digital, he sobrepuesto la figura de la protagonista sobre el diseño anterior. Finalmente, he realizado digitalmente algunas variaciones, añadiendo también un pequeño collage de 3 gildas en el tocado de su cabeza, que hacen referencia no solo a Bilbao y a Carmen Miranda, sino también a Rita Hayworth y a Marian Puertas.',
     sizeCategory: 'medium'
   },
   {
@@ -1251,7 +1265,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-smile-and-the-world-smiles-back',
     year: '2016',
     medium: 'Técnica mixta y collage sobre plato de madera sin tratar (Ø 24 cm) con barniz de látex líquido',
-    description: 'Retrato colorista sobre plato de madera sin tratar intervenido con elementos textiles, bordados, cenefas de punto, telas estampadas y barniz protector.',
+    description: '“Cuando me permito reconocer mi espejo en el otro, despierto a la conciencia y reviso en mi interior quien creo ser”. Retrato colorista realizado mediante técnica mixta sobre plato de madera sin tratar de 24 cm de diámetro. Materiales utilizados: lápices de colores Art & Graphic de Faber-Castell, rotuladores acrílicos Uni-Posca y collage (compuesto por papel de seda decorado, cenefa de punto, adornos bordados, telas estampadas y papel de regalo). Posteriormente barnizado con látex líquido para proteger la pieza, intensificar los colores y aportar brillo a la obra.',
     sizeCategory: 'medium'
   },
   {
@@ -1266,7 +1280,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-luis-and-sis',
     year: '2020',
     medium: 'Lápices de colores Faber-Castell sobre papel poliéster impreso en lámina de 350 g/m²',
-    description: 'Retrato realista doble en blanco y negro con la ropa garabateada a color mediante técnica mixta, recreando la espontaneidad y cariño de la infancia.',
+    description: 'Aquellos maravillosos años… Retrato realista doble trazado en blanco y negro con algo de color —en la ropa, garabateado— mediante técnica mixta, utilizando lápices de colores Art & Graphic de Faber-Castell sobre papel poliéster. Posteriormente he escaneado el resultado y lo he impreso en lámina de papel de alto gramaje (350 gr/m²) de mayores dimensiones. Presentado en marco de 40×50 cm con passepartout.',
     sizeCategory: 'medium'
   },
   {
@@ -1281,7 +1295,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-de-color',
     year: '2021',
     medium: 'Lápices Faber-Castell, salpicaduras de pintura acrílica y rotuladores Uni-Posca sobre papel satinado de 350 g/m²',
-    description: '«El mundo a veces se nos antoja gris y hay días en los que lo vemos todo negro, pero cuando Aitor llega, entonces hay tormenta intensa... un aluvión de energía que en vez de agua descarga trombas de color».',
+    description: 'El mundo a veces se nos antoja gris y hay días en los que lo vemos todo negro, pero cuando Aitor llega, entonces hay tormenta intensa, pero no un chaparrón cualquiera, sino un aluvión de energía que en vez de agua descarga trombas de color, como si, gracias a la luz de su mirada, millones de arcoíris quisieran precipitarse antes de tiempo. Retrato realista blanco/negro y un toque de color + fondo colorista, realizado mediante técnica mixta: la figura en blanco & negro con un toque de color y el fondo colorista desestructurado. Materiales utilizados: lápices de colores Art & Graphic de Faber-Castell y pintura acrílica aplicada de dos maneras distintas: muy diluida creando salpicaduras con pincel y trazada con rotuladores Uni-Posca. Posteriormente he escaneado el resultado y lo he impreso en papel de alto gramaje (350 gr/m²) ligeramente satinado de mayores dimensiones (lámina tamaño A3). Presentado en marco de 40×50 cm con passepartout.',
     sizeCategory: 'medium'
   },
   {
@@ -1296,7 +1310,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-el-reencuentro',
     year: '2015',
     medium: 'Pintura acrílica negra, Edding permanente blanco y látex líquido sobre lienzo 3D',
-    description: 'Una hija y su padre vuelven a encontrarse sobre un fondo blanco a partir de una fotografía de juventud rescatada. El rastro de caricias con pincel en rostros y cabellos materializa el reencuentro sobre el lienzo.',
+    description: 'Mediante esta obra, una hija y su padre volvieron a encontrarse sobre un fondo blanco. Todo gracias a una foto de joven de él, que me permitió —esquivando los reflejos del cristal que protegía su mirada— trazarles, de nuevo, juntos. "El Reencuentro" es un sentimiento traído a nuestra percepción a través del rastro —en los rostros— de caricias con pinceles, en su cabello y sus pieles; peinando su pelo y acariciando sus sienes. Retrato realista familiar doble, realizado en blanco y negro sobre lienzo 3D de 30×40 cm. Materiales utilizados: pintura acrílica negra, toques de rotulador Edding permanente blanco y cobertura de látex líquido para proteger el conjunto y aportarle cierto brillo.',
     sizeCategory: 'medium'
   },
   {
@@ -1311,7 +1325,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-papitxulo',
     year: '2022',
     medium: 'Látex vinílico sobre silueta mate y mosaico de láminas holográficas y papel espejo sobre óleo amarillo en lienzo',
-    description: 'Retrato del aitatxu de Naroa capturado en un selfie dandy con bata de laboratorio y cigarrillo en la empresa de artes gráficas donde se conocieron sus progenitores. La silueta mate resalta sobre un fondo de mosaico holográfico que muta con la perspectiva.',
+    description: 'Mis queridos progenitores se conocieron trabajando en una empresa de artes gráficas. Por aquel entonces, un día mi padre tuvo la feliz idea de utilizar una “cámara de dos cuartos” (que servía para tomar imágenes a los textos que después serían impresos) a modo de fotomatón para currarse el selfie a lo dandy —bata de laboratorio y cigarrito incluido— que dio pie a este cuadro. Ni mi madre ni yo pudimos finalmente sucumbir a tanto encanto. El fondo lo conforma un mosaico de trocitos de láminas de plástico metalizado —entre ellos también holográficas— que producen múltiples brillos y destellos de colores. Estos varían dependiendo de la luz que se refleje en su superficie y en función del lugar desde el que observemos la obra. Como la vida misma: todo cambia según la perspectiva. Retrato realista de mi aitatxu realizado mediante técnica mixta sobre lienzo de 50×40 cm. La silueta, en mate, está enmarcada por una composición con un gran juego de brillos, resaltando este contraste. Materiales utilizados: la figura está pintada con látex vinílico y el fondo lo he trabajado mediante la composición de un mosaico —utilizando papel espejo y holográfico de tonos dorados y plateados— adherido a una capa de óleo amarillo.',
     sizeCategory: 'large'
   },
   {
@@ -1326,7 +1340,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-starchild',
     year: '2020',
     medium: 'Bolígrafos Bic, bolsas de cartón holográficas, plástico en relieve y rotulador sobre papel poliéster impreso en 50 × 70 cm',
-    description: '«There\'s a starman waiting in the sky / He\'d like to come and meet us / But he thinks he\'d blow our minds». Retrato de David Bowie con gesto de silencio y firmamento a sus espaldas con astronautas, satélites y planetas holográficos.',
+    description: '“There\'s a starman waiting in the sky / He\'d like to come and meet us / But he thinks he\'d blow our minds”. —David Bowie. (“Hay un hombre de las estrellas esperando en el cielo / Le gustaría venir y conocernos / Pero cree que volaría nuestras mentes”). Retrato realista en blanco y negro con algo de color de David Robert Jones, más conocido por su nombre artístico David Bowie, nuestro eterno niño de las estrellas (firmamento que he extendido a sus espaldas) realizado mediante técnica mixta: ilustración realizada con bolígrafos Bic sobre papel poliéster. La he escaneado, impreso a mayores dimensiones en papel de alto gramaje, recortado su silueta e integrado en un collage de distintos elementos, tanto en el fondo como en la superficie. Materiales utilizados en la composición: Fondo: bolsas de cartón con motivos holográficos. Superficie: chaqueta con papel plástico holográfico metalizado en dos tonos (dorado y plateado), solapas envueltas en dicho papel, con cuñas para aportar relieve y rotulador permanente. Presentado en marco de 50×70 cm con paspartú intervenido.',
     sizeCategory: 'large'
   },
   {
@@ -1341,7 +1355,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-las-rosalias',
     year: '2019',
     medium: 'Lápices sobre poliéster, frottage de monedas, rosas glossy, fieltro, papeles Canson, celofán y rotuladores Uni-Posca',
-    description: 'Rara avis que destaca entre las obras enmarcadas por la riqueza de materiales y capas de significado. Los pies descansando en la barandilla de Copper Deli, las rosas plastificadas, los elefantes, el paisaje de fieltro y el cielo de celofán conforman un puzzle textil y afectivo en perfecto equilibrio.',
+    description: 'Esta obra es una rara avis que destaca entre sus compañeras de técnica mixta enmarcadas. Reúne una enorme variedad de elementos y texturas que se engranan en un collage repleto de significados. Es por ello que “Las RosaLías” se trata de una laboriosa y diferente creación en relación a las de su mismo formato, engarzada con mimo para que todo hable. Conforma un puzzle de mil piezas que encaja a la perfección, como dos almas que se quieren y se funden en un abrazo. Retrato realista/imaginativo de un vínculo realizado mediante técnica mixta, compuesto por ilustraciones trazadas con lápices de colores Art & Graphic de Faber-Castell sobre papel poliéster, posteriormente escaneadas, impresas en papel de alto gramaje (350 gr/m²), recortadas y adheridas al conjunto. En el dibujo de los pies, las tiras de las chanclas están decoradas con frottage de monedas, incluyendo los mensajes “United One” y “Rica Silver”. Tras su impresión, he intervenido la reproducción de esta parte con látex líquido y rotuladores acrílicos sobre las uñas y las etiquetas de las chancletas. Las flores, de cartulina plastificada efecto glossy, las he recortado y pegado al passepartout. El fondo bajo los pies lo he creado con papel de regalo arrugado y la barandilla en la que están apoyados es de cartulina negra con pegatinas de letras de colores. El cielo está formado por celofán transparente con nubes, superpuesto a una cartulina azul celeste. El paisaje es un ensamblaje de piezas de fieltro de distintos tonos y papel Canson rayado para aportarle textura. Los árboles están conformados por hojas artificiales y papel de estraza sobre el fieltro. Los troncos de los árboles, el brillo de la barandilla y el texto “las Rosa Lías” los he realizado con rotuladores acrílicos Uni-Posca. Presentado en marco de 40×50 cm con passepartout.',
     sizeCategory: 'large'
   },
   {
@@ -1356,7 +1370,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-sistashark',
     year: '2022',
     medium: 'Serie En.lata — Fotocollage 3D & Ensamblaje',
-    description: 'Retrato en relieve tridimensional montado por capas dentro de una lata de conservas con corona de conchas marinas y mini-faro.',
+    description: 'Retrato 3D realizado a partir de una imagen del fotograma de un vídeo —con decorado de la canción infantil “Babyshark”— impresa varias veces en papel fotográfico. El marco que abraza la obra lo he realizado con una lata de conservas que fue intervenida de la siguiente manera: Primeramente he creado una arandela con alambre grueso en la parte inferior de la pieza a modo de soporte de la misma. Tras ello, he subido el fondo a la lata y he ido montando múltiples partes de la fotografía mediante distintas capas, usando una pistola de silicona caliente para conformar una imagen con relieve y profundidad. En la parte superior he añadido mediante cola caliente una corona realizada a partir de distintos tipos de conchas con pintura acrílica, alambre, medio rollo de celo, esmalte dorado, mica plateada y esmalte transparente con brillantina dorada. Del mismo modo he decorado el interior del retrato con mica plateada, esmalte transparente con brillantina dorada y pequeñas caracolas con pintura acrílica. En la parte posterior, he creado una pequeña composición con pegatinas de felicitación, papel de seda decorado, celofán azul, mica plateada, un alga de fotografía recortada y un mini-faro (palillo con detalle decorativo, un trozo de pajita, la funda de un auricular, alambres plastificados dorados, pintura acrílica y brillantina dorada). He integrado el nombre de la obra y mi firma con cintas de rotuladora Dymo antigua.',
     sizeCategory: 'small'
   },
   {
@@ -1371,7 +1385,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-multi-dimensional-love',
     year: '2022',
     medium: 'Serie En.lata — Escultura 3D Articulada en Lata de Conservas',
-    description: 'Retrato doble con capas articuladas, gafas 3D abatibles de celofán, fondo holográfico y tapa con rótulo Better Together sobre caballete.',
+    description: '“El amor es el más viejo, a la vez que es el más nuevo y único acontecimiento del mundo”. (Friedrich Rückert). Retrato 3D doble realizado a partir de tres fotografías y trabajado en varias capas articuladas que, al moverlas, cuentan una pequeña pero gran historia: la del amor de sus protagonistas. El marco de dichas imágenes lo he realizado con una lata de conservas intervenida de la siguiente manera: Primeramente he creado el retrato interno montando pequeñas partes con una pistola de silicona caliente para conformar una imagen con relieve y profundidad. He utilizado una foto publicada por él como fondo. He contrastado las gafas de sol en color, con el resto de las figuras en blanco y negro. He decorado con pequeñas flores y hojas, washi-tape y cristales adhesivos formando las iniciales de sus nombres. Cubriendo esta capa, he creado una tapa con una lámina gruesa, aluminio adhesivo y una anilla de lata. Sobre ella he labrado relieves y he pegado dos rótulos de Dymo antigua. Retrato exterior: en la otra cara de esta tapa he colocado dos fotografías de la pareja por separado sobre un fondo holográfico plateado. Entre ellos un globo de pensamiento de amor compartido y debajo dos estrellas de brillantina que se tocan. He creado unas gafas 3D antiguas con lámina gruesa y celofán de colores para superponerlas a modo de ventanas sobre las imágenes. Los colores guardan relación con las fotos. La bisagra la he creado con cuerda fina y una pajita de papel dorada. Sobre ella, una corona de flores rosas abrazan a una azul. Tras ello, he creado unas alas doradas con un plato de plástico. Por la parte trasera he firmado con cinta adhesiva decorada (washi-tape) y he presentado la obra sobre un pequeño caballete.',
     sizeCategory: 'small'
   },
   {
@@ -1386,7 +1400,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-peru-pura-natura',
     year: '2022',
     medium: 'Serie En.lata — Ensamblaje 3D con Elementos Botánicos y Blíster',
-    description: 'Retrato en hamaca entre ramas y caracoles reales sobre blíster vitamínico, con anilla No Molestar y estuche de Equinácea.',
+    description: 'Érase Saban que estaba sosegado y calmado en el monte tumbado. Desde el horizonte incluso se le avistaba, recostado y relajado, al lado del arbolado, con los ojos cerrados y descalzos los pies. Es ese de allí, ¿lo ves? Aquel repanchingado de los brazos alzados, doblados y apoyados tras su lindo cogote. Tanto disfrute ha provocado que de él brote una liviana brisa con sabor a sábado y su sonrisa sin prisa... ¡Qué bien que se note! El bosque enlatado, la natura en el bote.',
     sizeCategory: 'small'
   },
   {
@@ -1401,7 +1415,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-enlatadas',
     year: '2022',
     medium: 'Serie En.lata — Relieve 3D en Lata con Patas de Alambre',
-    description: 'Fusión en relieve de retratos de infancia de Naroa y Saioa Etxebarria, con cuatro gatos ilustrados y mensaje afectivo con alambre.',
+    description: 'Lasaio, lanaro y cuatro gatas enlatadas en una lata con patas. Retrato 3D doble realizado a partir de dos fotografías: una de servidora y otra de Saioa Etxebarria allá por sus tiempos mozos. El marco de la fusión de dichas imágenes lo he realizado con una lata de conservas intervenida de la siguiente manera: Primeramente la he dotado de patas mediante un alambre grueso. Tras ello, he creado el fondo del retrato con un collage de ambas fotos y he rematado los bordes internos de la lata con un trozo de cuerda. El siguiente paso ha sido ir montando partes de ambas fotografías mediante distintas capas, usando una pistola de silicona caliente para conformar una imagen con relieve y profundidad. Por último, he añadido pequeñas flores de papel y gomaeva, así como papel de seda verde a modo de hojas y unos felinos con un mensaje conformado con alambre y papel de acuarela escrito. En la parte posterior he cubierto con esmalte dorado la cola caliente con la que he sujetado los gatos y he firmado con cinta rotuladora Dymo antigua.',
     sizeCategory: 'small'
   },
   {
@@ -1416,7 +1430,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-leire',
     year: '2021',
     medium: 'Lápices Faber-Castell, Pan de Oro, Mica Plateada & Smiley Holográfico',
-    description: 'Retrato figurativo de dulce luminosidad enmarcado con passepartout, con ropaje de oro y mica, y detalle de corazón y smiley.',
+    description: 'La dulzura que ella emana, tiñó mis trazos de vainilla y fresa. En su corazón planté un smiley con una sonrisa de oreja a oreja. De oro, brillantina y mica plateada he vestido su ropaje. Y la luz amorosa de su mirada, es la que me da coraje.',
     sizeCategory: 'medium'
   },
   {
@@ -1431,7 +1445,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-eneko-el-marino',
     year: '2019',
     medium: 'Lápices Art & Graphic, Collage de Lámina Antigua y Adhesivo Brutus',
-    description: 'Homenaje a Popeye a través del retrato de Eneko en marco vintage de 44x55 cm con passepartout deliciosamente envejecido.',
+    description: 'Retrato realizado mediante técnica mixta en marco vintage de 44×55 cm con preciosas humedades y passepartout deliciosamente deteriorado por el tiempo. Partiendo de la composición figurativa inicial mediante lápices de colores Art & Graphic de Faber-Castell, investigo los sucesivos cambios de formato (físico-digital-físico) y el contraste de las diferentes texturas al aislar la figura y aplicar distintas capas de collage —tanto en el fondo como en la superficie— creadas en esta ocasión recortando una lámina antigua y una pegatina de cerveza llamada “Brutus”.',
     sizeCategory: 'medium'
   },
   {
@@ -1446,7 +1460,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-aupas',
     year: '2019',
     medium: 'Lápices de Colores y Técnica Mixta Expresiva',
-    description: 'Retrato doble de padre e hijo en brazos con trazo vibrante y enérgica fuerza cromática enmarcado en formato cuadrado de 50x50 cm.',
+    description: 'Retrato doble en marco de 50×50 cm con passepartout.',
     sizeCategory: 'medium'
   },
   {
@@ -1461,7 +1475,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-aquellos-maravillosos-anos',
     year: '2017',
     medium: 'Lápices Faber-Castell Art & Graphic sobre Papel A4',
-    description: 'Retrato de infancia de dos hermanos con sutiles veladuras en los rostros y enérgica trama de tartán a color en las prendas.',
+    description: 'Lápices de colores Art & Graphic de Faber-Castell sobre papel de 80 gr/m² tamaño A4.',
     sizeCategory: 'medium'
   },
   {
@@ -1476,7 +1490,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-holy-wood-retplatos-amores',
     year: '2013-2014',
     medium: 'Serie Holy Wood — Lápices, Rotuladores, Acrílico & Flores sobre Madera de Pino',
-    description: 'Serie emblemática de 9 retratos sobre platos de madera de pino sin tratar (Retplatos) con mariposas, pétalos secos, purpurina y collage.',
+    description: 'Holy Wood: REtpLATOS & aMOREs es una serie emblemática de retratos expresivos realizados directamente sobre platos redondos de madera de pino sin tratar. La artista aprovecha la veta y calidez del soporte para plasmar retratos llenos de luz, humor y afecto, incorporando elementos en relieve como purpurina, flores secas, mariposas, encajes y collages botánicos.',
     sizeCategory: 'large'
   },
   {
@@ -1491,7 +1505,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-lily-munster',
     year: '2022',
     medium: 'Rotuladores de tinta, permanentes y frottage con grafito',
-    description: 'Retrato individual de Lily Munster en técnica mixta con contrastes de tinta y fondo texturizado.',
+    description: 'Retrato expresivo de Lily Munster con frottage de grafito, contrastes de tinta y marco impreso vintage.',
     sizeCategory: 'medium'
   },
   {
@@ -1506,7 +1520,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-herman-munster',
     year: '2022',
     medium: 'Rotuladores de tinta, permanentes y frottage con grafito',
-    description: 'Retrato de Herman Munster con su característica silueta y expresión bondadosa.',
+    description: 'Retrato de Herman Munster con su característica silueta y expresión bondadosa sobre fondo texturizado con grafito.',
     sizeCategory: 'medium'
   },
   {
@@ -1521,7 +1535,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-eddie-munster',
     year: '2022',
     medium: 'Rotuladores de tinta, permanentes y frottage con grafito',
-    description: 'Retrato de Eddie Munster con marcados contrastes de claroscuro y marco impreso.',
+    description: 'Retrato del joven Eddie Munster en técnica mixta con intensos contrastes de claroscuro y marco impreso.',
     sizeCategory: 'medium'
   },
   {
@@ -1536,7 +1550,7 @@ export const ARTWORKS: Artwork[] = [
     href: '#obra-abuelo-munster',
     year: '2022',
     medium: 'Rotuladores de tinta, permanentes y frottage con grafito',
-    description: 'Retrato del Abuelo Munster con su icónica capa y sonrisa picaresca.',
+    description: 'Retrato del Abuelo Munster con su icónica capa y sonrisa picaresca en trazos de tinta y frottage.',
     sizeCategory: 'medium'
   },
   {

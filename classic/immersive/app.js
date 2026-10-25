@@ -75,7 +75,20 @@
   let currentRemixBlob = null;
   let currentRemixFile = null;
   let currentRemixDataUrl = null;
+  let currentRemixSlug = null;
   let isGeneratingRemix = false;
+  const projects = catalogue.projects || [];
+  const storyLoopState = {
+    backend: 'canvas-capture-mediastream-v1',
+    isRecording: false,
+    lastRecordedSlug: null,
+    framesRendered: 0,
+    melodyName: null,
+    melodyDay: null,
+    notesScheduled: 0,
+    mimeType: 'video/webm',
+    durationMs: 6000
+  };
 
   function getActiveArtwork() {
     const scene = $('.art-scene.is-current');
@@ -175,6 +188,125 @@
     ctx.restore();
   }
 
+  function renderStoryFrame(ctx, heroWork, heroImg, panProgress = 0) {
+    // 1. Fondo de galería museo contemporáneo
+    const bg = ctx.createLinearGradient(0, 0, 0, 1920);
+    bg.addColorStop(0, '#0a0b08');
+    bg.addColorStop(0.5, '#12140f');
+    bg.addColorStop(1, '#080806');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, 1080, 1920);
+
+    // 2. Halo atmosférico cálido (sutil)
+    const radHalo = ctx.createRadialGradient(540, 780, 40, 540, 780, 850);
+    radHalo.addColorStop(0, 'rgba(212, 175, 55, 0.16)');
+    radHalo.addColorStop(1, 'rgba(212, 175, 55, 0)');
+    ctx.fillStyle = radHalo;
+    ctx.fillRect(0, 0, 1080, 1920);
+
+    // 3. Encabezado minimalista Awwwards
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#d4af37';
+    ctx.font = '700 17px "DM Sans", -apple-system, sans-serif';
+    ctx.fillText('NAROA GUTIÉRREZ GIL', 540, 72);
+
+    ctx.fillStyle = '#b8b2a2';
+    ctx.font = '500 13px "DM Sans", -apple-system, sans-serif';
+    ctx.fillText('DETAIL OBSESSION · TEXTURAS Y MATERIA', 540, 100);
+
+    // 4. Fragmento ampliado (Ocupa casi toda la pantalla para mostrar texturas y pinceladas)
+    const mainX = 48, mainY = 130, mainW = 984, mainH = 1530;
+    ctx.save();
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
+    ctx.shadowBlur = 40;
+    ctx.shadowOffsetY = 18;
+    ctx.fillStyle = '#141512';
+    drawStoryRoundedRect(ctx, mainX, mainY, mainW, mainH, 28);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255, 253, 244, 0.14)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.restore();
+
+    if (heroImg) {
+      // Zoom macro 2.65x-2.95x con panning orbital hipnótico si panProgress > 0
+      const p = clamp(Number(panProgress) || 0, 0, 1);
+      const zoom = p > 0 ? 2.65 + 0.30 * Math.sin(p * Math.PI) : 2.68;
+      const cx = p > 0 ? 0.48 + 0.12 * Math.cos(p * Math.PI * 2) : 0.5;
+      const cy = p > 0 ? 0.44 + 0.08 * Math.sin(p * Math.PI * 2) : 0.44;
+      drawStoryZoomedDetail(ctx, heroImg, mainX, mainY, mainW, mainH, 28, zoom, cx, cy);
+    }
+
+    // Sombra gradual interior inferior para legibilidad del título
+    const gradBottom = ctx.createLinearGradient(0, mainY + mainH - 320, 0, mainY + mainH);
+    gradBottom.addColorStop(0, 'rgba(10, 11, 8, 0)');
+    gradBottom.addColorStop(0.65, 'rgba(10, 11, 8, 0.72)');
+    gradBottom.addColorStop(1, 'rgba(10, 11, 8, 0.94)');
+    ctx.save();
+    drawStoryRoundedRect(ctx, mainX, mainY, mainW, mainH, 28);
+    ctx.clip();
+    ctx.fillStyle = gradBottom;
+    ctx.fillRect(mainX, mainY + mainH - 320, mainW, 320);
+    ctx.restore();
+
+    // 5. Miniatura que revela la pieza completa (Picture-in-Picture)
+    const miniW = 290, miniH = 370;
+    const miniX = mainX + 40, miniY = mainY + mainH - miniH - 40;
+    if (heroImg) {
+      drawStoryMiniature(ctx, heroImg, miniX, miniY, miniW, miniH, 18);
+
+      // Badge «PIEZA COMPLETA»
+      const badgeW = 160, badgeH = 32;
+      const badgeX = miniX + (miniW - badgeW) / 2;
+      const badgeY = miniY + miniH - 22;
+      ctx.save();
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
+      ctx.shadowBlur = 12;
+      ctx.fillStyle = '#0d0e0b';
+      drawStoryRoundedRect(ctx, badgeX, badgeY, badgeW, badgeH, 16);
+      ctx.fill();
+      ctx.strokeStyle = '#d4af37';
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+      ctx.restore();
+
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#f7d594';
+      ctx.font = '700 11px "DM Sans", -apple-system, sans-serif';
+      ctx.fillText('PIEZA COMPLETA', badgeX + badgeW / 2, badgeY + 20);
+    }
+
+    // 6. Información de la obra al pie del marco
+    const textLeft = miniX + miniW + 36;
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#fffdf4';
+    ctx.font = '700 36px "DM Sans", -apple-system, sans-serif';
+    let title = heroWork.title || 'Obra';
+    if (title.length > 20) title = title.slice(0, 19) + '…';
+    ctx.fillText(title, textLeft, mainY + mainH - 120);
+
+    ctx.fillStyle = '#d4af37';
+    ctx.font = '600 17px "DM Sans", -apple-system, sans-serif';
+    const cat = heroWork.label || heroWork.category || '';
+    ctx.fillText(cat.toUpperCase(), textLeft, mainY + mainH - 85);
+
+    ctx.fillStyle = '#c5bfaf';
+    ctx.font = '400 15px "DM Sans", -apple-system, sans-serif';
+    let tech = heroWork.support || heroWork.technique || 'Pintura y materia';
+    if (tech.length > 34) tech = tech.slice(0, 32) + '…';
+    ctx.fillText(tech, textLeft, mainY + mainH - 58);
+
+    // 7. Pie de Story & sticker de enlace
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#fffdf4';
+    ctx.font = '600 18px "DM Sans", -apple-system, sans-serif';
+    ctx.fillText('@naroa_art   ·   naroagutierrezgil.com', 540, 1720);
+
+    ctx.fillStyle = 'rgba(255, 253, 244, 0.45)';
+    ctx.font = '400 14px "DM Sans", -apple-system, sans-serif';
+    ctx.fillText('86 obras inmersivas · Retratos sobre pizarra y materia', 540, 1752);
+  }
+
   async function generateStoryRemix(preferredSlug = null) {
     const dialog = $('#story-remix-dialog');
     if (!dialog) return null;
@@ -194,6 +326,7 @@
         heroWork = projects[Math.floor(Math.random() * projects.length)] || projects[0];
       }
       if (!heroWork) throw new Error('No projects available');
+      currentRemixSlug = heroWork.slug;
 
       const src = heroWork.photos?.[0]?.src || heroWork.cover || heroWork.thumb;
       const heroImg = await loadImageAsync(src).catch(() => null);
@@ -209,118 +342,7 @@
         return null;
       }
 
-      // 1. Fondo de galería museo contemporáneo
-      const bg = ctx.createLinearGradient(0, 0, 0, 1920);
-      bg.addColorStop(0, '#0a0b08');
-      bg.addColorStop(0.5, '#12140f');
-      bg.addColorStop(1, '#080806');
-      ctx.fillStyle = bg;
-      ctx.fillRect(0, 0, 1080, 1920);
-
-      // 2. Halo atmosférico cálido (sutil)
-      const radHalo = ctx.createRadialGradient(540, 780, 40, 540, 780, 850);
-      radHalo.addColorStop(0, 'rgba(212, 175, 55, 0.16)');
-      radHalo.addColorStop(1, 'rgba(212, 175, 55, 0)');
-      ctx.fillStyle = radHalo;
-      ctx.fillRect(0, 0, 1080, 1920);
-
-      // 3. Encabezado minimalista Awwwards
-      ctx.textAlign = 'center';
-      ctx.fillStyle = '#d4af37';
-      ctx.font = '700 17px "DM Sans", -apple-system, sans-serif';
-      ctx.fillText('NAROA GUTIÉRREZ GIL', 540, 72);
-
-      ctx.fillStyle = '#b8b2a2';
-      ctx.font = '500 13px "DM Sans", -apple-system, sans-serif';
-      ctx.fillText('DETAIL OBSESSION · TEXTURAS Y MATERIA', 540, 100);
-
-      // 4. Fragmento ampliado (Ocupa casi toda la pantalla para mostrar texturas y pinceladas)
-      const mainX = 48, mainY = 130, mainW = 984, mainH = 1530;
-      ctx.save();
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
-      ctx.shadowBlur = 40;
-      ctx.shadowOffsetY = 18;
-      ctx.fillStyle = '#141512';
-      drawStoryRoundedRect(ctx, mainX, mainY, mainW, mainH, 28);
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(255, 253, 244, 0.14)';
-      ctx.lineWidth = 1.5;
-      ctx.stroke();
-      ctx.restore();
-
-      if (heroImg) {
-        // Zoom macro x2.45 sobre el centro matérico de la obra
-        drawStoryZoomedDetail(ctx, heroImg, mainX, mainY, mainW, mainH, 28, 2.45, 0.5, 0.44);
-      }
-
-      // Sombra gradual interior inferior para legibilidad del título
-      const gradBottom = ctx.createLinearGradient(0, mainY + mainH - 320, 0, mainY + mainH);
-      gradBottom.addColorStop(0, 'rgba(10, 11, 8, 0)');
-      gradBottom.addColorStop(0.65, 'rgba(10, 11, 8, 0.72)');
-      gradBottom.addColorStop(1, 'rgba(10, 11, 8, 0.94)');
-      ctx.save();
-      drawStoryRoundedRect(ctx, mainX, mainY, mainW, mainH, 28);
-      ctx.clip();
-      ctx.fillStyle = gradBottom;
-      ctx.fillRect(mainX, mainY + mainH - 320, mainW, 320);
-      ctx.restore();
-
-      // 5. Miniatura que revela la pieza completa (Picture-in-Picture)
-      const miniW = 290, miniH = 370;
-      const miniX = mainX + 40, miniY = mainY + mainH - miniH - 40;
-      if (heroImg) {
-        drawStoryMiniature(ctx, heroImg, miniX, miniY, miniW, miniH, 18);
-
-        // Badge «PIEZA COMPLETA»
-        const badgeW = 160, badgeH = 32;
-        const badgeX = miniX + (miniW - badgeW) / 2;
-        const badgeY = miniY + miniH - 22;
-        ctx.save();
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
-        ctx.shadowBlur = 12;
-        ctx.fillStyle = '#0d0e0b';
-        drawStoryRoundedRect(ctx, badgeX, badgeY, badgeW, badgeH, 16);
-        ctx.fill();
-        ctx.strokeStyle = '#d4af37';
-        ctx.lineWidth = 1.2;
-        ctx.stroke();
-        ctx.restore();
-
-        ctx.textAlign = 'center';
-        ctx.fillStyle = '#f7d594';
-        ctx.font = '700 11px "DM Sans", -apple-system, sans-serif';
-        ctx.fillText('PIEZA COMPLETA', badgeX + badgeW / 2, badgeY + 20);
-      }
-
-      // 6. Información de la obra al pie del marco
-      const textLeft = miniX + miniW + 36;
-      ctx.textAlign = 'left';
-      ctx.fillStyle = '#fffdf4';
-      ctx.font = '700 36px "DM Sans", -apple-system, sans-serif';
-      let title = heroWork.title || 'Obra';
-      if (title.length > 20) title = title.slice(0, 19) + '…';
-      ctx.fillText(title, textLeft, mainY + mainH - 120);
-
-      ctx.fillStyle = '#d4af37';
-      ctx.font = '600 17px "DM Sans", -apple-system, sans-serif';
-      const cat = heroWork.label || heroWork.category || '';
-      ctx.fillText(cat.toUpperCase(), textLeft, mainY + mainH - 85);
-
-      ctx.fillStyle = '#c5bfaf';
-      ctx.font = '400 15px "DM Sans", -apple-system, sans-serif';
-      let tech = heroWork.support || heroWork.technique || 'Pintura y materia';
-      if (tech.length > 34) tech = tech.slice(0, 32) + '…';
-      ctx.fillText(tech, textLeft, mainY + mainH - 58);
-
-      // 7. Pie de Story & sticker de enlace
-      ctx.textAlign = 'center';
-      ctx.fillStyle = '#fffdf4';
-      ctx.font = '600 18px "DM Sans", -apple-system, sans-serif';
-      ctx.fillText('@naroa_art   ·   naroagutierrezgil.com', 540, 1720);
-
-      ctx.fillStyle = 'rgba(255, 253, 244, 0.45)';
-      ctx.font = '400 14px "DM Sans", -apple-system, sans-serif';
-      ctx.fillText('86 obras inmersivas · Retratos sobre pizarra y materia', 540, 1752);
+      renderStoryFrame(ctx, heroWork, heroImg, 0);
 
       let dataUrl = '';
       try { dataUrl = canvas.toDataURL('image/jpeg', 0.94); } catch {}
@@ -357,6 +379,146 @@
       isGeneratingRemix = false;
     }
   }
+
+  async function recordStoryVideoLoop(preferredSlug = null, durationMs = 6000) {
+    if (storyLoopState.isRecording) return null;
+    const dialog = $('#story-remix-dialog');
+    const videoBtn = dialog ? $('[data-remix-video-loop]', dialog) : null;
+    const previewImg = dialog ? $('[data-story-remix-img]', dialog) : null;
+    const activeP = getActiveArtwork();
+    const targetSlug = preferredSlug || currentRemixSlug || activeP?.slug || null;
+    let heroWork = targetSlug ? projects.find(w => w.slug === targetSlug) : null;
+    if (!heroWork) heroWork = projects[0] || null;
+    if (!heroWork) return null;
+
+    storyLoopState.isRecording = true;
+    storyLoopState.lastRecordedSlug = heroWork.slug;
+    storyLoopState.durationMs = Number(durationMs) || 6000;
+    storyLoopState.framesRendered = 0;
+
+    if (videoBtn) {
+      videoBtn.classList.add('is-recording');
+      videoBtn.disabled = true;
+      videoBtn.textContent = '⏺ Grabando Loop 6s (Audio + Macro)…';
+    }
+
+    try {
+      const src = heroWork.photos?.[0]?.src || heroWork.cover || heroWork.thumb;
+      const heroImg = await loadImageAsync(src).catch(() => null);
+      const canvas = document.createElement('canvas');
+      canvas.width = 1080;
+      canvas.height = 1920;
+      let ctx = null;
+      try { ctx = canvas.getContext('2d'); } catch {}
+
+      const durSec = Math.max(0.5, storyLoopState.durationMs / 1000);
+      const audioLoop = window.NAROA_SOUND?.createStoryLoopStream
+        ? await window.NAROA_SOUND.createStoryLoopStream(durSec)
+        : null;
+
+      if (audioLoop) {
+        storyLoopState.melodyName = audioLoop.melodyName || null;
+        storyLoopState.melodyDay = audioLoop.melodyDay || null;
+        storyLoopState.notesScheduled = Number(audioLoop.notesScheduled) || 0;
+      }
+
+      const canCapture = ctx && typeof canvas.captureStream === 'function' && typeof window.MediaRecorder === 'function';
+      if (!canCapture) {
+        // Entorno headless / JSDOM o sin MediaRecorder: renderizar keyframes orbitales sincrónicamente
+        const sampleSteps = 12;
+        for (let i = 0; i <= sampleSteps; i++) {
+          if (ctx) renderStoryFrame(ctx, heroWork, heroImg, i / sampleSteps);
+          storyLoopState.framesRendered++;
+        }
+        if (audioLoop && typeof audioLoop.stop === 'function') audioLoop.stop();
+        return { ...storyLoopState };
+      }
+
+      const canvasStream = canvas.captureStream(30);
+      const combinedTracks = [...canvasStream.getVideoTracks()];
+      if (audioLoop?.stream && typeof audioLoop.stream.getAudioTracks === 'function') {
+        combinedTracks.push(...audioLoop.stream.getAudioTracks());
+      }
+      const combinedStream = new MediaStream(combinedTracks);
+      const mimeTypes = [
+        'video/mp4;codecs=avc1.42E01E,mp4a.40.2',
+        'video/mp4',
+        'video/webm;codecs=vp9,opus',
+        'video/webm;codecs=vp8,opus',
+        'video/webm'
+      ];
+      let chosenMime = 'video/webm';
+      for (const m of mimeTypes) {
+        if (typeof MediaRecorder.isTypeSupported === 'function' && MediaRecorder.isTypeSupported(m)) {
+          chosenMime = m;
+          break;
+        }
+      }
+      storyLoopState.mimeType = chosenMime;
+
+      const chunks = [];
+      const recorder = new MediaRecorder(combinedStream, { mimeType: chosenMime, videoBitsPerSecond: 6500000 });
+      recorder.ondataavailable = e => {
+        if (e.data && e.data.size > 0) chunks.push(e.data);
+      };
+
+      const startTs = performance.now();
+      let animId = 0;
+      const tick = now => {
+        const elapsed = now - startTs;
+        const p = clamp(elapsed / storyLoopState.durationMs, 0, 1);
+        renderStoryFrame(ctx, heroWork, heroImg, p);
+        storyLoopState.framesRendered++;
+        if (previewImg && storyLoopState.framesRendered % 6 === 0) {
+          try { previewImg.src = canvas.toDataURL('image/jpeg', 0.85); } catch {}
+        }
+        if (elapsed < storyLoopState.durationMs && storyLoopState.isRecording) {
+          animId = requestAnimationFrame(tick);
+        }
+      };
+
+      const recordedBlob = await new Promise(resolve => {
+        recorder.onstop = () => {
+          cancelAnimationFrame(animId);
+          if (audioLoop && typeof audioLoop.stop === 'function') audioLoop.stop();
+          const blob = new Blob(chunks, { type: chosenMime });
+          resolve(blob);
+        };
+        recorder.start(200);
+        animId = requestAnimationFrame(tick);
+        setTimeout(() => {
+          if (recorder.state !== 'inactive') recorder.stop();
+        }, storyLoopState.durationMs);
+      });
+
+      const ext = chosenMime.includes('mp4') ? 'mp4' : 'webm';
+      const url = URL.createObjectURL(recordedBlob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `naroa-vinyl-loop-${heroWork.slug}.${ext}`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 15000);
+
+      return { ...storyLoopState, blob: recordedBlob };
+    } catch (err) {
+      console.warn('Error recording story video loop:', err);
+      return null;
+    } finally {
+      storyLoopState.isRecording = false;
+      if (videoBtn) {
+        videoBtn.classList.remove('is-recording');
+        videoBtn.disabled = false;
+        videoBtn.textContent = '🎵 Grabar Loop 6s (Audio + Macro)';
+      }
+    }
+  }
+
+  window.NAROA_STORY_LOOP = {
+    record: recordStoryVideoLoop,
+    getState: () => ({ ...storyLoopState })
+  };
 
   async function shareStoryToInstagram() {
     const dialog = $('#story-remix-dialog');
@@ -436,6 +598,7 @@
   if (remixDialog) {
     const shuffleBtn = $('[data-remix-shuffle]', remixDialog);
     const shareBtn = $('[data-remix-share]', remixDialog);
+    const videoLoopBtn = $('[data-remix-video-loop]', remixDialog);
     if (shuffleBtn) {
       shuffleBtn.addEventListener('click', () => {
         if (!isGeneratingRemix) generateStoryRemix(null);
@@ -444,6 +607,11 @@
     if (shareBtn) {
       shareBtn.addEventListener('click', () => {
         shareStoryToInstagram();
+      });
+    }
+    if (videoLoopBtn) {
+      videoLoopBtn.addEventListener('click', () => {
+        recordStoryVideoLoop(currentRemixSlug || null, 6000);
       });
     }
   }
@@ -627,7 +795,80 @@
   menuButtons.forEach(button => button.addEventListener('click', () => openDialog('#menu-dialog')));
   $$('[data-open-index]').forEach(b => b.addEventListener('click', e => { e.preventDefault(); openDialog('#index-dialog'); }));
   const search = $('#art-search'), filters = $$('[data-filter]'), indexItems = $$('.index-work');
+  const indexListEl = $('.index-list', $('#index-dialog') || document);
   let filter = 'all';
+  let stencilWipeTimer = 0;
+  const stencilWallState = {
+    backend: 'stencil-roller-wheatpaste-v1',
+    activeFilter: 'all',
+    wipeCount: 0,
+    lastWipeInk: 'rgba(217, 56, 30, 0.28)',
+    peeledSlug: null,
+    peelRx: 0,
+    peelRy: 0,
+    tapeLift: 0
+  };
+  const STENCIL_INKS = {
+    all: 'rgba(217, 56, 30, 0.28)',
+    Retratos: 'rgba(217, 56, 30, 0.34)',
+    Vaivenes: 'rgba(42, 132, 178, 0.32)',
+    'Walking Gallery': 'rgba(212, 175, 55, 0.34)',
+    Pizarra: 'rgba(130, 145, 155, 0.34)',
+    Naturaleza: 'rgba(84, 156, 92, 0.32)',
+    Instalaciones: 'rgba(198, 92, 56, 0.34)',
+    Archivo: 'rgba(185, 165, 132, 0.30)'
+  };
+  function triggerStencilRollerWipe(targetFilter = filter) {
+    const ink = STENCIL_INKS[targetFilter] || STENCIL_INKS.all;
+    stencilWallState.activeFilter = targetFilter;
+    stencilWallState.wipeCount++;
+    stencilWallState.lastWipeInk = ink;
+    if (indexListEl) {
+      indexListEl.style.setProperty('--stencil-wipe-ink', ink);
+      indexListEl.classList.remove('is-stencil-wiping');
+      void indexListEl.offsetWidth;
+      indexListEl.classList.add('is-stencil-wiping');
+      clearTimeout(stencilWipeTimer);
+      stencilWipeTimer = setTimeout(() => {
+        indexListEl.classList.remove('is-stencil-wiping');
+      }, 480);
+    }
+    window.NAROA_SOUND?.stencilRollerWipe?.(targetFilter);
+    return { ...stencilWallState };
+  }
+  function applyWheatpastePeel(cardEl, normX = 0.5, normY = 0.5) {
+    if (!cardEl) return null;
+    const nx = clamp(Number(normX) || 0.5, 0, 1);
+    const ny = clamp(Number(normY) || 0.5, 0, 1);
+    const rx = Number(((0.5 - ny) * 9.5).toFixed(2));
+    const ry = Number(((nx - 0.5) * 11.5).toFixed(2));
+    const tx = Number(((nx - 0.5) * 3.5).toFixed(2));
+    const ty = Number((-2.5 - (1 - ny) * 3.5).toFixed(2));
+    const tapeRot = Number((-3.5 + (nx - 0.5) * 7.0).toFixed(2));
+    const tapeLift = Number((-2.0 - (1 - ny) * 3.0).toFixed(2));
+    cardEl.classList.add('is-wheatpaste-peeling');
+    cardEl.style.setProperty('--peel-rx', `${rx}deg`);
+    cardEl.style.setProperty('--peel-ry', `${ry}deg`);
+    cardEl.style.setProperty('--peel-tx', `${tx}px`);
+    cardEl.style.setProperty('--peel-ty', `${ty}px`);
+    cardEl.style.setProperty('--peel-tape-rot', `${tapeRot}deg`);
+    cardEl.style.setProperty('--peel-tape-lift', `${tapeLift}px`);
+    stencilWallState.peeledSlug = cardEl.dataset.work || null;
+    stencilWallState.peelRx = rx;
+    stencilWallState.peelRy = ry;
+    stencilWallState.tapeLift = tapeLift;
+    return { ...stencilWallState };
+  }
+  function resetWheatpastePeel(cardEl) {
+    if (!cardEl) return;
+    cardEl.classList.remove('is-wheatpaste-peeling');
+    cardEl.style.removeProperty('--peel-rx');
+    cardEl.style.removeProperty('--peel-ry');
+    cardEl.style.removeProperty('--peel-tx');
+    cardEl.style.removeProperty('--peel-ty');
+    cardEl.style.removeProperty('--peel-tape-rot');
+    cardEl.style.removeProperty('--peel-tape-lift');
+  }
   const normalized = s => s.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   function filterIndex() {
     const term = normalized(search.value.trim());
@@ -642,16 +883,43 @@
     filters.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.filter === filter)));
   }
   search.addEventListener('input', filterIndex);
-  filters.forEach(b => b.addEventListener('click', () => { filter = b.dataset.filter; filterIndex(); }));
-  $('[data-reset-index]').addEventListener('click', () => { search.value = ''; filter = 'all'; filterIndex(); search.focus(); });
+  filters.forEach(b => b.addEventListener('click', () => {
+    filter = b.dataset.filter;
+    filterIndex();
+    triggerStencilRollerWipe(filter);
+  }));
+  $('[data-reset-index]').addEventListener('click', () => {
+    search.value = '';
+    filter = 'all';
+    filterIndex();
+    triggerStencilRollerWipe('all');
+    search.focus();
+  });
   indexItems.forEach(a => {
     a.href = '/obra/' + encodeURIComponent(a.dataset.work) + '/#fotos';
+    a.addEventListener('pointermove', e => {
+      const rect = a.getBoundingClientRect();
+      const nx = rect.width > 0 ? (e.clientX - rect.left) / rect.width : 0.5;
+      const ny = rect.height > 0 ? (e.clientY - rect.top) / rect.height : 0.5;
+      applyWheatpastePeel(a, nx, ny);
+    }, { passive: true });
+    a.addEventListener('pointerleave', () => resetWheatpastePeel(a), { passive: true });
     a.addEventListener('click', e => {
       if (!gallery || !gallery.has(a.dataset.work) || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       e.preventDefault(); $('#index-dialog').close();
       (gallery.inspect || gallery.select)(a.dataset.work);
     });
   });
+  window.NAROA_STENCIL_WALL = {
+    triggerWipe: triggerStencilRollerWipe,
+    peelCard: (slugOrEl, normX = 0.72, normY = 0.24) => {
+      const el = typeof slugOrEl === 'string'
+        ? indexItems.find(item => item.dataset.work === slugOrEl) || indexItems[0]
+        : slugOrEl;
+      return applyWheatpastePeel(el, normX, normY);
+    },
+    getState: () => ({ ...stencilWallState })
+  };
 
   const stage = $('[data-gallery]');
   if (stage) {
@@ -684,35 +952,120 @@
         sceneEl.classList.remove('is-armigo-spinning');
       }, 1300);
     }
-    // #9 Iluminación Táctil Especular y Relieve 2.5D (Normal-Mapped Canvas & MatCaps)
-    const reliefState = { x: 50, y: 42, angle: 135, alpha: 0, dx: 0, dy: 0 };
+    // V1: Relieve Litográfico BRDF y Especularidad de Mica / Pan de Oro + V2: Fonógrafo de Pizarra
+    const reliefState = {
+      backend: 'micro-facet-brdf-v1',
+      x: 50,
+      y: 42,
+      angle: 135,
+      alpha: 0,
+      dx: 0,
+      dy: 0,
+      normalZ: 0.92,
+      roughness: 0.38,
+      micaGlint: 0,
+      goldBrdf: 0
+    };
+    const phonographState = {
+      backend: 'slate-phonograph-dsp-v1',
+      activeSlug: works[0]?.slug || null,
+      category: works[0]?.category || 'pizarra',
+      normX: 0.5,
+      normY: 0.5,
+      roughness: 0.42,
+      luminance: 0.48,
+      sampleCount: 0,
+      lastFreq: 0
+    };
+    function computeSpatialMicroTopography(slug, nx, ny, cat) {
+      const str = `${slug || 'naroa'}:${cat || 'pizarra'}`;
+      let hash = 2166136261;
+      for (let i = 0; i < str.length; i++) {
+        hash ^= str.charCodeAt(i);
+        hash = Math.imul(hash, 16777619);
+      }
+      const seed = (hash >>> 0) / 4294967295;
+      const wave1 = Math.sin((nx * 19.7 + seed * 6.28) * Math.PI) * Math.cos((ny * 17.3 - seed * 3.14) * Math.PI);
+      const wave2 = Math.sin((nx * 43.1 - ny * 37.9 + seed * 12.56) * Math.PI);
+      const catBias = /pizarra|rock/i.test(cat) ? 0.68 : /kintsugi|divin/i.test(cat) ? 0.56 : 0.44;
+      const roughness = clamp(catBias + 0.24 * Math.abs(wave1) + 0.14 * Math.abs(wave2), 0.08, 0.98);
+      const luminance = clamp(0.46 + 0.28 * wave1 - 0.16 * wave2, 0.06, 0.96);
+      return { roughness: Number(roughness.toFixed(4)), luminance: Number(luminance.toFixed(4)) };
+    }
+    function samplePhonographAt(normX, normY, customCategory = null) {
+      const nx = clamp(Number(normX) || 0.5, 0, 1);
+      const ny = clamp(Number(normY) || 0.5, 0, 1);
+      const currentScene = $('.art-scene.is-current', stage) || scenes[0];
+      const slug = currentScene?.dataset?.work || works[0]?.slug || 'naroa';
+      const cat = customCategory || currentScene?.dataset?.materialCat || works[0]?.category || 'pizarra';
+      const topo = computeSpatialMicroTopography(slug, nx, ny, cat);
+      phonographState.activeSlug = slug;
+      phonographState.category = cat;
+      phonographState.normX = Number(nx.toFixed(3));
+      phonographState.normY = Number(ny.toFixed(3));
+      phonographState.roughness = topo.roughness;
+      phonographState.luminance = topo.luminance;
+      phonographState.sampleCount++;
+      window.NAROA_SOUND?.phonographGrain?.(topo.roughness, topo.luminance, cat);
+      if (window.NAROA_SOUND?.lastPhonographFreq) {
+        phonographState.lastFreq = window.NAROA_SOUND.lastPhonographFreq;
+      }
+      return { ...phonographState };
+    }
     function updateTactileRelief(normX, normY, activeAlpha = 0.88) {
       if (reduced.matches) return;
-      reliefState.x = clamp(normX * 100, 0, 100);
-      reliefState.y = clamp(normY * 100, 0, 100);
-      const vx = normX - 0.5;
-      const vy = normY - 0.42;
+      const nx = clamp(Number(normX) || 0, 0, 1);
+      const ny = clamp(Number(normY) || 0, 0, 1);
+      reliefState.x = clamp(nx * 100, 0, 100);
+      reliefState.y = clamp(ny * 100, 0, 100);
+      const vx = nx - 0.5;
+      const vy = ny - 0.42;
       reliefState.angle = Math.round((Math.atan2(vy, vx) * 180 / Math.PI) + 180);
       reliefState.alpha = activeAlpha;
       reliefState.dx = Number((-vx * 16).toFixed(2));
       reliefState.dy = Number((-vy * 16).toFixed(2));
+
+      // Micro-Facet BRDF (Cook-Torrance / Blinn-Phong half-vector specular glint)
+      const currentScene = $('.art-scene.is-current', stage) || scenes[0];
+      const slug = currentScene?.dataset?.work || works[0]?.slug || 'naroa';
+      const cat = currentScene?.dataset?.materialCat || works[0]?.category || 'pizarra';
+      const topo = computeSpatialMicroTopography(slug, nx, ny, cat);
+      const r2 = vx * vx + vy * vy;
+      const nz = Math.sqrt(Math.max(0.12, 1 - Math.min(0.88, r2 * 1.8)));
+      const ndoth = clamp(nz * (0.82 + 0.18 * (1 - topo.roughness)), 0, 1);
+      const shininess = /kintsugi|divin/i.test(cat) ? 28 : /pizarra|rock/i.test(cat) ? 18 : 12;
+      const brdfPeak = Math.pow(ndoth, shininess) * activeAlpha;
+      reliefState.normalZ = Number(nz.toFixed(3));
+      reliefState.roughness = topo.roughness;
+      reliefState.micaGlint = Number(clamp(brdfPeak * (0.65 + topo.roughness * 0.6), 0, 1).toFixed(3));
+      reliefState.goldBrdf = Number(clamp(brdfPeak * (0.55 + topo.luminance * 0.7), 0, 1).toFixed(3));
+
       stage.style.setProperty('--specular-x', `${reliefState.x.toFixed(1)}%`);
       stage.style.setProperty('--specular-y', `${reliefState.y.toFixed(1)}%`);
       stage.style.setProperty('--specular-angle', `${reliefState.angle}deg`);
       stage.style.setProperty('--specular-alpha', reliefState.alpha.toFixed(3));
       stage.style.setProperty('--relief-dx', `${reliefState.dx}px`);
       stage.style.setProperty('--relief-dy', `${reliefState.dy}px`);
+      stage.style.setProperty('--mica-glint', String(reliefState.micaGlint));
+      stage.style.setProperty('--gold-brdf', String(reliefState.goldBrdf));
     }
     stage.addEventListener('pointermove', e => {
       const w = geometry.width || innerWidth || 1;
       const h = geometry.height || innerHeight || 1;
-      updateTactileRelief(e.clientX / w, e.clientY / h, 0.88);
+      const nx = e.clientX / w;
+      const ny = e.clientY / h;
+      updateTactileRelief(nx, ny, 0.88);
+      samplePhonographAt(nx, ny);
     }, { passive: true });
     stage.addEventListener('pointerleave', () => {
       reliefState.alpha = 0;
+      reliefState.micaGlint = 0;
+      reliefState.goldBrdf = 0;
       stage.style.setProperty('--specular-alpha', '0');
       stage.style.setProperty('--relief-dx', '0px');
       stage.style.setProperty('--relief-dy', '0px');
+      stage.style.setProperty('--mica-glint', '0');
+      stage.style.setProperty('--gold-brdf', '0');
     }, { passive: true });
     window.addEventListener('deviceorientation', e => {
       if (e.gamma === null || e.beta === null) return;
@@ -721,6 +1074,10 @@
     window.NAROA_RELIEF = {
       update: updateTactileRelief,
       getState: () => ({ ...reliefState })
+    };
+    window.NAROA_PHONOGRAPH = {
+      sampleAt: samplePhonographAt,
+      getState: () => ({ ...phonographState })
     };
     const kineticTitle = $('[data-kinetic-title]', stage), caption = $('[data-art-copy]', stage);
     const state = { index: Number(stage.dataset.initial) || 0, fit: false, quiet: false, photo: 0 };
@@ -1583,36 +1940,53 @@
           }
         } else if (isMurrayToEzquerra) {
           if (outgoing) {
-            // Bill Murray (52): Manotazo con las manos hacia la entrada de Ezquerra
-            const prep = smooth(clamp(fraction / 0.26, 0, 1));
-            const strike = smooth(clamp((fraction - 0.26) / 0.14, 0, 1));
-            const exit = smooth(clamp((fraction - 0.40) / 0.60, 0, 1));
-            const windupX = -prep * geometry.width * 0.05;
-            const lurchX = windupX + strike * geometry.width * 0.22;
-            const exitX = lurchX - exit * geometry.width * 1.15;
-            const handScale = 1.08 + prep * 0.04 + Math.sin(strike * Math.PI) * 0.16;
-            image.style.transformOrigin = '38% 46%';
-            image.style.transform = `scale(${handScale.toFixed(5)})`;
-            scene.style.transform = `translate3d(${exitX.toFixed(3)}px,0px,0)`;
-            scene.style.opacity = fraction >= 0.46 ? smooth((0.76 - fraction) / 0.30).toFixed(4) : '1';
+            // Bill Murray (52): Entra DE FRENTE a toda velocidad con las manos hacia el monitor: PUMBA!
+            image.style.transformOrigin = '38% 46%'; // Manos y mirada de Bill Murray
+            if (fraction < 0.38) {
+              const rush = Math.pow(smooth(fraction / 0.38), 1.9);
+              const forwardScale = 1.08 + rush * 2.38; // Se abalanza de frente de 1.08 a 3.46x
+              const forwardY = -rush * (geometry.height * 0.04);
+              image.style.transform = `scale(${forwardScale.toFixed(5)}) translate3d(0,${forwardY.toFixed(2)}px,0)`;
+              scene.style.transform = 'translate3d(0px,0px,0)';
+              scene.style.opacity = '1';
+              image.style.filter = 'none';
+            } else {
+              // Impacto PUMBA directo contra el cristal del monitor
+              const impactProg = smooth(clamp((fraction - 0.38) / 0.10, 0, 1));
+              const recoilScale = 3.46 - impactProg * 0.28;
+              const fadeOut = smooth(clamp((fraction - 0.40) / 0.26, 0, 1));
+              image.style.transform = `scale(${recoilScale.toFixed(5)})`;
+              scene.style.transform = 'translate3d(0px,0px,0)';
+              scene.style.opacity = (1 - fadeOut).toFixed(4);
+              const glassFlash = Math.sin(impactProg * Math.PI) * 0.55;
+              image.style.filter = glassFlash > 0.02 ? `brightness(${(1 + glassFlash).toFixed(3)}) contrast(1.2)` : 'none';
+            }
           } else {
-            // Jose Manuel Ezquerra (53): Entra a la izquierda, recibe el golpe, rebota y queda aturdido
-            const enterT = smooth(clamp(fraction / 0.38, 0, 1));
-            const enterX = (1 - enterT) * geometry.width;
-            const impactT = clamp((fraction - 0.36) / 0.16, 0, 1);
-            const impactHit = Math.sin(impactT * Math.PI);
-            const recoilX = impactHit * 32;
-            const settleT = smooth(clamp((fraction - 0.50) / 0.50, 0, 1));
-            const settleX = enterX + (1 - settleT) * recoilX;
-            const tilt = impactHit * -5.2 + (1 - settleT) * Math.sin((fraction - 0.36) * 30) * 3.0;
-            const rgbDist = impactHit * 18;
-            scene.style.transform = `translate3d(${settleX.toFixed(3)}px,0px,0)`;
-            scene.style.opacity = '1';
-            image.style.transformOrigin = '62% 42%';
-            image.style.transform = `scale(1.08000) rotate(${tilt.toFixed(2)}deg)`;
-            image.style.filter = rgbDist > 0.8
-              ? `drop-shadow(${rgbDist.toFixed(1)}px 0 0 rgba(255,40,90,0.85)) drop-shadow(-${rgbDist.toFixed(1)}px 0 0 rgba(0,230,255,0.85)) brightness(${(1 + impactHit * 0.25).toFixed(3)})`
-              : 'none';
+            // Jose Manuel Ezquerra (53): Detrás del impacto en el monitor
+            // La sacudida del PUMBA en el cristal lo alcanza con onda expansiva
+            if (fraction < 0.30) {
+              scene.style.opacity = '0';
+              scene.style.transform = 'translate3d(0px,0px,0)';
+            } else {
+              const enterProg = smooth(clamp((fraction - 0.30) / 0.70, 0, 1));
+              scene.style.opacity = smooth(clamp((fraction - 0.30) / 0.15, 0, 1)).toFixed(4);
+              
+              // Conmoción y sacudida por el impacto en el monitor
+              const impactT = clamp((fraction - 0.38) / 0.24, 0, 1);
+              const impactHit = Math.sin(impactT * Math.PI);
+              const shakeX = (1 - impactT) * Math.sin((fraction - 0.38) * 36) * 24;
+              const shakeY = (1 - impactT) * Math.cos((fraction - 0.38) * 28) * 14;
+              const tilt = (1 - impactT) * Math.sin((fraction - 0.38) * 24) * -6.8;
+              const rgbDist = impactHit * 24;
+              
+              const ezScale = 1.08 + (1 - enterProg) * 0.18;
+              scene.style.transform = `translate3d(${shakeX.toFixed(2)}px,${shakeY.toFixed(2)}px,0)`;
+              image.style.transformOrigin = '62% 42%';
+              image.style.transform = `scale(${ezScale.toFixed(5)}) rotate(${tilt.toFixed(2)}deg)`;
+              image.style.filter = rgbDist > 0.8
+                ? `drop-shadow(${rgbDist.toFixed(1)}px 0 0 rgba(255,40,90,0.92)) drop-shadow(-${rgbDist.toFixed(1)}px 0 0 rgba(0,240,255,0.92)) brightness(${(1 + impactHit * 0.35).toFixed(3)})`
+                : 'none';
+            }
           }
         } else if (mode === 'H' || mode === 'V') {
           const displacement = outgoing ? -progress : 1 - progress;
@@ -1993,9 +2367,14 @@
         armigoVisited = false;
       }
       if (works[base]?.slug === 'i-got-you-babe' || works[incoming]?.slug === 'jose-manuel-ezquerra' || works[state.index]?.slug === 'jose-manuel-ezquerra') {
-        if (isMurrayToEzquerra && fraction >= 0.34 && fraction <= 0.46 && !punchVisited) {
-          punchVisited = true;
-          soundscape?.punch?.();
+        if (isMurrayToEzquerra && fraction >= 0.35 && fraction <= 0.48) {
+          if (!punchVisited) {
+            punchVisited = true;
+            soundscape?.punch?.();
+            stage.classList.remove('has-monitor-hit');
+            void stage.offsetWidth;
+            stage.classList.add('has-monitor-hit');
+          }
         } else if (fraction < 0.20 || fraction > 0.65) {
           punchVisited = false;
         }
@@ -2008,7 +2387,7 @@
         ezquerraVisited = false;
         punchVisited = false;
         clearTimeout(ezquerraDazedTimer);
-        stage.classList.remove('is-ezquerra-dazed');
+        stage.classList.remove('is-ezquerra-dazed', 'has-monitor-hit');
       }
       // V2 (#7): Transición de Portal 3D entre Series Artísticas
       const isSeriesPortal = transition && (works[base]?.category !== works[incoming]?.category || works[base]?.series !== works[incoming]?.series);
@@ -2065,7 +2444,7 @@
       } else if (works[state.index]?.slug === 'jose-manuel-ezquerra' && !transition && stage.classList.contains('is-ezquerra-dazed')) {
         cue.textContent = 'Jose Manuel Ezquerra · Aturdido por el impacto (3s) ↓';
       } else if (isMurrayToEzquerra) {
-        cue.textContent = 'El manotazo de Bill Murray · sigue ↓';
+        cue.textContent = '¡PUMBA en el monitor! · sigue ↓';
       } else if (works[state.index]?.slug === 'lauralore' && !transition) {
         cue.textContent = 'LauraLore · Pausa y mirada lenta (5s) ↓';
       } else if (works[state.index]?.slug === 'can-dy-queen' && !transition) {

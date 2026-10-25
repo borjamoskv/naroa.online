@@ -222,7 +222,7 @@ async function eyeMatch(ui, base, points) {
   assert.ok(llorona.find('[data-facts]').textContent.includes('sal rosa'));
   llorona.dom.window.close();
   assert.equal(ui.journey.entries.length, manifest.projects);
-  assert.deepEqual(Array.from(ui.w.NAROA_CATALOG.journey.scenes, e => e.mode).join(' '), 'E H V Z V E H Z V Z E V H H V Z H V Z P V H Z V H Z V H Z V H H Z E Z V H Z H Z Z V Z V Z H V Z H Z V H H Z H H H H H Z H V Z V Z V Z H V H Z H H Z H H Z V H V Z Z V Z F');
+  assert.deepEqual(Array.from(ui.w.NAROA_CATALOG.journey.scenes, e => e.mode).join(' '), 'E H V Z V E H Z V Z E V H H V Z H V Z P V H Z V H Z V H Z V H H Z E Z V H Z H Z Z V Z V Z H V Z H Z V Z H Z H H H H H Z H V Z V Z V Z H V H Z H H Z H H Z V H V Z Z V Z F');
   const modes = { E: 'eyes', H: 'horizontal', V: 'vertical', Z: 'zoom', P: 'puzzle' };
   let horizontalDirection = -1, inHorizontal = false;
   for (let index = 0; index < works.length; index++) {
@@ -981,7 +981,7 @@ async function eyeMatch(ui, base, points) {
     page.dom.window.close();
   }
 
-  // Verificar #9 Iluminación Táctil Especular + Giro Atómico 720º en El Armigo Atómico (Obra 25/85)
+  // Verificar #9 Iluminación Táctil Especular (V1 BRDF) + V2 Fonógrafo de Pizarra + V3 Stencil Wall + V5 Audio-Vinyl Loop 6s + Giro Atómico 720º en El Armigo Atómico (Obra 25/85)
   {
     const armigoPage = create('/obra/el-armigo-atomico/', false, { width: 1280, height: 800 }, null, 'on');
     await armigoPage.flush();
@@ -989,6 +989,31 @@ async function eyeMatch(ui, base, points) {
     armigoPage.w.NAROA_RELIEF.update(0.75, 0.25, 0.9);
     const relief = armigoPage.w.NAROA_RELIEF.getState();
     assert.equal(relief.x, 75, 'Tactile relief updates specular X coordinate');
+    assert.equal(relief.backend, 'micro-facet-brdf-v1', 'V1 Relief uses Micro-Facet BRDF backend');
+    assert.ok(relief.micaGlint > 0 && relief.goldBrdf > 0, 'V1 BRDF computes non-zero mica glint and gold leaf specular terms');
+
+    assert.ok(armigoPage.w.NAROA_PHONOGRAPH, 'V2 NAROA_PHONOGRAPH tactile slate sonification API exposed');
+    const phono = armigoPage.w.NAROA_PHONOGRAPH.sampleAt(0.62, 0.38, 'Pizarra');
+    assert.equal(phono.backend, 'slate-phonograph-dsp-v1', 'V2 Phonograph uses slate-phonograph-dsp-v1 backend');
+    assert.ok(phono.roughness > 0 && phono.luminance > 0 && phono.sampleCount >= 1, 'V2 Phonograph samples micro-topography roughness and luminance');
+    assert.ok(armigoPage.w.NAROA_SOUND.lastPhonographFreq >= 140, 'V2 Phonograph triggers warm low-mid D-minor harmonic grain in soundscape.js');
+
+    assert.ok(armigoPage.w.NAROA_STENCIL_WALL, 'V3 NAROA_STENCIL_WALL API exposed');
+    const wipeState = armigoPage.w.NAROA_STENCIL_WALL.triggerWipe('Retratos');
+    assert.equal(wipeState.backend, 'stencil-roller-wheatpaste-v1', 'V3 Stencil Wall uses stencil-roller-wheatpaste-v1 backend');
+    assert.equal(wipeState.activeFilter, 'Retratos', 'V3 Stencil Roller Wipe updates active filter ink');
+    assert.equal(armigoPage.w.NAROA_SOUND.lastStencilSprayFilter, 'Retratos', 'V3 Stencil Roller Wipe triggers warm acoustic roller wipe');
+    const peelState = armigoPage.w.NAROA_STENCIL_WALL.peelCard('el-armigo-atomico', 0.8, 0.2);
+    assert.equal(peelState.peeledSlug, 'el-armigo-atomico', 'V3 Wheatpaste Peel targets requested index card');
+    assert.ok(peelState.tapeLift < 0, 'V3 Wheatpaste Peel lifts masking tape and tilts 3D card');
+
+    assert.ok(armigoPage.find('[data-remix-video-loop]'), 'V5 Story 9:16 Audio-Vinyl Loop 6s button mounted in DOM');
+    assert.ok(armigoPage.w.NAROA_STORY_LOOP, 'V5 NAROA_STORY_LOOP API exposed');
+    const loopResult = await armigoPage.w.NAROA_STORY_LOOP.record('el-armigo-atomico', 1200);
+    assert.equal(loopResult.backend, 'canvas-capture-mediastream-v1', 'V5 Story Loop uses canvas-capture-mediastream-v1 backend');
+    assert.equal(loopResult.lastRecordedSlug, 'el-armigo-atomico', 'V5 Story Loop records target artwork slug');
+    assert.ok(loopResult.framesRendered >= 12 && loopResult.notesScheduled >= 6 && Boolean(loopResult.melodyName), 'V5 Story Loop renders orbital macro frames and schedules daily melody notes');
+
     assert.ok(armigoPage.find('[data-journey-cue]').textContent.includes('720°'), 'El Armigo Atómico displays 720° atomic spin cue');
     const armigoScene = armigoPage.find('.art-scene[data-work="el-armigo-atomico"]');
     assert.ok(armigoScene.classList.contains('is-armigo-spinning'), 'El Armigo Atómico triggers 720° spin on arrival');
