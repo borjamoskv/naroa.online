@@ -10,7 +10,8 @@ labels={'solo':'Individual','group':'Colectiva','street':'Arte en la calle','mar
 def links(x):
  return ' '.join(f'<a href="{e(s["url"])}" target="_blank" rel="noopener noreferrer">{e(s["label"])} ↗</a>' for s in x['sources'])
 def row(x):
- return f'''<article class="career-entry" data-kind="{x['type']}"><div class="career-entry__date"><time datetime="{x['date']}">{e(x['dateLabel'])}</time><span>{labels[x['type']]}</span></div><div><h4>{e(x['title'])}</h4><p class="career-venue">{e(x['location'])}</p><p class="career-description">{e(x['description'])}</p><div class="career-sources">{links(x)}{f'<a href="{x["artwork"]}">Ver Rara Avis →</a>' if x.get('artwork') else ''}</div></div></article>'''
+ art_text = f'<a href="{x["artwork"]}">{e(x.get("artworkLabel", "Ver Rara Avis"))} →</a>' if x.get('artwork') else ''
+ return f'''<article class="career-entry" data-kind="{x['type']}"><div class="career-entry__date"><time datetime="{x['date']}">{e(x['dateLabel'])}</time><span>{labels[x['type']]}</span></div><div><h4>{e(x['title'])}</h4><p class="career-venue">{e(x['location'])}</p><p class="career-description">{e(x['description'])}</p><div class="career-sources">{links(x)}{art_text}</div></div></article>'''
 years=sorted(set(x['year'] for x in items),reverse=True)
 body=f'''<div class="career" data-career>
 <header class="career-heading"><p class="career-kicker">Naroa Gutiérrez Gil · 2010 — 2026</p><h2 id="career-title">Trayectoria</h2><p class="career-deck">El retrato como encuentro.</p></header>

@@ -2319,8 +2319,21 @@
       } else {
         if (candyTimer) { clearInterval(candyTimer); candyTimer = null; }
       }
+      const isAjenjoPhoto = transition && works[base]?.slug === 'ajenjo-cam' && works[incoming]?.slug === 'beatriz-de-pandora';
+      const isRaraToAmor = transition && works[base]?.slug === 'rara-avis' && works[incoming]?.slug === 'amor-en-conserva';
+      const isAmorToAmy = transition && works[base]?.slug === 'amor-en-conserva' && works[incoming]?.slug === 'amy-rocks';
+      const isJamesToMario = transition && works[base]?.slug === 'james-rocks' && works[incoming]?.slug === 'mario-moreno';
+      const isJaioTo13n = transition && works[base]?.slug === 'custom-jaio' && works[incoming]?.slug === '13n';
+      const isBowieToOlinga = transition && works[base]?.slug === 'el-hombre-que-susurraba-a-las-estrellas' && works[incoming]?.slug === 'olinga-a-la-naranja';
+      const isSistaToMulti = transition && works[base]?.slug === 'sistashark' && works[incoming]?.slug === 'multi-dimensional-love';
+      const isArmigoTransition = transition && (works[incoming]?.slug === 'el-armigo-atomico' || works[base]?.slug === 'el-armigo-atomico');
+      const isMurrayToEzquerra = transition && works[base]?.slug === 'i-got-you-babe' && works[incoming]?.slug === 'jose-manuel-ezquerra';
+      const isSeriesPortal = transition && (works[base]?.category !== works[incoming]?.category || works[base]?.series !== works[incoming]?.series);
       const isFloresToJohnny = transition && works[base]?.slug === 'entre-tantas-flores-de-dia' && works[incoming]?.slug === 'johnny-rocks';
-      if (isFloresToJohnny && !still) {
+      const isSpecialBespokeTransition = isRaraToAmor || isAmorToAmy || isJamesToMario || isJaioTo13n || isBowieToOlinga || isMurrayToEzquerra || isAjenjoPhoto || isDustinToGameOver;
+      const shouldRunStickman = transition && !still && (isFloresToJohnny || (isSeriesPortal && !isSpecialBespokeTransition));
+
+      if (shouldRunStickman) {
         stickman.removeAttribute('hidden');
         stickman.classList.add('is-running');
         const stageW = geometry.width || window.innerWidth;
@@ -2331,18 +2344,17 @@
         const posX = -110 + fraction * (stageW + 220);
         const phaseAngle = fraction * 42;
         const bounce = Math.abs(Math.sin(phaseAngle)) * 7.5;
-        const floorY = (1 - progress) * stageH;
+        const floorY = mode === 'V' ? (1 - progress) * stageH : (stageH - 140);
         const runwayY = floorY - 104;
         stickman.style.transform = `translate3d(0px,${runwayY.toFixed(2)}px,0)`;
         stickRunner.style.transform = `translate3d(${posX.toFixed(2)}px,${(-bounce).toFixed(2)}px,0) scaleX(${stickDirection})`;
         updateStickmanPose(phaseAngle);
       } else {
-        if (!stickman.hasAttribute('hidden')) {
+        if (!stickman.hasAttribute('hidden') && !isBreakdancing) {
           stickman.setAttribute('hidden', '');
           stickman.classList.remove('is-running');
         }
       }
-      const isAjenjoPhoto = transition && works[base]?.slug === 'ajenjo-cam' && works[incoming]?.slug === 'beatriz-de-pandora';
       if (works[base]?.slug === 'ajenjo-cam' || works[incoming]?.slug === 'ajenjo-cam') {
         if (!ajenjoVisited && isAjenjoPhoto && fraction >= 0.16 && fraction <= 0.42) {
           ajenjoVisited = true;
@@ -2353,14 +2365,6 @@
       } else {
         ajenjoVisited = false;
       }
-      const isRaraToAmor = transition && works[base]?.slug === 'rara-avis' && works[incoming]?.slug === 'amor-en-conserva';
-      const isAmorToAmy = transition && works[base]?.slug === 'amor-en-conserva' && works[incoming]?.slug === 'amy-rocks';
-      const isJamesToMario = transition && works[base]?.slug === 'james-rocks' && works[incoming]?.slug === 'mario-moreno';
-      const isJaioTo13n = transition && works[base]?.slug === 'custom-jaio' && works[incoming]?.slug === '13n';
-      const isBowieToOlinga = transition && works[base]?.slug === 'el-hombre-que-susurraba-a-las-estrellas' && works[incoming]?.slug === 'olinga-a-la-naranja';
-      const isSistaToMulti = transition && works[base]?.slug === 'sistashark' && works[incoming]?.slug === 'multi-dimensional-love';
-      const isArmigoTransition = transition && (works[incoming]?.slug === 'el-armigo-atomico' || works[base]?.slug === 'el-armigo-atomico');
-      const isMurrayToEzquerra = transition && works[base]?.slug === 'i-got-you-babe' && works[incoming]?.slug === 'jose-manuel-ezquerra';
       if (works[base]?.slug === 'el-armigo-atomico' || works[incoming]?.slug === 'el-armigo-atomico') {
         const armigoIdx = works.findIndex(w => w.slug === 'el-armigo-atomico');
         if (!armigoVisited && (works[state.index]?.slug === 'el-armigo-atomico' || (transition && works[incoming]?.slug === 'el-armigo-atomico' && fraction >= 0.35))) {
@@ -2394,7 +2398,6 @@
         stage.classList.remove('is-ezquerra-dazed', 'has-monitor-hit');
       }
       // V2 (#7): Transición de Portal 3D entre Series Artísticas
-      const isSeriesPortal = transition && (works[base]?.category !== works[incoming]?.category || works[base]?.series !== works[incoming]?.series);
       if (portalRing) {
         if (isSeriesPortal && !still) {
           portalRing.removeAttribute('hidden');
@@ -3497,9 +3500,21 @@
     const emailBtn = $('#cfg-email-btn');
     const previewEl = $('#cfg-preview');
     const seedBanner = $('#cfg-seed-banner');
+    const visualImg = $('#cfg-visual-img');
+    const visualTitle = $('#cfg-visual-title');
+    const visualTag = $('#cfg-visual-tag');
     const supportCards = $$('[data-support-card]');
     const compareRows = $$('[data-compare-support]');
     const pickBtns = $$('[data-pick-support]');
+    const pillBtns = $$('[data-cfg-pill]', configurator);
+
+    const supportVisualMap = {
+      'Collage textil sobre madera': { slug: 'custom-jaio', title: 'Custom Jaio · Collage textil y madera', tag: 'Tela vaquera, costuras y dibujo' },
+      'Caja personalizada u objeto': { slug: 'amor-en-conserva', title: 'Amor en Conserva · Caja de memoria 3D', tag: 'Objeto tridimensional intervenido' },
+      'Pizarra natural rústica': { slug: 'amy-rocks', title: 'Amy Rocks · Pizarra natural y mica', tag: 'Piedra de cantera con escamas minerales' },
+      'Retrato al óleo o grafito': { slug: 'el-gran-dakari', title: 'El Gran Dakari · Óleo, pastel o grafito', tag: 'Trazo clásico sobre tabla o algodón' },
+      'Asesoramiento en estudio': { slug: 'rara-avis', title: 'Rara Avis · Asesoramiento con Naroa', tag: 'Elección conjunta en el estudio de Bilbao' }
+    };
 
     const syncActiveSupportUI = supportVal => {
       supportCards.forEach(card => {
@@ -3508,6 +3523,18 @@
       compareRows.forEach(row => {
         row.classList.toggle('is-selected-support', row.dataset.compareSupport === supportVal);
       });
+      pillBtns.forEach(pill => {
+        const group = pill.dataset.cfgPill;
+        const val = pill.dataset.cfgVal;
+        if (group === 'support' && supportEl) pill.classList.toggle('is-active', val === supportEl.value);
+        if (group === 'motif' && motifEl) pill.classList.toggle('is-active', val === motifEl.value);
+        if (group === 'timing' && timingEl) pill.classList.toggle('is-active', val === timingEl.value);
+      });
+      const vMeta = supportVisualMap[supportVal] || supportVisualMap['Collage textil sobre madera'];
+      const foundWork = projects.find(p => p.slug === vMeta.slug) || projects[0];
+      if (visualImg && foundWork?.cover) visualImg.src = foundWork.cover;
+      if (visualTitle) visualTitle.textContent = vMeta.title;
+      if (visualTag) visualTag.textContent = vMeta.tag;
     };
 
     updateLink = () => {
@@ -3587,6 +3614,18 @@
           seedBanner.hidden = false;
           seedBanner.textContent = `✦ Soporte seleccionado de la tabla técnica: ${supportEl.value}`;
         }
+      });
+    });
+
+    pillBtns.forEach(pill => {
+      pill.addEventListener('click', () => {
+        const group = pill.dataset.cfgPill;
+        const val = pill.dataset.cfgVal;
+        if (group === 'support' && supportEl) supportEl.value = val;
+        if (group === 'motif' && motifEl) motifEl.value = val;
+        if (group === 'timing' && timingEl) timingEl.value = val;
+        updateLink();
+        window.NAROA_SOUND?.stencilRollerWipe?.(val);
       });
     });
 
