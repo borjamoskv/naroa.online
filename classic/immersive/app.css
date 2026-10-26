@@ -410,14 +410,14 @@ body.page-sobre-mi .site-footer{color:#14080e;border-top:1px solid rgba(20,8,14,
   a[href^="#"]:after,a[href^="javascript:"]:after{content:""}
 }
 
-/* Monigote blanco corriendo por lo negro (transición Flores -> Johnny) */
+/* Monigote blanco y oro Kintsugi corriendo por los portales de serie */
 .art-stickman{position:absolute;top:0;left:0;width:100%;height:136px;z-index:7;pointer-events:none;opacity:0;visibility:hidden;will-change:transform,opacity;transition:opacity .16s ease}
 .art-stickman::before{content:"";position:absolute;inset:-28px 0 -24px;background:linear-gradient(180deg,rgba(7,7,6,0) 0%,rgba(7,7,6,0.92) 28%,#060605 56%,rgba(7,7,6,0.94) 80%,rgba(7,7,6,0) 100%);pointer-events:none}
-.art-stickman::after{content:"";position:absolute;left:0;right:0;top:103px;height:1.5px;background:linear-gradient(90deg,rgba(255,253,244,0) 0%,rgba(255,253,244,0.28) 20%,rgba(255,253,244,0.52) 50%,rgba(255,253,244,0.28) 80%,rgba(255,253,244,0) 100%);pointer-events:none}
+.art-stickman::after{content:"";position:absolute;left:0;right:0;top:103px;height:2px;background:radial-gradient(circle 140px at var(--stick-pct,50%) 50%,rgba(247,213,148,0.95) 0%,rgba(255,253,244,0.68) 38%,transparent 100%),linear-gradient(90deg,rgba(255,253,244,0) 0%,rgba(255,253,244,0.28) 20%,rgba(247,213,148,0.52) 50%,rgba(255,253,244,0.28) 80%,rgba(255,253,244,0) 100%);box-shadow:0 0 12px rgba(247,213,148,0.35);pointer-events:none}
 .art-stickman.is-running{opacity:1;visibility:visible}
-.stickman-runner{position:absolute;top:0;left:0;width:110px;height:120px;will-change:transform}
-.art-stickman svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 0 8px rgba(255,253,244,0.85)) drop-shadow(0 0 22px rgba(255,253,244,0.42));animation:stickman-chalk-pulse .24s steps(2,end) infinite}
-@keyframes stickman-chalk-pulse{0%{filter:drop-shadow(0 0 8px rgba(255,253,244,0.88)) drop-shadow(0 0 20px rgba(255,253,244,0.4))}100%{filter:drop-shadow(0 0 11px rgba(255,253,244,0.96)) drop-shadow(0 0 26px rgba(255,253,244,0.52))}}
+.stickman-runner{position:absolute;top:0;left:0;width:110px;height:120px;transform-origin:50% 62%;will-change:transform}
+.art-stickman svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 0 6px rgba(255,253,244,0.92)) drop-shadow(0 0 16px rgba(247,213,148,0.52)) drop-shadow(0 0 28px rgba(255,253,244,0.34));animation:stickman-chalk-pulse .24s steps(2,end) infinite}
+@keyframes stickman-chalk-pulse{0%{filter:drop-shadow(0 0 6px rgba(255,253,244,0.9)) drop-shadow(0 0 15px rgba(247,213,148,0.48)) drop-shadow(0 0 24px rgba(255,253,244,0.32))}100%{filter:drop-shadow(0 0 9px rgba(255,253,244,0.98)) drop-shadow(0 0 20px rgba(247,213,148,0.64)) drop-shadow(0 0 32px rgba(255,253,244,0.46))}}
 .art-stickman[hidden]{display:none!important}
 
 /* Puntero personalizado solo en escenario de galería; en páginas editoriales/formularios mantenemos puntero nativo para máxima conversión */
@@ -450,10 +450,26 @@ body.page-retratos-por-encargo-bilbao .atelier-polaroid{position:absolute;width:
 body.page-retratos-por-encargo-bilbao .atelier-polaroid::before{content:'';position:absolute;top:-8px;left:50%;transform:translateX(-50%) rotate(-2deg);width:64px;height:18px;background:rgba(245,222,179,0.82);box-shadow:0 2px 5px rgba(0,0,0,0.25)}
 body.page-retratos-por-encargo-bilbao .atelier-polaroid img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:3px}
 body.page-retratos-por-encargo-bilbao .polaroid-caption{display:block;margin-top:9px;font-family:'Caveat',cursive;font-size:19px;line-height:1.1;text-align:center;color:#23140c}
-body.page-retratos-por-encargo-bilbao .atelier-polaroid--1{transform:translate(-95px,-42px) rotate(-7deg);z-index:2}
-body.page-retratos-por-encargo-bilbao .atelier-polaroid--2{transform:translate(82px,-12px) rotate(6deg);z-index:3}
-body.page-retratos-por-encargo-bilbao .atelier-polaroid--3{transform:translate(-12px,86px) rotate(-2.5deg);z-index:4}
+body.page-retratos-por-encargo-bilbao .atelier-polaroid--1{transform:translate(-120px,-70px) rotate(-7deg);z-index:2}
+body.page-retratos-por-encargo-bilbao .atelier-polaroid--2{transform:translate(120px,-40px) rotate(6deg);z-index:3}
+body.page-retratos-por-encargo-bilbao .atelier-polaroid--3{transform:translate(-10px,110px) rotate(-2.5deg);z-index:4}
 body.page-retratos-por-encargo-bilbao .atelier-polaroid:hover{transform:translate(0,0) scale(1.08) rotate(0deg);z-index:10;box-shadow:0 28px 60px rgba(0,0,0,0.75)}
+/* Grid children must be allowed to shrink (fixes mobile horizontal overflow from the comparison table) */
+body.page-retratos-por-encargo-bilbao .chapter>*,body.page-retratos-por-encargo-bilbao .atelier-workbench>*{min-width:0}
+body.page-retratos-por-encargo-bilbao .atelier-specs-chapter{display:block}
+body.page-retratos-por-encargo-bilbao .atelier-specs-chapter>.eyebrow{margin-bottom:14px}
+body.page-retratos-por-encargo-bilbao .commission-compare-table tbody th{white-space:normal;min-width:170px}
+body.page-retratos-por-encargo-bilbao .commission-swatch-meta{flex-direction:column;align-items:flex-start}
+/* Sticky mobile conversion bar */
+.atelier-mobile-cta{display:none}
+@media(max-width:760px){
+  body.page-retratos-por-encargo-bilbao .atelier-mobile-cta{position:fixed;z-index:30;left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));display:grid;grid-template-columns:1.2fr 1fr;gap:8px;padding:8px;border-radius:999px;background:rgba(27,21,18,0.94);border:1px solid rgba(212,175,55,0.45);box-shadow:0 14px 34px rgba(0,0,0,0.45);backdrop-filter:blur(12px);transition:transform .32s cubic-bezier(.16,1,.3,1),opacity .25s ease}
+  body.page-retratos-por-encargo-bilbao .atelier-mobile-cta a{display:flex;align-items:center;justify-content:center;min-height:46px;border-radius:999px;font-size:13px;font-weight:600}
+  body.page-retratos-por-encargo-bilbao .atelier-mobile-cta a:first-child{background:#f7d594;color:#1e120a}
+  body.page-retratos-por-encargo-bilbao .atelier-mobile-cta a:last-child{color:#fffdf4;border:1px solid rgba(255,253,244,0.28)}
+  body.page-retratos-por-encargo-bilbao .atelier-mobile-cta.is-hidden{transform:translateY(140%);opacity:0;pointer-events:none}
+  body.page-retratos-por-encargo-bilbao .site-footer{padding-bottom:96px}
+}
 
 /* Contenedores orgánicos en Papel Canson Crema (#FFFDF8) y Carbón de Estudio (#1A1512) */
 body.page-retratos-por-encargo-bilbao .atelier-manifesto,

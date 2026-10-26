@@ -1378,7 +1378,9 @@
       stickman.setAttribute('aria-hidden', 'true');
       stickman.setAttribute('hidden', '');
       stickman.innerHTML = `<div class="stickman-runner" data-stick-runner><svg viewBox="0 0 110 120" class="stickman-svg" aria-hidden="true">
-        <path data-stick-scarf d="M54,32 Q34,28 16,36" stroke="#fffdf4" stroke-width="2.6" stroke-linecap="round" fill="none" opacity="0.88" />
+        <ellipse data-stick-shadow cx="50" cy="103" rx="18" ry="2.6" fill="rgba(247,213,148,0.28)" />
+        <path data-stick-scarf-gold d="M52,34 Q30,24 10,38" stroke="#f7d594" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.78" />
+        <path data-stick-scarf d="M54,32 Q34,28 16,36" stroke="#fffdf4" stroke-width="2.6" stroke-linecap="round" fill="none" opacity="0.92" />
         <polyline data-stick-hair points="49,10 54,3 57,10 63,4 62,12" stroke="#fffdf4" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none" />
         <circle data-stick-head cx="58" cy="20" r="9.5" stroke="#fffdf4" stroke-width="3.2" fill="#070706" />
         <circle data-stick-eye cx="62" cy="18.5" r="1.8" fill="#fffdf4" />
@@ -1389,16 +1391,47 @@
         <polyline data-stick-leg-r points="50,62 68,80 80,100" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
         <line data-stick-dust-1 x1="26" y1="98" x2="6" y2="98" stroke="rgba(255,253,244,0.82)" stroke-width="2.6" stroke-linecap="round" />
         <line data-stick-dust-2 x1="32" y1="105" x2="12" y2="105" stroke="rgba(255,253,244,0.55)" stroke-width="2.2" stroke-linecap="round" />
-        <circle data-stick-spark cx="18" cy="93" r="2.2" fill="rgba(255,253,244,0.75)" />
+        <circle data-stick-spark cx="18" cy="93" r="2.2" fill="rgba(255,253,244,0.85)" />
+        <circle data-stick-spark-2 cx="10" cy="88" r="1.7" fill="rgba(247,213,148,0.9)" />
+        <circle data-stick-spark-3 cx="24" cy="97" r="1.4" fill="rgba(237,188,164,0.85)" />
       </svg></div>`;
       stage.appendChild(stickman);
     }
+    const stickSvg = stickman.querySelector('svg');
+    if (stickSvg && !stickSvg.querySelector('[data-stick-scarf-gold]')) {
+      const ns = 'http://www.w3.org/2000/svg';
+      const shadow = document.createElementNS(ns, 'ellipse');
+      shadow.setAttribute('data-stick-shadow', '');
+      shadow.setAttribute('cx', '50'); shadow.setAttribute('cy', '103');
+      shadow.setAttribute('rx', '18'); shadow.setAttribute('ry', '2.6');
+      shadow.setAttribute('fill', 'rgba(247,213,148,0.28)');
+      const scarfGold = document.createElementNS(ns, 'path');
+      scarfGold.setAttribute('data-stick-scarf-gold', '');
+      scarfGold.setAttribute('d', 'M52,34 Q30,24 10,38');
+      scarfGold.setAttribute('stroke', '#f7d594');
+      scarfGold.setAttribute('stroke-width', '1.8');
+      scarfGold.setAttribute('stroke-linecap', 'round');
+      scarfGold.setAttribute('fill', 'none');
+      scarfGold.setAttribute('opacity', '0.78');
+      const sp2 = document.createElementNS(ns, 'circle');
+      sp2.setAttribute('data-stick-spark-2', '');
+      sp2.setAttribute('cx', '10'); sp2.setAttribute('cy', '88'); sp2.setAttribute('r', '1.7');
+      sp2.setAttribute('fill', 'rgba(247,213,148,0.9)');
+      const sp3 = document.createElementNS(ns, 'circle');
+      sp3.setAttribute('data-stick-spark-3', '');
+      sp3.setAttribute('cx', '24'); sp3.setAttribute('cy', '97'); sp3.setAttribute('r', '1.4');
+      sp3.setAttribute('fill', 'rgba(237,188,164,0.85)');
+      stickSvg.prepend(shadow, scarfGold);
+      stickSvg.append(sp2, sp3);
+    }
     const stickRunner = stickman.querySelector('[data-stick-runner]') || stickman;
+    const stickShadow = stickman.querySelector('[data-stick-shadow]');
     const stickHead = stickman.querySelector('[data-stick-head]');
     const stickEye = stickman.querySelector('[data-stick-eye]');
     const stickHair = stickman.querySelector('[data-stick-hair]');
     const stickTorso = stickman.querySelector('[data-stick-torso]');
     const stickScarf = stickman.querySelector('[data-stick-scarf]');
+    const stickScarfGold = stickman.querySelector('[data-stick-scarf-gold]');
     const stickArmL = stickman.querySelector('[data-stick-arm-l]');
     const stickArmR = stickman.querySelector('[data-stick-arm-r]');
     const stickLegL = stickman.querySelector('[data-stick-leg-l]');
@@ -1406,28 +1439,39 @@
     const stickDust1 = stickman.querySelector('[data-stick-dust-1]');
     const stickDust2 = stickman.querySelector('[data-stick-dust-2]');
     const stickSpark = stickman.querySelector('[data-stick-spark]');
+    const stickSpark2 = stickman.querySelector('[data-stick-spark-2]');
+    const stickSpark3 = stickman.querySelector('[data-stick-spark-3]');
     let lastStickFraction = 0;
     let stickDirection = 1;
 
-    function updateStickmanPose(phase) {
-      const bob = Math.sin(phase * 2) * 2.2;
-      const headX = 58 + Math.cos(phase) * 1.4;
-      const headY = 20 + bob;
-      const shX = 55 + Math.cos(phase) * 1.1;
-      const shY = 35 + bob;
-      const hipX = 49, hipY = 62 + bob * 0.6;
+    function updateStickmanPose(phase, leapArc = 0, portalStyle = 0) {
+      const isFlip = portalStyle === 1 && leapArc > 0.05;
+      const isGlide = portalStyle === 2;
+      const bob = isGlide ? Math.sin(phase * 1.4) * 1.2 : Math.sin(phase * 2) * 2.4;
+      const forwardLean = isGlide ? 3.2 : (1.8 + leapArc * 3.5);
+      const headX = 58 + forwardLean + Math.cos(phase) * 1.5;
+      const headY = 20 + bob - leapArc * 4;
+      const shX = 55 + forwardLean * 0.75 + Math.cos(phase) * 1.1;
+      const shY = 35 + bob - leapArc * 3;
+      const hipX = 49, hipY = 62 + bob * 0.6 - leapArc * 2;
 
+      if (stickShadow) {
+        const shadowRx = Math.max(6, 18 * (1 - leapArc * 0.62) + Math.sin(phase * 2) * 2);
+        const shadowOp = Math.max(0.08, 0.32 * (1 - leapArc * 0.7));
+        stickShadow.setAttribute('rx', shadowRx.toFixed(1));
+        stickShadow.setAttribute('opacity', shadowOp.toFixed(2));
+      }
       if (stickHead) {
         stickHead.setAttribute('cx', headX.toFixed(1));
         stickHead.setAttribute('cy', headY.toFixed(1));
       }
       if (stickEye) {
-        stickEye.setAttribute('cx', (headX + 4).toFixed(1));
-        stickEye.setAttribute('cy', (headY - 1.5).toFixed(1));
+        stickEye.setAttribute('cx', (headX + 4.2).toFixed(1));
+        stickEye.setAttribute('cy', (headY - 1.5 - leapArc * 0.8).toFixed(1));
       }
       if (stickHair) {
-        const hw = Math.sin(phase * 1.5) * 2.4;
-        stickHair.setAttribute('points', `${(headX - 9).toFixed(1)},${(headY - 9).toFixed(1)} ${(headX - 4 + hw).toFixed(1)},${(headY - 17).toFixed(1)} ${(headX - 1).toFixed(1)},${(headY - 10).toFixed(1)} ${(headX + 5 + hw).toFixed(1)},${(headY - 16).toFixed(1)} ${(headX + 4).toFixed(1)},${(headY - 8).toFixed(1)}`);
+        const hw = Math.sin(phase * 1.6) * 2.8 - leapArc * 2.2;
+        stickHair.setAttribute('points', `${(headX - 9).toFixed(1)},${(headY - 9).toFixed(1)} ${(headX - 4 + hw).toFixed(1)},${(headY - 17.5).toFixed(1)} ${(headX - 1).toFixed(1)},${(headY - 10).toFixed(1)} ${(headX + 5 + hw).toFixed(1)},${(headY - 16.5).toFixed(1)} ${(headX + 4).toFixed(1)},${(headY - 8).toFixed(1)}`);
       }
       if (stickTorso) {
         stickTorso.setAttribute('x1', (headX - 2).toFixed(1));
@@ -1436,50 +1480,73 @@
         stickTorso.setAttribute('y2', hipY.toFixed(1));
       }
       if (stickScarf) {
-        const wave1 = Math.sin(phase * 1.8) * 6;
-        const wave2 = Math.cos(phase * 1.8) * 8;
-        stickScarf.setAttribute('d', `M${(shX - 1).toFixed(1)},${(shY - 2).toFixed(1)} Q${(shX - 20).toFixed(1)},${(shY - 7 + wave1).toFixed(1)} ${(shX - 39).toFixed(1)},${(shY + 2 + wave2).toFixed(1)}`);
+        const wave1 = Math.sin(phase * 1.9) * 6.5 - leapArc * 5;
+        const wave2 = Math.cos(phase * 1.9) * 9 + leapArc * 7;
+        stickScarf.setAttribute('d', `M${(shX - 1).toFixed(1)},${(shY - 2).toFixed(1)} C${(shX - 15).toFixed(1)},${(shY - 8 + wave1).toFixed(1)} ${(shX - 28).toFixed(1)},${(shY + 4 - wave1).toFixed(1)} ${(shX - 42).toFixed(1)},${(shY + 1 + wave2).toFixed(1)}`);
+      }
+      if (stickScarfGold) {
+        const gWave1 = Math.cos(phase * 2.1) * 7.5 - leapArc * 4;
+        const gWave2 = Math.sin(phase * 2.1) * 10 + leapArc * 8;
+        stickScarfGold.setAttribute('d', `M${(shX - 2).toFixed(1)},${(shY).toFixed(1)} C${(shX - 18).toFixed(1)},${(shY - 4 + gWave1).toFixed(1)} ${(shX - 32).toFixed(1)},${(shY + 8 - gWave1).toFixed(1)} ${(shX - 47).toFixed(1)},${(shY + 3 + gWave2).toFixed(1)}`);
       }
 
-      const thighL = Math.sin(phase) * 0.88 + 0.24;
+      const strideAmp = isGlide ? 0.68 : 0.92;
+      const thighL = isFlip
+        ? 0.95 + leapArc * 0.45
+        : Math.sin(phase) * strideAmp + 0.24 + leapArc * 0.65;
       const kneeLX = hipX + Math.sin(thighL) * 20;
       const kneeLY = hipY + Math.cos(thighL) * 20;
-      const calfL = thighL - Math.max(0.08, (Math.sin(phase - 0.65) + 0.45) * 0.95);
+      const calfL = isFlip
+        ? thighL - 1.35 * leapArc
+        : thighL - Math.max(0.08, (Math.sin(phase - 0.65) + 0.45) * 0.95 + leapArc * 0.55);
       const footLX = kneeLX + Math.sin(calfL) * 20;
       const footLY = kneeLY + Math.cos(calfL) * 20;
-      const toeLX = footLX + Math.cos(calfL) * 6;
-      const toeLY = footLY - Math.sin(calfL) * 4;
+      const toeLX = footLX + Math.cos(calfL) * 6.5;
+      const toeLY = footLY - Math.sin(calfL) * 4.2;
 
-      const thighR = Math.sin(phase + Math.PI) * 0.88 + 0.24;
+      const thighR = isFlip
+        ? 0.75 + leapArc * 0.5
+        : Math.sin(phase + Math.PI) * strideAmp + 0.24 - leapArc * 0.45;
       const kneeRX = hipX + Math.sin(thighR) * 20;
       const kneeRY = hipY + Math.cos(thighR) * 20;
-      const calfR = thighR - Math.max(0.08, (Math.sin(phase + Math.PI - 0.65) + 0.45) * 0.95);
+      const calfR = isFlip
+        ? thighR - 1.35 * leapArc
+        : thighR - Math.max(0.08, (Math.sin(phase + Math.PI - 0.65) + 0.45) * 0.95 + leapArc * 0.35);
       const footRX = kneeRX + Math.sin(calfR) * 20;
       const footRY = kneeRY + Math.cos(calfR) * 20;
-      const toeRX = footRX + Math.cos(calfR) * 6;
-      const toeRY = footRY - Math.sin(calfR) * 4;
+      const toeRX = footRX + Math.cos(calfR) * 6.5;
+      const toeRY = footRY - Math.sin(calfR) * 4.2;
 
-      const armL = -Math.sin(phase) * 0.95;
+      const armL = -Math.sin(phase) * 0.98 + leapArc * 0.85;
       const elbLX = shX + Math.sin(armL) * 15;
       const elbLY = shY + Math.cos(armL) * 15;
-      const handLX = elbLX + Math.sin(armL + 0.95) * 15;
-      const handLY = elbLY + Math.cos(armL + 0.95) * 15;
+      const handLX = elbLX + Math.sin(armL + 0.95 + leapArc * 0.4) * 15;
+      const handLY = elbLY + Math.cos(armL + 0.95 + leapArc * 0.4) * 15;
 
-      const armR = -Math.sin(phase + Math.PI) * 0.95;
+      const armR = -Math.sin(phase + Math.PI) * 0.98 + leapArc * 1.05;
       const elbRX = shX + Math.sin(armR) * 15;
       const elbRY = shY + Math.cos(armR) * 15;
-      const handRX = elbRX + Math.sin(armR + 0.95) * 15;
-      const handRY = elbRY + Math.cos(armR + 0.95) * 15;
+      const handRX = elbRX + Math.sin(armR + 0.95 + leapArc * 0.5) * 15;
+      const handRY = elbRY + Math.cos(armR + 0.95 + leapArc * 0.5) * 15;
 
       if (stickLegL) stickLegL.setAttribute('points', `${hipX.toFixed(1)},${hipY.toFixed(1)} ${kneeLX.toFixed(1)},${kneeLY.toFixed(1)} ${footLX.toFixed(1)},${footLY.toFixed(1)} ${toeLX.toFixed(1)},${toeLY.toFixed(1)}`);
       if (stickLegR) stickLegR.setAttribute('points', `${hipX.toFixed(1)},${hipY.toFixed(1)} ${kneeRX.toFixed(1)},${kneeRY.toFixed(1)} ${footRX.toFixed(1)},${footRY.toFixed(1)} ${toeRX.toFixed(1)},${toeRY.toFixed(1)}`);
       if (stickArmL) stickArmL.setAttribute('points', `${shX.toFixed(1)},${shY.toFixed(1)} ${elbLX.toFixed(1)},${elbLY.toFixed(1)} ${handLX.toFixed(1)},${handLY.toFixed(1)}`);
       if (stickArmR) stickArmR.setAttribute('points', `${shX.toFixed(1)},${shY.toFixed(1)} ${elbRX.toFixed(1)},${elbRY.toFixed(1)} ${handRX.toFixed(1)},${handRY.toFixed(1)}`);
-      if (stickDust1) stickDust1.style.opacity = (0.25 + Math.abs(Math.sin(phase)) * 0.72).toFixed(2);
-      if (stickDust2) stickDust2.style.opacity = (0.2 + Math.abs(Math.cos(phase)) * 0.65).toFixed(2);
+      const groundContact = Math.max(0, 1 - leapArc * 1.4);
+      if (stickDust1) stickDust1.style.opacity = ((0.25 + Math.abs(Math.sin(phase)) * 0.72) * groundContact).toFixed(2);
+      if (stickDust2) stickDust2.style.opacity = ((0.2 + Math.abs(Math.cos(phase)) * 0.65) * groundContact).toFixed(2);
       if (stickSpark) {
-        stickSpark.setAttribute('cx', (14 + (phase * 7) % 16).toFixed(1));
-        stickSpark.setAttribute('cy', (96 - Math.abs(Math.sin(phase * 1.5)) * 12).toFixed(1));
+        stickSpark.setAttribute('cx', (10 + (phase * 8) % 20).toFixed(1));
+        stickSpark.setAttribute('cy', (96 - Math.abs(Math.sin(phase * 1.5)) * 14 - leapArc * 10).toFixed(1));
+      }
+      if (stickSpark2) {
+        stickSpark2.setAttribute('cx', (6 + ((phase * 11 + 7) % 24)).toFixed(1));
+        stickSpark2.setAttribute('cy', (88 - Math.abs(Math.cos(phase * 1.8)) * 18 - leapArc * 14).toFixed(1));
+      }
+      if (stickSpark3) {
+        stickSpark3.setAttribute('cx', (16 + ((phase * 9 + 3) % 18)).toFixed(1));
+        stickSpark3.setAttribute('cy', (99 - Math.abs(Math.sin(phase * 2.2)) * 10 - leapArc * 8).toFixed(1));
       }
     }
     let lastQuartile = 0;
@@ -2341,14 +2408,20 @@
         if (fraction > lastStickFraction + 0.002) stickDirection = 1;
         else if (fraction < lastStickFraction - 0.002) stickDirection = -1;
         lastStickFraction = fraction;
+        const portalStyle = isFloresToJohnny ? 0 : (base % 3);
+        const leapWindow = fraction > 0.38 && fraction < 0.62 ? (fraction - 0.38) / 0.24 : 0;
+        const leapArc = leapWindow > 0 ? Math.sin(leapWindow * Math.PI) : 0;
+        const airLift = portalStyle === 1 ? leapArc * 30 : portalStyle === 0 ? leapArc * 22 : leapArc * 10;
+        const spinDeg = portalStyle === 1 && leapWindow > 0 ? leapWindow * 360 * stickDirection : (leapArc * -11 * stickDirection);
         const posX = -110 + fraction * (stageW + 220);
         const phaseAngle = fraction * 42;
-        const bounce = Math.abs(Math.sin(phaseAngle)) * 7.5;
+        const bounce = Math.abs(Math.sin(phaseAngle)) * (7.5 * (1 - leapArc * 0.6));
         const floorY = mode === 'V' ? (1 - progress) * stageH : (stageH - 140);
         const runwayY = floorY - 104;
+        stickman.style.setProperty('--stick-pct', `${(fraction * 100).toFixed(1)}%`);
         stickman.style.transform = `translate3d(0px,${runwayY.toFixed(2)}px,0)`;
-        stickRunner.style.transform = `translate3d(${posX.toFixed(2)}px,${(-bounce).toFixed(2)}px,0) scaleX(${stickDirection})`;
-        updateStickmanPose(phaseAngle);
+        stickRunner.style.transform = `translate3d(${posX.toFixed(2)}px,${(-bounce - airLift).toFixed(2)}px,0) scaleX(${stickDirection}) rotate(${spinDeg.toFixed(1)}deg)`;
+        updateStickmanPose(phaseAngle, leapArc, portalStyle);
       } else {
         if (!stickman.hasAttribute('hidden') && !isBreakdancing) {
           stickman.setAttribute('hidden', '');
@@ -3512,8 +3585,8 @@
       'Collage textil sobre madera': { slug: 'custom-jaio', title: 'Custom Jaio · Collage textil y madera', tag: 'Tela vaquera, costuras y dibujo' },
       'Caja personalizada u objeto': { slug: 'amor-en-conserva', title: 'Amor en Conserva · Caja de memoria 3D', tag: 'Objeto tridimensional intervenido' },
       'Pizarra natural rústica': { slug: 'amy-rocks', title: 'Amy Rocks · Pizarra natural y mica', tag: 'Piedra de cantera con escamas minerales' },
-      'Retrato al óleo o grafito': { slug: 'el-gran-dakari', title: 'El Gran Dakari · Óleo, pastel o grafito', tag: 'Trazo clásico sobre tabla o algodón' },
-      'Asesoramiento en estudio': { slug: 'rara-avis', title: 'Rara Avis · Asesoramiento con Naroa', tag: 'Elección conjunta en el estudio de Bilbao' }
+      'Retrato al óleo o grafito': { slug: 'rara-avis', title: 'Rara Avis · Pastel, grafito y lápiz', tag: 'Pastel Conté y collage sobre papel' },
+      'Asesoramiento en estudio': { slug: 'el-armigo-atomico', title: 'El Armigo Atómico · Asesoramiento con Naroa', tag: 'Elección conjunta en el estudio de Bilbao' }
     };
 
     const syncActiveSupportUI = supportVal => {
@@ -3630,6 +3703,16 @@
     });
 
     [supportEl, motifEl, timingEl].forEach(el => el?.addEventListener('change', updateLink));
+    const mobileCta = $('[data-atelier-mobile-cta]');
+    if (mobileCta && 'IntersectionObserver' in window) {
+      const hideZones = [configurator, $('.atelier-hero')].filter(Boolean);
+      const visible = new Set();
+      const ctaObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => entry.isIntersecting ? visible.add(entry.target) : visible.delete(entry.target));
+        mobileCta.classList.toggle('is-hidden', visible.size > 0);
+      }, { threshold: 0.12 });
+      hideZones.forEach(zone => ctaObserver.observe(zone));
+    }
     window.NAROA_COMMISSION = {
       selectSupport,
       getState: () => ({ ...commissionState })

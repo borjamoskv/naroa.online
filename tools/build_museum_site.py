@@ -63,7 +63,7 @@ def get_header(active_nav=''):
       </a>
       <nav>
         <ul class="nav-menu">
-{links_html}          <li><a href="https://naroagutierrezgil.com" target="_blank" rel="noopener noreferrer" class="nav-btn-lab">LAB / naroa.online ↗</a></li>
+{links_html}          <li><a href="https://naroagutierrezgil.com" class="nav-btn-lab">LAB / Galería Interactiva ↗</a></li>
         </ul>
       </nav>
     </div>
@@ -80,7 +80,7 @@ def get_footer():
         <a href="/contacto/">Contacto</a>
         <a href="https://www.instagram.com/naroa_art/" target="_blank" rel="noopener noreferrer">Instagram</a>
         <a href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer">Facebook</a>
-        <a href="https://naroagutierrezgil.com" target="_blank" rel="noopener noreferrer" style="color: var(--gold);">naroa.online ↗</a>
+        <a href="https://naroagutierrezgil.com" style="color: var(--gold);">Galería interactiva ↗</a>
       </div>
     </div>
   </footer>"""
@@ -431,7 +431,7 @@ bio_content = """    <section class="hero-editorial">
     <section class="lab-callout-banner">
       <p class="section-kicker">PROCESO EN VIVO & EXPERIMENTOS</p>
       <h3 class="lab-callout-title">EXPLORA EL LABORATORIO DIGITAL</h3>
-      <p class="lab-callout-text">Accede a las pruebas de texturas interactivas, lupa de alta resolución y shaders WebGL en naroa.online.</p>
+      <p class="lab-callout-text">Accede a las pruebas de texturas interactivas, lupa de alta resolución y shaders WebGL en la galería interactiva.</p>
       <a href="https://naroagutierrezgil.com/#/process" target="_blank" rel="noopener noreferrer" class="btn-primary">
         <span>🔬</span>
         <span>VER PROCESO DE TALLER EN NAROA.ONLINE ↗</span>

@@ -199,7 +199,7 @@ else
   wrangler pages deploy .deploy --project-name "naroagutierrezgil-com" --branch production --commit-dirty=true
   log "Desplegando EL SÓTANO / LAB → CF Pages proyecto ${BOLD}naroaonline${NC}..."
   wrangler pages deploy "$BUILD_DIR" --project-name "naroaonline" --branch production --commit-dirty=true
-  ok "Deploy PRODUCCIÓN completado → https://naroagutierrezgil.com/ (El Museo) & https://naroa.online/ (El Sótano)"
+  ok "Deploy PRODUCCIÓN completado → https://naroagutierrezgil.com/"
 fi
 
 # ── 7. Purga de Caché Global en Cloudflare Edge ──────────────
@@ -235,7 +235,6 @@ echo ""
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}${BOLD}  ✓ NAROA.ONLINE / NAROAGUTIERREZGIL.COM DESPLEGADO C5-REAL${NC}"
 echo -e "${GREEN}${BOLD}  • Cloudflare Pages:  https://naroagutierrezgil.com${NC}"
-echo -e "${GREEN}${BOLD}  • Cloudflare Alias:  https://naroa.online${NC}"
-echo -e "${GREEN}${BOLD}  • Vercel Mirror:     https://naroaonline.vercel.app${NC}"
+echo -e "${GREEN}${BOLD}  • Vercel Mirror:     https://naroaonline.vercel.app (noindex / shadow)${NC}"
 echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════${NC}"
 echo ""

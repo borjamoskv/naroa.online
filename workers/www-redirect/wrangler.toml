@@ -1,7 +1,0 @@
-name = "naroagutierrezgil-301-redirect"
-main = "index.js"
-compatibility_date = "2026-10-19"
-
-routes = [
-  { pattern = "*naroagutierrezgil.com/*", zone_name = "naroagutierrezgil.com" }
-]
