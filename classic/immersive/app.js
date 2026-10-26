@@ -2737,6 +2737,8 @@
       galleryTitle.textContent = p.title;
       galleryMeta.textContent = `${p.label} · ${p.photos.length} ${p.photos.length === 1 ? 'fotografía' : 'fotografías'}`;
       galleryGrid.dataset.count = String(p.photos.length);
+      workGallery.dataset.category = p.category || '';
+      workGallery.dataset.support = p.support || '';
       const figures = p.photos.map((photo, index) => {
         const figure = createGalleryElement('figure', 'work-gallery-figure');
         const link = createGalleryElement('a', 'work-gallery-image');
