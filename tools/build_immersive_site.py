@@ -1097,7 +1097,7 @@ def build(output):
         f'<img src="{ex["cover"]}" width="{ex["photos"][0]["width"]}" height="{ex["photos"][0]["height"]}" alt="{esc(work_alt(ex))}" loading="eager" decoding="async">'
         f'</a>'
         f'<a class="commission-detail-pip" href="/obra/{ex["slug"]}/" tabindex="-1" aria-hidden="true">'
-        f'<img src="{ex["photos"][1]["full"] if len(ex.get("photos", [])) > 1 else ex["cover"]}" alt="" loading="lazy" decoding="async">'
+        f'<img src="{ex["photos"][1]["src"] if len(ex.get("photos", [])) > 1 else ex["cover"]}" alt="{esc(ex["title"])} · Detalle matérico" loading="lazy" decoding="async">'
         f'</a>'
         f'<div class="commission-example-bar">'
         f'<a class="commission-work-title" href="/obra/{ex["slug"]}/">{esc(ex["title"])}</a>'

@@ -420,7 +420,9 @@ body.page-sobre-mi .site-footer{color:#14080e;border-top:1px solid rgba(20,8,14,
 .art-stickman::before{content:"";position:absolute;inset:-28px 0 -24px;background:linear-gradient(180deg,rgba(7,7,6,0) 0%,rgba(7,7,6,0.92) 28%,#060605 56%,rgba(7,7,6,0.94) 80%,rgba(7,7,6,0) 100%);pointer-events:none}
 .art-stickman::after{content:"";position:absolute;left:0;right:0;top:103px;height:2px;background:radial-gradient(circle 140px at var(--stick-pct,50%) 50%,rgba(247,213,148,0.95) 0%,rgba(255,253,244,0.68) 38%,transparent 100%),linear-gradient(90deg,rgba(255,253,244,0) 0%,rgba(255,253,244,0.28) 20%,rgba(247,213,148,0.52) 50%,rgba(255,253,244,0.28) 80%,rgba(255,253,244,0) 100%);box-shadow:0 0 12px rgba(247,213,148,0.35);pointer-events:none}
 .art-stickman.is-running{opacity:1;visibility:visible}
-.stickman-runner{position:absolute;top:0;left:0;width:110px;height:120px;transform-origin:50% 62%;will-change:transform}
+.stickman-runner{position:absolute;top:0;left:0;width:110px;height:120px;transform-origin:50% 62%;will-change:transform,opacity;z-index:2}
+.stickman-kutxa-box{position:absolute;top:0;left:0;width:128px;height:120px;transform-origin:50% 86%;will-change:transform,opacity;z-index:3;pointer-events:none}
+.stickman-kutxa-box[hidden]{display:none!important}
 .art-stickman svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 0 6px rgba(255,253,244,0.92)) drop-shadow(0 0 16px rgba(247,213,148,0.52)) drop-shadow(0 0 28px rgba(255,253,244,0.34));animation:stickman-chalk-pulse .24s steps(2,end) infinite}
 @keyframes stickman-chalk-pulse{0%{filter:drop-shadow(0 0 6px rgba(255,253,244,0.9)) drop-shadow(0 0 15px rgba(247,213,148,0.48)) drop-shadow(0 0 24px rgba(255,253,244,0.32))}100%{filter:drop-shadow(0 0 9px rgba(255,253,244,0.98)) drop-shadow(0 0 20px rgba(247,213,148,0.64)) drop-shadow(0 0 32px rgba(255,253,244,0.46))}}
 .art-stickman[hidden]{display:none!important}
@@ -570,9 +572,9 @@ html.motion-off .naroa-portal-canvas,body.is-quiet .naroa-portal-canvas{display:
   will-change: transform, filter !important;
 }
 .art-scene[data-work="lauralore"].is-eguzkilore-active img {
-  transition: transform 4.2s cubic-bezier(0.16, 1, 0.3, 1), filter 3.5s ease !important;
-  transform: scale(1.68) translate3d(calc(var(--relief-dx, 0px) * -1.8), calc(var(--relief-dy, 0px) * -1.8), 0) !important;
-  filter: drop-shadow(calc(var(--relief-dx, 4px) * 2) calc(var(--relief-dy, 4px) * 2) 16px rgba(17, 18, 15, 0.75)) brightness(1.04) contrast(1.05) !important;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), filter 1.2s ease !important;
+  transform: scale(var(--laura-vaiven-zoom, 1.68)) translate3d(calc(var(--relief-dx, 0px) * -1.8), calc(var(--relief-dy, 0px) * -1.8), 0) !important;
+  filter: drop-shadow(calc(var(--relief-dx, 4px) * 2) calc(var(--relief-dy, 4px) * 2) 16px rgba(17, 18, 15, 0.75)) brightness(var(--laura-vaiven-bright, 1.04)) contrast(1.06) !important;
 }
 .art-stage.is-eguzkilore-stage:before {
   background: radial-gradient(circle 380px at 38% 34%, rgba(247, 213, 148, 0.22) 0%, rgba(237, 188, 164, 0.08) 45%, transparent 75%) !important;

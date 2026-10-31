@@ -1648,9 +1648,10 @@
       }, 1600);
     }
     let lauraVisited = false, lauraTimer = null, isLauraZooming = false, lauraPauseDistance = 0;
+    let lauraLastProgress = 0, lauraDirection = 0, lauraVaivenCount = 1;
     function fireLauraLorePause() {
       const isTestEnv = typeof window !== 'undefined' && (window.location.hostname === 'portfolio.test' || reduced.matches);
-      if (isTestEnv || isBreakdancing) return;
+      if (isBreakdancing) return;
       isLauraZooming = false;
       lauraPauseDistance = motion.current;
       const lauraScene = stage.querySelector('.art-scene[data-work="lauralore"]');
@@ -1659,15 +1660,16 @@
         stage.classList.add('is-eguzkilore-stage');
         lauraScene.classList.add('is-eguzkilore-active');
         lauraImg.style.transformOrigin = '38% 34%';
-        soundscape?.eguzkilore?.();
+        if (!isTestEnv) soundscape?.eguzkilore?.();
       }
+      if (isTestEnv) return;
       clearTimeout(lauraTimer);
       lauraTimer = setTimeout(() => {
-        if (lauraScene) {
+        if (lauraScene && lauraVaivenCount <= 1) {
           stage.classList.remove('is-eguzkilore-stage');
           lauraScene.classList.remove('is-eguzkilore-active');
         }
-      }, 3200);
+      }, 3600);
     }
     let ezquerraVisited = false, ezquerraDazedTimer = null, punchVisited = false, canPeelVisited = false;
     function fireEzquerraDazed() {
@@ -1762,6 +1764,38 @@
       stickSvg.prepend(shadow, scarfGold);
       stickSvg.append(sp2, sp3);
     }
+    let stickKutxa = stickman.querySelector('[data-stick-kutxa]');
+    if (!stickKutxa) {
+      stickKutxa = document.createElement('div');
+      stickKutxa.className = 'stickman-kutxa-box';
+      stickKutxa.setAttribute('data-stick-kutxa', '');
+      stickKutxa.setAttribute('aria-hidden', 'true');
+      stickKutxa.setAttribute('hidden', '');
+      stickKutxa.innerHTML = `<svg viewBox="0 0 128 120" class="kutxa-box-svg" aria-hidden="true">
+        <ellipse data-kutxa-shadow cx="66" cy="105" rx="34" ry="4" fill="rgba(247,213,148,0.34)" />
+        <polygon points="36,68 94,68 88,103 42,103" fill="#0d3b3e" stroke="#2dd4bf" stroke-width="1.5" opacity="0.88" />
+        <g data-kutxa-peek opacity="0">
+          <polyline points="52,68 57,54 63,68 70,53 75,68" fill="#070706" stroke="#fffdf4" stroke-width="2.2" stroke-linejoin="round" />
+          <circle cx="59" cy="63" r="1.6" fill="#f7d594" />
+          <circle cx="69" cy="63" r="1.6" fill="#f7d594" />
+        </g>
+        <rect x="36" y="68" width="58" height="35" rx="2.5" fill="#1e140f" stroke="#f7d594" stroke-width="2.6" />
+        <line x1="39" y1="76" x2="91" y2="76" stroke="#ec4899" stroke-width="2" opacity="0.85" />
+        <line x1="39" y1="95" x2="91" y2="95" stroke="#2dd4bf" stroke-width="1.8" opacity="0.82" />
+        <circle cx="65" cy="86" r="3.2" fill="#f7d594" opacity="0.85" />
+        <circle cx="60" cy="81" r="1.4" fill="#f7d594" opacity="0.85" />
+        <circle cx="65" cy="79.5" r="1.4" fill="#f7d594" opacity="0.85" />
+        <circle cx="70" cy="81" r="1.4" fill="#f7d594" opacity="0.85" />
+        <g data-kutxa-lid transform="rotate(46 94 68)">
+          <rect x="34" y="61" width="62" height="7" rx="2" fill="#291a12" stroke="#fffdf4" stroke-width="2.4" />
+          <line x1="38" y1="64.5" x2="92" y2="64.5" stroke="#f7d594" stroke-width="1.6" />
+        </g>
+      </svg>`;
+      stickman.appendChild(stickKutxa);
+    }
+    const kutxaLid = stickKutxa.querySelector('[data-kutxa-lid]');
+    const kutxaPeek = stickKutxa.querySelector('[data-kutxa-peek]');
+    let kutxaSoundFired = false;
     const stickRunner = stickman.querySelector('[data-stick-runner]') || stickman;
     const stickShadow = stickman.querySelector('[data-stick-shadow]');
     const stickHead = stickman.querySelector('[data-stick-head]');
@@ -2662,6 +2696,34 @@
             soundscape?.puff?.(dragProgress);
           }
           applyCantinflowersDrag(cantinRig, dragProgress, cantinPuffCount);
+        }
+        if (works[index].slug === 'lauralore') {
+          const holdSpan = Math.max(0.01, entry.transitionStart - entry.start);
+          const localHold = clamp((pose.distance - entry.start) / holdSpan, 0, 1);
+          const lauraProgress = still ? 0 : transition
+            ? (outgoing ? clamp(0.28 + fraction * 0.72, 0, 1) : clamp(fraction * 0.75, 0, 1))
+            : clamp(0.16 + localHold * 0.68, 0, 1);
+          const deltaLaura = lauraProgress - lauraLastProgress;
+          if (Math.abs(deltaLaura) > 0.018) {
+            const nextDir = deltaLaura > 0 ? 1 : -1;
+            if (lauraDirection !== 0 && nextDir !== lauraDirection) {
+              lauraVaivenCount = Math.min(12, lauraVaivenCount + 1);
+              fireLauraLorePause();
+            }
+            lauraDirection = nextDir;
+            lauraLastProgress = lauraProgress;
+          }
+          const lauraZoom = +(1.68 + (lauraVaivenCount - 1) * 0.36).toFixed(3);
+          const lauraBright = +(1.04 + Math.min(0.24, (lauraVaivenCount - 1) * 0.035)).toFixed(3);
+          scene.dataset.vaivenCount = String(lauraVaivenCount);
+          scene.dataset.vaivenZoom = String(lauraZoom);
+          stage.style.setProperty('--laura-vaiven-zoom', String(lauraZoom));
+          stage.style.setProperty('--laura-vaiven-bright', String(lauraBright));
+          const lauraPan = $('.art-pan', scene);
+          if (lauraPan) {
+            lauraPan.style.transformOrigin = '38% 34%';
+            lauraPan.style.transform = (!still && lauraVaivenCount > 1) ? `scale(${lauraZoom})` : '';
+          }
         }
       });
       const activeSlug = transition && fraction >= .5 ? works[incoming].slug : works[base].slug;
@@ -4108,58 +4170,111 @@
   if (commissionHorizontal) {
     const track = $('[data-horizontal-track]', commissionHorizontal);
     const cards = $$('[data-parallax-card]', commissionHorizontal);
+    const progressFill = $('[data-progress-fill]', commissionHorizontal);
+    const dotBtns = $$('[data-jump-card]', commissionHorizontal);
+    let cachedCenters = [];
     const hState = {
       targetY: scrollY || 0,
       currentY: scrollY || 0,
+      velocity: 0,
       progress: 0,
       translateX: 0,
       raf: null
     };
+
+    function measureCards() {
+      if (!track) return;
+      cachedCenters = cards.map(c => {
+        const r = c.getBoundingClientRect();
+        return c.offsetLeft + r.width * 0.5;
+      });
+    }
+
     function stepCommissionHorizontal() {
       hState.raf = null;
       const dy = hState.targetY - hState.currentY;
+      hState.velocity = dy * 0.16;
       if (reduced.matches || Math.abs(dy) < 0.25) {
         hState.currentY = hState.targetY;
+        hState.velocity = 0;
       } else {
-        hState.currentY += dy * 0.16;
+        hState.currentY += hState.velocity;
       }
       const vh = innerHeight || 900;
       const vw = innerWidth || 1440;
-      const stageHeight = commissionHorizontal.offsetHeight || vh * 4.2;
+      const stageHeight = commissionHorizontal.offsetHeight || vh * 4.5;
       const maxScroll = Math.max(1, stageHeight - vh);
       const progress = clamp(hState.currentY / maxScroll, 0, 1);
       hState.progress = Number(progress.toFixed(4));
-      const trackWidth = track ? Math.max(track.scrollWidth || 0, vw * 3.2) : vw * 3.2;
+      const trackWidth = track ? Math.max(track.scrollWidth || 0, vw * 3.5) : vw * 3.5;
       const maxTx = Math.max(0, trackWidth - vw);
       const tx = reduced.matches ? 0 : -progress * maxTx;
       hState.translateX = Number(tx.toFixed(2));
       if (track) {
         track.style.setProperty('--hx', `${tx.toFixed(2)}px`);
       }
-      const total = Math.max(1, cards.length - 1);
+      const skew = reduced.matches ? 0 : clamp(hState.velocity * -0.05, -3.2, 3.2);
+      commissionHorizontal.style.setProperty('--velocity-skew', `${skew.toFixed(2)}deg`);
+      if (progressFill) {
+        commissionHorizontal.style.setProperty('--h-progress', progress.toFixed(4));
+      }
+      const viewportCenter = vw * 0.5;
+      const effectiveRadius = vw * 0.58;
+      let activeIdx = 0;
+      let minCenterDist = Infinity;
       cards.forEach((card, idx) => {
-        const anchor = idx / total;
-        const rel = reduced.matches ? 0 : clamp((anchor - progress) * 2.2, -1, 1);
+        const cX = cachedCenters[idx] !== undefined ? cachedCenters[idx] : (card.offsetLeft + card.offsetWidth * 0.5);
+        const screenX = cX + tx;
+        const distFromCenter = screenX - viewportCenter;
+        const rel = reduced.matches ? 0 : clamp(distFromCenter / effectiveRadius, -1.25, 1.25);
+        const focus = clamp(1 - Math.abs(distFromCenter) / effectiveRadius, 0, 1);
         card.style.setProperty('--parallax-x', rel.toFixed(4));
+        card.style.setProperty('--card-focus', focus.toFixed(3));
+        if (Math.abs(distFromCenter) < minCenterDist) {
+          minCenterDist = Math.abs(distFromCenter);
+          activeIdx = idx;
+        }
       });
-      $('.site-nav')?.classList.toggle('is-scrolled', hState.currentY > 24);
+      dotBtns.forEach((dot, dIdx) => {
+        dot.classList.toggle('is-active', dIdx === activeIdx);
+      });
+      $('.site-nav')?.classList.toggle('is-scrolled', hState.currentY > 30);
       if (!reduced.matches && Math.abs(hState.targetY - hState.currentY) >= 0.25) {
         hState.raf = requestAnimationFrame(stepCommissionHorizontal);
       }
     }
+
     function scheduleCommissionHorizontal() {
       hState.targetY = scrollY || 0;
       if (hState.raf === null) {
         hState.raf = requestAnimationFrame(stepCommissionHorizontal);
       }
     }
+
+    measureCards();
     addEventListener('scroll', scheduleCommissionHorizontal, { passive: true });
-    addEventListener('resize', scheduleCommissionHorizontal, { passive: true });
+    addEventListener('resize', () => { measureCards(); scheduleCommissionHorizontal(); }, { passive: true });
+    dotBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetIdx = parseInt(btn.dataset.jumpCard, 10);
+        const vh = innerHeight || 900;
+        const vw = innerWidth || 1440;
+        const stageHeight = commissionHorizontal.offsetHeight || vh * 4.5;
+        const maxScroll = Math.max(1, stageHeight - vh);
+        const trackWidth = track ? Math.max(track.scrollWidth || 0, vw * 3.5) : vw * 3.5;
+        const maxTx = Math.max(0, trackWidth - vw);
+        const cX = cachedCenters[targetIdx] || 0;
+        const targetTx = clamp(cX - vw * 0.5, 0, maxTx);
+        const p = maxTx > 0 ? targetTx / maxTx : 0;
+        window.scrollTo({ top: p * maxScroll, behavior: 'smooth' });
+      });
+    });
     stepCommissionHorizontal();
+
     window.NAROA_COMMISSION_HORIZONTAL = {
       scrollToProgress(p = 0.5) {
         const vh = innerHeight || 900;
-        const stageHeight = commissionHorizontal.offsetHeight || vh * 4.2;
+        const stageHeight = commissionHorizontal.offsetHeight || vh * 4.5;
         hState.targetY = clamp(p, 0, 1) * Math.max(1, stageHeight - vh);
         hState.currentY = hState.targetY;
         stepCommissionHorizontal();
@@ -4169,7 +4284,8 @@
         backend: 'substep-horizontal-parallax-v1',
         progress: hState.progress,
         translateX: hState.translateX,
-        cards: cards.length
+        cards: cards.length,
+        hasDetailPips: $$('.commission-detail-pip', commissionHorizontal).length
       })
     };
   }

@@ -285,6 +285,11 @@ async function eyeMatch(ui, base, points) {
       assert.ok(Number(cantinRig.dataset.emberGlow) > 0, 'Cantinflowers cigarette ember glows during scroll drag');
       assert.ok(Number(cantinRig.dataset.puffCount) >= 2, 'Scrolling back and forth on Cantinflowers increments the puff counter');
     }
+    if (entry.slug === 'lauralore') {
+      const lauraScene = ui.find(`[data-scene="${index}"]`);
+      assert.ok(Number(lauraScene.dataset.vaivenCount) >= 2, 'Scrolling back and forth on LauraLore increments the vaivén counter');
+      assert.ok(Number(lauraScene.dataset.vaivenZoom) > 1.68, 'Each LauraLore vaivén increases the progressive zoom into the eguzkilore');
+    }
     if (entry.mode === 'H') {
       const specDir = ui.w.NAROA_CATALOG.journey.scenes.find(s => s.slug === entry.slug)?.direction;
       if (specDir !== undefined) {
@@ -951,11 +956,14 @@ async function eyeMatch(ui, base, points) {
     if (route === '/cuaderno/') assert.equal(page.document.querySelectorAll('.notebook-posts article').length, 6);
     if (route === '/retratos-por-encargo-bilbao/') {
       assert.equal(page.document.querySelectorAll('.commission-example').length, 4, 'Commissions landing displays 4 monumental artworks');
+      assert.equal(page.document.querySelectorAll('.commission-detail-pip').length, 4, 'Every commission artwork has a macro detail PIP');
+      assert.ok(page.find('.commission-horizontal-progress'), 'Commissions includes horizontal progress bar');
       assert.ok(page.find('.closing a[href^="https://wa.me/"]'), 'Commissions landing includes direct WhatsApp CTA');
       assert.ok(page.w.NAROA_COMMISSION_HORIZONTAL, 'NAROA_COMMISSION_HORIZONTAL horizontal parallax engine exposed on window');
       const hParallax = page.w.NAROA_COMMISSION_HORIZONTAL.scrollToProgress(0.5);
       assert.equal(hParallax.backend, 'substep-horizontal-parallax-v1', 'Commissions uses substep horizontal parallax backend');
       assert.ok(hParallax.translateX < 0, 'Scrolling advances horizontal parallax track');
+      assert.equal(hParallax.hasDetailPips, 4, 'Telemetry reports 4 detail pips active in horizontal parallax');
       assert.ok(page.w.NAROA_ATTRIBUTION, 'First-party attribution telemetry exposed on window');
       assert.ok(page.w.WebMCP, 'WebMCP interface exposed on window');
       const catalogResults = await page.w.WebMCP.callTool('search_catalogue', { query: 'pizarra' });
