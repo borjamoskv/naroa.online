@@ -1249,8 +1249,9 @@
     } catch {}
     return { category: cat, frequency: freq, gated: false };
   }
-  let lastCanPeelTime = 0, lastEguzkiloreTime = 0, lastKutxaTime = 0;
+  let lastCanPeelTime = 0, lastEguzkiloreTime = 0, lastKutxaTime = 0, lastKutxaSlug = '';
   function playKutxaBoxJump() {
+    lastKutxaSlug = 'el-gato-que-es-kutxa';
     const nowMs = typeof performance !== 'undefined' ? performance.now() : Date.now();
     if (nowMs - lastKutxaTime < 420) return;
     lastKutxaTime = nowMs;
@@ -1827,7 +1828,7 @@
       source.onended = () => { voices.delete(voice); source.disconnect(); envelope.disconnect(); };
       source.start(start, offset); source.stop(start + duration);
     });
-    message();
+    if (!autoPlayActive && !cardPinned) message();
   }
   function advance(nextDistance, nextDepth = depth, nextMode = mode, nextPhase = phase, nextAxis = axisDirection, nextSlug = slug, nextFlash = 0, nextPunch = false) {
     depth = Math.max(0, Math.min(1, Number(nextDepth) || 0));
@@ -1962,6 +1963,40 @@
       context = null; message('No se pudo activar el sonido. Vuelve a pulsar Sonido.'); paint();
     }
   });
+  if (status) {
+    status.addEventListener('click', event => {
+      const target = event.target instanceof Element ? event.target : null;
+      if (!target) return;
+      const closeBtn = target.closest('[data-sound-card-close]');
+      if (closeBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        cardPinned = false;
+        message();
+        return;
+      }
+      const playBtn = target.closest('[data-sound-autoplay]');
+      if (playBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        cardPinned = true;
+        toggleAutoPlay();
+        return;
+      }
+      const pickBtn = target.closest('[data-sound-pick]');
+      if (pickBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        const idx = Number(pickBtn.getAttribute('data-sound-pick'));
+        selectMelody(idx, { preview: true });
+      }
+    });
+  }
+  button.addEventListener('mouseenter', () => {
+    if (enabled && status && status.hidden && !isHeadlessTest) {
+      message(activeMelodyMeta);
+    }
+  });
   function visibility() {
     if (document.hidden) rest(true);
   }
@@ -1971,12 +2006,17 @@
   addEventListener('pageshow', () => { pageActive = true; });
   window.NAROA_SOUND = Object.freeze({
     dailyMelody: Object.freeze({
-      index: activeMelodyIndex,
-      name: activeMelodyMeta.name,
-      title: activeMelodyMeta.title,
-      subtitle: activeMelodyMeta.subtitle,
-      day: activeMelodyMeta.day
+      get index() { return activeMelodyIndex; },
+      get name() { return activeMelodyMeta.name; },
+      get title() { return activeMelodyMeta.title; },
+      get subtitle() { return activeMelodyMeta.subtitle; },
+      get verse() { return activeMelodyMeta.verse; },
+      get day() { return activeMelodyMeta.day; }
     }),
+    melodies: DAILY_MELODIES,
+    selectMelody(idx, opts) { return selectMelody(idx, opts); },
+    toggleAutoPlay(state) { return toggleAutoPlay(state); },
+    get autoPlayActive() { return autoPlayActive; },
     depth(value) { depth = Math.max(0, Math.min(1, value)); if (enabled) mix(); },
     frame(state = {}) {
       if (!state || typeof state !== 'object') return;
