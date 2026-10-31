@@ -622,8 +622,15 @@
   const menu = $('#menu-dialog'), menuLinks = $$('[data-menu-item]', menu), menuImages = $$('[data-menu-image]', menu);
   const menuPicture = $('[data-menu-picture]', menu), menuReel = $('[data-menu-reel]', menu);
   const menuQuote = $('[data-menu-quote]', menu), menuMeta = $('[data-menu-preview-meta]', menu), menuLoupe = $('[data-menu-loupe]', menu);
+  const menuOpenWorkBtn = $('[data-menu-open-work]', menu);
+  const menuSoundCreditsBtn = $('[data-menu-sound-credits]', menu), menuSoundDrawer = $('[data-menu-sound-drawer]', menu), menuMelodyToday = $('[data-menu-melody-today]', menu);
   const menuButtons = $$('[data-open-menu]');
-  let menuRequest = 0, menuImageIndex = -1, reelTimer = 0, activeReel = null, activeReelIndex = 0, activeReelLabel = '', activeMenuLink = null;
+  let menuRequest = 0, menuImageIndex = -1, reelTimer = 0, activeReel = null, activeReelIndex = 0, activeReelLabel = '', activeMenuLink = null, activePreviewHref = '/obra/';
+  function setPreviewHref(href) {
+    activePreviewHref = href || activeMenuLink?.getAttribute('href') || '/obra/';
+    if (menuPicture) menuPicture.dataset.previewHref = activePreviewHref;
+    if (menuOpenWorkBtn) menuOpenWorkBtn.setAttribute('href', activePreviewHref);
+  }
   function clearReelTimer() {
     if (reelTimer) { clearTimeout(reelTimer); reelTimer = 0; }
   }
@@ -631,18 +638,19 @@
     const path = location.pathname;
     return path === '/' ? menuLinks[0] : menuLinks.find(link => path.startsWith(new URL(link.href).pathname));
   }
-  function labelMenu(title, label, quoteText, metaText) {
+  function labelMenu(title, label, quoteText, metaText, href) {
     $('[data-menu-preview-title]', menu).textContent = title;
     $('[data-menu-preview-label]', menu).textContent = label;
     if (menuQuote && quoteText) menuQuote.textContent = quoteText;
     if (menuMeta && metaText) menuMeta.textContent = metaText;
+    if (href) setPreviewHref(href);
   }
-  async function showMenuFrame(source, title, label, quoteText, metaText) {
+  async function showMenuFrame(source, title, label, quoteText, metaText, href) {
     if (!source || !menu.open) return;
     if (menuLoupe) menuLoupe.style.backgroundImage = `url("${source}")`;
     const request = ++menuRequest;
     if (menuImages.some(image => image.classList.contains('is-visible') && image.getAttribute('src') === source)) {
-      labelMenu(title, label, quoteText, metaText);
+      labelMenu(title, label, quoteText, metaText, href);
       return;
     }
     const picture = new Image(); picture.src = source;
@@ -655,7 +663,7 @@
     const image = menuImages[menuImageIndex];
     image.src = source; image.alt = title;
     menuImages.forEach(item => item.classList.toggle('is-visible', item === image));
-    labelMenu(title, label, quoteText, metaText);
+    labelMenu(title, label, quoteText, metaText, href);
   }
   function syncReelButtons() {
     if (!menuReel) return;
@@ -670,7 +678,7 @@
       activeReelIndex = (activeReelIndex + 1) % activeReel.length;
       const frame = activeReel[activeReelIndex];
       syncReelButtons();
-      showMenuFrame(frame.src, frame.title, activeReelLabel, null, frame.meta);
+      showMenuFrame(frame.src, frame.title, activeReelLabel, null, frame.meta, frame.href);
       scheduleReelStep();
     }, 1800);
   }
@@ -699,18 +707,23 @@
       btn.className = 'menu-reel-frame' + (idx === 0 ? ' is-active' : '');
       btn.dataset.reelIndex = String(idx);
       btn.dataset.reelTitle = frame.title;
+      if (frame.href) btn.dataset.reelHref = frame.href;
       btn.tabIndex = -1;
-      btn.title = frame.title;
+      btn.title = `${frame.title} · Clic para previsualizar`;
       btn.style.backgroundImage = `url("${frame.src}")`;
       const selectFrame = e => {
         e.stopPropagation();
         activeReelIndex = idx;
         syncReelButtons();
-        showMenuFrame(frame.src, frame.title, activeReelLabel, null, frame.meta);
+        showMenuFrame(frame.src, frame.title, activeReelLabel, null, frame.meta, frame.href);
         scheduleReelStep();
       };
       btn.addEventListener('pointerenter', selectFrame);
       btn.addEventListener('click', selectFrame);
+      btn.addEventListener('dblclick', e => {
+        e.stopPropagation();
+        if (frame.href) location.href = frame.href;
+      });
       return btn;
     }));
     scheduleReelStep();
@@ -718,7 +731,12 @@
   async function previewMenu(link, playSound = false) {
     if (!link || !menu.open) return;
     activeMenuLink = link;
-    const isPortrait = link.getAttribute('href') === '/sobre-mi/' || link.getAttribute('href') === '/contacto/';
+    const href = link.getAttribute('href') || '/obra/';
+    setPreviewHref(href);
+    if (link.dataset.previewGlow) {
+      menu.style.setProperty('--menu-glow', link.dataset.previewGlow);
+    }
+    const isPortrait = href === '/sobre-mi/' || href === '/contacto/';
     const isWink = link.dataset.previewWink === 'true';
     if (menuPicture) {
       menuPicture.dataset.portraitMode = String(isPortrait);
@@ -729,12 +747,35 @@
       if (isWink) window.NAROA_SOUND?.portraitWink?.();
     }
     renderReel(link);
-    await showMenuFrame(link.dataset.previewSrc, link.dataset.previewTitle, link.dataset.previewLabel, link.dataset.previewQuote, link.dataset.previewMeta);
+    await showMenuFrame(link.dataset.previewSrc, link.dataset.previewTitle, link.dataset.previewLabel, link.dataset.previewQuote, link.dataset.previewMeta, href);
+  }
+  function updateMenuLiveTelemetry() {
+    const obrasLink = menuLinks[0];
+    if (!obrasLink) return;
+    const detailEl = $('[data-menu-item-detail]', obrasLink) || $('small', obrasLink);
+    if (!detailEl) return;
+    const activeP = getActiveArtwork();
+    const idx = activeP ? projects.findIndex(p => p.slug === activeP.slug) : -1;
+    if (galleryPage && idx >= 0 && (idx > 0 || window.scrollY > 40)) {
+      detailEl.textContent = `${projects.length} retratos · En #${String(idx + 1).padStart(2, '0')} «${activeP.title}»`;
+    } else {
+      detailEl.textContent = `${projects.length} retratos · Un viaje`;
+    }
+    if (menuMelodyToday) {
+      const info = window.NAROA_SOUND?.getActiveMelodyInfo?.();
+      if (info && info.name) {
+        menuMelodyToday.textContent = `${info.day || 'Hoy'} · «${info.name}» (Re menor · 146–440 Hz)`;
+      } else {
+        const days = ['Domingo · «Haizea»', 'Lunes · «Landa»', 'Martes · «Haurtxo Polita»', 'Miércoles · «Harria eta Marea»', 'Jueves · «Txoria Txori»', 'Viernes · «Mi Gran Noche»', 'Sábado · «Gaua»'];
+        menuMelodyToday.textContent = `${days[new Date().getDay()] || 'Ciclo Semanal'} · Síntesis cálida Re menor`;
+      }
+    }
   }
   function refreshMenu() {
     const current = currentMenuLink();
     menuLinks.forEach(link => { if (link === current) link.setAttribute('aria-current', 'location'); else link.removeAttribute('aria-current'); });
     menuButtons.forEach(button => button.setAttribute('aria-expanded', 'true'));
+    updateMenuLiveTelemetry();
     previewMenu(current || menuLinks[0], false);
   }
   menuLinks.forEach(link => {
@@ -742,6 +783,10 @@
     link.addEventListener('focus', () => previewMenu(link, false));
   });
   if (menuPicture) {
+    menuPicture.addEventListener('click', e => {
+      if (e.target.closest('[data-menu-reel]')) return;
+      if (activePreviewHref) location.href = activePreviewHref;
+    });
     menuPicture.addEventListener('pointermove', e => {
       const r = menuPicture.getBoundingClientRect();
       if (!r.width || !r.height) return;
@@ -755,6 +800,18 @@
     menuPicture.addEventListener('pointerleave', () => {
       menuPicture.classList.remove('is-loupe-active');
       if (activeMenuLink?.dataset.previewWink !== 'true') menuPicture.classList.remove('is-winking');
+    });
+  }
+  if (menuSoundCreditsBtn && menuSoundDrawer) {
+    menuSoundCreditsBtn.addEventListener('click', e => {
+      e.preventDefault();
+      const isOpen = !menuSoundDrawer.hidden;
+      menuSoundDrawer.hidden = isOpen;
+      menuSoundCreditsBtn.setAttribute('aria-expanded', String(!isOpen));
+    });
+    $('[data-close-sound-drawer]', menuSoundDrawer)?.addEventListener('click', () => {
+      menuSoundDrawer.hidden = true;
+      menuSoundCreditsBtn.setAttribute('aria-expanded', 'false');
     });
   }
   $('[data-menu-open-index]', menu)?.addEventListener('click', () => {
@@ -792,6 +849,8 @@
     clearReelTimer();
     activeReel = null;
     if (menuPicture) menuPicture.classList.remove('is-loupe-active', 'is-winking');
+    if (menuSoundDrawer) menuSoundDrawer.hidden = true;
+    if (menuSoundCreditsBtn) menuSoundCreditsBtn.setAttribute('aria-expanded', 'false');
     window.NAROA_SOUND?.resolveCadence?.();
     menuRequest++;
     menuButtons.forEach(button => button.setAttribute('aria-expanded', 'false'));
