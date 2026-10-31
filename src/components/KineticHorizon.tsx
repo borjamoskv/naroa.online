@@ -777,6 +777,43 @@ export function KineticHorizon({
                     transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
                   }}
                 />
+                {artwork.slug === 'julio-iglesias-como-un-reloj-suizo' && (
+                  <svg
+                    viewBox="0 0 1700 2048"
+                    preserveAspectRatio="xMidYMid meet"
+                    aria-hidden="true"
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      width: '100%',
+                      height: '100%',
+                      pointerEvents: 'none',
+                      zIndex: 12,
+                      transform: cursorOverArtwork === idx && isCentered ? 'scale(1.025) translateZ(20px)' : 'scale(1) translateZ(0px)',
+                      transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+                    }}
+                  >
+                    <style>{`
+                      @keyframes julio-horizon-arm {
+                        0%, 100% { transform: rotate(-13deg); }
+                        50% { transform: rotate(4deg); }
+                      }
+                      .julio-horizon-arm-group {
+                        transform-origin: 1022px 1317px;
+                        animation: julio-horizon-arm 3.2s ease-in-out infinite;
+                      }
+                    `}</style>
+                    <image x="930" y="960" width="410" height="550" preserveAspectRatio="none" href="/images/catalogo/julio-iglesias-bg-patch.webp" />
+                    <line x1="982" y1="1320" x2="995" y2="1490" stroke="rgba(218,218,218,0.85)" strokeWidth="2.2" strokeLinecap="round" />
+                    <g className="julio-horizon-arm-group" opacity="0.24" style={{ filter: 'brightness(0.08) blur(4px)' }}>
+                      <image x="965" y="1039" width="280" height="335" preserveAspectRatio="none" href="/images/catalogo/julio-iglesias-arm-mic.webp" />
+                    </g>
+                    <g className="julio-horizon-arm-group">
+                      <image x="960" y="1030" width="280" height="335" preserveAspectRatio="none" href="/images/catalogo/julio-iglesias-arm-mic.webp" />
+                    </g>
+                    <path d="M1200,1222 C1216,1275 1265,1328 1324,1350" stroke="#8e2226" strokeWidth="5.2" strokeLinecap="round" fill="none" />
+                  </svg>
+                )}
 
                 {/* DESTELLO ESPECULAR CAÚSTICO MULTICAPA DE MICA MINERAL & ORO 24K */}
                 {isCentered && (
