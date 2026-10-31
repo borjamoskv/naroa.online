@@ -48,11 +48,11 @@
     "technique": "Acrílico y papel de seda sobre lienzo crudo",
     "image": "images/artworks/el-gran-dakari-C1tAWAhR.webp",
     "altText": "Obra RockaGipsy (Lembrança da Bahia) de Naroa Gutiérrez Gil",
-    "metaDescription": "RockaGipsy (Lembrança da Bahia) - Arte por Naroa Gutiérrez Gil. Acrílico y papel de seda sobre lienzo crudo",
+    "metaDescription": "Camarón aparece sobre el reverso del lienzo, rodeado por papeles de lunares y tela decorada. La silueta superpuesta añade profundidad al retrato.",
     "category": "DiviNos",
     "style": "Mixed Media",
     "featured": true,
-    "description": "Retrato de Camarón de la Isla sobre lienzo sin imprimar, decorado con papel de seda de lunares para evocar la crudeza del flamenco."
+    "description": "Camarón aparece sobre el reverso del lienzo, rodeado por papeles de lunares y tela decorada. La silueta superpuesta añade profundidad al retrato."
   },
   {
     "id": "amy-rocks",
@@ -62,11 +62,11 @@
     "technique": "Acrílico y posca sobre pizarra natural",
     "image": "images/artworks/amy-rocks.webp",
     "altText": "Obra Amy Rocks de Naroa Gutiérrez Gil",
-    "metaDescription": "Amy Rocks - Arte por Naroa Gutiérrez Gil. Acrílico y Posca sobre pizarra natural",
+    "metaDescription": "Amy Winehouse en blanco, negro y grises, con acentos rojos y dorados. La forma y el canto de la pizarra participan en el retrato.",
     "category": "Rocks",
     "style": "Mixed Media",
     "featured": true,
-    "description": "Retrato estilizado de Amy Winehouse pintado sobre una placa de pizarra negra, destacando el contraste con el soporte oscuro."
+    "description": "Amy Winehouse en blanco, negro y grises, con acentos rojos y dorados. La forma y el canto de la pizarra participan en el retrato."
   },
   {
     "id": "johnny-rocks",
@@ -76,11 +76,11 @@
     "technique": "Mixta (estilo pop)",
     "image": "images/artworks/johnny-rocks-hq-4.webp",
     "altText": "Obra Johnny Rocks de Naroa Gutiérrez Gil",
-    "metaDescription": "Johnny Rocks - Arte por Naroa Gutiérrez Gil. Mixta (Estilo Pop)",
+    "metaDescription": "Un retrato de Johnny Depp con contrastes en blanco y negro y detalles dorados y rojizos. Forma parte de DiviNos.",
     "category": "Rocks",
     "style": "Mixed Media",
     "featured": true,
-    "description": "Retrato pop estilizado de Johnny Depp con colores vivos y trazos definidos."
+    "description": "Un retrato de Johnny Depp con contrastes en blanco y negro y detalles dorados y rojizos. Forma parte de DiviNos."
   },
   {
     "id": "marilyn-rocks",
@@ -90,11 +90,11 @@
     "technique": "Mixta (estilo pop)",
     "image": "images/artworks/marilyn-rocks.webp",
     "altText": "Obra Marilyn Rocks de Naroa Gutiérrez Gil",
-    "metaDescription": "Marilyn Rocks - Arte por Naroa Gutiérrez Gil. Mixta (Estilo Pop)",
+    "metaDescription": "Marilyn Monroe sobre pizarra, con detalles dorados y escamas de mica encoladas. La luz revela la textura de los materiales añadidos.",
     "category": "Rocks",
     "style": "Mixed Media",
     "featured": true,
-    "description": "Reinterpretación moderna y colorida del icono de Marilyn Monroe bajo la estética 'Rocks'."
+    "description": "Marilyn Monroe sobre pizarra, con detalles dorados y escamas de mica encoladas. La luz revela la textura de los materiales añadidos."
   },
   {
     "id": "james-rocks",
@@ -104,11 +104,11 @@
     "technique": "Mixta (estilo pop)",
     "image": "images/artworks/james-rocks-hq-3.webp",
     "altText": "Obra James Rocks de Naroa Gutiérrez Gil",
-    "metaDescription": "James Rocks - Arte por Naroa Gutiérrez Gil. Mixta (Estilo Pop)",
+    "metaDescription": "James Dean sobre un fondo de rojos y motivos dorados. La pintura dimensional negra añade relieve a la superficie.",
     "category": "Rocks",
     "style": "Mixed Media",
     "featured": true,
-    "description": "Retrato pop art de James Dean, capturando su actitud rebelde con una paleta contemporánea."
+    "description": "James Dean sobre un fondo de rojos y motivos dorados. La pintura dimensional negra añade relieve a la superficie."
   },
   {
     "id": "cantiflowers-mario-moreno",
@@ -131,10 +131,11 @@
     "technique": "Pintura y collage",
     "image": "images/artworks/marilyn-rocks--qPeLHxE.webp",
     "altText": "Obra Mario Moreno de Naroa Gutiérrez Gil",
-    "metaDescription": "Mario Moreno - Arte por Naroa Gutiérrez Gil. Pintura y collage",
+    "metaDescription": "En este retrato de Mario Moreno, Naroa sostiene una mirada penetrante a grafito y carboncillo en blanco y negro, rasgada de improviso por una tridimensiona",
     "category": "DiviNos",
     "style": "Mixed Media",
-    "featured": true
+    "featured": true,
+    "description": "En este retrato de Mario Moreno, Naroa sostiene una mirada penetrante a grafito y carboncillo en blanco y negro, rasgada de improviso por una tridimensionalidad táctil: seda roja con lunares blancos en la corbata, tela vaquera negra en las solapas y un retal de lienzo crudo como pañuelo de bolsillo. Un tributo sobrio donde la elegancia clásica del cómico dialoga con el volumen textil."
   },
   {
     "id": "entre-tantas-flores-de-dia",
@@ -144,10 +145,11 @@
     "technique": "Collage con textil y alambre de plata",
     "image": "images/artworks/la_famiglia_1783824320607.webp",
     "altText": "Obra Entre Tantas Flores de Día de Naroa Gutiérrez Gil",
-    "metaDescription": "Entre Tantas Flores de Día - Arte por Naroa Gutiérrez Gil. Collage con textil y alambre de plata",
+    "metaDescription": "El retrato de Robe parte de un dibujo a lápices sobre poliéster. Tras escanearlo e imprimirlo a mayor tamaño, la imagen se recorta, retoca y combina con te",
     "category": "Vaivenes / Collage",
     "style": "Mixed Media",
-    "featured": false
+    "featured": false,
+    "description": "El retrato de Robe parte de un dibujo a lápices sobre poliéster. Tras escanearlo e imprimirlo a mayor tamaño, la imagen se recorta, retoca y combina con tela floral y una frase en alambre."
   },
   {
     "id": "el-poblema-cortometraje",
@@ -170,11 +172,11 @@
     "technique": "Intervención en lata de conserva",
     "image": "images/artworks/amor-en-conserva.webp",
     "altText": "Obra Amor en Conserva de Naroa Gutiérrez Gil",
-    "metaDescription": "Amor en Conserva - Arte por Naroa Gutiérrez Gil. Intervención en lata de conserva",
+    "metaDescription": "El retrato de Mary y Mala se construye con varias impresiones recortadas y montadas por capas. Flores, alambre y elementos de un collar acompañan la escena",
     "category": "En.lata (Latas y Conservas)",
     "style": "Mixed Media",
     "featured": false,
-    "description": "Lata de comida industrial reciclada y convertida en objeto artístico que metafóricamente preserva emociones."
+    "description": "El retrato de Mary y Mala se construye con varias impresiones recortadas y montadas por capas. Flores, alambre y elementos de un collar acompañan la escena."
   },
   {
     "id": "dar-la-lata",
@@ -184,11 +186,11 @@
     "technique": "Reciclaje artístico",
     "image": "images/artworks/dar-la-lata.webp",
     "altText": "Obra Dar la Lata de Naroa Gutiérrez Gil",
-    "metaDescription": "Dar la Lata - Arte por Naroa Gutiérrez Gil. Reciclaje artístico",
+    "metaDescription": "Dar la Lata reúne retratos tridimensionales realizados con fotografías y pequeñas latas. Cada recipiente se convierte en soporte, marco y escenario de una ",
     "category": "En.lata (Latas y Conservas)",
     "style": "Mixed Media",
     "featured": false,
-    "description": "Obra de la serie de reciclaje que utiliza envases metálicos reutilizados como soporte expresivo."
+    "description": "Dar la Lata reúne retratos tridimensionales realizados con fotografías y pequeñas latas. Cada recipiente se convierte en soporte, marco y escenario de una composición."
   },
   {
     "id": "enlatadas",
@@ -198,10 +200,11 @@
     "technique": "Reciclaje artístico",
     "image": "images/artworks/mr-fahrenheit-BzcoVisa.webp",
     "altText": "Obra En.lata.das de Naroa Gutiérrez Gil",
-    "metaDescription": "En.lata.das - Arte por Naroa Gutiérrez Gil. Reciclaje artístico",
+    "metaDescription": "Lasaio, lanaro y cuatro gatas enlatadas en una lata con patas. Retrato 3D doble realizado a partir de dos fotografías: una de servidora y otra de Saioa Etx",
     "category": "En.lata (Latas y Conservas)",
     "style": "Mixed Media",
-    "featured": false
+    "featured": false,
+    "description": "Lasaio, lanaro y cuatro gatas enlatadas en una lata con patas. Retrato 3D doble realizado a partir de dos fotografías: una de servidora y otra de Saioa Etxebarria allá por sus tiempos mozos. El marco de la fusión de dichas imágenes lo he realizado con una lata de conservas intervenida de la siguiente manera: Primeramente la he dotado de patas mediante un alambre grueso. Tras ello, he creado el fondo del retrato con un collage de ambas fotos y he rematado los bordes internos de la lata con un trozo de cuerda. El siguiente paso ha sido ir montando partes de ambas fotografías mediante distintas capas, usando una pistola de silicona caliente para conformar una imagen con relieve y profundidad. Por último, he añadido pequeñas flores de papel y gomaeva, así como papel de seda verde a modo de hojas y unos felinos con un mensaje conformado con alambre y papel de acuarela escrito. En la parte posterior he cubierto con esmalte dorado la cola caliente con la que he sujetado los gatos y he firmado con cinta rotuladora Dymo antigua."
   },
   {
     "id": "walking-gallery-bilbao-2022",
@@ -264,11 +267,11 @@
     "technique": "Pintura",
     "image": "images/artworks/baroque-farrokh.webp",
     "altText": "Obra Baroque Farrokh de Naroa Gutiérrez Gil",
-    "metaDescription": "Baroque Farrokh - Arte por Naroa Gutiérrez Gil. Pintura",
+    "metaDescription": "Farrokh —antes de ser Freddie— posa pensativo sobre un azul de flores, la chaqueta estallando en color y la mano sosteniendo la barbilla. El marco se vuelv",
     "category": "Tributos Musicales (Queen)",
     "style": "Mixed Media",
     "featured": false,
-    "description": "Retrato de Freddie Mercury con una estética ornamentada y barroca."
+    "description": "Farrokh —antes de ser Freddie— posa pensativo sobre un azul de flores, la chaqueta estallando en color y la mano sosteniendo la barbilla. El marco se vuelve altar: cenefa dorada de coronas, recortes y ornamentos como quien adelanta una coronación."
   },
   {
     "id": "starchild",
@@ -278,11 +281,11 @@
     "technique": "Pintura",
     "image": "images/artworks/hacer_el_indio_1783824336337.webp",
     "altText": "Obra Starchild de Naroa Gutiérrez Gil",
-    "metaDescription": "Starchild - Arte por Naroa Gutiérrez Gil. Pintura",
+    "metaDescription": "“There's a starman waiting in the sky / He'd like to come and meet us / But he thinks he'd blow our minds”. —David Bowie. (“Hay un hombre de las estrellas ",
     "category": "Tributos Musicales (Bowie)",
     "style": "Mixed Media",
     "featured": false,
-    "description": "Homenaje a David Bowie en su etapa Ziggy Stardust, destacando el maquillaje del rayo."
+    "description": "“There's a starman waiting in the sky / He'd like to come and meet us / But he thinks he'd blow our minds”. —David Bowie. (“Hay un hombre de las estrellas esperando en el cielo / Le gustaría venir y conocernos / Pero cree que volaría nuestras mentes”). Retrato realista en blanco y negro con algo de color de David Robert Jones, más conocido por su nombre artístico David Bowie, nuestro eterno niño de las estrellas (firmamento que he extendido a sus espaldas) realizado mediante técnica mixta: ilustración realizada con bolígrafos Bic sobre papel poliéster. La he escaneado, impreso a mayores dimensiones en papel de alto gramaje, recortado su silueta e integrado en un collage de distintos elementos, tanto en el fondo como en la superficie. Materiales utilizados en la composición: Fondo: bolsas de cartón con motivos holográficos. Superficie: chaqueta con papel plástico holográfico metalizado en dos tonos (dorado y plateado), solapas envueltas en dicho papel, con cuñas para aportar relieve y rotulador permanente. Presentado en marco de 50×70 cm con paspartú intervenido."
   },
   {
     "id": "tedas-queen",
@@ -306,11 +309,11 @@
     "technique": "Pintura",
     "image": "images/artworks/hq-johnny-5ueL8eU0.webp",
     "altText": "Obra Can-dy Queen de Naroa Gutiérrez Gil",
-    "metaDescription": "Can-dy Queen - Arte por Naroa Gutiérrez Gil. Pintura",
+    "metaDescription": "Retrato en relieve de Olatz, rodeado de colores y dulces. La lata incorpora patas de alambre, gominolas, papeles y una corona hecha con materiales cotidian",
     "category": "Tributos Musicales",
     "style": "Mixed Media",
     "featured": false,
-    "description": "Retrato o composición inspirada en Queen con estética de colores dulces/candy."
+    "description": "Retrato en relieve de Olatz, rodeado de colores y dulces. La lata incorpora patas de alambre, gominolas, papeles y una corona hecha con materiales cotidianos. Las capas de la fotografía aportan profundidad."
   },
   {
     "id": "el-cocinero-emplatado",
@@ -387,11 +390,11 @@
     "technique": "Pintura / proyecto social",
     "image": "images/artworks/lagrimas-de-oro-DikHc-Tk.webp",
     "altText": "Obra I Got You Babe (Autorretrato Colectivo Covid) de Naroa Gutiérrez Gil",
-    "metaDescription": "I Got You Babe (Autorretrato Colectivo Covid) - Arte por Naroa Gutiérrez Gil. Pintura / Proyecto social",
+    "metaDescription": "Un autorretrato colectivo del confinamiento realizado en abril de 2020. El rostro de Bill Murray y la referencia a Atrapado en el tiempo expresan la repeti",
     "category": "Artivismos",
     "style": "Mixed Media",
     "featured": false,
-    "description": "Obra colectiva realizada durante la pandemia que refleja la conexión social a distancia."
+    "description": "Un autorretrato colectivo del confinamiento realizado en abril de 2020. El rostro de Bill Murray y la referencia a Atrapado en el tiempo expresan la repetición de los días. La maquinaria desmontada del reloj pasa a formar parte de la superficie de la obra."
   },
   {
     "id": "espejos-del-alma",
@@ -468,10 +471,11 @@
     "technique": "Mixta",
     "image": "images/artworks/tedas-queen-GT9W8egT.webp",
     "altText": "Obra Red Red Wine de Naroa Gutiérrez Gil",
-    "metaDescription": "Red Red Wine - Arte por Naroa Gutiérrez Gil. Mixta",
+    "metaDescription": "Un retrato experimental de Neil Diamond en el que el vino se convierte en material de dibujo. La pieza parte de la relación entre el músico y Red Red Wine.",
     "category": "Obras individuales",
     "style": "Mixed Media",
-    "featured": false
+    "featured": false,
+    "description": "Un retrato experimental de Neil Diamond en el que el vino se convierte en material de dibujo. La pieza parte de la relación entre el músico y Red Red Wine."
   },
   {
     "id": "hugo-box",
@@ -481,11 +485,11 @@
     "technique": "Mixta / caja",
     "image": "images/artworks/hugo-box.webp",
     "altText": "Obra Hugo Box de Naroa Gutiérrez Gil",
-    "metaDescription": "Hugo Box - Arte por Naroa Gutiérrez Gil. Mixta / Caja",
+    "metaDescription": "Una caja de cumpleaños que transforma una fotografía en retrato con volumen. La toalla, la montura recortada y las láminas metalizadas rosas construyen los",
     "category": "Obras individuales",
     "style": "Mixed Media",
     "featured": false,
-    "description": "Obra tridimensional contenida o en formato de caja intervenida."
+    "description": "Una caja de cumpleaños que transforma una fotografía en retrato con volumen. La toalla, la montura recortada y las láminas metalizadas rosas construyen los detalles de la tapa."
   },
   {
     "id": "amazona",
@@ -559,7 +563,7 @@
     "series": "facefood y gastronomía",
     "year": 2026,
     "technique": "Mixta",
-    "image": "images/artworks/pink-and-sparkles-c4K6RUzC.webp",
+    "image": "images/artworks/boy-c4K6RUzC.webp",
     "altText": "Obra facefood: expos de quita y pon de Naroa Gutiérrez Gil",
     "metaDescription": "facefood: expos de quita y pon - Arte por Naroa Gutiérrez Gil. ",
     "category": "Serie: Facefood y Gastronomía",
@@ -717,10 +721,11 @@
     "technique": "Mixta",
     "image": "images/artworks/paul_newmum_1783824262669.webp",
     "altText": "Obra Aaron de Naroa Gutiérrez Gil",
-    "metaDescription": "Aaron - Arte por Naroa Gutiérrez Gil. ",
+    "metaDescription": "Aaron es un anagrama de Naroa y el nombre de un personaje interpretado por la artista. Maquillaje, peinado y vestuario transforman su apariencia.",
     "category": "Obras Individuales / Álbumes",
     "style": "Mixed Media",
-    "featured": false
+    "featured": false,
+    "description": "Aaron es un anagrama de Naroa y el nombre de un personaje interpretado por la artista. Maquillaje, peinado y vestuario transforman su apariencia."
   },
   {
     "id": "ajenjo-cam",
@@ -730,10 +735,11 @@
     "technique": "Mixta",
     "image": "images/artworks/summer_monroe_1783824308258.webp",
     "altText": "Obra Ajenjo Cam de Naroa Gutiérrez Gil",
-    "metaDescription": "Ajenjo Cam - Arte por Naroa Gutiérrez Gil. ",
+    "metaDescription": "Un miniálbum desplegable que toma la forma de una cámara instantánea. Al abrirlo, la pequeña caja deja salir una secuencia de fotografías.",
     "category": "Obras Individuales / Álbumes",
     "style": "Mixed Media",
-    "featured": false
+    "featured": false,
+    "description": "Un miniálbum desplegable que toma la forma de una cámara instantánea. Al abrirlo, la pequeña caja deja salir una secuencia de fotografías."
   },
   {
     "id": "alaineado-el-guru-del-celofan",
@@ -808,10 +814,11 @@
     "technique": "Mixta",
     "image": "images/artworks/divinos-marilyn-By8KYPMI.webp",
     "altText": "Obra Aquellos Maravillosos Años de Naroa Gutiérrez Gil",
-    "metaDescription": "Aquellos Maravillosos Años - Arte por Naroa Gutiérrez Gil. ",
+    "metaDescription": "Lápices de colores Art & Graphic de Faber-Castell sobre papel de 80 gr/m² tamaño A4.",
     "category": "Obras Individuales / Álbumes",
     "style": "Mixed Media",
-    "featured": false
+    "featured": false,
+    "description": "Lápices de colores Art & Graphic de Faber-Castell sobre papel de 80 gr/m² tamaño A4."
   },
   {
     "id": "audreys-lightning",
@@ -834,10 +841,11 @@
     "technique": "Mixta",
     "image": "images/artworks/lagrimas-de-oro-DikHc-Tk.webp",
     "altText": "Obra Aupas de Naroa Gutiérrez Gil",
-    "metaDescription": "Aupas - Arte por Naroa Gutiérrez Gil. ",
+    "metaDescription": "Retrato doble en marco de 50×50 cm con passepartout.",
     "category": "Obras Individuales / Álbumes",
     "style": "Mixed Media",
-    "featured": false
+    "featured": false,
+    "description": "Retrato doble en marco de 50×50 cm con passepartout."
   },
   {
     "id": "bamboleos-vaivenes-en-fase-0",
@@ -899,10 +907,11 @@
     "technique": "Mixta",
     "image": "images/artworks/dar-la-lata-DxWlKgS-.webp",
     "altText": "Obra Beatriz de Pandora de Naroa Gutiérrez Gil",
-    "metaDescription": "Beatriz de Pandora - Arte por Naroa Gutiérrez Gil. ",
+    "metaDescription": "El retrato de la tapa incorpora vaquero, encaje, cuerda y cinta en la gorra. El interior de la caja prolonga la composición con color y pequeños objetos de",
     "category": "Obras Individuales / Álbumes",
     "style": "Mixed Media",
-    "featured": false
+    "featured": false,
+    "description": "El retrato de la tapa incorpora vaquero, encaje, cuerda y cinta en la gorra. El interior de la caja prolonga la composición con color y pequeños objetos de celebración."
   },
   {
     "id": "beauty",
@@ -938,10 +947,11 @@
     "technique": "Mixta",
     "image": "images/artworks/sardine-tin-collage-Bo41LZ-o.webp",
     "altText": "Obra Billy Saw de Naroa Gutiérrez Gil",
-    "metaDescription": "Billy Saw - Arte por Naroa Gutiérrez Gil. ",
+    "metaDescription": "Caracterización presentada para los carnavales de 2016: una transformación que explora el rostro como soporte artístico.",
     "category": "Obras Individuales / Álbumes",
     "style": "Mixed Media",
-    "featured": false
+    "featured": false,
+    "description": "Caracterización presentada para los carnavales de 2016: una transformación que explora el rostro como soporte artístico."
   },
   {
     "id": "blanco-negro-y-algo-de-color",
@@ -964,10 +974,11 @@
     "technique": "Mixta",
     "image": "images/artworks/soy-un-amor-y-tengo-alas-ItTo7aOd.webp",
     "altText": "Obra Buena Fuente de Naroa Gutiérrez Gil",
-    "metaDescription": "Buena Fuente - Arte por Naroa Gutiérrez Gil. ",
+    "metaDescription": "Un retrato colorista de Andreu Buenafuente con tipografía, una cabeza de tenedor y una etiqueta de pintura. El objeto cotidiano entra en la composición.",
     "category": "Obras Individuales / Álbumes",
     "style": "Mixed Media",
-    "featured": false
+    "featured": false,
+    "description": "Un retrato colorista de Andreu Buenafuente con tipografía, una cabeza de tenedor y una etiqueta de pintura. El objeto cotidiano entra en la composición."
   },
   {
     "id": "cantinflowers",

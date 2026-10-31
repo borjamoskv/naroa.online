@@ -860,7 +860,7 @@
           "height": 2048,
           "caption": "Caja abierta con figura articulada",
           "source": "https://www.facebook.com/photo/?fbid=991951138950974&set=a.991952032284218",
-          "sha256": "3eaa192fe528d2c532b6ad9c43686790d76bb7cee1c919edf4983c80f82c85ce"
+          "sha256": "c628a576e1994136c8bddd85b95cb2198b9e4dfe6bddf4964dd12272504628d0"
         },
         {
           "src": "/images/catalogo/julio-iglesias-como-un-reloj-suizo-original-02-2048.jpg",
@@ -868,7 +868,7 @@
           "height": 1524,
           "caption": "Caja cerrada",
           "source": "https://www.facebook.com/photo/?fbid=991951335617621&set=a.991952032284218",
-          "sha256": "19a1a1d206e0525a084c26c20657fe73b35b71246d15ca0bf4cf52a14de47ba3"
+          "sha256": "6d436ad4279bd7e8fb01255d66eece2fc4297f837b0a046540aaeecc18c99f86"
         },
         {
           "src": "/images/catalogo/julio-iglesias-como-un-reloj-suizo-original-03-2048.jpg",
@@ -876,7 +876,7 @@
           "height": 1532,
           "caption": "Compartimento con libro y cassette",
           "source": "https://www.facebook.com/photo/?fbid=991951185617636&set=a.991952032284218",
-          "sha256": "a505da38de71f2513f58db75d841344095e4510a3b8e1a78b6b689929bbfb7a9"
+          "sha256": "00f0b14e4ce2d4c5b3eb28413bcbd8309104bfbe895657d0c646866c1189b84d"
         }
       ],
       "dimensions": null,
@@ -2144,7 +2144,7 @@
       "year": 2016,
       "credit": null,
       "selected": false,
-      "kind": "caracterizacion"
+      "kind": "proyecto"
     },
     {
       "slug": "out-por-los-pelos",

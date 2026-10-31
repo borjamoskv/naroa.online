@@ -190,9 +190,8 @@ def check(output):
     assert "answer_commission_faq" in tool_names, "missing answer_commission_faq tool"
     assert "catalog_api" in webmcp_data.get("endpoints", {}), "missing catalog_api endpoint in WebMCP"
     commissions_doc = (output / "retratos-por-encargo-bilbao" / "index.html").read_text()
-    assert 'class="commission-compare-table"' in commissions_doc, "missing comparative support table in commissions page"
-    assert 'id="cfg-email-btn"' in commissions_doc, "missing secondary email CTA in configurator"
-    assert 'id="cfg-preview"' in commissions_doc, "missing live preview in configurator"
+    assert 'class="commission-examples"' in commissions_doc, "missing commission examples showcase in commissions page"
+    assert 'https://wa.me/34636060609' in commissions_doc, "missing WhatsApp CTA in commissions page"
     assert (output / "6621e1f1c138eeb14922f7804f61ae34.txt").is_file(), "missing IndexNow key file"
     assert (output / "indexnow.json").is_file(), "missing indexnow.json"
     indexnow_data = json.loads((output / "indexnow.json").read_text())

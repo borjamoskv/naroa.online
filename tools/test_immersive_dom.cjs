@@ -934,31 +934,8 @@ async function eyeMatch(ui, base, points) {
     if (route === '/trayectoria/') { page.click('[data-year="2026"]'); assert.equal(page.document.querySelectorAll('[data-exhibition-year]:not([hidden])').length, 3); }
     if (route === '/cuaderno/') assert.equal(page.document.querySelectorAll('.notebook-posts article').length, 6);
     if (route === '/retratos-por-encargo-bilbao/') {
-      assert.equal(page.document.querySelectorAll('.commission-faq-item').length, 4, 'Commissions landing includes 4 buyer-intent FAQs');
-      assert.ok(page.find('.commission-compare-table'), 'Commissions landing includes comparative technical support table');
-      assert.equal(page.document.querySelectorAll('.commission-compare-table tbody tr').length, 4, 'Comparative table lists 4 primary supports');
+      assert.equal(page.document.querySelectorAll('.commission-example').length, 4, 'Commissions landing displays 4 monumental artworks');
       assert.ok(page.find('.closing a[href^="https://wa.me/"]'), 'Commissions landing includes direct WhatsApp CTA');
-      assert.ok(page.find('[data-commission-configurator]'), 'Commissions landing includes interactive configurator');
-      assert.ok(page.find('#cfg-support'), 'Configurator includes support selector');
-      assert.ok(page.find('#cfg-whatsapp-btn'), 'Configurator includes dynamic WhatsApp button');
-      assert.ok(page.find('#cfg-email-btn'), 'Configurator includes dynamic Email button');
-      assert.ok(page.find('#cfg-preview'), 'Configurator includes live message preview');
-      assert.ok(page.find('.commission-trust-pills'), 'Commissions landing includes local Bilbao trust pills');
-      assert.ok(page.find('.atelier-OrderCard'), 'Commissions landing includes live Atelier Order Card');
-      assert.ok(page.find('#cfg-visual-img'), 'Atelier Order Card includes dynamic support visual preview');
-      assert.equal(page.document.querySelectorAll('.commission-example').length, 4, 'Commissions landing displays 4 tactile support swatches');
-      assert.ok(page.w.NAROA_COMMISSION, 'NAROA_COMMISSION API exposed on window');
-      page.click('[data-cfg-pill="support"][data-cfg-val="Pizarra natural rústica"]');
-      assert.equal(page.find('#cfg-support').value, 'Pizarra natural rústica', 'Clicking visual support pill updates configurator select');
-      assert.ok(page.find('#cfg-visual-title').textContent.includes('Amy Rocks'), 'Clicking visual support pill updates live Order Card artwork preview');
-      page.click('[data-pick-support="Caja personalizada u objeto"]');
-      assert.equal(page.find('#cfg-support').value, 'Caja personalizada u objeto', 'Clicking support example card preselects support in configurator');
-      assert.ok(page.find('[data-support-card="Caja personalizada u objeto"]').classList.contains('is-selected-support'), 'Selected support card highlights visually');
-      page.find('#cfg-support').value = 'Caja personalizada u objeto';
-      page.find('#cfg-support').dispatchEvent(new page.w.Event('change'));
-      assert.ok(page.find('#cfg-whatsapp-btn').href.includes(encodeURIComponent('Caja personalizada u objeto')), 'Changing support updates WhatsApp query parameter');
-      assert.ok(page.find('#cfg-email-btn').href.includes(encodeURIComponent('Caja personalizada u objeto')), 'Changing support updates Email query parameter');
-      assert.ok(page.find('#cfg-preview').textContent.includes('Caja personalizada u objeto'), 'Changing support updates live message preview');
       assert.ok(page.w.NAROA_ATTRIBUTION, 'First-party attribution telemetry exposed on window');
       assert.ok(page.w.WebMCP, 'WebMCP interface exposed on window');
       const catalogResults = await page.w.WebMCP.callTool('search_catalogue', { query: 'pizarra' });
@@ -1036,14 +1013,19 @@ async function eyeMatch(ui, base, points) {
 
     assert.ok(armigoPage.w.NAROA_KINETICS, 'NAROA_KINETICS telemetry API exposed');
     const kinInit = armigoPage.w.NAROA_KINETICS.getState();
-    assert.equal(kinInit.backend, 'c5-substep-inertial-kinetics-v2', 'Kinetics uses C5 substep inertial kinetics v2 backend');
+    assert.equal(kinInit.backend, 'c5-substep-inertial-kinetics-v3', 'Kinetics uses C5 substep inertial kinetics v3 backend');
     assert.equal(kinInit.substepScroll, true, 'Substep scroll is active');
     assert.equal(kinInit.microPan25D, true, '2.5D micro-pan is active on gallery');
+    assert.equal(kinInit.gyroPan3D, true, '3D gyroscopic tilt is active on gallery');
+    assert.equal(kinInit.indexGaussianWave, true, 'Gaussian proximity wave is active on vertical index spine');
     assert.ok(kinInit.magneticCount >= 6, 'Magnetic spring-damper controls registered');
+    const activeIndexBtn = armigoPage.find('[data-select][aria-pressed="true"]');
+    assert.equal(Number(activeIndexBtn.style.getPropertyValue('--index-proximity')), 1, 'Active index button has peak Gaussian proximity wave');
     armigoPage.find('[data-gallery]').dispatchEvent(new armigoPage.w.MouseEvent('pointermove', { bubbles: true, clientX: 220, clientY: 160 }));
     await armigoPage.flush();
     const kinPan = armigoPage.w.NAROA_KINETICS.getState();
     assert.ok(Math.abs(kinPan.panX) > 1 && Math.abs(kinPan.panY) > 1, '2.5D micro-pan suspends artwork in response to resting pointer');
+    assert.ok(Math.abs(kinPan.panRx) > 0.2 && Math.abs(kinPan.panRy) > 0.2, '3D perspective tilt rotates artwork plane at rest');
     armigoPage.dom.window.close();
   }
   assert.equal(manifest.projects, works.length); assert.deepEqual(errors, []);

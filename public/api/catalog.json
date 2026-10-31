@@ -904,28 +904,28 @@
       "year": null,
       "story": "Un retrato tridimensional de Julio Iglesias que se puede accionar mediante hilos y tiradores. La caja contiene compartimentos y objetos que forman parte del relato.",
       "url": "https://naroagutierrezgil.com/obra/julio-iglesias-como-un-reloj-suizo/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/julio-iglesias-como-un-reloj-suizo-original-01-2048-3eaa192fe528-view.webp",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/julio-iglesias-como-un-reloj-suizo-4k-5d83eed9d59b-view-3468.webp",
       "photos": [
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/julio-iglesias-como-un-reloj-suizo-original-01-2048.jpg",
           "width": 1700,
           "height": 2048,
           "caption": "Caja abierta con figura articulada",
-          "sha256": "3eaa192fe528d2c532b6ad9c43686790d76bb7cee1c919edf4983c80f82c85ce"
+          "sha256": "c628a576e1994136c8bddd85b95cb2198b9e4dfe6bddf4964dd12272504628d0"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/julio-iglesias-como-un-reloj-suizo-original-02-2048.jpg",
           "width": 2048,
           "height": 1524,
           "caption": "Caja cerrada",
-          "sha256": "19a1a1d206e0525a084c26c20657fe73b35b71246d15ca0bf4cf52a14de47ba3"
+          "sha256": "6d436ad4279bd7e8fb01255d66eece2fc4297f837b0a046540aaeecc18c99f86"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/julio-iglesias-como-un-reloj-suizo-original-03-2048.jpg",
           "width": 2048,
           "height": 1532,
           "caption": "Compartimento con libro y cassette",
-          "sha256": "a505da38de71f2513f58db75d841344095e4510a3b8e1a78b6b689929bbfb7a9"
+          "sha256": "00f0b14e4ce2d4c5b3eb28413bcbd8309104bfbe895657d0c646866c1189b84d"
         }
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Julio%20Iglesias%2C%20como%20un%20Reloj%20Suizo",

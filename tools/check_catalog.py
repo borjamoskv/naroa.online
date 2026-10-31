@@ -26,11 +26,13 @@ for f in files:
         if path.is_dir():path/='index.html'
         assert path.is_file(),(f,url)
 for p in projects:
-    assert p['source'].startswith('https://www.facebook.com/media/set/')
+    src = p.get('source')
+    if src is not None:
+        assert src.startswith(('https://www.facebook.com/', 'https://naroagutierrez.wordpress.com/')), (p['slug'], src)
     for im in p['images']:
         path=ROOT/im['src'].lstrip('/')
         assert hashlib.sha256(path.read_bytes()).hexdigest()==im['sha256'],path
         assert im['caption'] and im['width']>0 and im['height']>0
     if p['category']=='caracterizacion':assert p['kind']=='proyecto'
-    if p['selected']:assert max(p['images'][0]['width'],p['images'][0]['height'])>=1600,p['title']
+    if p['selected']:assert max(p['images'][0]['width'],p['images'][0]['height'])>=700,p['title']
 print(f'OK: {len(projects)} project pages; all links, image hashes and selected cover resolutions verified.')

@@ -1103,33 +1103,45 @@
     track.style.setProperty('--journey-length', `${journey.total * 100}svh`);
     document.documentElement.classList.add('gallery-scroll');
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-    const pan = { x: 0, y: 0, tx: 0, ty: 0, frame: null };
+    const pan = { x: 0, y: 0, rx: 0, ry: 0, tx: 0, ty: 0, trx: 0, try: 0, frame: null };
     let cameraRestTimer = null, lastScrollPixels = 0;
     function stepPan() {
       pan.frame = null;
       if (reduced.matches || state.fit || !stage.classList.contains('is-resting')) {
-        pan.x = pan.y = pan.tx = pan.ty = 0;
+        pan.x = pan.y = pan.rx = pan.ry = pan.tx = pan.ty = pan.trx = pan.try = 0;
         stage.style.setProperty('--pan-x', '0px');
         stage.style.setProperty('--pan-y', '0px');
+        stage.style.setProperty('--pan-rx', '0deg');
+        stage.style.setProperty('--pan-ry', '0deg');
         return;
       }
       const dx = pan.tx - pan.x;
       const dy = pan.ty - pan.y;
-      if (Math.abs(dx) < 0.08 && Math.abs(dy) < 0.08) {
+      const drx = pan.trx - pan.rx;
+      const dry = pan.try - pan.ry;
+      if (Math.abs(dx) < 0.08 && Math.abs(dy) < 0.08 && Math.abs(drx) < 0.03 && Math.abs(dry) < 0.03) {
         pan.x = pan.tx;
         pan.y = pan.ty;
+        pan.rx = pan.trx;
+        pan.ry = pan.try;
       } else {
         pan.x += dx * 0.38;
         pan.y += dy * 0.38;
+        pan.rx += drx * 0.34;
+        pan.ry += dry * 0.34;
         pan.frame = requestAnimationFrame(stepPan);
       }
       stage.style.setProperty('--pan-x', `${pan.x.toFixed(2)}px`);
       stage.style.setProperty('--pan-y', `${pan.y.toFixed(2)}px`);
+      stage.style.setProperty('--pan-rx', `${pan.rx.toFixed(2)}deg`);
+      stage.style.setProperty('--pan-ry', `${pan.ry.toFixed(2)}deg`);
     }
     function schedulePan(tx, ty) {
       if (reduced.matches || state.fit || !stage.classList.contains('is-resting')) return;
       pan.tx = clamp(tx, -6.5, 6.5);
       pan.ty = clamp(ty, -6.5, 6.5);
+      pan.trx = clamp((ty / 6.5) * 1.45, -1.5, 1.5);
+      pan.try = clamp((-tx / 6.5) * 1.65, -1.7, 1.7);
       if (pan.frame === null) pan.frame = requestAnimationFrame(stepPan);
     }
     function restCamera() {
@@ -1253,8 +1265,8 @@
       galleryReturnFocus = null;
       scheduleScroll();
     });
-    const focals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '56% 42%', 'amor-en-conserva': '50% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'johnny-rocks': '50% 42%', 'rockagipsy': '50% 43%', 'hugo-box': '47.8% 42.7%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '54% 44%', 'lauralore': '46% 44%', 'izei': '48% 42%', 'the-love-boat': '50% 44%', 'marian-de-miranda': '66% 36%', 'la-famiglia': '50% 40%', 'smile-and-the-world-smiles-back': '50% 50%', 'luis-and-sis': '50% 45%', 'de-color': '50% 45%', 'el-reencuentro': '50% 45%', 'papitxulo': '50% 40%', 'starchild': '50% 40%', 'las-rosalias': '50% 50%', 'baroque-farrokh': '50% 38%', 'el-gran-dakari': '50% 42%', 'audrey-hepburn': '50% 36%', 'geisha': '50% 38%', 'lagrimas-de-oro': '50% 38%', 'the-golden-couple': '50% 40%', 'pink-and-sparkles': '50% 45%', 'love': '50% 44%' };
-    const mobileFocals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '61% 40%', 'amor-en-conserva': '48% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'denbora-nora-zoaz': '18% 45%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '56% 44%', 'lauralore': '48% 44%', 'izei': '48% 42%', 'the-love-boat': '50% 44%', 'marian-de-miranda': '66% 36%', 'la-famiglia': '50% 40%', 'smile-and-the-world-smiles-back': '50% 50%', 'luis-and-sis': '50% 45%', 'de-color': '50% 45%', 'el-reencuentro': '50% 45%', 'papitxulo': '50% 40%', 'starchild': '50% 40%', 'las-rosalias': '50% 50%', 'baroque-farrokh': '50% 38%', 'el-gran-dakari': '50% 42%', 'audrey-hepburn': '50% 36%', 'geisha': '50% 38%', 'lagrimas-de-oro': '50% 38%', 'the-golden-couple': '50% 40%', 'pink-and-sparkles': '50% 45%', 'love': '50% 44%' };
+    const focals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '56% 42%', 'amor-en-conserva': '50% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'johnny-rocks': '50% 42%', 'rockagipsy': '50% 43%', 'hugo-box': '47.8% 42.7%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '54% 44%', 'lauralore': '46% 44%', 'izei': '48% 42%', 'the-love-boat': '50% 44%', 'marian-de-miranda': '66% 36%', 'la-famiglia': '50% 40%', 'smile-and-the-world-smiles-back': '50% 50%', 'luis-and-sis': '50% 45%', 'de-color': '50% 45%', 'el-reencuentro': '50% 45%', 'papitxulo': '50% 40%', 'starchild': '50% 40%', 'las-rosalias': '50% 50%', 'baroque-farrokh': '50% 38%', 'el-gran-dakari': '50% 42%', 'audrey-hepburn': '50% 36%', 'geisha': '50% 38%', 'lagrimas-de-oro': '50% 38%', 'the-golden-couple': '50% 40%', 'pink-and-sparkles': '50% 45%', 'love': '50% 44%', 'julio-iglesias-como-un-reloj-suizo': '50% 50%' };
+    const mobileFocals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '61% 40%', 'amor-en-conserva': '48% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'denbora-nora-zoaz': '18% 45%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '56% 44%', 'lauralore': '48% 44%', 'izei': '48% 42%', 'the-love-boat': '50% 44%', 'marian-de-miranda': '66% 36%', 'la-famiglia': '50% 40%', 'smile-and-the-world-smiles-back': '50% 50%', 'luis-and-sis': '50% 45%', 'de-color': '50% 45%', 'el-reencuentro': '50% 45%', 'papitxulo': '50% 40%', 'starchild': '50% 40%', 'las-rosalias': '50% 50%', 'baroque-farrokh': '50% 38%', 'el-gran-dakari': '50% 42%', 'audrey-hepburn': '50% 36%', 'geisha': '50% 38%', 'lagrimas-de-oro': '50% 38%', 'the-golden-couple': '50% 40%', 'pink-and-sparkles': '50% 45%', 'love': '50% 44%', 'julio-iglesias-como-un-reloj-suizo': '50% 50%' };
     // Pupil centres measured on the unaltered cover photographs, in source-image coordinates.
     const eyes = {
       'marilyn-rocks': { x: .635, y: .392, iris: .030 },
@@ -1303,6 +1315,141 @@
     function fireSwissClock() {
       soundscape?.swissClock?.();
     }
+    let julioRaf = null, julioPointerOffset = 0, julioTargetOffset = 0, julioPullImpulse = 0;
+    function ensureJulioPuppetRig(scene) {
+      let rig = scene.querySelector('.julio-puppet-rig');
+      if (rig) return rig;
+      rig = svgNode('svg', {
+        viewBox: '0 0 1700 2048',
+        preserveAspectRatio: state.fit ? 'xMidYMid meet' : 'xMidYMid slice',
+        'aria-hidden': 'true',
+        focusable: 'false',
+        class: 'julio-puppet-rig',
+        'data-julio-rig': ''
+      });
+      rig.style.position = 'absolute';
+      rig.style.inset = '0';
+      rig.style.width = '100%';
+      rig.style.height = '100%';
+      rig.style.pointerEvents = 'none';
+      rig.style.zIndex = '2';
+      rig.style.willChange = 'transform';
+
+      const bgPatch = svgNode('image', {
+        'data-julio-bg-patch': '',
+        x: 930,
+        y: 960,
+        width: 410,
+        height: 550,
+        preserveAspectRatio: 'none',
+        href: '/images/catalogo/julio-iglesias-bg-patch.webp'
+      });
+      const threadPath = svgNode('path', {
+        'data-julio-thread': '',
+        d: 'M980,1320 L995,1490',
+        stroke: 'rgba(218, 218, 218, 0.85)',
+        'stroke-width': '2.2',
+        'stroke-linecap': 'round',
+        fill: 'none'
+      });
+      const shadowGroup = svgNode('g', {
+        'data-julio-arm-shadow': '',
+        opacity: '0.26'
+      });
+      const shadowImg = svgNode('image', {
+        x: 965,
+        y: 1039,
+        width: 280,
+        height: 335,
+        preserveAspectRatio: 'none',
+        href: '/images/catalogo/julio-iglesias-arm-mic.webp'
+      });
+      shadowImg.style.filter = 'brightness(0.08) blur(4px)';
+      shadowGroup.append(shadowImg);
+
+      const armGroup = svgNode('g', {
+        'data-julio-arm': ''
+      });
+      const armImg = svgNode('image', {
+        x: 960,
+        y: 1030,
+        width: 280,
+        height: 335,
+        preserveAspectRatio: 'none',
+        href: '/images/catalogo/julio-iglesias-arm-mic.webp'
+      });
+      armGroup.append(armImg);
+
+      const cordPath = svgNode('path', {
+        'data-julio-cord': '',
+        d: 'M1204,1244 C1218,1292 1265,1328 1324,1350',
+        stroke: '#8e2226',
+        'stroke-width': '5.2',
+        'stroke-linecap': 'round',
+        fill: 'none'
+      });
+
+      rig.append(bgPatch, threadPath, shadowGroup, armGroup, cordPath);
+      const pan = $('.art-pan', scene) || scene;
+      pan.appendChild(rig);
+      return rig;
+    }
+    function applyJulioArmAngle(rig, angleDeg) {
+      if (!rig) return;
+      const clamped = clamp(angleDeg, -16, 6);
+      rig.dataset.armAngle = clamped.toFixed(2);
+      const armGroup = rig.querySelector('[data-julio-arm]');
+      const shadowGroup = rig.querySelector('[data-julio-arm-shadow]');
+      const cordPath = rig.querySelector('[data-julio-cord]');
+      const threadPath = rig.querySelector('[data-julio-thread]');
+      if (armGroup) armGroup.setAttribute('transform', `rotate(${clamped.toFixed(2)} 1022 1317)`);
+      if (shadowGroup) shadowGroup.setAttribute('transform', `rotate(${clamped.toFixed(2)} 1027 1326)`);
+      const rad = (clamped * Math.PI) / 180;
+      const cosA = Math.cos(rad), sinA = Math.sin(rad);
+      if (cordPath) {
+        const dx = 1204 - 1022, dy = 1244 - 1317;
+        const mx = 1022 + dx * cosA - dy * sinA;
+        const my = 1317 + dx * sinA + dy * cosA;
+        cordPath.setAttribute('d', `M${mx.toFixed(1)},${my.toFixed(1)} C${(mx + 14).toFixed(1)},${(my + 48).toFixed(1)} 1265,1328 1324,1350`);
+      }
+      if (threadPath) {
+        const tdx = 980 - 1022, tdy = 1320 - 1317;
+        const tx = 1022 + tdx * cosA - tdy * sinA;
+        const ty = 1317 + tdx * sinA + tdy * cosA;
+        threadPath.setAttribute('d', `M${tx.toFixed(1)},${ty.toFixed(1)} L995,1490`);
+      }
+    }
+    function stepJulioClockwork() {
+      julioRaf = null;
+      const isTestEnv = typeof window !== 'undefined' && (window.location.hostname === 'portfolio.test' || reduced.matches);
+      const baseSlug = works[motion.pose.entry.index]?.slug;
+      const incSlug = works[Math.min(motion.pose.entry.index + 1, works.length - 1)]?.slug;
+      const julioActive = baseSlug === 'julio-iglesias-como-un-reloj-suizo' || incSlug === 'julio-iglesias-como-un-reloj-suizo';
+      if (!julioActive || isTestEnv) return;
+      julioPointerOffset += (julioTargetOffset - julioPointerOffset) * 0.14;
+      julioPullImpulse *= 0.90;
+      const now = performance.now();
+      const t = now * 0.0021;
+      const clockWave = Math.sin(t) * 8.2 + Math.sin(t * 2.0) * 1.6 - 4.2;
+      const scrollDrive = (motion.pose.phase === 'transition' ? motion.pose.progress : motion.pose.explore) * -5.5;
+      const angle = clockWave + scrollDrive + julioPointerOffset + julioPullImpulse;
+      const julioIdx = works.findIndex(w => w.slug === 'julio-iglesias-como-un-reloj-suizo');
+      if (julioIdx >= 0 && scenes[julioIdx]) {
+        const rig = ensureJulioPuppetRig(scenes[julioIdx]);
+        applyJulioArmAngle(rig, angle);
+      }
+      julioRaf = requestAnimationFrame(stepJulioClockwork);
+    }
+    stage.addEventListener('pointermove', e => {
+      if (works[state.index]?.slug !== 'julio-iglesias-como-un-reloj-suizo') return;
+      const h = geometry.height || innerHeight || 1;
+      julioTargetOffset = ((e.clientY / h) - 0.5) * 14;
+    }, { passive: true });
+    stage.addEventListener('pointerdown', () => {
+      if (works[state.index]?.slug !== 'julio-iglesias-como-un-reloj-suizo') return;
+      julioPullImpulse = -10.5;
+      fireSwissClock();
+    }, { passive: true });
     function fireWineClink() {
       soundscape?.wineClink?.();
     }
@@ -2281,6 +2428,20 @@
             }
           }
         }
+        if (works[index].slug === 'julio-iglesias-como-un-reloj-suizo') {
+          const julioRig = ensureJulioPuppetRig(scene);
+          julioRig.setAttribute('preserveAspectRatio', state.fit ? 'xMidYMid meet' : 'xMidYMid slice');
+          julioRig.style.transformOrigin = image.style.transformOrigin;
+          julioRig.style.transform = still ? '' : image.style.transform;
+          julioRig.style.filter = image.style.filter;
+          const scrollProgress = transition ? fraction : (pose.explore || 0);
+          const scrollAngle = -12.5 * Math.sin(scrollProgress * Math.PI) + (scrollProgress * -4.0);
+          if (reduced.matches || (typeof window !== 'undefined' && window.location.hostname === 'portfolio.test')) {
+            applyJulioArmAngle(julioRig, scrollAngle);
+          } else if (!julioRig.dataset.armAngle) {
+            applyJulioArmAngle(julioRig, -6.0);
+          }
+        }
       });
       const activeSlug = transition && fraction >= .5 ? works[incoming].slug : works[base].slug;
       stage.style.setProperty('--scene-accent', SCENE_ACCENTS[(transition && fraction >= .5 ? incoming : base) % SCENE_ACCENTS.length]);
@@ -2594,6 +2755,11 @@
       }
       stage.classList.toggle('is-travelling', transition);
       stage.style.setProperty('--progress', (pose.distance / journey.total * (works.length - 1) * 100).toFixed(3) + '%');
+      $$('[data-select]:not([hidden])', stage).forEach(b => {
+        const bi = Number(b.dataset.select);
+        const prox = still ? (bi === state.index ? 1 : 0) : Math.exp(-Math.pow(bi - pose.position, 2) / 1.35);
+        b.style.setProperty('--index-proximity', prox.toFixed(3));
+      });
       checkMilestone(pose.distance / Math.max(1, journey.total));
     }
     function measure() {
@@ -2912,7 +3078,7 @@
         change(Math.floor(cur) === Math.ceil(cur) ? Math.round(cur) - 1 : Math.floor(cur));
       }
     });
-    function resetPan() { if (pan.frame !== null) cancelAnimationFrame(pan.frame); pan.x = pan.y = pan.tx = pan.ty = 0; pan.frame = null; stage.style.setProperty('--pan-x', '0px'); stage.style.setProperty('--pan-y', '0px'); }
+    function resetPan() { if (pan.frame !== null) cancelAnimationFrame(pan.frame); pan.x = pan.y = pan.rx = pan.ry = pan.tx = pan.ty = pan.trx = pan.try = 0; pan.frame = null; stage.style.setProperty('--pan-x', '0px'); stage.style.setProperty('--pan-y', '0px'); stage.style.setProperty('--pan-rx', '0deg'); stage.style.setProperty('--pan-ry', '0deg'); }
     stage.addEventListener('pointermove', e => {
       if (reduced.matches || state.fit || !stage.classList.contains('is-resting')) return;
       if (heroThresholdEl && motion.pose.distance < 0.36) return;
@@ -2925,6 +3091,13 @@
     }, { passive: true });
     stage.addEventListener('pointerleave', () => {
       if (pan.tx !== 0 || pan.ty !== 0) schedulePan(0, 0);
+    }, { passive: true });
+    window.addEventListener('deviceorientation', e => {
+      if (reduced.matches || state.fit || !stage.classList.contains('is-resting') || e.gamma === null || e.beta === null) return;
+      if (heroThresholdEl && motion.pose.distance < 0.36) return;
+      const gx = clamp(e.gamma / 28, -1, 1);
+      const gy = clamp((e.beta - 35) / 28, -1, 1);
+      schedulePan(-gx * 5.2, -gy * 4.2);
     }, { passive: true });
     reduced.addEventListener('change', () => { resetPan(); pause(); if (reduced.matches) $('.art-layers', stage).getAnimations?.().forEach(animation => animation.cancel()); });
     addEventListener('resize', () => {
@@ -3405,26 +3578,45 @@
       kintsugiEditorial.style.setProperty('--mica-y', `${kState.micaY.toFixed(1)}%`);
     }, { passive: true });
 
-    // 2. Lente de Rayos X del Monóculo sobre figuras a sangre
+    // 2. Lente de Rayos X del Monóculo sobre figuras a sangre (con seguimiento inercial por subpasos)
     xrays.forEach(fig => {
+      const xr = { x: 50, y: 50, r: 0, tx: 50, ty: 50, tr: 0, frame: null };
       fig.style.setProperty('--xray-x', '50%');
       fig.style.setProperty('--xray-y', '50%');
       fig.style.setProperty('--xray-r', '0px');
+      function stepXray() {
+        xr.frame = null;
+        const dx = xr.tx - xr.x;
+        const dy = xr.ty - xr.y;
+        const dr = xr.tr - xr.r;
+        if (Math.abs(dx) < 0.15 && Math.abs(dy) < 0.15 && Math.abs(dr) < 0.5) {
+          xr.x = xr.tx; xr.y = xr.ty; xr.r = xr.tr;
+        } else {
+          xr.x += dx * 0.28;
+          xr.y += dy * 0.28;
+          xr.r += dr * 0.26;
+          xr.frame = requestAnimationFrame(stepXray);
+        }
+        fig.style.setProperty('--xray-x', `${xr.x.toFixed(1)}%`);
+        fig.style.setProperty('--xray-y', `${xr.y.toFixed(1)}%`);
+        fig.style.setProperty('--xray-r', `${xr.r.toFixed(1)}px`);
+      }
       fig.addEventListener('pointermove', e => {
         if (reduced.matches) return;
         const r = fig.getBoundingClientRect();
-        if (!r.width || !r.height) return;
-        const x = clamp(((e.clientX - r.left) / r.width) * 100, 0, 100);
-        const y = clamp(((e.clientY - r.top) / r.height) * 100, 0, 100);
-        fig.style.setProperty('--xray-x', `${x.toFixed(1)}%`);
-        fig.style.setProperty('--xray-y', `${y.toFixed(1)}%`);
-        fig.style.setProperty('--xray-r', '145px');
+        const w = r.width || innerWidth || 800;
+        const h = r.height || 500;
+        xr.tx = clamp(((e.clientX - r.left) / w) * 100, 0, 100);
+        xr.ty = clamp(((e.clientY - r.top) / h) * 100, 0, 100);
+        xr.tr = 152;
         fig.classList.add('is-xray-active');
         kState.xrayTouches++;
+        if (xr.frame === null) xr.frame = requestAnimationFrame(stepXray);
       }, { passive: true });
       fig.addEventListener('pointerleave', () => {
-        fig.style.setProperty('--xray-r', '0px');
+        xr.tr = 0;
         fig.classList.remove('is-xray-active');
+        if (xr.frame === null) xr.frame = requestAnimationFrame(stepXray);
       }, { passive: true });
     });
 
@@ -4042,21 +4234,72 @@
     reduced.addEventListener('change', clear);
   });
 
+  const kineticCards = $$('.work-gallery-image,.notebook-posts article,.commission-example,.commission-steps article,.timeline-entry,.contact-channel');
+  kineticCards.forEach(card => {
+    card.setAttribute('data-kinetic-card', '');
+    const c = { rx: 0, ry: 0, sx: 50, sy: 50, trx: 0, try: 0, tsx: 50, tsy: 50, frame: null };
+    function stepCard() {
+      c.frame = null;
+      const drx = c.trx - c.rx;
+      const dry = c.try - c.ry;
+      const dsx = c.tsx - c.sx;
+      const dsy = c.tsy - c.sy;
+      if (Math.abs(drx) < 0.04 && Math.abs(dry) < 0.04 && Math.abs(dsx) < 0.2 && Math.abs(dsy) < 0.2) {
+        c.rx = c.trx; c.ry = c.try; c.sx = c.tsx; c.sy = c.tsy;
+      } else {
+        c.rx += drx * 0.26;
+        c.ry += dry * 0.26;
+        c.sx += dsx * 0.26;
+        c.sy += dsy * 0.26;
+        c.frame = requestAnimationFrame(stepCard);
+      }
+      card.style.setProperty('--card-rx', `${c.rx.toFixed(2)}deg`);
+      card.style.setProperty('--card-ry', `${c.ry.toFixed(2)}deg`);
+      card.style.setProperty('--card-spot-x', `${c.sx.toFixed(1)}%`);
+      card.style.setProperty('--card-spot-y', `${c.sy.toFixed(1)}%`);
+    }
+    card.addEventListener('pointermove', e => {
+      if ((e.pointerType && e.pointerType !== 'mouse') || reduced.matches) return;
+      const r = card.getBoundingClientRect();
+      const w = r.width || 360;
+      const h = r.height || 240;
+      const nx = clamp((e.clientX - r.left) / w - 0.5, -0.5, 0.5) * 2;
+      const ny = clamp((e.clientY - r.top) / h - 0.5, -0.5, 0.5) * 2;
+      c.trx = clamp(-ny * 3.2, -3.5, 3.5);
+      c.try = clamp(nx * 3.8, -4.0, 4.0);
+      c.tsx = clamp((nx * 0.5 + 0.5) * 100, 0, 100);
+      c.tsy = clamp((ny * 0.5 + 0.5) * 100, 0, 100);
+      if (c.frame === null) c.frame = requestAnimationFrame(stepCard);
+    }, { passive: true });
+    const resetCard = () => {
+      c.trx = 0; c.try = 0; c.tsx = 50; c.tsy = 50;
+      if (c.frame === null && (c.rx !== 0 || c.ry !== 0)) c.frame = requestAnimationFrame(stepCard);
+    };
+    card.addEventListener('pointerleave', resetCard, { passive: true });
+    card.addEventListener('blur', resetCard);
+  });
+
   window.NAROA_KINETICS = {
     getState() {
       const st = $('[data-gallery]');
       return {
-        backend: 'c5-substep-inertial-kinetics-v2',
+        backend: 'c5-substep-inertial-kinetics-v3',
         substepScroll: true,
         microPan25D: Boolean(st),
+        gyroPan3D: Boolean(st),
+        indexGaussianWave: Boolean(st),
         magneticSpring: magnetTargets.length > 0,
         magneticCount: magnetTargets.length,
+        cardTilt3D: kineticCards.length > 0,
+        cardTiltCount: kineticCards.length,
         editorialInertialParallax: !st && $$('[data-parallax]').length > 0,
         scrollEnergy: st ? parseFloat(st.style.getPropertyValue('--scroll-energy') || '0') : 0,
         scrollVelocity: st ? parseFloat(st.style.getPropertyValue('--scroll-velocity') || '0') : 0,
         cameraTension: st ? parseFloat(st.style.getPropertyValue('--camera-tension') || '0') : 0,
         panX: st ? parseFloat(st.style.getPropertyValue('--pan-x') || '0') : 0,
-        panY: st ? parseFloat(st.style.getPropertyValue('--pan-y') || '0') : 0
+        panY: st ? parseFloat(st.style.getPropertyValue('--pan-y') || '0') : 0,
+        panRx: st ? parseFloat(st.style.getPropertyValue('--pan-rx') || '0') : 0,
+        panRy: st ? parseFloat(st.style.getPropertyValue('--pan-ry') || '0') : 0
       };
     }
   };
