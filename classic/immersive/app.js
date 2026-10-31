@@ -4960,7 +4960,21 @@
         if (group === 'motif' && motifEl) motifEl.value = val;
         if (group === 'timing' && timingEl) timingEl.value = val;
         updateLink();
-        window.NAROA_SOUND?.stencilRollerWipe?.(val);
+        if (group === 'support') {
+          if (val.includes('Pizarra')) {
+            window.NAROA_SOUND?.eguzkilore?.();
+          } else if (val.includes('Caja') || val.includes('Lata') || val.includes('objeto')) {
+            window.NAROA_SOUND?.canPeel?.();
+          } else if (val.includes('Collage') || val.includes('madera') || val.includes('Vaquera')) {
+            window.NAROA_SOUND?.deltoya?.();
+          } else if (val.includes('óleo') || val.includes('grafito') || val.includes('Papel')) {
+            window.NAROA_SOUND?.shaker?.();
+          } else {
+            window.NAROA_SOUND?.stencilRollerWipe?.(val);
+          }
+        } else {
+          window.NAROA_SOUND?.stencilRollerWipe?.(val);
+        }
       });
     });
 

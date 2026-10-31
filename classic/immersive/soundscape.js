@@ -29,7 +29,7 @@
       shortDay: 'L',
       name: 'Landa · Alboka pastoral de Arratia',
       day: 'Lunes',
-      tempoMs: 480,
+      tempoMs: 640,
       bass: [62.00, 69.02, 65.24, 67.02, 62.00, 69.02, 67.02, 69.02],
       harmony: [69.02, 74.00, 72.02, 71.74, 69.02, 72.02, 74.00, 65.24],
       notes: [
@@ -47,7 +47,7 @@
       shortDay: 'M',
       name: 'Haurtxo Polita · Nana popular en cinta cálida',
       day: 'Martes',
-      tempoMs: 520,
+      tempoMs: 680,
       bass: [62.00, 65.24, 67.02, 69.02, 62.00, 70.18, 67.02, 69.02],
       harmony: [69.02, 74.00, 71.74, 72.02, 69.02, 74.00, 70.18, 65.24],
       notes: [
@@ -65,7 +65,7 @@
       shortDay: 'X',
       name: 'Harria eta Marea · Aire de costa en Re menor',
       day: 'Miércoles',
-      tempoMs: 540,
+      tempoMs: 700,
       bass: [62.00, 70.18, 65.24, 67.02, 62.00, 67.02, 70.18, 69.02],
       harmony: [69.02, 74.00, 72.02, 74.00, 69.02, 71.74, 74.00, 67.02],
       notes: [
@@ -83,7 +83,7 @@
       shortDay: 'J',
       name: 'Txoria Txori · Mikel Laboa en piano de fieltro',
       day: 'Jueves',
-      tempoMs: 500,
+      tempoMs: 660,
       bass: [62.00, 62.00, 67.02, 69.02, 65.24, 67.02, 62.00, 69.02],
       harmony: [69.02, 69.02, 71.74, 72.02, 72.02, 74.00, 69.02, 65.24],
       notes: [
@@ -101,7 +101,7 @@
       shortDay: 'V',
       name: 'Mi Gran Noche · Caja de música íntima',
       day: 'Viernes',
-      tempoMs: 460,
+      tempoMs: 620,
       bass: [62.00, 67.02, 70.18, 69.02, 62.00, 65.24, 67.02, 69.02],
       harmony: [69.02, 71.74, 74.00, 72.02, 69.02, 72.02, 71.74, 74.00],
       notes: [
@@ -119,7 +119,7 @@
       shortDay: 'S',
       name: 'Gaua · Nocturno de Bilbao',
       day: 'Sábado',
-      tempoMs: 530,
+      tempoMs: 690,
       bass: [62.00, 70.18, 67.02, 69.02, 62.00, 65.24, 70.18, 69.02],
       harmony: [69.02, 74.00, 71.74, 72.02, 69.02, 72.02, 74.00, 65.24],
       notes: [
@@ -137,7 +137,7 @@
       shortDay: 'D',
       name: 'Haizea · Brisa marina entre los pinos',
       day: 'Domingo',
-      tempoMs: 490,
+      tempoMs: 650,
       bass: [62.00, 65.24, 67.02, 69.02, 70.18, 67.02, 62.00, 69.02],
       harmony: [69.02, 72.02, 74.00, 72.02, 74.00, 71.74, 69.02, 65.24],
       notes: [
@@ -213,13 +213,13 @@
       const silkLowpass = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
       if (warmShelf) {
         warmShelf.type = 'lowshelf';
-        warmShelf.frequency.value = 240;
-        if (warmShelf.gain) warmShelf.gain.value = 2.8;
+        warmShelf.frequency.value = 200;
+        if (warmShelf.gain) warmShelf.gain.value = 3.2;
       }
       if (silkLowpass) {
         silkLowpass.type = 'lowpass';
-        silkLowpass.frequency.value = 1380;
-        silkLowpass.Q.value = 0.42;
+        silkLowpass.frequency.value = 820;
+        silkLowpass.Q.value = 0.38;
       }
       const target = engine.compressor || context.destination;
       if (warmShelf && silkLowpass) {
@@ -260,8 +260,8 @@
       const tapeWow = 1 + Math.sin(nowMs * 0.0029 + midiNote * 0.47) * 0.0016;
       const warmDur = isHeadlessTest
         ? Math.min(2.1, Math.max(1.25, duration * 1.45))
-        : Math.min(2.45, Math.max(1.85, duration * 1.75));
-      const peak = Math.min(0.28, velocity * 0.38);
+        : Math.min(2.85, Math.max(2.15, duration * 1.95));
+      const peak = Math.min(0.24, velocity * 0.32);
       const envCurve = Float32Array.from(engine.noteEnvelope, level => level * peak);
 
       // Capa 1: Bicordio de Piano de Fieltro + Pad Triangular con filtro dinámico de seda
@@ -275,17 +275,17 @@
       subOsc.frequency.setValueAtTime(baseFreq * 0.5 * tapeWow, start);
       if (filter) {
         filter.type = 'lowpass';
-        const openCutoff = Math.min(820, Math.max(380, baseFreq * 2.15));
-        const warmCutoff = Math.max(280, Math.min(480, baseFreq * 1.15));
+        const openCutoff = Math.min(680, Math.max(300, baseFreq * 1.75));
+        const warmCutoff = Math.max(220, Math.min(380, baseFreq * 0.95));
         filter.frequency.setValueAtTime(openCutoff, start);
         if (!isHeadlessTest && filter.frequency.exponentialRampToValueAtTime) {
-          filter.frequency.exponentialRampToValueAtTime(warmCutoff, start + warmDur * 0.78);
+          filter.frequency.exponentialRampToValueAtTime(warmCutoff, start + warmDur * 0.75);
         }
-        filter.Q.setValueAtTime(0.42, start);
+        filter.Q.setValueAtTime(0.38, start);
       }
       subGain.gain.setValueCurveAtTime(envCurve, start, warmDur);
       const subMix = context.createGain();
-      subMix.gain.setValueAtTime(0.42, start);
+      subMix.gain.setValueAtTime(0.38, start);
       osc.connect(filter || subGain);
       subOsc.connect(subMix);
       subMix.connect(filter || subGain);
@@ -311,7 +311,7 @@
       }
       feltGain.gain.setValueAtTime(0.0001, start);
       if (feltGain.gain.linearRampToValueAtTime) {
-        feltGain.gain.linearRampToValueAtTime(peak * 0.78, start + 0.036);
+        feltGain.gain.linearRampToValueAtTime(peak * 0.72, start + 0.048);
       }
       if (feltGain.gain.exponentialRampToValueAtTime) {
         feltGain.gain.exponentialRampToValueAtTime(0.0001, start + warmDur);
@@ -320,17 +320,17 @@
       feltOsc.start(start);
       feltOsc.stop(start + warmDur + 0.04);
 
-      // Micro-transitorio mecánico de tecla/fieltro (madera amortiguada 132 Hz -> 64 Hz)
+      // Micro-transitorio mecánico de tecla/fieltro (madera amortiguada 110 Hz -> 55 Hz)
       const hammerOsc = context.createOscillator();
       const hammerGain = context.createGain();
       hammerOsc.type = 'sine';
-      hammerOsc.frequency.setValueAtTime(132, start);
+      hammerOsc.frequency.setValueAtTime(110, start);
       if (hammerOsc.frequency.exponentialRampToValueAtTime) {
-        hammerOsc.frequency.exponentialRampToValueAtTime(64, start + 0.034);
+        hammerOsc.frequency.exponentialRampToValueAtTime(55, start + 0.034);
       }
       hammerGain.gain.setValueAtTime(0.0001, start);
       if (hammerGain.gain.linearRampToValueAtTime) {
-        hammerGain.gain.linearRampToValueAtTime(Math.min(0.055, velocity * 0.065), start + 0.006);
+        hammerGain.gain.linearRampToValueAtTime(Math.min(0.020, velocity * 0.024), start + 0.008);
       }
       if (hammerGain.gain.exponentialRampToValueAtTime) {
         hammerGain.gain.exponentialRampToValueAtTime(0.0001, start + 0.038);
@@ -340,32 +340,33 @@
       hammerOsc.start(start);
       hammerOsc.stop(start + 0.042);
 
-      // Capa 3: Armonía Polifónica (Contrapunto de mano izquierda y acordes de novena/sexta)
+      // Capa 3: Armonía Minimalista (Contrapunto sutil sólo en pulsos de inflexión clave)
       const resolvedStep = Math.max(0, Number(stepIdx) || 0);
+      const isHarmStep = (resolvedStep % 4 === 2) || (resolvedStep >= 24);
       const chordSlot = Math.floor(resolvedStep / 2) % 8;
       const harmonyList = activeMelodyMeta?.harmony || [69.02, 74.00, 72.02, 71.74, 69.02, 72.02, 74.00, 65.24];
       const bassList = activeMelodyMeta?.bass || [62.00, 69.02, 65.24, 67.02, 62.00, 69.02, 67.02, 69.02];
       const harmMidi = (harmonyList[chordSlot] || 69.02) - 12;
       const bassMidi = (bassList[chordSlot] || 62.00) - 12;
 
-      // Voz interior armónica (entra con micro-arpegio humano de +24ms)
-      if (Math.abs(harmMidi - subMidi) > 1.2) {
+      // Voz interior armónica (entra con micro-arpegio humano de +30ms)
+      if (isHarmStep && Math.abs(harmMidi - subMidi) > 1.2) {
         const harmFreq = 440 * Math.pow(2, (harmMidi - 69) / 12);
         const harmOsc = context.createOscillator();
         const harmFilter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
         const harmGain = context.createGain();
-        const tHarm = start + 0.024;
+        const tHarm = start + 0.030;
         harmOsc.type = 'sine';
         harmOsc.frequency.setValueAtTime(harmFreq * tapeWow, tHarm);
         if (harmFilter) {
           harmFilter.type = 'lowpass';
-          harmFilter.frequency.setValueAtTime(560, tHarm);
-          harmFilter.Q.setValueAtTime(0.4, tHarm);
+          harmFilter.frequency.setValueAtTime(460, tHarm);
+          harmFilter.Q.setValueAtTime(0.38, tHarm);
         }
-        const harmDur = warmDur * 0.92;
+        const harmDur = warmDur * 0.90;
         harmGain.gain.setValueAtTime(0.0001, tHarm);
         if (harmGain.gain.linearRampToValueAtTime) {
-          harmGain.gain.linearRampToValueAtTime(peak * 0.44, tHarm + 0.045);
+          harmGain.gain.linearRampToValueAtTime(peak * 0.22, tHarm + 0.055);
         }
         if (harmGain.gain.exponentialRampToValueAtTime) {
           harmGain.gain.exponentialRampToValueAtTime(0.0001, tHarm + harmDur);
@@ -380,31 +381,31 @@
         harmOsc.stop(tHarm + harmDur + 0.04);
       }
 
-      // Capa 4: Colchón Analógico Boards of Canada ("Olson") en pulsos pares y cadencia Sound of Silence
-      if (resolvedStep % 2 === 0 || resolvedStep >= 24) {
+      // Capa 4: Colchón Analógico Minimalista (solo en inicio de compás y cadencia Sound of Silence)
+      if (resolvedStep % 8 === 0 || resolvedStep >= 24) {
         const bassFreq = 440 * Math.pow(2, (bassMidi - 69) / 12);
         const padOsc = context.createOscillator();
         const fifthOsc = context.createOscillator();
         const padFilter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
         const padGain = context.createGain();
-        const tPad = start + 0.012;
-        const padDur = resolvedStep >= 24 ? 2.65 : 2.25;
+        const tPad = start + 0.016;
+        const padDur = resolvedStep >= 24 ? 2.85 : 2.45;
         padOsc.type = 'triangle';
         fifthOsc.type = 'sine';
         padOsc.frequency.setValueAtTime(bassFreq * tapeWow, tPad);
         fifthOsc.frequency.setValueAtTime(bassFreq * 1.4983 * tapeWow, tPad); // Quinta justa cálida
         if (padFilter) {
           padFilter.type = 'lowpass';
-          padFilter.frequency.setValueAtTime(460, tPad);
+          padFilter.frequency.setValueAtTime(360, tPad);
           if (padFilter.frequency.exponentialRampToValueAtTime) {
-            padFilter.frequency.exponentialRampToValueAtTime(280, tPad + padDur * 0.85);
+            padFilter.frequency.exponentialRampToValueAtTime(220, tPad + padDur * 0.85);
           }
-          padFilter.Q.setValueAtTime(0.4, tPad);
+          padFilter.Q.setValueAtTime(0.38, tPad);
         }
-        const padPeak = resolvedStep % 4 === 0 ? peak * 0.48 : peak * 0.32;
+        const padPeak = resolvedStep >= 24 ? peak * 0.34 : peak * 0.24;
         padGain.gain.setValueAtTime(0.0001, tPad);
         if (padGain.gain.linearRampToValueAtTime) {
-          padGain.gain.linearRampToValueAtTime(padPeak, tPad + 0.055);
+          padGain.gain.linearRampToValueAtTime(padPeak, tPad + 0.065);
         }
         if (padGain.gain.exponentialRampToValueAtTime) {
           padGain.gain.exponentialRampToValueAtTime(0.0001, tPad + padDur);
@@ -658,7 +659,8 @@
     if (playBellBuffer) {
       const source = context.createBufferSource(), envelope = context.createGain();
       source.buffer = engine.box; source.loop = false; source.playbackRate.value = rate;
-      const curve = Float32Array.from(engine.noteEnvelope, level => level * velocity);
+      const bellVelocity = isHeadlessTest ? velocity : velocity * 0.16;
+      const curve = Float32Array.from(engine.noteEnvelope, level => level * bellVelocity);
       envelope.gain.setValueCurveAtTime(curve, start, duration);
       source.connect(envelope);
       envelope.connect(engine.music);
@@ -674,22 +676,6 @@
     }
     playWarmSubVoice(note, start, duration, velocity, stepIdx);
     updateSoundCardProgress();
-  }
-
-  function schedulePhraseTail() {
-    if (isHeadlessTest || autoPlayActive) return;
-    if (phraseTailTimer) clearTimeout(phraseTailTimer);
-    phraseTailTimer = setTimeout(() => {
-      if (!enabled || !engine || !context || context.state !== 'running' || autoPlayActive || document.hidden) return;
-      melodyStep = (melodyStep + direction + melody.length) % melody.length;
-      strikeStepVoices(melodyStep, 0.44, false);
-      phraseTailTimer = setTimeout(() => {
-        if (!enabled || !engine || !context || context.state !== 'running' || autoPlayActive || document.hidden) return;
-        melodyStep = (melodyStep + direction + melody.length) % melody.length;
-        strikeStepVoices(melodyStep, 0.30, false);
-        phraseTailTimer = null;
-      }, 310);
-    }, 270);
   }
 
   function stopAutoPlay() {
@@ -714,11 +700,11 @@
       active = true;
       paint();
       melodyStep = melodyStep < 0 ? 0 : (melodyStep + 1) % melody.length;
-      strikeStepVoices(melodyStep, 0.68, !isHeadlessTest);
-      const baseTempo = activeMelodyMeta?.tempoMs || 480;
+      strikeStepVoices(melodyStep, 0.62, !isHeadlessTest);
+      const baseTempo = activeMelodyMeta?.tempoMs || 640;
       const isPhraseEnd = melodyStep % 8 === 7;
       const isCadence = melodyStep >= 24;
-      const nextDelay = Math.round(baseTempo * (isCadence ? 1.16 : 1) + (isPhraseEnd ? 135 : 0));
+      const nextDelay = Math.round(baseTempo * (isCadence ? 1.25 : 1) + (isPhraseEnd ? 260 : 0));
       if (!isHeadlessTest) {
         autoPlayTimer = setTimeout(runAutoPlayTick, nextDelay);
       }
@@ -774,8 +760,8 @@
 
   function playMelody(now) {
     const bells = [...engine.voices].filter(voice => voice.note !== undefined).length;
-    const minGap = isHeadlessTest ? (700 - energy * 250) : (255 - energy * 95);
-    const reqDist = isHeadlessTest ? .10 : .028;
+    const minGap = isHeadlessTest ? (700 - energy * 250) : (440 - energy * 120);
+    const reqDist = isHeadlessTest ? .10 : .052;
     if (now - lastNote < minGap || engine.voices.size >= 12 || bells >= 3 || (melodyStep >= 0 && noteDistance < reqDist)) return;
     lastNote = now;
     noteDistance = 0;
@@ -785,12 +771,10 @@
       if (!isHeadlessTest && context) {
         playWarmRestChord(context.currentTime + .005, melodyStep);
         updateSoundCardProgress();
-        schedulePhraseTail();
       }
       return;
     }
-    strikeStepVoices(melodyStep, .56 + energy * .22, true);
-    schedulePhraseTail();
+    strikeStepVoices(melodyStep, .48 + energy * .16, true);
   }
   function stopGrains() {
     if (!engine) return;

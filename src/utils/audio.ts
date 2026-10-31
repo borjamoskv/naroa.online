@@ -342,13 +342,13 @@ class SoundEngine {
 
       this.warmShelf = this.ctx.createBiquadFilter()
       this.warmShelf.type = 'lowshelf'
-      this.warmShelf.frequency.value = 220
-      this.warmShelf.gain.value = 3.0
+      this.warmShelf.frequency.value = 200
+      this.warmShelf.gain.value = 3.2
 
       this.warmLowpass = this.ctx.createBiquadFilter()
       this.warmLowpass.type = 'lowpass'
-      this.warmLowpass.frequency.value = 1450
-      this.warmLowpass.Q.value = 0.5
+      this.warmLowpass.frequency.value = 820
+      this.warmLowpass.Q.value = 0.38
 
       this.masterCompressor = this.ctx.createDynamicsCompressor()
       this.masterCompressor.threshold.value = -10.0
@@ -408,22 +408,22 @@ class SoundEngine {
         masterVoiceGain.connect(out)
       }
 
-      // Filtro analógico de seda sin pico de resonancia (Q = 0.45)
+      // Filtro analógico de seda sin pico de resonancia (Q = 0.38)
       const filter = this.ctx.createBiquadFilter()
       filter.type = 'lowpass'
-      const openCutoff = Math.min(860, rootHz * 2.3)
-      const warmCutoff = Math.max(260, Math.min(520, rootHz * 1.15))
+      const openCutoff = Math.min(680, rootHz * 1.8)
+      const warmCutoff = Math.max(220, Math.min(420, rootHz * 0.95))
       filter.frequency.setValueAtTime(openCutoff, now)
-      filter.frequency.exponentialRampToValueAtTime(warmCutoff, now + 1.45)
-      filter.Q.setValueAtTime(0.45, now)
+      filter.frequency.exponentialRampToValueAtTime(warmCutoff, now + 1.65)
+      filter.Q.setValueAtTime(0.38, now)
       filter.connect(masterVoiceGain)
 
-      // Voces analógicas cálidas: sub-octava redonda + fundamental de fieltro + pad triangular con tape-drift + octava dulce
+      // Voces analógicas cálidas: sub-octava redonda + fundamental de fieltro + pad sutil
       const voices: { type: OscillatorType; ratio: number; detune: number; driftCents: number; level: number; attack: number; decay: number }[] = [
-        { type: 'sine',     ratio: 0.5, detune: -1.2, driftCents:  1.5, level: 0.26, attack: 0.048, decay: 2.25 }, // Sub-bajo analógico cálido
-        { type: 'sine',     ratio: 1.0, detune:  0.0, driftCents: -1.8, level: 0.58, attack: 0.032, decay: 1.95 }, // Fundamental piano de fieltro (Avril 14th)
-        { type: 'triangle', ratio: 1.0, detune:  3.2, driftCents:  3.4, level: 0.24, attack: 0.055, decay: 2.15 }, // Pad analógico con tape wow (Boards of Canada)
-        { type: 'sine',     ratio: 2.0, detune: -2.0, driftCents:  1.2, level: 0.08, attack: 0.028, decay: 0.95 }  // Armónico de octava aterciopelado
+        { type: 'sine',     ratio: 0.5, detune: -1.0, driftCents:  1.2, level: 0.20, attack: 0.052, decay: 2.65 }, // Sub-bajo analógico cálido
+        { type: 'sine',     ratio: 1.0, detune:  0.0, driftCents: -1.4, level: 0.62, attack: 0.046, decay: 2.45 }, // Fundamental piano de fieltro (Avril 14th)
+        { type: 'triangle', ratio: 1.0, detune:  2.4, driftCents:  2.6, level: 0.16, attack: 0.065, decay: 2.40 }, // Pad analógico sutil con tape wow
+        { type: 'sine',     ratio: 2.0, detune: -1.6, driftCents:  0.8, level: 0.04, attack: 0.038, decay: 1.10 }  // Armónico de octava casi inaudible
       ]
 
       voices.forEach(({ type, ratio, detune, driftCents, level, attack, decay }) => {
@@ -464,7 +464,7 @@ class SoundEngine {
   public playSessionStep(stepIndex?: number) {
     if (!this.enabled) return
     const nowMs = typeof performance !== 'undefined' ? performance.now() : Date.now()
-    if (nowMs - this.lastSessionStepTime < 115) return
+    if (nowMs - this.lastSessionStepTime < 180) return
     this.lastSessionStepTime = nowMs
 
     const mel = this.getSessionMelody()
