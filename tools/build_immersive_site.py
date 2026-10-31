@@ -1146,154 +1146,18 @@ def build(output):
     }
     page("/cuaderno/", "Cuaderno", "Historias de obras, procesos y encuentros. El cuaderno de la artista Naroa Gutiérrez Gil.", '<main id="main">' + notebook + '</main>', rara["photos"][0]["original"], schema=blog_schema)
 
-    adi = next((p for p in projects if p["slug"] == "little-adi"), rara)
     commission_examples = [
-        (jaio, "01 · Textil, costura y madera", "Retrato sobre tela vaquera o papel de algodón intervenido con costuras reales, botones y capas matéricas sobre madera noble.", "Collage textil sobre madera", "20 × 30 a 40 × 50 cm · 2–4 semanas"),
-        (amor, "02 · Objetos y cajas de memoria", "Cajas de madera tratada, latas o soportes cotidianos transformados en relicarios tridimensionales con retratos y recuerdos.", "Caja personalizada u objeto", "Formato tridimensional a medida · 2–4 semanas"),
-        (amy, "03 · Pizarra natural y mica", "Acrílico, lápices de colores, rotuladores y escamas de mica mineral sobre el corte irregular de la piedra de cantera.", "Pizarra natural rústica", "20 × 30 a 40 × 50 cm · 2–3 semanas"),
-        (rara, "04 · Pastel, grafito y lápiz", "Retrato dibujado a pastel Conté, grafito o lápices de colores sobre papel de algodón, solo o combinado con capas de collage.", "Retrato al óleo o grafito", "Desde 20 × 30 cm · 2–4 semanas"),
+        (jaio, "Madera y denim", "Collage textil sobre madera"),
+        (amy, "Pizarra y mica", "Pizarra natural rústica"),
+        (amor, "Lata intervenida", "Caja personalizada u objeto"),
+        (rara, "Papel y pastel", "Retrato al óleo o grafito"),
     ]
-    commission_faqs = [
-        ("¿Cómo encargar un retrato personalizado a partir de fotografías?", "Puedes enviar una o varias fotografías de referencia (incluso tomadas con el móvil) por WhatsApp o correo para estudiar la pose, la iluminación y el carácter. También es posible combinar varias fotos distintas en una misma composición. Naroa no realiza una reproducción fotomecánica, sino una reinterpretación artística de autor que integra la personalidad, anécdotas y memoria de quien recibe la obra."),
-        ("¿Cuánto cuesta un retrato personalizado por encargo?", "Cada encargo es una pieza de autor única e irrepetible hecha a mano en el estudio de Bilbao. El presupuesto se calcula con total transparencia según la técnica, el soporte y las dimensiones acordadas (dibujo, óleo, collage textil sobre madera noble, cajas de recuerdos tridimensionales o exploraciones en pizarra natural). Siempre se formaliza una propuesta con presupuesto cerrado previo y por escrito antes de comenzar la obra, sin ningún compromiso previo."),
-        ("¿Cuáles son los plazos de entrega en Bilbao, Bizkaia y mediante envío?", "El plazo habitual de ejecución se sitúa entre 2 y 4 semanas, condicionado por la complejidad de la composición y los tiempos de secado de óleos, acrílicos y barnices. Para fechas señaladas (aniversarios, bodas, jubilaciones, homenajes) es posible concertar plazos prioritarios con aviso previo. La entrega se realiza en mano en Bilbao y Bizkaia (Casco Viejo, Abando, Indautxu, Getxo, margen derecha e izquierda), o mediante envío rígido tricapa asegurado a cualquier destino."),
-        ("¿Qué técnicas y soportes se pueden elegir o ver en el estudio de Bilbao?", "Se puede elegir entre dibujo a grafito o pastel Conté combinado con collage textil sobre madera noble, pintura al óleo o acrílico, cajas y objetos cotidianos transformados en piezas de memoria personal, o soportes minerales como la pizarra natural con escamas de mica. Con cita previa puedes visitar el taller en Bilbao para ver materiales y formatos en directo."),
-    ]
-    examples_html = ''.join(f'''<article class="commission-example" data-support-card="{esc(sup_val)}"><span class="commission-tape" aria-hidden="true">MUESTRA DE TALLER</span><a class="commission-example-photo" href="/obra/{ex['slug']}/"><img src="{ex['cover']}" width="{ex['photos'][0]['width']}" height="{ex['photos'][0]['height']}" alt="{esc(work_alt(ex))}" loading="lazy" decoding="async"><span class="commission-photo-tag">{esc(ex['title'])} ↗</span></a><div class="commission-example-copy"><p class="eyebrow">{esc(kind_label.split(" · ")[0])} · Obra real: {esc(ex['title'])}</p><h3><a href="/obra/{ex['slug']}/">{esc(kind_label.split(" · ", 1)[-1])}</a></h3><p>{esc(note)}</p><div class="commission-swatch-meta"><small>{esc(meta_badge)}</small><button type="button" class="commission-pick-btn" data-pick-support="{esc(sup_val)}">Elegir este soporte en la mesa ↓</button></div></div></article>''' for ex, kind_label, note, sup_val, meta_badge in commission_examples)
-    faq_html = ''.join(f'''<details class="commission-faq-item"><summary>{esc(q)}</summary><p>{esc(a)}</p></details>''' for q, a in commission_faqs)
-    specs_rows = [
-        ("Soportes de autor", "Madera noble intervenida, collage textil sobre tela vaquera o papel de algodón Canson Mi-Teintes, cajas tridimensionales de memoria y pizarra natural de cantera con escamas de mica."),
-        ("Formatos habituales", "Composiciones en madera, papel, pizarra y objetos con medidas adaptadas a cada proyecto (formatos de 20 × 30 cm, 30 × 40 cm, 40 × 50 cm y medidas especiales a medida)."),
-        ("Técnicas plásticas", "Dibujo a grafito y pastel Conté, óleo, acrílico, collage textil, ensamblaje de objetos biográficos y detalles minerales con fijación y barniz protector."),
-        ("Plazo de ejecución", "Entre 2 y 4 semanas según complejidad y tiempos de secado de materiales (modalidad prioritaria disponible para aniversarios, bodas o regalos con aviso previo)."),
-        ("Presupuesto y valoración", "Propuesta personalizada y presupuesto cerrado por escrito según técnica y dimensiones antes de iniciar la obra, sin compromiso previo."),
-        ("Entrega en Bilbao y envíos", "Entrega personal en mano en Bilbao y Bizkaia (con posibilidad de cita previa en estudio), o envío en embalaje rígido tricapa asegurado a toda España e internacional."),
-    ]
-    specs_html = '<div class="commission-specs-grid">' + "".join(f'<div class="commission-spec-card"><span class="spec-label">{esc(k)}</span><p>{esc(v)}</p></div>' for k, v in specs_rows) + '</div>'
-    compare_rows = [
-        ("Collage textil sobre madera", "Collage textil y dibujo sobre madera", "20 × 30 cm a 40 × 50 cm (medidas adaptables)", "Grafito, pastel Conté, tela vaquera, costuras y madera noble", "2 a 4 semanas", "Custom Jaio · Entre Tantas Flores"),
-        ("Caja personalizada u objeto", "Cajas tridimensionales y objetos", "Formatos de caja o lata intervenida a medida", "Madera tratada, pintura acrílica, ensamblaje y objetos de memoria", "2 a 4 semanas", "Amor en Conserva · Hugo Box"),
-        ("Pizarra natural rústica", "Pizarra natural de cantera", "20 × 30 cm a 40 × 50 cm (contorno rústico irregular)", "Acrílico, lápices, rotuladores, escamas de mica mineral y esmalte", "2 a 3 semanas", "Amy Rocks · Marilyn Rocks"),
-        ("Retrato al óleo o grafito", "Pastel, grafito o lápiz sobre papel", "A partir de 20 × 30 cm sobre papel de algodón", "Pastel Conté, grafito o lápices de colores con fijación protectora", "2 a 4 semanas", "Rara Avis · Little Adi"),
-    ]
-    compare_tbody = "".join(
-        f"<tr data-compare-support=\"{esc(sup_key)}\"><th scope=\"row\">{esc(sup)}</th><td>{esc(dim)}</td><td>{esc(tech)}</td><td>{esc(turn)}</td><td>{esc(ex_ref)}</td></tr>"
-        for sup_key, sup, dim, tech, turn, ex_ref in compare_rows
+    examples_html = ''.join(
+        f'''<article class="commission-example" data-support-card="{esc(sup_val)}"><a class="commission-example-photo" href="/obra/{ex['slug']}/"><img src="{ex['cover']}" width="{ex['photos'][0]['width']}" height="{ex['photos'][0]['height']}" alt="{esc(work_alt(ex))}" loading="lazy" decoding="async"></a><div class="commission-example-bar"><a class="commission-work-title" href="/obra/{ex['slug']}/">{esc(ex['title'])}</a><a class="commission-pick-btn" href="https://wa.me/34636060609?text={quote(f'Hola Naroa, me gustaría un encargo como {ex["title"]}.')}" target="_blank" rel="noopener noreferrer">Encargar ↗</a></div></article>'''
+        for ex, kind_label, sup_val in commission_examples
     )
-    compare_table_html = (
-        '<div class="commission-compare-wrap">'
-        '<table class="commission-compare-table">'
-        '<caption>Comparativa técnica de soportes, plazos y obras de referencia (pulsa en una fila para seleccionarla)</caption>'
-        '<thead><tr><th scope="col">Soporte plástico</th><th scope="col">Formatos habituales</th><th scope="col">Técnica y materiales</th><th scope="col">Plazo estimado</th><th scope="col">Ejemplos del archivo</th></tr></thead>'
-        f'<tbody>{compare_tbody}</tbody>'
-        '</table>'
-        '</div>'
-    )
-    specs_html += compare_table_html
-    default_cfg_msg = "Hola Naroa, me gustaría consultar un encargo de retrato sobre Collage textil sobre madera para Retrato individual con plazo Sin prisa (2 a 4 semanas)."
-    configurator_html = (
-        '<section id="configurador" class="commission-configurator" aria-labelledby="configurator-heading" data-commission-configurator>'
-        '<div class="configurator-header">'
-        '<p class="eyebrow">Mesa de Encargos Interactiva · Presupuesto cerrado sin compromiso</p>'
-        '<h2 id="configurator-heading">Diseña tu encargo<br><span>paso a paso.</span></h2>'
-        '<p>Toca las muestras de materia, quién protagoniza la obra y el plazo para componer tu ficha de taller en vivo.</p>'
-        '<p id="cfg-seed-banner" class="configurator-seed-banner" data-cfg-seed-banner hidden></p>'
-        '</div>'
-        '<div class="atelier-workbench">'
-        '<div class="atelier-controls">'
-        '<div class="configurator-field">'
-        '<label for="cfg-support">01 · Elige la materia y soporte</label>'
-        '<div class="cfg-pill-group" role="group" aria-label="Selector visual de soporte">'
-        '<button type="button" class="cfg-pill is-active" data-cfg-pill="support" data-cfg-val="Collage textil sobre madera"><strong>Collage textil y madera</strong><small>Tela vaquera, costuras y dibujo</small></button>'
-        '<button type="button" class="cfg-pill" data-cfg-pill="support" data-cfg-val="Pizarra natural rústica"><strong>Pizarra natural y mica</strong><small>Piedra de cantera con destellos</small></button>'
-        '<button type="button" class="cfg-pill" data-cfg-pill="support" data-cfg-val="Caja personalizada u objeto"><strong>Caja de memoria 3D</strong><small>Objeto intervenido y relicario</small></button>'
-        '<button type="button" class="cfg-pill" data-cfg-pill="support" data-cfg-val="Retrato al óleo o grafito"><strong>Pastel, grafito o lápiz</strong><small>Dibujo de autor sobre papel</small></button>'
-        '<button type="button" class="cfg-pill" data-cfg-pill="support" data-cfg-val="Asesoramiento en estudio"><strong>Indeciso · Asesoramiento</strong><small>Naroa te propone según tu foto</small></button>'
-        '</div>'
-        '<select id="cfg-support" class="configurator-select">'
-        '<option value="Collage textil sobre madera">Collage textil y dibujo sobre madera</option>'
-        '<option value="Retrato al óleo o grafito">Retrato a pastel, grafito o lápiz</option>'
-        '<option value="Caja personalizada u objeto">Caja de memoria tridimensional u objeto</option>'
-        '<option value="Pizarra natural rústica">Pizarra natural (exploración reciente)</option>'
-        '<option value="Asesoramiento en estudio">Por definir (asesoramiento con Naroa)</option>'
-        '</select>'
-        '</div>'
-        '<div class="configurator-field">'
-        '<label for="cfg-motif">02 · ¿A quién retratamos?</label>'
-        '<div class="cfg-pill-group cfg-pill-group--compact" role="group" aria-label="Selector visual de motivo">'
-        '<button type="button" class="cfg-pill is-active" data-cfg-pill="motif" data-cfg-val="Retrato individual"><strong>Individual</strong><small>1 protagonista</small></button>'
-        '<button type="button" class="cfg-pill" data-cfg-pill="motif" data-cfg-val="Pareja o familia"><strong>Pareja / Familia</strong><small>Varias personas o fotos</small></button>'
-        '<button type="button" class="cfg-pill" data-cfg-pill="motif" data-cfg-val="Mascota"><strong>Mascota</strong><small>Compañero animal</small></button>'
-        '<button type="button" class="cfg-pill" data-cfg-pill="motif" data-cfg-val="Homenaje o recuerdo"><strong>Homenaje</strong><small>Recuerdo o regalo</small></button>'
-        '</div>'
-        '<select id="cfg-motif" class="configurator-select">'
-        '<option value="Retrato individual">Retrato individual (persona)</option>'
-        '<option value="Pareja o familia">Pareja o familia</option>'
-        '<option value="Mascota">Mascota (perro, gato u otro animal)</option>'
-        '<option value="Homenaje o recuerdo">Homenaje / recuerdo especial</option>'
-        '</select>'
-        '</div>'
-        '<div class="configurator-field">'
-        '<label for="cfg-timing">03 · Plazo y ocasión</label>'
-        '<div class="cfg-pill-group cfg-pill-group--two" role="group" aria-label="Selector visual de plazo">'
-        '<button type="button" class="cfg-pill is-active" data-cfg-pill="timing" data-cfg-val="Sin prisa (2 a 4 semanas)"><strong>Ritmo de estudio (2–4 semanas)</strong><small>Secado orgánico sin prisas</small></button>'
-        '<button type="button" class="cfg-pill" data-cfg-pill="timing" data-cfg-val="Fecha señalada próxima"><strong>Fecha especial próxima</strong><small>Prioridad para regalo o aniversario</small></button>'
-        '</div>'
-        '<select id="cfg-timing" class="configurator-select">'
-        '<option value="Sin prisa (2 a 4 semanas)">Plazo habitual (2 a 4 semanas)</option>'
-        '<option value="Fecha señalada próxima">Fecha especial próxima (cumpleaños, aniversario)</option>'
-        '</select>'
-        '</div>'
-        '</div>'
-        '<aside class="atelier-OrderCard" aria-label="Ficha de encargo en vivo">'
-        '<div class="atelier-card-stamp">FICHA DE TALLER · BILBAO</div>'
-        '<div class="atelier-card-visual">'
-        f'<img id="cfg-visual-img" src="{jaio["cover"]}" alt="Muestra de soporte seleccionado" width="480" height="360" loading="lazy">'
-        '<div class="atelier-card-caption">'
-        '<span id="cfg-visual-tag">Muestra de referencia</span>'
-        '<strong id="cfg-visual-title">Custom Jaio · Collage textil y madera</strong>'
-        '</div>'
-        '</div>'
-        '<div class="atelier-card-body">'
-        '<span class="atelier-msg-label">Mensaje listo para enviar a Naroa:</span>'
-        f'<p id="cfg-preview" class="configurator-preview" aria-live="polite">{esc(default_cfg_msg)}</p>'
-        '<div class="configurator-action">'
-        f'<a id="cfg-whatsapp-btn" class="commission-cta-btn" href="https://wa.me/34636060609?text={quote(default_cfg_msg)}" target="_blank" rel="noopener noreferrer">'
-        '<span>Enviar idea por WhatsApp ↗</span>'
-        '</a>'
-        f'<a id="cfg-email-btn" class="commission-cta-secondary" href="mailto:naroa@naroa.eu?subject={quote("Consulta encargo: Collage textil sobre madera")}&body={quote(default_cfg_msg)}">'
-        '<span>Solicitar propuesta por email ↗</span>'
-        '</a>'
-        '</div>'
-        '<p class="atelier-card-guarantee">✓ Respuesta personal de Naroa · Presupuesto cerrado sin compromiso</p>'
-        '</div>'
-        '</aside>'
-        '</div>'
-        '</section>'
-    )
-    commissions = f'''<section class="page-hero atelier-hero" data-parallax>
-<div class="page-hero-image"><img src="{amor["cover"]}" alt="{esc(work_alt(amor))}" fetchpriority="high" style="object-position:50% 42%"></div>
-<div class="page-hero-shade atelier-hero-shade"></div>
-<div class="atelier-hero-grid">
-  <div class="page-hero-copy atelier-hero-copy">
-    <p class="eyebrow">Estudio de Retratos por Encargo · Bilbao y Bizkaia</p>
-    <h1><span style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0">Retrato por encargo en Bilbao y retratos personalizados: </span>No retrato solo tu cara.<br><span>Retrato tu historia.</span></h1>
-    <p class="hero-lead">Envía tu fotografía de móvil o tu idea. Naroa la transforma a mano en una pieza única sobre <strong>madera noble, collage textil, pizarra natural con mica o cajas de memoria</strong>.</p>
-    <div class="atelier-hero-actions">
-      <a class="commission-cta-btn" href="#configurador">Diseñar mi encargo ahora ↓</a>
-      <a class="commission-cta-secondary" href="https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20un%20retrato%20por%20encargo." target="_blank" rel="noopener noreferrer">Hablar por WhatsApp ↗</a>
-    </div>
-  </div>
-  <div class="atelier-hero-polaroids" aria-hidden="true">
-    <a class="atelier-polaroid atelier-polaroid--1" href="#configurador" data-pick-support="Pizarra natural rústica"><img src="{amy["cover"]}" alt="Amy Rocks · Retrato en pizarra y mica"><span class="polaroid-caption">Amy Rocks · Pizarra y mica</span></a>
-    <a class="atelier-polaroid atelier-polaroid--2" href="#configurador" data-pick-support="Collage textil sobre madera"><img src="{jaio["cover"]}" alt="Custom Jaio · Retrato en denim y madera"><span class="polaroid-caption">Custom Jaio · Denim y madera</span></a>
-    <a class="atelier-polaroid atelier-polaroid--3" href="#configurador" data-pick-support="Caja personalizada u objeto"><img src="{amor["cover"]}" alt="Amor en Conserva · Objeto 3D en lata"><span class="polaroid-caption">Amor en Conserva · Objeto 3D</span></a>
-  </div>
-</div>
-<a class="hero-down" href="#contenido" aria-label="Seguir leyendo">↓</a>
-</section>
-<nav class="atelier-mobile-cta" data-atelier-mobile-cta aria-label="Acciones rápidas de encargo"><a href="#configurador">Diseñar encargo ↓</a><a href="https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20un%20retrato%20por%20encargo." target="_blank" rel="noopener noreferrer">WhatsApp ↗</a></nav>'''
-    commissions += f'''<article class="editorial atelier-editorial" id="contenido"><section class="chapter atelier-manifesto"><p class="eyebrow">El taller en Bilbao · De tu foto al objeto vivo</p><div><h2>Más allá de<br>una fotografía.</h2><p class="lead">«Mediante esta obra, una hija y su padre volvieron a encontrarse sobre un fondo blanco. Todo gracias a una foto de joven de él, que me permitió —esquivando los reflejos del cristal que protegía su mirada— trazarles, de nuevo, juntos. "El Reencuentro" es un sentimiento traído a nuestra percepción a través del rastro —en los rostros— de caricias con pinceles, en su cabello y sus pieles; peinando su pelo y acariciando sus sienes».</p><p>«Reúne una enorme variedad de elementos y texturas que se engranan en un collage repleto de significados… Conforma un puzzle de mil piezas que encaja a la perfección, como dos almas que se quieren y se funden en un abrazo». Solicita un <strong>retrato por encargo en Bilbao</strong> o retrato personalizado con Naroa Gutiérrez Gil a partir de tu historia o fotografías, con <strong>presupuesto cerrado previo por escrito</strong> y entrega local en mano en Bilbao y Bizkaia o envío rígido asegurado.</p><div class="commission-trust-pills" aria-label="Garantías del estudio en Bilbao"><span>✦ Presupuesto cerrado previo sin compromiso</span><span>✦ Plazo real: 2 a 4 semanas</span><span>✦ Cita en estudio y entrega en mano en Bilbao / Bizkaia</span><span>✦ Embalaje tricapa asegurado nacional e internacional</span></div></div></section>{configurator_html}<section class="commission-examples-section" aria-labelledby="commission-examples-heading"><div class="section-opening"><p class="eyebrow">Muestrario táctil de soportes reales</p><h2 id="commission-examples-heading">Cuatro materias para<br><span>contar quién eres.</span></h2><p>«Materiales utilizados: pintura acrílica (pincel y rotuladores Uni-Posca), papel (de seda, de regalo y de alto gramaje plastificado con mensaje impreso), telas, celofán, aluminio, plástico decorado y toneladas de amor».</p></div><div class="commission-examples">{examples_html}</div></section><section class="commission-steps" aria-label="Historias reales de encargos y regalos"><div class="commission-steps-header"><p class="eyebrow">Encargos y regalos contados por Naroa · 100% Verbatim</p><h2>Así nacieron<br><span>estos encargos reales.</span></h2></div><div class="commission-steps-grid"><article><span>EL REENCUENTRO</span><h3>Reunir dos miradas en el tiempo.</h3><p>«Mediante esta obra, una hija y su padre volvieron a encontrarse sobre un fondo blanco. Todo gracias a una foto de joven de él, que me permitió —esquivando los reflejos del cristal que protegía su mirada— trazarles, de nuevo, juntos».</p></article><article><span>LA FAMIGLIA</span><h3>Una misiva colectiva de corazón.</h3><p>«Si te encomendaran la misión de realizar una felicitación familiar, ¿qué mejor portavoz para verbalizar esta misiva colectiva que Don Vito Corleone? Al fin y al cabo “La famiglia è la famiglia...”. Zorionak Jon de la Famiglia de corazón».</p></article><article><span>THE LOVE BOAT</span><h3>Vacaciones en el mar sobre madera.</h3><p>«“Mare mía, mecachisenlamar, que no me puedo imaginar algo más espectacular que junto a ti pasar unas vacaciones en el mar”. Retrato colorista doble realizado mediante técnica mixta sobre tabla de madera de 50×50 cm… y toneladas de amor».</p></article><article><span>MULTI-DIMENSIONAL LOVE</span><h3>Capas articuladas en una lata.</h3><p>«Retrato 3D doble realizado a partir de tres fotografías y trabajado en varias capas articuladas que, al moverlas, cuentan una pequeña pero gran historia: la del amor de sus protagonistas».</p></article></div></section><section class="chapter atelier-specs-chapter" aria-labelledby="commission-specs-heading"><p class="eyebrow">Especificaciones de taller</p><div><h2 id="commission-specs-heading">Materiales, formatos<br><span>y tabla comparativa.</span></h2>{specs_html}</div></section><section class="commission-faq" aria-labelledby="commission-faq-heading"><div class="section-opening"><p class="eyebrow">Dudas frecuentes antes de encargar</p><h2 id="commission-faq-heading">Precios, fotos<br><span>y plazos.</span></h2></div><div class="commission-faq-list">{faq_html}</div></section><div class="closing"><p class="hand">¿A quién te gustaría retratar?</p><a class="commission-cta-btn" href="https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20un%20retrato%20personalizado%20por%20encargo." target="_blank" rel="noopener noreferrer">Hablar por WhatsApp directo ↗</a><a class="text-link" href="mailto:naroa@naroa.eu?subject=Solicitud%20de%20presupuesto%20para%20retrato%20por%20encargo">Solicitar presupuesto por email ↗</a><a class="text-link" href="/obra/#indice">Explorar las {len(projects)} obras del catálogo ↗</a></div></article>'''
+    commissions = f'''<section class="page-hero" data-parallax><div class="page-hero-image"><img src="{amor["cover"]}" alt="{esc(work_alt(amor))}" fetchpriority="high" style="object-position:50% 42%"></div><div class="page-hero-shade"></div><div class="page-hero-copy"><h1><span style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0">Retrato por encargo en Bilbao: </span><span>Encargos</span></h1></div><a class="hero-down" href="#contenido" aria-label="Seguir viendo">↓</a></section>'''
+    commissions += f'''<article class="editorial commission-minimal" id="contenido"><div class="commission-examples">{examples_html}</div><div class="closing"><a class="commission-cta-btn" href="https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20encargar%20un%20retrato." target="_blank" rel="noopener noreferrer">WhatsApp ↗</a><a class="text-link" href="mailto:naroa@naroa.eu?subject=Encargo%20de%20retrato">naroa@naroa.eu ↗</a></div></article>'''
     commissions_schema = {
         "@context": "https://schema.org",
         "@type": ["Service", "ProfessionalService"],
@@ -1311,7 +1175,7 @@ def build(output):
         "inLanguage": "es-ES",
         "dateModified": catalogue["reviewed"],
         "description": "Retrato por encargo en Bilbao y retratos personalizados con Naroa Gutiérrez Gil. Piezas originales hechas a mano a partir de fotografía e historia personal: dibujo, pintura, collage, madera, objetos y pizarra con presupuesto cerrado previo.",
-        "image": [ORIGIN + ex["photos"][0]["original"] for ex, _, _, _, _ in commission_examples],
+        "image": [ORIGIN + ex["photos"][0]["original"] for ex, *_ in commission_examples],
         "provider": canonical_artist_entity,
         "providerMobility": "dynamic",
         "availableLanguage": ["es", "eu"],

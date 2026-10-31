@@ -1494,7 +1494,7 @@
     function fireLauraLorePause() {
       const isTestEnv = typeof window !== 'undefined' && (window.location.hostname === 'portfolio.test' || reduced.matches);
       if (isTestEnv || isBreakdancing) return;
-      isLauraZooming = true;
+      isLauraZooming = false;
       lauraPauseDistance = motion.current;
       const lauraScene = stage.querySelector('.art-scene[data-work="lauralore"]');
       const lauraImg = images[state.index] || (lauraScene && lauraScene.querySelector('img'));
@@ -1506,12 +1506,11 @@
       }
       clearTimeout(lauraTimer);
       lauraTimer = setTimeout(() => {
-        isLauraZooming = false;
         if (lauraScene) {
           stage.classList.remove('is-eguzkilore-stage');
           lauraScene.classList.remove('is-eguzkilore-active');
         }
-      }, 5000);
+      }, 3200);
     }
     let ezquerraVisited = false, ezquerraDazedTimer = null, punchVisited = false, canPeelVisited = false;
     function fireEzquerraDazed() {
@@ -2549,6 +2548,9 @@
           clockVisited = true;
           fireSwissClock();
         }
+        if (julioRaf === null && !reduced.matches && !(typeof window !== 'undefined' && window.location.hostname === 'portfolio.test')) {
+          julioRaf = requestAnimationFrame(stepJulioClockwork);
+        }
       } else {
         clockVisited = false;
       }
@@ -2754,6 +2756,8 @@
         cue.textContent = still ? reduced.matches ? 'Activa los efectos para ver el viaje ↓' : 'Desplázate para recorrer ↕' : !transition ? phase === 'explore' ? 'Explora la superficie ↓' : 'Una pausa para mirar · sigue ↓' : isAjenjoPhoto ? 'Dispara y revela la foto ↓' : isRaraToAmor ? 'El azogue se disuelve · sigue ↓' : isTinCanPeelOuter ? 'Abre la lata de conserva · sigue ↓' : isJamesToMario ? 'La cantera de pizarra se quiebra · sigue ↓' : isJaioTo13n ? 'Deshilachar las costuras · sigue ↓' : isBowieToOlinga ? 'Refracción de estrella · sigue ↓' : isSeriesPortal ? 'Atravesando portal de serie ↓' : ({ E: 'Entra en la mirada ↓', H: 'Atravesar · sigue bajando ↓', V: 'Déjate llevar ↓', Z: (transition && works[base]?.slug === 'hugo-box') ? 'Entra en la lente rosa ↓' : 'Acércate ↓', P: 'Mezclar y volver a unir ↓' })[mode];
       }
       stage.classList.toggle('is-travelling', transition);
+      const holdProgress = still ? 0 : phase === 'hold' ? smooth(clamp((pose.distance - entry.start) / Math.max(0.01, entry.hold), 0, 1)) : 1;
+      stage.style.setProperty('--hold-progress', holdProgress.toFixed(4));
       stage.style.setProperty('--progress', (pose.distance / journey.total * (works.length - 1) * 100).toFixed(3) + '%');
       $$('[data-select]:not([hidden])', stage).forEach(b => {
         const bi = Number(b.dataset.select);
@@ -2804,25 +2808,34 @@
         motion.lastTime = 0;
         stage.style.setProperty('--scroll-energy', '0');
         stage.style.setProperty('--scroll-velocity', '0');
+        stage.style.setProperty('--scroll-accel', '0');
         stage.style.setProperty('--camera-tension', '0');
         stage.style.setProperty('--velocity-skew', '0deg');
         stage.classList.add('is-resting');
       } else {
         stage.classList.remove('is-resting');
-        // Amortiguamiento continuo invariante al framerate (60Hz / 120Hz ProMotion) — Ley 1 (INV_C5_SCROLL_SUBSTEP_DYNAMICS)
+        // Amortiguamiento continuo de 2º orden invariante al framerate (60Hz / 120Hz ProMotion) — Ley 1 (INV_C5_SCROLL_SUBSTEP_DYNAMICS)
         const currentBase = Math.floor(motion.desired || motion.position || 0);
         const isPuzzle = works[currentBase]?.interaction === 'puzzle' || works[currentBase]?.slug === 'saio-puzzle';
         const baseAlpha = isPuzzle
-          ? clamp(0.048 + Math.abs(delta) * 0.025, 0.042, 0.075)
-          : clamp(0.165 + Math.abs(delta) * 0.055, 0.165, 0.22);
+          ? clamp(0.088 + Math.abs(delta) * 0.035, 0.082, 0.125)
+          : clamp(0.142 + Math.tanh(Math.abs(delta) * 1.35) * 0.095, 0.142, 0.238);
         const alpha = 1 - Math.pow(1 - baseAlpha, dt);
-        const step = delta * alpha;
+        const rawStep = delta * alpha;
+        const sameDir = motion.velocity !== 0 && Math.sign(delta) === Math.sign(motion.velocity);
+        const blendedMag = sameDir && Math.abs(delta) > 0.015
+          ? Math.min(Math.abs(delta), Math.abs(rawStep) * 0.78 + Math.abs(motion.velocity * dt) * 0.22)
+          : Math.abs(rawStep);
+        const step = Math.sign(delta) * blendedMag;
+        const instVel = step / dt;
+        const accel = clamp((instVel - motion.velocity) * 24, -1, 1);
         motion.current += step;
-        motion.velocity = motion.velocity * 0.72 + (step / dt) * 0.28;
+        motion.velocity = motion.velocity * 0.68 + instVel * 0.32;
         const energy = clamp(Math.abs(delta) * 2.4, 0, 1);
         const normVel = clamp(motion.velocity * 18, -1, 1);
         stage.style.setProperty('--scroll-energy', energy.toFixed(3));
         stage.style.setProperty('--scroll-velocity', normVel.toFixed(3));
+        stage.style.setProperty('--scroll-accel', accel.toFixed(3));
         stage.style.setProperty('--camera-tension', clamp(energy * 0.65 + Math.abs(normVel) * 0.35, 0, 1).toFixed(3));
       }
       const pose = journey.read(motion.current);
@@ -3040,7 +3053,11 @@
         tooltip.hidden = false;
         tooltip.style.left = `${(ratio * 100).toFixed(2)}%`;
         tooltip.textContent = `${String(idx + 1).padStart(2, '0')} / ${String(works.length).padStart(2, '0')} · ${w.title}`;
-        if (e.buttons === 1) change(idx);
+        if (e.buttons === 1) {
+          leaveFit(); resetPan();
+          window.scrollTo({ top: geometry.top + ratio * journey.total * geometry.unit, behavior: 'auto' });
+          scheduleScroll();
+        }
       });
       progressBar.addEventListener('pointerleave', () => { tooltip.hidden = true; });
       progressBar.addEventListener('click', e => {
@@ -4283,8 +4300,11 @@
     getState() {
       const st = $('[data-gallery]');
       return {
-        backend: 'c5-substep-inertial-kinetics-v3',
+        backend: 'c5-substep-inertial-kinetics-v4',
+        scrollFeel: 'critically-damped-substep-v4',
         substepScroll: true,
+        holdOpticalBreath: Boolean(st),
+        zeroScrollLock: true,
         microPan25D: Boolean(st),
         gyroPan3D: Boolean(st),
         indexGaussianWave: Boolean(st),
@@ -4293,8 +4313,10 @@
         cardTilt3D: kineticCards.length > 0,
         cardTiltCount: kineticCards.length,
         editorialInertialParallax: !st && $$('[data-parallax]').length > 0,
+        holdProgress: st ? parseFloat(st.style.getPropertyValue('--hold-progress') || '0') : 0,
         scrollEnergy: st ? parseFloat(st.style.getPropertyValue('--scroll-energy') || '0') : 0,
         scrollVelocity: st ? parseFloat(st.style.getPropertyValue('--scroll-velocity') || '0') : 0,
+        scrollAccel: st ? parseFloat(st.style.getPropertyValue('--scroll-accel') || '0') : 0,
         cameraTension: st ? parseFloat(st.style.getPropertyValue('--camera-tension') || '0') : 0,
         panX: st ? parseFloat(st.style.getPropertyValue('--pan-x') || '0') : 0,
         panY: st ? parseFloat(st.style.getPropertyValue('--pan-y') || '0') : 0,

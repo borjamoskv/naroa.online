@@ -1013,8 +1013,11 @@ async function eyeMatch(ui, base, points) {
 
     assert.ok(armigoPage.w.NAROA_KINETICS, 'NAROA_KINETICS telemetry API exposed');
     const kinInit = armigoPage.w.NAROA_KINETICS.getState();
-    assert.equal(kinInit.backend, 'c5-substep-inertial-kinetics-v3', 'Kinetics uses C5 substep inertial kinetics v3 backend');
+    assert.equal(kinInit.backend, 'c5-substep-inertial-kinetics-v4', 'Kinetics uses C5 substep inertial kinetics v4 backend');
+    assert.equal(kinInit.scrollFeel, 'critically-damped-substep-v4', 'Critically-damped 2nd-order velocity blending is active');
     assert.equal(kinInit.substepScroll, true, 'Substep scroll is active');
+    assert.equal(kinInit.holdOpticalBreath, true, 'Continuous optical breath during viewing hold is active');
+    assert.equal(kinInit.zeroScrollLock, true, 'Zero scroll hijacking lock is enforced');
     assert.equal(kinInit.microPan25D, true, '2.5D micro-pan is active on gallery');
     assert.equal(kinInit.gyroPan3D, true, '3D gyroscopic tilt is active on gallery');
     assert.equal(kinInit.indexGaussianWave, true, 'Gaussian proximity wave is active on vertical index spine');
