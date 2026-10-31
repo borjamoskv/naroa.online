@@ -1030,6 +1030,14 @@ async function eyeMatch(ui, base, points) {
     assert.ok(Math.abs(kinPan.panX) > 1 && Math.abs(kinPan.panY) > 1, '2.5D micro-pan suspends artwork in response to resting pointer');
     assert.ok(Math.abs(kinPan.panRx) > 0.2 && Math.abs(kinPan.panRy) > 0.2, '3D perspective tilt rotates artwork plane at rest');
     armigoPage.dom.window.close();
+
+    const julioPage = create('/obra/julio-iglesias-como-un-reloj-suizo/', false, { width: 1280, height: 800 }, null, 'on');
+    await julioPage.flush();
+    const julioRig = julioPage.find('.art-scene[data-work="julio-iglesias-como-un-reloj-suizo"] [data-julio-rig]');
+    assert.ok(julioRig, 'Julio Iglesias mounts SVG articulated puppet rig');
+    const julioArm = julioRig.querySelector('[data-julio-arm]');
+    assert.ok(julioArm && julioArm.getAttribute('transform')?.includes('1022 1317'), 'Julio Iglesias articulated arm pivots around elbow rivet (1022, 1317)');
+    julioPage.dom.window.close();
   }
   assert.equal(manifest.projects, works.length); assert.deepEqual(errors, []);
   console.log(`PASS: ${works.length} variable camera scores, fixed viewing pauses, full-viewport vertical and horizontal seams, deterministic reverse motion, three deep iris passes, zoom and puzzle chapters; all ${works.length} artwork flows, 3 gallery eye pairs, kinetic titles, native scroll, free inertia, direct links, 3-image loading bound, search/filters, details/photos, quiet mode, reduced motion, Vaivenes, editorial reveals, responsive Naroa-to-Rara Avis pupil/iris alignment, photographic wink, cinematic deep-iris camera with continuous forward velocity across the blend, eased outward turn, reversible reveal, image-load guard, seamless continuation through all ${works.length} works, 8 additional deep eye matches embedded catalogue navigation, opt-in reactive sound fragments, speed and direction response, bounded voices, silence at rest and safe audio lifecycle.`);
