@@ -798,19 +798,32 @@
   });
   menuButtons.forEach(button => button.addEventListener('click', () => openDialog('#menu-dialog')));
   $$('[data-open-index]').forEach(b => b.addEventListener('click', e => { e.preventDefault(); openDialog('#index-dialog'); }));
+  const indexDialogEl = $('#index-dialog');
   const search = $('#art-search'), filters = $$('[data-filter]'), indexItems = $$('.index-work');
-  const indexListEl = $('.index-list', $('#index-dialog') || document);
+  const indexListEl = $('.index-list', indexDialogEl || document);
+  const indexBackdropImg = $('[data-index-backdrop-img]', indexDialogEl || document);
+  const hudNum = $('[data-hud-num]', indexDialogEl || document);
+  const hudTitle = $('[data-hud-title]', indexDialogEl || document);
+  const hudMeta = $('[data-hud-meta]', indexDialogEl || document);
+  const hudQuote = $('[data-hud-quote]', indexDialogEl || document);
+  const modeButtons = $$('[data-obra-mode]', indexDialogEl || document);
+  const oracleBtn = $('[data-index-oracle]', indexDialogEl || document);
   let filter = 'all';
+  let obraViewMode = 'muro';
   let stencilWipeTimer = 0;
   const stencilWallState = {
     backend: 'stencil-roller-wheatpaste-v1',
     activeFilter: 'all',
+    viewMode: 'muro',
     wipeCount: 0,
     lastWipeInk: 'rgba(217, 56, 30, 0.28)',
     peeledSlug: null,
     peelRx: 0,
     peelRy: 0,
-    tapeLift: 0
+    tapeLift: 0,
+    spotlightSlug: indexItems[0]?.dataset.work || null,
+    oracleSlug: null,
+    oracleRolls: 0
   };
   const STENCIL_INKS = {
     all: 'rgba(217, 56, 30, 0.28)',
@@ -818,10 +831,68 @@
     Vaivenes: 'rgba(42, 132, 178, 0.32)',
     'Walking Gallery': 'rgba(212, 175, 55, 0.34)',
     Pizarra: 'rgba(130, 145, 155, 0.34)',
+    pizarra: 'rgba(130, 145, 155, 0.34)',
+    collage: 'rgba(217, 56, 30, 0.34)',
+    objetos: 'rgba(212, 175, 55, 0.34)',
+    caracterizacion: 'rgba(185, 132, 165, 0.32)',
     Naturaleza: 'rgba(84, 156, 92, 0.32)',
     Instalaciones: 'rgba(198, 92, 56, 0.34)',
     Archivo: 'rgba(185, 165, 132, 0.30)'
   };
+  function updateIndexSpotlight(cardEl) {
+    if (!cardEl) return;
+    const slug = cardEl.dataset.work || null;
+    stencilWallState.spotlightSlug = slug;
+    const cover = cardEl.dataset.cover || $('img', cardEl)?.getAttribute('src') || '';
+    if (indexBackdropImg && cover) {
+      indexBackdropImg.style.backgroundImage = `url("${cover}")`;
+    }
+    const num = cardEl.dataset.indexNum || '01';
+    const title = $('strong', cardEl)?.textContent || '';
+    const meta = $('small', cardEl)?.textContent?.replace(/^\/\/\s*/, '') || '';
+    const story = cardEl.dataset.story || $('em', cardEl)?.textContent || '';
+    if (hudNum) hudNum.textContent = `${num} / ${String(indexItems.length).padStart(2, '0')}`;
+    if (hudTitle) hudTitle.textContent = title;
+    if (hudMeta) hudMeta.textContent = meta;
+    if (hudQuote) hudQuote.textContent = story ? `«${story}…»` : '';
+    if (obraViewMode === 'constelacion') {
+      const cat = cardEl.dataset.category;
+      const ser = cardEl.dataset.series;
+      indexItems.forEach(item => {
+        const linked = item !== cardEl && !item.hidden && ((cat && item.dataset.category === cat) || (ser && item.dataset.series === ser));
+        item.classList.toggle('is-constellation-linked', Boolean(linked));
+      });
+    }
+  }
+  function setObraViewMode(nextMode = 'muro') {
+    obraViewMode = ['muro', 'mesa', 'constelacion'].includes(nextMode) ? nextMode : 'muro';
+    stencilWallState.viewMode = obraViewMode;
+    if (indexDialogEl) indexDialogEl.dataset.obraView = obraViewMode;
+    modeButtons.forEach(btn => btn.setAttribute('aria-pressed', String(btn.dataset.obraMode === obraViewMode)));
+    if (obraViewMode !== 'constelacion') {
+      indexItems.forEach(item => item.classList.remove('is-constellation-linked'));
+    }
+    triggerStencilRollerWipe(filter);
+    return obraViewMode;
+  }
+  function rollIndexOracle() {
+    const visible = indexItems.filter(item => !item.hidden);
+    if (!visible.length) return null;
+    stencilWallState.oracleRolls++;
+    const pickIdx = (stencilWallState.oracleRolls * 17 + Math.floor(Math.random() * visible.length)) % visible.length;
+    const chosen = visible[pickIdx] || visible[0];
+    indexItems.forEach(item => item.classList.toggle('is-oracle-chosen', item === chosen));
+    stencilWallState.oracleSlug = chosen.dataset.work || null;
+    updateIndexSpotlight(chosen);
+    applyWheatpastePeel(chosen, 0.68, 0.28);
+    window.NAROA_SOUND?.menuNote?.(pickIdx % 7);
+    if (typeof chosen.scrollIntoView === 'function') {
+      try { chosen.scrollIntoView({ behavior: reduced.matches ? 'auto' : 'smooth', block: 'center' }); } catch {}
+    }
+    return chosen.dataset.work || null;
+  }
+  modeButtons.forEach(btn => btn.addEventListener('click', () => setObraViewMode(btn.dataset.obraMode)));
+  oracleBtn?.addEventListener('click', () => rollIndexOracle());
   function triggerStencilRollerWipe(targetFilter = filter) {
     const ink = STENCIL_INKS[targetFilter] || STENCIL_INKS.all;
     stencilWallState.activeFilter = targetFilter;
@@ -861,6 +932,7 @@
     stencilWallState.peelRx = rx;
     stencilWallState.peelRy = ry;
     stencilWallState.tapeLift = tapeLift;
+    updateIndexSpotlight(cardEl);
     return { ...stencilWallState };
   }
   function resetWheatpastePeel(cardEl) {
@@ -877,14 +949,19 @@
   function filterIndex() {
     const term = normalized(search.value.trim());
     let count = 0;
+    let firstVisible = null;
     indexItems.forEach(item => {
       const category = filter === 'all' || item.dataset.category === filter || item.dataset.series === filter;
       item.hidden = !category || !normalized(item.dataset.search).includes(term);
-      if (!item.hidden) count++;
+      if (!item.hidden) {
+        if (!firstVisible) firstVisible = item;
+        count++;
+      }
     });
     $('.index-count').textContent = `${count} ${count === 1 ? 'proyecto' : 'proyectos'}`;
     $('.index-empty').hidden = count !== 0;
     filters.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.filter === filter)));
+    if (firstVisible) updateIndexSpotlight(firstVisible);
   }
   search.addEventListener('input', filterIndex);
   filters.forEach(b => b.addEventListener('click', () => {
@@ -901,6 +978,8 @@
   });
   indexItems.forEach(a => {
     a.href = '/obra/' + encodeURIComponent(a.dataset.work) + '/#fotos';
+    a.addEventListener('pointerenter', () => updateIndexSpotlight(a), { passive: true });
+    a.addEventListener('focus', () => updateIndexSpotlight(a), { passive: true });
     a.addEventListener('pointermove', e => {
       const rect = a.getBoundingClientRect();
       const nx = rect.width > 0 ? (e.clientX - rect.left) / rect.width : 0.5;
@@ -916,6 +995,8 @@
   });
   window.NAROA_STENCIL_WALL = {
     triggerWipe: triggerStencilRollerWipe,
+    setMode: setObraViewMode,
+    rollOracle: rollIndexOracle,
     peelCard: (slugOrEl, normX = 0.72, normY = 0.24) => {
       const el = typeof slugOrEl === 'string'
         ? indexItems.find(item => item.dataset.work === slugOrEl) || indexItems[0]
