@@ -1312,73 +1312,21 @@ class SoundEngine {
   }
 
   /**
-   * Warm vintage tube-amp power chord with cabinet low-pass filtering.
+   * Authentic Extremoduro dry electric guitar chord hit ('Deltoya').
    */
   public playDeltoya() {
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      try {
-        window.speechSynthesis.cancel()
-        const utterance = new SpeechSynthesisUtterance('¡DELTOYA!')
-        utterance.lang = 'es-ES'
-        utterance.rate = 1.05
-        utterance.pitch = 0.86
-        utterance.volume = 1.0
-        window.speechSynthesis.speak(utterance)
-      } catch {
-        // Ignore speech synthesis errors
-      }
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      try { navigator.vibrate([20, 40, 20]) } catch {}
     }
 
-    try {
-      this.initCtx()
-      if (!this.ctx) return
-
-      if (typeof navigator !== 'undefined' && navigator.vibrate) {
-        try { navigator.vibrate([35, 50, 25, 90, 40, 160]) } catch {}
+    if (typeof window !== 'undefined' && typeof window.Audio === 'function') {
+      try {
+        const audio = new window.Audio('/audio/deltoya.mp3')
+        audio.volume = 0.85
+        audio.play().catch(() => {})
+      } catch {
+        // Ignore audio playback errors
       }
-
-      const now = this.ctx.currentTime + 0.005
-      const out = this.getOut()
-
-      // Vintage guitar cabinet simulation: warm 820 Hz lowpass filter with gentle resonance
-      const cabFilter = this.ctx.createBiquadFilter()
-      cabFilter.type = 'lowpass'
-      cabFilter.frequency.setValueAtTime(820, now)
-      cabFilter.Q.setValueAtTime(1.4, now)
-
-      // Warm overdrive soft-clip stage
-      const waveShaper = this.ctx.createWaveShaper()
-      const curve = new Float32Array(256)
-      for (let i = 0; i < 256; i++) {
-        const x = (i * 2) / 256 - 1
-        curve[i] = Math.tanh(1.8 * x) // Soft warm analog tape/tube saturation
-      }
-      waveShaper.curve = curve
-
-      const guitarGain = this.ctx.createGain()
-      guitarGain.gain.setValueAtTime(0.001, now)
-      guitarGain.gain.linearRampToValueAtTime(0.42, now + 0.02)
-      guitarGain.gain.exponentialRampToValueAtTime(0.0001, now + 2.0)
-
-      waveShaper.connect(cabFilter)
-      cabFilter.connect(guitarGain)
-      guitarGain.connect(out)
-
-      // Power chord: E2, B2, E3, G#3 (warm analog crunch)
-      ;[82.41, 123.47, 164.81, 207.65].forEach((freq, idx) => {
-        if (!this.ctx) return
-        const osc = this.ctx.createOscillator()
-        const gain = this.ctx.createGain()
-        osc.type = idx === 0 ? 'sawtooth' : 'triangle'
-        osc.frequency.setValueAtTime(freq, now)
-        gain.gain.setValueAtTime(0.35 / (idx + 1), now)
-        osc.connect(gain)
-        gain.connect(waveShaper)
-        osc.start(now)
-        osc.stop(now + 2.05)
-      })
-    } catch {
-      // Ignore audio errors
     }
   }
 

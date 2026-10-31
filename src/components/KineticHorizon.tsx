@@ -160,13 +160,6 @@ export function KineticHorizon({
     } else if (slug === 'entre-tantas-flores-de-dia' && lastSpokenSlugRef.current !== slug) {
       lastSpokenSlugRef.current = slug
       sound.playDeltoya()
-      try {
-        const audio = new window.Audio('/audio/deltoya.mp3')
-        audio.volume = 0.98
-        audio.play().catch(() => {})
-      } catch {
-        // Ignore audio playback errors
-      }
     } else if (slug === 'saio-puzzle' && lastSpokenSlugRef.current !== slug) {
       lastSpokenSlugRef.current = slug
       sound.playPuzzleSnap()
