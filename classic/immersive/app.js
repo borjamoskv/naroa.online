@@ -4283,17 +4283,17 @@
     $('[data-open-story]', stage).addEventListener('click', () => openDialog('#story-dialog'));
 
     // --- El Rasgado Kintsugi: Dual-State Scraper Controller ---
-    const kintsugiRig = $('[data-kintsugi-rig]', stage);
+    const kintsugiDialog = $('#kintsugi-dialog');
     const kintsugiToggle = $('[data-kintsugi-toggle]', stage);
-    const kintsugiHandle = $('[data-kintsugi-handle]', stage);
-    const kintsugiClose = $('[data-kintsugi-close]', stage);
+    const kintsugiStage = kintsugiDialog ? $('.kintsugi-stage', kintsugiDialog) : null;
+    const kintsugiHandle = kintsugiDialog ? $('[data-kintsugi-handle]', kintsugiDialog) : null;
     let kintsugiSplit = 50;
     let kintsugiDragging = false;
 
     function setKintsugiSplit(val, playSound = false) {
       kintsugiSplit = clamp(val, 5, 95);
-      if (kintsugiRig) {
-        kintsugiRig.style.setProperty('--split', `${kintsugiSplit.toFixed(1)}%`);
+      if (kintsugiStage) {
+        kintsugiStage.style.setProperty('--split', `${kintsugiSplit.toFixed(1)}%`);
       }
       if (kintsugiHandle) {
         kintsugiHandle.setAttribute('aria-valuenow', String(Math.round(kintsugiSplit)));
@@ -4303,56 +4303,28 @@
       }
     }
 
-    function openKintsugi() {
-      if (!kintsugiRig) return;
-      kintsugiRig.hidden = false;
-      if (kintsugiToggle) {
-        kintsugiToggle.setAttribute('aria-pressed', 'true');
-        kintsugiToggle.textContent = 'Cerrar Rasgado ×';
-      }
-      setKintsugiSplit(50, true);
-    }
-
-    function closeKintsugi() {
-      if (!kintsugiRig) return;
-      kintsugiRig.hidden = true;
-      if (kintsugiToggle) {
-        kintsugiToggle.setAttribute('aria-pressed', 'false');
-        kintsugiToggle.textContent = 'Rasgado Kintsugi ✦';
-      }
-    }
-
     if (kintsugiToggle) {
       kintsugiToggle.addEventListener('click', () => {
-        if (kintsugiRig && !kintsugiRig.hidden) {
-          closeKintsugi();
-        } else {
-          openKintsugi();
-        }
+        setKintsugiSplit(50, false);
+        openDialog('#kintsugi-dialog');
       });
     }
 
-    if (kintsugiClose) {
-      kintsugiClose.addEventListener('click', closeKintsugi);
-    }
-
-    if (kintsugiRig) {
-      const kStage = $('.kintsugi-stage', kintsugiRig);
+    if (kintsugiStage) {
       const updateSplitFromPointer = (clientX) => {
-        if (!kStage) return;
-        const rect = kStage.getBoundingClientRect();
+        const rect = kintsugiStage.getBoundingClientRect();
         if (rect.width <= 0) return;
         const percent = ((clientX - rect.left) / rect.width) * 100;
         setKintsugiSplit(percent, true);
       };
 
-      kStage?.addEventListener('pointerdown', (e) => {
+      kintsugiStage.addEventListener('pointerdown', (e) => {
         kintsugiDragging = true;
-        kStage.setPointerCapture?.(e.pointerId);
+        kintsugiStage.setPointerCapture?.(e.pointerId);
         updateSplitFromPointer(e.clientX);
       });
 
-      kStage?.addEventListener('pointermove', (e) => {
+      kintsugiStage.addEventListener('pointermove', (e) => {
         if (!kintsugiDragging) return;
         updateSplitFromPointer(e.clientX);
       });
@@ -4360,10 +4332,10 @@
       const onPointerEnd = (e) => {
         if (!kintsugiDragging) return;
         kintsugiDragging = false;
-        kStage?.releasePointerCapture?.(e.pointerId);
+        kintsugiStage.releasePointerCapture?.(e.pointerId);
       };
-      kStage?.addEventListener('pointerup', onPointerEnd);
-      kStage?.addEventListener('pointercancel', onPointerEnd);
+      kintsugiStage.addEventListener('pointerup', onPointerEnd);
+      kintsugiStage.addEventListener('pointercancel', onPointerEnd);
 
       kintsugiHandle?.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
@@ -4378,8 +4350,6 @@
         } else if (e.key === 'End') {
           e.preventDefault();
           setKintsugiSplit(95, true);
-        } else if (e.key === 'Escape') {
-          closeKintsugi();
         }
       });
     }
@@ -5327,7 +5297,22 @@
     const cards = $$('[data-parallax-card]', commissionHorizontal);
     const progressFill = $('[data-progress-fill]', commissionHorizontal);
     const dotBtns = $$('[data-jump-card]', commissionHorizontal);
+    const cutoutsStage = $('[data-commission-cutouts]', commissionHorizontal);
+    const actorButton = $('[data-commission-actor="jaio-button"]', commissionHorizontal);
+    const actorPurpleRose = $('[data-commission-actor="amor-purple-rose"]', commissionHorizontal);
+    const actorRedRose = $('[data-commission-actor="amor-red-rose"]', commissionHorizontal);
+    const actorCalla = $('[data-commission-actor="amor-calla"]', commissionHorizontal);
+    const actorPeacock = $('[data-commission-actor="rara-peacock"]', commissionHorizontal);
+    const BRIDGE_KEYS = ['jaio-amy', 'amy-amor', 'amor-rara', 'rara-closing'];
+    const bridgeState = {
+      'jaio-amy': { count: 0, inZone: false, u: 0 },
+      'amy-amor': { count: 0, inZone: false, u: 0 },
+      'amor-rara': { count: 0, inZone: false, u: 0 },
+      'rara-closing': { count: 0, inZone: false, u: 0 }
+    };
+    let activeBridgeKey = '';
     let cachedCenters = [];
+    let cachedDims = [];
     const hState = {
       targetY: scrollY || 0,
       currentY: scrollY || 0,
@@ -5337,12 +5322,40 @@
       raf: null
     };
 
+    const smoothStep01 = v => {
+      const c = clamp(v, 0, 1);
+      return c * c * (3 - 2 * c);
+    };
+
+    const bridgeEnvelope = u => {
+      if (u <= -0.12 || u >= 1.12) return 0;
+      if (u < 0.08) return smoothStep01((u + 0.12) / 0.20);
+      if (u > 0.92) return smoothStep01((1.12 - u) / 0.20);
+      return 1;
+    };
+
     function measureCards() {
       if (!track) return;
       cachedCenters = cards.map(c => {
         const r = c.getBoundingClientRect();
         return c.offsetLeft + r.width * 0.5;
       });
+      cachedDims = cards.map(c => {
+        const photo = $('.commission-example-photo', c) || c;
+        const pr = photo.getBoundingClientRect();
+        return { w: pr.width, h: pr.height };
+      });
+    }
+
+    function applyActorPose(el, x, y, rotDeg, scale, opacity, rotYDeg = 0) {
+      if (!el) return;
+      if (opacity <= 0.004) {
+        el.style.opacity = '0';
+        return;
+      }
+      el.style.opacity = opacity.toFixed(3);
+      const ry = rotYDeg ? ` rotateY(${rotYDeg.toFixed(1)}deg)` : '';
+      el.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0) translate(-50%,-50%) rotate(${rotDeg.toFixed(1)}deg)${ry} scale(${scale.toFixed(3)})`;
     }
 
     function stepCommissionHorizontal() {
@@ -5375,11 +5388,23 @@
       }
       const viewportCenter = vw * 0.5;
       const effectiveRadius = vw * 0.58;
+      const hasRealLayout = cachedCenters.length >= 2 && cachedCenters[1] > cachedCenters[0];
+      const fallbackSpan = maxTx / Math.max(1, cards.length - 1);
+      const screenXs = [];
+      const dims = [];
       let activeIdx = 0;
       let minCenterDist = Infinity;
       cards.forEach((card, idx) => {
-        const cX = cachedCenters[idx] !== undefined ? cachedCenters[idx] : (card.offsetLeft + card.offsetWidth * 0.5);
+        const cX = hasRealLayout
+          ? cachedCenters[idx]
+          : (viewportCenter + idx * fallbackSpan);
         const screenX = cX + tx;
+        screenXs.push(screenX);
+        const rawDim = cachedDims[idx];
+        dims.push({
+          w: rawDim && rawDim.w > 40 ? rawDim.w : Math.min(vw * 0.48, 640),
+          h: rawDim && rawDim.h > 40 ? rawDim.h : Math.min(vh * 0.58, 520)
+        });
         const distFromCenter = screenX - viewportCenter;
         const rel = reduced.matches ? 0 : clamp(distFromCenter / effectiveRadius, -1.25, 1.25);
         const focus = clamp(1 - Math.abs(distFromCenter) / effectiveRadius, 0, 1);
@@ -5390,6 +5415,127 @@
           activeIdx = idx;
         }
       });
+
+      if (!reduced.matches && screenXs.length >= 4) {
+        const centerY = vh * 0.50;
+        const velLift = clamp(hState.velocity * -0.28, -20, 20);
+        BRIDGE_KEYS.forEach((bKey, bIdx) => {
+          if (screenXs[bIdx + 1] === undefined) return;
+          const span = Math.max(1, screenXs[bIdx + 1] - screenXs[bIdx]);
+          const u = (viewportCenter - screenXs[bIdx]) / span;
+          const st = bridgeState[bKey];
+          st.u = Number(u.toFixed(4));
+          if (!st.inZone && u >= 0.18 && u <= 0.82) {
+            st.inZone = true;
+            st.count += 1;
+            activeBridgeKey = bKey;
+            if (cutoutsStage) {
+              cutoutsStage.dataset.activeBridge = bKey;
+              cutoutsStage.dataset.vaivenCount = String(st.count);
+            }
+            window.NAROA_SOUND?.commissionBridge?.(bKey, st.count);
+          } else if (st.inZone && (u < 0.08 || u > 0.92)) {
+            st.inZone = false;
+          }
+        });
+
+        // 1. Custom Jaio -> Amy Rocks: botón rojo cosido saltando con giro 3D hacia la pizarra
+        {
+          const u0 = bridgeState['jaio-amy'].u;
+          const op0 = bridgeEnvelope(u0);
+          const t0 = smoothStep01(u0);
+          const xStart = screenXs[0] - dims[0].w * 0.35;
+          const yStart = centerY + dims[0].h * 0.21;
+          const xEnd = screenXs[1] - dims[1].w * 0.38;
+          const yEnd = centerY + dims[1].h * 0.06;
+          const arc0 = -Math.sin(Math.PI * t0) * Math.min(vh * 0.19, 165) + velLift * Math.sin(Math.PI * t0);
+          const bx = xStart + (xEnd - xStart) * t0;
+          const by = yStart + (yEnd - yStart) * t0 + arc0;
+          applyActorPose(
+            actorButton,
+            bx,
+            by,
+            t0 * 540,
+            0.90 + Math.sin(Math.PI * t0) * 0.28,
+            op0,
+            Math.sin(t0 * Math.PI * 2) * 32
+          );
+        }
+
+        // 2. Amy Rocks -> Amor en Conserva: rosas de papel violeta y carmesí flotando hacia la lata
+        {
+          const u1 = bridgeState['amy-amor'].u;
+          const op1 = bridgeEnvelope(u1);
+          const tP = smoothStep01(clamp(u1 * 1.06, 0, 1));
+          const tR = smoothStep01(clamp((u1 - 0.07) * 1.08, 0, 1));
+          const x1Start = screenXs[1] + dims[1].w * 0.35;
+          const y1Start = centerY - dims[1].h * 0.10;
+          const pxEnd = screenXs[2] - dims[2].w * 0.31;
+          const pyEnd = centerY + dims[2].h * 0.27;
+          const rxEnd = screenXs[2] - dims[2].w * 0.20;
+          const ryEnd = centerY + dims[2].h * 0.29;
+          const pArc = -Math.sin(Math.PI * tP) * Math.min(vh * 0.14, 120) + velLift * 0.7;
+          const rArc = Math.sin(Math.PI * tR) * Math.min(vh * 0.08, 68) - Math.sin(Math.PI * tR) * 44;
+          applyActorPose(
+            actorPurpleRose,
+            x1Start + (pxEnd - x1Start) * tP,
+            y1Start + (pyEnd - y1Start) * tP + pArc,
+            -26 + tP * 26 + Math.sin(tP * Math.PI * 2) * 14,
+            0.88 + Math.sin(Math.PI * tP) * 0.24,
+            op1
+          );
+          applyActorPose(
+            actorRedRose,
+            (x1Start + 22) + (rxEnd - (x1Start + 22)) * tR,
+            (y1Start + 34) + (ryEnd - (y1Start + 34)) * tR + rArc,
+            30 - tR * 30 - Math.sin(tR * Math.PI * 2) * 16,
+            0.85 + Math.sin(Math.PI * tR) * 0.22,
+            op1 * smoothStep01((u1 + 0.08) / 0.18)
+          );
+        }
+
+        // 3. Amor en Conserva -> Rara Avis: cala blanca inclinándose hacia el marco dorado
+        {
+          const u2 = bridgeState['amor-rara'].u;
+          const op2 = bridgeEnvelope(u2);
+          const t2 = smoothStep01(u2);
+          const x2Start = screenXs[2] + dims[2].w * 0.06;
+          const y2Start = centerY - dims[2].h * 0.35;
+          const x2End = screenXs[3] - dims[3].w * 0.30;
+          const y2End = centerY - dims[3].h * 0.14;
+          const arc2 = -Math.sin(Math.PI * t2) * Math.min(vh * 0.13, 112) + velLift * 0.6;
+          applyActorPose(
+            actorCalla,
+            x2Start + (x2End - x2Start) * t2,
+            y2Start + (y2End - y2Start) * t2 + arc2,
+            -6 + Math.sin(Math.PI * t2) * 26,
+            0.92 + Math.sin(Math.PI * t2) * 0.18,
+            op2
+          );
+        }
+
+        // 4. Rara Avis -> El Comienzo: pluma de pavo real flotando como cálamo hacia la invitación final
+        if (screenXs[4] !== undefined) {
+          const u3 = bridgeState['rara-closing'].u;
+          const op3 = bridgeEnvelope(u3);
+          const t3 = smoothStep01(u3);
+          const x3Start = screenXs[3] + dims[3].w * 0.27;
+          const y3Start = centerY + dims[3].h * 0.32;
+          const x3End = screenXs[4] - dims[4].w * 0.24;
+          const y3End = centerY - dims[4].h * 0.18;
+          const swayX = Math.sin(t3 * Math.PI * 2.5) * 18;
+          const arc3 = -Math.sin(Math.PI * t3) * Math.min(vh * 0.14, 118);
+          applyActorPose(
+            actorPeacock,
+            x3Start + (x3End - x3Start) * t3 + swayX,
+            y3Start + (y3End - y3Start) * t3 + arc3,
+            -16 + t3 * 28 + Math.cos(t3 * Math.PI * 2) * 11,
+            0.90 + Math.sin(Math.PI * t3) * 0.22,
+            op3
+          );
+        }
+      }
+
       dotBtns.forEach((dot, dIdx) => {
         dot.classList.toggle('is-active', dIdx === activeIdx);
       });
@@ -5418,7 +5564,10 @@
         const maxScroll = Math.max(1, stageHeight - vh);
         const trackWidth = track ? Math.max(track.scrollWidth || 0, vw * 3.5) : vw * 3.5;
         const maxTx = Math.max(0, trackWidth - vw);
-        const cX = cachedCenters[targetIdx] || 0;
+        const hasRealLayout = cachedCenters.length >= 2 && cachedCenters[1] > cachedCenters[0];
+        const cX = hasRealLayout
+          ? (cachedCenters[targetIdx] || 0)
+          : (vw * 0.5 + targetIdx * (maxTx / Math.max(1, cards.length - 1)));
         const targetTx = clamp(cX - vw * 0.5, 0, maxTx);
         const p = maxTx > 0 ? targetTx / maxTx : 0;
         window.scrollTo({ top: p * maxScroll, behavior: 'smooth' });
@@ -5440,7 +5589,15 @@
         progress: hState.progress,
         translateX: hState.translateX,
         cards: cards.length,
-        hasDetailPips: $$('.commission-detail-pip', commissionHorizontal).length
+        hasDetailPips: $$('.commission-detail-pip', commissionHorizontal).length,
+        cutoutActors: $$('[data-commission-actor]', commissionHorizontal).length,
+        activeBridge: activeBridgeKey,
+        bridgeCounts: {
+          'jaio-amy': bridgeState['jaio-amy'].count,
+          'amy-amor': bridgeState['amy-amor'].count,
+          'amor-rara': bridgeState['amor-rara'].count,
+          'rara-closing': bridgeState['rara-closing'].count
+        }
       })
     };
   }

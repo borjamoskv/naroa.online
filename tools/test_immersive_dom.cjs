@@ -305,18 +305,17 @@ async function eyeMatch(ui, base, points) {
 
       const kintsugiBtn = ui.find('[data-kintsugi-toggle]');
       assert.ok(kintsugiBtn && !kintsugiBtn.hidden, 'Cantinflowers reveals the Rasgado Kintsugi toggle button');
-      const kintsugiRig = ui.find('[data-kintsugi-rig]');
-      assert.ok(kintsugiRig, 'Cantinflowers mounts the Rasgado Kintsugi dual-state scraper rig');
+      const kintsugiDialog = ui.find('#kintsugi-dialog');
+      assert.ok(kintsugiDialog, 'Cantinflowers mounts the Rasgado Kintsugi dual-state scraper dialog');
       kintsugiBtn.click();
-      assert.equal(kintsugiRig.hidden, false, 'Clicking Rasgado Kintsugi reveals the dual-state split canvas');
-      assert.equal(kintsugiBtn.getAttribute('aria-pressed'), 'true', 'Kintsugi button sets aria-pressed=true');
+      assert.equal(kintsugiDialog.open, true, 'Clicking Rasgado Kintsugi opens the dual-state split dialog');
       const kintsugiHandle = ui.find('[data-kintsugi-handle]');
       assert.ok(kintsugiHandle, 'Kintsugi scraper provides accessible gold fracture handle');
       assert.equal(kintsugiHandle.getAttribute('aria-valuenow'), '50', 'Kintsugi scraper defaults to 50% split');
       kintsugiHandle.dispatchEvent(new ui.w.KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
       assert.equal(kintsugiHandle.getAttribute('aria-valuenow'), '55', 'ArrowRight steps Kintsugi split to 55%');
-      ui.find('[data-kintsugi-close]').click();
-      assert.equal(kintsugiRig.hidden, true, 'Clicking close hides the Kintsugi scraper rig');
+      kintsugiDialog.close();
+      assert.equal(kintsugiDialog.open, false, 'Closing dialog hides the Kintsugi scraper');
     }
     if (entry.slug === 'lauralore') {
       const lauraScene = ui.find(`[data-scene="${index}"]`);
