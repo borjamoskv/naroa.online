@@ -552,9 +552,14 @@ async function eyeMatch(ui, base, points) {
       const [, tx, ty, scale] = pose.map(Number), width = parseFloat(element.style.width), height = parseFloat(element.style.height);
       return { tx, ty, scale, x: parseFloat(element.style.left) + tx + scale * point[0] * width, y: parseFloat(element.style.top) + ty + scale * point[1] * height, iris: scale * iris * width };
     }
+    await scrollPortrait(.09);
+    assert.equal(Number(wink.getAttribute('opacity')), 1, 'First Naroa winks her left eye immediately as scroll begins');
+    assert.ok(readPose(plane, [571 / 1248, 766 / 1966], .032).scale < 1.15, 'Portrait stays at full framing during the initial left-eye wink');
     await scrollPortrait(.23);
     assert.notEqual(plane.style.transform, initial, 'The portrait moves into its monocle eye');
     assert.equal(Number(wink.getAttribute('opacity')), 1, 'The existing photographic wink remains in the approach');
+    assert.ok(readPose(plane, [571 / 1248, 766 / 1966], .032).scale < 1.15, 'Monocle zoom waits until the left-eye wink completes');
+    assert.ok(Number(portrait.find('[data-portrait-monocle-glint]').getAttribute('opacity')) > 0.3, 'Optical monocle glint ignites to cue the monocle plunge');
     const closed = wink.getAttribute('opacity');
     let previousIris = 0;
     for (const progress of [.46, .51, .56]) {
@@ -1028,6 +1033,17 @@ async function eyeMatch(ui, base, points) {
     assert.ok(armigoPage.find('[data-journey-cue]').textContent.includes('720°'), 'El Armigo Atómico displays 720° atomic spin cue');
     const armigoScene = armigoPage.find('.art-scene[data-work="el-armigo-atomico"]');
     assert.ok(armigoScene.classList.contains('is-armigo-spinning'), 'El Armigo Atómico triggers 720° spin on arrival');
+
+    assert.ok(armigoPage.w.NAROA_KINETICS, 'NAROA_KINETICS telemetry API exposed');
+    const kinInit = armigoPage.w.NAROA_KINETICS.getState();
+    assert.equal(kinInit.backend, 'c5-substep-inertial-kinetics-v2', 'Kinetics uses C5 substep inertial kinetics v2 backend');
+    assert.equal(kinInit.substepScroll, true, 'Substep scroll is active');
+    assert.equal(kinInit.microPan25D, true, '2.5D micro-pan is active on gallery');
+    assert.ok(kinInit.magneticCount >= 6, 'Magnetic spring-damper controls registered');
+    armigoPage.find('[data-gallery]').dispatchEvent(new armigoPage.w.MouseEvent('pointermove', { bubbles: true, clientX: 220, clientY: 160 }));
+    await armigoPage.flush();
+    const kinPan = armigoPage.w.NAROA_KINETICS.getState();
+    assert.ok(Math.abs(kinPan.panX) > 1 && Math.abs(kinPan.panY) > 1, '2.5D micro-pan suspends artwork in response to resting pointer');
     armigoPage.dom.window.close();
   }
   assert.equal(manifest.projects, works.length); assert.deepEqual(errors, []);

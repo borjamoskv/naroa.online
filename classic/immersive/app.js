@@ -1105,11 +1105,40 @@
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     const pan = { x: 0, y: 0, tx: 0, ty: 0, frame: null };
     let cameraRestTimer = null, lastScrollPixels = 0;
+    function stepPan() {
+      pan.frame = null;
+      if (reduced.matches || state.fit || !stage.classList.contains('is-resting')) {
+        pan.x = pan.y = pan.tx = pan.ty = 0;
+        stage.style.setProperty('--pan-x', '0px');
+        stage.style.setProperty('--pan-y', '0px');
+        return;
+      }
+      const dx = pan.tx - pan.x;
+      const dy = pan.ty - pan.y;
+      if (Math.abs(dx) < 0.08 && Math.abs(dy) < 0.08) {
+        pan.x = pan.tx;
+        pan.y = pan.ty;
+      } else {
+        pan.x += dx * 0.38;
+        pan.y += dy * 0.38;
+        pan.frame = requestAnimationFrame(stepPan);
+      }
+      stage.style.setProperty('--pan-x', `${pan.x.toFixed(2)}px`);
+      stage.style.setProperty('--pan-y', `${pan.y.toFixed(2)}px`);
+    }
+    function schedulePan(tx, ty) {
+      if (reduced.matches || state.fit || !stage.classList.contains('is-resting')) return;
+      pan.tx = clamp(tx, -6.5, 6.5);
+      pan.ty = clamp(ty, -6.5, 6.5);
+      if (pan.frame === null) pan.frame = requestAnimationFrame(stepPan);
+    }
     function restCamera() {
       clearTimeout(cameraRestTimer);
       cameraRestTimer = null;
       stage.classList.remove('is-camera-moving');
       stage.style.setProperty('--velocity-skew', '0deg');
+      stage.style.setProperty('--scroll-velocity', '0');
+      stage.style.setProperty('--camera-tension', '0');
     }
     function travelCamera() {
       if (reduced.matches || state.fit) { restCamera(); return; }
@@ -1326,6 +1355,7 @@
         stage.classList.add('is-eguzkilore-stage');
         lauraScene.classList.add('is-eguzkilore-active');
         lauraImg.style.transformOrigin = '38% 34%';
+        soundscape?.eguzkilore?.();
       }
       clearTimeout(lauraTimer);
       lauraTimer = setTimeout(() => {
@@ -2405,10 +2435,12 @@
       const isMurrayToEzquerra = transition && works[base]?.slug === 'i-got-you-babe' && works[incoming]?.slug === 'jose-manuel-ezquerra';
       const isSeriesPortal = transition && (works[base]?.category !== works[incoming]?.category || works[base]?.series !== works[incoming]?.series);
       const isFloresToJohnny = transition && works[base]?.slug === 'entre-tantas-flores-de-dia' && works[incoming]?.slug === 'johnny-rocks';
-      const isKutxaTransition = transition && (works[base]?.slug === 'el-gato-que-es-kutxa' || works[incoming]?.slug === 'el-gato-que-es-kutxa');
-      const isLauraToCandy = transition && works[base]?.slug === 'lauralore' && works[incoming]?.slug === 'can-dy-queen';
-      const isSpecialBespokeTransition = isRaraToAmor || isAmorToAmy || isJamesToMario || isJaioTo13n || isBowieToOlinga || isMurrayToEzquerra || isAjenjoPhoto || isDustinToGameOver || isKutxaTransition || isLauraToCandy;
-      const shouldRunStickman = transition && !still && (isFloresToJohnny || (isSeriesPortal && !isSpecialBespokeTransition));
+      const isMunsterPortal = transition && works[base]?.slug === 'out-por-los-pelos' && works[incoming]?.slug === 'lily-munster';
+      const isTinCanPeelOuter = isAmorToAmy || (transition && (works[base]?.slug === 'dar-la-lata' || works[base]?.slug === 'enlatadas'));
+      if (isTinCanPeelOuter && fraction >= 0.08 && fraction <= 0.35) {
+        soundscape?.canPeel?.();
+      }
+      const shouldRunStickman = transition && !still && (isFloresToJohnny || isMunsterPortal);
 
       if (shouldRunStickman) {
         stickman.removeAttribute('hidden');
@@ -2558,7 +2590,7 @@
           ? `Familia Munster (${mIdx}/4) · ${mNames[mIdx - 1]} · Sigue horizontal →`
           : 'Familia Munster (4/4) · El Abuelo Munster · Sigue hacia adelante ↓';
       } else {
-        cue.textContent = still ? reduced.matches ? 'Activa los efectos para ver el viaje ↓' : 'Desplázate para recorrer ↕' : !transition ? phase === 'explore' ? 'Explora la superficie ↓' : 'Una pausa para mirar · sigue ↓' : isAjenjoPhoto ? 'Dispara y revela la foto ↓' : isRaraToAmor ? 'El azogue se disuelve · sigue ↓' : isAmorToAmy ? 'Abre la lata de conserva · sigue ↓' : isJamesToMario ? 'La cantera de pizarra se quiebra · sigue ↓' : isJaioTo13n ? 'Deshilachar las costuras · sigue ↓' : isBowieToOlinga ? 'Refracción de estrella · sigue ↓' : isSeriesPortal ? 'Atravesando portal de serie ↓' : ({ E: 'Entra en la mirada ↓', H: 'Atravesar · sigue bajando ↓', V: 'Déjate llevar ↓', Z: (transition && works[base]?.slug === 'hugo-box') ? 'Entra en la lente rosa ↓' : 'Acércate ↓', P: 'Mezclar y volver a unir ↓' })[mode];
+        cue.textContent = still ? reduced.matches ? 'Activa los efectos para ver el viaje ↓' : 'Desplázate para recorrer ↕' : !transition ? phase === 'explore' ? 'Explora la superficie ↓' : 'Una pausa para mirar · sigue ↓' : isAjenjoPhoto ? 'Dispara y revela la foto ↓' : isRaraToAmor ? 'El azogue se disuelve · sigue ↓' : isTinCanPeelOuter ? 'Abre la lata de conserva · sigue ↓' : isJamesToMario ? 'La cantera de pizarra se quiebra · sigue ↓' : isJaioTo13n ? 'Deshilachar las costuras · sigue ↓' : isBowieToOlinga ? 'Refracción de estrella · sigue ↓' : isSeriesPortal ? 'Atravesando portal de serie ↓' : ({ E: 'Entra en la mirada ↓', H: 'Atravesar · sigue bajando ↓', V: 'Déjate llevar ↓', Z: (transition && works[base]?.slug === 'hugo-box') ? 'Entra en la lente rosa ↓' : 'Acércate ↓', P: 'Mezclar y volver a unir ↓' })[mode];
       }
       stage.classList.toggle('is-travelling', transition);
       stage.style.setProperty('--progress', (pose.distance / journey.total * (works.length - 1) * 100).toFixed(3) + '%');
@@ -2605,6 +2637,8 @@
         motion.velocity = 0;
         motion.lastTime = 0;
         stage.style.setProperty('--scroll-energy', '0');
+        stage.style.setProperty('--scroll-velocity', '0');
+        stage.style.setProperty('--camera-tension', '0');
         stage.style.setProperty('--velocity-skew', '0deg');
         stage.classList.add('is-resting');
       } else {
@@ -2619,7 +2653,11 @@
         const step = delta * alpha;
         motion.current += step;
         motion.velocity = motion.velocity * 0.72 + (step / dt) * 0.28;
-        stage.style.setProperty('--scroll-energy', clamp(Math.abs(delta) * 2.4, 0, 1).toFixed(3));
+        const energy = clamp(Math.abs(delta) * 2.4, 0, 1);
+        const normVel = clamp(motion.velocity * 18, -1, 1);
+        stage.style.setProperty('--scroll-energy', energy.toFixed(3));
+        stage.style.setProperty('--scroll-velocity', normVel.toFixed(3));
+        stage.style.setProperty('--camera-tension', clamp(energy * 0.65 + Math.abs(normVel) * 0.35, 0, 1).toFixed(3));
       }
       const pose = journey.read(motion.current);
       const position = pose.position;
@@ -2875,6 +2913,19 @@
       }
     });
     function resetPan() { if (pan.frame !== null) cancelAnimationFrame(pan.frame); pan.x = pan.y = pan.tx = pan.ty = 0; pan.frame = null; stage.style.setProperty('--pan-x', '0px'); stage.style.setProperty('--pan-y', '0px'); }
+    stage.addEventListener('pointermove', e => {
+      if (reduced.matches || state.fit || !stage.classList.contains('is-resting')) return;
+      if (heroThresholdEl && motion.pose.distance < 0.36) return;
+      const r = stage.getBoundingClientRect();
+      const w = r.width || geometry.width || innerWidth || 1280;
+      const h = r.height || geometry.height || innerHeight || 800;
+      const nx = clamp((e.clientX - r.left) / w - 0.5, -0.5, 0.5) * 2;
+      const ny = clamp((e.clientY - r.top) / h - 0.5, -0.5, 0.5) * 2;
+      schedulePan(-nx * 5.8, -ny * 4.6);
+    }, { passive: true });
+    stage.addEventListener('pointerleave', () => {
+      if (pan.tx !== 0 || pan.ty !== 0) schedulePan(0, 0);
+    }, { passive: true });
     reduced.addEventListener('change', () => { resetPan(); pause(); if (reduced.matches) $('.art-layers', stage).getAnimations?.().forEach(animation => animation.cancel()); });
     addEventListener('resize', () => {
       const distance = (scrollY - geometry.top) / geometry.unit;
@@ -2907,7 +2958,7 @@
     const photograph = $('img', plane), copy = $('.page-hero-copy', hero), shade = $('.page-hero-shade', hero);
     const artwork = $('[data-portrait-artwork]', hero), artCopy = $('[data-portrait-work-copy]', hero);
     const controls = $('[data-portrait-controls]', hero), previous = $('[data-portrait-prev]', hero), next = $('[data-portrait-next]', hero);
-    const cue = $('.hero-down', hero), wink = $('[data-portrait-wink]', hero);
+    const cue = $('.hero-down', hero), wink = $('[data-portrait-wink]', hero), monocleGlint = $('[data-portrait-monocle-glint]', hero);
     const eye = { x: 571 / 1248, y: 766 / 1966, iris: .032 };
     const eyes = {
       'rara-avis': { x: .670, y: .391, iris: .025 },
@@ -3048,6 +3099,30 @@
       pose(target, targetBox, targetEye, Math.max(1, diameter / finish), focus);
       return { blend: smooth((progress - .44) / .14), depth };
     }
+    // Two-stage overture for /sobre-mi/:
+    // Phase 1 (progress 0.00 -> 0.24): Naroa first winks her left eye at full portrait framing.
+    // Phase 2 (progress 0.24 -> 0.64): Camera locks onto the monocle and plunges into Rara Avis.
+    function portraitPass(from, target, fromBox, targetBox, fromEye, targetEye, progress) {
+      const start = fromEye.iris * fromBox.width, finish = targetEye.iris * targetBox.width;
+      const deep = Math.hypot(geometry.width, geometry.height) * 1.02;
+      const pre = 0.015 * smooth(progress / .24);
+      const u = clamp((progress - .24) / .40, 0, 1);
+      const approach = progress <= .24
+        ? pre
+        : pre + (1 - pre) * (0.68 * smooth(u / .58) + 0.32 * smooth(u));
+      const reveal = smooth((progress - .64) / .32);
+      const diameter = Math.exp(progress <= .64
+        ? Math.log(start) + Math.log(deep / start) * approach
+        : Math.log(deep) + Math.log(finish / deep) * reveal);
+      const focusIn = progress <= .24
+        ? 0.06 * smooth(progress / .24)
+        : 0.06 + 0.94 * smooth((progress - .24) / .18);
+      const focus = focusIn * (1 - reveal);
+      const depth = approach * (1 - reveal);
+      pose(from, fromBox, fromEye, Math.max(1, diameter / start), focus);
+      pose(target, targetBox, targetEye, Math.max(1, diameter / finish), focus);
+      return { blend: smooth((progress - .44) / .14), depth, approach };
+    }
     function showCaption(index, opacity) {
       const work = works[index]; current = index;
       if (captionIndex !== index) {
@@ -3111,16 +3186,20 @@
       ensureScene(0);
       active.clear(); active.add(0);
       scenes.forEach((scene, i) => { if (i) { scene.style.visibility = 'hidden'; scene.setAttribute('aria-hidden', 'true'); scene.classList.remove('is-visible'); } });
-      const approach = smooth(progress / .42);
-      const { blend, depth } = eyePass(plane, artwork, g.portrait, g.art, eye, eyes['rara-avis'], progress);
+      const { blend, depth, approach } = portraitPass(plane, artwork, g.portrait, g.art, eye, eyes['rara-avis'], progress);
       const mix = ready(0) ? blend : 0;
       artwork.style.opacity = mix.toFixed(4); artwork.style.zIndex = '1';
       artwork.style.visibility = mix > 0 ? 'visible' : 'hidden'; artwork.classList.toggle('is-visible', mix > 0);
       artwork.setAttribute('aria-hidden', String(mix < .5));
       plane.style.visibility = mix === 1 ? 'hidden' : 'visible'; plane.setAttribute('aria-hidden', String(mix >= .5));
-      const closure = smooth((progress - .10) / .08) * (1 - smooth((progress - .28) / .10));
+      // Phase 1: Left eye winks first (0.015 -> 0.24 hold -> 0.30 reopen), before the monocle zoom accelerates.
+      const closure = smooth((progress - .015) / .065) * (1 - smooth((progress - .24) / .06));
       const effectiveClosure = Math.max(closure, interactiveWinkVal);
       wink.setAttribute('opacity', effectiveClosure.toFixed(4));
+      if (monocleGlint) {
+        const glint = reduced.matches ? 0 : smooth((progress - .18) / .09) * (1 - smooth((progress - .42) / .08));
+        monocleGlint.setAttribute('opacity', glint.toFixed(4));
+      }
       if (closure >= 0.8 && !hasWinkedOnScroll) {
         hasWinkedOnScroll = true;
         soundscape?.portraitWink?.();
@@ -3128,7 +3207,7 @@
         hasWinkedOnScroll = false;
       }
       const reveal = mix * smooth((progress - .84) / .10);
-      const visibility = 1 - smooth((progress - .12) / .16);
+      const visibility = 1 - smooth((progress - .18) / .14);
       mouse.x += (mouse.tx - mouse.x) * 0.15;
       mouse.y += (mouse.ty - mouse.y) * 0.15;
       const parallaxFactor = smooth(1 - progress / 0.28);
@@ -3196,19 +3275,47 @@
         section.style.setProperty('--hero-ry', '0deg');
       }, { passive: true });
     });
+    const sectionStates = new WeakMap();
     function pageParallax() {
       frame = null;
       const vh = innerHeight || 800;
+      let needsNextFrame = false;
       sections.forEach(section => {
-        const r = section.getBoundingClientRect(); if (r.bottom < -100 || r.top > vh + 100) return;
+        const r = section.getBoundingClientRect(); if (r.bottom < -120 || r.top > vh + 120) return;
         const target = $('.page-hero-image', section) || (section.matches('.contact-background') ? section : $('img', section));
         if (!target) return;
         const progress = clamp((vh - r.top) / (vh + r.height), 0, 1);
-        const shift = (progress - .5) * 2 * vh * .07;
-        target.style.transform = reduced.matches ? '' : `translate3d(0,${shift.toFixed(2)}px,0) scale(1.08)`;
+        const desiredShift = (progress - .5) * 2 * vh * .07;
+        let st = sectionStates.get(section);
+        if (!st) {
+          st = { shift: desiredShift, exit: clamp(-r.top / vh, 0, 1) };
+          sectionStates.set(section, st);
+        }
+        if (reduced.matches) {
+          st.shift = desiredShift;
+          target.style.transform = '';
+        } else {
+          const dShift = desiredShift - st.shift;
+          if (Math.abs(dShift) < 0.15) {
+            st.shift = desiredShift;
+          } else {
+            st.shift += dShift * 0.24;
+            needsNextFrame = true;
+          }
+          const depthScale = 1.08 + (1 - Math.abs(progress - 0.5) * 2) * 0.024;
+          target.style.transform = `translate3d(0,${st.shift.toFixed(2)}px,0) scale(${depthScale.toFixed(4)})`;
+        }
         const copy = $('.page-hero-copy', section);
         if (copy) {
-          const exit = clamp(-r.top / vh, 0, 1);
+          const desiredExit = clamp(-r.top / vh, 0, 1);
+          const dExit = desiredExit - st.exit;
+          if (reduced.matches || Math.abs(dExit) < 0.002) {
+            st.exit = desiredExit;
+          } else {
+            st.exit += dExit * 0.26;
+            needsNextFrame = true;
+          }
+          const exit = st.exit;
           const splitEase = exit * exit * (3 - 2 * exit);
           copy.style.transform = reduced.matches ? '' : `translate3d(0,${(-exit * vh * .035).toFixed(2)}px,0)`;
           copy.style.opacity = reduced.matches ? '1' : (1 - exit * .75).toFixed(3);
@@ -3218,6 +3325,7 @@
         }
       });
       $('.site-nav').classList.toggle('is-scrolled', scrollY > vh * .72);
+      if (needsNextFrame && frame === null) frame = requestAnimationFrame(pageParallax);
     }
     const schedule = () => { if (frame === null) frame = requestAnimationFrame(pageParallax); };
     addEventListener('scroll', schedule, { passive: true }); addEventListener('resize', schedule, { passive: true }); reduced.addEventListener('change', schedule); schedule();
@@ -3883,16 +3991,75 @@
     reveals.forEach(el => { el.classList.add('motion-reveal'); observer.observe(el); });
     reduced.addEventListener('change', () => { if (reduced.matches) reveals.forEach(el => el.classList.add('is-revealed')); });
   }
-  $$('.art-arrows button,.hero-down,.art-story-link,.text-link').forEach(el => {
+  const magnetTargets = $$('.art-arrows button,.hero-down,.art-story-link,.text-link,.art-index button,.share-btn,.ouroboros-loop-btn,.commission-cta-btn,.commission-pick-btn,.menu-index-pill');
+  magnetTargets.forEach(el => {
+    const m = { x: 0, y: 0, rot: 0, tx: 0, ty: 0, trot: 0, frame: null };
+    function stepMagnet() {
+      m.frame = null;
+      const dx = m.tx - m.x;
+      const dy = m.ty - m.y;
+      const dr = m.trot - m.rot;
+      if (Math.abs(dx) < 0.08 && Math.abs(dy) < 0.08 && Math.abs(dr) < 0.04) {
+        m.x = m.tx;
+        m.y = m.ty;
+        m.rot = m.trot;
+      } else {
+        m.x += dx * 0.28;
+        m.y += dy * 0.28;
+        m.rot += dr * 0.28;
+        m.frame = requestAnimationFrame(stepMagnet);
+      }
+      el.style.setProperty('--magnet-x', `${m.x.toFixed(2)}px`);
+      el.style.setProperty('--magnet-y', `${m.y.toFixed(2)}px`);
+      el.style.setProperty('--magnet-rot', `${m.rot.toFixed(2)}deg`);
+    }
     el.addEventListener('pointermove', e => {
-      if (e.pointerType !== 'mouse' || reduced.matches || el.disabled) return;
+      if ((e.pointerType && e.pointerType !== 'mouse') || reduced.matches || el.disabled) return;
       const r = el.getBoundingClientRect();
-      el.style.setProperty('--magnet-x', clamp((e.clientX - r.left - r.width / 2) * .16, -7, 7).toFixed(2) + 'px');
-      el.style.setProperty('--magnet-y', clamp((e.clientY - r.top - r.height / 2) * .16, -7, 7).toFixed(2) + 'px');
-    });
-    const clear = () => { el.style.setProperty('--magnet-x', '0px'); el.style.setProperty('--magnet-y', '0px'); };
-    el.addEventListener('pointerleave', clear); el.addEventListener('blur', clear); reduced.addEventListener('change', clear);
+      if (!r.width || !r.height) return;
+      const ox = e.clientX - r.left - r.width / 2;
+      const oy = e.clientY - r.top - r.height / 2;
+      m.tx = clamp(ox * .18, -7.5, 7.5);
+      m.ty = clamp(oy * .18, -7.5, 7.5);
+      m.trot = clamp((ox / Math.max(24, r.width)) * 2.4, -2.2, 2.2);
+      if (m.frame === null) m.frame = requestAnimationFrame(stepMagnet);
+    }, { passive: true });
+    const clear = () => {
+      m.tx = 0; m.ty = 0; m.trot = 0;
+      if (reduced.matches) {
+        if (m.frame !== null) cancelAnimationFrame(m.frame);
+        m.frame = null;
+        m.x = m.y = m.rot = 0;
+        el.style.setProperty('--magnet-x', '0px');
+        el.style.setProperty('--magnet-y', '0px');
+        el.style.setProperty('--magnet-rot', '0deg');
+      } else if (m.frame === null && (m.x !== 0 || m.y !== 0 || m.rot !== 0)) {
+        m.frame = requestAnimationFrame(stepMagnet);
+      }
+    };
+    el.addEventListener('pointerleave', clear, { passive: true });
+    el.addEventListener('blur', clear);
+    reduced.addEventListener('change', clear);
   });
+
+  window.NAROA_KINETICS = {
+    getState() {
+      const st = $('[data-gallery]');
+      return {
+        backend: 'c5-substep-inertial-kinetics-v2',
+        substepScroll: true,
+        microPan25D: Boolean(st),
+        magneticSpring: magnetTargets.length > 0,
+        magneticCount: magnetTargets.length,
+        editorialInertialParallax: !st && $$('[data-parallax]').length > 0,
+        scrollEnergy: st ? parseFloat(st.style.getPropertyValue('--scroll-energy') || '0') : 0,
+        scrollVelocity: st ? parseFloat(st.style.getPropertyValue('--scroll-velocity') || '0') : 0,
+        cameraTension: st ? parseFloat(st.style.getPropertyValue('--camera-tension') || '0') : 0,
+        panX: st ? parseFloat(st.style.getPropertyValue('--pan-x') || '0') : 0,
+        panY: st ? parseFloat(st.style.getPropertyValue('--pan-y') || '0') : 0
+      };
+    }
+  };
 
   // ── 3. Simulación Euleriana de Fluidos Navier-Stokes y Advect-Curl (FBO Ping-Pong) ──
   (() => {

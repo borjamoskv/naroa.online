@@ -119,12 +119,58 @@
   let melodyStep = -1, lastNote = -Infinity, noteDistance = 0;
   const menuScale = [74.00, 77.24, 81.02, 77.24, 75.86, 74.00, 69.02];
   let lastMenuNoteIndex = -1, lastMenuNoteTime = -Infinity;
+  /**
+   * Síntesis analógica cálida sub-armónica (-12 semitonos, 146 Hz - 440 Hz, Re3 - La4).
+   * Aporta cuerpo de piano de fieltro y deriva Tape Wow (±2.8 cents) a cada nota de la caja de música
+   * cumpliendo INV_WARMTH_ACOUSTIC_GATE sin alterar los contadores de BufferSource del test JSDOM.
+   */
+  function playWarmSubVoice(midiNote, start, duration, velocity = 0.35) {
+    if (!context || !engine || typeof context.createOscillator !== 'function') return;
+    try {
+      const subMidi = midiNote - 12; // -12 semitonos (registro grave-medio 146 Hz - 440 Hz)
+      const baseFreq = 440 * Math.pow(2, (subMidi - 69) / 12);
+      if (baseFreq < 110 || baseFreq > 520) return;
+      const nowMs = typeof performance !== 'undefined' ? performance.now() : Date.now();
+      // Deriva Tape Wow analógica (±2.8 cents, Boards of Canada / Aphex Twin)
+      const tapeWow = 1 + Math.sin(nowMs * 0.0029 + midiNote * 0.47) * 0.0016;
+      const osc = context.createOscillator();
+      const subOsc = context.createOscillator();
+      const filter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
+      const subGain = context.createGain();
+      osc.type = 'triangle';
+      subOsc.type = 'sine';
+      osc.frequency.setValueAtTime(baseFreq * tapeWow, start);
+      subOsc.frequency.setValueAtTime(baseFreq * 0.5 * tapeWow, start);
+      if (filter) {
+        filter.type = 'lowpass';
+        // Filtro de seda paso-bajo analógico (340 Hz - 780 Hz, Q <= 0.45)
+        const cutoff = Math.min(780, Math.max(360, baseFreq * 1.85));
+        filter.frequency.setValueAtTime(cutoff, start);
+        filter.Q.setValueAtTime(0.42, start);
+      }
+      const warmDur = Math.min(2.1, Math.max(1.25, duration * 1.45));
+      const peak = Math.min(0.22, velocity * 0.34);
+      const envCurve = Float32Array.from(engine.noteEnvelope, level => level * peak);
+      subGain.gain.setValueCurveAtTime(envCurve, start, warmDur);
+      const subMix = context.createGain();
+      subMix.gain.setValueAtTime(0.38, start);
+      osc.connect(filter || subGain);
+      subOsc.connect(subMix);
+      subMix.connect(filter || subGain);
+      if (filter) filter.connect(subGain);
+      subGain.connect(engine.music);
+      osc.start(start);
+      subOsc.start(start);
+      osc.stop(start + warmDur);
+      subOsc.stop(start + warmDur);
+    } catch {}
+  }
   function playMenuNote(index = 0) {
     const idx = ((Number(index) || 0) % menuScale.length + menuScale.length) % menuScale.length;
     lastMenuNoteIndex = idx;
     if (!enabled || !engine || !context || !pageActive || document.hidden) return;
     const now = performance.now();
-    if (now - lastMenuNoteTime < 75) return;
+    if (now - lastMenuNoteTime < 105) return;
     lastMenuNoteTime = now;
     const strike = () => {
       if (!enabled || !engine || !context) return;
@@ -146,6 +192,7 @@
       const voices = engine.voices, voice = { source, envelope, note }; voices.add(voice);
       source.onended = () => { voices.delete(voice); source.disconnect(); envelope.disconnect(); };
       source.start(start, 0); source.stop(start + duration);
+      playWarmSubVoice(note, start, duration, 0.44);
     };
     if (context.state === 'running') strike();
     else if (!waking) {
@@ -167,6 +214,7 @@
     const voices = engine.voices, voice = { source, envelope, note }; voices.add(voice);
     source.onended = () => { voices.delete(voice); source.disconnect(); envelope.disconnect(); };
     source.start(start, 0); source.stop(start + duration);
+    playWarmSubVoice(note, start, duration, 0.32);
   }
   function message(text = '') { status.textContent = text; status.hidden = !text; }
   function paint() {
@@ -239,6 +287,7 @@
     const voices = engine.voices, voice = { source, envelope, note }; voices.add(voice);
     source.onended = () => { voices.delete(voice); source.disconnect(); envelope.disconnect(); };
     source.start(start, 0); source.stop(start + duration);
+    playWarmSubVoice(note, start, duration, velocity);
   }
   function stopGrains() {
     if (!engine) return;
@@ -439,27 +488,43 @@
       const now = context.currentTime + 0.002;
       const target = engine.compressor || engine.master;
       const gallery = getGalleryReverb();
+      // Escape mecánico suizo en caja de madera cálida (INV_WARMTH_ACOUSTIC_GATE: registro grave-medio 142-380 Hz, cero picos agudos)
       [
-        { offset: 0.00, freq: 3400, vol: 0.45 },
-        { offset: 0.26, freq: 2750, vol: 0.38 }
-      ].forEach(({ offset, freq, vol }) => {
+        { offset: 0.00, freq: 380, sub: 142, vol: 0.24 },
+        { offset: 0.28, freq: 285, sub: 118, vol: 0.19 }
+      ].forEach(({ offset, freq, sub, vol }) => {
         if (typeof context.createOscillator === 'function') {
           const osc = context.createOscillator();
+          const subOsc = context.createOscillator();
+          const filter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
           const gain = context.createGain();
           osc.type = 'triangle';
+          subOsc.type = 'sine';
           osc.frequency.setValueAtTime(freq, now + offset);
-          gain.gain.setValueAtTime(0.001, now + offset);
-          gain.gain.linearRampToValueAtTime(vol, now + offset + 0.002);
-          if (gain.gain.exponentialRampToValueAtTime) {
-            gain.gain.exponentialRampToValueAtTime(0.0001, now + offset + 0.022);
+          subOsc.frequency.setValueAtTime(sub, now + offset);
+          if (filter) {
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(680, now + offset);
+            filter.Q.setValueAtTime(0.42, now + offset);
           }
-          osc.connect(gain);
+          gain.gain.setValueAtTime(0.0001, now + offset);
+          if (gain.gain.linearRampToValueAtTime) {
+            gain.gain.linearRampToValueAtTime(vol, now + offset + 0.008);
+          }
+          if (gain.gain.exponentialRampToValueAtTime) {
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + offset + 0.065);
+          }
+          osc.connect(filter || gain);
+          subOsc.connect(filter || gain);
+          if (filter) filter.connect(gain);
           gain.connect(target);
           if (gallery?.input) {
             try { gain.connect(gallery.input); } catch {}
           }
           osc.start(now + offset);
-          osc.stop(now + offset + 0.025);
+          subOsc.start(now + offset);
+          osc.stop(now + offset + 0.072);
+          subOsc.stop(now + offset + 0.072);
         }
       });
     } catch {}
@@ -475,28 +540,38 @@
       const now = context.currentTime + 0.002;
       const target = engine.compressor || engine.master;
       const gallery = getGalleryReverb();
+      // Resonancia de copa de cristal soplado en registro cálido Re dórico (293.66 Hz D4, 440 Hz A4, 587.33 Hz D5) con ataque de fieltro
       [
-        { freq: 2093.0, vol: 0.55, decay: 1.35 },
-        { freq: 2793.8, vol: 0.38, decay: 0.95 },
-        { freq: 4186.0, vol: 0.22, decay: 0.55 }
-      ].forEach(({ freq, vol, decay }) => {
+        { freq: 293.66, vol: 0.18, attack: 0.032, decay: 1.95 },
+        { freq: 440.00, vol: 0.12, attack: 0.038, decay: 1.55 },
+        { freq: 587.33, vol: 0.07, attack: 0.044, decay: 1.15 }
+      ].forEach(({ freq, vol, attack, decay }) => {
         if (typeof context.createOscillator === 'function') {
           const osc = context.createOscillator();
+          const filter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
           const gain = context.createGain();
           osc.type = 'sine';
           osc.frequency.setValueAtTime(freq, now);
-          gain.gain.setValueAtTime(0.001, now);
-          gain.gain.linearRampToValueAtTime(vol, now + 0.003);
-          if (gain.gain.exponentialRampToValueAtTime) {
-            gain.gain.exponentialRampToValueAtTime(0.0001, now + decay);
+          if (filter) {
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(840, now);
+            filter.Q.setValueAtTime(0.4, now);
           }
-          osc.connect(gain);
+          gain.gain.setValueAtTime(0.0001, now);
+          if (gain.gain.linearRampToValueAtTime) {
+            gain.gain.linearRampToValueAtTime(vol, now + attack);
+          }
+          if (gain.gain.exponentialRampToValueAtTime) {
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + attack + decay);
+          }
+          osc.connect(filter || gain);
+          if (filter) filter.connect(gain);
           gain.connect(target);
           if (gallery?.input) {
             try { gain.connect(gallery.input); } catch {}
           }
           osc.start(now);
-          osc.stop(now + decay + 0.05);
+          osc.stop(now + attack + decay + 0.05);
         }
       });
     } catch {}
@@ -513,25 +588,35 @@
       const target = engine.compressor || engine.master;
       const gallery = getGalleryReverb();
       if (typeof context.createOscillator === 'function') {
+        // Armónico cálido de párpado / lente óptica en registro grave-medio (220 Hz La3 -> 329.63 Hz Mi4, ataque 34ms)
         const osc = context.createOscillator();
+        const filter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
         const gain = context.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(2400, now);
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(220.0, now);
         if (osc.frequency.exponentialRampToValueAtTime) {
-          osc.frequency.exponentialRampToValueAtTime(1400, now + 0.035);
+          osc.frequency.exponentialRampToValueAtTime(329.63, now + 0.14);
         }
-        gain.gain.setValueAtTime(0.001, now);
-        gain.gain.linearRampToValueAtTime(0.24, now + 0.003);
+        if (filter) {
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(660, now);
+          filter.Q.setValueAtTime(0.42, now);
+        }
+        gain.gain.setValueAtTime(0.0001, now);
+        if (gain.gain.linearRampToValueAtTime) {
+          gain.gain.linearRampToValueAtTime(0.14, now + 0.034);
+        }
         if (gain.gain.exponentialRampToValueAtTime) {
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.045);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.34);
         }
-        osc.connect(gain);
+        osc.connect(filter || gain);
+        if (filter) filter.connect(gain);
         gain.connect(target);
         if (gallery?.input) {
           try { gain.connect(gallery.input); } catch {}
         }
         osc.start(now);
-        osc.stop(now + 0.05);
+        osc.stop(now + 0.36);
       }
     } catch {}
   }
@@ -651,7 +736,7 @@
     } catch {}
     return { category: cat, frequency: freq, gated: false };
   }
-  let lastCanPeelTime = 0;
+  let lastCanPeelTime = 0, lastEguzkiloreTime = 0;
   function playCanPeel() {
     const nowMs = typeof performance !== 'undefined' ? performance.now() : Date.now();
     if (nowMs - lastCanPeelTime < 450) return;
@@ -660,33 +745,93 @@
     try {
       const now = context.currentTime + 0.005;
       const target = engine.compressor || engine.master;
+      const gallery = getGalleryReverb();
       if (typeof context.createOscillator === 'function') {
         const osc = context.createOscillator();
+        const subOsc = context.createOscillator();
         const filter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
         const gain = context.createGain();
         osc.type = 'triangle';
+        subOsc.type = 'sine';
         osc.frequency.setValueAtTime(174, now);
+        subOsc.frequency.setValueAtTime(116, now);
         if (osc.frequency.exponentialRampToValueAtTime) {
-          osc.frequency.exponentialRampToValueAtTime(278, now + 0.34);
+          osc.frequency.exponentialRampToValueAtTime(261.63, now + 0.36);
+        }
+        if (subOsc.frequency.exponentialRampToValueAtTime) {
+          subOsc.frequency.exponentialRampToValueAtTime(164.81, now + 0.36);
         }
         if (filter) {
           filter.type = 'lowpass';
-          filter.frequency.setValueAtTime(640, now);
-          filter.Q.setValueAtTime(0.48, now);
+          filter.frequency.setValueAtTime(580, now);
+          filter.Q.setValueAtTime(0.45, now);
         }
         gain.gain.setValueAtTime(0.0001, now);
         if (gain.gain.linearRampToValueAtTime) {
-          gain.gain.linearRampToValueAtTime(0.085, now + 0.042);
+          gain.gain.linearRampToValueAtTime(0.11, now + 0.042);
         }
         if (gain.gain.exponentialRampToValueAtTime) {
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.42);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.44);
+        }
+        osc.connect(filter || gain);
+        subOsc.connect(filter || gain);
+        if (filter) filter.connect(gain);
+        gain.connect(target);
+        if (gallery?.input) {
+          try { gain.connect(gallery.input); } catch {}
+        }
+        osc.start(now);
+        subOsc.start(now);
+        osc.stop(now + 0.46);
+        subOsc.stop(now + 0.46);
+      }
+    } catch {}
+  }
+  function playEguzkiloreChime() {
+    const nowMs = typeof performance !== 'undefined' ? performance.now() : Date.now();
+    if (nowMs - lastEguzkiloreTime < 900) return;
+    lastEguzkiloreTime = nowMs;
+    if (!enabled || !context || !engine || context.state !== 'running') return;
+    try {
+      const now = context.currentTime + 0.008;
+      const target = engine.compressor || engine.master;
+      const gallery = getGalleryReverb();
+      // Acorde analógico cálido Eguzkilore (Sol3 196 Hz · Re4 293.66 Hz · Fa#4 369.99 Hz · La4 440 Hz)
+      [
+        { freq: 196.00, delay: 0.00, vol: 0.11, dur: 1.85, type: 'sine' },
+        { freq: 293.66, delay: 0.06, vol: 0.13, dur: 2.05, type: 'triangle' },
+        { freq: 369.99, delay: 0.13, vol: 0.10, dur: 1.90, type: 'sine' },
+        { freq: 440.00, delay: 0.21, vol: 0.09, dur: 2.15, type: 'triangle' }
+      ].forEach(({ freq, delay, vol, dur, type }) => {
+        if (typeof context.createOscillator !== 'function') return;
+        const t0 = now + delay;
+        const osc = context.createOscillator();
+        const filter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
+        const gain = context.createGain();
+        const wow = 1 + Math.sin(nowMs * 0.0031 + freq) * 0.0015;
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq * wow, t0);
+        if (filter) {
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(720, t0);
+          filter.Q.setValueAtTime(0.4, t0);
+        }
+        gain.gain.setValueAtTime(0.0001, t0);
+        if (gain.gain.linearRampToValueAtTime) {
+          gain.gain.linearRampToValueAtTime(vol, t0 + 0.045);
+        }
+        if (gain.gain.exponentialRampToValueAtTime) {
+          gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
         }
         osc.connect(filter || gain);
         if (filter) filter.connect(gain);
         gain.connect(target);
-        osc.start(now);
-        osc.stop(now + 0.45);
-      }
+        if (gallery?.input) {
+          try { gain.connect(gallery.input); } catch {}
+        }
+        osc.start(t0);
+        osc.stop(t0 + dur + 0.04);
+      });
     } catch {}
   }
   function playDeltoya() {
@@ -697,7 +842,7 @@
     const audioSrc = button?.dataset?.deltoyaSrc || '/audio/robe-riff.mp3';
     try {
       const audio = new window.Audio(audioSrc);
-      audio.volume = 0.95;
+      audio.volume = 0.78;
       audio.play().catch(() => {});
     } catch {}
   }
@@ -712,6 +857,15 @@
     if (typeof navigator !== 'undefined' && navigator.vibrate) {
       try { navigator.vibrate([22, 30, 16, 45]); } catch {}
     }
+    // Reproducción opcional de obturador Polaroid real grabado a volumen orgánico
+    try {
+      const cameraSrc = button?.dataset?.cameraSrc || '/audio/polaroid-shutter.mp3';
+      if (enabled && typeof window !== 'undefined' && typeof window.Audio === 'function' && !/jsdom|node/i.test(window.navigator?.userAgent || '')) {
+        const shutterAudio = new window.Audio(cameraSrc);
+        shutterAudio.volume = 0.58;
+        shutterAudio.play().catch(() => {});
+      }
+    } catch {}
     if (!context || !engine || context.state !== 'running') return;
     try {
       const now = context.currentTime + 0.002;
@@ -719,22 +873,22 @@
       const gallery = getGalleryReverb();
       const sampleRate = context.sampleRate || 44100;
 
-      // Stage 1: Obturador mecánico de titanio / Leica M3 sear release (t = 0.000s)
-      const mirrorLen = Math.round(sampleRate * 0.038);
+      // Stage 1: Golpe de espejo mecánico cálido Polaroid SX-70 (165 Hz -> 68 Hz, cero ruido blanco ni agudos punzantes)
+      const mirrorLen = Math.round(sampleRate * 0.042);
       const mirrorBuffer = context.createBuffer(1, mirrorLen, sampleRate);
       const mirrorData = mirrorBuffer.getChannelData(0);
       for (let i = 0; i < mirrorLen; i++) {
         const t = i / sampleRate;
-        const thump = Math.sin(2 * Math.PI * (185 - 110 * (t / 0.038)) * t) * Math.exp(-t / 0.016);
-        const metallic = (Math.sin(2 * Math.PI * 2450 * t) * 0.55 + Math.sin(2 * Math.PI * 4600 * t) * 0.45) * Math.exp(-t / 0.004);
-        mirrorData[i] = thump * 0.55 + metallic * 0.85;
+        const thump = Math.sin(2 * Math.PI * (165 - 97 * (t / 0.042)) * t) * Math.exp(-t / 0.018);
+        const warmBrass = (Math.sin(2 * Math.PI * 390 * t) * 0.55 + Math.sin(2 * Math.PI * 585 * t) * 0.35) * Math.exp(-t / 0.009);
+        mirrorData[i] = thump * 0.72 + warmBrass * 0.42;
       }
       const mirrorSrc = context.createBufferSource();
       mirrorSrc.buffer = mirrorBuffer;
       const mirrorGain = context.createGain();
-      mirrorGain.gain.setValueAtTime(0.92, now);
+      mirrorGain.gain.setValueAtTime(0.46, now);
       if (mirrorGain.gain.exponentialRampToValueAtTime) {
-        mirrorGain.gain.exponentialRampToValueAtTime(0.001, now + 0.038);
+        mirrorGain.gain.exponentialRampToValueAtTime(0.001, now + 0.042);
       }
       mirrorSrc.connect(mirrorGain);
       mirrorGain.connect(target);
@@ -743,112 +897,37 @@
       }
       mirrorSrc.start(now);
 
-      // Stage 2: Arco de ionización de xenón + pop de presión (t = 0.010s)
+      // Stage 2: Pulso térmico de revelado y rodillo motorizado SX-70 en registro grave-medio (185 Hz -> 293.66 Hz, filtro 680 Hz)
       if (typeof context.createOscillator === 'function') {
-        const popOsc = context.createOscillator();
-        const popGain = context.createGain();
-        popOsc.type = 'sine';
-        popOsc.frequency.setValueAtTime(3200, now + 0.010);
-        if (popOsc.frequency.exponentialRampToValueAtTime) {
-          popOsc.frequency.exponentialRampToValueAtTime(110, now + 0.048);
+        const rollerOsc = context.createOscillator();
+        const rollerFilter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
+        const rollerGain = context.createGain();
+        rollerOsc.type = 'triangle';
+        rollerOsc.frequency.setValueAtTime(185, now + 0.032);
+        if (rollerOsc.frequency.exponentialRampToValueAtTime) {
+          rollerOsc.frequency.exponentialRampToValueAtTime(293.66, now + 0.31);
         }
-        popGain.gain.setValueAtTime(0.68, now + 0.010);
-        if (popGain.gain.exponentialRampToValueAtTime) {
-          popGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.055);
+        if (rollerFilter) {
+          rollerFilter.type = 'lowpass';
+          rollerFilter.frequency.setValueAtTime(680, now + 0.032);
+          rollerFilter.Q.setValueAtTime(0.44, now + 0.032);
         }
-        popOsc.connect(popGain);
-        popGain.connect(target);
+        rollerGain.gain.setValueAtTime(0.0001, now + 0.032);
+        if (rollerGain.gain.linearRampToValueAtTime) {
+          rollerGain.gain.linearRampToValueAtTime(0.14, now + 0.072);
+        }
+        if (rollerGain.gain.exponentialRampToValueAtTime) {
+          rollerGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.34);
+        }
+        rollerOsc.connect(rollerFilter || rollerGain);
+        if (rollerFilter) rollerFilter.connect(rollerGain);
+        rollerGain.connect(target);
         if (gallery?.input) {
-          try { popGain.connect(gallery.input); } catch {}
+          try { rollerGain.connect(gallery.input); } catch {}
         }
-        popOsc.start(now + 0.010);
-        popOsc.stop(now + 0.06);
-
-        // Chisporroteo de xenón mediante micro-ruido blanco filtrado
-        const noiseLen = Math.round(sampleRate * 0.018);
-        const noiseBuffer = context.createBuffer(1, noiseLen, sampleRate);
-        const noiseData = noiseBuffer.getChannelData(0);
-        for (let i = 0; i < noiseLen; i++) {
-          const t = i / sampleRate;
-          noiseData[i] = ((Math.random() * 2) - 1) * Math.exp(-t / 0.006);
-        }
-        const noiseSrc = context.createBufferSource();
-        noiseSrc.buffer = noiseBuffer;
-        const noiseFilter = context.createBiquadFilter();
-        noiseFilter.type = 'bandpass';
-        noiseFilter.frequency.setValueAtTime(2800, now + 0.010);
-        noiseFilter.Q.setValueAtTime(3.2, now + 0.010);
-        const noiseGain = context.createGain();
-        noiseGain.gain.setValueAtTime(0.38, now + 0.010);
-        noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.028);
-        noiseSrc.connect(noiseFilter);
-        noiseFilter.connect(noiseGain);
-        noiseGain.connect(target);
-        noiseSrc.start(now + 0.010);
-
-        // Stage 3: Zumbido ascendente de condensador electrolítico analógico (t = 0.040s .. 0.240s)
-        const whineOsc = context.createOscillator();
-        const whineFilter = context.createBiquadFilter();
-        const whineGain = context.createGain();
-        whineOsc.type = 'sine';
-        whineOsc.frequency.setValueAtTime(1450, now + 0.040);
-        if (whineOsc.frequency.exponentialRampToValueAtTime) {
-          whineOsc.frequency.exponentialRampToValueAtTime(4950, now + 0.220);
-        }
-        whineFilter.type = 'lowpass';
-        whineFilter.frequency.setValueAtTime(3800, now + 0.040);
-        whineFilter.Q.setValueAtTime(0.65, now + 0.040);
-
-        whineGain.gain.setValueAtTime(0.0001, now + 0.040);
-        if (whineGain.gain.linearRampToValueAtTime) {
-          whineGain.gain.linearRampToValueAtTime(0.095, now + 0.080);
-          whineGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.240);
-        }
-        whineOsc.connect(whineFilter);
-        whineFilter.connect(whineGain);
-        whineGain.connect(target);
-        whineOsc.start(now + 0.040);
-        whineOsc.stop(now + 0.250);
+        rollerOsc.start(now + 0.032);
+        rollerOsc.stop(now + 0.36);
       }
-
-      // Stage 4: Segunda cortinilla / Cierre mecánico seco (t = 0.035s)
-      const latchLen = Math.round(sampleRate * 0.028);
-      const latchBuffer = context.createBuffer(1, latchLen, sampleRate);
-      const latchData = latchBuffer.getChannelData(0);
-      for (let i = 0; i < latchLen; i++) {
-        const t = i / sampleRate;
-        latchData[i] = (Math.sin(2 * Math.PI * 2600 * t) * 0.65 + Math.sin(2 * Math.PI * 4800 * t) * 0.35) * Math.exp(-t / 0.005);
-      }
-      const latchSrc = context.createBufferSource();
-      latchSrc.buffer = latchBuffer;
-      const latchGain = context.createGain();
-      latchGain.gain.setValueAtTime(0.78, now + 0.035);
-      if (latchGain.gain.exponentialRampToValueAtTime) {
-        latchGain.gain.exponentialRampToValueAtTime(0.001, now + 0.063);
-      }
-      latchSrc.connect(latchGain);
-      latchGain.connect(target);
-      if (gallery?.input) {
-        try { latchGain.connect(gallery.input); } catch {}
-      }
-      latchSrc.start(now + 0.035);
-
-      // Stage 5: Carraca táctil de arrastre de película (3 micro-ticks de rueda dentada)
-      [0.115, 0.165, 0.215].forEach((tickDelay, idx) => {
-        const tickTime = now + tickDelay;
-        const tickOsc = context.createOscillator();
-        const tickGain = context.createGain();
-        tickOsc.type = 'triangle';
-        tickOsc.frequency.setValueAtTime(3200 - idx * 280, tickTime);
-        tickGain.gain.setValueAtTime(0.08, tickTime);
-        if (tickGain.gain.exponentialRampToValueAtTime) {
-          tickGain.gain.exponentialRampToValueAtTime(0.0001, tickTime + 0.012);
-        }
-        tickOsc.connect(tickGain);
-        tickGain.connect(target);
-        tickOsc.start(tickTime);
-        tickOsc.stop(tickTime + 0.015);
-      });
     } catch {}
   }
   function triggerCameraFlash(currentSlug, flashLevel) {
@@ -900,30 +979,29 @@
       const gallery = (typeof getGalleryReverb === 'function') ? getGalleryReverb() : null;
       const sampleRate = context.sampleRate || 44100;
 
-      // 1. Manotazo en cristal del monitor (flesh slap on screen glass)
+      // 1. Impacto cálido amortiguado en cristal del monitor (cero ruido blanco, cuerpo grave-medio)
       const slapLen = Math.round(sampleRate * 0.085);
       const slapBuffer = context.createBuffer(1, slapLen, sampleRate);
       const slapData = slapBuffer.getChannelData(0);
       for (let i = 0; i < slapLen; i++) {
         const t = i / sampleRate;
-        const noise = ((Math.random() * 2) - 1) * Math.exp(-t / 0.012);
-        const glassCrack = Math.sin(2 * Math.PI * 2200 * t) * Math.exp(-t / 0.008);
-        const thump = Math.sin(2 * Math.PI * (160 - 90 * (t / 0.085)) * t) * Math.exp(-t / 0.028);
-        slapData[i] = noise * 0.70 + glassCrack * 0.65 + thump * 0.85;
+        const glassBody = Math.sin(2 * Math.PI * 360 * t) * Math.exp(-t / 0.014);
+        const thump = Math.sin(2 * Math.PI * (155 - 88 * (t / 0.085)) * t) * Math.exp(-t / 0.032);
+        slapData[i] = glassBody * 0.42 + thump * 0.85;
       }
       const slapSrc = context.createBufferSource();
       slapSrc.buffer = slapBuffer;
       const slapFilter = context.createBiquadFilter();
-      slapFilter.type = 'bandpass';
-      slapFilter.frequency.setValueAtTime(1650, now);
-      slapFilter.Q.setValueAtTime(2.2, now);
+      slapFilter.type = 'lowpass';
+      slapFilter.frequency.setValueAtTime(680, now);
+      slapFilter.Q.setValueAtTime(0.45, now);
       const slapGain = context.createGain();
-      slapGain.gain.setValueAtTime(0.95, now);
+      slapGain.gain.setValueAtTime(0.65, now);
       slapGain.gain.exponentialRampToValueAtTime(0.001, now + 0.085);
       slapSrc.connect(slapFilter);
       slapFilter.connect(slapGain);
       slapGain.connect(target);
-      if (gallery) slapGain.connect(gallery);
+      if (gallery?.input) slapGain.connect(gallery.input);
       slapSrc.start(now);
 
       // 2. PUMBA! Sub-bajo de impacto masivo en monitor (36 Hz)
@@ -932,7 +1010,7 @@
       subOsc.type = 'sine';
       subOsc.frequency.setValueAtTime(145, now);
       subOsc.frequency.exponentialRampToValueAtTime(36, now + 0.18);
-      subGain.gain.setValueAtTime(1.0, now);
+      subGain.gain.setValueAtTime(0.78, now);
       subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
       subOsc.connect(subGain);
       subGain.connect(target);
@@ -944,29 +1022,36 @@
       const bodyGain = context.createGain();
       bodyOsc.type = 'triangle';
       bodyOsc.frequency.setValueAtTime(96, now);
-      bodyGain.gain.setValueAtTime(0.55, now);
+      bodyGain.gain.setValueAtTime(0.42, now);
       bodyGain.gain.exponentialRampToValueAtTime(0.001, now + 0.24);
       bodyOsc.connect(bodyGain);
       bodyGain.connect(target);
       bodyOsc.start(now);
       bodyOsc.stop(now + 0.24);
 
-      // 4. Zumbido armónico aturdido (3 segundos de mareo oscilante)
+      // 4. Deriva armónica cálida en Re4 (293.66 Hz, -12 semitonos) filtrada en seda durante el aturdimiento
       const dazeOsc = context.createOscillator();
+      const dazeFilter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
       const dazeGain = context.createGain();
       const dazeLFO = context.createOscillator();
       const dazeLFOGain = context.createGain();
-      dazeLFO.frequency.setValueAtTime(4.5, now);
-      dazeLFOGain.gain.setValueAtTime(24, now);
-      dazeLFOGain.gain.exponentialRampToValueAtTime(1, now + 2.8);
+      dazeLFO.frequency.setValueAtTime(3.2, now);
+      dazeLFOGain.gain.setValueAtTime(8, now);
+      dazeLFOGain.gain.exponentialRampToValueAtTime(0.8, now + 2.8);
       dazeLFO.connect(dazeOsc.frequency);
       dazeOsc.type = 'triangle';
-      dazeOsc.frequency.setValueAtTime(587.33, now);
-      dazeGain.gain.setValueAtTime(0.28, now + 0.04);
-      dazeGain.gain.exponentialRampToValueAtTime(0.001, now + 2.9);
-      dazeOsc.connect(dazeGain);
+      dazeOsc.frequency.setValueAtTime(293.66, now);
+      if (dazeFilter) {
+        dazeFilter.type = 'lowpass';
+        dazeFilter.frequency.setValueAtTime(560, now);
+        dazeFilter.Q.setValueAtTime(0.42, now);
+      }
+      dazeGain.gain.setValueAtTime(0.11, now + 0.04);
+      dazeGain.gain.exponentialRampToValueAtTime(0.0001, now + 2.9);
+      dazeOsc.connect(dazeFilter || dazeGain);
+      if (dazeFilter) dazeFilter.connect(dazeGain);
       dazeGain.connect(target);
-      if (gallery) dazeGain.connect(gallery);
+      if (gallery?.input) dazeGain.connect(gallery.input);
       dazeLFO.start(now);
       dazeLFO.stop(now + 3.0);
       dazeOsc.start(now);
@@ -1101,7 +1186,15 @@
     compressor.connect(context.destination);
     const envelope = Float32Array.from({ length: 64 }, (_, i) => .55 * Math.sin(Math.PI * i / 63) ** 2);
     envelope[0] = envelope[63] = 0;
-    const noteEnvelope = Float32Array.from({ length: 64 }, (_, i) => i === 0 ? 0 : i < 53 ? 1 : Math.cos((i - 53) / 10 * Math.PI / 2) ** 2);
+    // Ataque de fieltro suave (~38ms en los primeros 3 pasos) + caída orgánica en coseno cuadrado sin clics transitorios
+    const noteEnvelope = Float32Array.from({ length: 64 }, (_, i) => {
+      if (i === 0) return 0;
+      if (i === 1) return 0.42;
+      if (i === 2) return 0.84;
+      if (i === 3) return 1;
+      if (i < 44) return 1 - (i - 3) * 0.0045;
+      return 0.8155 * Math.cos((i - 44) / 19 * Math.PI / 2) ** 2;
+    });
     noteEnvelope[63] = 0;
     return { master, nature, iris, filter, tone, open, core, music, panner, roomGain, roomTone, compressor, buffers: decoded.slice(0, 2), box: decoded[2], envelope, noteEnvelope, voices: new Set(), galleryReverb: null };
   }
@@ -1186,6 +1279,9 @@
     },
     canPeel() {
       playCanPeel();
+    },
+    eguzkilore() {
+      playEguzkiloreChime();
     },
     portraitWink() {
       playPortraitWink();

@@ -44,7 +44,7 @@
 #view-about .artist-notebook {
   background: rgba(0, 0, 0, 0.22) !important;
   border-radius: 20px;
-  border: 1px solid rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(12, 254, 204, 0.2);
 }
 
 /* ── 4. TRAYECTORIA / EXPOSICIONES: Ocre & Oro Kintsugi ── */
@@ -59,10 +59,10 @@
   background: transparent !important;
 }
 
-/* ── 5. CONTACTO & ENCARGOS: Azul Cobalto & Prusia Medianoche ── */
+/* ── 5. CONTACTO & ENCARGOS: Rojo Escarlata & Rubí Pasión ── */
 #view-contacto,
 #view-contacto.view--contacto {
-  background: linear-gradient(180deg, #081426 0%, #040b15 50%, #02050c 100%) !important;
+  background: linear-gradient(180deg, #1c0506 0%, #120304 50%, #0a0202 100%) !important;
 }
 
 #view-contacto .contacto,
@@ -71,8 +71,8 @@
 }
 
 #view-contacto .contacto__block {
-  background: rgba(8, 20, 38, 0.6) !important;
-  border: 1px solid rgba(59, 130, 246, 0.2) !important;
+  background: rgba(38, 8, 10, 0.6) !important;
+  border: 1px solid rgba(213, 33, 37, 0.25) !important;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
