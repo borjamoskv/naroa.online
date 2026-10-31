@@ -287,35 +287,7 @@ def build(output):
             if center_path.exists():
                 c_im = Image.open(center_path).convert("RGB")
                 c_crop = ImageOps.fit(c_im, (SW, SH), method=Image.Resampling.LANCZOS, centering=(0.5, 0.42))
-
-                # Remasterización óptica selectiva (Ilford Delta 100: negros de fieltro profundos, piel sedosa, foco cristalino en iris/monóculo/pincel)
-                import numpy as np
-                arr = np.asarray(c_crop, dtype=np.float32) / 255.0
-                lo, hi = np.percentile(arr, [1.4, 99.5])
-                arr = np.clip((arr - lo) / max(hi - lo, 1e-5), 0.0, 1.0)
-                # Curva tonal suave de cuarto oscuro: densidad en sombras sin endurecer piel ni pelo
-                arr = np.where(arr < 0.45, 0.45 * np.power(arr / 0.45, 1.09), 1.0 - 0.55 * np.power((1.0 - arr) / 0.55, 1.04))
-                base_im = Image.fromarray(np.clip(arr * 255.0, 0, 255).astype(np.uint8), "RGB")
-
-                # Suavizado bilateral ligero en frecuencias de ruido JPEG + nitidez focal exclusiva en mirada, monóculo, pincel y firma
-                denoise_im = base_im.filter(ImageFilter.GaussianBlur(radius=0.65))
-                blur_detail = denoise_im.filter(ImageFilter.GaussianBlur(radius=2.1))
-                b_arr = np.asarray(base_im, dtype=np.float32)
-                d_arr = np.asarray(denoise_im, dtype=np.float32)
-                u_arr = np.asarray(blur_detail, dtype=np.float32)
-
-                yy, xx = np.ogrid[:SH, :SW]
-                # Máscara gaussiana en la mirada/monóculo (0.48, 0.39) y punta del pincel/mano (0.30, 0.56) + rótulo (0.62, 0.82)
-                mask_eyes = np.exp(-(((xx - SW * 0.49) / (SW * 0.22)) ** 2 + ((yy - SH * 0.39) / (SH * 0.11)) ** 2))
-                mask_brush = np.exp(-(((xx - SW * 0.34) / (SW * 0.16)) ** 2 + ((yy - SH * 0.50) / (SH * 0.14)) ** 2))
-                mask_sign = np.exp(-(((xx - SW * 0.62) / (SW * 0.34)) ** 2 + ((yy - SH * 0.82) / (SH * 0.14)) ** 2))
-                focus_mask = np.clip(mask_eyes + 0.65 * mask_brush + 0.55 * mask_sign, 0.0, 1.0)[..., None]
-
-                detail = d_arr - u_arr
-                # Suprime ruido de compresión en piel/ladrillo y realza acutancia óptica solo en zonas de foco sin halos
-                clean_base = (1.0 - 0.35 * (1.0 - focus_mask)) * b_arr + 0.35 * (1.0 - focus_mask) * d_arr
-                enhanced = np.clip(clean_base + (0.18 + 0.68 * focus_mask) * detail, 0, 255).astype(np.uint8)
-                story = Image.fromarray(enhanced, "RGB")
+                story = c_crop.filter(ImageFilter.UnsharpMask(radius=0.9, percent=32, threshold=2))
 
             dest_src = social_dir / "naroa-story-card-1080x1920.jpg"
             story.save(dest_src, quality=98, subsampling=0, optimize=True)
@@ -1118,31 +1090,46 @@ def build(output):
         (rara, "Papel y grafito"),
     ]
     examples_html = ''.join(
-        f'<article class="commission-example" data-parallax-card>'
+        f'<article class="commission-example" data-parallax-card data-card-index="{idx}">'
+        f'<span class="commission-parallax-num" aria-hidden="true">0{idx + 1}</span>'
+        f'<div class="commission-stage-wrap">'
         f'<a class="commission-example-photo" href="/obra/{ex["slug"]}/">'
         f'<img src="{ex["cover"]}" width="{ex["photos"][0]["width"]}" height="{ex["photos"][0]["height"]}" alt="{esc(work_alt(ex))}" loading="eager" decoding="async">'
+        f'</a>'
+        f'<a class="commission-detail-pip" href="/obra/{ex["slug"]}/" tabindex="-1" aria-hidden="true">'
+        f'<img src="{ex["photos"][1]["full"] if len(ex.get("photos", [])) > 1 else ex["cover"]}" alt="" loading="lazy" decoding="async">'
         f'</a>'
         f'<div class="commission-example-bar">'
         f'<a class="commission-work-title" href="/obra/{ex["slug"]}/">{esc(ex["title"])}</a>'
         f'<a class="commission-pick-btn" href="https://wa.me/34636060609?text={quote("Hola Naroa, me gustaría un encargo inspirado en " + ex["title"] + ".")}" target="_blank" rel="noopener noreferrer">Encargar ↗</a>'
         f'</div>'
+        f'</div>'
         f'</article>'
-        for ex, _ in commission_examples
+        for idx, (ex, _) in enumerate(commission_examples)
+    )
+    progress_dots = ''.join(
+        f'<button type="button" class="commission-dot{" is-active" if idx == 0 else ""}" data-jump-card="{idx}" aria-label="Ir a obra {idx + 1}: {esc(ex["title"])}"><span>0{idx + 1}</span></button>'
+        for idx, (ex, _) in enumerate(commission_examples)
     )
     commissions = (
         f'<article class="editorial commission-minimal" id="contenido" data-commission-horizontal>'
         f'<div class="commission-horizontal-sticky">'
         f'<header class="commission-minimal-head">'
         f'<h1><span style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0">Retrato por encargo en Bilbao y retratos personalizados: </span><span>Encargos</span></h1>'
-        f'<a class="commission-pick-btn" href="https://wa.me/34636060609?text=Hola%20Naroa%2C%20quiero%20encargar%20una%20obra." target="_blank" rel="noopener noreferrer">WhatsApp ↗</a>'
+        f'<a class="commission-head-cta" href="https://wa.me/34636060609?text=Hola%20Naroa%2C%20quiero%20encargar%20una%20obra." target="_blank" rel="noopener noreferrer">WhatsApp ↗</a>'
         f'</header>'
         f'<div class="commission-examples" data-horizontal-track>'
         f'{examples_html}'
         f'<div class="closing" data-parallax-card>'
-        f'<a class="commission-cta-btn" href="https://wa.me/34636060609?text=Hola%20Naroa%2C%20quiero%20encargar%20una%20obra." target="_blank" rel="noopener noreferrer">WhatsApp ↗</a>'
+        f'<p class="hand" style="font-size:clamp(36px,4.5vw,56px);margin:0;color:#fffdf4">¿A quién te gustaría retratar?</p>'
+        f'<a class="commission-cta-btn" href="https://wa.me/34636060609?text=Hola%20Naroa%2C%20quiero%20encargar%20una%20obra." target="_blank" rel="noopener noreferrer">WhatsApp directo ↗</a>'
         f'<a class="text-link" href="mailto:naroa@naroa.eu?subject=Encargo">naroa@naroa.eu ↗</a>'
         f'</div>'
         f'</div>'
+        f'<nav class="commission-horizontal-progress" aria-label="Navegación horizontal de obras">'
+        f'<div class="commission-progress-bar"><div class="commission-progress-fill" data-progress-fill></div></div>'
+        f'<div class="commission-dots-dock">{progress_dots}</div>'
+        f'</nav>'
         f'</div>'
         f'</article>'
     )

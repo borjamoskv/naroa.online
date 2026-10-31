@@ -736,7 +736,61 @@
     } catch {}
     return { category: cat, frequency: freq, gated: false };
   }
-  let lastCanPeelTime = 0, lastEguzkiloreTime = 0;
+  let lastCanPeelTime = 0, lastEguzkiloreTime = 0, lastKutxaTime = 0;
+  function playKutxaBoxJump() {
+    const nowMs = typeof performance !== 'undefined' ? performance.now() : Date.now();
+    if (nowMs - lastKutxaTime < 420) return;
+    lastKutxaTime = nowMs;
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      try { navigator.vibrate([12, 24, 18]); } catch {}
+    }
+    if (!enabled || !context || !engine || context.state !== 'running') return;
+    try {
+      const now = context.currentTime + 0.004;
+      const target = engine.compressor || engine.master;
+      const gallery = getGalleryReverb();
+      if (typeof context.createOscillator === 'function') {
+        // 1. Golpe cálido de tapa de caja de nogal (164.81 Hz E3 -> 98.00 Hz G2)
+        const woodOsc = context.createOscillator();
+        const hingeOsc = context.createOscillator();
+        const filter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
+        const gain = context.createGain();
+        woodOsc.type = 'sine';
+        hingeOsc.type = 'triangle';
+        woodOsc.frequency.setValueAtTime(164.81, now);
+        hingeOsc.frequency.setValueAtTime(293.66, now + 0.045);
+        if (woodOsc.frequency.exponentialRampToValueAtTime) {
+          woodOsc.frequency.exponentialRampToValueAtTime(98.00, now + 0.19);
+        }
+        if (hingeOsc.frequency.exponentialRampToValueAtTime) {
+          hingeOsc.frequency.exponentialRampToValueAtTime(196.00, now + 0.24);
+        }
+        if (filter) {
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(520, now);
+          filter.Q.setValueAtTime(0.42, now);
+        }
+        gain.gain.setValueAtTime(0.0001, now);
+        if (gain.gain.linearRampToValueAtTime) {
+          gain.gain.linearRampToValueAtTime(0.14, now + 0.032);
+        }
+        if (gain.gain.exponentialRampToValueAtTime) {
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.42);
+        }
+        woodOsc.connect(filter || gain);
+        hingeOsc.connect(filter || gain);
+        if (filter) filter.connect(gain);
+        gain.connect(target);
+        if (gallery?.input) {
+          try { gain.connect(gallery.input); } catch {}
+        }
+        woodOsc.start(now);
+        hingeOsc.start(now + 0.045);
+        woodOsc.stop(now + 0.44);
+        hingeOsc.stop(now + 0.44);
+      }
+    } catch {}
+  }
   function playCanPeel() {
     const nowMs = typeof performance !== 'undefined' ? performance.now() : Date.now();
     if (nowMs - lastCanPeelTime < 450) return;
@@ -1380,6 +1434,9 @@
     puff(intensity) {
       playCigarettePuff(intensity);
     },
+    kutxaBox() {
+      playKutxaBoxJump();
+    },
     eguzkilore() {
       playEguzkiloreChime();
     },
@@ -1528,6 +1585,7 @@
     get lastGameOverSlug() { return lastGameOverSlug; },
     get lastKissSlug() { return lastKissSlug; },
     get lastPuffSlug() { return lastPuffSlug; },
+    get lastKutxaSlug() { return lastKutxaSlug; },
     get lastMenuNoteIndex() { return lastMenuNoteIndex; },
     get lastPhonographCategory() { return lastPhonographCategory; },
     get lastPhonographFreq() { return lastPhonographFreq; },
