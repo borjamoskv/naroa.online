@@ -5473,12 +5473,15 @@
         updateLink();
         if (group === 'support') {
           if (val.includes('Pizarra')) {
+            window.NAROA_SOUND?.organicTouch?.('stone-slate', 0.88);
             window.NAROA_SOUND?.eguzkilore?.();
           } else if (val.includes('Caja') || val.includes('Lata') || val.includes('objeto')) {
+            window.NAROA_SOUND?.organicTouch?.('water-ripple', 0.85);
             window.NAROA_SOUND?.canPeel?.();
           } else if (val.includes('Collage') || val.includes('madera') || val.includes('Vaquera')) {
-            window.NAROA_SOUND?.deltoya?.();
+            window.NAROA_SOUND?.organicTouch?.('wood-breeze', 0.86);
           } else if (val.includes('óleo') || val.includes('grafito') || val.includes('Papel')) {
+            window.NAROA_SOUND?.organicTouch?.('leaf-rustle', 0.82);
             window.NAROA_SOUND?.shaker?.();
           } else {
             window.NAROA_SOUND?.stencilRollerWipe?.(val);

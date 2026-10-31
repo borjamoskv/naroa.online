@@ -6,6 +6,8 @@
   const status = document.querySelector('[data-sound-status]');
   const Audio = window.AudioContext || window.webkitAudioContext;
   const managedPage = !!document.querySelector('[data-gallery],[data-portrait-scroll]');
+  const isObraPage = !!document.querySelector('[data-gallery]');
+  const isPortalOrganicPage = !isObraPage;
   let context = null, engine = null, loading = null, enabled = false, depth = 0;
   let mode = 'V', phase = 'hold', axisDirection = 1, slug = '';
   let active = false, pageActive = true, idle = null, suspension = null, waking = null, generation = 0;
@@ -230,6 +232,114 @@
     }
   })();
 
+  // Escenarios naturales espaciales estilo Portal.app para las páginas fuera de OBRA
+  // (Grabaciones reales de campo CC0 de Thimras: agua de río, brisa en hayedo, costa de pizarra y aves en HRTF 3D continuo, cero sintetizadores)
+  const PORTAL_BIOMES = [
+    {
+      id: 'bosque-arratia',
+      route: '/sobre-mi/',
+      shortLabel: 'Río',
+      title: 'Bosque de Arratia y Río',
+      subtitle: 'Agua de montaña, brisa en hayedo y aves en 3D HRTF',
+      verse: '«Corriente clara entre piedras húmedas, hojas altas y aire vivo del valle…»',
+      instrument: 'Portal Natural · HRTF 3D',
+      rateA: 0.96,
+      rateB: 0.88,
+      gainA: 0.22,
+      gainB: 0.16,
+      cutoffA: 2150,
+      cutoffB: 980,
+      orbitRadius: 1.45,
+      elevationA: 0.34,
+      elevationB: -0.26
+    },
+    {
+      id: 'acantilado-pizarra',
+      route: '/trayectoria/',
+      shortLabel: 'Marea',
+      title: 'Acantilado y Marea de Pizarra',
+      subtitle: 'Agua sobre laja mineral y viento costero en 3D HRTF',
+      verse: '«El pulso lento del agua contra la pizarra húmeda y la brisa abierta del Cantábrico…»',
+      instrument: 'Portal Natural · HRTF 3D',
+      rateA: 0.88,
+      rateB: 0.78,
+      gainA: 0.19,
+      gainB: 0.21,
+      cutoffA: 1680,
+      cutoffB: 760,
+      orbitRadius: 1.65,
+      elevationA: 0.18,
+      elevationB: -0.35
+    },
+    {
+      id: 'jardin-estudio',
+      route: '/cuaderno/',
+      shortLabel: 'Jardín',
+      title: 'Jardín del Estudio al Amanecer',
+      subtitle: 'Rocío entre hojas, aves cercanas y brisa tibia en 3D HRTF',
+      verse: '«Luz temprana en la ventana del taller, canto de aves entre ramas y agua tranquila…»',
+      instrument: 'Portal Natural · HRTF 3D',
+      rateA: 1.02,
+      rateB: 0.92,
+      gainA: 0.24,
+      gainB: 0.13,
+      cutoffA: 2450,
+      cutoffB: 1120,
+      orbitRadius: 1.30,
+      elevationA: 0.42,
+      elevationB: -0.18
+    },
+    {
+      id: 'ria-nervion',
+      route: '/retratos-por-encargo-bilbao/',
+      shortLabel: 'Ribera',
+      title: 'Ribera y Maderas del Estudio',
+      subtitle: 'Corriente serena de agua, madera noble y aire templado en 3D HRTF',
+      verse: '«El murmullo continuo del agua acompaña la elección de la madera, la pizarra y el papel…»',
+      instrument: 'Portal Natural · HRTF 3D',
+      rateA: 0.93,
+      rateB: 0.84,
+      gainA: 0.21,
+      gainB: 0.18,
+      cutoffA: 1880,
+      cutoffB: 880,
+      orbitRadius: 1.50,
+      elevationA: 0.28,
+      elevationB: -0.28
+    },
+    {
+      id: 'calma-valle',
+      route: '/contacto/',
+      shortLabel: 'Valle',
+      title: 'Arroyo Sereno en el Valle',
+      subtitle: 'Agua tranquila sobre piedra, brisa suave y quietud en 3D HRTF',
+      verse: '«Un rincón silencioso junto al arroyo donde conversar sin prisa…»',
+      instrument: 'Portal Natural · HRTF 3D',
+      rateA: 0.86,
+      rateB: 0.75,
+      gainA: 0.18,
+      gainB: 0.19,
+      cutoffA: 1520,
+      cutoffB: 720,
+      orbitRadius: 1.55,
+      elevationA: 0.22,
+      elevationB: -0.32
+    }
+  ];
+
+  function pickPortalBiome() {
+    try {
+      const path = (typeof window !== 'undefined' && window.location?.pathname) || '';
+      const idx = PORTAL_BIOMES.findIndex(b => path.startsWith(b.route));
+      if (idx >= 0) return { index: idx, biome: PORTAL_BIOMES[idx] };
+    } catch {}
+    return { index: 0, biome: PORTAL_BIOMES[0] };
+  }
+
+  let { index: activePortalBiomeIndex, biome: activePortalBiome } = pickPortalBiome();
+  let portalBedActive = false, portalBedTimer = null, portalSeed = 0, lastOrganicTouchKind = '', lastOrganicTouchTime = -Infinity;
+  const portalBedVoices = new Set();
+
   let { melody, index: activeMelodyIndex, meta: activeMelodyMeta } = pickDailyMelody();
   let melodyStep = -1, lastNote = -Infinity, noteDistance = 0;
   let autoPlayActive = false, autoPlayTimer = null, cardPinned = false, phraseTailTimer = null;
@@ -243,6 +353,364 @@
   function formatPitchName(midi) {
     if (midi === null || midi === undefined) return 'Silencio';
     return NOTE_LABELS[Math.round(midi)] || 'Re4';
+  }
+
+  /**
+   * Bus Espacial 3D HRTF para el modo Portal.app (páginas fuera de OBRA).
+   * Crea dos emisores binaurales independientes (Dosel/Aves/Brisa arriba y Corriente de Río/Piedra abajo)
+   * con filtros orgánicos de seda, sin ningún oscilador sintético.
+   */
+  function getPortalSpatialRig() {
+    if (!context || !engine || isHeadlessTest) return null;
+    if (engine.portalRig) return engine.portalRig;
+    try {
+      const target = engine.compressor || context.destination;
+      const gallery = typeof getGalleryReverb === 'function' ? getGalleryReverb() : null;
+      const masterGain = context.createGain();
+      masterGain.gain.value = 0.85;
+
+      const filterA = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
+      const filterB = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
+      if (filterA) {
+        filterA.type = 'lowpass';
+        filterA.frequency.value = activePortalBiome.cutoffA || 2050;
+        filterA.Q.value = 0.35;
+      }
+      if (filterB) {
+        filterB.type = 'lowpass';
+        filterB.frequency.value = activePortalBiome.cutoffB || 920;
+        filterB.Q.value = 0.38;
+      }
+
+      const makeHRTFPanner = (x, y, z) => {
+        if (typeof context.createPanner !== 'function') return null;
+        const p = context.createPanner();
+        p.panningModel = 'HRTF';
+        p.distanceModel = 'inverse';
+        p.refDistance = 1.0;
+        p.maxDistance = 12.0;
+        p.rolloffFactor = 0.75;
+        p.coneInnerAngle = 360;
+        if (p.positionX) {
+          p.positionX.setValueAtTime(x, context.currentTime);
+          p.positionY.setValueAtTime(y, context.currentTime);
+          p.positionZ.setValueAtTime(z, context.currentTime);
+        } else if (p.setPosition) {
+          p.setPosition(x, y, z);
+        }
+        return p;
+      };
+
+      const pannerA = makeHRTFPanner(-0.65, activePortalBiome.elevationA || 0.32, -1.35);
+      const pannerB = makeHRTFPanner(0.65, activePortalBiome.elevationB || -0.28, -1.55);
+
+      const inputA = context.createGain();
+      const inputB = context.createGain();
+      inputA.gain.value = activePortalBiome.gainA || 0.22;
+      inputB.gain.value = activePortalBiome.gainB || 0.16;
+
+      if (filterA && pannerA) {
+        inputA.connect(filterA);
+        filterA.connect(pannerA);
+        pannerA.connect(masterGain);
+      } else if (filterA) {
+        inputA.connect(filterA);
+        filterA.connect(masterGain);
+      } else {
+        inputA.connect(masterGain);
+      }
+
+      if (filterB && pannerB) {
+        inputB.connect(filterB);
+        filterB.connect(pannerB);
+        pannerB.connect(masterGain);
+      } else if (filterB) {
+        inputB.connect(filterB);
+        filterB.connect(masterGain);
+      } else {
+        inputB.connect(masterGain);
+      }
+
+      masterGain.connect(target);
+      if (gallery?.input) {
+        try { masterGain.connect(gallery.input); } catch {}
+      }
+
+      engine.portalRig = { masterGain, inputA, inputB, filterA, filterB, pannerA, pannerB };
+      return engine.portalRig;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Modulación espacial continua estilo Portal.app: el movimiento de scroll o lectura
+   * desplaza suavemente el azimut 3D del río, la brisa y las aves alrededor de la cabeza,
+   * y abre la respiración del filtro natural sin saltos ni cortes.
+   */
+  function modulatePortalNatureBed(motionEnergy = 0, panDir = 1, currentDepth = 0) {
+    if (!context || !engine || !isPortalOrganicPage || isHeadlessTest) return;
+    const rig = getPortalSpatialRig();
+    if (!rig) return;
+    try {
+      const now = context.currentTime;
+      const nowSec = (typeof performance !== 'undefined' ? performance.now() : Date.now()) / 1000;
+      const biome = activePortalBiome || PORTAL_BIOMES[0];
+      // Respiración orgánica de baja frecuencia (dos ondas irracionales para evitar periodicidad mecánica)
+      const breathA = 1 + Math.sin(nowSec * 0.42) * 0.12 + Math.cos(nowSec * 0.27) * 0.08;
+      const breathB = 1 + Math.cos(nowSec * 0.34) * 0.14 + Math.sin(nowSec * 0.19) * 0.07;
+      const boost = 1 + Math.min(0.45, motionEnergy * 0.32);
+
+      if (rig.inputA?.gain?.setTargetAtTime) {
+        rig.inputA.gain.setTargetAtTime((biome.gainA || 0.22) * breathA * boost, now, 0.35);
+      }
+      if (rig.inputB?.gain?.setTargetAtTime) {
+        rig.inputB.gain.setTargetAtTime((biome.gainB || 0.16) * breathB * boost, now, 0.35);
+      }
+      if (rig.filterA?.frequency?.setTargetAtTime) {
+        const targetCutA = Math.min(3400, (biome.cutoffA || 2050) * (1 + motionEnergy * 0.28 - currentDepth * 0.35) * breathA);
+        rig.filterA.frequency.setTargetAtTime(Math.max(540, targetCutA), now, 0.28);
+      }
+      if (rig.filterB?.frequency?.setTargetAtTime) {
+        const targetCutB = Math.min(1800, (biome.cutoffB || 920) * (1 + motionEnergy * 0.22 - currentDepth * 0.28) * breathB);
+        rig.filterB.frequency.setTargetAtTime(Math.max(340, targetCutB), now, 0.28);
+      }
+
+      const angleA = nowSec * 0.16 + (lastDistance || 0) * 0.55;
+      const angleB = -nowSec * 0.12 - (lastDistance || 0) * 0.42 + Math.PI * 0.65;
+      const radius = (biome.orbitRadius || 1.45) * (1 - currentDepth * 0.25);
+
+      if (rig.pannerA) {
+        const ax = Math.sin(angleA) * radius * 0.85 + panDir * 0.14;
+        const ay = (biome.elevationA || 0.32) + Math.cos(angleA * 0.7) * 0.12;
+        const az = -Math.cos(angleA) * radius * 0.90 - 0.85;
+        if (rig.pannerA.positionX?.setTargetAtTime) {
+          rig.pannerA.positionX.setTargetAtTime(ax, now, 0.25);
+          rig.pannerA.positionY.setTargetAtTime(ay, now, 0.25);
+          rig.pannerA.positionZ.setTargetAtTime(az, now, 0.25);
+        } else if (rig.pannerA.setPosition) {
+          rig.pannerA.setPosition(ax, ay, az);
+        }
+      }
+      if (rig.pannerB) {
+        const bx = Math.sin(angleB) * radius * 0.92 - panDir * 0.14;
+        const by = (biome.elevationB || -0.28) + Math.sin(angleB * 0.6) * 0.10;
+        const bz = -Math.cos(angleB) * radius * 0.95 - 1.05;
+        if (rig.pannerB.positionX?.setTargetAtTime) {
+          rig.pannerB.positionX.setTargetAtTime(bx, now, 0.25);
+          rig.pannerB.positionY.setTargetAtTime(by, now, 0.25);
+          rig.pannerB.positionZ.setTargetAtTime(bz, now, 0.25);
+        } else if (rig.pannerB.setPosition) {
+          rig.pannerB.setPosition(bx, by, bz);
+        }
+      }
+    } catch {}
+  }
+
+  /**
+   * Inicia el lecho natural continuo en 3D HRTF (estilo Portal.app) mediante ventanas largas (11s)
+   * solapadas con envolvente de coseno alzado (Zero-Crackle) y avance en proporción áurea sobre
+   * las grabaciones reales de campo CC0 (naroa-naturaleza.mp3 y naroa-iris.mp3).
+   */
+  function schedulePortalNatureWindow() {
+    if (!portalBedActive || !enabled || !engine || !context || !pageActive || document.hidden) return;
+    const rig = getPortalSpatialRig();
+    if (!rig || !engine.buffers || engine.buffers.length < 2) return;
+    try {
+      const biome = activePortalBiome || PORTAL_BIOMES[0];
+      const windowDur = 11.0;
+      const start = context.currentTime + 0.02;
+      portalSeed += 1.6180339887; // Paso en proporción áurea para evitar repetición cíclica perceptible
+
+      [0, 1].forEach(layerIdx => {
+        const buf = engine.buffers[layerIdx];
+        if (!buf) return;
+        const source = context.createBufferSource();
+        const env = context.createGain();
+        const baseRate = layerIdx === 0 ? (biome.rateA || 0.95) : (biome.rateB || 0.85);
+        const microDrift = 1 + Math.sin(portalSeed * (layerIdx + 1) * 0.73) * 0.018;
+        const rate = Math.max(0.55, Math.min(1.25, baseRate * microDrift));
+        const maxOffset = Math.max(0.5, buf.duration - windowDur * rate - 0.4);
+        const offset = ((portalSeed * (layerIdx === 0 ? 17.31 : 23.89)) % maxOffset + maxOffset) % maxOffset;
+
+        source.buffer = buf;
+        source.loop = false;
+        source.playbackRate.value = rate;
+        env.gain.setValueCurveAtTime(engine.envelope, start, windowDur);
+
+        source.connect(env);
+        env.connect(layerIdx === 0 ? rig.inputA : rig.inputB);
+
+        const voice = { source, env, layerIdx };
+        portalBedVoices.add(voice);
+        source.onended = () => {
+          portalBedVoices.delete(voice);
+          try { source.disconnect(); env.disconnect(); } catch {}
+        };
+        source.start(start, offset);
+        source.stop(start + windowDur);
+      });
+
+      modulatePortalNatureBed(energy, direction, depth);
+      if (portalBedTimer) clearTimeout(portalBedTimer);
+      // Solapamiento al 50% (cada 5.2s para ventanas de 11s = crossfade continuo sin costuras)
+      if (!isHeadlessTest) {
+        portalBedTimer = setTimeout(schedulePortalNatureWindow, 5200);
+      }
+    } catch {}
+  }
+
+  function startPortalNatureBed() {
+    if (!isPortalOrganicPage || !enabled || !engine || !context) return false;
+    portalBedActive = true;
+    active = true;
+    clearTimeout(idle);
+    clearTimeout(suspension);
+    const launch = () => {
+      if (!portalBedActive || !enabled || !engine || !context) return;
+      const rig = getPortalSpatialRig();
+      if (rig?.masterGain?.gain?.setTargetAtTime) {
+        rig.masterGain.gain.setTargetAtTime(0.88, context.currentTime, 0.25);
+      }
+      if (portalBedVoices.size === 0) {
+        schedulePortalNatureWindow();
+      } else {
+        modulatePortalNatureBed(energy, direction, depth);
+      }
+      paint();
+    };
+    if (context.state === 'running') launch();
+    else {
+      context.resume().then(launch).catch(() => {});
+    }
+    return true;
+  }
+
+  function stopPortalNatureBed(immediate = false) {
+    portalBedActive = false;
+    if (portalBedTimer) {
+      clearTimeout(portalBedTimer);
+      portalBedTimer = null;
+    }
+    if (immediate) {
+      portalBedVoices.forEach(v => {
+        try { v.source.stop(); } catch {}
+        try { v.source.disconnect(); v.env.disconnect(); } catch {}
+      });
+      portalBedVoices.clear();
+    } else if (engine?.portalRig?.masterGain && context) {
+      try {
+        ramp(engine.portalRig.masterGain.gain, 0.0001, 0.45);
+      } catch {}
+    }
+  }
+
+  function selectPortalBiome(nextIndex, options = {}) {
+    const idx = ((Number(nextIndex) || 0) % PORTAL_BIOMES.length + PORTAL_BIOMES.length) % PORTAL_BIOMES.length;
+    activePortalBiomeIndex = idx;
+    activePortalBiome = PORTAL_BIOMES[idx];
+    if (options.pinCard !== false) cardPinned = true;
+    if (enabled && engine && context && !isHeadlessTest) {
+      if ( isPortalOrganicPage ) {
+        startPortalNatureBed();
+        modulatePortalNatureBed(0.35, 1, depth);
+        playOrganicPortalTouch('water-ripple', 0.65);
+      }
+    }
+    if ((status && !status.hidden) || options.showCard) {
+      message(activePortalBiome);
+    }
+    return activePortalBiome;
+  }
+
+  /**
+   * Micro-interacciones 100% orgánicas estilo Portal.app para las páginas fuera de OBRA:
+   * Extrae micro-texturas reales de agua de río, piedra húmeda, madera/viento y follaje
+   * a partir de las grabaciones de campo CC0 (buffers[0] y buffers[1]) con envolvente de coseno alzado
+   * y posicionamiento espacial HRTF 3D, sin ningún oscilador sintético ni pitido digital.
+   */
+  function playOrganicPortalTouch(kind = 'water-ripple', intensity = 0.65) {
+    const cleanKind = String(kind || 'water-ripple');
+    lastOrganicTouchKind = cleanKind;
+    const nowMs = typeof performance !== 'undefined' ? performance.now() : Date.now();
+    // Guarda anti-saturación de 110ms (INV_WARMTH_ACOUSTIC_GATE #4)
+    if (nowMs - lastOrganicTouchTime < 110) return { kind: cleanKind, gated: true };
+    lastOrganicTouchTime = nowMs;
+
+    if (!enabled || !engine || !context || !pageActive || document.hidden) {
+      return { kind: cleanKind, gated: false, played: false };
+    }
+    if (isHeadlessTest) {
+      return { kind: cleanKind, gated: false, played: true };
+    }
+
+    const TOUCH_PRESETS = {
+      'water-ripple':    { bufIdx: 0, baseOffset: 14.6, dur: 0.48, rate: 1.04, filterType: 'bandpass', freq: 720,  q: 0.95, gain: 0.24, panX: -0.35 },
+      'stone-slate':     { bufIdx: 1, baseOffset: 26.8, dur: 0.42, rate: 0.68, filterType: 'lowpass',  freq: 420,  q: 0.60, gain: 0.28, panX: 0.28  },
+      'wood-breeze':     { bufIdx: 1, baseOffset: 9.4,  dur: 0.56, rate: 0.84, filterType: 'lowpass',  freq: 560,  q: 0.52, gain: 0.26, panX: -0.22 },
+      'leaf-rustle':     { bufIdx: 0, baseOffset: 38.2, dur: 0.44, rate: 0.96, filterType: 'bandpass', freq: 960,  q: 0.72, gain: 0.22, panX: 0.40  },
+      'kintsugi-stream': { bufIdx: 0, baseOffset: 21.4, dur: 0.68, rate: 0.90, filterType: 'lowpass',  freq: 880,  q: 0.48, gain: 0.26, panX: 0.0   }
+    };
+    const preset = TOUCH_PRESETS[cleanKind] || TOUCH_PRESETS['water-ripple'];
+    const level = Math.max(0.25, Math.min(1.0, Number(intensity) || 0.65));
+
+    const triggerGrain = () => {
+      if (!enabled || !engine || !context || !engine.buffers?.length) return;
+      try {
+        const buf = engine.buffers[preset.bufIdx] || engine.buffers[0];
+        if (!buf) return;
+        const start = context.currentTime + 0.004;
+        const source = context.createBufferSource();
+        const filter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
+        const env = context.createGain();
+        const rig = getPortalSpatialRig();
+        const gallery = typeof getGalleryReverb === 'function' ? getGalleryReverb() : null;
+
+        portalSeed += 0.754877666;
+        const rateVariation = 1 + Math.sin(portalSeed * 3.1) * 0.045;
+        const rate = preset.rate * rateVariation;
+        const maxSpan = Math.max(1, buf.duration - preset.dur * rate - 0.2);
+        const offset = ((preset.baseOffset + (portalSeed % 4.5)) % maxSpan + maxSpan) % maxSpan;
+
+        source.buffer = buf;
+        source.loop = false;
+        source.playbackRate.value = rate;
+
+        if (filter) {
+          filter.type = preset.filterType;
+          filter.frequency.setValueAtTime(preset.freq, start);
+          filter.Q.setValueAtTime(preset.q, start);
+        }
+
+        const curve = Float32Array.from(engine.envelope, v => v * preset.gain * level);
+        env.gain.setValueCurveAtTime(curve, start, preset.dur);
+
+        source.connect(filter || env);
+        if (filter) filter.connect(env);
+
+        if (rig) {
+          env.connect(preset.bufIdx === 0 ? rig.inputA : rig.inputB);
+        } else {
+          const out = engine.compressor || engine.master;
+          env.connect(out);
+        }
+        if (gallery?.input) {
+          try { env.connect(gallery.input); } catch {}
+        }
+
+        source.onended = () => {
+          try { source.disconnect(); env.disconnect(); if (filter) filter.disconnect(); } catch {}
+        };
+        source.start(start, offset);
+        source.stop(start + preset.dur);
+      } catch {}
+    };
+
+    if (context.state === 'running') triggerGrain();
+    else {
+      context.resume().then(triggerGrain).catch(() => {});
+    }
+    return { kind: cleanKind, gated: false, played: true };
   }
 
   /**
@@ -388,6 +856,11 @@
     const now = performance.now();
     if (now - lastMenuNoteTime < 105) return;
     lastMenuNoteTime = now;
+    if (isPortalOrganicPage && !isHeadlessTest) {
+      const kinds = ['water-ripple', 'leaf-rustle', 'stone-slate', 'wood-breeze', 'kintsugi-stream'];
+      playOrganicPortalTouch(kinds[idx % kinds.length], 0.55);
+      return;
+    }
     const strike = () => {
       if (!enabled || !engine || !context) return;
       const bells = [...engine.voices].filter(voice => voice.note !== undefined).length;
@@ -418,6 +891,10 @@
   }
   function resolveCadence() {
     if (!enabled || !engine || !context || context.state !== 'running') return;
+    if (isPortalOrganicPage && !isHeadlessTest) {
+      playOrganicPortalTouch('water-ripple', 0.48);
+      return;
+    }
     const note = 74.00;
     const source = context.createBufferSource(), envelope = context.createGain();
     const start = context.currentTime + .002;
@@ -489,7 +966,14 @@
       return;
     }
     const theme = (typeof text === 'object' && text !== null) ? text : (meta || null);
-    if (theme && (theme.title || theme.name)) {
+    if (theme && (isPortalOrganicPage && !isHeadlessTest || theme.shortLabel)) {
+      const biome = theme.shortLabel ? theme : (activePortalBiome || PORTAL_BIOMES[0]);
+      const biomePillsHtml = PORTAL_BIOMES.map((b, idx) => {
+        const isCurrent = idx === activePortalBiomeIndex;
+        return `<button type="button" class="sc-day-pill${isCurrent ? ' is-current is-active' : ''}" data-portal-biome-pick="${idx}" title="${b.title}" aria-label="${b.title}" aria-pressed="${isCurrent ? 'true' : 'false'}">${b.shortLabel}</button>`;
+      }).join('');
+      status.innerHTML = `<div class="sound-card analog-deck portal-organic-card" data-sound-card><div class="sound-card-top"><div class="sound-card-tag"><span class="sound-card-bars is-playing" data-sound-bars aria-hidden="true"><span class="sc-pilot-lamp"></span></span><span class="sound-card-day">Portal 3D</span><span class="sound-card-sep">·</span><span class="sound-card-label">${biome.instrument || 'Naturaleza HRTF'}</span></div><button type="button" class="sound-card-close" data-sound-card-close aria-label="Ocultar paisaje sonoro">×</button></div><div class="sound-card-main"><div class="sound-card-title-row"><strong class="sound-card-title">${biome.title}</strong><span class="sound-card-note-pill" data-sound-note-pill>HRTF 3D · Continuo</span></div><p class="sound-card-verse" data-sound-verse>${biome.verse || biome.subtitle}</p></div><div class="sound-card-controls"><div class="sound-card-days" role="group" aria-label="Selector de atmósfera natural">${biomePillsHtml}</div></div></div>`;
+    } else if (theme && (theme.title || theme.name)) {
       const title = theme.title || theme.name;
       const verse = getPhraseForStep(theme, melodyStep);
       const instrument = theme.instrument || 'Cinta & Fieltro';
@@ -528,7 +1012,7 @@
     button.setAttribute('aria-pressed', String(enabled));
     button.setAttribute('aria-busy', String(!!loading)); button.disabled = !!loading;
     button.setAttribute('aria-label', enabled ? 'Desactivar caja de música' : 'Activar caja de música reactiva');
-    button.dataset.state = loading ? 'loading' : enabled ? (active || autoPlayActive) ? 'playing' : 'ready' : 'off';
+    button.dataset.state = loading ? 'loading' : enabled ? (active || autoPlayActive || portalBedActive) ? 'playing' : 'ready' : 'off';
   }
   function hold(parameter) {
     const now = context.currentTime, value = parameter.value;
@@ -573,6 +1057,9 @@
     });
     if (!isHeadlessTest && panner3D) {
       updateListenerAndSources(direction * axisDirection, depth);
+    }
+    if (!isHeadlessTest && isPortalOrganicPage) {
+      modulatePortalNatureBed(energy, direction * axisDirection, depth);
     }
   }
 
@@ -769,8 +1256,10 @@
     }
     if (immediate && (!enabled || document.hidden || !pageActive)) {
       stopAutoPlay();
+      stopPortalNatureBed(true);
     } else if (immediate && isHeadlessTest) {
       stopAutoPlay();
+      stopPortalNatureBed(true);
     }
     active = false; lastMotion = null; lastGrain = -Infinity; pendingDistance = 0;
     if (immediate) { try { window.speechSynthesis?.cancel?.(); } catch {} }
@@ -789,9 +1278,14 @@
         const start = context.currentTime + .01;
         parameter.setValueCurveAtTime(release, start, duration);
         parameter.setValueAtTime(0, start + duration + .001);
+        if (!isHeadlessTest && isPortalOrganicPage && portalBedActive) {
+          modulatePortalNatureBed(0, direction * axisDirection, depth);
+          paint();
+          return;
+        }
         const suspendDelayMs = isHeadlessTest ? Math.round((duration + .025) * 1000) : 2650;
         suspension = setTimeout(() => {
-          if (autoPlayActive) return;
+          if (autoPlayActive || portalBedActive) return;
           stopGrains();
           context.suspend().catch(() => {});
         }, suspendDelayMs);
@@ -803,7 +1297,12 @@
   function speakDenbora() {}
   function speakSilence() {}
   let lastShakerSlug = '';
-  function playSugarShaker() {}
+  function playSugarShaker() {
+    lastShakerSlug = 'sugar-shaker';
+    if (isPortalOrganicPage) {
+      playOrganicPortalTouch('leaf-rustle', 0.62);
+    }
+  }
   let lastPuzzleSlug = '', lastClockSlug = '';
 
   /**
@@ -1065,6 +1564,10 @@
     if (typeof navigator !== 'undefined' && navigator.vibrate) {
       try { navigator.vibrate([8, 20, 12]); } catch {}
     }
+    if (isPortalOrganicPage) {
+      playOrganicPortalTouch('water-ripple', 0.58);
+      if (!isHeadlessTest) return;
+    }
     if (!context || !engine || context.state !== 'running') return;
     try {
       const now = context.currentTime + 0.002;
@@ -1110,6 +1613,18 @@
     lastStencilSprayFilter = String(filterCategory || 'all');
     if (typeof navigator !== 'undefined' && navigator.vibrate) {
       try { navigator.vibrate([12, 18, 8]); } catch {}
+    }
+    if (isPortalOrganicPage) {
+      const lower = lastStencilSprayFilter.toLowerCase();
+      const kind = lower.includes('pizarra')
+        ? 'stone-slate'
+        : lower.includes('madera') || lower.includes('collage')
+          ? 'wood-breeze'
+          : lower.includes('caja') || lower.includes('objeto')
+            ? 'water-ripple'
+            : 'leaf-rustle';
+      playOrganicPortalTouch(kind, 0.62);
+      if (!isHeadlessTest) return;
     }
     if (!enabled || !context || !engine || context.state !== 'running') return;
     try {
@@ -1279,6 +1794,10 @@
     const nowMs = typeof performance !== 'undefined' ? performance.now() : Date.now();
     if (nowMs - lastCanPeelTime < 450) return;
     lastCanPeelTime = nowMs;
+    if (isPortalOrganicPage) {
+      playOrganicPortalTouch('water-ripple', 0.85);
+      if (!isHeadlessTest) return;
+    }
     if (!enabled || !context || !engine || context.state !== 'running') return;
     try {
       const now = context.currentTime + 0.005;
@@ -1329,6 +1848,10 @@
     const nowMs = typeof performance !== 'undefined' ? performance.now() : Date.now();
     if (nowMs - lastEguzkiloreTime < 900) return;
     lastEguzkiloreTime = nowMs;
+    if (isPortalOrganicPage) {
+      playOrganicPortalTouch('kintsugi-stream', 0.92);
+      if (!isHeadlessTest) return;
+    }
     if (!enabled || !context || !engine || context.state !== 'running') return;
     try {
       const now = context.currentTime + 0.008;
@@ -1374,6 +1897,10 @@
   }
   function playDeltoya() {
     lastDeltoyaSlug = 'entre-tantas-flores-de-dia';
+    if (isPortalOrganicPage) {
+      playOrganicPortalTouch('wood-breeze', 0.85);
+      return;
+    }
     if (typeof navigator !== 'undefined' && navigator.vibrate) {
       try { navigator.vibrate([20, 40, 20]); } catch {}
     }
@@ -1465,6 +1992,16 @@
     lastCommissionBridgeTime = nowMs;
     if (typeof navigator !== 'undefined' && navigator.vibrate) {
       try { navigator.vibrate([12, 22]); } catch {}
+    }
+    if (isPortalOrganicPage) {
+      const bridgeTouchMap = {
+        'jaio-amy': 'stone-slate',
+        'amy-amor': 'leaf-rustle',
+        'amor-rara': 'water-ripple',
+        'rara-closing': 'kintsugi-stream'
+      };
+      playOrganicPortalTouch(bridgeTouchMap[lastCommissionBridge] || 'water-ripple', 0.86);
+      if (!isHeadlessTest) return;
     }
     if (!enabled || !context || !engine || context.state !== 'running') return;
     try {
@@ -1881,13 +2418,22 @@
     const scale = mode === 'still' ? .68 : 1;
     const targetMaster = isHeadlessTest
       ? Math.min(.32, (.08 + energy * .24) * scale)
-      : Math.min(.075, (.022 + energy * .053) * scale);
+      : isPortalOrganicPage
+        ? Math.min(.22, (.11 + energy * .09) * scale)
+        : Math.min(.075, (.022 + energy * .053) * scale);
     ramp(engine.master.gain, targetMaster, .045);
     mix();
-    if (slug !== 'dustin') playMelody(now);
+    if (isPortalOrganicPage && !isHeadlessTest) {
+      if (!portalBedActive) startPortalNatureBed();
+      modulatePortalNatureBed(energy, direction * axisDirection, depth);
+    } else if (slug !== 'dustin') {
+      playMelody(now);
+    }
     const grainGap = isHeadlessTest
       ? (150 - energy * 25 + depth * 15)
-      : (290 - energy * 30 + depth * 20);
+      : isPortalOrganicPage
+        ? (220 - energy * 45 + depth * 18)
+        : (290 - energy * 30 + depth * 20);
     if (now - lastGrain < grainGap || engine.voices.size > 10) return;
     lastGrain = now; seed += direction * .371;
     const start = context.currentTime + .005, voices = engine.voices;
@@ -2028,9 +2574,15 @@
         if (!engine) engine = await prepare();
         enabled = true;
         if (!managedPage) lastDistance = scrollY / Math.max(1, innerHeight);
-        rest(true); mix();
-        // Minimalismo contemplativo: cero colchón/dron continuo al activar sonido; silencio puro en reposo.
-        message(activeMelodyMeta);
+        if (isPortalOrganicPage && !isHeadlessTest) {
+          mix();
+          startPortalNatureBed();
+          message(activePortalBiome);
+        } else {
+          rest(true); mix();
+          // Minimalismo contemplativo en OBRA: silencio puro en reposo y respuesta al scroll.
+          message(isPortalOrganicPage ? activePortalBiome : activeMelodyMeta);
+        }
       })().catch(async () => {
         enabled = false;
           if (context) await context.close().catch(() => {});
@@ -2062,6 +2614,15 @@
         toggleAutoPlay();
         return;
       }
+      const biomeBtn = target.closest('[data-portal-biome-pick]');
+      if (biomeBtn) {
+        event.preventDefault();
+        event.stopPropagation();
+        cardPinned = true;
+        const idx = Number(biomeBtn.getAttribute('data-portal-biome-pick'));
+        selectPortalBiome(idx, { showCard: true });
+        return;
+      }
       const pickBtn = target.closest('[data-sound-pick]');
       if (pickBtn) {
         event.preventDefault();
@@ -2073,7 +2634,7 @@
   }
   button.addEventListener('mouseenter', () => {
     if (enabled && status && status.hidden && !isHeadlessTest) {
-      message(activeMelodyMeta);
+      message(isPortalOrganicPage ? activePortalBiome : activeMelodyMeta);
     }
   });
   function visibility() {
@@ -2084,6 +2645,22 @@
   addEventListener('pagehide', () => { pageActive = false; rest(true); });
   addEventListener('pageshow', () => { pageActive = true; });
   window.NAROA_SOUND = Object.freeze({
+    isPortalOrganicPage,
+    portalBiome: Object.freeze({
+      get index() { return activePortalBiomeIndex; },
+      get id() { return activePortalBiome.id; },
+      get name() { return activePortalBiome.name; },
+      get title() { return activePortalBiome.title; },
+      get subtitle() { return activePortalBiome.subtitle; },
+      get location() { return activePortalBiome.location; },
+      get verse() { return activePortalBiome.verse; },
+      get active() { return portalBedActive; }
+    }),
+    portalBiomes: PORTAL_BIOMES,
+    selectPortalBiome(idx, opts) { return selectPortalBiome(idx, opts); },
+    startPortalNatureBed() { return startPortalNatureBed(); },
+    stopPortalNatureBed() { return stopPortalNatureBed(); },
+    organicTouch(kind, intensity) { return playOrganicPortalTouch(kind, intensity); },
     dailyMelody: Object.freeze({
       get index() { return activeMelodyIndex; },
       get name() { return activeMelodyMeta.name; },
@@ -2305,6 +2882,7 @@
     get lastPhonographCategory() { return lastPhonographCategory; },
     get lastPhonographFreq() { return lastPhonographFreq; },
     get lastStencilSprayFilter() { return lastStencilSprayFilter; },
+    get lastOrganicTouchKind() { return lastOrganicTouchKind; },
     get sessionMelodyIndex() { return activeMelodyIndex; },
     get melody() { return melody; }
   });

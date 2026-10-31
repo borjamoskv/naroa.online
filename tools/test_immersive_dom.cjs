@@ -1151,7 +1151,26 @@ async function eyeMatch(ui, base, points) {
     assert.ok(julioRig, 'Julio Iglesias mounts SVG articulated puppet rig');
     const julioArm = julioRig.querySelector('[data-julio-arm]');
     assert.ok(julioArm && julioArm.getAttribute('transform')?.includes('1022 1317'), 'Julio Iglesias articulated arm pivots around elbow rivet (1022, 1317)');
+    assert.equal(julioPage.w.NAROA_SOUND.isPortalOrganicPage, false, 'OBRA gallery pages remain in musical gallery mode');
     julioPage.dom.window.close();
+
+    const portalAudio = audioBoundary();
+    const portalEncargos = create('/retratos-por-encargo-bilbao/', false, { width: 1280, height: 800 }, portalAudio);
+    await portalEncargos.flush();
+    assert.equal(portalEncargos.w.NAROA_SOUND.isPortalOrganicPage, true, 'Non-OBRA pages enable Portal.app organic 3D nature mode');
+    assert.equal(portalEncargos.w.NAROA_SOUND.portalBiome.id, 'ria-nervion', 'Encargos route maps to Ribera y Maderas del Estudio 3D biome');
+    assert.equal(portalEncargos.w.NAROA_SOUND.portalBiomes.length, 5, 'Five 3D HRTF natural Portal biomes are registered');
+    portalEncargos.click('[data-sound]');
+    await portalEncargos.flush();
+    portalEncargos.w.NAROA_SOUND.startPortalNatureBed();
+    assert.equal(portalEncargos.w.NAROA_SOUND.portalBiome.active, true, 'Portal 3D nature bed starts continuous organic field windows');
+    portalEncargos.w.NAROA_SOUND.organicTouch('water-ripple', 0.9);
+    assert.equal(portalEncargos.w.NAROA_SOUND.lastOrganicTouchKind, 'water-ripple', 'Organic touch dispatches real field-recording water ripple');
+    portalEncargos.w.NAROA_SOUND.selectPortalBiome(2);
+    assert.equal(portalEncargos.w.NAROA_SOUND.portalBiome.id, 'jardin-estudio', 'Selecting a Portal biome switches the active 3D natural escape');
+    portalEncargos.w.NAROA_SOUND.stopPortalNatureBed();
+    assert.equal(portalEncargos.w.NAROA_SOUND.portalBiome.active, false, 'Stopping Portal 3D nature bed cleanly releases voices');
+    portalEncargos.dom.window.close();
   }
   assert.equal(manifest.projects, works.length); assert.deepEqual(errors, []);
   console.log(`PASS: ${works.length} variable camera scores, fixed viewing pauses, full-viewport vertical and horizontal seams, deterministic reverse motion, three deep iris passes, zoom and puzzle chapters; all ${works.length} artwork flows, 3 gallery eye pairs, kinetic titles, native scroll, free inertia, direct links, 3-image loading bound, search/filters, details/photos, quiet mode, reduced motion, Vaivenes, editorial reveals, responsive Naroa-to-Rara Avis pupil/iris alignment, photographic wink, cinematic deep-iris camera with continuous forward velocity across the blend, eased outward turn, reversible reveal, image-load guard, seamless continuation through all ${works.length} works, 8 additional deep eye matches embedded catalogue navigation, opt-in reactive sound fragments, speed and direction response, bounded voices, silence at rest and safe audio lifecycle.`);
