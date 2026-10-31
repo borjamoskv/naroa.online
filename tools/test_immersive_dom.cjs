@@ -387,6 +387,7 @@ async function eyeMatch(ui, base, points) {
   assert.equal(ui.document.querySelectorAll('[data-menu-reel] [data-reel-index]').length, 4);
   ui.find('[data-menu-reel] [data-reel-index="1"]').click(); await ui.flush();
   assert.equal(ui.find('[data-menu-preview-title]').textContent, 'Marilyn Rocks', 'Selecting a filmstrip frame updates the main preview');
+  assert.equal(ui.find('[data-menu-open-work]').getAttribute('href'), '/obra/marilyn-rocks/', 'Selecting a filmstrip frame syncs the direct entry link');
   const vaivenesMenu = ui.find('[data-menu-item][href="/series/vaivenes/"]');
   vaivenesMenu.dispatchEvent(new ui.w.Event('pointerenter')); await ui.flush();
   assert.equal(ui.find('[data-menu-reel]').hidden, false, 'Vaivenes also displays its 4-frame series filmstrip');
@@ -405,6 +406,12 @@ async function eyeMatch(ui, base, points) {
   ui.find('#menu-dialog').dispatchEvent(new ui.w.KeyboardEvent('keydown', { key: '4', bubbles: true, cancelable: true })); await ui.flush();
   assert.equal(ui.find('[data-menu-preview-label]').textContent, 'Trayectoria', 'Numeric shortcut 1-7 previews and focuses the corresponding section');
   assert.equal(ui.find('[data-menu-preview-meta]').textContent, 'Exposiciones colectivas e individuales');
+  assert.equal(ui.find('[data-menu-reel]').hidden, false, 'Trayectoria renders its 4-frame curated filmstrip');
+  assert.equal(ui.find('#menu-dialog').style.getPropertyValue('--menu-glow'), '#6b5a35', 'Menu atmosphere glow adapts dynamically to the active section');
+  ui.click('[data-menu-sound-credits]'); await ui.flush();
+  assert.equal(ui.find('[data-menu-sound-drawer]').hidden, false, 'Sound credits drawer opens inline inside the menu dialog');
+  ui.click('[data-close-sound-drawer]'); await ui.flush();
+  assert.equal(ui.find('[data-menu-sound-drawer]').hidden, true, 'Sound credits drawer closes cleanly');
   assert.equal(ui.w.scrollY, heldPosition, 'Opening a panel preserves the exact scroll position');
   assert.equal(ui.find('[data-scene="1"] img').style.transform, heldPose, 'Opening a panel preserves the camera pose');
   ui.click('#menu-dialog [data-close-dialog]'); await ui.flush();
