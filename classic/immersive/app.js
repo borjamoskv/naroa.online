@@ -1243,38 +1243,56 @@
     track.style.setProperty('--journey-length', `${journey.total * 100}svh`);
     document.documentElement.classList.add('gallery-scroll');
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-    const pan = { x: 0, y: 0, rx: 0, ry: 0, tx: 0, ty: 0, trx: 0, try: 0, frame: null };
+    const pan = { x: 0, y: 0, rx: 0, ry: 0, vx: 0, vy: 0, vrx: 0, vry: 0, tx: 0, ty: 0, trx: 0, try: 0, frame: null };
     let cameraRestTimer = null, lastScrollPixels = 0;
     function stepPan() {
       pan.frame = null;
       if (reduced.matches || state.fit || !stage.classList.contains('is-resting')) {
-        pan.x = pan.y = pan.rx = pan.ry = pan.tx = pan.ty = pan.trx = pan.try = 0;
+        pan.x = pan.y = pan.rx = pan.ry = pan.vx = pan.vy = pan.vrx = pan.vry = pan.tx = pan.ty = pan.trx = pan.try = 0;
         stage.style.setProperty('--pan-x', '0px');
         stage.style.setProperty('--pan-y', '0px');
         stage.style.setProperty('--pan-rx', '0deg');
         stage.style.setProperty('--pan-ry', '0deg');
+        stage.style.setProperty('--pan-vx', '0');
+        stage.style.setProperty('--pan-vy', '0');
+        stage.style.setProperty('--pan-vrx', '0');
+        stage.style.setProperty('--pan-vry', '0');
         return;
       }
       const dx = pan.tx - pan.x;
       const dy = pan.ty - pan.y;
       const drx = pan.trx - pan.rx;
       const dry = pan.try - pan.ry;
-      if (Math.abs(dx) < 0.08 && Math.abs(dy) < 0.08 && Math.abs(drx) < 0.03 && Math.abs(dry) < 0.03) {
+      pan.vx = pan.vx * 0.56 + dx * 0.24;
+      pan.vy = pan.vy * 0.56 + dy * 0.24;
+      pan.vrx = pan.vrx * 0.54 + drx * 0.22;
+      pan.vry = pan.vry * 0.54 + dry * 0.22;
+      if (
+        Math.abs(dx) < 0.06 && Math.abs(dy) < 0.06 &&
+        Math.abs(drx) < 0.025 && Math.abs(dry) < 0.025 &&
+        Math.abs(pan.vx) < 0.03 && Math.abs(pan.vy) < 0.03 &&
+        Math.abs(pan.vrx) < 0.015 && Math.abs(pan.vry) < 0.015
+      ) {
         pan.x = pan.tx;
         pan.y = pan.ty;
         pan.rx = pan.trx;
         pan.ry = pan.try;
+        pan.vx = pan.vy = pan.vrx = pan.vry = 0;
       } else {
-        pan.x += dx * 0.38;
-        pan.y += dy * 0.38;
-        pan.rx += drx * 0.34;
-        pan.ry += dry * 0.34;
+        pan.x += pan.vx;
+        pan.y += pan.vy;
+        pan.rx += pan.vrx;
+        pan.ry += pan.vry;
         pan.frame = requestAnimationFrame(stepPan);
       }
       stage.style.setProperty('--pan-x', `${pan.x.toFixed(2)}px`);
       stage.style.setProperty('--pan-y', `${pan.y.toFixed(2)}px`);
       stage.style.setProperty('--pan-rx', `${pan.rx.toFixed(2)}deg`);
       stage.style.setProperty('--pan-ry', `${pan.ry.toFixed(2)}deg`);
+      stage.style.setProperty('--pan-vx', pan.vx.toFixed(3));
+      stage.style.setProperty('--pan-vy', pan.vy.toFixed(3));
+      stage.style.setProperty('--pan-vrx', pan.vrx.toFixed(3));
+      stage.style.setProperty('--pan-vry', pan.vry.toFixed(3));
     }
     function schedulePan(tx, ty) {
       if (reduced.matches || state.fit || !stage.classList.contains('is-resting')) return;
@@ -1289,6 +1307,8 @@
       cameraRestTimer = null;
       stage.classList.remove('is-camera-moving');
       stage.style.setProperty('--velocity-skew', '0deg');
+      stage.style.setProperty('--velocity-depth', '0px');
+      stage.style.setProperty('--velocity-tilt-x', '0deg');
       stage.style.setProperty('--scroll-velocity', '0');
       stage.style.setProperty('--camera-tension', '0');
     }
@@ -3572,6 +3592,8 @@
         stage.style.setProperty('--scroll-accel', '0');
         stage.style.setProperty('--camera-tension', '0');
         stage.style.setProperty('--velocity-skew', '0deg');
+        stage.style.setProperty('--velocity-depth', '0px');
+        stage.style.setProperty('--velocity-tilt-x', '0deg');
         stage.classList.add('is-resting');
       } else {
         stage.classList.remove('is-resting');
@@ -3594,10 +3616,15 @@
         motion.velocity = motion.velocity * 0.68 + instVel * 0.32;
         const energy = clamp(Math.abs(delta) * 2.4, 0, 1);
         const normVel = clamp(motion.velocity * 18, -1, 1);
+        const tension = clamp(energy * 0.65 + Math.abs(normVel) * 0.35, 0, 1);
+        const velDepth = clamp(-(Math.abs(normVel) * 18 + energy * 10), -28, 0);
+        const velTiltX = clamp(normVel * 1.65, -2.4, 2.4);
         stage.style.setProperty('--scroll-energy', energy.toFixed(3));
         stage.style.setProperty('--scroll-velocity', normVel.toFixed(3));
         stage.style.setProperty('--scroll-accel', accel.toFixed(3));
-        stage.style.setProperty('--camera-tension', clamp(energy * 0.65 + Math.abs(normVel) * 0.35, 0, 1).toFixed(3));
+        stage.style.setProperty('--camera-tension', tension.toFixed(3));
+        stage.style.setProperty('--velocity-depth', `${(Math.abs(velDepth) < 0.05 ? 0 : velDepth).toFixed(2)}px`);
+        stage.style.setProperty('--velocity-tilt-x', `${(Math.abs(velTiltX) < 0.02 ? 0 : velTiltX).toFixed(2)}deg`);
       }
       const pose = journey.read(motion.current);
       const position = pose.position;
@@ -3895,7 +3922,7 @@
         change(Math.floor(cur) === Math.ceil(cur) ? Math.round(cur) - 1 : Math.floor(cur));
       }
     });
-    function resetPan() { if (pan.frame !== null) cancelAnimationFrame(pan.frame); pan.x = pan.y = pan.rx = pan.ry = pan.tx = pan.ty = pan.trx = pan.try = 0; pan.frame = null; stage.style.setProperty('--pan-x', '0px'); stage.style.setProperty('--pan-y', '0px'); stage.style.setProperty('--pan-rx', '0deg'); stage.style.setProperty('--pan-ry', '0deg'); }
+    function resetPan() { if (pan.frame !== null) cancelAnimationFrame(pan.frame); pan.x = pan.y = pan.rx = pan.ry = pan.vx = pan.vy = pan.vrx = pan.vry = pan.tx = pan.ty = pan.trx = pan.try = 0; pan.frame = null; stage.style.setProperty('--pan-x', '0px'); stage.style.setProperty('--pan-y', '0px'); stage.style.setProperty('--pan-rx', '0deg'); stage.style.setProperty('--pan-ry', '0deg'); stage.style.setProperty('--pan-vx', '0'); stage.style.setProperty('--pan-vy', '0'); stage.style.setProperty('--pan-vrx', '0'); stage.style.setProperty('--pan-vry', '0'); }
     stage.addEventListener('pointermove', e => {
       if (reduced.matches || state.fit || !stage.classList.contains('is-resting')) return;
       if (heroThresholdEl && motion.pose.distance < 0.36) return;
@@ -5234,15 +5261,20 @@
   });
 
   window.NAROA_KINETICS = {
+    version: 'c5-substep-inertial-kinetics-v5',
     getState() {
       const st = $('[data-gallery]');
       return {
-        backend: 'c5-substep-inertial-kinetics-v4',
-        scrollFeel: 'critically-damped-substep-v4',
+        version: 'c5-substep-inertial-kinetics-v5',
+        backend: 'c5-substep-inertial-kinetics-v5',
+        scrollFeel: 'critically-damped-substep-v5',
         substepScroll: true,
         holdOpticalBreath: Boolean(st),
         zeroScrollLock: true,
         microPan25D: Boolean(st),
+        springPan2ndOrder: Boolean(st),
+        velocityDepthCoupling: Boolean(st),
+        differentialLayerParallax: Boolean(st),
         gyroPan3D: Boolean(st),
         indexGaussianWave: Boolean(st),
         magneticSpring: magnetTargets.length > 0,
@@ -5255,10 +5287,16 @@
         scrollVelocity: st ? parseFloat(st.style.getPropertyValue('--scroll-velocity') || '0') : 0,
         scrollAccel: st ? parseFloat(st.style.getPropertyValue('--scroll-accel') || '0') : 0,
         cameraTension: st ? parseFloat(st.style.getPropertyValue('--camera-tension') || '0') : 0,
+        velocityDepth: st ? parseFloat(st.style.getPropertyValue('--velocity-depth') || '0') : 0,
+        velocityTiltX: st ? parseFloat(st.style.getPropertyValue('--velocity-tilt-x') || '0') : 0,
         panX: st ? parseFloat(st.style.getPropertyValue('--pan-x') || '0') : 0,
         panY: st ? parseFloat(st.style.getPropertyValue('--pan-y') || '0') : 0,
         panRx: st ? parseFloat(st.style.getPropertyValue('--pan-rx') || '0') : 0,
-        panRy: st ? parseFloat(st.style.getPropertyValue('--pan-ry') || '0') : 0
+        panRy: st ? parseFloat(st.style.getPropertyValue('--pan-ry') || '0') : 0,
+        panVelX: st ? parseFloat(st.style.getPropertyValue('--pan-vx') || '0') : 0,
+        panVelY: st ? parseFloat(st.style.getPropertyValue('--pan-vy') || '0') : 0,
+        panVelRx: st ? parseFloat(st.style.getPropertyValue('--pan-vrx') || '0') : 0,
+        panVelRy: st ? parseFloat(st.style.getPropertyValue('--pan-vry') || '0') : 0
       };
     }
   };

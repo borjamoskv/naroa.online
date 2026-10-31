@@ -25,11 +25,18 @@
       title: 'Landa',
       subtitle: 'Alboka pastoral de Arratia',
       verse: '«Piedra húmeda y niebla tibia sobre el valle de Arratia»',
+      phrases: [
+        '«Piedra húmeda y niebla tibia sobre el valle de Arratia…»',
+        '«El eco del cuerno dormido entre hayedos y musgo antiguo…»',
+        '«Sube la luz por la pizarra mientras despierta el monte…»',
+        '«Y en la quietud desnuda resuena el sonido del silencio.»'
+      ],
       instrument: 'Alboka & Piano de Fieltro',
       shortDay: 'L',
       name: 'Landa · Alboka pastoral de Arratia',
       day: 'Lunes',
       tempoMs: 640,
+      timbre: { detuneCents: 2.2, cutoffMul: 1.05, subLevel: 0.42, harmColor: 'triangle', attackSec: 0.042, releaseMul: 1.05 },
       bass: [62.00, 69.02, 65.24, 67.02, 62.00, 69.02, 67.02, 69.02],
       harmony: [69.02, 74.00, 72.02, 71.74, 69.02, 72.02, 74.00, 65.24],
       notes: [
@@ -43,11 +50,18 @@
       title: 'Haurtxo Polita',
       subtitle: 'Nana popular en cinta cálida',
       verse: '«Haurtxo polita sehaskan dago, zapi zuritan txit bero…»',
+      phrases: [
+        '«Haurtxo polita sehaskan dago, zapi zuritan txit bero…»',
+        '«Amonak dio: ene potxolo, arren egin ba lo, lo…»',
+        '«Txakur haundia etorriko da zuk ezpadazu egiten lo…»',
+        '«Suave cae la tarde en el estudio hasta volverse silencio.»'
+      ],
       instrument: 'Celesta & Fieltro Cálido',
       shortDay: 'M',
       name: 'Haurtxo Polita · Nana popular en cinta cálida',
       day: 'Martes',
       tempoMs: 680,
+      timbre: { detuneCents: 1.4, cutoffMul: 0.88, subLevel: 0.36, harmColor: 'sine', attackSec: 0.052, releaseMul: 1.15 },
       bass: [62.00, 65.24, 67.02, 69.02, 62.00, 70.18, 67.02, 69.02],
       harmony: [69.02, 74.00, 71.74, 72.02, 69.02, 74.00, 70.18, 65.24],
       notes: [
@@ -61,11 +75,18 @@
       title: 'Harria eta Marea',
       subtitle: 'Aire de costa en Re menor',
       verse: '«Donde rompe la espuma contra la pizarra del Cantábrico»',
+      phrases: [
+        '«Donde rompe la espuma contra la pizarra del Cantábrico…»',
+        '«Salitre y grafito sobre la veta oscura de la pleamar…»',
+        '«Respira la ola honda antes de volver hacia el abismo…»',
+        '«Queda la piedra brillando sola en el sonido del silencio.»'
+      ],
       instrument: 'Pad Analógico & Caja',
       shortDay: 'X',
       name: 'Harria eta Marea · Aire de costa en Re menor',
       day: 'Miércoles',
       tempoMs: 700,
+      timbre: { detuneCents: 2.7, cutoffMul: 0.92, subLevel: 0.48, harmColor: 'triangle', attackSec: 0.048, releaseMul: 1.18 },
       bass: [62.00, 70.18, 65.24, 67.02, 62.00, 67.02, 70.18, 69.02],
       harmony: [69.02, 74.00, 72.02, 74.00, 69.02, 71.74, 74.00, 67.02],
       notes: [
@@ -79,11 +100,18 @@
       title: 'Txoria Txori',
       subtitle: 'Mikel Laboa en piano de fieltro',
       verse: '«Hegoak ebaki banizkio, nerea izango zen…»',
+      phrases: [
+        '«Hegoak ebaki banizkio, nerea izango zen, ez zuen aldegingo…»',
+        '«Bainan, honela, ez zen gehiago txoria izango…»',
+        '«Eta nik… txoria nuen maite, txoria nuen maite…»',
+        '«El vuelo libre se funde despacio en el sonido del silencio.»'
+      ],
       instrument: 'Piano de Fieltro Íntimo',
       shortDay: 'J',
       name: 'Txoria Txori · Mikel Laboa en piano de fieltro',
       day: 'Jueves',
       tempoMs: 660,
+      timbre: { detuneCents: 1.6, cutoffMul: 0.84, subLevel: 0.44, harmColor: 'sine', attackSec: 0.046, releaseMul: 1.12 },
       bass: [62.00, 62.00, 67.02, 69.02, 65.24, 67.02, 62.00, 69.02],
       harmony: [69.02, 69.02, 71.74, 72.02, 72.02, 74.00, 69.02, 65.24],
       notes: [
@@ -97,11 +125,18 @@
       title: 'Mi Gran Noche',
       subtitle: 'Caja de música íntima',
       verse: '«¿Qué pasará, qué misterio habrá? Puede ser mi gran noche…»',
+      phrases: [
+        '«¿Qué pasará, qué misterio habrá? Puede ser mi gran noche…»',
+        '«Y al despertar ya mi vida sabrá algo que no conoce…»',
+        '«Caminaré abrazando el azar bajo las luces de terciopelo…»',
+        '«Cuando se apaga el telón, habita el sonido del silencio.»'
+      ],
       instrument: 'Caja Íntima & Fieltro',
       shortDay: 'V',
       name: 'Mi Gran Noche · Caja de música íntima',
       day: 'Viernes',
       tempoMs: 620,
+      timbre: { detuneCents: 2.0, cutoffMul: 1.08, subLevel: 0.38, harmColor: 'triangle', attackSec: 0.036, releaseMul: 1.0 },
       bass: [62.00, 67.02, 70.18, 69.02, 62.00, 65.24, 67.02, 69.02],
       harmony: [69.02, 71.74, 74.00, 72.02, 69.02, 72.02, 71.74, 74.00],
       notes: [
@@ -115,11 +150,18 @@
       title: 'Gaua',
       subtitle: 'Nocturno de Bilbao',
       verse: '«Luces de ámbar reflejadas sobre la ría en calma»',
+      phrases: [
+        '«Luces de ámbar reflejadas sobre la ría en calma…»',
+        '«Cinta magnética lenta en la madrugada del taller…»',
+        '«El carbón y el pan de oro guardan la memoria del gesto…»',
+        '«Todo regresa a la penumbra y al sonido del silencio.»'
+      ],
       instrument: 'Nocturno Analógico',
       shortDay: 'S',
       name: 'Gaua · Nocturno de Bilbao',
       day: 'Sábado',
       tempoMs: 690,
+      timbre: { detuneCents: 2.8, cutoffMul: 0.80, subLevel: 0.50, harmColor: 'sine', attackSec: 0.054, releaseMul: 1.22 },
       bass: [62.00, 70.18, 67.02, 69.02, 62.00, 65.24, 70.18, 69.02],
       harmony: [69.02, 74.00, 71.74, 72.02, 69.02, 72.02, 74.00, 65.24],
       notes: [
@@ -133,11 +175,18 @@
       title: 'Haizea',
       subtitle: 'Brisa marina entre los pinos',
       verse: '«El viento peina las agujas de pino hacia el origen»',
+      phrases: [
+        '«El viento peina las agujas de pino hacia el origen…»',
+        '«Arpa dórica suspendida entre la niebla y el acantilado…»',
+        '«Cada trazo respira antes de posarse sobre el papel…»',
+        '«Y el aire se pliega sereno en el sonido del silencio.»'
+      ],
       instrument: 'Arpa Dórica & Cinta',
       shortDay: 'D',
       name: 'Haizea · Brisa marina entre los pinos',
       day: 'Domingo',
       tempoMs: 650,
+      timbre: { detuneCents: 1.9, cutoffMul: 1.02, subLevel: 0.40, harmColor: 'triangle', attackSec: 0.040, releaseMul: 1.10 },
       bass: [62.00, 65.24, 67.02, 69.02, 70.18, 67.02, 62.00, 69.02],
       harmony: [69.02, 72.02, 74.00, 72.02, 74.00, 71.74, 69.02, 65.24],
       notes: [
@@ -256,11 +305,13 @@
       const baseFreq = 440 * Math.pow(2, (subMidi - 69) / 12);
       if (baseFreq < 95 || baseFreq > 560) return;
       const nowMs = typeof performance !== 'undefined' ? performance.now() : Date.now();
+      const timbre = activeMelodyMeta?.timbre || { detuneCents: 2.0, cutoffMul: 1.0, subLevel: 0.38, harmColor: 'sine', attackSec: 0.048, releaseMul: 1.0 };
       // Deriva Tape Wow analógica (±2.8 cents, Boards of Canada / Aphex Twin)
       const tapeWow = 1 + Math.sin(nowMs * 0.0029 + midiNote * 0.47) * 0.0016;
+      const detuneRatio = Math.pow(2, (timbre.detuneCents || 1.8) / 1200);
       const warmDur = isHeadlessTest
         ? Math.min(2.1, Math.max(1.25, duration * 1.45))
-        : Math.min(2.85, Math.max(2.15, duration * 1.95));
+        : Math.min(2.95, Math.max(2.15, duration * 1.95 * (timbre.releaseMul || 1.0)));
       const peak = Math.min(0.24, velocity * 0.32);
       const envCurve = Float32Array.from(engine.noteEnvelope, level => level * peak);
 
@@ -271,12 +322,12 @@
       const subGain = context.createGain();
       osc.type = 'triangle';
       subOsc.type = 'sine';
-      osc.frequency.setValueAtTime(baseFreq * tapeWow * 1.0011, start);
+      osc.frequency.setValueAtTime(baseFreq * tapeWow * detuneRatio, start);
       subOsc.frequency.setValueAtTime(baseFreq * 0.5 * tapeWow, start);
       if (filter) {
         filter.type = 'lowpass';
-        const openCutoff = Math.min(680, Math.max(300, baseFreq * 1.75));
-        const warmCutoff = Math.max(220, Math.min(380, baseFreq * 0.95));
+        const openCutoff = Math.min(760, Math.max(290, baseFreq * 1.75 * (timbre.cutoffMul || 1.0)));
+        const warmCutoff = Math.max(210, Math.min(410, baseFreq * 0.95 * (timbre.cutoffMul || 1.0)));
         filter.frequency.setValueAtTime(openCutoff, start);
         if (!isHeadlessTest && filter.frequency.exponentialRampToValueAtTime) {
           filter.frequency.exponentialRampToValueAtTime(warmCutoff, start + warmDur * 0.75);
@@ -285,7 +336,7 @@
       }
       subGain.gain.setValueCurveAtTime(envCurve, start, warmDur);
       const subMix = context.createGain();
-      subMix.gain.setValueAtTime(0.38, start);
+      subMix.gain.setValueAtTime(timbre.subLevel || 0.38, start);
       osc.connect(filter || subGain);
       subOsc.connect(subMix);
       subMix.connect(filter || subGain);
@@ -311,7 +362,7 @@
       }
       feltGain.gain.setValueAtTime(0.0001, start);
       if (feltGain.gain.linearRampToValueAtTime) {
-        feltGain.gain.linearRampToValueAtTime(peak * 0.72, start + 0.048);
+        feltGain.gain.linearRampToValueAtTime(peak * 0.74, start + (timbre.attackSec || 0.048));
       }
       if (feltGain.gain.exponentialRampToValueAtTime) {
         feltGain.gain.exponentialRampToValueAtTime(0.0001, start + warmDur);
@@ -340,33 +391,33 @@
       hammerOsc.start(start);
       hammerOsc.stop(start + 0.042);
 
-      // Capa 3: Armonía Minimalista (Contrapunto sutil sólo en pulsos de inflexión clave)
+      // Capa 3: Armonía Minimalista (Contrapunto sutil en pulsos de frase y cadencia)
       const resolvedStep = Math.max(0, Number(stepIdx) || 0);
-      const isHarmStep = (resolvedStep % 4 === 2) || (resolvedStep >= 24);
+      const isHarmStep = (resolvedStep % 2 === 0) || (resolvedStep >= 24);
       const chordSlot = Math.floor(resolvedStep / 2) % 8;
       const harmonyList = activeMelodyMeta?.harmony || [69.02, 74.00, 72.02, 71.74, 69.02, 72.02, 74.00, 65.24];
       const bassList = activeMelodyMeta?.bass || [62.00, 69.02, 65.24, 67.02, 62.00, 69.02, 67.02, 69.02];
       const harmMidi = (harmonyList[chordSlot] || 69.02) - 12;
       const bassMidi = (bassList[chordSlot] || 62.00) - 12;
 
-      // Voz interior armónica (entra con micro-arpegio humano de +30ms)
+      // Voz interior armónica (entra con micro-arpegio humano de +28ms)
       if (isHarmStep && Math.abs(harmMidi - subMidi) > 1.2) {
         const harmFreq = 440 * Math.pow(2, (harmMidi - 69) / 12);
         const harmOsc = context.createOscillator();
         const harmFilter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
         const harmGain = context.createGain();
-        const tHarm = start + 0.030;
-        harmOsc.type = 'sine';
+        const tHarm = start + 0.028;
+        harmOsc.type = timbre.harmColor || 'sine';
         harmOsc.frequency.setValueAtTime(harmFreq * tapeWow, tHarm);
         if (harmFilter) {
           harmFilter.type = 'lowpass';
-          harmFilter.frequency.setValueAtTime(460, tHarm);
+          harmFilter.frequency.setValueAtTime(480 * (timbre.cutoffMul || 1.0), tHarm);
           harmFilter.Q.setValueAtTime(0.38, tHarm);
         }
-        const harmDur = warmDur * 0.90;
+        const harmDur = warmDur * 0.92;
         harmGain.gain.setValueAtTime(0.0001, tHarm);
         if (harmGain.gain.linearRampToValueAtTime) {
-          harmGain.gain.linearRampToValueAtTime(peak * 0.22, tHarm + 0.055);
+          harmGain.gain.linearRampToValueAtTime(peak * 0.25, tHarm + 0.052);
         }
         if (harmGain.gain.exponentialRampToValueAtTime) {
           harmGain.gain.exponentialRampToValueAtTime(0.0001, tHarm + harmDur);
@@ -381,8 +432,8 @@
         harmOsc.stop(tHarm + harmDur + 0.04);
       }
 
-      // Capa 4: Colchón Analógico Minimalista (solo en inicio de compás y cadencia Sound of Silence)
-      if (resolvedStep % 8 === 0 || resolvedStep >= 24) {
+      // Capa 4: Colchón Analógico Minimalista (inicio de semifrase cada 4 pasos y cadencia Sound of Silence)
+      if (resolvedStep % 4 === 0 || resolvedStep >= 24) {
         const bassFreq = 440 * Math.pow(2, (bassMidi - 69) / 12);
         const padOsc = context.createOscillator();
         const fifthOsc = context.createOscillator();
@@ -396,13 +447,13 @@
         fifthOsc.frequency.setValueAtTime(bassFreq * 1.4983 * tapeWow, tPad); // Quinta justa cálida
         if (padFilter) {
           padFilter.type = 'lowpass';
-          padFilter.frequency.setValueAtTime(360, tPad);
+          padFilter.frequency.setValueAtTime(380 * (timbre.cutoffMul || 1.0), tPad);
           if (padFilter.frequency.exponentialRampToValueAtTime) {
             padFilter.frequency.exponentialRampToValueAtTime(220, tPad + padDur * 0.85);
           }
           padFilter.Q.setValueAtTime(0.38, tPad);
         }
-        const padPeak = resolvedStep >= 24 ? peak * 0.34 : peak * 0.24;
+        const padPeak = resolvedStep >= 24 ? peak * 0.36 : peak * 0.25;
         padGain.gain.setValueAtTime(0.0001, tPad);
         if (padGain.gain.linearRampToValueAtTime) {
           padGain.gain.linearRampToValueAtTime(padPeak, tPad + 0.065);
@@ -522,6 +573,15 @@
     playWarmSubVoice(note, start, duration, 0.32);
   }
   let statusDismissTimer = null;
+  function getPhraseForStep(theme, stepIdx) {
+    if (!theme) return '';
+    const phrases = Array.isArray(theme.phrases) && theme.phrases.length > 0 ? theme.phrases : null;
+    if (!phrases) return theme.verse || '';
+    const s = stepIdx < 0 ? 0 : (stepIdx % 32);
+    const pIdx = Math.min(phrases.length - 1, Math.floor(s / 8));
+    return phrases[pIdx] || theme.verse || '';
+  }
+
   function updateSoundCardProgress() {
     if (!status || status.hidden) return;
     const progBar = status.querySelector('[data-sound-progress]');
@@ -532,7 +592,15 @@
     const noteBadge = status.querySelector('[data-sound-note-pill]');
     if (noteBadge && melodyStep >= 0) {
       const currentNote = melody[melodyStep % melody.length];
-      noteBadge.textContent = `♪ ${formatPitchName(currentNote)} · ${(melodyStep % melody.length) + 1}/${melody.length}`;
+      const stepStr = String((melodyStep % melody.length) + 1).padStart(2, '0');
+      noteBadge.textContent = `${formatPitchName(currentNote)} · ${stepStr}/${melody.length}`;
+    }
+    const verseEl = status.querySelector('[data-sound-verse]');
+    if (verseEl && activeMelodyMeta) {
+      const nextVerse = getPhraseForStep(activeMelodyMeta, melodyStep);
+      if (nextVerse && verseEl.textContent !== nextVerse) {
+        verseEl.textContent = nextVerse;
+      }
     }
     const playBtn = status.querySelector('[data-sound-autoplay]');
     if (playBtn) {
@@ -540,8 +608,8 @@
       playBtn.classList.toggle('is-playing', autoPlayActive);
       const iconEl = playBtn.querySelector('.sc-play-icon');
       const labelEl = playBtn.querySelector('.sc-play-label');
-      if (iconEl) iconEl.textContent = autoPlayActive ? '⏸' : '▶';
-      if (labelEl) labelEl.textContent = autoPlayActive ? 'Sonando' : 'Escuchar';
+      if (iconEl) iconEl.textContent = autoPlayActive ? '■' : '▸';
+      if (labelEl) labelEl.textContent = autoPlayActive ? 'Cinta' : 'Auto';
     }
     const barsEl = status.querySelector('[data-sound-bars]');
     if (barsEl) {
@@ -563,20 +631,22 @@
     const theme = (typeof text === 'object' && text !== null) ? text : (meta || null);
     if (theme && (theme.title || theme.name)) {
       const title = theme.title || theme.name;
-      const subtitle = theme.subtitle || '';
-      const verse = theme.verse || '';
-      const instrument = theme.instrument || 'Caja de música & Fieltro';
+      const verse = getPhraseForStep(theme, melodyStep);
+      const instrument = theme.instrument || 'Cinta & Fieltro';
       const day = theme.day || 'Hoy';
       const stepNum = melodyStep < 0 ? 1 : (melodyStep % melody.length) + 1;
+      const stepStr = String(stepNum).padStart(2, '0');
       const currentPitch = melody[melodyStep < 0 ? 0 : melodyStep % melody.length];
       const pct = Math.round((stepNum / melody.length) * 100);
+      const isPlayingNow = autoPlayActive || active;
       const dayPillsHtml = DAILY_MELODIES.map((m, idx) => {
         const isCurrent = idx === activeMelodyIndex;
-        return `<button type="button" class="sc-day-pill${isCurrent ? ' is-current' : ''}" data-sound-pick="${idx}" title="${m.day}: ${m.title}" aria-label="${m.day}: ${m.title}" aria-pressed="${isCurrent ? 'true' : 'false'}">${m.shortDay || m.day[0]}</button>`;
+        return `<button type="button" class="sc-day-pill${isCurrent ? ' is-current is-active' : ''}" data-sound-pick="${idx}" title="${m.day}: ${m.title}" aria-label="${m.day}: ${m.title}" aria-pressed="${isCurrent ? 'true' : 'false'}">${m.shortDay || m.day[0]}</button>`;
       }).join('');
-      status.innerHTML = `<div class="sound-card" data-sound-card><div class="sound-card-top"><div class="sound-card-tag"><span class="sound-card-bars${(autoPlayActive || active) ? ' is-playing' : ''}" data-sound-bars aria-hidden="true"><span class="sc-bar"></span><span class="sc-bar"></span><span class="sc-bar"></span><span class="sc-bar"></span></span><span class="sound-card-day">${day}</span><span class="sound-card-sep">·</span><span class="sound-card-label">${instrument}</span></div><button type="button" class="sound-card-close" data-sound-card-close aria-label="Ocultar consola musical">×</button></div><div class="sound-card-main"><div class="sound-card-title-row"><strong class="sound-card-title">«${title}»</strong><span class="sound-card-note-pill" data-sound-note-pill>♪ ${formatPitchName(currentPitch)} · ${stepNum}/${melody.length}</span></div>${subtitle ? `<span class="sound-card-sub">${subtitle}</span>` : ''}${verse ? `<p class="sound-card-verse">${verse}</p>` : ''}</div><div class="sound-card-controls"><button type="button" class="sound-card-play${autoPlayActive ? ' is-playing' : ''}" data-sound-autoplay aria-pressed="${autoPlayActive ? 'true' : 'false'}"><span class="sc-play-icon" aria-hidden="true">${autoPlayActive ? '⏸' : '▶'}</span><span class="sc-play-label">${autoPlayActive ? 'Sonando' : 'Escuchar'}</span></button><div class="sound-card-days" role="group" aria-label="Canciones de la semana">${dayPillsHtml}</div></div><div class="sound-card-progress" aria-hidden="true"><span class="sound-card-progress-bar" data-sound-progress style="width:${pct}%"></span></div><p class="sound-card-hint"><span class="sound-card-hint-icon" aria-hidden="true">✦</span> Desplázate para hilar cada nota o pulsa Escuchar</p></div>`;
+      const reelsSvg = `<svg class="analog-reels-svg" viewBox="0 0 38 16" aria-hidden="true"><rect x="1" y="1" width="36" height="14" rx="2" class="reel-window-frame"/><line x1="10" y1="4.5" x2="28" y2="4.5" class="reel-tape-line"/><g class="reel-spool reel-spool--left"><circle cx="10" cy="8" r="4.2"/><circle cx="10" cy="8" r="1.2"/><line x1="10" y1="3.8" x2="10" y2="6.8"/><line x1="6.4" y1="10.1" x2="9" y2="8.6"/><line x1="13.6" y1="10.1" x2="11" y2="8.6"/></g><g class="reel-spool reel-spool--right"><circle cx="28" cy="8" r="4.2"/><circle cx="28" cy="8" r="1.2"/><line x1="28" y1="3.8" x2="28" y2="6.8"/><line x1="24.4" y1="10.1" x2="27" y2="8.6"/><line x1="31.6" y1="10.1" x2="29" y2="8.6"/></g></svg>`;
+      status.innerHTML = `<div class="sound-card analog-deck" data-sound-card><div class="sound-card-top"><div class="sound-card-tag"><span class="sound-card-bars${isPlayingNow ? ' is-playing' : ''}" data-sound-bars aria-hidden="true"><span class="sc-pilot-lamp"></span>${reelsSvg}</span><span class="sound-card-day">${day}</span><span class="sound-card-sep">·</span><span class="sound-card-label">${instrument}</span></div><button type="button" class="sound-card-close" data-sound-card-close aria-label="Ocultar aparato musical">×</button></div><div class="sound-card-main"><div class="sound-card-title-row"><strong class="sound-card-title">${title}</strong><span class="sound-card-note-pill" data-sound-note-pill>${formatPitchName(currentPitch)} · ${stepStr}/${melody.length}</span></div>${verse ? `<p class="sound-card-verse" data-sound-verse>${verse}</p>` : ''}</div><div class="sound-card-progress" aria-hidden="true"><span class="sound-card-progress-bar" data-sound-progress style="width:${pct}%"></span></div><div class="sound-card-controls"><button type="button" class="sound-card-play${autoPlayActive ? ' is-playing is-active' : ''}" data-sound-autoplay aria-pressed="${autoPlayActive ? 'true' : 'false'}" title="Marcha continua de cinta"><span class="sc-play-icon" aria-hidden="true">${autoPlayActive ? '■' : '▸'}</span><span class="sc-play-label">${autoPlayActive ? 'Cinta' : 'Auto'}</span></button><div class="sound-card-days" role="group" aria-label="Selector mecánico semanal">${dayPillsHtml}</div></div></div>`;
     } else {
-      status.innerHTML = `<div class="sound-card is-simple"><p class="sound-card-text">${text}</p></div>`;
+      status.innerHTML = `<div class="sound-card analog-deck is-simple"><p class="sound-card-text">${text}</p></div>`;
     }
     status.classList.remove('is-fading');
     status.hidden = false;
@@ -591,7 +661,7 @@
           status.classList.remove('is-fading');
           statusDismissTimer = null;
         }, 450);
-      }, 9500);
+      }, 5800);
     }
   }
   function paint() {
@@ -758,6 +828,24 @@
     return activeMelodyMeta;
   }
 
+  function schedulePhraseTail() {
+    if (isHeadlessTest || autoPlayActive || !enabled || !engine || !context) return;
+    if (phraseTailTimer) clearTimeout(phraseTailTimer);
+    phraseTailTimer = setTimeout(() => {
+      phraseTailTimer = null;
+      if (autoPlayActive || !enabled || !engine || !context || context.state !== 'running') return;
+      const nextStep = melodyStep < 0 ? 0 : (melodyStep + 1) % melody.length;
+      melodyStep = nextStep;
+      const tailNote = melody[nextStep];
+      if (tailNote !== null) {
+        playWarmSubVoice(tailNote, context.currentTime + 0.01, 1.35, 0.28, nextStep);
+      } else {
+        playWarmRestChord(context.currentTime + 0.01, nextStep);
+      }
+      updateSoundCardProgress();
+    }, 520);
+  }
+
   function playMelody(now) {
     const bells = [...engine.voices].filter(voice => voice.note !== undefined).length;
     const minGap = isHeadlessTest ? (700 - energy * 250) : (440 - energy * 120);
@@ -775,6 +863,7 @@
       return;
     }
     strikeStepVoices(melodyStep, .48 + energy * .16, true);
+    schedulePhraseTail();
   }
   function stopGrains() {
     if (!engine) return;
@@ -1972,7 +2061,7 @@
         event.preventDefault();
         event.stopPropagation();
         const idx = Number(pickBtn.getAttribute('data-sound-pick'));
-        selectMelody(idx, { preview: true });
+        selectMelody(idx, { audition: true, showCard: true });
       }
     });
   }
