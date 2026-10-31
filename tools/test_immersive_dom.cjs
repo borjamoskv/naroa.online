@@ -300,7 +300,6 @@ async function eyeMatch(ui, base, points) {
       'infusion-de-berto': { key: 'berto', sel: '[data-berto-bag]' },
       'red-red-wine': { key: 'wineflame', sel: '[data-wine-flame="0"]' },
       'pajarraca-azul': { key: 'pajarraca', sel: '[data-pajarraca-bird]' },
-      'la-llorona': { key: 'llorona', sel: '[data-llorona-drop]' },
       'idoia-arkatz-bihotz': { key: 'arkatz', sel: '[data-arkatz-heart]' },
       'sistashark': { key: 'shark3d', sel: '[data-shark-goggles]' },
       'eneko-el-marino': { key: 'ancla', sel: '[data-ancla-hook]' },
@@ -1110,8 +1109,8 @@ async function eyeMatch(ui, base, points) {
 
     assert.ok(armigoPage.w.NAROA_KINETICS, 'NAROA_KINETICS telemetry API exposed');
     const kinInit = armigoPage.w.NAROA_KINETICS.getState();
-    assert.equal(kinInit.backend, 'c5-substep-inertial-kinetics-v5', 'Kinetics uses C5 substep inertial kinetics v5 backend');
-    assert.equal(kinInit.scrollFeel, 'critically-damped-substep-v5', 'Critically-damped 2nd-order velocity blending is active');
+    assert.equal(kinInit.backend, 'c5-substep-inertial-kinetics-v6', 'Kinetics uses C5 substep inertial kinetics v6 backend');
+    assert.equal(kinInit.scrollFeel, 'critically-damped-substep-v6', 'Critically-damped 2nd-order velocity blending v6 is active');
     assert.equal(kinInit.substepScroll, true, 'Substep scroll is active');
     assert.equal(kinInit.holdOpticalBreath, true, 'Continuous optical breath during viewing hold is active');
     assert.equal(kinInit.zeroScrollLock, true, 'Zero scroll hijacking lock is enforced');
@@ -1119,6 +1118,10 @@ async function eyeMatch(ui, base, points) {
     assert.equal(kinInit.springPan2ndOrder, true, '2nd-order spring-damped pointer micro-inertia is active');
     assert.equal(kinInit.velocityDepthCoupling, true, 'Optical velocity depth coupling is active');
     assert.equal(kinInit.differentialLayerParallax, true, 'Multi-layer differential parallax is active');
+    assert.equal(kinInit.fluidScrollCoupling, true, 'Scroll-to-Navier-Stokes fluid vorticity coupling is active');
+    assert.equal(kinInit.secondOrderMagnet, true, '2nd-order dt-invariant magnetic spring-damper is active');
+    assert.equal(kinInit.secondOrderSpline, true, '2nd-order dt-invariant Catmull-Rom 3D spline rig is active');
+    assert.equal(kinInit.secondOrderLens, true, '2nd-order dt-invariant Liquid Glass IOR lens is active');
     assert.equal(armigoPage.find('[data-gallery]').style.getPropertyValue('--velocity-depth'), '0px', '--velocity-depth converges to 0px at rest');
     assert.equal(armigoPage.find('[data-gallery]').style.getPropertyValue('--velocity-tilt-x'), '0deg', '--velocity-tilt-x converges to 0deg at rest');
     assert.equal(kinInit.gyroPan3D, true, '3D gyroscopic tilt is active on gallery');
@@ -1131,6 +1134,11 @@ async function eyeMatch(ui, base, points) {
     const kinPan = armigoPage.w.NAROA_KINETICS.getState();
     assert.ok(Math.abs(kinPan.panX) > 1 && Math.abs(kinPan.panY) > 1, '2.5D micro-pan suspends artwork in response to resting pointer');
     assert.ok(Math.abs(kinPan.panRx) > 0.2 && Math.abs(kinPan.panRy) > 0.2, '3D perspective tilt rotates artwork plane at rest');
+    const splatsBeforeScroll = armigoPage.w.NAROA_FLUID.getState().splatCount;
+    armigoPage.scroll(25.55);
+    await armigoPage.flush();
+    assert.ok(armigoPage.w.NAROA_FLUID.getState().splatCount > splatsBeforeScroll, 'Camera scroll momentum injects laminar vorticity splats into NAROA_FLUID');
+    assert.equal(armigoPage.find('[data-gallery]').style.getPropertyValue('--velocity-depth'), '0px', '--velocity-depth returns to 0px after scroll settles');
     armigoPage.dom.window.close();
 
     const julioPage = create('/obra/julio-iglesias-como-un-reloj-suizo/', false, { width: 1280, height: 800 }, null, 'on');
@@ -1139,7 +1147,7 @@ async function eyeMatch(ui, base, points) {
     assert.ok(julioRig, 'Julio Iglesias mounts SVG articulated puppet rig');
     const julioArm = julioRig.querySelector('[data-julio-arm]');
     assert.ok(julioArm && julioArm.getAttribute('transform')?.includes('1022 1317'), 'Julio Iglesias articulated arm pivots around elbow rivet (1022, 1317)');
-    for (const cueKey of ['berto', 'wineflame', 'pajarraca', 'llorona', 'arkatz', 'shark3d', 'ancla', 'bowiestar', 'audreybolt', 'rosettabirds']) {
+    for (const cueKey of ['berto', 'wineflame', 'pajarraca', 'arkatz', 'shark3d', 'ancla', 'bowiestar', 'audreybolt', 'rosettabirds']) {
       julioPage.w.NAROA_SOUND.interworkCue(cueKey, 3);
       assert.equal(julioPage.w.NAROA_SOUND.lastInterworkCueKind, cueKey, `NAROA_SOUND synthesizes warm analog interwork cue for ${cueKey}`);
       assert.equal(julioPage.w.NAROA_SOUND.lastInterworkCueCount, 3, `NAROA_SOUND tracks vaivén count for ${cueKey}`);

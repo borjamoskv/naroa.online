@@ -1043,7 +1043,7 @@ def build(output):
         if arts:
             cards_html = '<div class="timeline-cards-strip" role="group" aria-label="Obras de este encuentro">' + ''.join(
                 f'<a href="{esc(a["url"])}" class="timeline-cromo" data-cromo-slug="{esc(a["slug"])}" title="{esc(a["title"])}">'
-                f'<span class="timeline-cromo-frame"><img src="{esc(a["thumb"])}" alt="{esc(a["title"])}" width="80" height="96" loading="lazy" decoding="async"></span>'
+                f'<span class="timeline-cromo-frame"><img src="{esc(a["thumb"])}" alt="{esc(a["title"])}" width="80" height="96" loading="eager" decoding="async"></span>'
                 f'<span class="timeline-cromo-meta"><strong>{esc(a["title"])}</strong><small>{esc(a["medium"])}</small></span>'
                 f'</a>'
                 for a in arts

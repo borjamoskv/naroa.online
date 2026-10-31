@@ -1485,7 +1485,7 @@
     const galleryHeader = createGalleryElement('div', 'work-gallery-header');
     const galleryClose = createGalleryElement('button', '', 'Cerrar ×');
     galleryClose.type = 'button'; galleryClose.autofocus = true;
-    galleryHeader.append(createGalleryElement('p', 'eyebrow', 'Mesa de disección · La obra, de cerca'), galleryClose);
+    galleryHeader.append(createGalleryElement('p', 'eyebrow', 'El Estudio · La obra, de cerca'), galleryClose);
     const galleryIntro = createGalleryElement('div', 'work-gallery-intro');
     const gallerySerial = createGalleryElement('span', 'work-gallery-serial');
     gallerySerial.dataset.workGallerySerial = '';
@@ -1499,21 +1499,21 @@
     const dissectionPills = createGalleryElement('div', 'work-dissection-pills');
     dissectionPills.dataset.workPills = '';
     const dissectionTools = createGalleryElement('div', 'work-dissection-tools');
-    const loupeToggleBtn = createGalleryElement('button', 'dissection-tool-btn is-active', '🔍 Lupa matérica 3×');
+    const loupeToggleBtn = createGalleryElement('button', 'dissection-tool-btn is-active', '🔍 Lupa matérica');
     loupeToggleBtn.type = 'button';
     loupeToggleBtn.dataset.galleryLoupeToggle = '';
     loupeToggleBtn.setAttribute('aria-pressed', 'true');
-    const xrayToggleBtn = createGalleryElement('button', 'dissection-tool-btn', '✦ Luz rasante / Relieve');
+    const xrayToggleBtn = createGalleryElement('button', 'dissection-tool-btn', '✦ Luz rasante');
     xrayToggleBtn.type = 'button';
     xrayToggleBtn.dataset.galleryXrayToggle = '';
     xrayToggleBtn.setAttribute('aria-pressed', 'false');
-    const storyOpenBtn = createGalleryElement('button', 'dissection-tool-btn', 'Sobre esta obra +');
+    const storyOpenBtn = createGalleryElement('button', 'dissection-tool-btn', 'Historia de la obra +');
     storyOpenBtn.type = 'button';
     storyOpenBtn.dataset.galleryStoryOpen = '';
-    const prevWorkBtn = createGalleryElement('button', 'dissection-tool-btn', '← Obra anterior');
+    const prevWorkBtn = createGalleryElement('button', 'dissection-tool-btn', '← Anterior');
     prevWorkBtn.type = 'button';
     prevWorkBtn.dataset.galleryPrevWork = '';
-    const nextWorkBtn = createGalleryElement('button', 'dissection-tool-btn', 'Siguiente obra →');
+    const nextWorkBtn = createGalleryElement('button', 'dissection-tool-btn', 'Siguiente →');
     nextWorkBtn.type = 'button';
     nextWorkBtn.dataset.galleryNextWork = '';
     dissectionTools.append(loupeToggleBtn, xrayToggleBtn, storyOpenBtn, prevWorkBtn, nextWorkBtn);
@@ -1521,7 +1521,7 @@
     galleryIntro.append(gallerySerial, galleryTitle, galleryMeta, dissectionDeck);
     const galleryGrid = createGalleryElement('div', 'work-gallery-grid');
     workGallery.append(galleryBackdrop, galleryHeader, galleryIntro, galleryGrid,
-      createGalleryElement('p', 'work-gallery-footer', 'Desliza la lupa sobre el lienzo para inspeccionar el grano · Pulsa una plancha para abrirla a pantalla completa'));
+      createGalleryElement('p', 'work-gallery-footer', 'Acerca la lupa sobre el lienzo para sentir el trazo · Pulsa cualquier vista para abrirla a pantalla completa'));
     document.body.append(workGallery);
     loupeToggleBtn.addEventListener('click', () => {
       const nextState = workGallery.dataset.loupeActive !== 'true';
@@ -2181,7 +2181,6 @@
       'infusion-de-berto->buena-fuente': 'berto',
       'red-red-wine->i-remember-when-your-head-caught-flame': 'wineflame',
       'pajarraca-azul->flying-dragon': 'pajarraca',
-      'la-llorona->pablo': 'llorona',
       'idoia-arkatz-bihotz->little-adi': 'arkatz',
       'sistashark->multi-dimensional-love': 'shark3d',
       'eneko-el-marino->aupas': 'ancla',
@@ -2215,9 +2214,6 @@
       ).join('');
       const dragonSparksHtml = Array.from({ length: 7 }, (_, i) =>
         `<circle class="iw-dragon-spark" data-dragon-spark="${i}" r="${5 + (i % 3) * 3}" fill="${i % 2 === 0 ? '#ffb703' : '#ff2a55'}" />`
-      ).join('');
-      const lloronaRipplesHtml = Array.from({ length: 6 }, (_, i) =>
-        `<ellipse class="iw-llorona-ripple" data-llorona-ripple="${i}" rx="20" ry="12" fill="none" stroke="${i % 2 === 0 ? 'rgba(247,213,148,0.82)' : 'rgba(255,140,190,0.72)'}" stroke-width="${2.6 - i * 0.28}" />`
       ).join('');
       const sharkBubblesHtml = Array.from({ length: 8 }, (_, i) =>
         `<circle class="iw-shark-bubble" data-shark-bubble="${i}" r="${6 + (i % 4) * 3.5}" fill="none" stroke="${i % 2 === 0 ? '#00f0ff' : '#ff004c'}" stroke-width="2.2" />`
@@ -2253,10 +2249,6 @@
             ${dragonSparksHtml}
           </svg>
           <div class="iw-cutout iw-pajarraca-mask" data-pajarraca-bird style="background-image:url(&quot;/images/catalogo/pajarraca-mask-cutout.webp&quot;)"></div>
-        </div>
-        <div class="iw-rig" data-fx="llorona" hidden>
-          <svg class="iw-svg" viewBox="0 0 1000 1000" preserveAspectRatio="none">${lloronaRipplesHtml}</svg>
-          <div class="iw-cutout iw-llorona-tear" data-llorona-drop style="background-image:url(&quot;/images/catalogo/llorona-tear-cutout.webp&quot;)"></div>
         </div>
         <div class="iw-rig" data-fx="arkatz" hidden>
           <svg class="iw-svg" viewBox="0 0 1000 1000" preserveAspectRatio="none">
@@ -3683,32 +3675,6 @@
             sp.setAttribute('cy', spY.toFixed(1));
             sp.style.opacity = (Math.sin(stT * Math.PI) * 0.92).toFixed(3);
           });
-        } else if (activePairKey === 'llorona' && rig) {
-          const dropEl = rig.querySelector('[data-llorona-drop]');
-          const fallT = clamp(fraction / 0.66, 0, 1);
-          const fallS = smooth(fallT);
-          const lx = stageW * (0.30 + 0.20 * fallS) - 42;
-          const ly = stageH * (0.54 + 0.04 * fallS) + Math.pow(fallT, 1.7) * stageH * 0.14 - 54;
-          const rot = Math.sin(fraction * Math.PI * 3) * 14;
-          const sc = 0.78 + fallS * 0.26;
-          if (dropEl) {
-            dropEl.style.opacity = (fraction < 0.86 ? 1 : clamp((1 - fraction) / 0.14, 0.15, 1)).toFixed(3);
-            dropEl.style.transform = `translate3d(${lx.toFixed(1)}px,${ly.toFixed(1)}px,0) scale(${sc.toFixed(3)}) rotate(${rot.toFixed(1)}deg)`;
-          }
-          const ripBase = clamp((fraction - 0.42) / 0.58, 0, 1);
-          const maxRip = Math.min(6, 2 + st.count);
-          rig.querySelectorAll('[data-llorona-ripple]').forEach((rp, idx) => {
-            if (idx >= maxRip || ripBase <= 0) {
-              rp.style.opacity = '0';
-              return;
-            }
-            const rt = clamp((ripBase - idx * 0.11) / 0.72, 0, 1);
-            rp.setAttribute('cx', '500');
-            rp.setAttribute('cy', '715');
-            rp.setAttribute('rx', (18 + rt * (175 + st.count * 14)).toFixed(1));
-            rp.setAttribute('ry', (10 + rt * (74 + st.count * 6)).toFixed(1));
-            rp.style.opacity = (Math.sin(rt * Math.PI) * 0.88).toFixed(3);
-          });
         } else if (activePairKey === 'arkatz' && rig) {
           const heartEl = rig.querySelector('[data-arkatz-heart]');
           const graphEl = rig.querySelector('[data-arkatz-graphite]');
@@ -4096,7 +4062,6 @@
           berto: iwCount > 1 ? `Infusión de Berto · Remojo ×${iwCount} en el tenedor de Andreu ↓↑` : 'La bolsita de romero cae al tenedor de Buena Fuente ↓',
           wineflame: iwCount > 1 ? `Red Red Wine · Llamarada Beronia ×${iwCount} en el celofán ↓↑` : 'Gotas de vino tinto prenden la llama de Carole ↓',
           pajarraca: iwCount > 1 ? `Pajarraca vs. Flying Dragon · Duelo aéreo ×${iwCount} ↓↑` : 'La Pajarraca Azul cruza contra el aliento del Dragón ↔',
-          llorona: iwCount > 1 ? `La Llorona · Lágrima de sal y oro ×${iwCount} hacia Pablo ↓↑` : 'Lágrima de sal rosa y alcayata dorada en el iris ↓',
           arkatz: iwCount > 1 ? `Arkatz & Bihotz · Trazo de corazón ×${iwCount} sobre Little Adi ↓↑` : 'El lápiz-corazón traza a Little Adi en vivo ↓',
           shark3d: iwCount > 1 ? `Sistashark 3D · Inmersión anaglifo ×${iwCount} ↓↑` : 'Gafas de buceo rosas a filtro estereoscópico 3D ↓',
           ancla: iwCount > 1 ? `Eneko el Marino · Cabo y ancla ×${iwCount} izando Aupas ↓↑` : 'Pipa de Popeye y ancla naval enganchando Aupas ↓',
@@ -4209,6 +4174,11 @@
         stage.style.setProperty('--camera-tension', tension.toFixed(3));
         stage.style.setProperty('--velocity-depth', `${(Math.abs(velDepth) < 0.05 ? 0 : velDepth).toFixed(2)}px`);
         stage.style.setProperty('--velocity-tilt-x', `${(Math.abs(velTiltX) < 0.02 ? 0 : velTiltX).toFixed(2)}deg`);
+        if (Math.abs(normVel) > 0.08 && Math.abs(delta) > 0.012 && window.NAROA_FLUID?.splat) {
+          const fx = 0.5 + Math.sin(motion.current * 2.4) * 0.16;
+          const fy = clamp(0.5 - normVel * 0.12, 0.14, 0.86);
+          window.NAROA_FLUID.splat(fx, fy, -normVel * 92, normVel * 215);
+        }
       }
       const pose = journey.read(motion.current);
       const position = pose.position;
@@ -4344,18 +4314,17 @@
       state.photo = 0;
       workGallery.dataset.work = p.slug;
       workGallery.style.setProperty('--gallery-backdrop', `url("${p.cover}")`);
-      gallerySerial.textContent = `EXPEDIENTE MATÉRICO Nº ${String(state.index + 1).padStart(2, '0')} / ${String(works.length).padStart(2, '0')} · ${(p.series || p.category || 'ESTUDIO BILBAO').toUpperCase()}`;
+      gallerySerial.textContent = `Obra ${String(state.index + 1).padStart(2, '0')} de ${String(works.length).padStart(2, '0')} · ${p.series || p.category || 'Estudio Bilbao'}`;
       galleryTitle.textContent = p.title;
-      galleryMeta.textContent = `${p.label} · ${p.photos.length} ${p.photos.length === 1 ? 'fotografía' : 'fotografías'}`;
+      galleryMeta.textContent = `${p.label} · ${p.photos.length} ${p.photos.length === 1 ? 'mirada' : 'miradas'}`;
       dissectionStory.textContent = p.story ? `«${p.story}»` : '';
       dissectionStory.hidden = !p.story;
       const pillItems = [
-        p.technique ? `Técnica: ${p.technique}` : null,
-        p.support ? `Soporte: ${p.support}` : null,
-        p.dimensions ? `Formato: ${p.dimensions}` : null,
-        p.series ? `Serie: ${p.series}` : null,
-        p.year ? `Año: ${p.year}` : null,
-        `${p.photos.length} ${p.photos.length === 1 ? 'plancha' : 'planchas'} de archivo`
+        p.technique || null,
+        p.support || null,
+        p.dimensions || null,
+        p.series ? `Serie ${p.series}` : null,
+        p.year ? String(p.year) : null
       ].filter(Boolean);
       dissectionPills.replaceChildren(...pillItems.map(txt => createGalleryElement('span', 'work-dissection-pill', txt)));
       galleryGrid.dataset.count = String(p.photos.length);
@@ -4365,12 +4334,12 @@
       const figures = p.photos.map((photo, index) => {
         const figure = createGalleryElement('figure', 'work-gallery-figure');
         figure.dataset.plateIndex = String(index);
+        if (index === 0 && p.photos.length > 1) figure.classList.add('is-hero-plate');
         const plateHead = createGalleryElement('div', 'work-gallery-plate-bar');
-        const plateRole = index === 0 ? 'VISTA DE ESTUDIO' : `DETALLE MATÉRICO · ${roman[index] || index + 1}`;
-        const plateRes = photo.width && photo.height ? `${photo.width}×${photo.height}px` : '4K MASTER';
+        const plateRole = index === 0 ? 'Obra completa' : `Detalle de cerca · ${roman[index] || index + 1}`;
         plateHead.append(
-          createGalleryElement('span', 'work-gallery-plate-tag', `PLANCHA ${roman[index] || index + 1} // ${plateRole}`),
-          createGalleryElement('span', 'work-gallery-plate-spec', plateRes)
+          createGalleryElement('span', 'work-gallery-plate-tag', plateRole),
+          createGalleryElement('span', 'work-gallery-plate-spec', `${String(index + 1).padStart(2, '0')} / ${String(p.photos.length).padStart(2, '0')}`)
         );
         const link = createGalleryElement('a', 'work-gallery-image');
         link.href = photo.original || photo.src;
@@ -4410,7 +4379,7 @@
           showPhoto(); openDialog('#photos-dialog');
         };
         link.addEventListener('click', openPhoto);
-        const expand = createGalleryElement('a', 'work-gallery-expand', 'Abrir plancha ↗');
+        const expand = createGalleryElement('a', 'work-gallery-expand', 'Ampliar ↗');
         expand.href = link.href;
         expand.setAttribute('aria-label', link.getAttribute('aria-label'));
         expand.setAttribute('aria-haspopup', 'dialog');
@@ -4877,10 +4846,33 @@
       }, { passive: true });
     });
     const sectionStates = new WeakMap();
-    function pageParallax() {
+    let parallaxLastTime = 0;
+    let parallaxLastScrollY = scrollY;
+    let editorialSkew = 0;
+    function pageParallax(now) {
       frame = null;
+      const ts = typeof now === 'number' ? now : performance.now();
+      const dt = parallaxLastTime > 0 && ts >= parallaxLastTime ? clamp((ts - parallaxLastTime) / 16.6667, 0.5, 2.2) : 1;
+      parallaxLastTime = ts;
+      const damp = Math.pow(0.48, dt);
+      const springK = 0.26 * dt;
       const vh = innerHeight || 800;
       let needsNextFrame = false;
+      const scrollDelta = scrollY - parallaxLastScrollY;
+      parallaxLastScrollY = scrollY;
+      if (reduced.matches) {
+        editorialSkew = 0;
+        document.documentElement.style.setProperty('--editorial-velocity-skew', '0deg');
+      } else {
+        const instSkew = clamp((scrollDelta / Math.max(0.5, dt)) * 0.018, -1.35, 1.35);
+        editorialSkew = editorialSkew * damp + instSkew * (1 - damp);
+        if (Math.abs(editorialSkew) < 0.015 && Math.abs(scrollDelta) < 0.1) {
+          editorialSkew = 0;
+        } else {
+          needsNextFrame = true;
+        }
+        document.documentElement.style.setProperty('--editorial-velocity-skew', `${editorialSkew.toFixed(3)}deg`);
+      }
       sections.forEach(section => {
         const r = section.getBoundingClientRect(); if (r.bottom < -120 || r.top > vh + 120) return;
         const target = $('.page-hero-image', section) || (section.matches('.contact-background') ? section : $('img', section));
@@ -4889,18 +4881,21 @@
         const desiredShift = (progress - .5) * 2 * vh * .07;
         let st = sectionStates.get(section);
         if (!st) {
-          st = { shift: desiredShift, exit: clamp(-r.top / vh, 0, 1) };
+          st = { shift: desiredShift, vShift: 0, exit: clamp(-r.top / vh, 0, 1), vExit: 0 };
           sectionStates.set(section, st);
         }
         if (reduced.matches) {
           st.shift = desiredShift;
+          st.vShift = 0;
           target.style.transform = '';
         } else {
           const dShift = desiredShift - st.shift;
-          if (Math.abs(dShift) < 0.15) {
+          st.vShift = st.vShift * damp + dShift * springK;
+          if (Math.abs(dShift) < 0.12 && Math.abs(st.vShift) < 0.08) {
             st.shift = desiredShift;
+            st.vShift = 0;
           } else {
-            st.shift += dShift * 0.24;
+            st.shift += st.vShift;
             needsNextFrame = true;
           }
           const depthScale = 1.08 + (1 - Math.abs(progress - 0.5) * 2) * 0.024;
@@ -4910,10 +4905,12 @@
         if (copy) {
           const desiredExit = clamp(-r.top / vh, 0, 1);
           const dExit = desiredExit - st.exit;
-          if (reduced.matches || Math.abs(dExit) < 0.002) {
+          st.vExit = st.vExit * damp + dExit * springK;
+          if (reduced.matches || (Math.abs(dExit) < 0.0015 && Math.abs(st.vExit) < 0.001)) {
             st.exit = desiredExit;
+            st.vExit = 0;
           } else {
-            st.exit += dExit * 0.26;
+            st.exit += st.vExit;
             needsNextFrame = true;
           }
           const exit = st.exit;
@@ -4926,7 +4923,11 @@
         }
       });
       $('.site-nav').classList.toggle('is-scrolled', scrollY > vh * .72);
-      if (needsNextFrame && frame === null) frame = requestAnimationFrame(pageParallax);
+      if (needsNextFrame && frame === null) {
+        frame = requestAnimationFrame(pageParallax);
+      } else if (!needsNextFrame) {
+        parallaxLastTime = 0;
+      }
     }
     const schedule = () => { if (frame === null) frame = requestAnimationFrame(pageParallax); };
     addEventListener('scroll', schedule, { passive: true }); addEventListener('resize', schedule, { passive: true }); reduced.addEventListener('change', schedule); schedule();
@@ -5750,20 +5751,33 @@
   }
   const magnetTargets = $$('.art-arrows button,.hero-down,.art-story-link,.text-link,.art-index button,.share-btn,.ouroboros-loop-btn,.commission-cta-btn,.commission-pick-btn,.menu-index-pill');
   magnetTargets.forEach(el => {
-    const m = { x: 0, y: 0, rot: 0, tx: 0, ty: 0, trot: 0, frame: null };
-    function stepMagnet() {
+    const m = { x: 0, y: 0, rot: 0, vx: 0, vy: 0, vrot: 0, tx: 0, ty: 0, trot: 0, lastTime: 0, frame: null };
+    function stepMagnet(now) {
       m.frame = null;
+      const ts = typeof now === 'number' ? now : performance.now();
+      const dt = m.lastTime > 0 && ts >= m.lastTime ? clamp((ts - m.lastTime) / 16.6667, 0.5, 2.2) : 1;
+      m.lastTime = ts;
+      const damp = Math.pow(0.48, dt);
+      const springK = 0.26 * dt;
       const dx = m.tx - m.x;
       const dy = m.ty - m.y;
       const dr = m.trot - m.rot;
-      if (Math.abs(dx) < 0.08 && Math.abs(dy) < 0.08 && Math.abs(dr) < 0.04) {
+      m.vx = m.vx * damp + dx * springK;
+      m.vy = m.vy * damp + dy * springK;
+      m.vrot = m.vrot * damp + dr * springK;
+      if (
+        Math.abs(dx) < 0.06 && Math.abs(dy) < 0.06 && Math.abs(dr) < 0.03 &&
+        Math.abs(m.vx) < 0.04 && Math.abs(m.vy) < 0.04 && Math.abs(m.vrot) < 0.02
+      ) {
         m.x = m.tx;
         m.y = m.ty;
         m.rot = m.trot;
+        m.vx = m.vy = m.vrot = 0;
+        m.lastTime = 0;
       } else {
-        m.x += dx * 0.28;
-        m.y += dy * 0.28;
-        m.rot += dr * 0.28;
+        m.x += m.vx;
+        m.y += m.vy;
+        m.rot += m.vrot;
         m.frame = requestAnimationFrame(stepMagnet);
       }
       el.style.setProperty('--magnet-x', `${m.x.toFixed(2)}px`);
@@ -5786,11 +5800,11 @@
       if (reduced.matches) {
         if (m.frame !== null) cancelAnimationFrame(m.frame);
         m.frame = null;
-        m.x = m.y = m.rot = 0;
+        m.x = m.y = m.rot = m.vx = m.vy = m.vrot = m.lastTime = 0;
         el.style.setProperty('--magnet-x', '0px');
         el.style.setProperty('--magnet-y', '0px');
         el.style.setProperty('--magnet-rot', '0deg');
-      } else if (m.frame === null && (m.x !== 0 || m.y !== 0 || m.rot !== 0)) {
+      } else if (m.frame === null && (m.x !== 0 || m.y !== 0 || m.rot !== 0 || m.vx !== 0 || m.vy !== 0)) {
         m.frame = requestAnimationFrame(stepMagnet);
       }
     };
@@ -5802,24 +5816,43 @@
   const kineticCards = $$('.work-gallery-image,.notebook-posts article,.commission-example,.commission-steps article,.timeline-entry,.contact-channel');
   kineticCards.forEach(card => {
     card.setAttribute('data-kinetic-card', '');
-    const c = { rx: 0, ry: 0, sx: 50, sy: 50, trx: 0, try: 0, tsx: 50, tsy: 50, frame: null };
-    function stepCard() {
+    const c = { rx: 0, ry: 0, z: 0, sx: 50, sy: 50, vrx: 0, vry: 0, vz: 0, vsx: 0, vsy: 0, trx: 0, try: 0, tz: 0, tsx: 50, tsy: 50, lastTime: 0, frame: null };
+    function stepCard(now) {
       c.frame = null;
+      const ts = typeof now === 'number' ? now : performance.now();
+      const dt = c.lastTime > 0 && ts >= c.lastTime ? clamp((ts - c.lastTime) / 16.6667, 0.5, 2.2) : 1;
+      c.lastTime = ts;
+      const damp = Math.pow(0.48, dt);
+      const springK = 0.25 * dt;
       const drx = c.trx - c.rx;
       const dry = c.try - c.ry;
+      const dz = c.tz - c.z;
       const dsx = c.tsx - c.sx;
       const dsy = c.tsy - c.sy;
-      if (Math.abs(drx) < 0.04 && Math.abs(dry) < 0.04 && Math.abs(dsx) < 0.2 && Math.abs(dsy) < 0.2) {
-        c.rx = c.trx; c.ry = c.try; c.sx = c.tsx; c.sy = c.tsy;
+      c.vrx = c.vrx * damp + drx * springK;
+      c.vry = c.vry * damp + dry * springK;
+      c.vz = c.vz * damp + dz * springK;
+      c.vsx = c.vsx * damp + dsx * springK;
+      c.vsy = c.vsy * damp + dsy * springK;
+      if (
+        Math.abs(drx) < 0.03 && Math.abs(dry) < 0.03 && Math.abs(dz) < 0.08 &&
+        Math.abs(dsx) < 0.15 && Math.abs(dsy) < 0.15 &&
+        Math.abs(c.vrx) < 0.02 && Math.abs(c.vry) < 0.02 && Math.abs(c.vz) < 0.05
+      ) {
+        c.rx = c.trx; c.ry = c.try; c.z = c.tz; c.sx = c.tsx; c.sy = c.tsy;
+        c.vrx = c.vry = c.vz = c.vsx = c.vsy = 0;
+        c.lastTime = 0;
       } else {
-        c.rx += drx * 0.26;
-        c.ry += dry * 0.26;
-        c.sx += dsx * 0.26;
-        c.sy += dsy * 0.26;
+        c.rx += c.vrx;
+        c.ry += c.vry;
+        c.z += c.vz;
+        c.sx += c.vsx;
+        c.sy += c.vsy;
         c.frame = requestAnimationFrame(stepCard);
       }
       card.style.setProperty('--card-rx', `${c.rx.toFixed(2)}deg`);
       card.style.setProperty('--card-ry', `${c.ry.toFixed(2)}deg`);
+      card.style.setProperty('--card-z', `${c.z.toFixed(2)}px`);
       card.style.setProperty('--card-spot-x', `${c.sx.toFixed(1)}%`);
       card.style.setProperty('--card-spot-y', `${c.sy.toFixed(1)}%`);
     }
@@ -5832,26 +5865,29 @@
       const ny = clamp((e.clientY - r.top) / h - 0.5, -0.5, 0.5) * 2;
       c.trx = clamp(-ny * 3.2, -3.5, 3.5);
       c.try = clamp(nx * 3.8, -4.0, 4.0);
+      c.tz = 6.5;
       c.tsx = clamp((nx * 0.5 + 0.5) * 100, 0, 100);
       c.tsy = clamp((ny * 0.5 + 0.5) * 100, 0, 100);
       if (c.frame === null) c.frame = requestAnimationFrame(stepCard);
     }, { passive: true });
     const resetCard = () => {
-      c.trx = 0; c.try = 0; c.tsx = 50; c.tsy = 50;
-      if (c.frame === null && (c.rx !== 0 || c.ry !== 0)) c.frame = requestAnimationFrame(stepCard);
+      c.trx = 0; c.try = 0; c.tz = 0; c.tsx = 50; c.tsy = 50;
+      if (c.frame === null && (c.rx !== 0 || c.ry !== 0 || c.z !== 0 || c.vrx !== 0 || c.vry !== 0)) {
+        c.frame = requestAnimationFrame(stepCard);
+      }
     };
     card.addEventListener('pointerleave', resetCard, { passive: true });
     card.addEventListener('blur', resetCard);
   });
 
   window.NAROA_KINETICS = {
-    version: 'c5-substep-inertial-kinetics-v5',
+    version: 'c5-substep-inertial-kinetics-v6',
     getState() {
       const st = $('[data-gallery]');
       return {
-        version: 'c5-substep-inertial-kinetics-v5',
-        backend: 'c5-substep-inertial-kinetics-v5',
-        scrollFeel: 'critically-damped-substep-v5',
+        version: 'c5-substep-inertial-kinetics-v6',
+        backend: 'c5-substep-inertial-kinetics-v6',
+        scrollFeel: 'critically-damped-substep-v6',
         substepScroll: true,
         holdOpticalBreath: Boolean(st),
         zeroScrollLock: true,
@@ -5859,6 +5895,11 @@
         springPan2ndOrder: Boolean(st),
         velocityDepthCoupling: Boolean(st),
         differentialLayerParallax: Boolean(st),
+        fluidScrollCoupling: true,
+        secondOrderMagnet: magnetTargets.length > 0,
+        secondOrderCards: kineticCards.length > 0,
+        secondOrderSpline: true,
+        secondOrderLens: true,
         gyroPan3D: Boolean(st),
         indexGaussianWave: Boolean(st),
         magneticSpring: magnetTargets.length > 0,
@@ -6716,19 +6757,25 @@
       }
     }
 
-    // Ley 1 & 2 & 4 (INV_C5_SCROLL_SUBSTEP_DYNAMICS): Sub-step inertial follow (alpha = 0.16) y reposo a 0% CPU
-    function stepSplineRig() {
+    // Ley 1 & 2 & 4 (INV_C5_SCROLL_SUBSTEP_DYNAMICS): Sub-step 2nd-order dt-invariant inertial follow y reposo a 0% CPU
+    let splineLastTime = 0;
+    function stepSplineRig(now) {
       portalRaf = null;
+      const ts = typeof now === 'number' ? now : performance.now();
+      const dt = splineLastTime > 0 && ts >= splineLastTime ? clamp((ts - splineLastTime) / 16.6667, 0.5, 2.2) : 1;
+      splineLastTime = ts;
       const delta = portalState.targetU - portalState.u;
-      if (reduced.matches || Math.abs(delta) < 0.00015) {
+      const damp = Math.pow(0.48, dt);
+      const springK = 0.24 * dt;
+      portalState.velocityU = Number((portalState.velocityU * damp + delta * springK).toFixed(6));
+      if (reduced.matches || (Math.abs(delta) < 0.00015 && Math.abs(portalState.velocityU) < 0.00008)) {
         portalState.u = portalState.targetU;
         portalState.velocityU = 0;
+        splineLastTime = 0;
         applySplinePoseToStage(evaluateAt(portalState.u));
         return;
       }
-      const step = delta * 0.16;
-      portalState.u += step;
-      portalState.velocityU = Number(step.toFixed(6));
+      portalState.u += portalState.velocityU;
       applySplinePoseToStage(evaluateAt(portalState.u));
       portalRaf = requestAnimationFrame(stepSplineRig);
     }
@@ -6790,18 +6837,34 @@
       lens.setAttribute('data-liquid-lens', '');
       lens.setAttribute('aria-hidden', 'true');
       document.body.appendChild(lens);
-      const lensState = { x: -200, y: -200, tx: -200, ty: -200, ior: 1.48, dispersion: 0.032, active: false, raf: null };
-      function stepLens() {
+      const lensState = { x: -200, y: -200, vx: 0, vy: 0, tx: -200, ty: -200, lastTime: 0, ior: 1.48, dispersion: 0.032, active: false, raf: null };
+      function stepLens(now) {
         lensState.raf = null;
         if (reduced.matches) return;
+        const ts = typeof now === 'number' ? now : performance.now();
+        const dt = lensState.lastTime > 0 && ts >= lensState.lastTime ? clamp((ts - lensState.lastTime) / 16.6667, 0.5, 2.2) : 1;
+        lensState.lastTime = ts;
+        const damp = Math.pow(0.48, dt);
+        const springK = 0.26 * dt;
         const dx = lensState.tx - lensState.x;
         const dy = lensState.ty - lensState.y;
-        lensState.x += dx * 0.22;
-        lensState.y += dy * 0.22;
-        const stretch = clamp(Math.hypot(dx, dy) * 0.004, 0, 0.16);
-        const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+        lensState.vx = lensState.vx * damp + dx * springK;
+        lensState.vy = lensState.vy * damp + dy * springK;
+        const settled = Math.hypot(dx, dy) <= 0.35 && Math.hypot(lensState.vx, lensState.vy) <= 0.18;
+        if (settled) {
+          lensState.x = lensState.tx;
+          lensState.y = lensState.ty;
+          lensState.vx = lensState.vy = 0;
+          lensState.lastTime = 0;
+        } else {
+          lensState.x += lensState.vx;
+          lensState.y += lensState.vy;
+        }
+        const velMag = Math.hypot(lensState.vx, lensState.vy);
+        const stretch = clamp(velMag * 0.012, 0, 0.18);
+        const angle = velMag > 0.05 ? Math.atan2(lensState.vy, lensState.vx) * (180 / Math.PI) : 0;
         lens.style.transform = `translate3d(${(lensState.x - 42).toFixed(1)}px,${(lensState.y - 42).toFixed(1)}px,0) rotate(${angle.toFixed(1)}deg) scale(${(1 + stretch).toFixed(3)},${(1 - stretch * 0.5).toFixed(3)})`;
-        if (Math.hypot(dx, dy) > 0.35 && window.WebGLRenderingContext) {
+        if (!settled && window.WebGLRenderingContext) {
           lensState.raf = requestAnimationFrame(stepLens);
         }
       }
@@ -6933,7 +6996,7 @@
             const arts = JSON.parse(raw);
             renderDeck(arts);
           }
-        } catch (_) {}
+        } catch {}
       }, { passive: true });
     });
 

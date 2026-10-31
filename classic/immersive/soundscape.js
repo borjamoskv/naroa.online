@@ -1785,7 +1785,7 @@
     berto:        { notes: [146.83, 220.00, 349.23], wave: 'triangle', subWave: 'sine',     cutoff: 560, endCut: 340, attack: 0.036, decay: 1.85, stagger: 0.045, glide: 1.004 },
     wineflame:    { notes: [164.81, 220.00, 277.18], wave: 'sawtooth', subWave: 'triangle', cutoff: 640, endCut: 350, attack: 0.048, decay: 2.05, stagger: 0.038, glide: 1.012 },
     pajarraca:    { notes: [146.83, 174.61, 233.08], wave: 'sawtooth', subWave: 'sine',     cutoff: 520, endCut: 340, attack: 0.038, decay: 1.90, stagger: 0.028, glide: 0.988 },
-    llorona:      { notes: [293.66, 261.63, 220.00, 174.61], wave: 'sine', subWave: 'triangle', cutoff: 620, endCut: 360, attack: 0.034, decay: 2.25, stagger: 0.065, glide: 0.996 },
+    llorona:      { notes: [293.66, 261.63, 220.00], wave: 'sine',     subWave: 'triangle', cutoff: 480, endCut: 340, attack: 0.042, decay: 2.05, stagger: 0.048, glide: 0.992 },
     arkatz:       { notes: [146.83, 293.66, 349.23], wave: 'triangle', subWave: 'sine',     cutoff: 510, endCut: 340, attack: 0.034, decay: 1.85, stagger: 0.055, glide: 1.002 },
     shark3d:      { notes: [146.83, 174.61, 220.00, 261.63], wave: 'sawtooth', subWave: 'sine', cutoff: 680, endCut: 360, attack: 0.052, decay: 2.15, stagger: 0.032, glide: 1.008 },
     ancla:        { notes: [196.00, 233.08, 293.66], wave: 'sawtooth', subWave: 'triangle', cutoff: 580, endCut: 345, attack: 0.050, decay: 2.10, stagger: 0.040, glide: 0.994 },
