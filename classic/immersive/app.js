@@ -1320,18 +1320,23 @@
       if (isTestEnv || isBreakdancing) return;
       isLauraZooming = true;
       lauraPauseDistance = motion.current;
-      const lauraImg = images[state.index];
-      if (lauraImg) {
-        lauraImg.style.transformOrigin = '50.0% 61.5%';
-        lauraImg.classList.add('is-mouth-zooming');
+      const lauraScene = stage.querySelector('.art-scene[data-work="lauralore"]');
+      const lauraImg = images[state.index] || (lauraScene && lauraScene.querySelector('img'));
+      if (lauraScene && lauraImg) {
+        stage.classList.add('is-eguzkilore-stage');
+        lauraScene.classList.add('is-eguzkilore-active');
+        lauraImg.style.transformOrigin = '38% 34%';
       }
       clearTimeout(lauraTimer);
       lauraTimer = setTimeout(() => {
         isLauraZooming = false;
-        if (lauraImg) lauraImg.classList.remove('is-mouth-zooming');
+        if (lauraScene) {
+          stage.classList.remove('is-eguzkilore-stage');
+          lauraScene.classList.remove('is-eguzkilore-active');
+        }
       }, 5000);
     }
-    let ezquerraVisited = false, ezquerraDazedTimer = null, punchVisited = false;
+    let ezquerraVisited = false, ezquerraDazedTimer = null, punchVisited = false, canPeelVisited = false;
     function fireEzquerraDazed() {
       const isTestEnv = typeof window !== 'undefined' && (window.location.hostname === 'portfolio.test' || reduced.matches);
       if (isTestEnv) return;
@@ -1681,9 +1686,9 @@
           vec3 N = normalize(vec3(pAnamorphic.x, pAnamorphic.y, z * 1.85));
           vec3 I = normalize(vec3(uMouse * 0.45, -1.0));
 
-          float iorR = 1.0 / 1.492;
-          float iorG = 1.0 / 1.520;
-          float iorB = 1.0 / 1.548;
+          float iorR = 1.0 / 1.488;
+          float iorG = 1.0 / 1.522;
+          float iorB = 1.0 / 1.558;
 
           vec3 refrR = refract(I, N, iorR);
           vec3 refrG = refract(I, N, iorG);
@@ -1889,6 +1894,7 @@
         const isAjenjoToBeatriz = transition && works[base]?.slug === 'ajenjo-cam' && works[incoming]?.slug === 'beatriz-de-pandora';
         const isRaraToAmor = transition && works[base]?.slug === 'rara-avis' && works[incoming]?.slug === 'amor-en-conserva';
         const isAmorToAmy = transition && works[base]?.slug === 'amor-en-conserva' && works[incoming]?.slug === 'amy-rocks';
+        const isTinCanPeel = isAmorToAmy || (transition && (works[base]?.slug === 'dar-la-lata' || works[base]?.slug === 'enlatadas'));
         const isJamesToMario = transition && works[base]?.slug === 'james-rocks' && works[incoming]?.slug === 'mario-moreno';
         const isJaioTo13n = transition && works[base]?.slug === 'custom-jaio' && works[incoming]?.slug === '13n';
         const isBowieToOlinga = transition && works[base]?.slug === 'el-hombre-que-susurraba-a-las-estrellas' && works[incoming]?.slug === 'olinga-a-la-naranja';
@@ -1897,7 +1903,7 @@
         const isMunsterFamily = transition && munsterSlugs.includes(works[base]?.slug) && munsterSlugs.includes(works[incoming]?.slug);
         const isMurrayToEzquerra = transition && works[base]?.slug === 'i-got-you-babe' && works[incoming]?.slug === 'jose-manuel-ezquerra';
         paintedScenes.add(index);
-        const isTopOutgoing = isRockaToHugo || isAmorToAmy || isJamesToMario || isJaioTo13n || isRaraToAmor || isBowieToOlinga || isDustinToGameOver || isSistaToMulti || isMurrayToEzquerra;
+        const isTopOutgoing = isRockaToHugo || isTinCanPeel || isJamesToMario || isJaioTo13n || isRaraToAmor || isBowieToOlinga || isDustinToGameOver || isSistaToMulti || isMurrayToEzquerra;
         scene.style.visibility = 'visible'; scene.style.zIndex = isTopOutgoing ? (outgoing ? '2' : '1') : (outgoing ? '1' : '2');
         scene.style.willChange = transition ? 'opacity,transform' : 'auto'; image.style.willChange = still ? 'auto' : 'transform';
         scene.style.clipPath = 'inset(0)'; scene.style.opacity = '1'; scene.style.transform = 'translate3d(0px,0px,0)';
@@ -2004,9 +2010,10 @@
               const br = (1 + (1 - develop) * 1.85).toFixed(3);
               const ct = (0.38 + develop * 0.62).toFixed(3);
               const sat = (0.04 + Math.pow(develop, 1.35) * 0.96).toFixed(3);
-              const sep = ((1 - develop) * 0.28).toFixed(3);
-              const bl = ((1 - smooth((fraction - 0.22) / 0.46)) * 5.5).toFixed(2);
-              image.style.filter = `brightness(${br}) contrast(${ct}) saturate(${sat}) sepia(${sep}) blur(${bl}px)`;
+              const hue = ((1 - develop) * -32).toFixed(1);
+              const sep = ((1 - develop) * 0.34).toFixed(3);
+              const bl = ((1 - smooth((fraction - 0.22) / 0.46)) * 5.8).toFixed(2);
+              image.style.filter = `brightness(${br}) contrast(${ct}) saturate(${sat}) hue-rotate(${hue}deg) sepia(${sep}) blur(${bl}px)`;
             }
           }
         } else if (isMurrayToEzquerra) {
@@ -2090,12 +2097,13 @@
               scene.style.opacity = smooth((fraction - 0.15) / 0.45).toFixed(4);
             }
             image.style.transform = `translate3d(${mode === 'H' ? parallax.toFixed(3) : '0'}%,${mode === 'V' ? parallax.toFixed(3) : '0'}%,0) scale(${lens.toFixed(5)})`;
-          } else if (isAmorToAmy) {
+          } else if (isTinCanPeel) {
             if (outgoing) {
               const peel = smooth(fraction);
               const peelPct = (peel * 100).toFixed(2);
-              scene.style.clipPath = `inset(0 0 ${peelPct}% 0)`;
-              image.style.filter = `brightness(${(1 + Math.sin(fraction * Math.PI) * 0.30).toFixed(3)})`;
+              const curlRadius = (Math.sin(fraction * Math.PI) * 48).toFixed(1);
+              scene.style.clipPath = `inset(0 0 ${peelPct}% 0 round 0 0 ${curlRadius}px ${curlRadius}px)`;
+              image.style.filter = `brightness(${(1 + Math.sin(fraction * Math.PI) * 0.34).toFixed(3)}) contrast(${(1 + peel * 0.14).toFixed(3)})`;
             }
             image.style.transform = `translate3d(${mode === 'H' ? parallax.toFixed(3) : '0'}%,${mode === 'V' ? parallax.toFixed(3) : '0'}%,0) scale(${lens.toFixed(5)})`;
           } else if (isJamesToMario) {
@@ -2397,7 +2405,9 @@
       const isMurrayToEzquerra = transition && works[base]?.slug === 'i-got-you-babe' && works[incoming]?.slug === 'jose-manuel-ezquerra';
       const isSeriesPortal = transition && (works[base]?.category !== works[incoming]?.category || works[base]?.series !== works[incoming]?.series);
       const isFloresToJohnny = transition && works[base]?.slug === 'entre-tantas-flores-de-dia' && works[incoming]?.slug === 'johnny-rocks';
-      const isSpecialBespokeTransition = isRaraToAmor || isAmorToAmy || isJamesToMario || isJaioTo13n || isBowieToOlinga || isMurrayToEzquerra || isAjenjoPhoto || isDustinToGameOver;
+      const isKutxaTransition = transition && (works[base]?.slug === 'el-gato-que-es-kutxa' || works[incoming]?.slug === 'el-gato-que-es-kutxa');
+      const isLauraToCandy = transition && works[base]?.slug === 'lauralore' && works[incoming]?.slug === 'can-dy-queen';
+      const isSpecialBespokeTransition = isRaraToAmor || isAmorToAmy || isJamesToMario || isJaioTo13n || isBowieToOlinga || isMurrayToEzquerra || isAjenjoPhoto || isDustinToGameOver || isKutxaTransition || isLauraToCandy;
       const shouldRunStickman = transition && !still && (isFloresToJohnny || (isSeriesPortal && !isSpecialBespokeTransition));
 
       if (shouldRunStickman) {
@@ -2470,6 +2480,16 @@
         clearTimeout(ezquerraDazedTimer);
         stage.classList.remove('is-ezquerra-dazed', 'has-monitor-hit');
       }
+      if (isAmorToAmy) {
+        if (!canPeelVisited && fraction >= 0.18 && fraction <= 0.45) {
+          canPeelVisited = true;
+          soundscape?.canPeel?.();
+        } else if (fraction < 0.10 || fraction > 0.70) {
+          canPeelVisited = false;
+        }
+      } else {
+        canPeelVisited = false;
+      }
       // V2 (#7): Transición de Portal 3D entre Series Artísticas
       if (portalRing) {
         if (isSeriesPortal && !still) {
@@ -2526,7 +2546,7 @@
       } else if (isMurrayToEzquerra) {
         cue.textContent = '¡PUMBA en el monitor! · sigue ↓';
       } else if (works[state.index]?.slug === 'lauralore' && !transition) {
-        cue.textContent = 'LauraLore · Pausa y mirada lenta (5s) ↓';
+        cue.textContent = 'LauraLore · Flor de cerámica y eguzkilore vegetal ✦';
       } else if (works[state.index]?.slug === 'can-dy-queen' && !transition) {
         cue.textContent = 'Can-dy Queen · Slow-Motion Caramelo ↓';
       } else if (isSistaToMulti) {

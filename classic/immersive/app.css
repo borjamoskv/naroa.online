@@ -100,16 +100,16 @@ html.motion-off .kinetic-title{display:none}
 /* Give the camera the frame; bring reading controls back when the gesture rests. */
 .gallery-page .art-shade{transition:opacity .6s}
 .gallery-page .art-stage:before{content:'';position:absolute;inset:0;z-index:4;pointer-events:none;background:radial-gradient(ellipse 86% 76% at 50% 43%,transparent 52%,rgba(9,10,8,0.35) 80%,rgba(6,7,5,0.74) 100%)}
-.gallery-page .art-stage:after{content:'';position:absolute;inset:0;z-index:7;pointer-events:none;background:radial-gradient(circle at 52% 48%,#fffef2 0%,rgba(255,252,240,0.98) 45%,rgba(255,248,230,0.92) 75%,rgba(246,236,214,0.80) 100%);opacity:var(--camera-flash,0);mix-blend-mode:screen;will-change:opacity,filter}
+.gallery-page .art-stage:after{content:'';position:absolute;inset:0;z-index:7;pointer-events:none;background:radial-gradient(circle at 52% 48%,#ffffff 0%,#fff7db 28%,rgba(0,240,255,0.42) 64%,rgba(255,0,128,0.34) 88%,rgba(246,236,214,0.75) 100%);opacity:var(--camera-flash,0);mix-blend-mode:screen;will-change:opacity,filter}
 @keyframes erco-breathe{0%,100%{transform:translate(var(--pan-x,0px),var(--pan-y,0px)) scale(1)}50%{transform:translate(var(--pan-x,0px),calc(var(--pan-y,0px) - 0.75px)) scale(1.0015)}}
 .art-scene.is-current:not(.is-puzzle) .art-pan{animation:erco-breathe 7.6s cubic-bezier(0.42,0,0.58,1) infinite;animation-play-state:paused}
 .art-stage.is-resting .art-scene.is-current:not(.is-puzzle) .art-pan{animation-play-state:running}
 @media(prefers-reduced-motion:reduce){.art-scene.is-current .art-pan{animation:none!important}.gallery-page .art-stage.has-flash-burst .art-scene[data-work="ajenjo-cam"] img,.gallery-page .art-stage.has-flash-burst .art-scene[data-work="beatriz-de-pandora"] img{animation:none!important}}
-@keyframes ajenjo-flash-burst{0%{opacity:.98;filter:brightness(1.72) contrast(1.10) sepia(.08)}14%{opacity:.90;filter:brightness(1.48) contrast(1.08) sepia(.06)}32%{opacity:.44;filter:brightness(1.22) contrast(1.04) sepia(.04)}65%{opacity:.10;filter:brightness(1.06) contrast(1.02) sepia(.02)}100%{opacity:0;filter:none}}
-.gallery-page .art-stage.has-flash-burst:after{animation:ajenjo-flash-burst .40s cubic-bezier(.08,.9,.18,1) forwards}
-@keyframes ajenjo-chemical-settle{0%{filter:brightness(1.38) contrast(1.18) sepia(.12) saturate(.92);opacity:.96}18%{filter:brightness(1.24) contrast(1.12) sepia(.08) saturate(.95);opacity:.98}42%{filter:brightness(1.10) contrast(1.06) sepia(.05) saturate(.98);opacity:1}75%{filter:brightness(1.03) contrast(1.02) sepia(.02) saturate(1);opacity:1}100%{filter:none;opacity:1}}
+@keyframes ajenjo-flash-burst{0%{opacity:.98;filter:brightness(1.85) contrast(1.16) hue-rotate(-18deg) sepia(.12)}14%{opacity:.90;filter:brightness(1.52) contrast(1.10) hue-rotate(-10deg) sepia(.08)}32%{opacity:.46;filter:brightness(1.24) contrast(1.05) sepia(.05)}65%{opacity:.12;filter:brightness(1.06) contrast(1.02) sepia(.02)}100%{opacity:0;filter:none}}
+.gallery-page .art-stage.has-flash-burst:after{animation:ajenjo-flash-burst .46s cubic-bezier(.08,.9,.18,1) forwards}
+@keyframes ajenjo-chemical-settle{0%{filter:brightness(1.75) contrast(0.58) saturate(1.85) hue-rotate(-32deg) sepia(.28) blur(4px);opacity:.94}24%{filter:brightness(1.38) contrast(0.82) saturate(1.42) hue-rotate(-18deg) sepia(.18) blur(2px);opacity:.98}52%{filter:brightness(1.14) contrast(0.96) saturate(1.12) hue-rotate(-6deg) sepia(.08) blur(0.6px);opacity:1}80%{filter:brightness(1.03) contrast(1.02) saturate(1.02) hue-rotate(0deg) sepia(.02);opacity:1}100%{filter:none;opacity:1}}
 .gallery-page .art-stage.has-flash-burst .art-scene[data-work="ajenjo-cam"] img,
-.gallery-page .art-stage.has-flash-burst .art-scene[data-work="beatriz-de-pandora"] img{animation:ajenjo-chemical-settle .48s cubic-bezier(.16,1,.3,1) forwards;will-change:filter,opacity}
+.gallery-page .art-stage.has-flash-burst .art-scene[data-work="beatriz-de-pandora"] img{animation:ajenjo-chemical-settle 1.35s cubic-bezier(.16,1,.3,1) forwards;will-change:filter,opacity}
 .gallery-page .art-scene[data-work="el-hombre-que-susurraba-a-las-estrellas"] img{transform-origin:65.2% 57.4%!important}
 .gallery-page .art-scene[data-work="i-got-you-babe"] img{transform-origin:38% 46%!important}
 .gallery-page .art-scene[data-work="jose-manuel-ezquerra"] img{transform-origin:62% 42%!important}
@@ -162,12 +162,12 @@ html.motion-off .kinetic-title{display:none}
 @keyframes hero-fade-overture{from{opacity:0}to{opacity:1}}
 .hero-threshold-plane{position:absolute;inset:0;transform-origin:46% 39.5%;will-change:transform;transform-style:preserve-3d;rotate:x var(--hero-rx,0deg);translate:calc(var(--hero-mx,0)*-14px) calc(var(--hero-my,0)*-10px) 0}
 .hero-threshold-portrait,.hero-threshold-wink{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 38%;transform:rotateY(var(--hero-ry,0deg)) scale(1.02)}
-.hero-threshold-wink{opacity:0;transition:opacity .22s ease;-webkit-mask-image:radial-gradient(ellipse 11% 8% at 61% 41%,#000 60%,transparent 100%);mask-image:radial-gradient(ellipse 11% 8% at 61% 41%,#000 60%,transparent 100%)}
-.hero-threshold-shade{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at calc(46% + var(--hero-mx,0)*4%) calc(39.5% + var(--hero-my,0)*4%),transparent 14%,rgba(11,12,9,.42) 52%,rgba(11,12,9,.90) 100%)}
-.hero-spotlight{position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(circle 260px at var(--spot-x,46%) var(--spot-y,39.5%),rgba(247,213,148,.18) 0%,rgba(237,188,164,.08) 42%,transparent 75%);mix-blend-mode:screen;opacity:calc(1 - var(--hero-split,0))}
+.hero-threshold-wink{opacity:0;transition:opacity .26s cubic-bezier(.16,1,.3,1);-webkit-mask-image:radial-gradient(ellipse 12.5% 9% at 61% 41%,#000 54%,rgba(0,0,0,.45) 78%,transparent 100%);mask-image:radial-gradient(ellipse 12.5% 9% at 61% 41%,#000 54%,rgba(0,0,0,.45) 78%,transparent 100%)}
+.hero-threshold-shade{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at calc(46% + var(--hero-mx,0)*4.5%) calc(39.5% + var(--hero-my,0)*4.5%),transparent 18%,rgba(11,12,9,.38) 55%,rgba(11,12,9,.88) 100%)}
+.hero-spotlight{position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(circle 280px at var(--spot-x,46%) var(--spot-y,39.5%),rgba(247,213,148,.20) 0%,rgba(237,188,164,.09) 44%,transparent 76%);mix-blend-mode:screen;opacity:calc(1 - var(--hero-split,0))}
 .hero-telemetry{position:absolute;top:92px;left:4.5%;right:4.5%;z-index:4;pointer-events:none;display:flex;justify-content:space-between;font:500 10px/1.4 'DM Sans',monospace;letter-spacing:.18em;text-transform:uppercase;color:rgba(247,213,148,.78);opacity:calc(1 - var(--hero-split,0)*1.2)}
 .hero-monocle-portal{position:absolute;left:46%;top:39.5%;width:clamp(124px,14.5vmin,212px);height:clamp(124px,14.5vmin,212px);transform:translate(-50%,-50%) translate3d(calc(var(--hero-mx,0)*12px),calc(var(--hero-my,0)*12px),24px);pointer-events:none;z-index:3;display:grid;place-items:center}
-.hero-monocle-lens{position:relative;width:66%;height:66%;border-radius:50%;overflow:hidden;backdrop-filter:blur(2.5px) contrast(1.22) saturate(1.28) brightness(1.12);-webkit-backdrop-filter:blur(2.5px) contrast(1.22) saturate(1.28) brightness(1.12);box-shadow:0 0 32px rgba(237,188,164,.42),inset 0 0 18px rgba(255,253,244,.36),inset 0 0 34px rgba(17,18,15,.85);border:1.5px solid rgba(247,213,148,.52)}
+.hero-monocle-lens{position:relative;width:66%;height:66%;border-radius:50%;overflow:hidden;backdrop-filter:blur(2.5px) contrast(1.22) saturate(1.28) brightness(1.12);-webkit-backdrop-filter:blur(2.5px) contrast(1.22) saturate(1.28) brightness(1.12);box-shadow:0 0 36px rgba(247,213,148,.46),inset 0 0 20px rgba(255,253,244,.38),inset 0 0 34px rgba(17,18,15,.85);border:1.5px solid rgba(247,213,148,.58)}
 .hero-monocle-marilyn{position:absolute;inset:-14%;background-image:var(--monocle-preview);background-size:cover;background-position:50.4% 51.7%;opacity:.76;mix-blend-mode:screen;filter:contrast(1.18) saturate(1.18);transform-origin:50.4% 51.7%;animation:monocle-marilyn-pulse 3.4s ease-in-out infinite alternate;will-change:transform,opacity}
 .hero-monocle-canvas{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;pointer-events:none;z-index:2;mix-blend-mode:normal;opacity:0.96;transition:opacity .35s ease}
 html.motion-off .hero-monocle-canvas,body.is-quiet .hero-monocle-canvas{display:none!important}
@@ -689,10 +689,20 @@ html.motion-off .naroa-portal-canvas,body.is-quiet .naroa-portal-canvas{display:
   text-shadow: 0 0 14px #ff0055, 0 0 28px #00f0ff;
 }
 
-/* LauraLore: Acercamiento progresivo a la boca (5 segundos) */
-.art-scene img.is-mouth-zooming {
-  transition: transform 5s cubic-bezier(0.22, 1, 0.36, 1) !important;
-  transform: scale(2.85) !important;
+/* LauraLore: Marco de profundidad con relieve de cerámica y halo cálido de Eguzkilore */
+.art-scene[data-work="lauralore"] img {
+  transform-origin: 38% 34% !important;
+  will-change: transform, filter !important;
+}
+.art-scene[data-work="lauralore"].is-eguzkilore-active img {
+  transition: transform 4.2s cubic-bezier(0.16, 1, 0.3, 1), filter 3.5s ease !important;
+  transform: scale(1.68) translate3d(calc(var(--relief-dx, 0px) * -1.8), calc(var(--relief-dy, 0px) * -1.8), 0) !important;
+  filter: drop-shadow(calc(var(--relief-dx, 4px) * 2) calc(var(--relief-dy, 4px) * 2) 16px rgba(17, 18, 15, 0.75)) brightness(1.04) contrast(1.05) !important;
+}
+.art-stage.is-eguzkilore-stage:before {
+  background: radial-gradient(circle 380px at 38% 34%, rgba(247, 213, 148, 0.22) 0%, rgba(237, 188, 164, 0.08) 45%, transparent 75%) !important;
+  mix-blend-mode: screen !important;
+  transition: opacity 1.8s ease;
 }
 
 /* Clímax Ouroboros: Fundido a Negro, Monigote BreakDance & Rebobinado Supersónico */

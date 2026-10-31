@@ -651,6 +651,44 @@
     } catch {}
     return { category: cat, frequency: freq, gated: false };
   }
+  let lastCanPeelTime = 0;
+  function playCanPeel() {
+    const nowMs = typeof performance !== 'undefined' ? performance.now() : Date.now();
+    if (nowMs - lastCanPeelTime < 450) return;
+    lastCanPeelTime = nowMs;
+    if (!enabled || !context || !engine || context.state !== 'running') return;
+    try {
+      const now = context.currentTime + 0.005;
+      const target = engine.compressor || engine.master;
+      if (typeof context.createOscillator === 'function') {
+        const osc = context.createOscillator();
+        const filter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
+        const gain = context.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(174, now);
+        if (osc.frequency.exponentialRampToValueAtTime) {
+          osc.frequency.exponentialRampToValueAtTime(278, now + 0.34);
+        }
+        if (filter) {
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(640, now);
+          filter.Q.setValueAtTime(0.48, now);
+        }
+        gain.gain.setValueAtTime(0.0001, now);
+        if (gain.gain.linearRampToValueAtTime) {
+          gain.gain.linearRampToValueAtTime(0.085, now + 0.042);
+        }
+        if (gain.gain.exponentialRampToValueAtTime) {
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.42);
+        }
+        osc.connect(filter || gain);
+        if (filter) filter.connect(gain);
+        gain.connect(target);
+        osc.start(now);
+        osc.stop(now + 0.45);
+      }
+    } catch {}
+  }
   function playDeltoya() {
     lastDeltoyaSlug = 'entre-tantas-flores-de-dia';
     if (typeof navigator !== 'undefined' && navigator.vibrate) {
@@ -1145,6 +1183,9 @@
     },
     wineClink() {
       playWineGlassClink();
+    },
+    canPeel() {
+      playCanPeel();
     },
     portraitWink() {
       playPortraitWink();
