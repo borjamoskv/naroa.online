@@ -147,150 +147,254 @@ def build(output):
     menu_img_pepa = derivative("/images/menu/menu-08-pepa-glitter.jpg", 900)
 
     def generate_social_cards(source_dir, output_dir):
+        import math
         social_dir = source_dir / "images/social"
         social_dir.mkdir(parents=True, exist_ok=True)
         target_social_dir = output_dir / "images/social"
         target_social_dir.mkdir(parents=True, exist_ok=True)
 
-        font_bold_path = "/System/Library/Fonts/Supplemental/Arial Bold.ttf"
-        font_reg_path = "/System/Library/Fonts/Helvetica.ttc"
+        font_mono_path = "/System/Library/Fonts/SFNSMono.ttf"
+        font_serif_it_path = "/System/Library/Fonts/Supplemental/Georgia Italic.ttf"
+        if not Path(font_serif_it_path).exists():
+            font_serif_it_path = "/System/Library/Fonts/Supplemental/Times New Roman Italic.ttf"
         try:
-            font_eyebrow = ImageFont.truetype(font_reg_path, 16)
-            font_h1 = ImageFont.truetype(font_bold_path, 38)
-            font_body = ImageFont.truetype(font_reg_path, 21)
-            font_pill = ImageFont.truetype(font_bold_path, 15)
-            font_foot = ImageFont.truetype(font_reg_path, 15)
+            font_micro = ImageFont.truetype(font_mono_path, 12)
+            font_quote = ImageFont.truetype(font_serif_it_path, 15)
+            font_cromo = ImageFont.truetype(font_serif_it_path, 13)
         except Exception:
-            font_eyebrow = font_h1 = font_body = font_pill = font_foot = ImageFont.load_default()
+            font_micro = font_quote = font_cromo = ImageFont.load_default()
 
-        def create_card(filename, main_img_path, tile1_path, tile2_path, eyebrow, title, lead, badge_text, badge_bg, badge_fg, accent_hex):
+        def create_card(filename, left_img_path, right_img_path, cromo_img_path, micro_tag, micro_quote, cromo_label, seed_phase=0.0, split_mode="split"):
             W, H = 1200, 630
-            card = Image.new("RGB", (W, H), "#0b0c0a")
+            # 1. Right / Secondary Plane (Focused in Right Half x=460..1200 so subject is 100% visible)
+            right_plane = Image.new("RGB", (W, H), "#0b0c0a")
+            if Path(right_img_path).exists():
+                r_im = Image.open(right_img_path).convert("RGB")
+                r_crop = ImageOps.fit(r_im, (760, H), method=Image.Resampling.LANCZOS, centering=(0.5, 0.32))
+                r_crop = r_crop.filter(ImageFilter.UnsharpMask(radius=1.1, percent=45, threshold=2))
+                right_plane.paste(r_crop, (440, 0))
 
-            halo = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-            hdraw = ImageDraw.Draw(halo)
-            hdraw.ellipse([640, -120, 1380, 620], fill=(46, 80, 144, 130))
-            hdraw.ellipse([-100, 180, 520, 800], fill=(247, 213, 148, 45))
-            halo = halo.filter(ImageFilter.GaussianBlur(80))
-            card.paste(Image.alpha_composite(Image.new("RGBA", (W, H), (11, 12, 10, 255)), halo).convert("RGB"))
+            # 2. Left / Primary Plane (Focused in Left Half x=0..680 so subject is 100% visible)
+            left_plane = Image.new("RGB", (W, H), "#0b0c0a")
+            if Path(left_img_path).exists():
+                l_im = Image.open(left_img_path).convert("RGB")
+                l_crop = ImageOps.fit(l_im, (700, H), method=Image.Resampling.LANCZOS, centering=(0.5, 0.30))
+                l_crop = l_crop.filter(ImageFilter.UnsharpMask(radius=1.1, percent=48, threshold=2))
+                left_plane.paste(l_crop, (0, 0))
+            else:
+                left_plane = right_plane.copy()
 
-            if Path(main_img_path).exists():
-                main_im = Image.open(main_img_path).convert("RGB")
-                main_crop = ImageOps.fit(main_im, (380, 530), centering=(0.5, 0.3))
-                mask = Image.new("L", (380, 530), 0)
-                ImageDraw.Draw(mask).rounded_rectangle([0, 0, 380, 530], radius=24, fill=255)
-                card.paste(main_crop, (50, 50), mask)
+            # 3. Procedural Kintsugi Fracture Seam across Full-Bleed Canvas
+            seam_pts = []
+            for y in range(0, H + 1, 3):
+                t = y / H
+                base_x = 610 - (t - 0.5) * 170
+                jag = (
+                    math.sin(t * 17.0 + seed_phase) * 20.0
+                    + math.sin(t * 43.0 + seed_phase * 2.1) * 9.0
+                    + math.cos(t * 97.0 + seed_phase * 3.7) * 3.8
+                )
+                seam_pts.append((base_x + jag, y))
 
-            if Path(tile1_path).exists():
-                t1 = Image.open(tile1_path).convert("RGB")
-                t1_crop = ImageOps.fit(t1, (240, 255), centering=(0.5, 0.45))
-                m1 = Image.new("L", (240, 255), 0)
-                ImageDraw.Draw(m1).rounded_rectangle([0, 0, 240, 255], radius=18, fill=255)
-                card.paste(t1_crop, (450, 50), m1)
+            # Build mask for Left Plane
+            poly_left = [(0, 0)] + seam_pts + [(0, H)]
+            left_mask = Image.new("L", (W, H), 0)
+            ImageDraw.Draw(left_mask).polygon(poly_left, fill=255)
 
-            if Path(tile2_path).exists():
-                t2 = Image.open(tile2_path).convert("RGB")
-                t2_crop = ImageOps.fit(t2, (240, 255), centering=(0.5, 0.4))
-                m2 = Image.new("L", (240, 255), 0)
-                ImageDraw.Draw(m2).rounded_rectangle([0, 0, 240, 255], radius=18, fill=255)
-                card.paste(t2_crop, (450, 325), m2)
+            # Cast deep physical shadow from the torn edge onto Right Plane
+            shadow_layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+            s_draw = ImageDraw.Draw(shadow_layer)
+            shadow_poly = [(0, 0)] + [(x + 18, y + 8) for (x, y) in seam_pts] + [(0, H)]
+            s_draw.polygon(shadow_poly, fill=(4, 5, 3, 195))
+            shadow_layer = shadow_layer.filter(ImageFilter.GaussianBlur(16))
 
-            draw = ImageDraw.Draw(card)
-            draw.text((720, 75), eyebrow, fill=accent_hex, font=font_eyebrow)
-            draw.text((720, 115), title, fill="#fffdf4", font=font_h1, spacing=8)
-            draw.text((720, 285), lead, fill="#d1cfc7", font=font_body, spacing=6)
+            base_rgba = Image.alpha_composite(right_plane.convert("RGBA"), shadow_layer)
+            base_rgba.paste(left_plane.convert("RGBA"), (0, 0), left_mask)
 
-            badge_w = 270
-            draw.rounded_rectangle([720, 395, 720 + badge_w, 435], radius=12, fill=badge_bg)
-            draw.text((735, 405), badge_text, fill=badge_fg, font=font_pill)
+            # 4. Molten Gold Kintsugi Vein + Secondary Branch Cracks
+            vein_glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+            vg_draw = ImageDraw.Draw(vein_glow)
+            vg_draw.line(seam_pts, fill=(212, 175, 55, 190), width=14, joint="curve")
+            vein_glow = vein_glow.filter(ImageFilter.GaussianBlur(8))
+            base_rgba = Image.alpha_composite(base_rgba, vein_glow)
 
-            draw.rounded_rectangle([720, 455, 980, 495], radius=12, outline="#f7d594", width=1)
-            draw.text((735, 465), "ESTUDIO EN BILBAO · 2026", fill="#f7d594", font=font_pill)
+            vein_core = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+            vc_draw = ImageDraw.Draw(vein_core)
+            # Raw fibrous paper edge on left side of crack
+            deckle_pts = [(x - 3.5, y) for (x, y) in seam_pts]
+            vc_draw.line(deckle_pts, fill=(255, 253, 244, 150), width=3)
+            # Main gold leaf vein
+            vc_draw.line(seam_pts, fill=(247, 213, 148, 255), width=4, joint="curve")
+            # Specular white-gold core
+            spec_pts = [(x + 0.8, y) for (x, y) in seam_pts]
+            vc_draw.line(spec_pts, fill=(255, 255, 255, 235), width=1)
 
-            draw.text((720, 545), "naroagutierrezgil.com", fill="#9ca3af", font=font_foot)
-            draw.text((1000, 545), "BILBAO · BIZKAIA", fill="#6b7280", font=font_foot)
+            # Secondary Kintsugi lightning branches
+            for b_idx in (len(seam_pts) // 4, (len(seam_pts) * 2) // 3):
+                bx, by = seam_pts[b_idx]
+                direction = 1 if b_idx % 2 == 0 else -1
+                b_pts = [(bx, by)]
+                for step in range(1, 9):
+                    bx += direction * (14 + math.sin(step * 2.3 + seed_phase) * 5)
+                    by += 9 + math.cos(step * 1.9) * 6
+                    b_pts.append((bx, by))
+                vc_draw.line(b_pts, fill=(247, 213, 148, 210), width=2)
+                vc_draw.line(b_pts, fill=(255, 255, 255, 160), width=1)
 
+            base_rgba = Image.alpha_composite(base_rgba, vein_core)
+
+            # 5. Physical Tilted Studio Cromo / Polaroid pinned in bottom-right
+            if Path(cromo_img_path).exists():
+                cw, ch = 228, 268
+                cromo_canvas = Image.new("RGBA", (cw + 80, ch + 80), (0, 0, 0, 0))
+                # Deep 3D drop shadow
+                c_shad = Image.new("RGBA", (cw + 80, ch + 80), (0, 0, 0, 0))
+                ImageDraw.Draw(c_shad).rounded_rectangle([46, 52, 46 + cw, 52 + ch], radius=6, fill=(4, 5, 3, 215))
+                c_shad = c_shad.filter(ImageFilter.GaussianBlur(14))
+                cromo_canvas = Image.alpha_composite(cromo_canvas, c_shad)
+
+                # Cotton gallery paper body
+                c_draw = ImageDraw.Draw(cromo_canvas)
+                c_draw.rounded_rectangle([36, 36, 36 + cw, 36 + ch], radius=5, fill=(252, 249, 242, 255), outline=(212, 175, 55, 160), width=1)
+
+                # Inner artwork photo
+                c_im = Image.open(cromo_img_path).convert("RGB")
+                c_crop = ImageOps.fit(c_im, (cw - 24, ch - 58), method=Image.Resampling.LANCZOS, centering=(0.5, 0.38))
+                c_crop = c_crop.filter(ImageFilter.UnsharpMask(radius=0.9, percent=38, threshold=2))
+                cromo_canvas.paste(c_crop.convert("RGBA"), (48, 48))
+
+                # Micro caption on the polaroid bottom margin
+                c_draw.text((52, 36 + ch - 29), cromo_label, fill=(35, 26, 7, 230), font=font_cromo)
+
+                # Piece of translucent studio masking tape at top center
+                c_draw.polygon(
+                    [(36 + cw // 2 - 34, 26), (36 + cw // 2 + 36, 29), (36 + cw // 2 + 33, 47), (36 + cw // 2 - 37, 44)],
+                    fill=(245, 236, 212, 185),
+                    outline=(215, 202, 170, 140)
+                )
+
+                cromo_rot = cromo_canvas.rotate(-6.2, resample=Image.Resampling.BICUBIC, expand=True)
+                base_rgba.alpha_composite(cromo_rot, (W - cromo_rot.width - 28, H - cromo_rot.height - 16))
+
+            # 6. Subtle Cinema Vignette on bottom-left for micro-jewel legibility
+            vignette = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+            v_draw = ImageDraw.Draw(vignette)
+            v_draw.ellipse([-180, H - 220, 760, H + 180], fill=(5, 6, 4, 155))
+            vignette = vignette.filter(ImageFilter.GaussianBlur(55))
+            base_rgba = Image.alpha_composite(base_rgba, vignette)
+
+            # 7. Micro-Joya Luminous Frosted Capsule (Tiny, Pure White, Specular Glow)
+            pill_x, pill_y = 36, H - 92
+            pill_w, pill_h = 620, 62
+            # Frosted dark glass backing
+            crop_bg = base_rgba.crop((pill_x, pill_y, pill_x + pill_w, pill_y + pill_h)).filter(ImageFilter.GaussianBlur(14))
+            dark_tint = Image.new("RGBA", (pill_w, pill_h), (8, 9, 7, 172))
+            frosted = Image.alpha_composite(crop_bg, dark_tint)
+            pill_mask = Image.new("L", (pill_w, pill_h), 0)
+            ImageDraw.Draw(pill_mask).rounded_rectangle([0, 0, pill_w - 1, pill_h - 1], radius=12, fill=255)
+            base_rgba.paste(frosted, (pill_x, pill_y), pill_mask)
+
+            # Hairline luminous border + text glow
+            overlay = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+            o_draw = ImageDraw.Draw(overlay)
+            o_draw.rounded_rectangle([pill_x, pill_y, pill_x + pill_w - 1, pill_y + pill_h - 1], radius=12, outline=(255, 255, 255, 78), width=1)
+
+            # Specular white glow behind tiny text + vector 4-point star
+            sx, sy = pill_x + 22, pill_y + 18
+            star_poly = [(sx, sy - 6), (sx + 1.8, sy - 1.8), (sx + 6, sy), (sx + 1.8, sy + 1.8), (sx, sy + 6), (sx - 1.8, sy + 1.8), (sx - 6, sy), (sx - 1.8, sy - 1.8)]
+            glow_layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+            g_draw = ImageDraw.Draw(glow_layer)
+            g_draw.polygon(star_poly, fill=(247, 213, 148, 255))
+            g_draw.text((pill_x + 36, pill_y + 11), micro_tag, fill=(255, 255, 255, 210), font=font_micro)
+            g_draw.text((pill_x + 18, pill_y + 32), micro_quote, fill=(255, 255, 255, 185), font=font_quote)
+            glow_layer = glow_layer.filter(ImageFilter.GaussianBlur(3.5))
+            base_rgba = Image.alpha_composite(base_rgba, glow_layer)
+
+            o_draw.polygon(star_poly, fill=(255, 253, 244, 255))
+            o_draw.text((pill_x + 36, pill_y + 11), micro_tag, fill=(255, 255, 255, 255), font=font_micro)
+            o_draw.text((pill_x + 18, pill_y + 32), micro_quote, fill=(255, 255, 255, 255), font=font_quote)
+            base_rgba = Image.alpha_composite(base_rgba, overlay)
+
+            card = base_rgba.convert("RGB")
             dest_src = social_dir / filename
-            card.save(dest_src, quality=94, optimize=True)
+            card.save(dest_src, quality=95, subsampling=0, optimize=True)
             dest_deploy = target_social_dir / filename
             shutil.copy2(dest_src, dest_deploy)
+            # Also write cache-busted v2 sibling so WhatsApp/Twitter scrapers refresh immediately
+            v2_name = filename.replace(".jpg", "-v2.jpg")
+            shutil.copy2(dest_src, social_dir / v2_name)
+            shutil.copy2(dest_src, target_social_dir / v2_name)
 
         create_card(
             "naroa-share-card-home.jpg",
             source_dir / "images/sobre-mi/naroa-monoculo.jpg",
             source_dir / "images/catalogo/marilyn-rocks-4k.webp",
             source_dir / "images/menu/menu-01-luz.jpg",
-            "NAROA GUTIÉRREZ GIL · BILBAO",
-            "LA MIRADA\nQUE ATRAVIESA\nLA MATERIA",
-            f"Pintura, collage contemporáneo y retratos\nsobre pizarra, madera y memoria · {len(projects)} obras.",
-            f"{len(projects)} OBRAS CANÓNICAS",
-            "#2E5090", "#fffdf4", "#f7d594"
+            f"NAROA GUTIÉRREZ GIL  ·  {len(projects)} OBRAS EN BILBAO",
+            "«Me encontré a mí en los demás: espejos de vuestras almas y la mía».",
+            "Rara Avis · Espejos del Alma",
+            seed_phase=0.4
         )
         create_card(
             "naroa-share-card-cuaderno.jpg",
             source_dir / "images/cuaderno/cuaderno-twister-collage.jpg",
             source_dir / "images/menu/menu-05-homer-pepe.jpg",
             source_dir / "images/menu/menu-04-bastidor-flores.jpg",
-            "CUADERNO DE ESTUDIO · BILBAO",
-            "HISTORIAS,\nPROCESOS Y\nENCUENTROS",
-            "Apuntes, textos y exploraciones visuales\ndesde el estudio de Naroa Gutiérrez Gil.",
-            "CUADERNO DE ARTISTA",
-            "#93C572", "#162410", "#93C572"
+            "CUADERNO DE ESTUDIO  ·  BILBAO",
+            "«Comienzo a rascar sobre la base y encuentro una textura inédita».",
+            "Apuntes y materia viva",
+            seed_phase=1.2
         )
         create_card(
             "naroa-share-card-trayectoria.jpg",
-            source_dir / "images/trayectoria/cantinflowers.jpg",
+            source_dir / "images/catalogo/mario-moreno-hq-01.webp",
+            source_dir / "images/catalogo/cantinflowers-4k.webp",
             source_dir / "images/menu/menu-04-bastidor-flores.jpg",
-            source_dir / "images/sobre-mi/naroa-monoculo.jpg",
-            "TRAYECTORIA DOCUMENTADA",
-            "EL CAMINO\nDE LAS OBRAS\nY ENCUENTROS",
-            "Exposiciones colectivas e individuales,\nWalking Gallery y proyectos compartidos.",
-            "EXPOSICIONES Y HITOS",
-            "#F4D06F", "#231a07", "#F4D06F"
+            "TRAYECTORIA  ·  EL RASGADO KINTSUGI (2013 - 2026)",
+            "«El arte también sale de paseo: una galería sin muros, de tú a tú».",
+            "Walking Gallery · Bilbao",
+            seed_phase=2.5,
+            split_mode="aligned_dual"
         )
         create_card(
             "naroa-share-card-sobre-mi.jpg",
             source_dir / "images/sobre-mi/naroa-monoculo.jpg",
             source_dir / "images/menu/menu-03-manostijeras.jpg",
             source_dir / "images/catalogo/marilyn-rocks-4k.webp",
-            "LA ARTISTA · BILBAO",
-            "NAROA\nGUTIÉRREZ GIL\nRETRATISTA",
-            "«Me encontré a mí en los demás».\nUn recorrido biográfico por su mirada plástica.",
-            "BIOGRAFÍA Y ESTUDIO",
-            "#FF69B4", "#11120f", "#FF69B4"
+            "LA ARTISTA  ·  NAROA GUTIÉRREZ GIL",
+            "«Transformar el problema en trampolín: puro kintsugi».",
+            "El ReCreo · Bilbao",
+            seed_phase=3.1
         )
         create_card(
             "naroa-share-card-encargos.jpg",
             source_dir / "images/menu/menu-06-iloveyou.jpg",
             source_dir / "images/catalogo/marilyn-rocks-4k.webp",
             source_dir / "images/sobre-mi/naroa-monoculo.jpg",
-            "RETRATOS POR ENCARGO · BILBAO",
-            "UN RETRATO\nCON TU PROPIA\nHISTORIA",
-            "Retratos artísticos personalizados en dibujo,\nóleo, collage contemporáneo y pizarra rústica.",
-            "CONSULTA PERSONALIZADA",
-            "#2E5090", "#fffdf4", "#f7d594"
+            "RETRATOS POR ENCARGO  ·  BILBAO",
+            "«Cada rostro guarda un mundo: pizarra, madera, collage y pan de oro».",
+            "Encargo a medida · Estudio",
+            seed_phase=4.0
         )
         create_card(
             "naroa-share-card-vaivenes.jpg",
             source_dir / "images/menu/menu-02-celia.jpg",
             source_dir / "images/menu/menu-08-pepa-glitter.jpg",
             source_dir / "images/menu/menu-05-homer-pepe.jpg",
-            "SERIE VAIVENES · COLLAGE",
-            "DIBUJO, MATERIA\nY TRANSFORMACIÓN",
-            "Serie plástica de collages y emociones\ncon materiales reutilizados y memoria.",
-            "SERIE VAIVENES",
-            "#f4c430", "#11120f", "#f7d594"
+            "SERIE VAIVENES  ·  COLLAGE Y MATERIA",
+            "«Rostros conocidos, emociones propias y materiales con segunda vida».",
+            "DiviNos VaiVenes",
+            seed_phase=5.2
         )
         create_card(
             "naroa-share-card-contacto.jpg",
             source_dir / "images/menu/menu-07-frankenstein.jpg",
             source_dir / "images/sobre-mi/naroa-monoculo.jpg",
             source_dir / "images/menu/menu-06-iloveyou.jpg",
-            "ESTUDIO EN BILBAO · CONTACTO",
-            "HABLEMOS\nDE TU PROYECTO\nO ENCARGO",
-            "Contacto directo por email o WhatsApp con la\nartista para encargos, visitas o exposiciones.",
-            "CONTACTO DIRECTO",
-            "#2E5090", "#fffdf4", "#f7d594"
+            "ESTUDIO EN BILBAO  ·  CONTACTO DIRECTO",
+            "«¿Qué historia retratamos? Escríbeme y le damos forma juntos».",
+            "naroagutierrezgil.com",
+            seed_phase=6.1
         )
 
         def create_story_card():
@@ -717,14 +821,14 @@ def build(output):
         im_w, im_h, im_mime = image_info(image)
         im_alt = image_alt or f"{title} · Naroa Gutiérrez Gil"
         og_card_map = {
-            "/": "/images/social/naroa-share-card-home.jpg",
-            "/obra/": "/images/social/naroa-share-card-home.jpg",
-            "/cuaderno/": "/images/social/naroa-share-card-cuaderno.jpg",
-            "/trayectoria/": "/images/social/naroa-share-card-trayectoria.jpg",
-            "/sobre-mi/": "/images/social/naroa-share-card-sobre-mi.jpg",
-            "/retratos-por-encargo-bilbao/": "/images/social/naroa-share-card-encargos.jpg",
-            "/series/vaivenes/": "/images/social/naroa-share-card-vaivenes.jpg",
-            "/contacto/": "/images/social/naroa-share-card-contacto.jpg",
+            "/": "/images/social/naroa-share-card-home-v2.jpg",
+            "/obra/": "/images/social/naroa-share-card-home-v2.jpg",
+            "/cuaderno/": "/images/social/naroa-share-card-cuaderno-v2.jpg",
+            "/trayectoria/": "/images/social/naroa-share-card-trayectoria-v2.jpg",
+            "/sobre-mi/": "/images/social/naroa-share-card-sobre-mi-v2.jpg",
+            "/retratos-por-encargo-bilbao/": "/images/social/naroa-share-card-encargos-v2.jpg",
+            "/series/vaivenes/": "/images/social/naroa-share-card-vaivenes-v2.jpg",
+            "/contacto/": "/images/social/naroa-share-card-contacto-v2.jpg",
         }
         og_img_path = og_card_map.get(path, image)
         og_w, og_h, og_mime = (1200, 630, "image/jpeg") if og_img_path.startswith("/images/social/naroa-share-card") else (im_w, im_h, im_mime)
