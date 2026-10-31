@@ -2969,7 +2969,8 @@
       if (isTinCanPeelOuter && fraction >= 0.08 && fraction <= 0.35) {
         soundscape?.canPeel?.();
       }
-      const shouldRunStickman = transition && !still && (isFloresToJohnny || isMunsterPortal);
+      const isKutxaBoxJump = transition && works[base]?.slug === 'beatriz-de-pandora' && works[incoming]?.slug === 'el-gato-que-es-kutxa';
+      const shouldRunStickman = transition && !still && (isFloresToJohnny || isMunsterPortal || isKutxaBoxJump);
 
       if (shouldRunStickman) {
         stickman.removeAttribute('hidden');
@@ -2979,24 +2980,78 @@
         if (fraction > lastStickFraction + 0.002) stickDirection = 1;
         else if (fraction < lastStickFraction - 0.002) stickDirection = -1;
         lastStickFraction = fraction;
-        const portalStyle = isFloresToJohnny ? 0 : (base % 3);
-        const leapWindow = fraction > 0.38 && fraction < 0.62 ? (fraction - 0.38) / 0.24 : 0;
-        const leapArc = leapWindow > 0 ? Math.sin(leapWindow * Math.PI) : 0;
-        const airLift = portalStyle === 1 ? leapArc * 30 : portalStyle === 0 ? leapArc * 22 : leapArc * 10;
-        const spinDeg = portalStyle === 1 && leapWindow > 0 ? leapWindow * 360 * stickDirection : (leapArc * -11 * stickDirection);
-        const posX = -110 + fraction * (stageW + 220);
-        const phaseAngle = fraction * 42;
-        const bounce = Math.abs(Math.sin(phaseAngle)) * (7.5 * (1 - leapArc * 0.6));
         const floorY = mode === 'V' ? (1 - progress) * stageH : (stageH - 140);
         const runwayY = floorY - 104;
-        stickman.style.setProperty('--stick-pct', `${(fraction * 100).toFixed(1)}%`);
         stickman.style.transform = `translate3d(0px,${runwayY.toFixed(2)}px,0)`;
-        stickRunner.style.transform = `translate3d(${posX.toFixed(2)}px,${(-bounce - airLift).toFixed(2)}px,0) scaleX(${stickDirection}) rotate(${spinDeg.toFixed(1)}deg)`;
-        updateStickmanPose(phaseAngle, leapArc, portalStyle);
+
+        if (isKutxaBoxJump) {
+          stickman.classList.add('is-kutxa-jump');
+          stickKutxa.removeAttribute('hidden');
+          const boxTargetX = stageW * 0.56 - 64;
+          // 1. Approach (0..0.42), 2. Head-first Dive (0.42..0.64), 3. Inside Box + Lid Slam + Cat Peek (0.64..1.0)
+          const runT = clamp(fraction / 0.42, 0, 1);
+          const diveT = clamp((fraction - 0.42) / 0.22, 0, 1);
+          const settleT = clamp((fraction - 0.64) / 0.36, 0, 1);
+          const runnerX = fraction <= 0.42
+            ? -90 + (boxTargetX - 24 + 90) * smooth(runT)
+            : (boxTargetX - 24) + diveT * 38;
+          const diveArc = diveT > 0 && diveT < 1 ? Math.sin(diveT * Math.PI) : 0;
+          const phaseAngle = Math.min(fraction, 0.44) * 46;
+          const bounce = diveT > 0 ? 0 : Math.abs(Math.sin(phaseAngle)) * 7.2;
+          const runnerY = -bounce - diveArc * 52 + (diveT > 0.55 ? (diveT - 0.55) * 48 : 0);
+          const diveRot = diveT * 108;
+          const diveScale = fraction >= 0.64 ? 0.01 : (1 - Math.pow(diveT, 1.6) * 0.58);
+          stickRunner.style.opacity = fraction >= 0.64 ? '0' : '1';
+          stickRunner.style.transform = `translate3d(${runnerX.toFixed(2)}px,${runnerY.toFixed(2)}px,0) scale(${diveScale.toFixed(3)}) rotate(${diveRot.toFixed(1)}deg)`;
+          updateStickmanPose(phaseAngle, diveArc, 0);
+
+          const impactBounce = settleT > 0 ? Math.sin(settleT * Math.PI * 3.5) * Math.exp(-settleT * 4.5) : 0;
+          const boxScaleX = 1 + impactBounce * 0.11;
+          const boxScaleY = 1 - impactBounce * 0.09;
+          stickKutxa.style.transform = `translate3d(${boxTargetX.toFixed(2)}px,0px,0) scale(${boxScaleX.toFixed(3)},${boxScaleY.toFixed(3)})`;
+          if (kutxaLid) {
+            const lidDeg = fraction < 0.60
+              ? 46
+              : settleT < 0.38
+                ? Math.max(0, 46 * (1 - settleT / 0.16) + Math.abs(impactBounce) * 14)
+                : 11 * smooth(clamp((settleT - 0.38) / 0.35, 0, 1));
+            kutxaLid.setAttribute('transform', `rotate(${lidDeg.toFixed(1)} 94 68)`);
+          }
+          if (kutxaPeek) {
+            const peekOp = settleT > 0.38 ? clamp((settleT - 0.38) / 0.25, 0, 1) : 0;
+            kutxaPeek.setAttribute('opacity', peekOp.toFixed(2));
+          }
+          if (fraction >= 0.62 && fraction <= 0.78 && !kutxaSoundFired) {
+            kutxaSoundFired = true;
+            soundscape?.kutxaBox?.();
+            if (!soundscape?.kutxaBox) window.NAROA_SOUND?.kutxaBox?.();
+          } else if (fraction < 0.35) {
+            kutxaSoundFired = false;
+          }
+          stickman.style.setProperty('--stick-pct', `${(Math.min(fraction, 0.56) * 100).toFixed(1)}%`);
+        } else {
+          stickman.classList.remove('is-kutxa-jump');
+          if (!stickKutxa.hasAttribute('hidden')) stickKutxa.setAttribute('hidden', '');
+          stickRunner.style.opacity = '1';
+          const portalStyle = isFloresToJohnny ? 0 : (base % 3);
+          const leapWindow = fraction > 0.38 && fraction < 0.62 ? (fraction - 0.38) / 0.24 : 0;
+          const leapArc = leapWindow > 0 ? Math.sin(leapWindow * Math.PI) : 0;
+          const airLift = portalStyle === 1 ? leapArc * 30 : portalStyle === 0 ? leapArc * 22 : leapArc * 10;
+          const spinDeg = portalStyle === 1 && leapWindow > 0 ? leapWindow * 360 * stickDirection : (leapArc * -11 * stickDirection);
+          const posX = -110 + fraction * (stageW + 220);
+          const phaseAngle = fraction * 42;
+          const bounce = Math.abs(Math.sin(phaseAngle)) * (7.5 * (1 - leapArc * 0.6));
+          stickman.style.setProperty('--stick-pct', `${(fraction * 100).toFixed(1)}%`);
+          stickRunner.style.transform = `translate3d(${posX.toFixed(2)}px,${(-bounce - airLift).toFixed(2)}px,0) scaleX(${stickDirection}) rotate(${spinDeg.toFixed(1)}deg)`;
+          updateStickmanPose(phaseAngle, leapArc, portalStyle);
+        }
       } else {
+        kutxaSoundFired = false;
         if (!stickman.hasAttribute('hidden') && !isBreakdancing) {
           stickman.setAttribute('hidden', '');
-          stickman.classList.remove('is-running');
+          stickman.classList.remove('is-running', 'is-kutxa-jump');
+          if (stickKutxa && !stickKutxa.hasAttribute('hidden')) stickKutxa.setAttribute('hidden', '');
+          stickRunner.style.opacity = '1';
         }
       }
       if (works[base]?.slug === 'ajenjo-cam' || works[incoming]?.slug === 'ajenjo-cam') {
