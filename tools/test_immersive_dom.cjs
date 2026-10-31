@@ -269,6 +269,13 @@ async function eyeMatch(ui, base, points) {
       assert.ok(runner.style.transform.includes('translate3d('), 'Stickman runner translates horizontally across the black void');
       assert.ok(ui.find('[data-stick-scarf]')?.getAttribute('d')?.startsWith('M'), 'Stickman scarf waves dynamically during sprint');
     }
+    if (entry.slug === 'beatriz-de-pandora') {
+      const stickman = ui.find('[data-stickman]');
+      const kutxaBox = ui.find('[data-stick-kutxa]');
+      assert.ok(stickman && kutxaBox && !kutxaBox.hasAttribute('hidden'), 'Kutxa box is revealed during Beatriz de Pandora -> El Gato que es Kutxa transition');
+      assert.ok(stickman.classList.contains('is-kutxa-jump'), 'Stickman activates the If-It-Fits-I-Sits kutxa box dive');
+      assert.ok(ui.find('[data-kutxa-lid]')?.getAttribute('transform')?.includes('rotate('), 'Kutxa wooden box lid articulates during the dive');
+    }
     if (entry.slug === 'la-pensadora') {
       const kissStage = ui.find('[data-kiss-stage]');
       assert.ok(kissStage && !kissStage.hasAttribute('hidden'), 'La Pensadora activates the collage lip-cutout kiss stage toward Freddie');
