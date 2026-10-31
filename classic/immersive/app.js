@@ -1957,8 +1957,7 @@
     let stickDirection = 1;
 
     const MAX_KISS_CUTOUTS = 12;
-    const pensadoraWork = works.find(w => w.slug === 'la-pensadora');
-    const pensadoraCoverUrl = pensadoraWork?.cover || '/images/catalogo/la-pensadora-original-01-2048.jpg';
+    const pensadoraLipsUrl = '/images/catalogo/la-pensadora-lips.webp';
     let kissStage = stage.querySelector('[data-kiss-stage]');
     if (!kissStage) {
       kissStage = document.createElement('div');
@@ -1972,28 +1971,55 @@
         cutout.setAttribute('data-kiss-cutout', String(k));
         const lips = document.createElement('div');
         lips.className = 'pensadora-kiss-lips';
-        lips.style.backgroundImage = `url("${pensadoraCoverUrl}")`;
+        lips.style.backgroundImage = `url("${pensadoraLipsUrl}")`;
         cutout.appendChild(lips);
         kissStage.appendChild(cutout);
       }
       stage.appendChild(kissStage);
     }
     const kissCutouts = Array.from(kissStage.querySelectorAll('[data-kiss-cutout]'));
+    // Dispersión orgánica por mejillas, frente, cuello y sien de Freddie (evitando tapar ojos/nariz y sin solaparse)
     const KISS_LANDING_OFFSETS = [
-      { dx: 0.000, dy: 0.000, arc: -0.15, rot: -11, scale: 0.88, stagger: 0.00 },
-      { dx: 0.055, dy: -0.048, arc: -0.22, rot: 14, scale: 0.72, stagger: 0.05 },
-      { dx: -0.062, dy: 0.042, arc: -0.11, rot: -18, scale: 0.68, stagger: 0.09 },
-      { dx: 0.145, dy: -0.135, arc: -0.26, rot: 9, scale: 0.64, stagger: 0.13 },
-      { dx: -0.038, dy: -0.095, arc: -0.19, rot: -6, scale: 0.74, stagger: 0.16 },
-      { dx: 0.088, dy: 0.065, arc: -0.14, rot: 17, scale: 0.62, stagger: 0.19 },
-      { dx: -0.110, dy: -0.025, arc: -0.24, rot: -15, scale: 0.60, stagger: 0.22 },
-      { dx: 0.180, dy: -0.175, arc: -0.29, rot: 12, scale: 0.58, stagger: 0.25 },
-      { dx: 0.025, dy: 0.092, arc: -0.12, rot: -9, scale: 0.66, stagger: 0.28 },
-      { dx: -0.085, dy: 0.085, arc: -0.17, rot: 15, scale: 0.56, stagger: 0.31 },
-      { dx: 0.115, dy: -0.085, arc: -0.21, rot: -14, scale: 0.60, stagger: 0.34 },
-      { dx: -0.015, dy: -0.145, arc: -0.25, rot: 7, scale: 0.54, stagger: 0.37 }
+      { dx: -0.095, dy: 0.055, arc: -0.14, rot: -14, scale: 0.72, stagger: 0.00 }, // mejilla izquierda
+      { dx: 0.125, dy: -0.135, arc: -0.22, rot: 12, scale: 0.64, stagger: 0.05 },  // frente derecha
+      { dx: -0.155, dy: -0.085, arc: -0.18, rot: -21, scale: 0.60, stagger: 0.09 }, // sien izquierda
+      { dx: 0.140, dy: 0.085, arc: -0.12, rot: 16, scale: 0.62, stagger: 0.13 },   // mejilla/mandíbula derecha
+      { dx: -0.045, dy: -0.165, arc: -0.25, rot: -7, scale: 0.66, stagger: 0.16 },  // frente central-izquierda
+      { dx: -0.115, dy: 0.155, arc: -0.11, rot: 19, scale: 0.58, stagger: 0.19 },  // cuello izquierdo
+      { dx: 0.195, dy: -0.035, arc: -0.20, rot: -15, scale: 0.56, stagger: 0.22 },  // pómulo exterior derecho
+      { dx: 0.035, dy: 0.175, arc: -0.13, rot: 9, scale: 0.60, stagger: 0.25 },    // barbilla/cuello
+      { dx: -0.195, dy: 0.015, arc: -0.17, rot: -12, scale: 0.54, stagger: 0.28 },  // pómulo exterior izquierdo
+      { dx: 0.065, dy: -0.210, arc: -0.27, rot: 14, scale: 0.55, stagger: 0.31 },  // flequillo/frente alta
+      { dx: 0.175, dy: 0.165, arc: -0.15, rot: -16, scale: 0.52, stagger: 0.34 },  // mano/muñeca derecha
+      { dx: -0.150, dy: -0.185, arc: -0.24, rot: 8, scale: 0.52, stagger: 0.37 }    // sien alta izquierda
     ];
     let lastKissFraction = 0, kissDirection = 0, kissVolleyCount = 1, kissInSector = false;
+
+    const pippiMonkeyUrl = '/images/catalogo/pippi-monkey-cutout.webp';
+    const ROSETTA_STRING_COLORS = ['#ff2a55', '#ff8a1e', '#ffd628', '#38e54d', '#2bc4ff', '#9c4dff'];
+    let monkeyStage = stage.querySelector('[data-monkey-stage]');
+    if (!monkeyStage) {
+      monkeyStage = document.createElement('div');
+      monkeyStage.className = 'art-monkey-stage';
+      monkeyStage.setAttribute('data-monkey-stage', '');
+      monkeyStage.setAttribute('aria-hidden', 'true');
+      monkeyStage.setAttribute('hidden', '');
+      const stringsMarkup = ROSETTA_STRING_COLORS.map((col, idx) =>
+        `<path class="rosetta-rainbow-string" data-guitar-string="${idx}" stroke="${col}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`
+      ).join('');
+      monkeyStage.innerHTML = `
+        <svg class="rosetta-guitar-strings-svg" data-rosetta-strings viewBox="0 0 1000 1000" preserveAspectRatio="none">
+          ${stringsMarkup}
+        </svg>
+        <div class="rosetta-guitar-shockwave" data-guitar-shockwave></div>
+        <div class="pippi-monkey-cutout" data-pippi-monkey style="background-image:url(&quot;${pippiMonkeyUrl}&quot;)"></div>
+      `;
+      stage.appendChild(monkeyStage);
+    }
+    const pippiMonkeyEl = monkeyStage.querySelector('[data-pippi-monkey]');
+    const guitarShockwaveEl = monkeyStage.querySelector('[data-guitar-shockwave]');
+    const guitarStringEls = Array.from(monkeyStage.querySelectorAll('[data-guitar-string]'));
+    let lastMonkeyFraction = 0, monkeyDirection = 0, monkeyStrumCount = 1, monkeyInSector = false, monkeyStrumFired = false;
 
     function updateStickmanPose(phase, leapArc = 0, portalStyle = 0) {
       const isFlip = portalStyle === 1 && leapArc > 0.05;
@@ -3105,6 +3131,107 @@
           cutout.style.opacity = '0';
         });
       }
+      const isPippiToRosetta = transition && !still && works[base]?.slug === 'pippilotta' && works[incoming]?.slug === 'rosetta';
+      if (isPippiToRosetta) {
+        if (!monkeyInSector) {
+          monkeyInSector = true;
+          lastMonkeyFraction = fraction;
+          monkeyDirection = 0;
+          monkeyStrumFired = false;
+        }
+        const deltaMonkey = fraction - lastMonkeyFraction;
+        if (Math.abs(deltaMonkey) > 0.008) {
+          const newDir = deltaMonkey > 0 ? 1 : -1;
+          if (monkeyDirection !== 0 && newDir !== monkeyDirection) {
+            monkeyStrumCount = Math.min(16, monkeyStrumCount + 1);
+            soundscape?.guitarStrum?.(monkeyStrumCount);
+          }
+          monkeyDirection = newDir;
+          lastMonkeyFraction = fraction;
+        }
+        monkeyStage.removeAttribute('hidden');
+        monkeyStage.classList.add('is-leaping');
+        monkeyStage.dataset.monkeyStrums = String(monkeyStrumCount);
+
+        const stageW = geometry.width || window.innerWidth;
+        const stageH = geometry.height || window.innerHeight;
+        // Origen: Hombro derecho de Pippi (Mr. Nilsson posado en Loving Långstrump)
+        const startX = stageW * 0.69 - 105;
+        const startY = stageH * 0.54 - 145;
+        // Destino: Cuerdas arcoíris de la guitarra blanca de Sister Rosetta Tharpe
+        const targetX = stageW * 0.51 - 105;
+        const targetY = stageH * 0.60 - 145;
+
+        // Fase 1 (0..0.48): Salto parabólico acrobático desde el hombro de Pippi hasta el mástil/cuerdas de Rosetta
+        const leapT = clamp(fraction / 0.48, 0, 1);
+        const flight = smooth(leapT);
+        // Fase 2 (0.48..1.0): Guitarrazo rasgueando las 6 cuerdas arcoíris con slide por el mástil (-53°)
+        const strumT = clamp((fraction - 0.48) / 0.52, 0, 1);
+
+        const strumFreq = 3.5 + Math.min(7, monkeyStrumCount);
+        const strumOsc = strumT > 0 ? Math.sin(strumT * Math.PI * strumFreq * 2) : 0;
+        const neckSlide = strumT > 0 ? Math.sin(strumT * Math.PI * 2) * 26 : 0;
+        const arcLift = Math.sin(flight * Math.PI) * (-stageH * 0.29);
+
+        // Vector perpendicular al mástil (rasgueo de púa) + slide paralelo al diapasón de Rosetta
+        const x = startX + (targetX - startX) * flight + strumOsc * 24 + neckSlide * 0.58;
+        const y = startY + (targetY - startY) * flight + arcLift + strumOsc * 18 - neckSlide * 0.76;
+        const scale = 0.78 + Math.sin(flight * Math.PI) * 0.28 + (strumT > 0 ? 0.14 + Math.abs(strumOsc) * 0.09 : 0);
+        const rot = -26 * Math.sin(flight * Math.PI) + strumOsc * 21;
+        const op = fraction > 0.96 ? clamp((1 - fraction) / 0.04, 0.22, 1) : 1;
+
+        if (pippiMonkeyEl) {
+          pippiMonkeyEl.classList.add('is-active');
+          pippiMonkeyEl.classList.toggle('is-strumming', strumT > 0);
+          pippiMonkeyEl.style.opacity = op.toFixed(3);
+          pippiMonkeyEl.style.transform = `translate3d(${x.toFixed(2)}px,${y.toFixed(2)}px,0) scale(${scale.toFixed(3)}) rotate(${rot.toFixed(2)}deg)`;
+        }
+        if (guitarStringEls.length) {
+          const stringOp = strumT > 0 ? clamp(Math.sin(strumT * Math.PI * 0.95) * 1.15, 0.18, 0.96) : 0;
+          const ampBoost = 1 + Math.min(5, monkeyStrumCount - 1) * 0.22;
+          guitarStringEls.forEach((pathEl, idx) => {
+            // Geometría exacta de las 6 cuerdas arcoíris en Rosetta: puente (472, 662) -> cejuela Gibson (762, 276)
+            const spread = (idx - 2.5) * 4.4;
+            const x1 = 472 + spread * 0.8, y1 = 662 + spread * 0.6;
+            const x2 = 762 + spread * 0.5, y2 = 276 + spread * 0.4;
+            const vib = strumT > 0
+              ? Math.sin(strumT * Math.PI * (strumFreq * 2.4 + idx * 0.7) + idx * 1.1) * 19 * ampBoost
+              : 0;
+            // Desplazamiento transversal normal al eje del mástil (nx = 0.79, ny = 0.61)
+            const cx = (x1 + x2) * 0.5 + vib * 0.79;
+            const cy = (y1 + y2) * 0.5 + vib * 0.61;
+            pathEl.setAttribute('d', `M ${x1.toFixed(1)} ${y1.toFixed(1)} Q ${cx.toFixed(1)} ${cy.toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}`);
+            pathEl.style.opacity = stringOp.toFixed(3);
+          });
+        }
+        if (guitarShockwaveEl) {
+          const waveOp = strumT > 0 ? Math.sin(strumT * Math.PI) * 0.88 : 0;
+          const waveScale = 0.55 + strumT * 1.65 + Math.abs(strumOsc) * 0.28;
+          guitarShockwaveEl.style.opacity = waveOp.toFixed(3);
+          guitarShockwaveEl.style.transform = `translate3d(${(stageW * 0.51).toFixed(2)}px,${(stageH * 0.63).toFixed(2)}px,0) translate(-50%,-50%) scale(${waveScale.toFixed(3)}) rotate(${(strumOsc * 15).toFixed(1)}deg)`;
+        }
+        if (fraction >= 0.46 && fraction <= 0.82 && !monkeyStrumFired) {
+          monkeyStrumFired = true;
+          soundscape?.guitarStrum?.(monkeyStrumCount);
+        } else if (fraction < 0.28) {
+          monkeyStrumFired = false;
+        }
+      } else if (monkeyStage && !monkeyStage.hasAttribute('hidden')) {
+        monkeyStage.setAttribute('hidden', '');
+        monkeyStage.classList.remove('is-leaping');
+        if (pippiMonkeyEl) {
+          pippiMonkeyEl.classList.remove('is-active', 'is-strumming');
+          pippiMonkeyEl.style.opacity = '0';
+        }
+        if (guitarShockwaveEl) {
+          guitarShockwaveEl.style.opacity = '0';
+        }
+        guitarStringEls.forEach(pathEl => { pathEl.style.opacity = '0'; });
+        if (works[base]?.slug !== 'pippilotta' && works[incoming]?.slug !== 'rosetta') {
+          monkeyInSector = false;
+          monkeyStrumFired = false;
+        }
+      }
       const isTinCanPeelOuter = isAmorToAmy || (transition && (works[base]?.slug === 'dar-la-lata' || works[base]?.slug === 'enlatadas'));
       if (isTinCanPeelOuter && fraction >= 0.08 && fraction <= 0.35) {
         soundscape?.canPeel?.();
@@ -3311,6 +3438,10 @@
         cue.textContent = kissVolleyCount > 1
           ? `LIPS en acción · ×${kissVolleyCount} besos a Freddie ↓↑`
           : 'LIPS en acción · Beso a Freddie ↓';
+      } else if (isPippiToRosetta) {
+        cue.textContent = monkeyStrumCount > 1
+          ? `Mr. Nilsson al vuelo · ¡Guitarrazo ×${monkeyStrumCount} en Rosetta! 🎸↓↑`
+          : 'Mr. Nilsson salta · ¡Guitarrazo en Sister Rosetta! 🎸↓';
       } else if ((works[state.index]?.slug === 'cantinflowers' || (transition && (works[base]?.slug === 'cantinflowers' || works[incoming]?.slug === 'cantinflowers'))) && !still) {
         cue.textContent = cantinPuffCount > 1
           ? `Cantinflowers · Calada ×${cantinPuffCount} y volutas de humo ↓↑`

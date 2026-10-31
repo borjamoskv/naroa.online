@@ -18,9 +18,13 @@
     const leave=document.createElement('button');leave.type='button';leave.textContent='Seguir ↓';
     footer.append(hint,previous,next,details,leave);stage.append(track,label,footer);wrap.append(stage);
     let enabled=false,scheduled=0,width=0,height=0,distance=0,lead=0,current=0,near=false,displayed=NaN,lastTick=0,velocity=0,pointerX=0,pointerY=0,livePointerX=0,livePointerY=0;
+    let lastDesired=0,scrollAccum=0,nextReversalDist=700+Math.random()*700;
+    let reversalActive=false,reversalStartTime=0,reversalDuration=850,reversalDir=-1,reversalBlend=0;
+    let lastTravel=0;
+    const reduceMotion=Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches);
     const id=++serial;
     figures.forEach((figure,i)=>{window.NaroaVaivenesEyes?.attach(figure);figure.querySelector('figcaption').id=`vaivenes-caption-${id}-${i}`;});
-    function measure(){width=stage.clientWidth;height=innerHeight;lead=width*.55;distance=(figures.length-1)*width+lead;wrap.style.height=`${height+distance}px`;schedule();}
+    function measure(){width=stage.clientWidth;height=innerHeight;lead=width*.55;distance=(figures.length-1)*width+lead;wrap.style.height=`${height+distance}px`;lastDesired=clamp(-wrap.getBoundingClientRect().top-lead,0,distance-lead);schedule();}
     function render(time){
       scheduled=0;if(!enabled||document.hidden)return;
       const rect=wrap.getBoundingClientRect();if(rect.top>height||rect.bottom<0)return;
@@ -28,7 +32,35 @@
       const dt=Math.min(40,Math.max(8,time-lastTick||16));lastTick=time;
       const seek=!Number.isFinite(displayed)||Math.abs(desired-displayed)>width*1.6;
       const outside=(desired===0&&rect.top>=0)||(desired===distance-lead&&rect.bottom<height*.75);
-      if(seek||outside){displayed=desired;velocity=0;}
+      if(seek||outside){displayed=desired;velocity=0;lastDesired=desired;scrollAccum=0;reversalActive=false;reversalBlend=0;}
+
+      const scrollStep=Math.abs(desired-lastDesired);
+      lastDesired=desired;
+      scrollAccum+=scrollStep;
+
+      // Stochastic reversal trigger: occasionally inverts direction during active scroll
+      if(!reduceMotion&&scrollStep>0.5&&!reversalActive&&scrollAccum>=nextReversalDist&&desired>width*0.2&&desired<distance-lead-width*0.2){
+        reversalActive=true;
+        reversalStartTime=time;
+        reversalDuration=750+Math.random()*600;
+        reversalDir=Math.random()>0.35?-1:1;
+        scrollAccum=0;
+        nextReversalDist=width*(0.75+Math.random()*1.3);
+      }
+
+      let burstOffset=0;
+      if(reversalActive){
+        const elapsed=time-reversalStartTime;
+        if(elapsed>=reversalDuration){
+          reversalActive=false;
+          reversalBlend=0;
+        }else{
+          const burstProgress=elapsed/reversalDuration;
+          reversalBlend=Math.sin(burstProgress*Math.PI);
+          burstOffset=reversalDir*(width*0.13)*reversalBlend;
+        }
+      }
+
       // An analytical critically damped spring remains stable at any refresh rate.
       const before=displayed,omega=1/(width<=760?68:90),offset=displayed-desired;
       const impulse=velocity+omega*offset,decay=Math.exp(-omega*dt);
@@ -37,24 +69,48 @@
       if((desired-before>0&&displayed>desired)||(desired-before<0&&displayed<desired)){
         displayed=desired;velocity=0;
       }
-      if(Math.abs(desired-displayed)<.15&&Math.abs(velocity)<.03){displayed=desired;velocity=0;}
+      if(Math.abs(desired-displayed)<.15&&Math.abs(velocity)<.03&&!reversalActive){displayed=desired;velocity=0;}
       const pointerBlend=1-Math.exp(-dt/110);
       livePointerX+=(pointerX-livePointerX)*pointerBlend;
       livePointerY+=(pointerY-livePointerY)*pointerBlend;
-      const travel=displayed;
+
+      // Harmonic incommensurate vaivén wave with boundary envelope (smoothly fades to 0 at extremes)
+      const maxDesired=Math.max(1,distance-lead);
+      const progress=clamp(displayed/maxDesired,0,1);
+      const envelope=Math.sin(progress*Math.PI);
+      const phase=displayed/Math.max(1,width);
+      const wave1=Math.sin(phase*2*Math.PI)*(width*0.085);
+      const wave2=Math.sin(phase*2*Math.PI*1.61803398875+1.25)*(width*0.065);
+      const wave3=Math.cos(phase*2*Math.PI*0.61803398875+2.4)*(width*0.045);
+      const vaivenWave=reduceMotion?0:(wave1+wave2+wave3)*envelope;
+      const totalVaiven=vaivenWave+(reduceMotion?0:burstOffset*envelope);
+
+      const travel=clamp(displayed+totalVaiven,0,distance-lead);
+      const travelDelta=travel-lastTravel;
+      lastTravel=travel;
+
+      const isReversing=!reduceMotion&&((desired>before+0.2&&travelDelta<-0.35)||(desired<before-0.2&&travelDelta>0.35)||(reversalActive&&reversalBlend>0.25));
+
       const index=clamp(Math.round(travel/Math.max(1,width)),0,figures.length-1);
       if(index!==current){figures[current].classList.remove('vaivenes-caption-open');details.setAttribute('aria-expanded','false');current=index;}
       track.style.transform=`translate3d(${-travel}px,0,0)`;
       previous.disabled=current===0;next.disabled=current===figures.length-1;
       details.setAttribute('aria-controls',`vaivenes-caption-${id}-${current}`);
       const title=figures[current].querySelector('h2').textContent;
-      hint.textContent=`${title} · sigue bajando →`;
+      if(isReversing){
+        hint.textContent=`${title} · vaivén ⇄ · invierte el sentido`;
+        stage.classList.add('vaivenes-reversing');
+      }else{
+        hint.textContent=`${title} · sigue bajando →`;
+        stage.classList.remove('vaivenes-reversing');
+      }
       figures.forEach((figure,i)=>{
         const image=figure.querySelector('img');
         if(Math.abs(i-current)<=1)image.loading='eager';
         const depth=clamp((i*width-travel)/Math.max(1,width),-1,1);
         const shift=depth*Math.min(22,width*.018)+livePointerX*5;
-        const tilt=clamp(velocity*.09+livePointerX*.12,-.25,.25);
+        const vaivenTilt=isReversing?-reversalDir*0.35:(velocity*.09+livePointerX*.12);
+        const tilt=clamp(vaivenTilt,-.35,.35);
         image.style.transform=`translate3d(${shift.toFixed(2)}px,${(-Math.min(3,Math.abs(velocity))+livePointerY*3).toFixed(2)}px,0) rotate(${tilt.toFixed(3)}deg)`;
         const local=clamp(-rect.top,0,distance);
         const eyeTravel=local<=lead?local:travel+lead;
@@ -64,10 +120,10 @@
         caption.style.transform=`translate3d(${(depth*Math.min(32,width*.025)-livePointerX*3).toFixed(2)}px,0,0)`;
         caption.style.opacity=figure.classList.contains('vaivenes-caption-open')?'1':String(.25+.75*(1-Math.abs(depth)));
       });
-      if(Math.abs(desired-displayed)>.15||Math.abs(velocity)>.03||Math.abs(pointerX-livePointerX)>.002||Math.abs(pointerY-livePointerY)>.002)schedule();
+      if(Math.abs(desired-displayed)>.15||Math.abs(velocity)>.03||reversalActive||Math.abs(pointerX-livePointerX)>.002||Math.abs(pointerY-livePointerY)>.002)schedule();
     }
     function schedule(){if(!scheduled&&enabled&&near)scheduled=requestAnimationFrame(render);}
-    function go(index){if(!enabled)return;const top=scrollY+wrap.getBoundingClientRect().top;scrollTo({top:top+lead+clamp(index,0,figures.length-1)*width,behavior:'smooth'});}
+    function go(index){if(!enabled)return;reversalActive=false;reversalBlend=0;const top=scrollY+wrap.getBoundingClientRect().top;scrollTo({top:top+lead+clamp(index,0,figures.length-1)*width,behavior:'smooth'});}
     stage.addEventListener('pointermove',event=>{
       if(event.pointerType!=='mouse')return;
       const box=stage.getBoundingClientRect();
@@ -88,7 +144,7 @@
       if(enabled){
         insertionPoint.after(wrap);figures.forEach(figure=>track.append(figure));host.classList.add('vaivenes-host-active');
         if(inline)host.classList.add('vaivenes-host-inline');
-        displayed=NaN;velocity=0;pointerX=pointerY=livePointerX=livePointerY=0;
+        displayed=NaN;velocity=0;lastDesired=0;scrollAccum=0;reversalActive=false;reversalBlend=0;lastTravel=0;pointerX=pointerY=livePointerX=livePointerY=0;
         measure();intersection.observe(wrap);addEventListener('scroll',schedule,{passive:true});
       }else{
         cancelAnimationFrame(scheduled);scheduled=0;intersection.disconnect();removeEventListener('scroll',schedule);

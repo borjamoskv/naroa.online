@@ -14,9 +14,11 @@
 .vaivenes-scroll__track .series-work:not(.vaivenes-caption-open) figcaption a { display:none; }
 .vaivenes-scroll__track .series-work.vaivenes-caption-open figcaption { bottom:65px; max-height:60svh; overflow:auto; }
 .vaivenes-scroll__track .series-work.vaivenes-caption-open p { margin:12px 0 0; color:#ddd3c4; font:14px/1.7 Inter,sans-serif; }
-.vaivenes-scroll__label { position:absolute; top:22px; left:5vw; margin:0; padding:4px 9px; font:italic 26px/1.2 Georgia,serif; color:#ff71a5; background:#0c0b0bd9; transform:rotate(-3deg); pointer-events:none; }
+.vaivenes-scroll__label { position:absolute; top:22px; left:5vw; margin:0; padding:4px 9px; font:italic 26px/1.2 Georgia,serif; color:#ff71a5; background:#0c0b0bd9; transform:rotate(-3deg); pointer-events:none; transition:color 0.25s ease,text-shadow 0.25s ease; }
+.vaivenes-scroll__stage.vaivenes-reversing .vaivenes-scroll__label { color:#51e2f1; text-shadow:0 0 12px rgba(81,226,241,0.45); }
 .vaivenes-scroll__controls { position:absolute; z-index:3; bottom:0; left:0; right:0; display:flex; gap:20px; align-items:center; min-height:58px; padding:6px 5vw; background:#0c0b0bed; font:12px/1.5 Inter,sans-serif; color:#d6cec0; }
-.vaivenes-scroll__controls > span { margin-right:auto; }
+.vaivenes-scroll__controls > span { margin-right:auto; transition:color 0.2s ease; }
+.vaivenes-scroll__stage.vaivenes-reversing .vaivenes-scroll__controls > span { color:#f1df51; font-weight:500; }
 .vaivenes-scroll__controls button { min-height:44px; border:0; padding:4px 0; background:none; color:#f1df51; font:inherit; cursor:pointer; }
 .vaivenes-scroll__controls button:disabled { opacity:.3; cursor:default; }
 .vaivenes-scroll__controls button:focus-visible { outline:2px solid #ff71a5; outline-offset:4px; }

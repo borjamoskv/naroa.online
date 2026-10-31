@@ -163,32 +163,25 @@
       "cover_url": "https://naroagutierrezgil.com/immersive/media/marilyn-rocks-original-03-2048-0b7e2cff277e-view.webp",
       "photos": [
         {
-          "url": "https://naroagutierrezgil.com/images/catalogo/marilyn-rocks-hq-01.webp",
-          "width": 1536,
-          "height": 2048,
-          "caption": "Pieza completa sobre pizarra",
-          "sha256": "203987738ce599a295eac22831a77aff873a81d44b3fbcc0856cedb42871e588"
+          "url": "https://naroagutierrezgil.com/images/catalogo/marilyn-rocks-4k.webp",
+          "width": 2880,
+          "height": 3840,
+          "caption": "Marilyn Rocks — Retrato frontal en acrílico, mica mineral y pan de oro sobre pizarra natural.",
+          "sha256": "64f6ad930bc5b6bd124fb658c3f715249bb11b08b0f70b047e4cb3512edbc9b4"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/marilyn-rocks-hq-02.webp",
           "width": 1536,
           "height": 2048,
-          "caption": "Detalle lateral",
+          "caption": "Detalle lateral del relieve matérico y esmalte rojo sobre el canto de pizarra.",
           "sha256": "ac74525705a3dc22c3ee3a202c496548b94b937c4a6c7464c4e88dac78ad49dc"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/marilyn-rocks-original-03-2048.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Detalle del retrato",
+          "caption": "Primer plano del rostro de Marilyn Monroe con incrustaciones doradas y escamas de mica.",
           "sha256": "0b7e2cff277e5c7933464a833546389c23f276cd9cfeac2c6233ada612f9e511"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/marilyn-rocks-4k.webp",
-          "width": 2880,
-          "height": 3840,
-          "caption": "Fotografía master 4K de Marilyn Monroe con escamas de mica y brillantina sobre pizarra.",
-          "sha256": "64f6ad930bc5b6bd124fb658c3f715249bb11b08b0f70b047e4cb3512edbc9b4"
         }
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Marilyn%20Rocks",
@@ -383,35 +376,28 @@
       "year": null,
       "story": "«Las dicotomías blanco/negro y rojo/dorado señalan nuestra naturaleza más allá de la identificación corpórea. No olvidemos que somos eso: la esencia divina que anima nuestra carne y huesos». — Naroa Gutiérrez Gil",
       "url": "https://naroagutierrezgil.com/obra/johnny-rocks/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/johnny-rocks-hq-01-d850042bf419-view.webp",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/johnny-rocks-4k-b439483cae55-view.webp",
       "photos": [
         {
-          "url": "https://naroagutierrezgil.com/images/catalogo/johnny-rocks-hq-01.webp",
-          "width": 1530,
-          "height": 2048,
-          "caption": "Pieza completa sobre pizarra",
-          "sha256": "d850042bf41929f04ba385ec63c85b4b28d822104804dd2445ba06ec627914df"
+          "url": "https://naroagutierrezgil.com/images/catalogo/johnny-rocks-4k.webp",
+          "width": 2870,
+          "height": 3840,
+          "caption": "Johnny Rocks — Retrato en blanco, negro y dorado sobre pizarra natural.",
+          "sha256": "b439483cae55d5e8be9aad248b16bb0159205a2e7e4011eb681039e9d86c20cd"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/johnny-rocks-hq-02.webp",
           "width": 1536,
           "height": 2048,
-          "caption": "Detalle del retrato",
+          "caption": "Detalle en escorzo del relieve mineral y trazos de grafito sobre la roca.",
           "sha256": "7f044cfa7f86df93e3704cc3de8ee2fae586dfc965a0c61a5297c2103667e6bb"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/johnny-rocks-original-03-2048.jpg",
           "width": 1536,
           "height": 2048,
-          "caption": "Escala de la pieza junto a un rotulador",
+          "caption": "Vista de estudio del retrato sobre las vetas naturales de la pizarra.",
           "sha256": "5612514fdd462044fac8d5c33aec88f438f0f8afe70a5e6e6a21cbd6165986a8"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/johnny-rocks-4k.webp",
-          "width": 2870,
-          "height": 3840,
-          "caption": "Fotografía master 4K del retrato de Johnny Depp sobre plato de pizarra.",
-          "sha256": "b439483cae55d5e8be9aad248b16bb0159205a2e7e4011eb681039e9d86c20cd"
         }
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Johnny%20Rocks",
@@ -429,35 +415,35 @@
       "year": "2015",
       "story": "Camarón aparece sobre el reverso del lienzo, rodeado por papeles de lunares y tela decorada. La silueta superpuesta añade profundidad al retrato.",
       "url": "https://naroagutierrezgil.com/obra/rockagipsy/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/rockagipsy-hq-01-8d0838d38e76-view.webp",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/rockagipsy-4k-5221c7cc4efc-view.webp",
       "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/rockagipsy-4k.webp",
+          "width": 2932,
+          "height": 3840,
+          "caption": "RockaGipsy — Retrato frontal de Camarón de la Isla sobre reverso de lienzo y collage de lunares.",
+          "sha256": "5221c7cc4efc1b2485e2817ff0ec2681a3ea8093612bc00d1ddcbb98b91ef566"
+        },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/rockagipsy-hq-01.jpg",
           "width": 1597,
           "height": 2048,
-          "caption": "Obra completa enmarcada",
+          "caption": "Vista en escorzo de las capas de papel de lunares y silueta recortada.",
           "sha256": "8d0838d38e761dfb22558e39e62533f72ede6d44d3ae94968c389a31617b96e1"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/rockagipsy-hq-02.jpg",
-          "width": 1564,
-          "height": 2048,
-          "caption": "Composición y tejidos",
-          "sha256": "0a63851398217366ea94029e713feca4d75ce975fbb1dbeb50512161282fbccc"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/rockagipsy-hq-03.jpg",
           "width": 2048,
           "height": 1532,
-          "caption": "Vista oblicua de las capas",
+          "caption": "Detalle matérico de la mano, el tatuaje y las texturas textiles del marco.",
           "sha256": "4078d5f9fc66c71782aaed0d5c55bcaef4aeb29da5c505265c95916decbb9618"
         },
         {
-          "url": "https://naroagutierrezgil.com/images/catalogo/rockagipsy-4k.webp",
-          "width": 2932,
-          "height": 3840,
-          "caption": "Fotografía master 4K del retrato de Camarón de la Isla con tejidos de lunares y textura sobre lienzo.",
-          "sha256": "5221c7cc4efc1b2485e2817ff0ec2681a3ea8093612bc00d1ddcbb98b91ef566"
+          "url": "https://naroagutierrezgil.com/images/catalogo/rockagipsy-estudio-4k.webp",
+          "width": 3840,
+          "height": 2872,
+          "caption": "Perspectiva de estudio del ensamblaje tridimensional y marco intervenido.",
+          "sha256": "8ff642c0473c781394fb0ab5f7fc92b7d565a35f965a3d755cf85932959a47c3"
         }
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20RockaGipsy",
@@ -520,28 +506,14 @@
           "url": "https://naroagutierrezgil.com/images/catalogo/james-rocks-hq-01.webp",
           "width": 1536,
           "height": 2048,
-          "caption": "Pieza completa sobre pizarra",
+          "caption": "James Rocks — Vista completa de la pizarra natural intervenida con halo carmesí.",
           "sha256": "285bc25f922eb9fd577980eb9dd70349a7d87a7d3d955d5ec73d2dfae897ccbe"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/james-rocks-hq-02.webp",
-          "width": 1536,
-          "height": 2048,
-          "caption": "Detalle del retrato",
-          "sha256": "8658a9175555f098799f2287f7186f6df06c66dc40a640050ccff695fc124f11"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/james-rocks-original-03-2048.jpg",
-          "width": 1536,
-          "height": 2048,
-          "caption": "Detalle del rostro",
-          "sha256": "67215656cf0f34170464bff19c3dd32d336f45294f2d907347d362a9837f508a"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/james-rocks-4k.webp",
           "width": 2882,
           "height": 3840,
-          "caption": "Fotografía master 4K de James Dean sobre plato de pizarra.",
+          "caption": "Primer plano 4K del rostro de James Dean y el empaste dimensional rojo y negro.",
           "sha256": "61a3e416e1bb9abda79fdde1d2b8d1758d7f2baa4ea9d86fe62d31bfe53fdb0c"
         }
       ],
@@ -1463,29 +1435,22 @@
           "url": "https://naroagutierrezgil.com/images/catalogo/monster-dragon-original-01-2048.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Caracterización frontal",
+          "caption": "Monster Dragon — Caracterización de reptil para el Carnaval de Bilbao.",
           "sha256": "4222e40b1f6131e65780f73c5939d93e4dfb833e653a73189b5a9373194e5b40"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/monster-dragon-original-02-2048.jpg",
           "width": 1536,
           "height": 2048,
-          "caption": "Maquillaje y vestuario",
+          "caption": "Detalle del maquillaje de escamas y colmillos pintados sobre el rostro.",
           "sha256": "738cfebe2e60bcb74ab212b75ca437cc37926597279cd1fb3ae0e39196faa207"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/monster-dragon-original-03-2048.jpg",
           "width": 1536,
           "height": 2048,
-          "caption": "Otra expresión del personaje",
+          "caption": "Posado completo con disfraz kigurumi y caracterización facial.",
           "sha256": "e0c48e4960df4fb6c8ac9dba2fbf00b04c57ea315758c4a109968c87533f5d7e"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/monster-dragon-4k.webp",
-          "width": 3840,
-          "height": 2872,
-          "caption": "Fotografía master 4K de Monster Dragon con caracterización completa.",
-          "sha256": "6a153d1ee2fa74d2624d1ee55374ff32f738e18698bc86b68a83ff262d21ebeb"
         }
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Monster%20Dragon",
@@ -1769,14 +1734,14 @@
       "year": "2022",
       "story": "Retrato 3D realizado a partir de una imagen del fotograma de un vídeo —con decorado de la canción infantil “Babyshark”— impresa varias veces en papel fotográfico. El marco que abraza la obra lo he realizado con una lata de conservas que fue intervenida de la siguiente manera: Primeramente he creado una arandela con alambre grueso en la parte inferior de la pieza a modo de soporte de la misma. Tras ello, he subido el fondo a la lata y he ido montando múltiples partes de la fotografía mediante distintas capas, usando una pistola de silicona caliente para conformar una imagen con relieve y profundidad. En la parte superior he añadido mediante cola caliente una corona realizada a partir de distintos tipos de conchas con pintura acrílica, alambre, medio rollo de celo, esmalte dorado, mica plateada y esmalte transparente con brillantina dorada. Del mismo modo he decorado el interior del retrato con mica plateada, esmalte transparente con brillantina dorada y pequeñas caracolas con pintura acrílica. En la parte posterior, he creado una pequeña composición con pegatinas de felicitación, papel de seda decorado, celofán azul, mica plateada, un alga de fotografía recortada y un mini-faro (palillo con detalle decorativo, un trozo de pajita, la funda de un auricular, alambres plastificados dorados, pintura acrílica y brillantina dorada). He integrado el nombre de la obra y mi firma con cintas de rotuladora Dymo antigua.",
       "url": "https://naroagutierrezgil.com/obra/sistashark/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/sistashark-01-5ab7be79bd89-view.webp",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/sistashark-4k-0ebd64373e0b-view.webp",
       "photos": [
         {
-          "url": "https://naroagutierrezgil.com/images/catalogo/sistashark-01.jpg",
+          "url": "https://naroagutierrezgil.com/images/catalogo/sistashark-4k.webp",
           "width": 994,
           "height": 1024,
           "caption": "Retrato 3D frontal con corona de conchas y gafas de buceo en lata intervenida.",
-          "sha256": "5ab7be79bd89c669910dd753b1e00fa75223dc0fd2665ff85700f85c50f6c901"
+          "sha256": "0ebd64373e0b9cdd55331b46705371c287e2fe3c21222f1f4166038142a9275b"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/sistashark-02.jpg",
@@ -1791,13 +1756,6 @@
           "height": 768,
           "caption": "Composición posterior con mini-faro, pegatinas y rotulación Dymo (NARO.22).",
           "sha256": "b5996d92b8c030ecd0a4c5f8bd2b8f2d3ef6b0b1b68d2a7ae75853e16724bc5a"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/sistashark-4k.webp",
-          "width": 994,
-          "height": 1024,
-          "caption": "Fotografía master de Sistashark: retrato 3D en lata de conservas.",
-          "sha256": "0ebd64373e0b9cdd55331b46705371c287e2fe3c21222f1f4166038142a9275b"
         }
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Sistashark",
@@ -1815,14 +1773,14 @@
       "year": "2022",
       "story": "“El amor es el más viejo, a la vez que es el más nuevo y único acontecimiento del mundo”. (Friedrich Rückert). Retrato 3D doble realizado a partir de tres fotografías y trabajado en varias capas articuladas que, al moverlas, cuentan una pequeña pero gran historia: la del amor de sus protagonistas. El marco de dichas imágenes lo he realizado con una lata de conservas intervenida de la siguiente manera: Primeramente he creado el retrato interno montando pequeñas partes con una pistola de silicona caliente para conformar una imagen con relieve y profundidad. He utilizado una foto publicada por él como fondo. He contrastado las gafas de sol en color, con el resto de las figuras en blanco y negro. He decorado con pequeñas flores y hojas, washi-tape y cristales adhesivos formando las iniciales de sus nombres. Cubriendo esta capa, he creado una tapa con una lámina gruesa, aluminio adhesivo y una anilla de lata. Sobre ella he labrado relieves y he pegado dos rótulos de Dymo antigua. Retrato exterior: en la otra cara de esta tapa he colocado dos fotografías de la pareja por separado sobre un fondo holográfico plateado. Entre ellos un globo de pensamiento de amor compartido y debajo dos estrellas de brillantina que se tocan. He creado unas gafas 3D antiguas con lámina gruesa y celofán de colores para superponerlas a modo de ventanas sobre las imágenes. Los colores guardan relación con las fotos. La bisagra la he creado con cuerda fina y una pajita de papel dorada. Sobre ella, una corona de flores rosas abrazan a una azul. Tras ello, he creado unas alas doradas con un plato de plástico. Por la parte trasera he firmado con cinta adhesiva decorada (washi-tape) y he presentado la obra sobre un pequeño caballete.",
       "url": "https://naroagutierrezgil.com/obra/multi-dimensional-love/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/multi-dimensional-love-01-7dec429f02a5-view.webp",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/multi-dimensional-love-4k-755854b0120a-view.webp",
       "photos": [
         {
-          "url": "https://naroagutierrezgil.com/images/catalogo/multi-dimensional-love-01.jpg",
+          "url": "https://naroagutierrezgil.com/images/catalogo/multi-dimensional-love-4k.webp",
           "width": 1024,
           "height": 768,
           "caption": "Vista frontal con gafas 3D de celofán sobre caballete en la playa.",
-          "sha256": "7dec429f02a54b586566ae25e64ff23a195199f6840b90d712ff3bf0839e44c2"
+          "sha256": "755854b0120a61525614b4a8987830a92048be2cf598461f138d926fde2e890a"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/multi-dimensional-love-02.jpg",
@@ -1837,13 +1795,6 @@
           "height": 768,
           "caption": "Tapa con rótulo Dymo Better Together abierta hacia el retrato interior con gafas a color.",
           "sha256": "64a3a4058fe2840451bf3d3908d774ff5af18aea81942df0db54a7ecc35bee3f"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/multi-dimensional-love-4k.webp",
-          "width": 1024,
-          "height": 768,
-          "caption": "Fotografía master 4K de multi-dimensional-love.",
-          "sha256": "755854b0120a61525614b4a8987830a92048be2cf598461f138d926fde2e890a"
         }
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Multi-dimensional%20Love",
@@ -1861,14 +1812,14 @@
       "year": "2022",
       "story": "Érase Saban que estaba sosegado y calmado en el monte tumbado. Desde el horizonte incluso se le avistaba, recostado y relajado, al lado del arbolado, con los ojos cerrados y descalzos los pies. Es ese de allí, ¿lo ves? Aquel repanchingado de los brazos alzados, doblados y apoyados tras su lindo cogote. Tanto disfrute ha provocado que de él brote una liviana brisa con sabor a sábado y su sonrisa sin prisa... ¡Qué bien que se note! El bosque enlatado, la natura en el bote.",
       "url": "https://naroagutierrezgil.com/obra/peru-pura-natura/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/peru-pura-natura-01-d3e0bbfd4d5c-view.webp",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/peru-pura-natura-4k-b0f5966430d4-view.webp",
       "photos": [
         {
-          "url": "https://naroagutierrezgil.com/images/catalogo/peru-pura-natura-01.jpg",
+          "url": "https://naroagutierrezgil.com/images/catalogo/peru-pura-natura-4k.webp",
           "width": 1024,
           "height": 768,
           "caption": "Retrato 3D de Peru en la hamaca entre ramas y caracoles con fondo de cápsulas y cartel No Molestar.",
-          "sha256": "d3e0bbfd4d5c4f1af854473f98bb53804815fe111af51080079be9f690ecdc5d"
+          "sha256": "b0f5966430d448eaec7bb8824c40c42be6e2a72fc9981c3f8c8f61e308044c76"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/peru-pura-natura-02.jpg",
@@ -1883,13 +1834,6 @@
           "height": 768,
           "caption": "Lata asomando de la caja de infusión Equinácea con goma elástica morada.",
           "sha256": "7581bd5017660b79d988ed0028cefa20bb2c04321d16d2a6d2448bab6c98bbc4"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/peru-pura-natura-4k.webp",
-          "width": 1024,
-          "height": 768,
-          "caption": "Fotografía master 4K de peru-pura-natura.",
-          "sha256": "b0f5966430d448eaec7bb8824c40c42be6e2a72fc9981c3f8c8f61e308044c76"
         }
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Peru%2C%20pura%20natura",
@@ -1907,14 +1851,14 @@
       "year": "2022",
       "story": "Lasaio, lanaro y cuatro gatas enlatadas en una lata con patas. Retrato 3D doble realizado a partir de dos fotografías: una de servidora y otra de Saioa Etxebarria allá por sus tiempos mozos. El marco de la fusión de dichas imágenes lo he realizado con una lata de conservas intervenida de la siguiente manera: Primeramente la he dotado de patas mediante un alambre grueso. Tras ello, he creado el fondo del retrato con un collage de ambas fotos y he rematado los bordes internos de la lata con un trozo de cuerda. El siguiente paso ha sido ir montando partes de ambas fotografías mediante distintas capas, usando una pistola de silicona caliente para conformar una imagen con relieve y profundidad. Por último, he añadido pequeñas flores de papel y gomaeva, así como papel de seda verde a modo de hojas y unos felinos con un mensaje conformado con alambre y papel de acuarela escrito. En la parte posterior he cubierto con esmalte dorado la cola caliente con la que he sujetado los gatos y he firmado con cinta rotuladora Dymo antigua.",
       "url": "https://naroagutierrezgil.com/obra/enlatadas/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/enlatadas-01-d604970f23e8-view.webp",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/enlatadas-4k-6b3c3c1bf756-view.webp",
       "photos": [
         {
-          "url": "https://naroagutierrezgil.com/images/catalogo/enlatadas-01.jpg",
+          "url": "https://naroagutierrezgil.com/images/catalogo/enlatadas-4k.webp",
           "width": 768,
           "height": 1024,
           "caption": "Conjunto escultórico completo en lata con patas de alambre, los cuatro gatos y mensaje I love you so mau.",
-          "sha256": "d604970f23e8f934ae6da2124d133991d4963de13f694ce869aef0eadff30052"
+          "sha256": "6b3c3c1bf756f892dd8887b3a62888312dc0d105f2087931598faaa978364d51"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/enlatadas-02.jpg",
@@ -1922,13 +1866,6 @@
           "height": 768,
           "caption": "Primer plano frontal de las niñas enlatadas en relieve con rosas de papel.",
           "sha256": "1116ac884fd30ef5f6a71217375d147d258aa698e9391f5e4c69ddaf672bdcb8"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/enlatadas-4k.webp",
-          "width": 768,
-          "height": 1024,
-          "caption": "Fotografía master 4K de enlatadas.",
-          "sha256": "6b3c3c1bf756f892dd8887b3a62888312dc0d105f2087931598faaa978364d51"
         }
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20En.lata.das",
@@ -1946,14 +1883,14 @@
       "year": "2021",
       "story": "La dulzura que ella emana, tiñó mis trazos de vainilla y fresa. En su corazón planté un smiley con una sonrisa de oreja a oreja. De oro, brillantina y mica plateada he vestido su ropaje. Y la luz amorosa de su mirada, es la que me da coraje.",
       "url": "https://naroagutierrezgil.com/obra/leire/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/leire-01-9a7bf3a659f5-view.webp",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/leire-4k-35987086b252-view.webp",
       "photos": [
         {
-          "url": "https://naroagutierrezgil.com/images/catalogo/leire-01.jpg",
+          "url": "https://naroagutierrezgil.com/images/catalogo/leire-4k.webp",
           "width": 838,
           "height": 1024,
           "caption": "Retrato completo de Leire enmarcado en blanco con passepartout.",
-          "sha256": "9a7bf3a659f5c7e25516e1a8aa3a80186752a8d718cfba47a38eb9fe5a6f805b"
+          "sha256": "35987086b2523805c25cd238ecfa6a136e6163ee6ef36ff7f4e4427208031a64"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/leire-02.jpg",
@@ -1968,13 +1905,6 @@
           "height": 768,
           "caption": "Detalle de la firma Naroa 2021, destellos de brillantina y estrella plateada.",
           "sha256": "41a83e038a25bba1d3c6b35879635b9827d4c356d3081316a81e39a5c622fe41"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/leire-4k.webp",
-          "width": 838,
-          "height": 1024,
-          "caption": "Fotografía master 4K de leire.",
-          "sha256": "35987086b2523805c25cd238ecfa6a136e6163ee6ef36ff7f4e4427208031a64"
         }
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Leire",
@@ -1992,14 +1922,14 @@
       "year": "2019",
       "story": "Retrato realizado mediante técnica mixta en marco vintage de 44×55 cm con preciosas humedades y passepartout deliciosamente deteriorado por el tiempo. Partiendo de la composición figurativa inicial mediante lápices de colores Art & Graphic de Faber-Castell, investigo los sucesivos cambios de formato (físico-digital-físico) y el contraste de las diferentes texturas al aislar la figura y aplicar distintas capas de collage —tanto en el fondo como en la superficie— creadas en esta ocasión recortando una lámina antigua y una pegatina de cerveza llamada “Brutus”.",
       "url": "https://naroagutierrezgil.com/obra/eneko-el-marino/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/eneko-el-marino-01-8fd7bc3479d7-view.webp",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/eneko-el-marino-4k-0ef618d14202-view.webp",
       "photos": [
         {
-          "url": "https://naroagutierrezgil.com/images/catalogo/eneko-el-marino-01.jpg",
+          "url": "https://naroagutierrezgil.com/images/catalogo/eneko-el-marino-4k.webp",
           "width": 1024,
           "height": 768,
           "caption": "Primer plano de Eneko el Marino con pipa, bíceps flexionado y collage de cerveza Brutus.",
-          "sha256": "8fd7bc3479d746df9bb04ad1a174c10e71c7b70845ad34dcd3b9d4aeef76360d"
+          "sha256": "0ef618d14202c6c8575405a90bf7fb77d718a09201555bae87c3fbc85e32fbb2"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/eneko-el-marino-02.jpg",
@@ -2007,13 +1937,6 @@
           "height": 797,
           "caption": "Obra completa en marco vintage de 44x55 cm con passepartout envejecido.",
           "sha256": "3ec1b90628a5b4df598095fa884b549474c734859c9fe6cd29619ee82c1335fd"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/eneko-el-marino-4k.webp",
-          "width": 1024,
-          "height": 768,
-          "caption": "Fotografía master 4K de eneko-el-marino.",
-          "sha256": "0ef618d14202c6c8575405a90bf7fb77d718a09201555bae87c3fbc85e32fbb2"
         }
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Eneko%20el%20Marino",
@@ -2031,14 +1954,14 @@
       "year": "2019",
       "story": "Ficha técnica: Retrato doble en marco de 50×50 cm con passepartout.",
       "url": "https://naroagutierrezgil.com/obra/aupas/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/aupas-01-4974da8f528b-view.webp",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/aupas-4k-f3ce320a349f-view.webp",
       "photos": [
         {
-          "url": "https://naroagutierrezgil.com/images/catalogo/aupas-01.jpg",
+          "url": "https://naroagutierrezgil.com/images/catalogo/aupas-4k.webp",
           "width": 1024,
           "height": 1024,
           "caption": "Retrato artístico Aupas: padre e hijo en técnica mixta expresiva.",
-          "sha256": "4974da8f528b64c647c0830519666c138780076c977439835996945d7f76a1bb"
+          "sha256": "f3ce320a349fa1b8e9a9fea9d64935a6084fd538fcb12e1f99610bc65937f7bb"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/aupas-02.jpg",
@@ -2053,13 +1976,6 @@
           "height": 576,
           "caption": "El protagonista con el cuadro enmarcado.",
           "sha256": "ab38a97689aeb78c1b238de2f5b46c07476bf2c4b400067b9f11d305fb68c72f"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/aupas-4k.webp",
-          "width": 1024,
-          "height": 1024,
-          "caption": "Fotografía master 4K de aupas.",
-          "sha256": "f3ce320a349fa1b8e9a9fea9d64935a6084fd538fcb12e1f99610bc65937f7bb"
         }
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Aupas",
@@ -2077,14 +1993,14 @@
       "year": 2017,
       "story": "Ficha técnica: Lápices de colores Art & Graphic de Faber-Castell sobre papel de 80 gr/m² tamaño A4.",
       "url": "https://naroagutierrezgil.com/obra/aquellos-maravillosos-anos/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/aquellos-maravillosos-anos-01-eee57d67d1d5-view.webp",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/aquellos-maravillosos-anos-4k-fa85d9e62b5b-view.webp",
       "photos": [
         {
-          "url": "https://naroagutierrezgil.com/images/catalogo/aquellos-maravillosos-anos-01.jpg",
+          "url": "https://naroagutierrezgil.com/images/catalogo/aquellos-maravillosos-anos-4k.webp",
           "width": 1024,
           "height": 657,
           "caption": "Retrato completo de los dos hermanos en técnica mixta sobre papel A4.",
-          "sha256": "eee57d67d1d54b0ed7264e2abf0b1aa6613a3bf9e15fedd794d92e224160ffa9"
+          "sha256": "fa85d9e62b5b57344a006433462e1e57008e9e5145907377104813053854f70a"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/aquellos-maravillosos-anos-02.jpg",
@@ -2099,13 +2015,6 @@
           "height": 612,
           "caption": "Detalle del entramado de tartán a color y firma Naroa 2017.",
           "sha256": "4b9e2d7ce0cb03d5dbabf7dd6de6365a0a8fea4237699583e209ee819c65173a"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/aquellos-maravillosos-anos-4k.webp",
-          "width": 1024,
-          "height": 657,
-          "caption": "Fotografía master 4K de Aquellos Maravillosos Años.",
-          "sha256": "fa85d9e62b5b57344a006433462e1e57008e9e5145907377104813053854f70a"
         }
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Aquellos%20Maravillosos%20A%C3%B1os",
@@ -2123,14 +2032,14 @@
       "year": "2013-2014",
       "story": "Holy Wood: REtpLATOS & aMOREs es una serie emblemática de retratos expresivos realizados directamente sobre platos redondos de madera de pino sin tratar. La artista aprovecha la veta y calidez del soporte para plasmar retratos llenos de luz, humor y afecto, incorporando elementos en relieve como purpurina, flores secas, mariposas, encajes y collages botánicos.",
       "url": "https://naroagutierrezgil.com/obra/holy-wood-retplatos-amores/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/holy-wood-retplatos-01-d967e557d435-view.webp",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/holy-wood-retplatos-amores-4k-e40303b89381-view.webp",
       "photos": [
         {
-          "url": "https://naroagutierrezgil.com/images/catalogo/holy-wood-retplatos-01.jpg",
+          "url": "https://naroagutierrezgil.com/images/catalogo/holy-wood-retplatos-amores-4k.webp",
           "width": 1024,
           "height": 768,
           "caption": "Retplato de mujer a rayas con hojas blancas cayendo como lluvia sobre madera de pino (Naroa 2014).",
-          "sha256": "d967e557d435f865280cc469791d584b44a30c4e2b2520cb91495352356263a3"
+          "sha256": "e40303b89381144c57746f067e24d2336dfaedc733e33f46f5f8df5c26e197b9"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/holy-wood-retplatos-02.jpg",
@@ -2187,13 +2096,6 @@
           "height": 1020,
           "caption": "Retplato de cocinero con gorro de chef y torbellino de color (Naroa 2013).",
           "sha256": "c71ad75255fc1640e6ea2c598e4bc2cf1e4921bd64d421e29d2912e9ec82e984"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/holy-wood-retplatos-amores-4k.webp",
-          "width": 1024,
-          "height": 768,
-          "caption": "Fotografía master 4K de la serie Holy Wood: REtpLATOS & aMOREs.",
-          "sha256": "e40303b89381144c57746f067e24d2336dfaedc733e33f46f5f8df5c26e197b9"
         }
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Holy%20Wood%3A%20REtpLATOS%20%26%20aMOREs",
@@ -2509,7 +2411,7 @@
       "dimensions": "50 × 40 cm",
       "materials": "Pelota de tenis de fieltro, cabello anudado, papeles Canson, acetato impreso publicitario (“Do they match?”), marcador washi-tape con las letras OUT, redes cosidas y gotas de látex líquido a modo de sudor.",
       "year": null,
-      "story": "«Dentro de la colección ‘Vaivenes’, esta obra narra un “con-movedor” hecho: la derrota de una figura ante las circunstancias. Retrato a lápices de colores y rotulador permanente sobre cartulina texturizada, recortada e integrada en collage sobre marco decapado». — Naroa Gutiérrez Gil",
+      "story": "«Dentro de la colección ‘Vaivenes’, esta obra narra un “con-movedor” hecho: la derrota de una figura internacional del tenis (Andre Agassi) durante el Roland Garros de 1990, ante las circunstancias y el temor de perder su peluca con tanto zarandeo. Retrato realista a lápices de colores y rotulador permanente sobre cartulina texturizada, recortada e integrada en collage sobre marco con passepartout intervenido». — Naroa Gutiérrez Gil",
       "url": "https://naroagutierrezgil.com/obra/out-por-los-pelos/",
       "cover_url": "https://naroagutierrezgil.com/immersive/media/out-por-los-pelos-master-4k-92aad807f4da-view.webp",
       "photos": [
@@ -2517,49 +2419,42 @@
           "url": "https://naroagutierrezgil.com/images/catalogo/out-por-los-pelos-master-4k.jpg",
           "width": 2000,
           "height": 2435,
-          "caption": "OUT (por los pelos) — Fotografía master de la obra enmarcada completa.",
+          "caption": "OUT (por los pelos) — Obra completa enmarcada con passepartout rasgado y pelota de fieltro.",
           "sha256": "92aad807f4dadd2efceb409302869f3650d37e20e199c7cafbeb67a405369d2f"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/out-por-los-pelos-01.jpg",
-          "width": 1356,
-          "height": 1684,
-          "caption": "Obra completa.",
-          "sha256": "64f6fd12a965e429b105d98b5a60aa1a8b0fff403d2460fe5af5cdb1723825ae"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/out-por-los-pelos-02.jpg",
           "width": 832,
           "height": 403,
-          "caption": "Detalle o perspectiva 1 de la obra.",
+          "caption": "Detalle superior de las redes cosidas y el lema «Por los pelos» con gotas de látex.",
           "sha256": "fc8db39ee7f1e130e8087d32103f54edd79027e07f2bad8ad398a19d9ba6b99f"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/out-por-los-pelos-03.jpg",
           "width": 843,
           "height": 632,
-          "caption": "Detalle o perspectiva 2 de la obra.",
+          "caption": "Detalle de la ventana lateral con mechón azul y pelota de tenis en fieltro amarillo.",
           "sha256": "b3f4c213e2391b067d79f900abfc39a5d9e258ce949000b3d3549eafef0079aa"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/out-por-los-pelos-04.jpg",
           "width": 843,
           "height": 632,
-          "caption": "Detalle o perspectiva 3 de la obra.",
+          "caption": "Primer plano del perfil de Andre Agassi a lápices de colores y el desgarro del cartón.",
           "sha256": "46c3b98d9cec3593f7c3f49da8e641e2e69aa78cbf7b22b91703f92dc0ac75cf"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/out-por-los-pelos-05.jpg",
           "width": 843,
           "height": 637,
-          "caption": "Detalle o perspectiva 4 de la obra.",
+          "caption": "Detalle del marcador tipográfico «OUT» en cinta washi roja y redes superpuestas.",
           "sha256": "8880e559af285c6e8296af10e7f28a7cb42008b836eca61c64936dadcc27b27e"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/out-por-los-pelos-06.jpg",
           "width": 843,
           "height": 632,
-          "caption": "Detalle o perspectiva 5 de la obra.",
+          "caption": "Vista oblicua del relieve de redes, cabellos y látex líquido sobre el retrato.",
           "sha256": "5a1eab03024eb306d5bda401735937f11a852df97b719573b33918f0b991240e"
         }
       ],
@@ -2877,14 +2772,14 @@
       "year": 2024,
       "story": "Ficha técnica: Retrato doble técnica mixta mediante collage textil y mineral.",
       "url": "https://naroagutierrezgil.com/obra/the-golden-couple/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/the-golden-couple-01-f607cbc62554-view.webp",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/the-golden-couple-4k-7ef7502d06f6-view.webp",
       "photos": [
         {
-          "url": "https://naroagutierrezgil.com/images/catalogo/the-golden-couple-01.jpg",
+          "url": "https://naroagutierrezgil.com/images/catalogo/the-golden-couple-4k.webp",
           "width": 1024,
           "height": 1024,
           "caption": "Retrato doble The Golden Couple en técnica mixta mediante collage con fondo floral, celosía dorada y gominolas.",
-          "sha256": "f607cbc625541fb46a7405f2e8a990a619af762fc46a933623595d7ff0eb5a67"
+          "sha256": "7ef7502d06f6abee406d3991ecbe5ecf5760565b7c7cd2e687769f6c7c26b87e"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/the-golden-couple-02.jpg",
@@ -2899,13 +2794,6 @@
           "height": 1024,
           "caption": "Vista cenital de la obra enmarcada sobre un lecho de margaritas naturales.",
           "sha256": "bef5000612c9cdef4e87e4fbdf483fa736f5d10a9002ae1e456070bd846a0caf"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/the-golden-couple-4k.webp",
-          "width": 1024,
-          "height": 1024,
-          "caption": "Fotografía master de The Golden Couple: técnica mixta mediante collage.",
-          "sha256": "7ef7502d06f6abee406d3991ecbe5ecf5760565b7c7cd2e687769f6c7c26b87e"
         }
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20The%20Golden%20Couple",
@@ -3078,22 +2966,8 @@
           "url": "https://naroagutierrezgil.com/images/catalogo/vaivenes-mr-fahrenheit.jpg",
           "width": 1905,
           "height": 1545,
-          "caption": "Retrato de Freddie Mercury enmarcado con collage y corona de roscón.",
+          "caption": "Mr. Fahrenheit — Retrato de Freddie Mercury a lápices de colores con capas de collage, prensa y corona de roscón de Reyes.",
           "sha256": "3f2561c4f1948a8adc05a0bcdab6bdd2b11607475e3d820fc71ca43e7e580871"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/mr-fahrenheit-4k.webp",
-          "width": 3840,
-          "height": 2880,
-          "caption": "Fotografía master 4K del retrato de Freddie Mercury.",
-          "sha256": "e6f0a7cee96208da4b0c5a1595ecfa84889cf677ab98c922e54aa4a9c43a4810"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/baroque-farrokh-4k.webp",
-          "width": 3810,
-          "height": 3090,
-          "caption": "Composición de estudio Baroque Farrokh en resolución 4K.",
-          "sha256": "52f8182de160a40ac84f44d7aecf627556fd982c32a17d0579f3e5f00f263f47"
         }
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Mr.%20Fahrenheit",
@@ -3117,15 +2991,8 @@
           "url": "https://naroagutierrezgil.com/images/catalogo/vaivenes-audreys-lightning.webp",
           "width": 1536,
           "height": 2048,
-          "caption": "Detalle del retrato de Audrey Hepburn: el rayo sobre su ojo hace un guiño a David Bowie.",
+          "caption": "Audrey’s Lightning — Retrato de Audrey Hepburn intervenido con el rayo de Bowie y mica mineral.",
           "sha256": "db78e90d5426abb9df6613064ce71171dd2be9099ce02603472f72d0529dd76b"
-        },
-        {
-          "url": "https://naroagutierrezgil.com/images/catalogo/audrey-hepburn-4k.webp",
-          "width": 3840,
-          "height": 2872,
-          "caption": "Fotografía master 4K del retrato completo de Audrey Hepburn con rayo Bowie.",
-          "sha256": "8ff642c0473c781394fb0ab5f7fc92b7d565a35f965a3d755cf85932959a47c3"
         }
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Audrey%E2%80%99s%20Lightning",
@@ -3149,22 +3016,29 @@
           "url": "https://naroagutierrezgil.com/images/trayectoria/cantinflowers.jpg",
           "width": 3656,
           "height": 2456,
-          "caption": "«Durante la pandemia, mientras creaba la obra “Cantinflowers”, me vi sumida en una ardua lucha entre el acrílico y la cola, la transparencia y la grieta. En lugar de claudicar, comienzo a rascar sobre una base que no me permitía difuminar y ¡premio!, encuentro una textura inédita. Una actitud que es como las flores que rompen el asfalto y brotan de sus fisuras; puro “kintsugi”, el problema hecho trampolín».",
-          "sha256": null
+          "caption": "Cantinflowers — Obra completa («el problema hecho trampolín»: acrílico, cola rascada y flores mexicanas).",
+          "sha256": "17689d7324a4a39ba4a12b65e97eea0b87a816fb20bc552330d9901e63f34d65"
         },
         {
-          "url": "https://naroagutierrezgil.com/images/catalogo/cantinflowers-4k.webp",
-          "width": 3656,
-          "height": 2456,
-          "caption": "Composición master 4K de Cantinflowers con matices textiles y florales.",
-          "sha256": "9dd913cf1c42a8278cff1b1c2daa8cca4ea362f1e658353065bd5fadd142e3d8"
+          "url": "https://naroagutierrezgil.com/images/catalogo/cantinflowers-cigarrillo-4k.webp",
+          "width": 3840,
+          "height": 2880,
+          "caption": "Detalle en primer plano de la mano de Cantinflas sosteniendo el cigarrillo encendido frente a los platos mexicanos.",
+          "sha256": "e6f0a7cee96208da4b0c5a1595ecfa84889cf677ab98c922e54aa4a9c43a4810"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/cantinflowers-rostro-4k.webp",
+          "width": 2880,
+          "height": 3840,
+          "caption": "Primer plano del rostro de Mario Moreno (Cantinflas) mostrando la textura kintsugi de acrílico y cola rascada.",
+          "sha256": "f585c8dca309134f6037a3564f3eb00eb13b21ed03e5fe4f1adaeda11cd34305"
         },
         {
           "url": "https://naroagutierrezgil.com/images/catalogo/vaivenes-cantinflowers-detalle.jpg",
           "width": 2000,
           "height": 1500,
-          "caption": "Detalle en alta resolución de textura, relieve y prensa.",
-          "sha256": null
+          "caption": "Detalle lateral de los platos artesanales y el relieve matérico de la composición.",
+          "sha256": "eb20a936d88a611e314f4f5b5a7baaaf940f4ed466fef2ea3422b159b0861ede"
         }
       ],
       "inquire_email": "mailto:naroa@naroa.eu?subject=Consulta%20sobre%20Cantinflowers",

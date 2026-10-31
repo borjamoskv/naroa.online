@@ -91,6 +91,8 @@ def build(output):
         return image_meta_cache[src]
 
     projects = []
+    originals.add("/images/catalogo/la-pensadora-lips.webp")
+    originals.add("/images/catalogo/pippi-monkey-cutout.webp")
     series_slugs = {im.get("work_slug", im.get("slug")) for im in series["images"]}
     for p in catalogue["projects"]:
         photographs = [{"src": derivative(im["src"]), "original": im["src"], "caption": im["caption"], "width": im["width"], "height": im["height"]} for im in p["images"]]
@@ -397,20 +399,38 @@ def build(output):
             {"src": menu_img_homer_pepe, "title": "Homer & Pepe", "meta": "Pastel y lápiz · Humor gráfico", "href": "/series/vaivenes/"},
             {"src": menu_img_bastidor, "title": "Bordado entre flores", "meta": "Bastidor textil y botones al aire libre", "href": "/series/vaivenes/"},
         ]
+        trayectoria_reel = [
+            {"src": menu_img_bastidor, "title": "Cantinflowers", "meta": "Exposiciones colectivas e individuales", "href": "/trayectoria/"},
+            {"src": menu_img_celia, "title": "Vaivenes · Copper Deli", "meta": "Muestra individual · Bilbao", "href": "/trayectoria/"},
+            {"src": menu_img_luz, "title": "DiviNos · Pizarra y mica", "meta": "Recorrido expositivo en Bizkaia", "href": "/trayectoria/"},
+            {"src": work["rara-avis"]["thumb"], "title": "Rara Avis", "meta": "Encuentros de arte y creación", "href": "/obra/rara-avis/"},
+        ]
+        cuaderno_reel = [
+            {"src": menu_img_homer_pepe, "title": "Rara Avis", "meta": "Proceso creativo y textos de estudio", "href": "/cuaderno/"},
+            {"src": work["entre-tantas-flores-de-dia"]["thumb"], "title": "Entre Tantas Flores de Día", "meta": "Del trazo sobre poliéster al collage textil", "href": "/obra/entre-tantas-flores-de-dia/"},
+            {"src": work["la-llorona"]["thumb"], "title": "La Llorona", "meta": "Sal rosa, lágrimas y simbolismo en el taller", "href": "/obra/la-llorona/"},
+            {"src": menu_img_bastidor, "title": "Apuntes al natural", "meta": "Bitácora de materiales y bocetos", "href": "/cuaderno/"},
+        ]
+        encargos_reel = [
+            {"src": menu_img_iloveyou, "title": "I Love You · Pop Art", "meta": "Retrato personalizado a medida · Bilbao", "href": "/retratos-por-encargo-bilbao/"},
+            {"src": work["hugo-box"]["thumb"], "title": "Hugo Box", "meta": "Caja de madera intervenida · Regalo a medida", "href": "/obra/hugo-box/"},
+            {"src": work["13n"]["thumb"], "title": "13N", "meta": "Retrato doble en plato de madera y pan de oro", "href": "/obra/13n/"},
+            {"src": work["lauralore"]["thumb"], "title": "LauraLore", "meta": "Retrato con cerámica y eguzkilore en marco", "href": "/obra/lauralore/"},
+        ]
         def reel_attr(seq):
             if not seq:
                 return ""
             return f' data-preview-reel="{esc(json.dumps(seq, ensure_ascii=False, separators=(",", ":")))}"'
         items = [
-            ("/obra/", "Obras", f"{len(projects)} retratos · Un viaje", menu_img_luz, "Amy Rocks", "Otra manera de mirar.", f"Pizarra, collage y objetos · {len(projects)} obras", False, obras_reel),
-            ("/series/vaivenes/", "Vaivenes", "Dibujo, materia y transformación", menu_img_celia, "Celia Cruz · ¡Azúcar!", "Todo va y viene.", f"Collage y transformación · {len(vaivenes_list)} obras", False, vaivenes_reel),
-            ("/sobre-mi/", "Naroa", "La artista", menu_img_manostijeras, "Naroa Gutiérrez Gil", "Me encontré a mí en los demás.", "Retratista y artista plástica · Bilbao", False, None),
-            ("/trayectoria/", "Trayectoria", "Exposiciones y encuentros", menu_img_bastidor, "Cantinflowers", "El arte también sale de paseo.", "Exposiciones colectivas e individuales", False, None),
-            ("/cuaderno/", "Cuaderno", "Historias desde el estudio", menu_img_homer_pepe, "Rara Avis", "Apuntes desde el estudio.", "Proceso creativo y textos de estudio", False, None),
-            ("/retratos-por-encargo-bilbao/", "Encargos", "Un retrato con tu historia", menu_img_iloveyou, "I Love You · Pop Art", "Cada rostro guarda un mundo.", "Retrato personalizado a medida · Bilbao", False, None),
-            ("/contacto/", "Contacto", "Hablemos de tu idea", menu_img_frankenstein, "Naroa Gutiérrez Gil", "¿Qué historia retratamos?", "Estudio en Bilbao · Consulta directa", True, None),
+            ("/obra/", "Obras", f"{len(projects)} retratos · Un viaje", menu_img_luz, "Amy Rocks", "Otra manera de mirar.", f"Pizarra, collage y objetos · {len(projects)} obras", False, obras_reel, "#4a72bd"),
+            ("/series/vaivenes/", "Vaivenes", "Dibujo, materia y transformación", menu_img_celia, "Celia Cruz · ¡Azúcar!", "Todo va y viene.", f"Collage y transformación · {len(vaivenes_list)} obras", False, vaivenes_reel, "#267ba8"),
+            ("/sobre-mi/", "Naroa", "La artista", menu_img_manostijeras, "Naroa Gutiérrez Gil", "Me encontré a mí en los demás.", "Retratista y artista plástica · Bilbao", False, None, "#3f63ab"),
+            ("/trayectoria/", "Trayectoria", "Exposiciones y encuentros", menu_img_bastidor, "Cantinflowers", "El arte también sale de paseo.", "Exposiciones colectivas e individuales", False, trayectoria_reel, "#6b5a35"),
+            ("/cuaderno/", "Cuaderno", "Historias desde el estudio", menu_img_homer_pepe, "Rara Avis", "Apuntes desde el estudio.", "Proceso creativo y textos de estudio", False, cuaderno_reel, "#1b7874"),
+            ("/retratos-por-encargo-bilbao/", "Encargos", "Un retrato con tu historia", menu_img_iloveyou, "I Love You · Pop Art", "Cada rostro guarda un mundo.", "Retrato personalizado a medida · Bilbao", False, encargos_reel, "#6b395c"),
+            ("/contacto/", "Contacto", "Hablemos de tu idea", menu_img_frankenstein, "Naroa Gutiérrez Gil", "¿Qué historia retratamos?", "Estudio en Bilbao · Consulta directa", True, None, "#385fa8"),
         ]
-        return ''.join(f'''<a href="{href}" data-menu-item data-menu-index="{i-1}" data-preview-src="{src}" data-preview-title="{esc(title)}" data-preview-label="{esc(label)}" data-preview-quote="{esc(quote_text)}" data-preview-meta="{esc(meta_text)}"{' data-preview-wink="true"' if wink else ''}{reel_attr(reel)}><span class="menu-number" aria-hidden="true">{i:02}</span><span class="menu-name">{label}<small>{detail}</small></span><span class="menu-arrow" aria-hidden="true">↗</span></a>''' for i, (href, label, detail, src, title, quote_text, meta_text, wink, reel) in enumerate(items, 1))
+        return ''.join(f'''<a href="{href}" style="--item-idx:{i-1}" data-menu-item data-menu-index="{i-1}" data-preview-src="{src}" data-preview-title="{esc(title)}" data-preview-label="{esc(label)}" data-preview-quote="{esc(quote_text)}" data-preview-meta="{esc(meta_text)}" data-preview-glow="{glow}"{' data-preview-wink="true"' if wink else ''}{reel_attr(reel)}><span class="menu-number" aria-hidden="true" title="Atajo de teclado: {i}">{i:02}</span><span class="menu-name">{label}<small data-menu-item-detail>{detail}</small></span><span class="menu-arrow" aria-hidden="true">↗</span></a>''' for i, (href, label, detail, src, title, quote_text, meta_text, wink, reel, glow) in enumerate(items, 1))
 
     share_svgs = {
         "instagram": '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>',
@@ -440,7 +460,7 @@ def build(output):
             'Vaivenes': sum(1 for p in projects if p.get('series') == 'Vaivenes' or p.get('category') == 'Vaivenes')
         }
         index = ''.join(f'''<a class="index-work" href="/obra/{p['slug']}/" data-work="{p['slug']}" data-index-num="{idx+1:02d}" data-category="{p['category']}" data-series="{esc(p['series'] or '')}" data-cover="{esc(p['cover'])}" data-dimensions="{esc(p.get('dimensions') or '')}" data-photos-count="{len(p.get('photos') or [])}" data-story="{esc((p.get('story') or '')[:140])}" data-search="{esc(' '.join(str(p[k] or '') for k in ['title','technique','support','series','story','materials']))}"><div class="index-work-frame"><img src="{p['thumb']}" width="280" height="320" alt="{esc(p['title'])}" loading="lazy"><span class="index-work-num" aria-hidden="true">{idx+1:02d}</span><span class="index-work-whisper" aria-hidden="true">«{esc((p.get('story') or p.get('label') or '')[:92]).rstrip()}…»</span></div><span><small>// {esc(p['label'])}</small><strong>{esc(p['title'])}</strong><em>{esc(p['support'] or p['technique'] or '')}{f" · {esc(p['dimensions'])}" if p.get('dimensions') else ""}</em></span><span class="stencil-stamp" aria-hidden="true">{esc((p.get('series') or p.get('category') or 'ORIGINAL').upper())}</span><span class="index-work-arrow" aria-hidden="true">↗</span></a>''' for idx, p in enumerate(projects))
-        return f'''<dialog id="menu-dialog" class="menu-dialog" aria-labelledby="menu-heading"><div class="dialog-top menu-top"><a class="signature" href="/" aria-label="Naroa Gutiérrez Gil, inicio"><span>Naroa</span><small>GUTIÉRREZ GIL</small></a><span id="menu-heading">Otra manera de mirar</span><button type="button" data-close-dialog autofocus>Cerrar <span aria-hidden="true">×</span></button></div><div class="menu-layout"><figure class="menu-preview"><div class="menu-preview-picture" data-menu-picture><img data-menu-image alt="Amy Rocks" aria-hidden="true" width="480" height="360"><img data-menu-image alt="Amy Rocks" aria-hidden="true" width="480" height="360"><img class="menu-preview-wink" data-menu-wink src="{menu_portrait_wink}" alt="Guiño de Naroa Gutiérrez Gil" aria-hidden="true" width="480" height="360"><div class="menu-preview-loupe" data-menu-loupe aria-hidden="true"></div><span class="menu-preview-hand" data-menu-quote aria-hidden="true">Otra manera de mirar.</span><div class="menu-preview-reel" data-menu-reel hidden aria-hidden="true"></div></div><figcaption class="menu-preview-caption"><div class="menu-caption-main"><span data-menu-preview-label>Obras</span><span data-menu-preview-title>Amy Rocks</span></div><div class="menu-caption-sub"><span class="menu-preview-meta" data-menu-preview-meta>Pizarra, collage y objetos · {len(projects)} obras</span><button type="button" class="menu-index-pill" data-menu-open-index title="Abrir catálogo completo (atajo: / o I)"><span>Índice</span><span aria-hidden="true">⌕</span><kbd aria-hidden="true">/</kbd></button></div></figcaption></figure><nav class="menu-pages" aria-label="Todas las páginas">{links()}</nav></div><div class="menu-foot"><span>Desde Bilbao, con otra mirada.</span><a href="mailto:naroa@naroa.eu">naroa@naroa.eu ↗</a><a href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer">Facebook ↗</a><a href="https://instagram.com/naroa_art/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="/immersive/audio/creditos.txt">Créditos del sonido ↗</a></div></dialog>
+        return f'''<dialog id="menu-dialog" class="menu-dialog" aria-labelledby="menu-heading"><div class="dialog-top menu-top"><a class="signature" href="/" aria-label="Naroa Gutiérrez Gil, inicio"><span>Naroa</span><small>GUTIÉRREZ GIL</small></a><span id="menu-heading">Otra manera de mirar</span><button type="button" data-close-dialog autofocus>Cerrar <span aria-hidden="true">×</span></button></div><div class="menu-layout"><figure class="menu-preview"><div class="menu-preview-picture" data-menu-picture data-preview-href="/obra/" title="Ir a la sección u obra en vista previa"><img data-menu-image alt="Amy Rocks" aria-hidden="true" width="480" height="360"><img data-menu-image alt="Amy Rocks" aria-hidden="true" width="480" height="360"><img class="menu-preview-wink" data-menu-wink src="{menu_portrait_wink}" alt="Guiño de Naroa Gutiérrez Gil" aria-hidden="true" width="480" height="360"><div class="menu-preview-loupe" data-menu-loupe aria-hidden="true"></div><div class="menu-preview-reel" data-menu-reel hidden aria-hidden="true"></div></div><figcaption class="menu-preview-caption"><div class="menu-caption-main"><span data-menu-preview-label>Obras</span><span class="menu-caption-quote" data-menu-quote>Otra manera de mirar.</span><span data-menu-preview-title>Amy Rocks</span></div><div class="menu-caption-sub"><span class="menu-preview-meta" data-menu-preview-meta>Pizarra, collage y objetos · {len(projects)} obras</span><div class="menu-caption-actions"><a class="menu-open-work-pill" href="/obra/" data-menu-open-work title="Entrar en esta vista"><span>Entrar</span><span aria-hidden="true">↗</span></a><button type="button" class="menu-index-pill" data-menu-open-index title="Abrir catálogo completo (atajo: / o I)"><span>Índice</span><span aria-hidden="true">⌕</span><kbd aria-hidden="true">/</kbd></button></div></div></figcaption></figure><nav class="menu-pages" aria-label="Todas las páginas">{links()}</nav></div><div class="menu-sound-drawer" data-menu-sound-drawer hidden aria-label="Paisaje sonoro y créditos"><div class="menu-sound-drawer-inner"><div class="menu-sound-col"><span class="menu-sound-eyebrow">CAJA DE MÚSICA ANALÓGICA · HOY SUENA</span><strong class="menu-sound-theme" data-menu-melody-today>Ciclo Melódico Semanal · Re menor (340–860 Hz)</strong><p>Síntesis cálida reactiva al paso de cada obra con ataque de fieltro, filtro de seda y cadencia <em>The Sound of Silence</em>.</p></div><div class="menu-sound-col"><span class="menu-sound-eyebrow">CRÉDITOS Y LICENCIAS DE AUDIO</span><p>Ambiente natural CC0 (Freesound) · Arreglos de caja de música y síntesis WebAudio original para el estudio de Naroa Gutiérrez Gil.</p><div class="menu-sound-links"><a href="/immersive/audio/creditos.txt" target="_blank" rel="noopener noreferrer">Ver ficha técnica completa (.txt) ↗</a><button type="button" data-close-sound-drawer>Ocultar ×</button></div></div></div></div><div class="menu-foot"><span>Desde Bilbao, con otra mirada. <em class="menu-kbd-hint" aria-hidden="true">· Teclas [1–7] Secciones · [/] Índice</em></span><a href="mailto:naroa@naroa.eu">naroa@naroa.eu ↗</a><a href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer">Facebook ↗</a><a href="https://instagram.com/naroa_art/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="/immersive/audio/creditos.txt" data-menu-sound-credits aria-expanded="false">Créditos del sonido ↗</a></div></dialog>
 <dialog id="index-dialog" class="index-dialog" data-obra-view="muro" aria-labelledby="index-heading"><div class="index-backdrop" data-index-backdrop aria-hidden="true"><div class="index-backdrop-image" data-index-backdrop-img style="background-image:url('{projects[0]['cover']}')"></div><div class="index-backdrop-vignette"></div></div><div class="dialog-top"><h2 id="index-heading">La obra <span class="stencil-subtag" aria-hidden="true">✦ GABINETE DE MIRADAS &amp; MATERIA VIVA</span></h2><div class="index-top-actions"><div class="index-mode-switcher" role="group" aria-label="Modo de visualización del gabinete"><button type="button" data-obra-mode="muro" aria-pressed="true">Muro de Taller</button><button type="button" data-obra-mode="mesa" aria-pressed="false">Mesa de Luz</button><button type="button" data-obra-mode="constelacion" aria-pressed="false">Hilo Kintsugi</button></div><button type="button" class="index-oracle-btn" data-index-oracle title="Dejar que el azar elija una mirada">🎲 Oráculo del azar</button><button type="button" data-close-dialog class="stencil-close-btn">Cerrar ×</button></div></div><div class="index-controls"><label for="art-search"><span class="search-label-stencil">⌕ BUSCAR EN EL ESTUDIO // TRAZO, MATERIA O ROSTRO</span><input type="search" id="art-search" placeholder="Título, pizarra, lata, collage o personaje…" autocomplete="off"></label><div class="index-filters" role="group" aria-label="Filtrar obras"><button type="button" data-filter="all" aria-pressed="true"><span class="spray-dot" aria-hidden="true">●</span> Todas <span class="filter-num" aria-hidden="true">{counts['all']}</span></button><button type="button" data-filter="pizarra" aria-pressed="false"><span class="spray-dot" aria-hidden="true">●</span> Pizarra <span class="filter-num" aria-hidden="true">{counts['pizarra']}</span></button><button type="button" data-filter="collage" aria-pressed="false"><span class="spray-dot" aria-hidden="true">●</span> Collage <span class="filter-num" aria-hidden="true">{counts['collage']}</span></button><button type="button" data-filter="objetos" aria-pressed="false"><span class="spray-dot" aria-hidden="true">●</span> Objetos <span class="filter-num" aria-hidden="true">{counts['objetos']}</span></button><button type="button" data-filter="caracterizacion" aria-pressed="false"><span class="spray-dot" aria-hidden="true">●</span> Caracterización <span class="filter-num" aria-hidden="true">{counts['caracterizacion']}</span></button><button type="button" data-filter="Vaivenes" aria-pressed="false"><span class="spray-dot" aria-hidden="true">●</span> Vaivenes <span class="filter-num" aria-hidden="true">{counts['Vaivenes']}</span></button></div></div><div class="index-status-bar"><p class="index-count" role="status" aria-live="polite">{len(projects)} proyectos</p><div class="index-spotlight-hud" data-index-spotlight-hud aria-hidden="true"><span class="spotlight-hud-num" data-hud-num>01 / {len(projects):02d}</span><strong class="spotlight-hud-title" data-hud-title>{esc(projects[0]['title'])}</strong><span class="spotlight-hud-meta" data-hud-meta>{esc(projects[0]['label'])}</span><span class="spotlight-hud-quote" data-hud-quote>«{esc((projects[0].get('story') or '')[:110])}…»</span></div></div><div class="index-list">{index}</div><p class="index-empty" hidden>No hay obras que coincidan con esta búsqueda. <button type="button" data-reset-index>Ver todas</button></p></dialog>
 <dialog id="story-remix-dialog" class="story-remix-dialog" aria-labelledby="story-remix-heading"><div class="dialog-top"><span id="story-remix-heading">Modo Story · Detail Obsession</span><button type="button" data-close-dialog autofocus>Cerrar ×</button></div><div class="story-remix-content"><div class="story-remix-preview-frame"><img data-story-remix-img alt="Story Detail Obsession de Naroa Gutiérrez Gil" width="360" height="640"><div class="story-remix-spinner" data-story-remix-spinner hidden><span>Generando detalle matérico...</span></div></div><div class="story-remix-actions"><button type="button" class="remix-btn remix-btn--shuffle" data-remix-shuffle>🎲 Otra obra</button><button type="button" class="remix-btn remix-btn--share" data-remix-share>Subir a Instagram Stories ↗</button><button type="button" class="remix-btn remix-btn--video" data-remix-video-loop>🎵 Grabar Loop 6s (Audio + Macro)</button><a class="remix-btn remix-btn--download" data-remix-download href="#" download="naroa-detail-obsession.jpg">Descargar Story HD ⤓</a></div></div></dialog>'''
 
@@ -1111,6 +1131,124 @@ def build(output):
         f'<button type="button" class="commission-dot{" is-active" if idx == 0 else ""}" data-jump-card="{idx}" aria-label="Ir a obra {idx + 1}: {esc(ex["title"])}"><span>0{idx + 1}</span></button>'
         for idx, (ex, _) in enumerate(commission_examples)
     )
+
+    commission_faqs = [
+        ("¿Cómo encargar un retrato personalizado a partir de fotografías?", "Puedes enviar una o varias fotografías de referencia (incluso tomadas con el móvil) por WhatsApp o correo para estudiar la pose, la iluminación y el carácter. También es posible combinar varias fotos distintas en una misma composición. Naroa no realiza una reproducción fotomecánica, sino una reinterpretación artística de autor que integra la personalidad, anécdotas y memoria de quien recibe la obra."),
+        ("¿Cuánto cuesta un retrato personalizado por encargo?", "Cada encargo es una pieza de autor única e irrepetible hecha a mano en el estudio de Bilbao. El presupuesto se calcula con total transparencia según la técnica, el soporte y las dimensiones acordadas (dibujo, óleo, collage textil sobre madera noble, cajas de recuerdos tridimensionales o exploraciones en pizarra natural). Siempre se formaliza una propuesta con presupuesto cerrado previo y por escrito antes de comenzar la obra, sin ningún compromiso previo."),
+        ("¿Cuáles son los plazos de entrega en Bilbao, Bizkaia y mediante envío?", "El plazo habitual de ejecución se sitúa entre 2 y 4 semanas, condicionado por la complejidad de la composición y los tiempos de secado de óleos, acrílicos y barnices. Para fechas señaladas (aniversarios, bodas, jubilaciones, homenajes) es posible concertar plazos prioritarios con aviso previo. La entrega se realiza en mano en Bilbao y Bizkaia (Casco Viejo, Abando, Indautxu, Getxo, margen derecha e izquierda), o mediante envío rígido tricapa asegurado a cualquier destino."),
+        ("¿Qué técnicas y soportes se pueden elegir o ver en el estudio de Bilbao?", "Se puede elegir entre dibujo a grafito o pastel Conté combinado con collage textil sobre madera noble, pintura al óleo o acrílico, cajas y objetos cotidianos transformados en piezas de memoria personal, o soportes minerales como la pizarra natural con escamas de mica. Con cita previa puedes visitar el taller en Bilbao para ver materiales y formatos en directo."),
+    ]
+    faq_html = ''.join(f'<details class="commission-faq-item"><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q, a in commission_faqs)
+
+    specs_rows = [
+        ("Soportes de autor", "Madera noble tratada, collage textil sobre tela vaquera o papel de algodón Canson Mi-Teintes, cajas tridimensionales de memoria y losas de pizarra natural de cantera con escamas de mica mineral pura."),
+        ("Formatos habituales", "Composiciones en madera, papel, pizarra y objetos con medidas adaptadas a cada proyecto (formatos estándar de 20 × 30 cm, 30 × 40 cm, 40 × 50 cm y medidas especiales a medida de gran formato)."),
+        ("Técnicas plásticas", "Dibujo a grafito y pastel Conté, pintura acrílica y al óleo, collage textil y ensamblaje de objetos biográficos protegidos con barnices de conservación UV."),
+        ("Protección y entrega", "Piezas listas para colgar o exhibir, acompañadas de certificado de autenticidad firmado, entrega local en mano en Bilbao y Bizkaia o envío rígido tricapa asegurado."),
+    ]
+    specs_html = '<div class="commission-specs-grid">' + ''.join(f'<div class="commission-spec-card"><span class="spec-label">{esc(lbl)}</span><p>{esc(desc)}</p></div>' for lbl, desc in specs_rows) + '</div>'
+
+    compare_rows = [
+        ("Collage textil sobre madera", "Madera noble + vaquero / tela", "20 × 30 a 40 × 50 cm", "2 a 4 semanas", "Tridimensional, cálido y táctil"),
+        ("Pizarra natural rústica", "Piedra de cantera + mica mineral", "20 × 30 a 30 × 40 cm", "2 a 3 semanas", "Textura geológica milenaria"),
+        ("Caja personalizada u objeto", "Lata, caja de madera o relicario", "Tridimensional a medida", "2 a 4 semanas", "Narrativa de recuerdos y objetos"),
+        ("Retrato al óleo o grafito", "Papel de algodón Canson / tabla", "Desde 20 × 30 cm", "2 a 4 semanas", "Clásico de autor y trazo íntimo"),
+    ]
+    specs_html += (
+        '<div class="commission-compare-wrap">'
+        '<table class="commission-compare-table">'
+        '<caption>Tabla comparativa de soportes · Pulsa cualquier fila para elegirla en la mesa</caption>'
+        '<thead><tr><th scope="col">Soporte</th><th scope="col">Materiales</th><th scope="col">Dimensiones</th><th scope="col">Plazo</th><th scope="col">Carácter</th></tr></thead>'
+        '<tbody>'
+        + ''.join(
+            f'<tr data-compare-support="{esc(s)}"><th scope="row">{esc(s)}</th><td>{esc(m)}</td><td>{esc(d)}</td><td>{esc(t)}</td><td>{esc(c)}</td></tr>'
+            for s, m, d, t, c in compare_rows
+        )
+        + '</tbody></table></div>'
+    )
+
+    default_cfg_msg = "Hola Naroa, me gustaría consultar un encargo de retrato sobre Collage textil sobre madera para Retrato individual con plazo Sin prisa (2 a 4 semanas)."
+    configurator_html = (
+        '<section id="configurador" class="commission-configurator" aria-labelledby="configurator-heading" data-commission-configurator>'
+        '<div class="configurator-header">'
+        '<p class="eyebrow">Mesa de Encargos Interactiva · Presupuesto cerrado sin compromiso</p>'
+        '<h2 id="configurator-heading">Diseña tu encargo<br><span>paso a paso.</span></h2>'
+        '<p>Toca las muestras de materia, quién protagoniza la obra y el plazo para componer tu ficha de taller en vivo.</p>'
+        '<p id="cfg-seed-banner" class="configurator-seed-banner" data-cfg-seed-banner hidden></p>'
+        '</div>'
+        '<div class="atelier-workbench">'
+        '<div class="atelier-controls">'
+        '<div class="configurator-field">'
+        '<label for="cfg-support">01 · Elige la materia y soporte</label>'
+        '<div class="cfg-pill-group" role="group" aria-label="Selector visual de soporte">'
+        '<button type="button" class="cfg-pill is-active" data-cfg-pill="support" data-cfg-val="Collage textil sobre madera"><strong>Collage textil y madera</strong><small>Tela vaquera, costuras y dibujo</small></button>'
+        '<button type="button" class="cfg-pill" data-cfg-pill="support" data-cfg-val="Pizarra natural rústica"><strong>Pizarra natural y mica</strong><small>Piedra de cantera con destellos</small></button>'
+        '<button type="button" class="cfg-pill" data-cfg-pill="support" data-cfg-val="Caja personalizada u objeto"><strong>Caja de memoria 3D</strong><small>Objeto intervenido y relicario</small></button>'
+        '<button type="button" class="cfg-pill" data-cfg-pill="support" data-cfg-val="Retrato al óleo o grafito"><strong>Pastel, grafito o lápiz</strong><small>Dibujo de autor sobre papel</small></button>'
+        '<button type="button" class="cfg-pill" data-cfg-pill="support" data-cfg-val="Asesoramiento en estudio"><strong>Indeciso · Asesoramiento</strong><small>Naroa te propone según tu foto</small></button>'
+        '</div>'
+        '<select id="cfg-support" class="configurator-select">'
+        '<option value="Collage textil sobre madera">Collage textil y dibujo sobre madera</option>'
+        '<option value="Retrato al óleo o grafito">Retrato a pastel, grafito o lápiz</option>'
+        '<option value="Caja personalizada u objeto">Caja de memoria tridimensional u objeto</option>'
+        '<option value="Pizarra natural rústica">Pizarra natural (exploración reciente)</option>'
+        '<option value="Asesoramiento en estudio">Por definir (asesoramiento con Naroa)</option>'
+        '</select>'
+        '</div>'
+        '<div class="configurator-field">'
+        '<label for="cfg-motif">02 · ¿A quién retratamos?</label>'
+        '<div class="cfg-pill-group cfg-pill-group--compact" role="group" aria-label="Selector visual de motivo">'
+        '<button type="button" class="cfg-pill is-active" data-cfg-pill="motif" data-cfg-val="Retrato individual"><strong>Individual</strong><small>1 protagonista</small></button>'
+        '<button type="button" class="cfg-pill" data-cfg-pill="motif" data-cfg-val="Pareja o familia"><strong>Pareja / Familia</strong><small>Varias personas o fotos</small></button>'
+        '<button type="button" class="cfg-pill" data-cfg-pill="motif" data-cfg-val="Mascota"><strong>Mascota</strong><small>Compañero animal</small></button>'
+        '<button type="button" class="cfg-pill" data-cfg-pill="motif" data-cfg-val="Homenaje o recuerdo"><strong>Homenaje</strong><small>Recuerdo o regalo</small></button>'
+        '</div>'
+        '<select id="cfg-motif" class="configurator-select">'
+        '<option value="Retrato individual">Retrato individual (persona)</option>'
+        '<option value="Pareja o familia">Pareja o familia</option>'
+        '<option value="Mascota">Mascota (perro, gato u otro animal)</option>'
+        '<option value="Homenaje o recuerdo">Homenaje / recuerdo especial</option>'
+        '</select>'
+        '</div>'
+        '<div class="configurator-field">'
+        '<label for="cfg-timing">03 · Plazo y ocasión</label>'
+        '<div class="cfg-pill-group cfg-pill-group--two" role="group" aria-label="Selector visual de plazo">'
+        '<button type="button" class="cfg-pill is-active" data-cfg-pill="timing" data-cfg-val="Sin prisa (2 a 4 semanas)"><strong>Ritmo de estudio (2–4 semanas)</strong><small>Secado orgánico sin prisas</small></button>'
+        '<button type="button" class="cfg-pill" data-cfg-pill="timing" data-cfg-val="Fecha señalada próxima"><strong>Fecha especial próxima</strong><small>Prioridad para regalo o aniversario</small></button>'
+        '</div>'
+        '<select id="cfg-timing" class="configurator-select">'
+        '<option value="Sin prisa (2 a 4 semanas)">Plazo habitual (2 a 4 semanas)</option>'
+        '<option value="Fecha señalada próxima">Fecha especial próxima (cumpleaños, aniversario)</option>'
+        '</select>'
+        '</div>'
+        '</div>'
+        '<aside class="atelier-OrderCard" aria-label="Ficha de encargo en vivo">'
+        '<div class="atelier-card-stamp">FICHA DE TALLER · BILBAO</div>'
+        '<div class="atelier-card-visual">'
+        f'<img id="cfg-visual-img" src="{jaio["cover"]}" alt="Muestra de soporte seleccionado" width="480" height="360" loading="lazy">'
+        '<div class="atelier-card-caption">'
+        '<span id="cfg-visual-tag">Tela vaquera, costuras y dibujo</span>'
+        '<strong id="cfg-visual-title">Custom Jaio · Collage textil y madera</strong>'
+        '</div>'
+        '</div>'
+        '<div class="atelier-card-body">'
+        '<span class="atelier-msg-label">Mensaje listo para enviar a Naroa:</span>'
+        f'<p id="cfg-preview" class="configurator-preview" aria-live="polite">{esc(default_cfg_msg)}</p>'
+        '<div class="configurator-action">'
+        f'<a id="cfg-whatsapp-btn" class="commission-cta-btn" href="https://wa.me/34636060609?text={quote(default_cfg_msg)}" target="_blank" rel="noopener noreferrer">'
+        '<span>Enviar idea por WhatsApp ↗</span>'
+        '</a>'
+        f'<a id="cfg-email-btn" class="commission-cta-secondary" href="mailto:naroa@naroa.eu?subject={quote("Consulta encargo: Collage textil sobre madera")}&body={quote(default_cfg_msg)}">'
+        '<span>Solicitar propuesta por email ↗</span>'
+        '</a>'
+        '</div>'
+        '<p class="atelier-card-guarantee">✓ Respuesta directa de Naroa · Presupuesto cerrado previo sin compromiso</p>'
+        '</div>'
+        '</aside>'
+        '</div>'
+        '</section>'
+    )
+
     commissions = (
         f'<article class="editorial commission-minimal" id="contenido" data-commission-horizontal>'
         f'<div class="commission-horizontal-sticky">'
@@ -1123,6 +1261,7 @@ def build(output):
         f'<div class="closing" data-parallax-card>'
         f'<p class="hand" style="font-size:clamp(36px,4.5vw,56px);margin:0;color:#fffdf4">¿A quién te gustaría retratar?</p>'
         f'<a class="commission-cta-btn" href="https://wa.me/34636060609?text=Hola%20Naroa%2C%20quiero%20encargar%20una%20obra." target="_blank" rel="noopener noreferrer">WhatsApp directo ↗</a>'
+        f'<a class="text-link" href="#taller">Configurar encargo y ver taller ↓</a>'
         f'<a class="text-link" href="mailto:naroa@naroa.eu?subject=Encargo">naroa@naroa.eu ↗</a>'
         f'</div>'
         f'</div>'
@@ -1130,6 +1269,55 @@ def build(output):
         f'<div class="commission-progress-bar"><div class="commission-progress-fill" data-progress-fill></div></div>'
         f'<div class="commission-dots-dock">{progress_dots}</div>'
         f'</nav>'
+        f'</div>'
+        f'</article>'
+        f'<article class="editorial atelier-editorial" id="taller">'
+        f'<section class="chapter atelier-manifesto">'
+        f'<p class="eyebrow">El taller en Bilbao · De tu foto al objeto vivo</p>'
+        f'<div>'
+        f'<h2>Más allá de<br><span>una fotografía.</span></h2>'
+        f'<p class="lead">«Mediante esta obra, una hija y su padre volvieron a encontrarse sobre un fondo blanco. Todo gracias a una foto de joven de él, que me permitió —esquivando los reflejos del cristal que protegía su mirada— trazarles, de nuevo, juntos. "El Reencuentro" es un sentimiento traído a nuestra percepción a través del rastro —en los rostros— de caricias con pinceles, en su cabello y sus pieles; peinando su pelo y acariciando sus sienes».</p>'
+        f'<p>«Reúne una enorme variedad de elementos y texturas que se engranan en un collage repleto de significados… Conforma un puzzle de mil piezas que encaja a la perfección, como dos almas que se quieren y se funden en un abrazo». Solicita un <strong>retrato por encargo en Bilbao</strong> o retrato personalizado con Naroa Gutiérrez Gil a partir de tu historia o fotografías, con <strong>presupuesto cerrado previo por escrito</strong> y entrega local en mano en Bilbao y Bizkaia o envío rígido asegurado.</p>'
+        f'<div class="commission-trust-pills" aria-label="Garantías del estudio en Bilbao">'
+        f'<span>✦ Presupuesto cerrado previo sin compromiso</span>'
+        f'<span>✦ Plazo real de taller: 2 a 4 semanas</span>'
+        f'<span>✦ Cita en estudio y entrega en mano en Bilbao / Bizkaia</span>'
+        f'<span>✦ Embalaje tricapa asegurado nacional e internacional</span>'
+        f'</div>'
+        f'</div>'
+        f'</section>'
+        f'{configurator_html}'
+        f'<section class="commission-steps" aria-label="Historias reales de encargos y regalos">'
+        f'<div class="commission-steps-header">'
+        f'<p class="eyebrow">Encargos y regalos contados por Naroa · 100% Verbatim</p>'
+        f'<h2>Así nacieron<br><span>estos encargos reales.</span></h2>'
+        f'</div>'
+        f'<div class="commission-steps-grid">'
+        f'<article><span>EL REENCUENTRO</span><h3>Reunir dos miradas en el tiempo.</h3><p>«Mediante esta obra, una hija y su padre volvieron a encontrarse sobre un fondo blanco. Todo gracias a una foto de joven de él, que me permitió —esquivando los reflejos del cristal que protegía su mirada— trazarles, de nuevo, juntos».</p></article>'
+        f'<article><span>LA FAMIGLIA</span><h3>Una misiva colectiva de corazón.</h3><p>«Si te encomendaran la misión de realizar una felicitación familiar, ¿qué mejor portavoz para verbalizar esta misiva colectiva que Don Vito Corleone? Al fin y al cabo “La famiglia è la famiglia...”. Zorionak Jon de la Famiglia de corazón».</p></article>'
+        f'<article><span>THE LOVE BOAT</span><h3>Vacaciones en el mar sobre madera.</h3><p>«“Mare mía, mecachisenlamar, que no me puedo imaginar algo más espectacular que junto a ti pasar unas vacaciones en el mar”. Retrato colorista doble realizado mediante técnica mixta sobre tabla de madera de 50×50 cm… y toneladas de amor».</p></article>'
+        f'<article><span>MULTI-DIMENSIONAL LOVE</span><h3>Capas articuladas en una lata.</h3><p>«Retrato 3D doble realizado a partir de tres fotografías y trabajado en varias capas articuladas que, al moverlas, cuentan una pequeña pero gran historia: la del amor de sus protagonistas».</p></article>'
+        f'</div>'
+        f'</section>'
+        f'<section class="chapter atelier-specs-chapter" aria-labelledby="commission-specs-heading">'
+        f'<p class="eyebrow">Especificaciones de taller</p>'
+        f'<div>'
+        f'<h2 id="commission-specs-heading">Materiales, formatos<br><span>y tabla comparativa.</span></h2>'
+        f'{specs_html}'
+        f'</div>'
+        f'</section>'
+        f'<section class="commission-faq" aria-labelledby="commission-faq-heading">'
+        f'<div class="section-opening">'
+        f'<p class="eyebrow">Dudas frecuentes antes de encargar</p>'
+        f'<h2 id="commission-faq-heading">Precios, fotos<br><span>y plazos.</span></h2>'
+        f'</div>'
+        f'<div class="commission-faq-list">{faq_html}</div>'
+        f'</section>'
+        f'<div class="closing">'
+        f'<p class="hand">¿A quién te gustaría retratar?</p>'
+        f'<a class="commission-cta-btn" href="https://wa.me/34636060609?text={quote("Hola Naroa, me gustaría consultar un retrato personalizado por encargo.")}" target="_blank" rel="noopener noreferrer">Hablar por WhatsApp directo ↗</a>'
+        f'<a class="text-link" href="mailto:naroa@naroa.eu?subject={quote("Solicitud de presupuesto para retrato por encargo")}">Solicitar presupuesto por email ↗</a>'
+        f'<a class="text-link" href="/obra/#indice">Explorar las {len(projects)} obras del catálogo ↗</a>'
         f'</div>'
         f'</article>'
     )

@@ -17,90 +17,133 @@
   // D5 (sound), [silencio], A4 (of), C5 (si-), F5 (-lence), E5 (resolución), [silencio], D5 (tónica)
   const SOUND_OF_SILENCE_CADENCE = [74.00, null, 69.02, 71.74, 77.24, 75.86, null, 74.00];
 
-  // Repertorio de melodías modales cálidas en Re menor microtonal (Estética Aphex Twin / Boards of Canada).
-  // Cada día de la semana tiene su tema emblemático, culminando siempre en SOUND OF SILENCE:
+  // Repertorio de melodías modales cálidas en Re menor microtonal (Estética Aphex Twin / Boards of Canada / Nils Frahm).
+  // Cada día de la semana tiene su tema emblemático con armonía polifónica de fieltro, bajo analógico y verso poético,
+  // culminando siempre en SOUND OF SILENCE:
   const DAILY_MELODIES = [
     {
       title: 'Landa',
       subtitle: 'Alboka pastoral de Arratia',
+      verse: '«Piedra húmeda y niebla tibia sobre el valle de Arratia»',
+      instrument: 'Alboka & Piano de Fieltro',
+      shortDay: 'L',
       name: 'Landa · Alboka pastoral de Arratia',
       day: 'Lunes',
+      tempoMs: 480,
+      bass: [62.00, 69.02, 65.24, 67.02, 62.00, 69.02, 67.02, 69.02],
+      harmony: [69.02, 74.00, 72.02, 71.74, 69.02, 72.02, 74.00, 65.24],
       notes: [
         74.00, 77.24, 81.02, 77.24, 75.86, 74.00, 69.02, null,
-        71.74, null, 75.86, 78.98, 75.86, null, 71.74, 69.02,
-        74.00, null, 77.24, 81.02, null, 78.98, 75.86, null,
+        71.74, 74.00, 75.86, 78.98, 77.24, 75.86, 71.74, 69.02,
+        74.00, 75.86, 77.24, 81.02, 83.74, 81.02, 78.98, 75.86,
         ...SOUND_OF_SILENCE_CADENCE
       ]
     },
     {
       title: 'Haurtxo Polita',
       subtitle: 'Nana popular en cinta cálida',
+      verse: '«Haurtxo polita sehaskan dago, zapi zuritan txit bero…»',
+      instrument: 'Celesta & Fieltro Cálido',
+      shortDay: 'M',
       name: 'Haurtxo Polita · Nana popular en cinta cálida',
       day: 'Martes',
+      tempoMs: 520,
+      bass: [62.00, 65.24, 67.02, 69.02, 62.00, 70.18, 67.02, 69.02],
+      harmony: [69.02, 74.00, 71.74, 72.02, 69.02, 74.00, 70.18, 65.24],
       notes: [
-        69.02, null, 74.00, 75.86, 77.24, null, 75.86, 74.00,
-        77.24, null, 78.98, 81.02, null, 78.98, 77.24, 75.86,
-        null, 74.00, 71.74, 69.02, null, 71.74, 75.86, null,
+        74.00, 77.24, 81.02, 78.98, 77.24, 75.86, 74.00, 72.02,
+        74.00, 75.86, 77.24, 81.02, 78.98, 77.24, 75.86, 74.00,
+        81.02, 82.18, 81.02, 78.98, 77.24, 75.86, 74.00, 69.02,
         ...SOUND_OF_SILENCE_CADENCE
       ]
     },
     {
       title: 'Harria eta Marea',
       subtitle: 'Aire de costa en Re menor',
+      verse: '«Donde rompe la espuma contra la pizarra del Cantábrico»',
+      instrument: 'Pad Analógico & Caja',
+      shortDay: 'X',
       name: 'Harria eta Marea · Aire de costa en Re menor',
       day: 'Miércoles',
+      tempoMs: 540,
+      bass: [62.00, 70.18, 65.24, 67.02, 62.00, 67.02, 70.18, 69.02],
+      harmony: [69.02, 74.00, 72.02, 74.00, 69.02, 71.74, 74.00, 67.02],
       notes: [
-        74.00, 69.02, null, 77.24, 74.00, null, 78.98, 75.86,
-        71.74, null, 74.00, 75.86, null, 69.02, 71.74, 74.00,
-        77.24, null, 81.02, 86.00, null, 81.02, 77.24, null,
+        74.00, 81.02, 75.86, 77.24, 74.00, 69.02, 72.02, 75.86,
+        77.24, 81.02, 86.00, 83.74, 81.02, 78.98, 77.24, 74.00,
+        75.86, 78.98, 81.02, 77.24, 75.86, 74.00, 72.02, 69.02,
         ...SOUND_OF_SILENCE_CADENCE
       ]
     },
     {
       title: 'Txoria Txori',
       subtitle: 'Mikel Laboa en piano de fieltro',
+      verse: '«Hegoak ebaki banizkio, nerea izango zen…»',
+      instrument: 'Piano de Fieltro Íntimo',
+      shortDay: 'J',
       name: 'Txoria Txori · Mikel Laboa en piano de fieltro',
       day: 'Jueves',
+      tempoMs: 500,
+      bass: [62.00, 62.00, 67.02, 69.02, 65.24, 67.02, 62.00, 69.02],
+      harmony: [69.02, 69.02, 71.74, 72.02, 72.02, 74.00, 69.02, 65.24],
       notes: [
-        74.00, null, 77.24, 75.86, null, 74.00, 71.74, 74.00,
-        null, 69.02, 71.74, null, 74.00, 75.86, 77.24, 75.86,
-        74.00, null, 81.02, 78.98, null, 77.24, 71.74, null,
+        74.00, 75.86, 77.24, 75.86, 74.00, 72.02, 74.00, 69.02,
+        74.00, 75.86, 77.24, 78.98, 81.02, 78.98, 77.24, 75.86,
+        77.24, 78.98, 81.02, 78.98, 77.24, 75.86, 74.00, 72.02,
         ...SOUND_OF_SILENCE_CADENCE
       ]
     },
     {
       title: 'Mi Gran Noche',
       subtitle: 'Caja de música íntima',
+      verse: '«¿Qué pasará, qué misterio habrá? Puede ser mi gran noche…»',
+      instrument: 'Caja Íntima & Fieltro',
+      shortDay: 'V',
       name: 'Mi Gran Noche · Caja de música íntima',
       day: 'Viernes',
+      tempoMs: 460,
+      bass: [62.00, 67.02, 70.18, 69.02, 62.00, 65.24, 67.02, 69.02],
+      harmony: [69.02, 71.74, 74.00, 72.02, 69.02, 72.02, 71.74, 74.00],
       notes: [
-        69.02, 74.00, null, 77.24, 75.86, null, 69.02, 74.00,
-        77.24, 75.86, null, 74.00, 75.86, null, 78.98, 77.24,
-        74.00, null, 77.24, 81.02, null, 78.98, 75.86, null,
+        74.00, 75.86, 77.24, 78.98, 81.02, 78.98, 77.24, 75.86,
+        77.24, 78.98, 81.02, 77.24, 75.86, 74.00, 72.02, 69.02,
+        81.02, 82.18, 81.02, 78.98, 77.24, 75.86, 77.24, 81.02,
         ...SOUND_OF_SILENCE_CADENCE
       ]
     },
     {
       title: 'Gaua',
       subtitle: 'Nocturno de Bilbao',
+      verse: '«Luces de ámbar reflejadas sobre la ría en calma»',
+      instrument: 'Nocturno Analógico',
+      shortDay: 'S',
       name: 'Gaua · Nocturno de Bilbao',
       day: 'Sábado',
+      tempoMs: 530,
+      bass: [62.00, 70.18, 67.02, 69.02, 62.00, 65.24, 70.18, 69.02],
+      harmony: [69.02, 74.00, 71.74, 72.02, 69.02, 72.02, 74.00, 65.24],
       notes: [
-        74.00, null, 71.74, 69.02, null, 74.00, 77.24, 74.00,
-        69.02, 74.00, null, 78.98, 81.02, null, 77.24, 74.00,
-        81.02, null, 83.74, 81.02, null, 75.86, 71.74, null,
+        74.00, 81.02, 78.98, 77.24, 75.86, 74.00, 72.02, 69.02,
+        70.18, 74.00, 77.24, 81.02, 82.18, 81.02, 77.24, 75.86,
+        74.00, 77.24, 81.02, 86.00, 83.74, 81.02, 77.24, 75.86,
         ...SOUND_OF_SILENCE_CADENCE
       ]
     },
     {
       title: 'Haizea',
       subtitle: 'Brisa marina entre los pinos',
+      verse: '«El viento peina las agujas de pino hacia el origen»',
+      instrument: 'Arpa Dórica & Cinta',
+      shortDay: 'D',
       name: 'Haizea · Brisa marina entre los pinos',
       day: 'Domingo',
+      tempoMs: 490,
+      bass: [62.00, 65.24, 67.02, 69.02, 70.18, 67.02, 62.00, 69.02],
+      harmony: [69.02, 72.02, 74.00, 72.02, 74.00, 71.74, 69.02, 65.24],
       notes: [
-        74.00, 77.24, null, 81.02, 86.00, null, 83.74, 77.24,
-        78.98, null, 75.86, 74.00, 69.02, null, 71.74, 74.00,
-        77.24, null, 81.02, 78.98, null, 75.86, 69.02, null,
+        74.00, 77.24, 81.02, 86.00, 83.74, 81.02, 78.98, 77.24,
+        78.98, 77.24, 75.86, 74.00, 72.02, 69.02, 72.02, 74.00,
+        75.86, 77.24, 81.02, 83.74, 81.02, 78.98, 75.86, 72.02,
         ...SOUND_OF_SILENCE_CADENCE
       ]
     }
@@ -946,6 +989,79 @@
       audio.play().catch(() => {});
     } catch {}
   }
+  let lastGuitarStrumTime = 0, lastGuitarStrumSlug = '';
+  function playMonkeyGuitarStrum(strumCount = 1) {
+    lastGuitarStrumSlug = 'rosetta';
+    const nowMs = typeof performance !== 'undefined' ? performance.now() : Date.now();
+    if (nowMs - lastGuitarStrumTime < 165) return;
+    lastGuitarStrumTime = nowMs;
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      try { navigator.vibrate([18, 28, 24]); } catch {}
+    }
+    if (!enabled || !context || !engine || context.state !== 'running') return;
+    try {
+      const now = context.currentTime + 0.005;
+      const target = engine.compressor || engine.master;
+      const gallery = getGalleryReverb();
+      // Progresión Gospel-Blues de Sister Rosetta Tharpe en Re menor (registro grave-medio 146-440 Hz, INV_WARMTH_ACOUSTIC_GATE)
+      const ROSETTA_CHORDS = [
+        [146.83, 220.00, 261.63, 349.23, 440.00], // Dm7 (Re3 - La3 - Do4 - Fa4 - La4)
+        [196.00, 233.08, 293.66, 349.23, 392.00], // Gm7 (Sol3 - Sib3 - Re4 - Fa4 - Sol4)
+        [164.81, 220.00, 277.18, 329.63, 392.00], // A7 (Mi3 - La3 - Do#4 - Mi4 - Sol4)
+        [146.83, 174.61, 220.00, 293.66, 329.63]  // Dm9 cálido
+      ];
+      const baseChord = ROSETTA_CHORDS[(Math.max(1, strumCount) - 1) % ROSETTA_CHORDS.length];
+      const isUpstroke = strumCount % 2 === 0;
+      const orderedChord = isUpstroke ? baseChord.slice().reverse() : baseChord;
+
+      orderedChord.forEach((freq, i) => {
+        if (typeof context.createOscillator !== 'function') return;
+        const osc = context.createOscillator();
+        const sub = context.createOscillator();
+        const filter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
+        const gain = context.createGain();
+        const t0 = now + i * 0.022; // Rasgueo articulado cuerda por cuerda (downstroke / upstroke)
+        osc.type = 'sawtooth';
+        sub.type = 'triangle';
+        // Deriva Tape Wow analógica (±2.8 cents) + bend de blues al atacar la cuerda
+        const wowCents = Math.sin(strumCount * 1.7 + i * 0.9) * 2.8;
+        const tunedFreq = freq * Math.pow(2, wowCents / 1200);
+        osc.frequency.setValueAtTime(tunedFreq * 0.994, t0);
+        sub.frequency.setValueAtTime(tunedFreq * 0.5, t0);
+        if (osc.frequency.exponentialRampToValueAtTime) {
+          osc.frequency.exponentialRampToValueAtTime(tunedFreq * 1.008, t0 + 0.065);
+          osc.frequency.exponentialRampToValueAtTime(tunedFreq, t0 + 0.42);
+        }
+        if (filter) {
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(840, t0);
+          if (filter.frequency.exponentialRampToValueAtTime) {
+            filter.frequency.exponentialRampToValueAtTime(360, t0 + 1.85);
+          }
+          filter.Q.setValueAtTime(0.44, t0);
+        }
+        const vol = 0.066 * Math.pow(0.91, i);
+        gain.gain.setValueAtTime(0.0001, t0);
+        if (gain.gain.linearRampToValueAtTime) {
+          gain.gain.linearRampToValueAtTime(vol, t0 + 0.036); // Ataque de fieltro / púa cálida (36 ms)
+        }
+        if (gain.gain.exponentialRampToValueAtTime) {
+          gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 1.95); // Caída larga (1.95 s)
+        }
+        osc.connect(filter || gain);
+        sub.connect(filter || gain);
+        if (filter) filter.connect(gain);
+        gain.connect(target);
+        if (gallery?.input) {
+          try { gain.connect(gallery.input); } catch {}
+        }
+        osc.start(t0);
+        sub.start(t0);
+        osc.stop(t0 + 2.0);
+        sub.stop(t0 + 2.0);
+      });
+    } catch {}
+  }
   let lastGameOverSlug = '', lastKissSlug = '', lastPuffSlug = '', lastKissTime = 0, lastPuffTime = 0;
   function play8BitGameOver() {
     lastGameOverSlug = 'game-over';
@@ -1485,6 +1601,9 @@
     kutxaBox() {
       playKutxaBoxJump();
     },
+    guitarStrum(strumCount) {
+      playMonkeyGuitarStrum(strumCount);
+    },
     eguzkilore() {
       playEguzkiloreChime();
     },
@@ -1634,6 +1753,7 @@
     get lastKissSlug() { return lastKissSlug; },
     get lastPuffSlug() { return lastPuffSlug; },
     get lastKutxaSlug() { return lastKutxaSlug; },
+    get lastGuitarStrumSlug() { return lastGuitarStrumSlug; },
     get lastMenuNoteIndex() { return lastMenuNoteIndex; },
     get lastPhonographCategory() { return lastPhonographCategory; },
     get lastPhonographFreq() { return lastPhonographFreq; },

@@ -285,6 +285,17 @@ async function eyeMatch(ui, base, points) {
       const activeKisses = ui.document.querySelectorAll('[data-kiss-cutout].is-active');
       assert.equal(activeKisses.length, volleyAfterBackAndForth, 'Active lip-cutout elements match the back-and-forth volley multiplier');
     }
+    if (entry.slug === 'pippilotta') {
+      const monkeyStage = ui.find('[data-monkey-stage]');
+      const monkeyEl = ui.find('[data-pippi-monkey]');
+      const stringEls = ui.document.querySelectorAll('[data-guitar-string]');
+      assert.ok(monkeyStage && !monkeyStage.hasAttribute('hidden'), 'Pippilotta activates Mr. Nilsson monkey leap stage toward Rosetta');
+      assert.ok(monkeyStage.classList.contains('is-leaping'), 'Monkey stage has active leaping class');
+      assert.ok(monkeyEl && monkeyEl.classList.contains('is-active'), 'Pippi monkey cutout is active and leaping');
+      assert.equal(stringEls.length, 6, 'Rosetta guitar stage renders 6 vibrating rainbow strings');
+      assert.ok(stringEls[0].getAttribute('d')?.startsWith('M '), 'Rosetta rainbow guitar strings bend via quadratic Bezier wave during strum');
+      assert.ok(Number(monkeyStage.dataset.monkeyStrums) >= 2, 'Scrolling back and forth in Pippilotta -> Rosetta increments the guitar strum counter');
+    }
     if (entry.slug === 'cantinflowers') {
       const cantinRig = ui.find(`[data-scene="${index}"] [data-cantinflowers-rig]`);
       assert.ok(cantinRig, 'Cantinflowers renders the reactive cigarette ember and smoke SVG rig');

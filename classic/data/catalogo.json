@@ -15,36 +15,29 @@
           "src": "/images/catalogo/amy-rocks-hq-01.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Vista completa",
-          "source": "https://www.facebook.com/media/set/?set=a.1571125317700217&type=3",
           "sha256": "bfde5d2cb7307054f1d84df907bdc70879e4cbf03993b8f943f3fcaa919b9e9b",
-          "source_local": "raw_artworks_facebook/rocks/1571120934367322.jpg"
+          "caption": "Vista completa"
         },
         {
           "src": "/images/catalogo/amy-rocks-hq-02.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Vista oblicua",
-          "source": "https://www.facebook.com/media/set/?set=a.1571125317700217&type=3",
           "sha256": "1ac77c840ef4ded5818dbf70aff740b43c87e5d28ac38341e305ed7a21629aa2",
-          "source_local": "raw_artworks_facebook/rocks/1571120854367330.jpg"
+          "caption": "Vista oblicua"
         },
         {
           "src": "/images/catalogo/amy-rocks-hq-03.jpg",
           "width": 1536,
           "height": 2048,
-          "caption": "Detalle del soporte",
-          "source": "https://www.facebook.com/media/set/?set=a.1571125317700217&type=3",
           "sha256": "29a00186ab77d4603ab8774241c9867b7d28276ec80184350fc82b712647c7cc",
-          "source_local": "raw_artworks_facebook/rocks/1571120761034006.jpg"
+          "caption": "Detalle del soporte"
         },
         {
           "src": "/images/catalogo/amy-rocks-4k.webp",
           "width": 3840,
           "height": 2880,
-          "caption": "Fotografía master 4K del retrato de Amy Winehouse sobre plato de pizarra natural.",
-          "source": null,
-          "sha256": "28dc695129e36e5e2eba4cd1f052397444e9cc9468938f663b3b5bce3c5dba09"
+          "sha256": "28dc695129e36e5e2eba4cd1f052397444e9cc9468938f663b3b5bce3c5dba09",
+          "caption": "Fotografía master 4K del retrato de Amy Winehouse sobre plato de pizarra natural."
         }
       ],
       "dimensions": "18 × 10 × 0,6 cm",
@@ -76,38 +69,25 @@
       "story": "«Técnicas mixtas (como la pintura acrílica, los lápices de colores y el mineral de mica) conforman estas obras, hilando el abrazo entre la caverna y el cielo. “DiviNos” es un laberinto de espejos donde nuestra alma entra en juego». — Naroa Gutiérrez Gil",
       "images": [
         {
-          "src": "/images/catalogo/marilyn-rocks-hq-01.webp",
-          "width": 1536,
-          "height": 2048,
-          "caption": "Pieza completa sobre pizarra",
-          "source": "https://www.facebook.com/media/set/?set=a.1552149902931092&type=3",
-          "sha256": "203987738ce599a295eac22831a77aff873a81d44b3fbcc0856cedb42871e588",
-          "source_local": "classic/images/artworks/601340023_1552126202933462_7815927344957967258_n.webp"
+          "src": "/images/catalogo/marilyn-rocks-4k.webp",
+          "width": 2880,
+          "height": 3840,
+          "sha256": "64f6ad930bc5b6bd124fb658c3f715249bb11b08b0f70b047e4cb3512edbc9b4",
+          "caption": "Marilyn Rocks — Retrato frontal en acrílico, mica mineral y pan de oro sobre pizarra natural."
         },
         {
           "src": "/images/catalogo/marilyn-rocks-hq-02.webp",
           "width": 1536,
           "height": 2048,
-          "caption": "Detalle lateral",
-          "source": "https://www.facebook.com/media/set/?set=a.1552149902931092&type=3",
           "sha256": "ac74525705a3dc22c3ee3a202c496548b94b937c4a6c7464c4e88dac78ad49dc",
-          "source_local": "classic/images/artworks/600258291_1552125946266821_6847049145049928090_n.webp"
+          "caption": "Detalle lateral del relieve matérico y esmalte rojo sobre el canto de pizarra."
         },
         {
           "src": "/images/catalogo/marilyn-rocks-original-03-2048.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Detalle del retrato",
-          "source": "https://www.facebook.com/photo/?fbid=1552126032933479&set=a.1552149902931092",
-          "sha256": "0b7e2cff277e5c7933464a833546389c23f276cd9cfeac2c6233ada612f9e511"
-        },
-        {
-          "src": "/images/catalogo/marilyn-rocks-4k.webp",
-          "width": 2880,
-          "height": 3840,
-          "caption": "Fotografía master 4K de Marilyn Monroe con escamas de mica y brillantina sobre pizarra.",
-          "source": null,
-          "sha256": "64f6ad930bc5b6bd124fb658c3f715249bb11b08b0f70b047e4cb3512edbc9b4"
+          "sha256": "0b7e2cff277e5c7933464a833546389c23f276cd9cfeac2c6233ada612f9e511",
+          "caption": "Primer plano del rostro de Marilyn Monroe con incrustaciones doradas y escamas de mica."
         }
       ],
       "dimensions": "18 × 10 × 0,6 cm",
@@ -127,38 +107,25 @@
       "story": "«Las dicotomías blanco/negro y rojo/dorado señalan nuestra naturaleza más allá de la identificación corpórea. No olvidemos que somos eso: la esencia divina que anima nuestra carne y huesos». — Naroa Gutiérrez Gil",
       "images": [
         {
-          "src": "/images/catalogo/johnny-rocks-hq-01.webp",
-          "width": 1530,
-          "height": 2048,
-          "caption": "Pieza completa sobre pizarra",
-          "source": "https://www.facebook.com/media/set/?set=a.1562090265270389&type=3",
-          "sha256": "d850042bf41929f04ba385ec63c85b4b28d822104804dd2445ba06ec627914df",
-          "source_local": "classic/images/artworks/608211438_1562089535270462_2827127275272133326_n.webp"
+          "src": "/images/catalogo/johnny-rocks-4k.webp",
+          "width": 2870,
+          "height": 3840,
+          "sha256": "b439483cae55d5e8be9aad248b16bb0159205a2e7e4011eb681039e9d86c20cd",
+          "caption": "Johnny Rocks — Retrato en blanco, negro y dorado sobre pizarra natural."
         },
         {
           "src": "/images/catalogo/johnny-rocks-hq-02.webp",
           "width": 1536,
           "height": 2048,
-          "caption": "Detalle del retrato",
-          "source": "https://www.facebook.com/media/set/?set=a.1562090265270389&type=3",
           "sha256": "7f044cfa7f86df93e3704cc3de8ee2fae586dfc965a0c61a5297c2103667e6bb",
-          "source_local": "classic/images/artworks/divinos-johnny-gl9M1ZKj.webp"
+          "caption": "Detalle en escorzo del relieve mineral y trazos de grafito sobre la roca."
         },
         {
           "src": "/images/catalogo/johnny-rocks-original-03-2048.jpg",
           "width": 1536,
           "height": 2048,
-          "caption": "Escala de la pieza junto a un rotulador",
-          "source": "https://www.facebook.com/photo/?fbid=1562089398603809&set=a.1562090265270389",
-          "sha256": "5612514fdd462044fac8d5c33aec88f438f0f8afe70a5e6e6a21cbd6165986a8"
-        },
-        {
-          "src": "/images/catalogo/johnny-rocks-4k.webp",
-          "width": 2870,
-          "height": 3840,
-          "caption": "Fotografía master 4K del retrato de Johnny Depp sobre plato de pizarra.",
-          "source": null,
-          "sha256": "b439483cae55d5e8be9aad248b16bb0159205a2e7e4011eb681039e9d86c20cd"
+          "sha256": "5612514fdd462044fac8d5c33aec88f438f0f8afe70a5e6e6a21cbd6165986a8",
+          "caption": "Vista de estudio del retrato sobre las vetas naturales de la pizarra."
         }
       ],
       "dimensions": "18 × 10 × 0,6 cm",
@@ -181,35 +148,15 @@
           "src": "/images/catalogo/james-rocks-hq-01.webp",
           "width": 1536,
           "height": 2048,
-          "caption": "Pieza completa sobre pizarra",
-          "source": "https://www.facebook.com/media/set/?set=a.1543127323833350&type=3",
           "sha256": "285bc25f922eb9fd577980eb9dd70349a7d87a7d3d955d5ec73d2dfae897ccbe",
-          "source_local": "classic/images/artworks/594972277_1543116283834454_8672784625256696657_n.webp"
-        },
-        {
-          "src": "/images/catalogo/james-rocks-hq-02.webp",
-          "width": 1536,
-          "height": 2048,
-          "caption": "Detalle del retrato",
-          "source": "https://www.facebook.com/media/set/?set=a.1543127323833350&type=3",
-          "sha256": "8658a9175555f098799f2287f7186f6df06c66dc40a640050ccff695fc124f11",
-          "source_local": "classic/images/artworks/james-rocks-new.webp"
-        },
-        {
-          "src": "/images/catalogo/james-rocks-original-03-2048.jpg",
-          "width": 1536,
-          "height": 2048,
-          "caption": "Detalle del rostro",
-          "source": "https://www.facebook.com/photo/?fbid=1543115983834484&set=a.1543127323833350",
-          "sha256": "67215656cf0f34170464bff19c3dd32d336f45294f2d907347d362a9837f508a"
+          "caption": "James Rocks — Vista completa de la pizarra natural intervenida con halo carmesí."
         },
         {
           "src": "/images/catalogo/james-rocks-4k.webp",
           "width": 2882,
           "height": 3840,
-          "caption": "Fotografía master 4K de James Dean sobre plato de pizarra.",
-          "source": null,
-          "sha256": "61a3e416e1bb9abda79fdde1d2b8d1758d7f2baa4ea9d86fe62d31bfe53fdb0c"
+          "sha256": "61a3e416e1bb9abda79fdde1d2b8d1758d7f2baa4ea9d86fe62d31bfe53fdb0c",
+          "caption": "Primer plano 4K del rostro de James Dean y el empaste dimensional rojo y negro."
         }
       ],
       "dimensions": "18 × 10 × 0,6 cm",
@@ -232,37 +179,29 @@
           "src": "/images/catalogo/deltoya-robe-master-4k.jpg",
           "width": 2457,
           "height": 3072,
-          "caption": "Retrato completo de Robe Iniesta (Deltoya) en alta fidelidad 4K.",
-          "source": null,
           "sha256": "a377e060f80fce97c59b06fc779a89e6cc9ceef274433c90307a71d9b9a63f97",
-          "source_local": "classic/images/catalogo/deltoya-robe-master-4k.jpg"
+          "caption": "Retrato completo de Robe Iniesta (Deltoya) en alta fidelidad 4K."
         },
         {
           "src": "/images/catalogo/entre-tantas-flores-de-dia-hq-01.webp",
           "width": 1528,
           "height": 2048,
-          "caption": "Obra completa enmarcada",
-          "source": "https://www.facebook.com/media/set/?set=a.1577827357030013&type=3",
           "sha256": "e419319adba02da28f3f51b0c414e6a053a9b4ba36265f16caa220487faab9c0",
-          "source_local": "classic/images/artworks/616198291_1577822413697174_3337151405885426240_n.webp"
+          "caption": "Obra completa enmarcada"
         },
         {
           "src": "/images/catalogo/entre-tantas-flores-de-dia-hq-02.webp",
           "width": 1536,
           "height": 2048,
-          "caption": "Detalle del alambre",
-          "source": "https://www.facebook.com/media/set/?set=a.1577827357030013&type=3",
           "sha256": "6897268c74336109a7d956c58b012ce1fbe1e3488721ffcbf2ded20df276d567",
-          "source_local": "classic/images/artworks/615932964_1577822457030503_2110397705300850911_n.webp"
+          "caption": "Detalle del alambre"
         },
         {
           "src": "/images/catalogo/entre-tantas-flores-de-dia-hq-03.webp",
           "width": 1536,
           "height": 2048,
-          "caption": "Vista oblicua de las capas",
-          "source": "https://www.facebook.com/media/set/?set=a.1577827357030013&type=3",
           "sha256": "d73b09ece6adaa370869476720b7ec0a0053fcd055fd4ea9961cf66ae02564b0",
-          "source_local": "classic/images/artworks/615438426_1577822580363824_2923463327956560352_n.webp"
+          "caption": "Vista oblicua de las capas"
         }
       ],
       "dimensions": "Marco: 46 × 33 cm",
@@ -297,26 +236,22 @@
           "src": "/images/catalogo/mario-moreno-hq-01.webp",
           "width": 1564,
           "height": 2048,
-          "caption": "Composición sin marco",
-          "source": "https://www.facebook.com/media/set/?set=a.1580369216775827&type=3",
           "sha256": "b0d9bf3e15f70d86be46d394ef6e079070836f057d552eb42e21cd6f7c3f1bad",
-          "source_local": "classic/images/artworks/616822144_1580323063447109_589182952237233174_n.webp"
+          "caption": "Composición sin marco"
         },
         {
           "src": "/images/catalogo/mario-moreno-original-02-2048.jpg",
           "width": 1668,
           "height": 2048,
-          "caption": "Obra enmarcada",
-          "source": "https://www.facebook.com/photo/?fbid=1580322983447117&set=a.1580369216775827",
-          "sha256": "95b1d8cbe5bd269356b6d981a23d17bae8097f2779f1f5e84ee6d27c81dc15e8"
+          "sha256": "95b1d8cbe5bd269356b6d981a23d17bae8097f2779f1f5e84ee6d27c81dc15e8",
+          "caption": "Obra enmarcada"
         },
         {
           "src": "/images/catalogo/mario-moreno-original-03-2048.jpg",
           "width": 2048,
           "height": 1188,
-          "caption": "Detalle de corbata, solapa y pañuelo",
-          "source": "https://www.facebook.com/photo/?fbid=1580323013447114&set=a.1580369216775827",
-          "sha256": "a1e804d5526516af981cac8ee91614d8839080d3664606e406e8dba47b34c35e"
+          "sha256": "a1e804d5526516af981cac8ee91614d8839080d3664606e406e8dba47b34c35e",
+          "caption": "Detalle de corbata, solapa y pañuelo"
         }
       ],
       "dimensions": "Lienzo: 24 × 18 cm · Marco: 32 × 26 cm",
@@ -336,39 +271,32 @@
       "story": "Camarón aparece sobre el reverso del lienzo, rodeado por papeles de lunares y tela decorada. La silueta superpuesta añade profundidad al retrato.",
       "images": [
         {
+          "src": "/images/catalogo/rockagipsy-4k.webp",
+          "width": 2932,
+          "height": 3840,
+          "sha256": "5221c7cc4efc1b2485e2817ff0ec2681a3ea8093612bc00d1ddcbb98b91ef566",
+          "caption": "RockaGipsy — Retrato frontal de Camarón de la Isla sobre reverso de lienzo y collage de lunares."
+        },
+        {
           "src": "/images/catalogo/rockagipsy-hq-01.jpg",
           "width": 1597,
           "height": 2048,
-          "caption": "Obra completa enmarcada",
-          "source": "https://www.facebook.com/media/set/?set=a.989285339217554&type=3",
           "sha256": "8d0838d38e761dfb22558e39e62533f72ede6d44d3ae94968c389a31617b96e1",
-          "source_local": "raw_artworks_facebook/divinos/989285142550907.jpg"
-        },
-        {
-          "src": "/images/catalogo/rockagipsy-hq-02.jpg",
-          "width": 1564,
-          "height": 2048,
-          "caption": "Composición y tejidos",
-          "source": "https://www.facebook.com/media/set/?set=a.989285339217554&type=3",
-          "sha256": "0a63851398217366ea94029e713feca4d75ce975fbb1dbeb50512161282fbccc",
-          "source_local": "raw_artworks_facebook/divinos/989285042550917.jpg"
+          "caption": "Vista en escorzo de las capas de papel de lunares y silueta recortada."
         },
         {
           "src": "/images/catalogo/rockagipsy-hq-03.jpg",
           "width": 2048,
           "height": 1532,
-          "caption": "Vista oblicua de las capas",
-          "source": "https://www.facebook.com/media/set/?set=a.989285339217554&type=3",
           "sha256": "4078d5f9fc66c71782aaed0d5c55bcaef4aeb29da5c505265c95916decbb9618",
-          "source_local": "raw_artworks_facebook/divinos/989285149217573.jpg"
+          "caption": "Detalle matérico de la mano, el tatuaje y las texturas textiles del marco."
         },
         {
-          "src": "/images/catalogo/rockagipsy-4k.webp",
-          "width": 2932,
-          "height": 3840,
-          "caption": "Fotografía master 4K del retrato de Camarón de la Isla con tejidos de lunares y textura sobre lienzo.",
-          "source": null,
-          "sha256": "5221c7cc4efc1b2485e2817ff0ec2681a3ea8093612bc00d1ddcbb98b91ef566"
+          "src": "/images/catalogo/rockagipsy-estudio-4k.webp",
+          "width": 3840,
+          "height": 2872,
+          "sha256": "8ff642c0473c781394fb0ab5f7fc92b7d565a35f965a3d755cf85932959a47c3",
+          "caption": "Perspectiva de estudio del ensamblaje tridimensional y marco intervenido."
         }
       ],
       "dimensions": "Marco: 37,5 × 29,5 cm",
@@ -391,36 +319,29 @@
           "src": "/images/catalogo/amor-en-conserva-hq-01.jpg",
           "width": 2048,
           "height": 1532,
-          "caption": "Conjunto completo",
-          "source": "https://www.facebook.com/media/set/?set=a.858798248932931&type=3",
           "sha256": "fc52b02053bcb2781c8a3aa76042982fece154bb5e9eb0d52a9765282d6d06d8",
-          "source_local": "raw_artworks_facebook/enlatas/858772058935550.jpg"
+          "caption": "Conjunto completo"
         },
         {
           "src": "/images/catalogo/amor-en-conserva-hq-02.jpg",
           "width": 1532,
           "height": 2048,
-          "caption": "Vista lateral y volumen",
-          "source": "https://www.facebook.com/media/set/?set=a.858798248932931&type=3",
           "sha256": "3fddb7f16757a64c15d861d7c912946dee23d77f81f168cfad9b487ed6686ab8",
-          "source_local": "raw_artworks_facebook/enlatas/858772095602213.jpg"
+          "caption": "Vista lateral y volumen"
         },
         {
           "src": "/images/catalogo/amor-en-conserva-hq-03.jpg",
           "width": 2048,
           "height": 1532,
-          "caption": "Detalle de las capas",
-          "source": "https://www.facebook.com/media/set/?set=a.858798248932931&type=3",
           "sha256": "6ae2c81999563d6b0a250c53ad01e44d9a880c99c4ecfc9b34ad6608ecde20f2",
-          "source_local": "raw_artworks_facebook/enlatas/858771938935562.jpg"
+          "caption": "Detalle de las capas"
         },
         {
           "src": "/images/catalogo/amor-en-conserva-4k.webp",
           "width": 3840,
           "height": 2872,
-          "caption": "Fotografía master 4K de Amor en Conserva: relieve tridimensional en lata intervenida.",
-          "source": null,
-          "sha256": "09efc6b14e7c1659d609e8374c3264c171fcb2a304ed5533a6342ca76d46c03c"
+          "sha256": "09efc6b14e7c1659d609e8374c3264c171fcb2a304ed5533a6342ca76d46c03c",
+          "caption": "Fotografía master 4K de Amor en Conserva: relieve tridimensional en lata intervenida."
         }
       ],
       "dimensions": null,
@@ -455,25 +376,22 @@
           "src": "/images/catalogo/hugo-box-frontal-2048.jpg",
           "width": 2048,
           "height": 2048,
-          "caption": "Vista frontal de la tapa completa",
-          "source": "https://www.facebook.com/photo/?fbid=1520931519386264&set=a.1520934946052588",
-          "sha256": "811c1136687ef99c32a687d222b36615f8d7c3973e00694505ca912439f8498a"
+          "sha256": "811c1136687ef99c32a687d222b36615f8d7c3973e00694505ca912439f8498a",
+          "caption": "Vista frontal de la tapa completa"
         },
         {
           "src": "/images/catalogo/hugo-box-relieve-2048.jpg",
           "width": 2048,
           "height": 1532,
-          "caption": "Vista oblicua del relieve",
-          "source": "https://www.facebook.com/photo/?fbid=1520931656052917&set=a.1520934946052588",
-          "sha256": "e4958b05f5a870f312575f30d38585ff778fc3002f1e57f9afb27d0811c59ca8"
+          "sha256": "e4958b05f5a870f312575f30d38585ff778fc3002f1e57f9afb27d0811c59ca8",
+          "caption": "Vista oblicua del relieve"
         },
         {
           "src": "/images/catalogo/hugo-box-interior-2048.jpg",
           "width": 1532,
           "height": 2048,
-          "caption": "Interior de la caja",
-          "source": "https://www.facebook.com/photo/?fbid=1520931496052933&set=a.1520934946052588",
-          "sha256": "37d7bd92478c9e7d9666613696dddaac7846707320b5191cc300681d3023c8e5"
+          "sha256": "37d7bd92478c9e7d9666613696dddaac7846707320b5191cc300681d3023c8e5",
+          "caption": "Interior de la caja"
         }
       ],
       "dimensions": null,
@@ -496,26 +414,22 @@
           "src": "/images/catalogo/rara-avis-original-4080.jpg",
           "width": 4080,
           "height": 3072,
-          "caption": "Ensamblaje completo: autorretrato, marcos y collage",
-          "source": "https://naroagutierrez.wordpress.com/2026/05/14/autorretratos-mujeres-a-traves-del-espejo/",
           "sha256": "5933c4a68a815973e918dee4bf0246a6376c9d334acdf93cf6ecbce37f106484",
-          "source_local": "classic/images/sobre-mi/rara-avis.jpg"
+          "caption": "Ensamblaje completo: autorretrato, marcos y collage"
         },
         {
           "src": "/images/catalogo/rara-avis-original-02-2048.jpg",
           "width": 1536,
           "height": 2048,
-          "caption": "Dibujo a pastel, antes del ensamblaje",
-          "source": "https://www.facebook.com/photo/?fbid=1696470185165729&set=a.1696477745164973",
-          "sha256": "d62edb4bdfc73f85b420452f799a6336448b40cefbaadd082810251880e7141b"
+          "sha256": "d62edb4bdfc73f85b420452f799a6336448b40cefbaadd082810251880e7141b",
+          "caption": "Dibujo a pastel, antes del ensamblaje"
         },
         {
           "src": "/images/catalogo/rara-avis-original-03-2048.jpg",
           "width": 1542,
           "height": 2048,
-          "caption": "Detalle del marco y los reflejos",
-          "source": "https://www.facebook.com/photo/?fbid=1696470791832335&set=a.1696477745164973",
-          "sha256": "bdb3606cf3a5b057a926fba4d5628dbfae9c534a7965add0d7e8c271967d295f"
+          "sha256": "bdb3606cf3a5b057a926fba4d5628dbfae9c534a7965add0d7e8c271967d295f",
+          "caption": "Detalle del marco y los reflejos"
         }
       ],
       "dimensions": "50 × 35 cm",
@@ -538,25 +452,22 @@
           "src": "/images/catalogo/infusion-de-berto-original-01-2048.jpg",
           "width": 2048,
           "height": 2048,
-          "caption": "Vista completa",
-          "source": "https://www.facebook.com/photo/?fbid=1112388250240595&set=a.1112397760239644",
-          "sha256": "b524bdc379f62f470fdf5cc68ac8f542b4f428ca1f3b78a34cccaee87220056d"
+          "sha256": "b524bdc379f62f470fdf5cc68ac8f542b4f428ca1f3b78a34cccaee87220056d",
+          "caption": "Vista completa"
         },
         {
           "src": "/images/catalogo/infusion-de-berto-original-02-2048.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Detalle de corteza y materiales",
-          "source": "https://www.facebook.com/photo/?fbid=1112388203573933&set=a.1112397760239644",
-          "sha256": "ddfce2c16f9a5cb13e9791d627de53c27d47f60e7528590c6eef65cfa2c1a33a"
+          "sha256": "ddfce2c16f9a5cb13e9791d627de53c27d47f60e7528590c6eef65cfa2c1a33a",
+          "caption": "Detalle de corteza y materiales"
         },
         {
           "src": "/images/catalogo/infusion-de-berto-original-03-2048.jpg",
           "width": 1111,
           "height": 2048,
-          "caption": "Bolsita de infusión y romero",
-          "source": "https://www.facebook.com/photo/?fbid=1112388306907256&set=a.1112397760239644",
-          "sha256": "8fd11360e3ae06f718d9aff09137f8534709ce920e38d7a67da397c86a8ecd1d"
+          "sha256": "8fd11360e3ae06f718d9aff09137f8534709ce920e38d7a67da397c86a8ecd1d",
+          "caption": "Bolsita de infusión y romero"
         }
       ],
       "dimensions": "18 cm de diámetro",
@@ -579,25 +490,22 @@
           "src": "/images/catalogo/buena-fuente-original-01-2048.jpg",
           "width": 2048,
           "height": 2048,
-          "caption": "Vista completa",
-          "source": "https://www.facebook.com/photo/?fbid=1111045863708167&set=a.1111052607040826",
-          "sha256": "c0db25aa2da2a5c7d74dc91eb39739fc46d6ade6d8315ecad138a7964ca105b7"
+          "sha256": "c0db25aa2da2a5c7d74dc91eb39739fc46d6ade6d8315ecad138a7964ca105b7",
+          "caption": "Vista completa"
         },
         {
           "src": "/images/catalogo/buena-fuente-original-02-2048.jpg",
           "width": 1536,
           "height": 2048,
-          "caption": "Detalle de tipografía",
-          "source": "https://www.facebook.com/photo/?fbid=1111045947041492&set=a.1111052607040826",
-          "sha256": "5a32689129e538c738f1bb36cc901ff9f0bad190c9be1ceeb75ff2829e0f4a3d"
+          "sha256": "5a32689129e538c738f1bb36cc901ff9f0bad190c9be1ceeb75ff2829e0f4a3d",
+          "caption": "Detalle de tipografía"
         },
         {
           "src": "/images/catalogo/buena-fuente-original-03-2048.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Detalle del collage y el tenedor",
-          "source": "https://www.facebook.com/photo/?fbid=1111045963708157&set=a.1111052607040826",
-          "sha256": "b5c27a28f218c21bbdb7125af08afd4466e0b2b8774fa959fb50f3464326795b"
+          "sha256": "b5c27a28f218c21bbdb7125af08afd4466e0b2b8774fa959fb50f3464326795b",
+          "caption": "Detalle del collage y el tenedor"
         }
       ],
       "dimensions": "18 cm de diámetro",
@@ -620,25 +528,22 @@
           "src": "/images/catalogo/ajenjo-cam-original-01-2048.jpg",
           "width": 2048,
           "height": 1532,
-          "caption": "Objeto cerrado",
-          "source": "https://www.facebook.com/photo/?fbid=1308591553953596&set=a.1308613517284733",
-          "sha256": "9603a5824e39320d029af0704db6d04d78655afa34465f7ee3ddb6d3616e5f92"
+          "sha256": "9603a5824e39320d029af0704db6d04d78655afa34465f7ee3ddb6d3616e5f92",
+          "caption": "Objeto cerrado"
         },
         {
           "src": "/images/catalogo/ajenjo-cam-original-02-2048.jpg",
           "width": 1532,
           "height": 2048,
-          "caption": "Álbum desplegado en la mano",
-          "source": "https://www.facebook.com/photo/?fbid=1308591447286940&set=a.1308613517284733",
-          "sha256": "6244a5287ddba55e39ca63be204306f2dfd4d2afcc2f4efc675b87adf4462a85"
+          "sha256": "6244a5287ddba55e39ca63be204306f2dfd4d2afcc2f4efc675b87adf4462a85",
+          "caption": "Álbum desplegado en la mano"
         },
         {
           "src": "/images/catalogo/ajenjo-cam-original-03-2048.jpg",
           "width": 1532,
           "height": 2048,
-          "caption": "Detalle del desplegable",
-          "source": "https://www.facebook.com/photo/?fbid=1308591627286922&set=a.1308613517284733",
-          "sha256": "4d6dbf61e892f66cceb4a8a92627b06278aca210be9cc06894d5b015bf2e0b2a"
+          "sha256": "4d6dbf61e892f66cceb4a8a92627b06278aca210be9cc06894d5b015bf2e0b2a",
+          "caption": "Detalle del desplegable"
         }
       ],
       "dimensions": null,
@@ -661,25 +566,22 @@
           "src": "/images/catalogo/beatriz-de-pandora-original-01-2048.jpg",
           "width": 2048,
           "height": 1532,
-          "caption": "Retrato en la tapa",
-          "source": "https://www.facebook.com/photo/?fbid=1303450707801014&set=a.1303454654467286",
-          "sha256": "d2cc42c64616e5a85c163275d0bd918dba2b69e2c76e2a0b7b1699b0659f6d6c"
+          "sha256": "d2cc42c64616e5a85c163275d0bd918dba2b69e2c76e2a0b7b1699b0659f6d6c",
+          "caption": "Retrato en la tapa"
         },
         {
           "src": "/images/catalogo/beatriz-de-pandora-original-02-2048.jpg",
           "width": 1532,
           "height": 2048,
-          "caption": "Vista oblicua del collage",
-          "source": "https://www.facebook.com/photo/?fbid=1303450684467683&set=a.1303454654467286",
-          "sha256": "65e81d61fb9dab969c5b86ec7946c652f445e983a1a71657e265af65a9b6c756"
+          "sha256": "65e81d61fb9dab969c5b86ec7946c652f445e983a1a71657e265af65a9b6c756",
+          "caption": "Vista oblicua del collage"
         },
         {
           "src": "/images/catalogo/beatriz-de-pandora-original-03-2048.jpg",
           "width": 1532,
           "height": 2048,
-          "caption": "Caja abierta",
-          "source": "https://www.facebook.com/photo/?fbid=1303450667801018&set=a.1303454654467286",
-          "sha256": "a3cfb6b6e4f872ede691bb5f21e2709c3727d5753fd74ead7f875412d5af5bdc"
+          "sha256": "a3cfb6b6e4f872ede691bb5f21e2709c3727d5753fd74ead7f875412d5af5bdc",
+          "caption": "Caja abierta"
         }
       ],
       "dimensions": "5 × 8 × 13 cm",
@@ -702,25 +604,22 @@
           "src": "/images/catalogo/el-gato-que-es-kutxa-original-01-2048.jpg",
           "width": 2048,
           "height": 1532,
-          "caption": "Tapa terminada",
-          "source": "https://www.facebook.com/photo/?fbid=1230043735141712&set=a.1230045515141534",
-          "sha256": "28a9aca2976cf5f6ee0f2d7eb62f58bbdcf18c7807086bce3468f4bf67bc5616"
+          "sha256": "28a9aca2976cf5f6ee0f2d7eb62f58bbdcf18c7807086bce3468f4bf67bc5616",
+          "caption": "Tapa terminada"
         },
         {
           "src": "/images/catalogo/el-gato-que-es-kutxa-original-02-2048.jpg",
           "width": 2048,
           "height": 1532,
-          "caption": "Proceso: fondo e imagen recortada",
-          "source": "https://www.facebook.com/photo/?fbid=1230043715141714&set=a.1230045515141534",
-          "sha256": "f869aca5cdf8e192299a0df36c32b2066f843a0451a744947e0a18b1fbda8b4e"
+          "sha256": "f869aca5cdf8e192299a0df36c32b2066f843a0451a744947e0a18b1fbda8b4e",
+          "caption": "Proceso: fondo e imagen recortada"
         },
         {
           "src": "/images/catalogo/el-gato-que-es-kutxa-original-03-2048.jpg",
           "width": 1532,
           "height": 2048,
-          "caption": "Interior de la caja",
-          "source": "https://www.facebook.com/photo/?fbid=1230043695141716&set=a.1230045515141534",
-          "sha256": "32a3aeb1f28222dc297947535333089dce74e15575f2998e87942b9b06470b97"
+          "sha256": "32a3aeb1f28222dc297947535333089dce74e15575f2998e87942b9b06470b97",
+          "caption": "Interior de la caja"
         }
       ],
       "dimensions": "4,7 × 8,3 × 8,3 cm",
@@ -743,25 +642,22 @@
           "src": "/images/catalogo/me-parto-de-risa-original-01-2048.jpg",
           "width": 1536,
           "height": 2048,
-          "caption": "Obra enmarcada",
-          "source": "https://www.facebook.com/photo/?fbid=1225338215612264&set=a.1225348225611263",
-          "sha256": "22fdc51a6a13a5a4f6153a5c4caf9bd5b0fcf99afe1f6a2e68aec40cd97bf47c"
+          "sha256": "22fdc51a6a13a5a4f6153a5c4caf9bd5b0fcf99afe1f6a2e68aec40cd97bf47c",
+          "caption": "Obra enmarcada"
         },
         {
           "src": "/images/catalogo/me-parto-de-risa-original-02-2048.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Vista oblicua del conjunto",
-          "source": "https://www.facebook.com/photo/?fbid=1225338352278917&set=a.1225348225611263",
-          "sha256": "08291423c7b8e510d34935977a15df2c847bda418d5d5cd24fc04b0e1b95642a"
+          "sha256": "08291423c7b8e510d34935977a15df2c847bda418d5d5cd24fc04b0e1b95642a",
+          "caption": "Vista oblicua del conjunto"
         },
         {
           "src": "/images/catalogo/me-parto-de-risa-original-03-2048.jpg",
           "width": 1536,
           "height": 2048,
-          "caption": "Detalle del retrato y los materiales",
-          "source": "https://www.facebook.com/photo/?fbid=1225338148945604&set=a.1225348225611263",
-          "sha256": "b190ff07247269493e35440282a0f878c71a94a30ef685de7a6cf2db8af7ded0"
+          "sha256": "b190ff07247269493e35440282a0f878c71a94a30ef685de7a6cf2db8af7ded0",
+          "caption": "Detalle del retrato y los materiales"
         }
       ],
       "dimensions": null,
@@ -784,17 +680,15 @@
           "src": "/images/catalogo/red-red-wine-original-01-2048.jpg",
           "width": 2048,
           "height": 1646,
-          "caption": "Obra enmarcada",
-          "source": "https://www.facebook.com/photo/?fbid=1069042114575209&set=a.1069042964575124",
-          "sha256": "c7f25a47a52de61d558eb32651a59c66000d45bf0e3ecda0623f691dcbddf415"
+          "sha256": "c7f25a47a52de61d558eb32651a59c66000d45bf0e3ecda0623f691dcbddf415",
+          "caption": "Obra enmarcada"
         },
         {
           "src": "/images/catalogo/red-red-wine-original-02-2048.jpg",
           "width": 2048,
           "height": 1230,
-          "caption": "Detalle de la composición",
-          "source": "https://www.facebook.com/photo/?fbid=1069042134575207&set=a.1069042964575124",
-          "sha256": "0ac10b611798de6e8e947bd76f681e71530f1eecd729fa5cb3b8aa0d570e48df"
+          "sha256": "0ac10b611798de6e8e947bd76f681e71530f1eecd729fa5cb3b8aa0d570e48df",
+          "caption": "Detalle de la composición"
         }
       ],
       "dimensions": "Papel: A5",
@@ -817,25 +711,22 @@
           "src": "/images/catalogo/i-remember-when-your-head-caught-flame-original-01-2048.jpg",
           "width": 1558,
           "height": 2048,
-          "caption": "Conjunto enmarcado",
-          "source": "https://www.facebook.com/photo/?fbid=1045376596941761&set=a.1045418860270868",
-          "sha256": "255a3649a75c7bf62ab71040b14ec09c039fef3bc36882db7613fc6478a3a9ad"
+          "sha256": "255a3649a75c7bf62ab71040b14ec09c039fef3bc36882db7613fc6478a3a9ad",
+          "caption": "Conjunto enmarcado"
         },
         {
           "src": "/images/catalogo/i-remember-when-your-head-caught-flame-original-02-2048.jpg",
           "width": 1532,
           "height": 2048,
-          "caption": "Detalle del collage",
-          "source": "https://www.facebook.com/photo/?fbid=1045376700275084&set=a.1045418860270868",
-          "sha256": "ad18ac150d7303ac31e41aed915b0d000d3cf77f64412e409a309bd0526b3f60"
+          "sha256": "ad18ac150d7303ac31e41aed915b0d000d3cf77f64412e409a309bd0526b3f60",
+          "caption": "Detalle del collage"
         },
         {
           "src": "/images/catalogo/i-remember-when-your-head-caught-flame-original-03-2048.jpg",
           "width": 1532,
           "height": 2048,
-          "caption": "Vista oblicua",
-          "source": "https://www.facebook.com/photo/?fbid=1045376566941764&set=a.1045418860270868",
-          "sha256": "81f5c5f6adc16390cf0b3337552dc3a769ca5f5df898b1d0c6c41c40b2e4d47d"
+          "sha256": "81f5c5f6adc16390cf0b3337552dc3a769ca5f5df898b1d0c6c41c40b2e4d47d",
+          "caption": "Vista oblicua"
         }
       ],
       "dimensions": "Marco: 25 × 18 cm · Ventana: aproximadamente 7 × 11 cm",
@@ -858,25 +749,22 @@
           "src": "/images/catalogo/julio-iglesias-como-un-reloj-suizo-original-01-2048.jpg",
           "width": 1700,
           "height": 2048,
-          "caption": "Caja abierta con figura articulada",
-          "source": "https://www.facebook.com/photo/?fbid=991951138950974&set=a.991952032284218",
-          "sha256": "c628a576e1994136c8bddd85b95cb2198b9e4dfe6bddf4964dd12272504628d0"
+          "sha256": "c628a576e1994136c8bddd85b95cb2198b9e4dfe6bddf4964dd12272504628d0",
+          "caption": "Caja abierta con figura articulada"
         },
         {
           "src": "/images/catalogo/julio-iglesias-como-un-reloj-suizo-original-02-2048.jpg",
           "width": 2048,
           "height": 1524,
-          "caption": "Caja cerrada",
-          "source": "https://www.facebook.com/photo/?fbid=991951335617621&set=a.991952032284218",
-          "sha256": "6d436ad4279bd7e8fb01255d66eece2fc4297f837b0a046540aaeecc18c99f86"
+          "sha256": "6d436ad4279bd7e8fb01255d66eece2fc4297f837b0a046540aaeecc18c99f86",
+          "caption": "Caja cerrada"
         },
         {
           "src": "/images/catalogo/julio-iglesias-como-un-reloj-suizo-original-03-2048.jpg",
           "width": 2048,
           "height": 1532,
-          "caption": "Compartimento con libro y cassette",
-          "source": "https://www.facebook.com/photo/?fbid=991951185617636&set=a.991952032284218",
-          "sha256": "00f0b14e4ce2d4c5b3eb28413bcbd8309104bfbe895657d0c646866c1189b84d"
+          "sha256": "00f0b14e4ce2d4c5b3eb28413bcbd8309104bfbe895657d0c646866c1189b84d",
+          "caption": "Compartimento con libro y cassette"
         }
       ],
       "dimensions": null,
@@ -899,25 +787,22 @@
           "src": "/images/catalogo/saio-puzzle-original-01-2048.jpg",
           "width": 2048,
           "height": 2047,
-          "caption": "El puzle completo, con el retrato y sus piezas encajadas.",
-          "source": "https://www.facebook.com/photo/?fbid=890523279093761&set=a.890533279092761",
-          "sha256": "95120f255b54e61f59af82a5cdffd067a235305a1360bd8ca8e68c0930b174bd"
+          "sha256": "95120f255b54e61f59af82a5cdffd067a235305a1360bd8ca8e68c0930b174bd",
+          "caption": "El puzle completo, con el retrato y sus piezas encajadas."
         },
         {
           "src": "/images/catalogo/saio-puzzle-original-02-2048.jpg",
           "width": 2048,
           "height": 1532,
-          "caption": "Detalle de las piezas",
-          "source": "https://www.facebook.com/photo/?fbid=890523115760444&set=a.890533279092761",
-          "sha256": "cfd180112d242a1a229a3d2afb8091ba6b8d821e7723b9663c1d31a3319cf0de"
+          "sha256": "cfd180112d242a1a229a3d2afb8091ba6b8d821e7723b9663c1d31a3319cf0de",
+          "caption": "Detalle de las piezas"
         },
         {
           "src": "/images/catalogo/saio-puzzle-original-03-2048.jpg",
           "width": 2048,
           "height": 1532,
-          "caption": "Vista oblicua",
-          "source": "https://www.facebook.com/photo/?fbid=890523222427100&set=a.890533279092761",
-          "sha256": "7370aebc35be3075018288018dd28537cb4d03bcce9a8a6fe28496ebca83e1c8"
+          "sha256": "7370aebc35be3075018288018dd28537cb4d03bcce9a8a6fe28496ebca83e1c8",
+          "caption": "Vista oblicua"
         }
       ],
       "dimensions": null,
@@ -941,25 +826,22 @@
           "src": "/images/catalogo/custom-jaio-original-01-2048.jpg",
           "width": 1532,
           "height": 2048,
-          "caption": "Bastidor completo",
-          "source": "https://www.facebook.com/photo/?fbid=853517492794340&set=a.853524166127006",
-          "sha256": "a6c67781f679a239c79751cc324e88356d55fc0c00f8fa4212248a0518b969c9"
+          "sha256": "a6c67781f679a239c79751cc324e88356d55fc0c00f8fa4212248a0518b969c9",
+          "caption": "Bastidor completo"
         },
         {
           "src": "/images/catalogo/custom-jaio-original-02-2048.jpg",
           "width": 2048,
           "height": 1532,
-          "caption": "Vista oblicua del retrato",
-          "source": "https://www.facebook.com/photo/?fbid=853517239461032&set=a.853524166127006",
-          "sha256": "040297a12a0a188b63844d965a0ebbb545232cf3ef071734d4b4dd850683d682"
+          "sha256": "040297a12a0a188b63844d965a0ebbb545232cf3ef071734d4b4dd850683d682",
+          "caption": "Vista oblicua del retrato"
         },
         {
           "src": "/images/catalogo/custom-jaio-original-03-2048.jpg",
           "width": 2048,
           "height": 1532,
-          "caption": "Detalle del tejido y los botones",
-          "source": "https://www.facebook.com/photo/?fbid=853517129461043&set=a.853524166127006",
-          "sha256": "3d6ddc377621a51a5260d8c7eb4e48b633d2e2cf04857e288801504f81c4211b"
+          "sha256": "3d6ddc377621a51a5260d8c7eb4e48b633d2e2cf04857e288801504f81c4211b",
+          "caption": "Detalle del tejido y los botones"
         }
       ],
       "dimensions": "Bastidor: 17 cm de diámetro",
@@ -982,25 +864,22 @@
           "src": "/images/catalogo/13n-original-01-2048.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Plato completo",
-          "source": "https://www.facebook.com/photo/?fbid=819540819525341&set=a.819542002858556",
-          "sha256": "422f47e10f3a54e9b6f851fe7ae18e9d3e474bf39775d496b85566771678ab6a"
+          "sha256": "422f47e10f3a54e9b6f851fe7ae18e9d3e474bf39775d496b85566771678ab6a",
+          "caption": "Plato completo"
         },
         {
           "src": "/images/catalogo/13n-original-02-2048.jpg",
           "width": 1536,
           "height": 2048,
-          "caption": "Tapa de la caja personalizada",
-          "source": "https://www.facebook.com/photo/?fbid=819540672858689&set=a.819542002858556",
-          "sha256": "45e9abe56abd34491a568f19f122e6c9ac24521998336102f38a189e918f3dae"
+          "sha256": "45e9abe56abd34491a568f19f122e6c9ac24521998336102f38a189e918f3dae",
+          "caption": "Tapa de la caja personalizada"
         },
         {
           "src": "/images/catalogo/13n-original-03-2048.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Detalle del collage",
-          "source": "https://www.facebook.com/photo/?fbid=819540689525354&set=a.819542002858556",
-          "sha256": "bed63cda053bdf69e7448f576539ae34201241ac2d90d88c0e4e139189e9b63d"
+          "sha256": "bed63cda053bdf69e7448f576539ae34201241ac2d90d88c0e4e139189e9b63d",
+          "caption": "Detalle del collage"
         }
       ],
       "dimensions": "Plato: 18 cm de diámetro",
@@ -1023,25 +902,22 @@
           "src": "/images/catalogo/patxi-en-su-pino-original-01-2048.jpg",
           "width": 2048,
           "height": 1532,
-          "caption": "Rodaja completa",
-          "source": "https://www.facebook.com/photo/?fbid=800361154776641&set=a.800361614776595",
-          "sha256": "9ebeaaf7940c64e594c80401563dcadec1f730a6c5b4e972ed655555fad16b8d"
+          "sha256": "9ebeaaf7940c64e594c80401563dcadec1f730a6c5b4e972ed655555fad16b8d",
+          "caption": "Rodaja completa"
         },
         {
           "src": "/images/catalogo/patxi-en-su-pino-original-02-1600.jpg",
           "width": 1600,
           "height": 1200,
-          "caption": "Escala en las manos",
-          "source": "https://www.facebook.com/photo/?fbid=800360861443337&set=a.800361614776595",
-          "sha256": "2b4d8df98d3b1c86abb138ddcc316406c9204f71c5721013a234c14b2ae5de75"
+          "sha256": "2b4d8df98d3b1c86abb138ddcc316406c9204f71c5721013a234c14b2ae5de75",
+          "caption": "Escala en las manos"
         },
         {
           "src": "/images/catalogo/patxi-en-su-pino-original-03-2048.jpg",
           "width": 1532,
           "height": 2048,
-          "caption": "Detalle del retrato",
-          "source": "https://www.facebook.com/photo/?fbid=800361234776633&set=a.800361614776595",
-          "sha256": "2270df7510270ab0907806b85b57bdd79a3e51b2b86f22a66dc586b0a1c2d9e0"
+          "sha256": "2270df7510270ab0907806b85b57bdd79a3e51b2b86f22a66dc586b0a1c2d9e0",
+          "caption": "Detalle del retrato"
         }
       ],
       "dimensions": null,
@@ -1064,25 +940,22 @@
           "src": "/images/catalogo/el-luengo-y-el-mar-original-01-2048.jpg",
           "width": 1818,
           "height": 2048,
-          "caption": "Concha completa",
-          "source": "https://www.facebook.com/photo/?fbid=790104415802315&set=a.790135652465858",
-          "sha256": "fce93c751a34a34a6aa1fe61ee0c64bfcfe895826d001c8544a02bc15c476d25"
+          "sha256": "fce93c751a34a34a6aa1fe61ee0c64bfcfe895826d001c8544a02bc15c476d25",
+          "caption": "Concha completa"
         },
         {
           "src": "/images/catalogo/el-luengo-y-el-mar-original-02-2048.jpg",
           "width": 2048,
           "height": 1532,
-          "caption": "Escala en la mano",
-          "source": "https://www.facebook.com/photo/?fbid=790104545802302&set=a.790135652465858",
-          "sha256": "d4bdcfd9ad34f0fede65b2d520a1de9d87065b186f7e381679785b55f1e3611d"
+          "sha256": "d4bdcfd9ad34f0fede65b2d520a1de9d87065b186f7e381679785b55f1e3611d",
+          "caption": "Escala en la mano"
         },
         {
           "src": "/images/catalogo/el-luengo-y-el-mar-original-03-2048.jpg",
           "width": 2048,
           "height": 1608,
-          "caption": "Reverso de la concha",
-          "source": "https://www.facebook.com/photo/?fbid=790104342468989&set=a.790135652465858",
-          "sha256": "550e64bdb9af12389f874c551153787094c51d0464ac44e48c67d6b667e85f26"
+          "sha256": "550e64bdb9af12389f874c551153787094c51d0464ac44e48c67d6b667e85f26",
+          "caption": "Reverso de la concha"
         }
       ],
       "dimensions": null,
@@ -1105,25 +978,22 @@
           "src": "/images/catalogo/el-armigo-atomico-original-01-2048.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Plato completo",
-          "source": "https://www.facebook.com/photo/?fbid=719141552898602&set=a.719159769563447",
-          "sha256": "7e9964ff527f6a44357f2f28f038d52ea5fb274c1fa0159194bb186a49a9ed61"
+          "sha256": "7e9964ff527f6a44357f2f28f038d52ea5fb274c1fa0159194bb186a49a9ed61",
+          "caption": "Plato completo"
         },
         {
           "src": "/images/catalogo/el-armigo-atomico-original-02-2048.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Reverso intervenido",
-          "source": "https://www.facebook.com/photo/?fbid=719141656231925&set=a.719159769563447",
-          "sha256": "4a0dbd0f8a6d7d61bcf5c6d6c45135be77c0a1490a4f78df2e97ce61d689dee5"
+          "sha256": "4a0dbd0f8a6d7d61bcf5c6d6c45135be77c0a1490a4f78df2e97ce61d689dee5",
+          "caption": "Reverso intervenido"
         },
         {
           "src": "/images/catalogo/el-armigo-atomico-original-03-2048.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Detalle del retrato",
-          "source": "https://www.facebook.com/photo/?fbid=719141599565264&set=a.719159769563447",
-          "sha256": "fb920e8128772a2934f2eb55bb93c0d4fb7f3239436f3ea1feea1ede7176abdd"
+          "sha256": "fb920e8128772a2934f2eb55bb93c0d4fb7f3239436f3ea1feea1ede7176abdd",
+          "caption": "Detalle del retrato"
         }
       ],
       "dimensions": "18 cm de diámetro",
@@ -1146,25 +1016,22 @@
           "src": "/images/catalogo/elene-original-01-2048.jpg",
           "width": 1536,
           "height": 2048,
-          "caption": "Plato completo",
-          "source": "https://www.facebook.com/photo/?fbid=688837762595648&set=a.688859365926821",
-          "sha256": "961446bd9744b8e02ad835a8ef4a363511c00ed29170ee5cab36b5970e063a2a"
+          "sha256": "961446bd9744b8e02ad835a8ef4a363511c00ed29170ee5cab36b5970e063a2a",
+          "caption": "Plato completo"
         },
         {
           "src": "/images/catalogo/elene-original-02-2048.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Vista oblicua y flores",
-          "source": "https://www.facebook.com/photo/?fbid=688837525929005&set=a.688859365926821",
-          "sha256": "d8e7fd72fec7692f0fccd5a457f52b1af5358eab0d4525b5fe390dbdb42d767c"
+          "sha256": "d8e7fd72fec7692f0fccd5a457f52b1af5358eab0d4525b5fe390dbdb42d767c",
+          "caption": "Vista oblicua y flores"
         },
         {
           "src": "/images/catalogo/elene-original-03-1831.jpg",
           "width": 1831,
           "height": 1763,
-          "caption": "Detalle del rostro",
-          "source": "https://www.facebook.com/photo/?fbid=688837522595672&set=a.688859365926821",
-          "sha256": "a6c7bd72a595c955d62bebc4b5ee6a928722c54cae6aca3c8a05884d44f9d300"
+          "sha256": "a6c7bd72a595c955d62bebc4b5ee6a928722c54cae6aca3c8a05884d44f9d300",
+          "caption": "Detalle del rostro"
         }
       ],
       "dimensions": "18 cm de diámetro",
@@ -1187,25 +1054,22 @@
           "src": "/images/catalogo/dar-la-lata-original-01-2048.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Una de las composiciones de la serie",
-          "source": "https://www.facebook.com/photo/?fbid=606809387465153&set=a.606818890797536",
-          "sha256": "b56177fb0e22acad084396262f3c5302b99b578e6796012903feb82d05228283"
+          "sha256": "b56177fb0e22acad084396262f3c5302b99b578e6796012903feb82d05228283",
+          "caption": "Una de las composiciones de la serie"
         },
         {
           "src": "/images/catalogo/dar-la-lata-original-03-2048.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Reverso de la lata",
-          "source": "https://www.facebook.com/photo/?fbid=606809277465164&set=a.606818890797536",
-          "sha256": "7f52ebef12a026f67995d5ffebd3025f49eecfea0ff578c2b8767d9c0646a06f"
+          "sha256": "7f52ebef12a026f67995d5ffebd3025f49eecfea0ff578c2b8767d9c0646a06f",
+          "caption": "Reverso de la lata"
         },
         {
           "src": "/images/catalogo/dar-la-lata-04.jpg",
           "width": 843,
           "height": 632,
-          "caption": "Detalle del reverso y grabado de la lata.",
-          "source": null,
-          "sha256": "54a599f7815236e5234c07de657dbe2d854c067b477eb0ba1d5c9cc1dd74987d"
+          "sha256": "54a599f7815236e5234c07de657dbe2d854c067b477eb0ba1d5c9cc1dd74987d",
+          "caption": "Detalle del reverso y grabado de la lata."
         }
       ],
       "dimensions": null,
@@ -1228,33 +1092,29 @@
           "src": "/images/catalogo/marian-de-miranda-obra-2048.jpg",
           "width": 1364,
           "height": 2048,
-          "caption": "Obra final: Marian Puertas como Carmen Miranda con tocado de tres gildas, red y caja de sardinas.",
-          "source": "https://www.facebook.com/photo/?fbid=1087698559376231&set=a.1087704452708975",
-          "sha256": "b34907ad7a979f8a71cbb6c6a2f6b87447663b8c7e2dfba8b43d1b242df88f91"
+          "sha256": "b34907ad7a979f8a71cbb6c6a2f6b87447663b8c7e2dfba8b43d1b242df88f91",
+          "caption": "Obra final: Marian Puertas como Carmen Miranda con tocado de tres gildas, red y caja de sardinas."
         },
         {
           "src": "/images/catalogo/marian-de-miranda-montaje-digital-2048.jpg",
           "width": 1364,
           "height": 2048,
-          "caption": "Montaje digital intermedio del proceso sobre fondo fucsia y caja de sardinas.",
-          "source": "https://www.facebook.com/photo/?fbid=1087698802709540&set=a.1087704452708975",
-          "sha256": "c8c01f8548f5a38e840ea4b2be301bdd3431ca948efcc9da8933a018e609eb55"
+          "sha256": "c8c01f8548f5a38e840ea4b2be301bdd3431ca948efcc9da8933a018e609eb55",
+          "caption": "Montaje digital intermedio del proceso sobre fondo fucsia y caja de sardinas."
         },
         {
           "src": "/images/catalogo/marian-de-miranda-collage-sardinas-2048.jpg",
           "width": 1440,
           "height": 2048,
-          "caption": "Base de collage tangible: caja de sardinas de chocolate, envoltorio metalizado y llave abrelatas.",
-          "source": "https://www.facebook.com/media/set/?set=a.1087704452708975&type=3",
-          "sha256": "b21e766470f9c376016e6e798663e46629c02a09af8564e7dd1405a2b2118faf"
+          "sha256": "b21e766470f9c376016e6e798663e46629c02a09af8564e7dd1405a2b2118faf",
+          "caption": "Base de collage tangible: caja de sardinas de chocolate, envoltorio metalizado y llave abrelatas."
         },
         {
           "src": "/images/catalogo/marian-de-miranda-referencia-marian-2048.jpg",
           "width": 2048,
           "height": 2004,
-          "caption": "Fotografía de referencia de Marian Puertas con aros y gesto icónico.",
-          "source": "https://www.facebook.com/media/set/?set=a.1087704452708975&type=3",
-          "sha256": "85240f846a8c89c9b8ea0a1ab04df1bfc40681355e4622b6bf37ebe6f7792c97"
+          "sha256": "85240f846a8c89c9b8ea0a1ab04df1bfc40681355e4622b6bf37ebe6f7792c97",
+          "caption": "Fotografía de referencia de Marian Puertas con aros y gesto icónico."
         }
       ],
       "dimensions": "23 × 18 cm",
@@ -1278,25 +1138,22 @@
           "src": "/images/catalogo/my-tiny-face-original-01-2048.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Caracterización frontal",
-          "source": "https://www.facebook.com/photo/?fbid=1293289228817162&set=a.1293294798816605",
-          "sha256": "31cc6566f7b1e9375804c8c40cd0f3b44f68b9907ae45935007978c49ad56b64"
+          "sha256": "31cc6566f7b1e9375804c8c40cd0f3b44f68b9907ae45935007978c49ad56b64",
+          "caption": "Caracterización frontal"
         },
         {
           "src": "/images/catalogo/my-tiny-face-original-02-2048.jpg",
           "width": 2013,
           "height": 2048,
-          "caption": "Variante con gafas",
-          "source": "https://www.facebook.com/photo/?fbid=1293289238817161&set=a.1293294798816605",
-          "sha256": "0b7abe415518435dccf72760af48615c56fd8ea8fe4a3940d1ed8b4810362ff8"
+          "sha256": "0b7abe415518435dccf72760af48615c56fd8ea8fe4a3940d1ed8b4810362ff8",
+          "caption": "Variante con gafas"
         },
         {
           "src": "/images/catalogo/my-tiny-face-original-03-2048.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Otra expresión del personaje",
-          "source": "https://www.facebook.com/photo/?fbid=1293289335483818&set=a.1293294798816605",
-          "sha256": "c6b61495a60f3cc2d47afb474eec4b576e4e2505e1f8b12cb413b081d7e83b48"
+          "sha256": "c6b61495a60f3cc2d47afb474eec4b576e4e2505e1f8b12cb413b081d7e83b48",
+          "caption": "Otra expresión del personaje"
         }
       ],
       "dimensions": null,
@@ -1319,25 +1176,22 @@
           "src": "/images/catalogo/aaron-original-01-2048.jpg",
           "width": 1536,
           "height": 2048,
-          "caption": "Retrato del personaje",
-          "source": "https://www.facebook.com/photo/?fbid=1178663040279782&set=a.1178665556946197",
-          "sha256": "e8cb84ad62306926422305cddef78c0390ff7224109e2de65fe65c53c72dd6a6"
+          "sha256": "e8cb84ad62306926422305cddef78c0390ff7224109e2de65fe65c53c72dd6a6",
+          "caption": "Retrato del personaje"
         },
         {
           "src": "/images/catalogo/aaron-original-02-2048.jpg",
           "width": 1536,
           "height": 2048,
-          "caption": "Caracterización con accesorios",
-          "source": "https://www.facebook.com/photo/?fbid=1178663050279781&set=a.1178665556946197",
-          "sha256": "6c94d95b80f8baf209171f87c23f798763458b41567f7e2969785e36a13b72c8"
+          "sha256": "6c94d95b80f8baf209171f87c23f798763458b41567f7e2969785e36a13b72c8",
+          "caption": "Caracterización con accesorios"
         },
         {
           "src": "/images/catalogo/aaron-original-03-2048.jpg",
           "width": 1536,
           "height": 2048,
-          "caption": "Vista de perfil",
-          "source": "https://www.facebook.com/photo/?fbid=1178663020279784&set=a.1178665556946197",
-          "sha256": "ee03cb872359296db7d01a5c7f792b780ee63485d057651322f2143a4defe633"
+          "sha256": "ee03cb872359296db7d01a5c7f792b780ee63485d057651322f2143a4defe633",
+          "caption": "Vista de perfil"
         }
       ],
       "dimensions": null,
@@ -1360,25 +1214,22 @@
           "src": "/images/catalogo/pajarraca-azul-original-01-2048.jpg",
           "width": 1536,
           "height": 2048,
-          "caption": "Máscara en uso",
-          "source": "https://www.facebook.com/photo/?fbid=1066295198183234&set=a.1066297131516374",
-          "sha256": "fb4c49306d014b7006123c296b4ce53e934a0a8ac9bdc2849f0b1bdee73b6a90"
+          "sha256": "fb4c49306d014b7006123c296b4ce53e934a0a8ac9bdc2849f0b1bdee73b6a90",
+          "caption": "Máscara en uso"
         },
         {
           "src": "/images/catalogo/pajarraca-azul-original-02-2048.jpg",
           "width": 1532,
           "height": 2048,
-          "caption": "Detalle de las plumas y el antifaz",
-          "source": "https://www.facebook.com/photo/?fbid=1066295321516555&set=a.1066297131516374",
-          "sha256": "d866500f8d87a0589799573e9ed37191417c3b2772c12cdc324bed4ff5cf91d9"
+          "sha256": "d866500f8d87a0589799573e9ed37191417c3b2772c12cdc324bed4ff5cf91d9",
+          "caption": "Detalle de las plumas y el antifaz"
         },
         {
           "src": "/images/catalogo/pajarraca-azul-original-03-2048.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Caracterización y maquillaje",
-          "source": "https://www.facebook.com/photo/?fbid=1066295258183228&set=a.1066297131516374",
-          "sha256": "1a1e80a25c3318e6ff264778714d584e7e86c9f0a0d3a048176639d0a04ba9e5"
+          "sha256": "1a1e80a25c3318e6ff264778714d584e7e86c9f0a0d3a048176639d0a04ba9e5",
+          "caption": "Caracterización y maquillaje"
         }
       ],
       "dimensions": null,
@@ -1401,25 +1252,22 @@
           "src": "/images/catalogo/flying-dragon-original-01-2048.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Maquillaje y disfraz",
-          "source": "https://www.facebook.com/photo/?fbid=776919143787509&set=a.776919880454102",
-          "sha256": "8ca9502767b855b257666fa365d82749a1e66a1e5db3cfa9226b7358a4925af5"
+          "sha256": "8ca9502767b855b257666fa365d82749a1e66a1e5db3cfa9226b7358a4925af5",
+          "caption": "Maquillaje y disfraz"
         },
         {
           "src": "/images/catalogo/flying-dragon-original-02-2048.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Vista lateral del maquillaje",
-          "source": "https://www.facebook.com/photo/?fbid=776919183787505&set=a.776919880454102",
-          "sha256": "dd6d05a752400007bc7cd46ca4f5ba388724e3d151f933023d08cfaa1b2ac75e"
+          "sha256": "dd6d05a752400007bc7cd46ca4f5ba388724e3d151f933023d08cfaa1b2ac75e",
+          "caption": "Vista lateral del maquillaje"
         },
         {
           "src": "/images/catalogo/flying-dragon-original-03-2048.jpg",
           "width": 2048,
           "height": 1404,
-          "caption": "Detalle de la frente",
-          "source": "https://www.facebook.com/photo/?fbid=776919220454168&set=a.776919880454102",
-          "sha256": "6696af639992efbdac2fbd4ebe5ec6721ea5c6c77a81921427166f80f9ded16e"
+          "sha256": "6696af639992efbdac2fbd4ebe5ec6721ea5c6c77a81921427166f80f9ded16e",
+          "caption": "Detalle de la frente"
         }
       ],
       "dimensions": null,
@@ -1442,33 +1290,22 @@
           "src": "/images/catalogo/monster-dragon-original-01-2048.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Caracterización frontal",
-          "source": "https://www.facebook.com/photo/?fbid=765382121607878&set=a.765384181607672",
-          "sha256": "4222e40b1f6131e65780f73c5939d93e4dfb833e653a73189b5a9373194e5b40"
+          "sha256": "4222e40b1f6131e65780f73c5939d93e4dfb833e653a73189b5a9373194e5b40",
+          "caption": "Monster Dragon — Caracterización de reptil para el Carnaval de Bilbao."
         },
         {
           "src": "/images/catalogo/monster-dragon-original-02-2048.jpg",
           "width": 1536,
           "height": 2048,
-          "caption": "Maquillaje y vestuario",
-          "source": "https://www.facebook.com/photo/?fbid=765382261607864&set=a.765384181607672",
-          "sha256": "738cfebe2e60bcb74ab212b75ca437cc37926597279cd1fb3ae0e39196faa207"
+          "sha256": "738cfebe2e60bcb74ab212b75ca437cc37926597279cd1fb3ae0e39196faa207",
+          "caption": "Detalle del maquillaje de escamas y colmillos pintados sobre el rostro."
         },
         {
           "src": "/images/catalogo/monster-dragon-original-03-2048.jpg",
           "width": 1536,
           "height": 2048,
-          "caption": "Otra expresión del personaje",
-          "source": "https://www.facebook.com/photo/?fbid=765382171607873&set=a.765384181607672",
-          "sha256": "e0c48e4960df4fb6c8ac9dba2fbf00b04c57ea315758c4a109968c87533f5d7e"
-        },
-        {
-          "src": "/images/catalogo/monster-dragon-4k.webp",
-          "width": 3840,
-          "height": 2872,
-          "caption": "Fotografía master 4K de Monster Dragon con caracterización completa.",
-          "source": null,
-          "sha256": "6a153d1ee2fa74d2624d1ee55374ff32f738e18698bc86b68a83ff262d21ebeb"
+          "sha256": "e0c48e4960df4fb6c8ac9dba2fbf00b04c57ea315758c4a109968c87533f5d7e",
+          "caption": "Posado completo con disfraz kigurumi y caracterización facial."
         }
       ],
       "dimensions": null,
@@ -1491,28 +1328,22 @@
           "src": "/images/catalogo/la-llorona-frontal.jpg",
           "width": 1297,
           "height": 960,
-          "caption": "La composición completa: Chavela Vargas y los ojos de sal rosa.",
-          "source": null,
           "sha256": "535ea3a9ebd4e1a51ee1d72f4aee33d3ac1efcbeaa8c74cdf2bcc9727365b432",
-          "source_local": "/Users/borjafernandezangulo/Downloads/786467990_1782401706572576_4478636774858911346_n-2.jpg"
+          "caption": "La composición completa: Chavela Vargas y los ojos de sal rosa."
         },
         {
           "src": "/images/catalogo/la-llorona-materia.jpg",
           "width": 1280,
           "height": 960,
-          "caption": "Vista rasante del lienzo: volumen, fucsia y textura.",
-          "source": null,
           "sha256": "91dfd53649622d1d76c189044dc3e1d5ad3e33f51cadaeb5f9f45a635c376968",
-          "source_local": "/Users/borjafernandezangulo/Downloads/785979160_1782404613238952_4878989123181257927_n.jpg"
+          "caption": "Vista rasante del lienzo: volumen, fucsia y textura."
         },
         {
           "src": "/images/catalogo/la-llorona-lienzo.jpg",
           "width": 1205,
           "height": 565,
-          "caption": "Otra perspectiva del lienzo y sus materiales.",
-          "source": null,
           "sha256": "54a8dc942b3c70369bd0e92112f05a13e0fff2222a1825ddb16e3ec71af5c150",
-          "source_local": "/Users/borjafernandezangulo/Downloads/786493002_1782404639905616_110270408239704901_n.jpg"
+          "caption": "Otra perspectiva del lienzo y sus materiales."
         }
       ],
       "source": null,
@@ -1536,10 +1367,8 @@
           "src": "/images/catalogo/pablo-original.png",
           "width": 1362,
           "height": 1835,
-          "caption": "Retrato completo de Pablo.",
-          "source": null,
           "sha256": "af0af17eaacd9ecb7e8ba6469faee701a630325bc82012d7344d17b40e1ed1e3",
-          "source_local": "/var/folders/r_/hw1ds2nj49zffr6r4m_81r5h0000gn/T/codex-clipboard-d3143f7e-3d45-40cf-8f9a-303ef03fe39a.png"
+          "caption": "Retrato completo de Pablo."
         }
       ],
       "source": null,
@@ -1563,10 +1392,8 @@
           "src": "/images/catalogo/euskolander-original.png",
           "width": 1280,
           "height": 1808,
-          "caption": "La obra completa, sobre un fondo de estrellas rojas y blancas.",
-          "source": null,
           "sha256": "ec2d2f834d1f5d07158148d076c76853bf5ab0acf771410a7144b6a7ee2d605f",
-          "source_local": "/var/folders/r_/hw1ds2nj49zffr6r4m_81r5h0000gn/T/codex-clipboard-495bed4b-7ee7-4518-813f-7529339d013c.png"
+          "caption": "La obra completa, sobre un fondo de estrellas rojas y blancas."
         }
       ],
       "source": null,
@@ -1590,10 +1417,8 @@
           "src": "/images/catalogo/idoia-arkatz-bihotz.png",
           "width": 1190,
           "height": 1704,
-          "caption": "Retrato completo con los detalles de color de las pulseras y las cintas.",
-          "source": "https://www.facebook.com/photo/?fbid=4310884678986211&set=a.4310847965656549",
           "sha256": "5bb78ff52aa1f652b8fe2af94166e427eed1e933ece4117775106a357f0b7866",
-          "source_local": "/var/folders/r_/hw1ds2nj49zffr6r4m_81r5h0000gn/T/codex-clipboard-a61dde8c-5642-4218-9587-df0c47424f65.png"
+          "caption": "Retrato completo con los detalles de color de las pulseras y las cintas."
         }
       ],
       "source": "https://www.facebook.com/photo/?fbid=4310884678986211&set=a.4310847965656549",
@@ -1617,19 +1442,15 @@
           "src": "/images/catalogo/little-adi-completa.png",
           "width": 1164,
           "height": 1586,
-          "caption": "Composición completa sin marco.",
-          "source": "https://www.facebook.com/photo/?fbid=4310881775653168&set=a.4310847965656549",
           "sha256": "0a90eadba4d018800011517e93499f867732539fb76d593587a57790a161b350",
-          "source_local": "/var/folders/r_/hw1ds2nj49zffr6r4m_81r5h0000gn/T/codex-clipboard-52791ffc-2ec2-417e-a5d0-698c4af9926d.png"
+          "caption": "Composición completa sin marco."
         },
         {
           "src": "/images/catalogo/little-adi-marco.png",
           "width": 1536,
           "height": 2048,
-          "caption": "Presentación de la obra en su marco ornamental blanco.",
-          "source": "https://www.facebook.com/photo/?fbid=4310881775653168&set=a.4310847965656549",
           "sha256": "97cf4247e3fab8d65498fd98e10efc0342ee3ba100885b87fe55823980a3dc00",
-          "source_local": "/var/folders/r_/hw1ds2nj49zffr6r4m_81r5h0000gn/T/codex-clipboard-1f8b45b9-90d0-44c6-a053-daf673852ede.png"
+          "caption": "Presentación de la obra en su marco ornamental blanco."
         }
       ],
       "source": "https://www.facebook.com/photo/?fbid=4310881775653168&set=a.4310847965656549",
@@ -1653,55 +1474,43 @@
           "src": "/images/catalogo/lauralore-dibujo-2048.jpg",
           "width": 1536,
           "height": 2048,
-          "caption": "Retrato original en lápiz negro con caracterización del búho y la rosa.",
-          "source": null,
           "sha256": "b26ca97aaac76fe1c0c2c7c1008969c4ecfd89f25843942b1e19a4973090bffe",
-          "source_local": "classic/images/catalogo/lauralore-dibujo-2048.jpg"
+          "caption": "Retrato original en lápiz negro con caracterización del búho y la rosa."
         },
         {
           "src": "/images/catalogo/lauralore-01-4k.jpg",
           "width": 2400,
           "height": 3200,
-          "caption": "Obra completa enmarcada con collage de cerámica y elementos vegetales.",
-          "source": "https://www.facebook.com/photo/?fbid=666366311509460&set=a.666379298174828",
           "sha256": "24c1ca198fdd9177e5b9281f3250c682be10b4005d5df891b33d0cd08339a4d9",
-          "source_local": "classic/images/catalogo/lauralore-01-4k.jpg"
+          "caption": "Obra completa enmarcada con collage de cerámica y elementos vegetales."
         },
         {
           "src": "/images/catalogo/lauralore-03.jpg",
           "width": 640,
           "height": 853,
-          "caption": "Detalle de la flor tridimensional en cerámica azul y tallo vegetal seco.",
-          "source": "https://www.facebook.com/photo/?fbid=666366318176126&set=a.666379298174828",
           "sha256": "1836a394733383a9600eced5d098ae456169b2a7006a5e32e4e9f63baf2e0f7d",
-          "source_local": "work/naroa-artwork-intake/666379298174828-02.jpg"
+          "caption": "Detalle de la flor tridimensional en cerámica azul y tallo vegetal seco."
         },
         {
           "src": "/images/catalogo/lauralore-02.jpg",
           "width": 640,
           "height": 853,
-          "caption": "Perspectiva lateral del marco de profundidad y relieve cerámico.",
-          "source": "https://www.facebook.com/photo/?fbid=666366511509440&set=a.666379298174828",
           "sha256": "8cdd6abdab5f4a8534b9635e6a365d779d496c3b3ad0c3985a8a5a903725d999",
-          "source_local": "work/naroa-artwork-intake/666379298174828-01.jpg"
+          "caption": "Perspectiva lateral del marco de profundidad y relieve cerámico."
         },
         {
           "src": "/images/catalogo/lauralore-04.jpg",
           "width": 843,
           "height": 632,
-          "caption": "Detalle superior de ramitas de madera y flores secas.",
-          "source": "https://www.facebook.com/photo/?fbid=666366374842787&set=a.666379298174828",
           "sha256": "751a3e36f9b272a3e5ff2841d1e80afede3e5e44de2b44156b6309cf7d856e82",
-          "source_local": "work/naroa-artwork-intake/666379298174828-04.jpg"
+          "caption": "Detalle superior de ramitas de madera y flores secas."
         },
         {
           "src": "/images/catalogo/lauralore-05.jpg",
           "width": 640,
           "height": 853,
-          "caption": "Detalle de textura y collage en la esquina.",
-          "source": "https://www.facebook.com/photo/?fbid=666366418176116&set=a.666379298174828",
           "sha256": "a51d758d45f4e7cf7ce0795e70f5e6f64f7144a71756d4f293d84c9e1c4a24c4",
-          "source_local": "work/naroa-artwork-intake/666379298174828-06.jpg"
+          "caption": "Detalle de textura y collage en la esquina."
         }
       ],
       "source": "https://www.facebook.com/media/set/?set=a.666379298174828&type=3",
@@ -1725,55 +1534,43 @@
           "src": "/images/catalogo/can-dy-queen-01.jpg",
           "width": 1500,
           "height": 2000,
-          "caption": "Obra completa.",
-          "source": "https://www.facebook.com/photo/?fbid=504441384368621&set=a.504443464368413",
           "sha256": "3cb0740291f42b15d5951368c52a76f51af17b213b4d56e1b96ba7e77fc29ece",
-          "source_local": "work/naroa-artwork-intake/504443464368413-cover.jpg"
+          "caption": "Obra completa."
         },
         {
           "src": "/images/catalogo/can-dy-queen-02.jpg",
           "width": 720,
           "height": 906,
-          "caption": "Detalle o perspectiva 1 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=504441444368615&set=a.504443464368413",
           "sha256": "e0604fa776b7adbc3881bf8385e3a07d74fae06bdb853f84302de1460fcf6bbb",
-          "source_local": "work/naroa-artwork-intake/504443464368413-02.jpg"
+          "caption": "Detalle o perspectiva 1 de la obra."
         },
         {
           "src": "/images/catalogo/can-dy-queen-03.jpg",
           "width": 640,
           "height": 853,
-          "caption": "Detalle o perspectiva 2 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=504441437701949&set=a.504443464368413",
           "sha256": "d0de7ba2af37fbd91da22ab9ff1a6e806cd4fc3bc37afa21d2764b42e7511cf2",
-          "source_local": "work/naroa-artwork-intake/504443464368413-03.jpg"
+          "caption": "Detalle o perspectiva 2 de la obra."
         },
         {
           "src": "/images/catalogo/can-dy-queen-04.jpg",
           "width": 640,
           "height": 853,
-          "caption": "Detalle o perspectiva 3 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=504441511035275&set=a.504443464368413",
           "sha256": "01db830434ba38f3b8032de0c5b50f289ce770f99a90cc8b5da68a8829195d91",
-          "source_local": "work/naroa-artwork-intake/504443464368413-04.jpg"
+          "caption": "Detalle o perspectiva 3 de la obra."
         },
         {
           "src": "/images/catalogo/can-dy-queen-05.jpg",
           "width": 640,
           "height": 853,
-          "caption": "Detalle o perspectiva 4 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=504441551035271&set=a.504443464368413",
           "sha256": "165381ee71aebe7b167254d701f6e704ff146b539a0dcdb23f435923acca50c1",
-          "source_local": "work/naroa-artwork-intake/504443464368413-06.jpg"
+          "caption": "Detalle o perspectiva 4 de la obra."
         },
         {
           "src": "/images/catalogo/can-dy-queen-06.jpg",
           "width": 843,
           "height": 632,
-          "caption": "Detalle o perspectiva 5 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=504441361035290&set=a.504443464368413",
           "sha256": "161ea23ac0d38603473c5ea375bd6c5d3c79fcdc5eccc0c0864b0a046f8938e9",
-          "source_local": "work/naroa-artwork-intake/504443464368413-08.jpg"
+          "caption": "Detalle o perspectiva 5 de la obra."
         }
       ],
       "source": "https://www.facebook.com/media/set/?set=a.504443464368413&type=3",
@@ -1797,55 +1594,43 @@
           "src": "/images/catalogo/el-hombre-que-susurraba-a-las-estrellas-01.jpg",
           "width": 2048,
           "height": 1533,
-          "caption": "Obra completa.",
-          "source": "https://www.facebook.com/photo/?fbid=613835193429239&set=a.613837923428966",
           "sha256": "a5111c684526fc6fde242250af695c6c36eec74de28eef864788bb7fb3be6add",
-          "source_local": "work/naroa-artwork-intake/613837923428966-cover.jpg"
+          "caption": "Obra completa."
         },
         {
           "src": "/images/catalogo/el-hombre-que-susurraba-a-las-estrellas-02.jpg",
           "width": 843,
           "height": 632,
-          "caption": "Detalle o perspectiva 1 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=613834790095946&set=a.613837923428966",
           "sha256": "ad7ec829fbc7ee536095914668219651b898888798528a050566ea20ca74edcc",
-          "source_local": "work/naroa-artwork-intake/613837923428966-02.jpg"
+          "caption": "Detalle o perspectiva 1 de la obra."
         },
         {
           "src": "/images/catalogo/el-hombre-que-susurraba-a-las-estrellas-03.jpg",
           "width": 640,
           "height": 853,
-          "caption": "Detalle o perspectiva 2 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=613834940095931&set=a.613837923428966",
           "sha256": "b08afc50012e102d6dbe55455329d9ac45eb915e090197a92dd9be827a58020c",
-          "source_local": "work/naroa-artwork-intake/613837923428966-03.jpg"
+          "caption": "Detalle o perspectiva 2 de la obra."
         },
         {
           "src": "/images/catalogo/el-hombre-que-susurraba-a-las-estrellas-04.jpg",
           "width": 843,
           "height": 632,
-          "caption": "Detalle o perspectiva 3 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=613835110095914&set=a.613837923428966",
           "sha256": "6d2187c05d24d02d2f8f0471ed89a037a877a96d97ecebf6310c9ba084551f5c",
-          "source_local": "work/naroa-artwork-intake/613837923428966-04.jpg"
+          "caption": "Detalle o perspectiva 3 de la obra."
         },
         {
           "src": "/images/catalogo/el-hombre-que-susurraba-a-las-estrellas-05.jpg",
           "width": 843,
           "height": 632,
-          "caption": "Detalle o perspectiva 4 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=613834903429268&set=a.613837923428966",
           "sha256": "3f98bec37bef7746cfca0ee52f838963f2565fb4c31597b81401a77c408500f6",
-          "source_local": "work/naroa-artwork-intake/613837923428966-05.jpg"
+          "caption": "Detalle o perspectiva 4 de la obra."
         },
         {
           "src": "/images/catalogo/el-hombre-que-susurraba-a-las-estrellas-06.jpg",
           "width": 640,
           "height": 856,
-          "caption": "Detalle o perspectiva 5 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=613834740095951&set=a.613837923428966",
           "sha256": "7a258b8b338e081d30d6ee5545609d5f856422cff5c203c2a40c69ce2fc9363e",
-          "source_local": "work/naroa-artwork-intake/613837923428966-08.jpg"
+          "caption": "Detalle o perspectiva 5 de la obra."
         }
       ],
       "source": "https://www.facebook.com/media/set/?set=a.613837923428966&type=3",
@@ -1869,55 +1654,43 @@
           "src": "/images/catalogo/olinga-a-la-naranja-01.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Obra completa.",
-          "source": "https://www.facebook.com/photo/?fbid=3502565673151453&set=a.3502565189818168",
           "sha256": "c8d7fb49311ba5e3a86841a9a3c7f393823ca978524a649ccaa2cccb50ae0317",
-          "source_local": "work/naroa-artwork-intake/3502565189818168-cover.jpg"
+          "caption": "Obra completa."
         },
         {
           "src": "/images/catalogo/olinga-a-la-naranja-02.jpg",
           "width": 640,
           "height": 853,
-          "caption": "Detalle o perspectiva 1 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=3502565546484799&set=a.3502565189818168",
           "sha256": "82873d60ef465a8403f9136bbd6ef5e9b7b5a24c6ae49c9681aea4ebdab5c54c",
-          "source_local": "work/naroa-artwork-intake/3502565189818168-02.jpg"
+          "caption": "Detalle o perspectiva 1 de la obra."
         },
         {
           "src": "/images/catalogo/olinga-a-la-naranja-03.jpg",
           "width": 640,
           "height": 853,
-          "caption": "Detalle o perspectiva 2 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=3502565689818118&set=a.3502565189818168",
           "sha256": "ad336e694c52c5468979b2fe66c392c612c253c45a56a49368e02c5f3f08c350",
-          "source_local": "work/naroa-artwork-intake/3502565189818168-03.jpg"
+          "caption": "Detalle o perspectiva 2 de la obra."
         },
         {
           "src": "/images/catalogo/olinga-a-la-naranja-04.jpg",
           "width": 843,
           "height": 632,
-          "caption": "Detalle o perspectiva 3 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=3502566166484737&set=a.3502565189818168",
           "sha256": "322e65f15acc685e774d65d19137afe88c641a2f5586942a095c57fea455275d",
-          "source_local": "work/naroa-artwork-intake/3502565189818168-05.jpg"
+          "caption": "Detalle o perspectiva 3 de la obra."
         },
         {
           "src": "/images/catalogo/olinga-a-la-naranja-05.jpg",
           "width": 843,
           "height": 632,
-          "caption": "Detalle o perspectiva 4 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=3502566196484734&set=a.3502565189818168",
           "sha256": "5bb9f4ca6aaa5f26f337f508883ad1aefac3739f849064685c9cb921f9e23333",
-          "source_local": "work/naroa-artwork-intake/3502565189818168-06.jpg"
+          "caption": "Detalle o perspectiva 4 de la obra."
         },
         {
           "src": "/images/catalogo/olinga-a-la-naranja-06.jpg",
           "width": 843,
           "height": 632,
-          "caption": "Detalle o perspectiva 5 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=3502566456484708&set=a.3502565189818168",
           "sha256": "3025633436eb1e3b727bfb673f20ca7ff1976df00847bf8cf9d4665e0c1f4b39",
-          "source_local": "work/naroa-artwork-intake/3502565189818168-08.jpg"
+          "caption": "Detalle o perspectiva 5 de la obra."
         }
       ],
       "source": "https://www.facebook.com/media/set/?set=a.3502565189818168&type=3",
@@ -1941,55 +1714,43 @@
           "src": "/images/catalogo/i-got-you-babe-01.jpg",
           "width": 1874,
           "height": 1405,
-          "caption": "Obra completa.",
-          "source": "https://www.facebook.com/photo/?fbid=4820372858037388&set=a.4820384624702878",
           "sha256": "c2da0b046b4fa8117d36c20524638743554e2007dacf98e83dc98a55ab02bcef",
-          "source_local": "work/naroa-artwork-intake/4820384624702878-cover.jpg"
+          "caption": "Obra completa."
         },
         {
           "src": "/images/catalogo/i-got-you-babe-02.jpg",
           "width": 843,
           "height": 632,
-          "caption": "Detalle o perspectiva 1 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=4820373288037345&set=a.4820384624702878",
           "sha256": "3c8e6e26c52f6931876f1b350bb3cb69b9ef689e43132a2a2567a7368283b338",
-          "source_local": "work/naroa-artwork-intake/4820384624702878-01.jpg"
+          "caption": "Detalle o perspectiva 1 de la obra."
         },
         {
           "src": "/images/catalogo/i-got-you-babe-03.jpg",
           "width": 843,
           "height": 632,
-          "caption": "Detalle o perspectiva 2 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=4820373011370706&set=a.4820384624702878",
           "sha256": "55b5e2fda3b1494f042a813f4c6519840e1f458a4f0e192e36b9de53f38169fd",
-          "source_local": "work/naroa-artwork-intake/4820384624702878-02.jpg"
+          "caption": "Detalle o perspectiva 2 de la obra."
         },
         {
           "src": "/images/catalogo/i-got-you-babe-04.jpg",
           "width": 640,
           "height": 853,
-          "caption": "Detalle o perspectiva 3 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=4820372998037374&set=a.4820384624702878",
           "sha256": "c7806cbbddec03b3b7f6aa07287922c3ecc66f0362ccd41d22755283d246f6f4",
-          "source_local": "work/naroa-artwork-intake/4820384624702878-03.jpg"
+          "caption": "Detalle o perspectiva 3 de la obra."
         },
         {
           "src": "/images/catalogo/i-got-you-babe-05.jpg",
           "width": 837,
           "height": 640,
-          "caption": "Detalle o perspectiva 4 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=4820372561370751&set=a.4820384624702878",
           "sha256": "47bdb92b929aee8a13ecbd347c627cad43a3797e20e911f36a1aa84b83d94ab3",
-          "source_local": "work/naroa-artwork-intake/4820384624702878-04.jpg"
+          "caption": "Detalle o perspectiva 4 de la obra."
         },
         {
           "src": "/images/catalogo/i-got-you-babe-06.jpg",
           "width": 843,
           "height": 632,
-          "caption": "Detalle o perspectiva 5 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=4820372864704054&set=a.4820384624702878",
           "sha256": "08975db8e0eff581dfe1f205f9c86f35a3440a4b1294c253d42277f95ece02fb",
-          "source_local": "work/naroa-artwork-intake/4820384624702878-08.jpg"
+          "caption": "Detalle o perspectiva 5 de la obra."
         }
       ],
       "source": "https://www.facebook.com/media/set/?set=a.4820384624702878&type=3",
@@ -2014,55 +1775,43 @@
           "src": "/images/catalogo/jose-manuel-ezquerra-01.jpg",
           "width": 1585,
           "height": 2048,
-          "caption": "Obra completa.",
-          "source": "https://www.facebook.com/photo/?fbid=773329519408429&set=a.773327879408593",
           "sha256": "cb0d94ce2e348e6370d34c0aff95edd7bffa15f8751b2d341d4c84024338f66f",
-          "source_local": "work/naroa-artwork-intake/773327879408593-cover.jpg"
+          "caption": "Obra completa."
         },
         {
           "src": "/images/catalogo/jose-manuel-ezquerra-02.jpg",
           "width": 640,
           "height": 853,
-          "caption": "Detalle o perspectiva 1 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=773329689408412&set=a.773327879408593",
           "sha256": "722ae579a29d3daa2aea1edf2314e7ee92f016586237958ac3ff47628a43a925",
-          "source_local": "work/naroa-artwork-intake/773327879408593-01.jpg"
+          "caption": "Detalle o perspectiva 1 de la obra."
         },
         {
           "src": "/images/catalogo/jose-manuel-ezquerra-03.jpg",
           "width": 843,
           "height": 632,
-          "caption": "Detalle o perspectiva 2 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=773329616075086&set=a.773327879408593",
           "sha256": "3fcfcecfee93cf95ef930e49d0a90163d9f2e32ea6850a458a2f9d51a3ca397e",
-          "source_local": "work/naroa-artwork-intake/773327879408593-02.jpg"
+          "caption": "Detalle o perspectiva 2 de la obra."
         },
         {
           "src": "/images/catalogo/jose-manuel-ezquerra-04.jpg",
           "width": 843,
           "height": 632,
-          "caption": "Detalle o perspectiva 3 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=773330449408336&set=a.773327879408593",
           "sha256": "35aecc9e94c885fda479e1750d41c98bc34db71fb2986cb236509fa37b71aa62",
-          "source_local": "work/naroa-artwork-intake/773327879408593-08.jpg"
+          "caption": "Detalle o perspectiva 3 de la obra."
         },
         {
           "src": "/images/catalogo/jose-manuel-ezquerra-05.jpg",
           "width": 640,
           "height": 853,
-          "caption": "Detalle o perspectiva 4 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=773330786074969&set=a.773327879408593",
           "sha256": "ff5ddb7839cdcdecfdc70c395e8f77939e4d94c69d385f518879d7ddd0568f47",
-          "source_local": "work/naroa-artwork-intake/773327879408593-12.jpg"
+          "caption": "Detalle o perspectiva 4 de la obra."
         },
         {
           "src": "/images/catalogo/jose-manuel-ezquerra-06.jpg",
           "width": 843,
           "height": 632,
-          "caption": "Detalle o perspectiva 5 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=773331369408244&set=a.773327879408593",
           "sha256": "44b86060ab5051e6d0fb93ad6619a72cefc65ae1d94db26554eee500a88ec120",
-          "source_local": "work/naroa-artwork-intake/773327879408593-18.jpg"
+          "caption": "Detalle o perspectiva 5 de la obra."
         }
       ],
       "source": "https://www.facebook.com/media/set/?set=a.773327879408593&type=3",
@@ -2086,55 +1835,43 @@
           "src": "/images/catalogo/billy-saw-01.jpg",
           "width": 1536,
           "height": 2048,
-          "caption": "Obra completa.",
-          "source": "https://www.facebook.com/photo/?fbid=1026561340751911&set=a.1026561114085267",
           "sha256": "dbdc860c5ff1cb8af4d0d4d06aea43ad853ede392bf2df4e0db0cb9f88aa0f38",
-          "source_local": "work/naroa-artwork-intake/1026561114085267-cover.jpg"
+          "caption": "Obra completa."
         },
         {
           "src": "/images/catalogo/billy-saw-02.jpg",
           "width": 590,
           "height": 836,
-          "caption": "Detalle o perspectiva 1 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=1026561157418596&set=a.1026561114085267",
           "sha256": "ce5bd48d6809b4ed80a484079dca03927f6b8a855e628c6a65d9762943e120e5",
-          "source_local": "work/naroa-artwork-intake/1026561114085267-01.jpg"
+          "caption": "Detalle o perspectiva 1 de la obra."
         },
         {
           "src": "/images/catalogo/billy-saw-03.jpg",
           "width": 590,
           "height": 845,
-          "caption": "Detalle o perspectiva 2 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=1026561164085262&set=a.1026561114085267",
           "sha256": "eee8a657913b62b5b0847c4dda65412f972b82c4134764280e68fee883a76b69",
-          "source_local": "work/naroa-artwork-intake/1026561114085267-02.jpg"
+          "caption": "Detalle o perspectiva 2 de la obra."
         },
         {
           "src": "/images/catalogo/billy-saw-04.jpg",
           "width": 640,
           "height": 865,
-          "caption": "Detalle o perspectiva 3 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=1026561227418589&set=a.1026561114085267",
           "sha256": "b3138c81871c3ce80794aa3eda71fbdc376ff0e8b83ca6e7ab5f86cda6dd6601",
-          "source_local": "work/naroa-artwork-intake/1026561114085267-04.jpg"
+          "caption": "Detalle o perspectiva 3 de la obra."
         },
         {
           "src": "/images/catalogo/billy-saw-05.jpg",
           "width": 600,
           "height": 820,
-          "caption": "Detalle o perspectiva 4 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=1026561267418585&set=a.1026561114085267",
           "sha256": "ee33484525af22654d7fd8d6f33d8ba87485b15ff48e5bff0cd5fe7a10e6e4ac",
-          "source_local": "work/naroa-artwork-intake/1026561114085267-06.jpg"
+          "caption": "Detalle o perspectiva 4 de la obra."
         },
         {
           "src": "/images/catalogo/billy-saw-06.jpg",
           "width": 640,
           "height": 871,
-          "caption": "Detalle o perspectiva 5 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=1026561307418581&set=a.1026561114085267",
           "sha256": "97630e8629327827ef4021c94e3a0a03ed8cd7f8773fae1e34094f6646a934ca",
-          "source_local": "work/naroa-artwork-intake/1026561114085267-07.jpg"
+          "caption": "Detalle o perspectiva 5 de la obra."
         }
       ],
       "source": "https://www.facebook.com/media/set/?set=a.1026561114085267&type=3",
@@ -2152,74 +1889,55 @@
       "category": "collage",
       "technique": "Lápices de colores y collage",
       "support": "Marco con passepartout intervenido",
-      "story": "«Dentro de la colección ‘Vaivenes’, esta obra narra un “con-movedor” hecho: la derrota de una figura ante las circunstancias. Retrato a lápices de colores y rotulador permanente sobre cartulina texturizada, recortada e integrada en collage sobre marco decapado». — Naroa Gutiérrez Gil",
+      "story": "«Dentro de la colección ‘Vaivenes’, esta obra narra un “con-movedor” hecho: la derrota de una figura internacional del tenis (Andre Agassi) durante el Roland Garros de 1990, ante las circunstancias y el temor de perder su peluca con tanto zarandeo. Retrato realista a lápices de colores y rotulador permanente sobre cartulina texturizada, recortada e integrada en collage sobre marco con passepartout intervenido». — Naroa Gutiérrez Gil",
       "images": [
         {
           "src": "/images/catalogo/out-por-los-pelos-master-4k.jpg",
           "width": 2000,
           "height": 2435,
-          "caption": "OUT (por los pelos) — Fotografía master de la obra enmarcada completa.",
-          "sha256": "92aad807f4dadd2efceb409302869f3650d37e20e199c7cafbeb67a405369d2f"
-        },
-        {
-          "src": "/images/catalogo/out-por-los-pelos-01.jpg",
-          "width": 1356,
-          "height": 1684,
-          "caption": "Obra completa.",
-          "source": "https://www.facebook.com/photo/?fbid=4622931041114905&set=a.4622940807780595",
-          "sha256": "64f6fd12a965e429b105d98b5a60aa1a8b0fff403d2460fe5af5cdb1723825ae",
-          "source_local": "work/naroa-artwork-intake/4622940807780595-cover.jpg"
+          "sha256": "92aad807f4dadd2efceb409302869f3650d37e20e199c7cafbeb67a405369d2f",
+          "caption": "OUT (por los pelos) — Obra completa enmarcada con passepartout rasgado y pelota de fieltro."
         },
         {
           "src": "/images/catalogo/out-por-los-pelos-02.jpg",
           "width": 832,
           "height": 403,
-          "caption": "Detalle o perspectiva 1 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=4622931557781520&set=a.4622940807780595",
           "sha256": "fc8db39ee7f1e130e8087d32103f54edd79027e07f2bad8ad398a19d9ba6b99f",
-          "source_local": "work/naroa-artwork-intake/4622940807780595-02.jpg"
+          "caption": "Detalle superior de las redes cosidas y el lema «Por los pelos» con gotas de látex."
         },
         {
           "src": "/images/catalogo/out-por-los-pelos-03.jpg",
           "width": 843,
           "height": 632,
-          "caption": "Detalle o perspectiva 2 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=4622931247781551&set=a.4622940807780595",
           "sha256": "b3f4c213e2391b067d79f900abfc39a5d9e258ce949000b3d3549eafef0079aa",
-          "source_local": "work/naroa-artwork-intake/4622940807780595-03.jpg"
+          "caption": "Detalle de la ventana lateral con mechón azul y pelota de tenis en fieltro amarillo."
         },
         {
           "src": "/images/catalogo/out-por-los-pelos-04.jpg",
           "width": 843,
           "height": 632,
-          "caption": "Detalle o perspectiva 3 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=4622931291114880&set=a.4622940807780595",
           "sha256": "46c3b98d9cec3593f7c3f49da8e641e2e69aa78cbf7b22b91703f92dc0ac75cf",
-          "source_local": "work/naroa-artwork-intake/4622940807780595-04.jpg"
+          "caption": "Primer plano del perfil de Andre Agassi a lápices de colores y el desgarro del cartón."
         },
         {
           "src": "/images/catalogo/out-por-los-pelos-05.jpg",
           "width": 843,
           "height": 637,
-          "caption": "Detalle o perspectiva 4 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=4622931734448169&set=a.4622940807780595",
           "sha256": "8880e559af285c6e8296af10e7f28a7cb42008b836eca61c64936dadcc27b27e",
-          "source_local": "work/naroa-artwork-intake/4622940807780595-06.jpg"
+          "caption": "Detalle del marcador tipográfico «OUT» en cinta washi roja y redes superpuestas."
         },
         {
           "src": "/images/catalogo/out-por-los-pelos-06.jpg",
           "width": 843,
           "height": 632,
-          "caption": "Detalle o perspectiva 5 de la obra.",
-          "source": "https://www.facebook.com/photo/?fbid=4622931831114826&set=a.4622940807780595",
           "sha256": "5a1eab03024eb306d5bda401735937f11a852df97b719573b33918f0b991240e",
-          "source_local": "work/naroa-artwork-intake/4622940807780595-08.jpg"
+          "caption": "Vista oblicua del relieve de redes, cabellos y látex líquido sobre el retrato."
         }
       ],
       "source": "https://www.facebook.com/media/set/?set=a.4622940807780595&type=3",
       "dimensions": "50 × 40 cm",
       "materials": "Pelota de tenis de fieltro, cabello anudado, papeles Canson, acetato impreso publicitario (“Do they match?”), marcador washi-tape con las letras OUT, redes cosidas y gotas de látex líquido a modo de sudor.",
-      "series": "VaiVenes",
+      "series": "Vaivenes",
       "year": null,
       "credit": null,
       "selected": false,
@@ -2237,10 +1955,8 @@
           "src": "/images/catalogo/denbora-nora-zoaz.jpg",
           "width": 2048,
           "height": 1366,
-          "caption": "El rostro y el collage de hojas de calendario.",
-          "source": "https://www.facebook.com/naroa.artista.plastica/posts/pfbid02Lr4MnfMkwrdmxN4GewwY8WLAwvRRKT1oajaVkLJXWsM4mCg7dzWFoXa3af67YKKyl",
           "sha256": "8ec25e352e263a6fe81f41a2451899bd68c53eb9a896c262e5c484abffb408cd",
-          "source_local": "work/naroa-artwork-intake/post-0-0.jpg"
+          "caption": "El rostro y el collage de hojas de calendario."
         }
       ],
       "source": "https://www.facebook.com/naroa.artista.plastica/posts/pfbid02Lr4MnfMkwrdmxN4GewwY8WLAwvRRKT1oajaVkLJXWsM4mCg7dzWFoXa3af67YKKyl",
@@ -2264,10 +1980,8 @@
           "src": "/images/catalogo/la-pensadora-original-01-2048.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Vista completa: La pensadora, procesos cognitivos y mundo interior.",
-          "source": null,
           "sha256": "d00881c21faed4404688946cdb589a7a521ee3906705863b513c0860053a941e",
-          "source_local": "classic/images/catalogo/la-pensadora-original-01-2048.jpg"
+          "caption": "Vista completa: La pensadora, procesos cognitivos y mundo interior."
         }
       ],
       "source": null,
@@ -2341,9 +2055,8 @@
           "src": "/images/artworks/el-gran-dakari-C1tAWAhR.webp",
           "width": 1498,
           "height": 2000,
-          "caption": "Fotografía original de El Gran Dakari sobre plato de pizarra natural.",
-          "source": null,
-          "sha256": "0a4a77967d4278f5b880719f03019b8464018a6e85a9c70604997589260c34a1"
+          "sha256": "0a4a77967d4278f5b880719f03019b8464018a6e85a9c70604997589260c34a1",
+          "caption": "Fotografía original de El Gran Dakari sobre plato de pizarra natural."
         }
       ],
       "dimensions": "32 × 24 × 0,8 cm",
@@ -2457,36 +2170,25 @@
       "story": "Ficha técnica: Retrato doble técnica mixta mediante collage textil y mineral.",
       "images": [
         {
-          "src": "/images/catalogo/the-golden-couple-01.jpg",
+          "src": "/images/catalogo/the-golden-couple-4k.webp",
           "width": 1024,
           "height": 1024,
-          "caption": "Retrato doble The Golden Couple en técnica mixta mediante collage con fondo floral, celosía dorada y gominolas.",
-          "source": null,
-          "sha256": "f607cbc625541fb46a7405f2e8a990a619af762fc46a933623595d7ff0eb5a67"
+          "sha256": "7ef7502d06f6abee406d3991ecbe5ecf5760565b7c7cd2e687769f6c7c26b87e",
+          "caption": "Retrato doble The Golden Couple en técnica mixta mediante collage con fondo floral, celosía dorada y gominolas."
         },
         {
           "src": "/images/catalogo/the-golden-couple-02.jpg",
           "width": 1024,
           "height": 768,
-          "caption": "Obra enmarcada en caja vitrina negra (shadow box) dispuesta sobre la hierba con flores silvestres.",
-          "source": null,
-          "sha256": "5e6ffc934dcc709839e81558529f49f30e2d2c3f2ea3de3baeaa6f8a8bb4eddb"
+          "sha256": "5e6ffc934dcc709839e81558529f49f30e2d2c3f2ea3de3baeaa6f8a8bb4eddb",
+          "caption": "Obra enmarcada en caja vitrina negra (shadow box) dispuesta sobre la hierba con flores silvestres."
         },
         {
           "src": "/images/catalogo/the-golden-couple-03.jpg",
           "width": 768,
           "height": 1024,
-          "caption": "Vista cenital de la obra enmarcada sobre un lecho de margaritas naturales.",
-          "source": null,
-          "sha256": "bef5000612c9cdef4e87e4fbdf483fa736f5d10a9002ae1e456070bd846a0caf"
-        },
-        {
-          "src": "/images/catalogo/the-golden-couple-4k.webp",
-          "width": 1024,
-          "height": 1024,
-          "caption": "Fotografía master de The Golden Couple: técnica mixta mediante collage.",
-          "source": null,
-          "sha256": "7ef7502d06f6abee406d3991ecbe5ecf5760565b7c7cd2e687769f6c7c26b87e"
+          "sha256": "bef5000612c9cdef4e87e4fbdf483fa736f5d10a9002ae1e456070bd846a0caf",
+          "caption": "Vista cenital de la obra enmarcada sobre un lecho de margaritas naturales."
         }
       ],
       "dimensions": "35 × 46 × 0,7 cm",
@@ -2565,28 +2267,22 @@
           "src": "/images/catalogo/izei-dibujo-2048.jpg",
           "width": 1424,
           "height": 2048,
-          "caption": "Retrato original en blanco y negro con lápices Faber-Castell sobre papel poliéster.",
-          "source": null,
           "sha256": "a2fa744040fa05a4a3757bb6880cfb06af5b0392c3576641c6eef336f382197d",
-          "source_local": "classic/images/catalogo/izei-dibujo-2048.jpg"
+          "caption": "Retrato original en blanco y negro con lápices Faber-Castell sobre papel poliéster."
         },
         {
           "src": "/images/catalogo/izei-enmarcado-2048.jpg",
           "width": 1504,
           "height": 2048,
-          "caption": "Obra completa enmarcada en formato A3 con cristal, alas en Uni-Posca y reflejos de esmalte.",
-          "source": null,
           "sha256": "cc39a85873ffce1087b6d024751965939d85c9c0cee512727f4be5df9ac844cf",
-          "source_local": "classic/images/catalogo/izei-enmarcado-2048.jpg"
+          "caption": "Obra completa enmarcada en formato A3 con cristal, alas en Uni-Posca y reflejos de esmalte."
         },
         {
           "src": "/images/catalogo/izei-lamina-2048.jpg",
           "width": 1580,
           "height": 2048,
-          "caption": "Lámina impresa en papel de 350 gr/m² con pinceladas de esmalte y brillantina dorada.",
-          "source": null,
           "sha256": "212d924da1aabc57081b7f194381aeda018396f74b53cd9c2e1da26996efe39f",
-          "source_local": "classic/images/catalogo/izei-lamina-2048.jpg"
+          "caption": "Lámina impresa en papel de 350 gr/m² con pinceladas de esmalte y brillantina dorada."
         }
       ],
       "dimensions": "Formato A3 (42 × 29,7 cm)",
@@ -2610,28 +2306,22 @@
           "src": "/images/catalogo/the-love-boat-frontal-2048.jpg",
           "width": 2048,
           "height": 2037,
-          "caption": "Retrato colorista doble sobre tabla de madera con marco perimetral intervenido.",
-          "source": null,
           "sha256": "53ef178a27e4b63e79d9f6b717f4d7c04ef8a48fa4ac8f7a015008dc26ee9b61",
-          "source_local": "classic/images/catalogo/the-love-boat-frontal-2048.jpg"
+          "caption": "Retrato colorista doble sobre tabla de madera con marco perimetral intervenido."
         },
         {
           "src": "/images/catalogo/the-love-boat-detalle-01-2048.jpg",
           "width": 2048,
           "height": 2048,
-          "caption": "Detalle de los rostros, gafas de sol con reflejos y vibración cromática.",
-          "source": null,
           "sha256": "42d6cf9f8dca3b87bc178f4188b641f17c3b1ac31f173c1956709131b7953b49",
-          "source_local": "classic/images/catalogo/the-love-boat-detalle-01-2048.jpg"
+          "caption": "Detalle de los rostros, gafas de sol con reflejos y vibración cromática."
         },
         {
           "src": "/images/catalogo/the-love-boat-detalle-02-2048.jpg",
           "width": 2048,
           "height": 2048,
-          "caption": "Detalle del retrato femenino con gafas aviador y textura de collage.",
-          "source": null,
           "sha256": "6123956d6bc0f2e1120680a0b010d3151a45ded217e6f30aa9f56a53d4cbe288",
-          "source_local": "classic/images/catalogo/the-love-boat-detalle-02-2048.jpg"
+          "caption": "Detalle del retrato femenino con gafas aviador y textura de collage."
         }
       ],
       "dimensions": "50 × 50 cm",
@@ -2663,8 +2353,8 @@
           "src": "/images/catalogo/la-famiglia-01.jpg",
           "width": 2048,
           "height": 1560,
-          "caption": "La Famiglia — Retrato de Vito Corleone sobre fondo acuarelado.",
-          "sha256": "48058f357ca4c5e1bb549b495f3f5c49c8b5aa3ce4a58b62233dc56fa059968e"
+          "sha256": "48058f357ca4c5e1bb549b495f3f5c49c8b5aa3ce4a58b62233dc56fa059968e",
+          "caption": "La Famiglia — Retrato de Vito Corleone sobre fondo acuarelado."
         }
       ]
     },
@@ -2688,8 +2378,8 @@
           "src": "/images/catalogo/smile-and-the-world-smiles-back-01.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Smile & the World Smiles Back — Retrato sobre plato de madera y elementos bordados.",
-          "sha256": "84fe46b108b39edf53657e497496e69a54c12153a381c2d6af0f4ee0d4ba435a"
+          "sha256": "84fe46b108b39edf53657e497496e69a54c12153a381c2d6af0f4ee0d4ba435a",
+          "caption": "Smile & the World Smiles Back — Retrato sobre plato de madera y elementos bordados."
         }
       ]
     },
@@ -2713,8 +2403,8 @@
           "src": "/images/catalogo/luis-and-sis-01.jpg",
           "width": 2048,
           "height": 1516,
-          "caption": "Luis & sis — Retrato infantil doble con toques de color garabateados.",
-          "sha256": "373d097129afc1d56fbbc6f94689b1b7889078f3ed2b33e877f2b459dfbb7a47"
+          "sha256": "373d097129afc1d56fbbc6f94689b1b7889078f3ed2b33e877f2b459dfbb7a47",
+          "caption": "Luis & sis — Retrato infantil doble con toques de color garabateados."
         }
       ]
     },
@@ -2738,8 +2428,8 @@
           "src": "/images/catalogo/de-color-01.jpg",
           "width": 2048,
           "height": 1364,
-          "caption": "…de color — Retrato de Aitor con salpicaduras y fondo de arcoíris desestructurado.",
-          "sha256": "70952370b409d760f58f4655ee66274a4960b3d541140b3b5ded77b8dbb21538"
+          "sha256": "70952370b409d760f58f4655ee66274a4960b3d541140b3b5ded77b8dbb21538",
+          "caption": "…de color — Retrato de Aitor con salpicaduras y fondo de arcoíris desestructurado."
         }
       ]
     },
@@ -2763,8 +2453,8 @@
           "src": "/images/catalogo/el-reencuentro-01.jpg",
           "width": 2048,
           "height": 1538,
-          "caption": "El Reencuentro — Retrato familiar doble en acrílico blanco y negro sobre lienzo 3D.",
-          "sha256": "9d092673be5b063a045fe3e7a187ec22833f73707dd16008c151ef9e4afc3402"
+          "sha256": "9d092673be5b063a045fe3e7a187ec22833f73707dd16008c151ef9e4afc3402",
+          "caption": "El Reencuentro — Retrato familiar doble en acrílico blanco y negro sobre lienzo 3D."
         }
       ]
     },
@@ -2788,8 +2478,8 @@
           "src": "/images/catalogo/papitxulo-01.jpg",
           "width": 2048,
           "height": 2560,
-          "caption": "Papitxulo — Retrato del aitatxu de Naroa con fondo de mosaico holográfico.",
-          "sha256": "6d67341675e7fbdddfdfad7f1853102b805d1cfa8eeadd93e866f56c1de6378f"
+          "sha256": "6d67341675e7fbdddfdfad7f1853102b805d1cfa8eeadd93e866f56c1de6378f",
+          "caption": "Papitxulo — Retrato del aitatxu de Naroa con fondo de mosaico holográfico."
         }
       ]
     },
@@ -2813,8 +2503,8 @@
           "src": "/images/catalogo/starchild-01.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Starchild — Retrato de David Bowie con collage holográfico espacial.",
-          "sha256": "25128ae99889284842420364ce449a15f986ce0052b69166fc1cd91748172995"
+          "sha256": "25128ae99889284842420364ce449a15f986ce0052b69166fc1cd91748172995",
+          "caption": "Starchild — Retrato de David Bowie con collage holográfico espacial."
         }
       ]
     },
@@ -2838,8 +2528,8 @@
           "src": "/images/catalogo/las-rosalias-01.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Las RosaLías — Collage textil y plástico con pies en la barandilla de Copper Deli.",
-          "sha256": "7d6bd9742afbedeb34188a8c2eba47c39ac75b6ade6d5126e430d0942eaecca4"
+          "sha256": "7d6bd9742afbedeb34188a8c2eba47c39ac75b6ade6d5126e430d0942eaecca4",
+          "caption": "Las RosaLías — Collage textil y plástico con pies en la barandilla de Copper Deli."
         }
       ]
     },
@@ -2852,36 +2542,25 @@
       "story": "Retrato 3D realizado a partir de una imagen del fotograma de un vídeo —con decorado de la canción infantil “Babyshark”— impresa varias veces en papel fotográfico. El marco que abraza la obra lo he realizado con una lata de conservas que fue intervenida de la siguiente manera: Primeramente he creado una arandela con alambre grueso en la parte inferior de la pieza a modo de soporte de la misma. Tras ello, he subido el fondo a la lata y he ido montando múltiples partes de la fotografía mediante distintas capas, usando una pistola de silicona caliente para conformar una imagen con relieve y profundidad. En la parte superior he añadido mediante cola caliente una corona realizada a partir de distintos tipos de conchas con pintura acrílica, alambre, medio rollo de celo, esmalte dorado, mica plateada y esmalte transparente con brillantina dorada. Del mismo modo he decorado el interior del retrato con mica plateada, esmalte transparente con brillantina dorada y pequeñas caracolas con pintura acrílica. En la parte posterior, he creado una pequeña composición con pegatinas de felicitación, papel de seda decorado, celofán azul, mica plateada, un alga de fotografía recortada y un mini-faro (palillo con detalle decorativo, un trozo de pajita, la funda de un auricular, alambres plastificados dorados, pintura acrílica y brillantina dorada). He integrado el nombre de la obra y mi firma con cintas de rotuladora Dymo antigua.",
       "images": [
         {
-          "src": "/images/catalogo/sistashark-01.jpg",
+          "src": "/images/catalogo/sistashark-4k.webp",
           "width": 994,
           "height": 1024,
-          "caption": "Retrato 3D frontal con corona de conchas y gafas de buceo en lata intervenida.",
-          "source": null,
-          "sha256": "5ab7be79bd89c669910dd753b1e00fa75223dc0fd2665ff85700f85c50f6c901"
+          "sha256": "0ebd64373e0b9cdd55331b46705371c287e2fe3c21222f1f4166038142a9275b",
+          "caption": "Retrato 3D frontal con corona de conchas y gafas de buceo en lata intervenida."
         },
         {
           "src": "/images/catalogo/sistashark-02.jpg",
           "width": 768,
           "height": 1024,
-          "caption": "Vista superior y perspectiva del volumen tridimensional y capas de relieve.",
-          "source": null,
-          "sha256": "f5498b65fa3637587c7fdbc9938533f03aca8d3d2b8c1fbc6322aeb04281cc48"
+          "sha256": "f5498b65fa3637587c7fdbc9938533f03aca8d3d2b8c1fbc6322aeb04281cc48",
+          "caption": "Vista superior y perspectiva del volumen tridimensional y capas de relieve."
         },
         {
           "src": "/images/catalogo/sistashark-03.jpg",
           "width": 1024,
           "height": 768,
-          "caption": "Composición posterior con mini-faro, pegatinas y rotulación Dymo (NARO.22).",
-          "source": null,
-          "sha256": "b5996d92b8c030ecd0a4c5f8bd2b8f2d3ef6b0b1b68d2a7ae75853e16724bc5a"
-        },
-        {
-          "src": "/images/catalogo/sistashark-4k.webp",
-          "width": 994,
-          "height": 1024,
-          "caption": "Fotografía master de Sistashark: retrato 3D en lata de conservas.",
-          "source": null,
-          "sha256": "0ebd64373e0b9cdd55331b46705371c287e2fe3c21222f1f4166038142a9275b"
+          "sha256": "b5996d92b8c030ecd0a4c5f8bd2b8f2d3ef6b0b1b68d2a7ae75853e16724bc5a",
+          "caption": "Composición posterior con mini-faro, pegatinas y rotulación Dymo (NARO.22)."
         }
       ],
       "source": null,
@@ -2914,32 +2593,25 @@
       "story": "“El amor es el más viejo, a la vez que es el más nuevo y único acontecimiento del mundo”. (Friedrich Rückert). Retrato 3D doble realizado a partir de tres fotografías y trabajado en varias capas articuladas que, al moverlas, cuentan una pequeña pero gran historia: la del amor de sus protagonistas. El marco de dichas imágenes lo he realizado con una lata de conservas intervenida de la siguiente manera: Primeramente he creado el retrato interno montando pequeñas partes con una pistola de silicona caliente para conformar una imagen con relieve y profundidad. He utilizado una foto publicada por él como fondo. He contrastado las gafas de sol en color, con el resto de las figuras en blanco y negro. He decorado con pequeñas flores y hojas, washi-tape y cristales adhesivos formando las iniciales de sus nombres. Cubriendo esta capa, he creado una tapa con una lámina gruesa, aluminio adhesivo y una anilla de lata. Sobre ella he labrado relieves y he pegado dos rótulos de Dymo antigua. Retrato exterior: en la otra cara de esta tapa he colocado dos fotografías de la pareja por separado sobre un fondo holográfico plateado. Entre ellos un globo de pensamiento de amor compartido y debajo dos estrellas de brillantina que se tocan. He creado unas gafas 3D antiguas con lámina gruesa y celofán de colores para superponerlas a modo de ventanas sobre las imágenes. Los colores guardan relación con las fotos. La bisagra la he creado con cuerda fina y una pajita de papel dorada. Sobre ella, una corona de flores rosas abrazan a una azul. Tras ello, he creado unas alas doradas con un plato de plástico. Por la parte trasera he firmado con cinta adhesiva decorada (washi-tape) y he presentado la obra sobre un pequeño caballete.",
       "images": [
         {
-          "src": "/images/catalogo/multi-dimensional-love-01.jpg",
+          "src": "/images/catalogo/multi-dimensional-love-4k.webp",
           "width": 1024,
           "height": 768,
-          "caption": "Vista frontal con gafas 3D de celofán sobre caballete en la playa.",
-          "sha256": "7dec429f02a54b586566ae25e64ff23a195199f6840b90d712ff3bf0839e44c2"
+          "sha256": "755854b0120a61525614b4a8987830a92048be2cf598461f138d926fde2e890a",
+          "caption": "Vista frontal con gafas 3D de celofán sobre caballete en la playa."
         },
         {
           "src": "/images/catalogo/multi-dimensional-love-02.jpg",
           "width": 768,
           "height": 1024,
-          "caption": "Gafas 3D alzadas mostrando los retratos sobre fondo holográfico con corazón y estrellas.",
-          "sha256": "4fdbb06a0c4279a139b7ad8b1c4c4b2fc07aa91a0be354f55f67d3f001e31d89"
+          "sha256": "4fdbb06a0c4279a139b7ad8b1c4c4b2fc07aa91a0be354f55f67d3f001e31d89",
+          "caption": "Gafas 3D alzadas mostrando los retratos sobre fondo holográfico con corazón y estrellas."
         },
         {
           "src": "/images/catalogo/multi-dimensional-love-03.jpg",
           "width": 1024,
           "height": 768,
-          "caption": "Tapa con rótulo Dymo Better Together abierta hacia el retrato interior con gafas a color.",
-          "sha256": "64a3a4058fe2840451bf3d3908d774ff5af18aea81942df0db54a7ecc35bee3f"
-        },
-        {
-          "src": "/images/catalogo/multi-dimensional-love-4k.webp",
-          "width": 1024,
-          "height": 768,
-          "caption": "Fotografía master 4K de multi-dimensional-love.",
-          "sha256": "755854b0120a61525614b4a8987830a92048be2cf598461f138d926fde2e890a"
+          "sha256": "64a3a4058fe2840451bf3d3908d774ff5af18aea81942df0db54a7ecc35bee3f",
+          "caption": "Tapa con rótulo Dymo Better Together abierta hacia el retrato interior con gafas a color."
         }
       ],
       "source": null,
@@ -2972,32 +2644,25 @@
       "story": "Érase Saban que estaba sosegado y calmado en el monte tumbado. Desde el horizonte incluso se le avistaba, recostado y relajado, al lado del arbolado, con los ojos cerrados y descalzos los pies. Es ese de allí, ¿lo ves? Aquel repanchingado de los brazos alzados, doblados y apoyados tras su lindo cogote. Tanto disfrute ha provocado que de él brote una liviana brisa con sabor a sábado y su sonrisa sin prisa... ¡Qué bien que se note! El bosque enlatado, la natura en el bote.",
       "images": [
         {
-          "src": "/images/catalogo/peru-pura-natura-01.jpg",
+          "src": "/images/catalogo/peru-pura-natura-4k.webp",
           "width": 1024,
           "height": 768,
-          "caption": "Retrato 3D de Peru en la hamaca entre ramas y caracoles con fondo de cápsulas y cartel No Molestar.",
-          "sha256": "d3e0bbfd4d5c4f1af854473f98bb53804815fe111af51080079be9f690ecdc5d"
+          "sha256": "b0f5966430d448eaec7bb8824c40c42be6e2a72fc9981c3f8c8f61e308044c76",
+          "caption": "Retrato 3D de Peru en la hamaca entre ramas y caracoles con fondo de cápsulas y cartel No Molestar."
         },
         {
           "src": "/images/catalogo/peru-pura-natura-02.jpg",
           "width": 1024,
           "height": 768,
-          "caption": "Tapa dorada de la lata cerrada con anilla y cartel No Molestar sobre la vegetación.",
-          "sha256": "017424beefe8743b6217b08f5a10d84f8d287073a98903ea9b5f92495ab51467"
+          "sha256": "017424beefe8743b6217b08f5a10d84f8d287073a98903ea9b5f92495ab51467",
+          "caption": "Tapa dorada de la lata cerrada con anilla y cartel No Molestar sobre la vegetación."
         },
         {
           "src": "/images/catalogo/peru-pura-natura-03.jpg",
           "width": 1024,
           "height": 768,
-          "caption": "Lata asomando de la caja de infusión Equinácea con goma elástica morada.",
-          "sha256": "7581bd5017660b79d988ed0028cefa20bb2c04321d16d2a6d2448bab6c98bbc4"
-        },
-        {
-          "src": "/images/catalogo/peru-pura-natura-4k.webp",
-          "width": 1024,
-          "height": 768,
-          "caption": "Fotografía master 4K de peru-pura-natura.",
-          "sha256": "b0f5966430d448eaec7bb8824c40c42be6e2a72fc9981c3f8c8f61e308044c76"
+          "sha256": "7581bd5017660b79d988ed0028cefa20bb2c04321d16d2a6d2448bab6c98bbc4",
+          "caption": "Lata asomando de la caja de infusión Equinácea con goma elástica morada."
         }
       ],
       "source": null,
@@ -3030,25 +2695,18 @@
       "story": "Lasaio, lanaro y cuatro gatas enlatadas en una lata con patas. Retrato 3D doble realizado a partir de dos fotografías: una de servidora y otra de Saioa Etxebarria allá por sus tiempos mozos. El marco de la fusión de dichas imágenes lo he realizado con una lata de conservas intervenida de la siguiente manera: Primeramente la he dotado de patas mediante un alambre grueso. Tras ello, he creado el fondo del retrato con un collage de ambas fotos y he rematado los bordes internos de la lata con un trozo de cuerda. El siguiente paso ha sido ir montando partes de ambas fotografías mediante distintas capas, usando una pistola de silicona caliente para conformar una imagen con relieve y profundidad. Por último, he añadido pequeñas flores de papel y gomaeva, así como papel de seda verde a modo de hojas y unos felinos con un mensaje conformado con alambre y papel de acuarela escrito. En la parte posterior he cubierto con esmalte dorado la cola caliente con la que he sujetado los gatos y he firmado con cinta rotuladora Dymo antigua.",
       "images": [
         {
-          "src": "/images/catalogo/enlatadas-01.jpg",
+          "src": "/images/catalogo/enlatadas-4k.webp",
           "width": 768,
           "height": 1024,
-          "caption": "Conjunto escultórico completo en lata con patas de alambre, los cuatro gatos y mensaje I love you so mau.",
-          "sha256": "d604970f23e8f934ae6da2124d133991d4963de13f694ce869aef0eadff30052"
+          "sha256": "6b3c3c1bf756f892dd8887b3a62888312dc0d105f2087931598faaa978364d51",
+          "caption": "Conjunto escultórico completo en lata con patas de alambre, los cuatro gatos y mensaje I love you so mau."
         },
         {
           "src": "/images/catalogo/enlatadas-02.jpg",
           "width": 1024,
           "height": 768,
-          "caption": "Primer plano frontal de las niñas enlatadas en relieve con rosas de papel.",
-          "sha256": "1116ac884fd30ef5f6a71217375d147d258aa698e9391f5e4c69ddaf672bdcb8"
-        },
-        {
-          "src": "/images/catalogo/enlatadas-4k.webp",
-          "width": 768,
-          "height": 1024,
-          "caption": "Fotografía master 4K de enlatadas.",
-          "sha256": "6b3c3c1bf756f892dd8887b3a62888312dc0d105f2087931598faaa978364d51"
+          "sha256": "1116ac884fd30ef5f6a71217375d147d258aa698e9391f5e4c69ddaf672bdcb8",
+          "caption": "Primer plano frontal de las niñas enlatadas en relieve con rosas de papel."
         }
       ],
       "source": null,
@@ -3079,32 +2737,25 @@
       "story": "La dulzura que ella emana, tiñó mis trazos de vainilla y fresa. En su corazón planté un smiley con una sonrisa de oreja a oreja. De oro, brillantina y mica plateada he vestido su ropaje. Y la luz amorosa de su mirada, es la que me da coraje.",
       "images": [
         {
-          "src": "/images/catalogo/leire-01.jpg",
+          "src": "/images/catalogo/leire-4k.webp",
           "width": 838,
           "height": 1024,
-          "caption": "Retrato completo de Leire enmarcado en blanco con passepartout.",
-          "sha256": "9a7bf3a659f5c7e25516e1a8aa3a80186752a8d718cfba47a38eb9fe5a6f805b"
+          "sha256": "35987086b2523805c25cd238ecfa6a136e6163ee6ef36ff7f4e4427208031a64",
+          "caption": "Retrato completo de Leire enmarcado en blanco con passepartout."
         },
         {
           "src": "/images/catalogo/leire-02.jpg",
           "width": 1024,
           "height": 768,
-          "caption": "Detalle en perspectiva de las texturas de mica, oro y smiley holográfico.",
-          "sha256": "9abf561a87e159ebd8caff5ae6d198f445d7fa4bf0e175db63c8b83559ed3ada"
+          "sha256": "9abf561a87e159ebd8caff5ae6d198f445d7fa4bf0e175db63c8b83559ed3ada",
+          "caption": "Detalle en perspectiva de las texturas de mica, oro y smiley holográfico."
         },
         {
           "src": "/images/catalogo/leire-03.jpg",
           "width": 1024,
           "height": 768,
-          "caption": "Detalle de la firma Naroa 2021, destellos de brillantina y estrella plateada.",
-          "sha256": "41a83e038a25bba1d3c6b35879635b9827d4c356d3081316a81e39a5c622fe41"
-        },
-        {
-          "src": "/images/catalogo/leire-4k.webp",
-          "width": 838,
-          "height": 1024,
-          "caption": "Fotografía master 4K de leire.",
-          "sha256": "35987086b2523805c25cd238ecfa6a136e6163ee6ef36ff7f4e4427208031a64"
+          "sha256": "41a83e038a25bba1d3c6b35879635b9827d4c356d3081316a81e39a5c622fe41",
+          "caption": "Detalle de la firma Naroa 2021, destellos de brillantina y estrella plateada."
         }
       ],
       "source": null,
@@ -3137,25 +2788,18 @@
       "story": "Retrato realizado mediante técnica mixta en marco vintage de 44×55 cm con preciosas humedades y passepartout deliciosamente deteriorado por el tiempo. Partiendo de la composición figurativa inicial mediante lápices de colores Art & Graphic de Faber-Castell, investigo los sucesivos cambios de formato (físico-digital-físico) y el contraste de las diferentes texturas al aislar la figura y aplicar distintas capas de collage —tanto en el fondo como en la superficie— creadas en esta ocasión recortando una lámina antigua y una pegatina de cerveza llamada “Brutus”.",
       "images": [
         {
-          "src": "/images/catalogo/eneko-el-marino-01.jpg",
+          "src": "/images/catalogo/eneko-el-marino-4k.webp",
           "width": 1024,
           "height": 768,
-          "caption": "Primer plano de Eneko el Marino con pipa, bíceps flexionado y collage de cerveza Brutus.",
-          "sha256": "8fd7bc3479d746df9bb04ad1a174c10e71c7b70845ad34dcd3b9d4aeef76360d"
+          "sha256": "0ef618d14202c6c8575405a90bf7fb77d718a09201555bae87c3fbc85e32fbb2",
+          "caption": "Primer plano de Eneko el Marino con pipa, bíceps flexionado y collage de cerveza Brutus."
         },
         {
           "src": "/images/catalogo/eneko-el-marino-02.jpg",
           "width": 1024,
           "height": 797,
-          "caption": "Obra completa en marco vintage de 44x55 cm con passepartout envejecido.",
-          "sha256": "3ec1b90628a5b4df598095fa884b549474c734859c9fe6cd29619ee82c1335fd"
-        },
-        {
-          "src": "/images/catalogo/eneko-el-marino-4k.webp",
-          "width": 1024,
-          "height": 768,
-          "caption": "Fotografía master 4K de eneko-el-marino.",
-          "sha256": "0ef618d14202c6c8575405a90bf7fb77d718a09201555bae87c3fbc85e32fbb2"
+          "sha256": "3ec1b90628a5b4df598095fa884b549474c734859c9fe6cd29619ee82c1335fd",
+          "caption": "Obra completa en marco vintage de 44x55 cm con passepartout envejecido."
         }
       ],
       "source": null,
@@ -3186,32 +2830,25 @@
       "story": "Ficha técnica: Retrato doble en marco de 50×50 cm con passepartout.",
       "images": [
         {
-          "src": "/images/catalogo/aupas-01.jpg",
+          "src": "/images/catalogo/aupas-4k.webp",
           "width": 1024,
           "height": 1024,
-          "caption": "Retrato artístico Aupas: padre e hijo en técnica mixta expresiva.",
-          "sha256": "4974da8f528b64c647c0830519666c138780076c977439835996945d7f76a1bb"
+          "sha256": "f3ce320a349fa1b8e9a9fea9d64935a6084fd538fcb12e1f99610bc65937f7bb",
+          "caption": "Retrato artístico Aupas: padre e hijo en técnica mixta expresiva."
         },
         {
           "src": "/images/catalogo/aupas-02.jpg",
           "width": 768,
           "height": 1024,
-          "caption": "Obra enmarcada en formato 50x50 cm con passepartout firmado Naroa 2019.",
-          "sha256": "f42a77d8cd59ac1e156e84c6600de8c251c73a83868e114a73309ba4b4744f6a"
+          "sha256": "f42a77d8cd59ac1e156e84c6600de8c251c73a83868e114a73309ba4b4744f6a",
+          "caption": "Obra enmarcada en formato 50x50 cm con passepartout firmado Naroa 2019."
         },
         {
           "src": "/images/catalogo/aupas-03.jpg",
           "width": 1024,
           "height": 576,
-          "caption": "El protagonista con el cuadro enmarcado.",
-          "sha256": "ab38a97689aeb78c1b238de2f5b46c07476bf2c4b400067b9f11d305fb68c72f"
-        },
-        {
-          "src": "/images/catalogo/aupas-4k.webp",
-          "width": 1024,
-          "height": 1024,
-          "caption": "Fotografía master 4K de aupas.",
-          "sha256": "f3ce320a349fa1b8e9a9fea9d64935a6084fd538fcb12e1f99610bc65937f7bb"
+          "sha256": "ab38a97689aeb78c1b238de2f5b46c07476bf2c4b400067b9f11d305fb68c72f",
+          "caption": "El protagonista con el cuadro enmarcado."
         }
       ],
       "source": null,
@@ -3244,36 +2881,25 @@
       "story": "Ficha técnica: Lápices de colores Art & Graphic de Faber-Castell sobre papel de 80 gr/m² tamaño A4.",
       "images": [
         {
-          "src": "/images/catalogo/aquellos-maravillosos-anos-01.jpg",
+          "src": "/images/catalogo/aquellos-maravillosos-anos-4k.webp",
           "width": 1024,
           "height": 657,
-          "caption": "Retrato completo de los dos hermanos en técnica mixta sobre papel A4.",
-          "source": null,
-          "sha256": "eee57d67d1d54b0ed7264e2abf0b1aa6613a3bf9e15fedd794d92e224160ffa9"
+          "sha256": "fa85d9e62b5b57344a006433462e1e57008e9e5145907377104813053854f70a",
+          "caption": "Retrato completo de los dos hermanos en técnica mixta sobre papel A4."
         },
         {
           "src": "/images/catalogo/aquellos-maravillosos-anos-02.jpg",
           "width": 1024,
           "height": 563,
-          "caption": "Detalle de los rostros, miradas y matices de piel a lápices de colores.",
-          "source": null,
-          "sha256": "2ff7399ead5d48b420649cdebaf68ebd3ba1ceb89122dd47fc6518365f35d644"
+          "sha256": "2ff7399ead5d48b420649cdebaf68ebd3ba1ceb89122dd47fc6518365f35d644",
+          "caption": "Detalle de los rostros, miradas y matices de piel a lápices de colores."
         },
         {
           "src": "/images/catalogo/aquellos-maravillosos-anos-03.jpg",
           "width": 1024,
           "height": 612,
-          "caption": "Detalle del entramado de tartán a color y firma Naroa 2017.",
-          "source": null,
-          "sha256": "4b9e2d7ce0cb03d5dbabf7dd6de6365a0a8fea4237699583e209ee819c65173a"
-        },
-        {
-          "src": "/images/catalogo/aquellos-maravillosos-anos-4k.webp",
-          "width": 1024,
-          "height": 657,
-          "caption": "Fotografía master 4K de Aquellos Maravillosos Años.",
-          "source": null,
-          "sha256": "fa85d9e62b5b57344a006433462e1e57008e9e5145907377104813053854f70a"
+          "sha256": "4b9e2d7ce0cb03d5dbabf7dd6de6365a0a8fea4237699583e209ee819c65173a",
+          "caption": "Detalle del entramado de tartán a color y firma Naroa 2017."
         }
       ],
       "source": null,
@@ -3306,84 +2932,67 @@
       "story": "Holy Wood: REtpLATOS & aMOREs es una serie emblemática de retratos expresivos realizados directamente sobre platos redondos de madera de pino sin tratar. La artista aprovecha la veta y calidez del soporte para plasmar retratos llenos de luz, humor y afecto, incorporando elementos en relieve como purpurina, flores secas, mariposas, encajes y collages botánicos.",
       "images": [
         {
-          "src": "/images/catalogo/holy-wood-retplatos-01.jpg",
+          "src": "/images/catalogo/holy-wood-retplatos-amores-4k.webp",
           "width": 1024,
           "height": 768,
-          "caption": "Retplato de mujer a rayas con hojas blancas cayendo como lluvia sobre madera de pino (Naroa 2014).",
-          "source": null,
-          "sha256": "d967e557d435f865280cc469791d584b44a30c4e2b2520cb91495352356263a3"
+          "sha256": "e40303b89381144c57746f067e24d2336dfaedc733e33f46f5f8df5c26e197b9",
+          "caption": "Retplato de mujer a rayas con hojas blancas cayendo como lluvia sobre madera de pino (Naroa 2014)."
         },
         {
           "src": "/images/catalogo/holy-wood-retplatos-02.jpg",
           "width": 1022,
           "height": 1024,
-          "caption": "Retplato de chico sonriente con mariposas doradas sobre veta de madera (Naroa 2014).",
-          "source": null,
-          "sha256": "4d2c57431d2c5c9adc279d1f1e3540d7d7ad78d409a66bf5862e2f2eebebd34c"
+          "sha256": "4d2c57431d2c5c9adc279d1f1e3540d7d7ad78d409a66bf5862e2f2eebebd34c",
+          "caption": "Retplato de chico sonriente con mariposas doradas sobre veta de madera (Naroa 2014)."
         },
         {
           "src": "/images/catalogo/holy-wood-retplatos-03.jpg",
           "width": 1024,
           "height": 816,
-          "caption": "Retplato de mujer joven con pelo recogido, pétalos secos de rosa y encaje (Naroa 2014).",
-          "source": null,
-          "sha256": "2611a219c381e61b1ab1b5fc0fbf3ef2ba7b7a54808bfe269f8e381f61c95abd"
+          "sha256": "2611a219c381e61b1ab1b5fc0fbf3ef2ba7b7a54808bfe269f8e381f61c95abd",
+          "caption": "Retplato de mujer joven con pelo recogido, pétalos secos de rosa y encaje (Naroa 2014)."
         },
         {
           "src": "/images/catalogo/holy-wood-retplatos-04.jpg",
           "width": 768,
           "height": 1024,
-          "caption": "Retplato Hermanita con trenza y collar de cuentas multicolor (Naroa 2014).",
-          "source": null,
-          "sha256": "b53945072223711d91af782906d0f4447c824dc8ba14471e42aaa845d6d95ad8"
+          "sha256": "b53945072223711d91af782906d0f4447c824dc8ba14471e42aaa845d6d95ad8",
+          "caption": "Retplato Hermanita con trenza y collar de cuentas multicolor (Naroa 2014)."
         },
         {
           "src": "/images/catalogo/holy-wood-retplatos-05.jpg",
           "width": 1022,
           "height": 1024,
-          "caption": "Retplato de fotógrafa con cámara reflex y lámpara mágica de genio.",
-          "source": null,
-          "sha256": "f913d8313482a62a3330747f299f163e2909dc42bc4985ee0cce868773f3760d"
+          "sha256": "f913d8313482a62a3330747f299f163e2909dc42bc4985ee0cce868773f3760d",
+          "caption": "Retplato de fotógrafa con cámara reflex y lámpara mágica de genio."
         },
         {
           "src": "/images/catalogo/holy-wood-retplatos-06.jpg",
           "width": 1014,
           "height": 1024,
-          "caption": "Retplato de perfil de chico con barba y auriculares.",
-          "source": null,
-          "sha256": "d3c09e375c7fcc62040e90f36ef72e45d9b714a815405149f609453bd0ef441c"
+          "sha256": "d3c09e375c7fcc62040e90f36ef72e45d9b714a815405149f609453bd0ef441c",
+          "caption": "Retplato de perfil de chico con barba y auriculares."
         },
         {
           "src": "/images/catalogo/holy-wood-retplatos-07.jpg",
           "width": 1024,
           "height": 1017,
-          "caption": "Retplato marioneta con cuerdas y cigarro (Naroa 2013).",
-          "source": null,
-          "sha256": "d47107b9ee3fa39de9ebc39ead4856ab2cc45ac3be2d05e0df118d608e65b051"
+          "sha256": "d47107b9ee3fa39de9ebc39ead4856ab2cc45ac3be2d05e0df118d608e65b051",
+          "caption": "Retplato marioneta con cuerdas y cigarro (Naroa 2013)."
         },
         {
           "src": "/images/catalogo/holy-wood-retplatos-08.jpg",
           "width": 1024,
           "height": 1014,
-          "caption": "Retplato de mujer pelirroja sonriente con flor silvestre y botella (Naroa 2013).",
-          "source": null,
-          "sha256": "33f9138a6f3c3e3dbe0e0c81a5be1cd28f99a786d6bc855360d6e98ab349ccd3"
+          "sha256": "33f9138a6f3c3e3dbe0e0c81a5be1cd28f99a786d6bc855360d6e98ab349ccd3",
+          "caption": "Retplato de mujer pelirroja sonriente con flor silvestre y botella (Naroa 2013)."
         },
         {
           "src": "/images/catalogo/holy-wood-retplatos-09.jpg",
           "width": 1024,
           "height": 1020,
-          "caption": "Retplato de cocinero con gorro de chef y torbellino de color (Naroa 2013).",
-          "source": null,
-          "sha256": "c71ad75255fc1640e6ea2c598e4bc2cf1e4921bd64d421e29d2912e9ec82e984"
-        },
-        {
-          "src": "/images/catalogo/holy-wood-retplatos-amores-4k.webp",
-          "width": 1024,
-          "height": 768,
-          "caption": "Fotografía master 4K de la serie Holy Wood: REtpLATOS & aMOREs.",
-          "source": null,
-          "sha256": "e40303b89381144c57746f067e24d2336dfaedc733e33f46f5f8df5c26e197b9"
+          "sha256": "c71ad75255fc1640e6ea2c598e4bc2cf1e4921bd64d421e29d2912e9ec82e984",
+          "caption": "Retplato de cocinero con gorro de chef y torbellino de color (Naroa 2013)."
         }
       ],
       "source": null,
@@ -3607,17 +3216,15 @@
           "src": "/images/catalogo/dar-la-lata-game-over-2048.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Ensamblaje final de la serie Dar la Lata con tipografía pixel art 8-bit GAME OVER.",
-          "source": null,
-          "sha256": "5815aca2cc0f479ea6e188d12301f2261862350c6c4b93700e8d7238d5dfa8b5"
+          "sha256": "5815aca2cc0f479ea6e188d12301f2261862350c6c4b93700e8d7238d5dfa8b5",
+          "caption": "Ensamblaje final de la serie Dar la Lata con tipografía pixel art 8-bit GAME OVER."
         },
         {
           "src": "/images/catalogo/dar-la-lata-original-03-2048.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Reverso de la lata de conservas.",
-          "source": "https://www.facebook.com/photo/?fbid=606809277465164&set=a.606818890797536",
-          "sha256": "7f52ebef12a026f67995d5ffebd3025f49eecfea0ff578c2b8767d9c0646a06f"
+          "sha256": "7f52ebef12a026f67995d5ffebd3025f49eecfea0ff578c2b8767d9c0646a06f",
+          "caption": "Reverso de la lata de conservas."
         }
       ],
       "source": null,
