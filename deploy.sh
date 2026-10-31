@@ -2,20 +2,66 @@
 # ═══════════════════════════════════════════════════════════════
 # deploy.sh — NAROA.ONLINE Zero-Friction Deployment Pipeline
 # ═══════════════════════════════════════════════════════════════
-# Ensambla el sitio completo (portal SEO + galería 3D) y lo
-# despliega a Cloudflare Pages en un solo comando.
+# Orquesta el despliegue multi-superficie de naroa.online:
+#   1. El Museo (Portfolio Canónico Inmersivo) → naroagutierrezgil-com (.deploy/)
+#   2. El Laboratorio (Galería 3D / SPA React) → naroaonline (dist/)
+#   3. Espejo Shadow Vercel → naroaonline.vercel.app
+#   4. Purga Edge Cloudflare + Ping IndexNow (Bing/Copilot/Perplexity)
 #
 # Uso:
-#   npm run deploy          # build + deploy producción
-#   npm run deploy:preview  # build + deploy preview
-#   ./deploy.sh             # equivalente a npm run deploy
-#   ./deploy.sh --preview   # deploy a URL de preview
+#   ./deploy.sh                # Despliegue completo a producción (con Touch ID)
+#   ./deploy.sh --preview      # Despliegue a rama preview (sin gate biométrico)
+#   ./deploy.sh --build-only   # Compilación y batería de tests (sin subir a red)
+#   ./deploy.sh --test-only    # Ejecución de linter, tipos y tests DOM
+#   ./deploy.sh --help         # Muestra este menú de ayuda
 # ═══════════════════════════════════════════════════════════════
 set -euo pipefail
 
 PROJECT="naroaonline"
 BUILD_DIR="dist"
-BRANCH="${1:-production}"
+MODE="production"
+
+case "${1:-}" in
+  --help|-h|help)
+    echo ""
+    echo "═══════════════════════════════════════════════════════════════"
+    echo "  NAROA.ONLINE · PIPELINE DE DESPLIEGUE MULTI-SUPERFICIE C5-REAL"
+    echo "═══════════════════════════════════════════════════════════════"
+    echo ""
+    echo "Comandos disponibles:"
+    echo "  ./deploy.sh               Compilar, validar y desplegar a PRODUCCIÓN"
+    echo "  ./deploy.sh --preview     Compilar y desplegar a ramas PREVIEW"
+    echo "  ./deploy.sh --build-only  Compilar y verificar en local (sin subir)"
+    echo "  ./deploy.sh --test-only   Ejecutar linter, tipos y tests JSDOM"
+    echo "  ./deploy.sh --help        Mostrar esta ayuda"
+    echo ""
+    echo "Superficies de destino:"
+    echo "  • El Museo (Inmersivo):  https://naroagutierrezgil.com (.deploy/)"
+    echo "  • El Lab (3D / Three):   https://naroaonline.pages.dev (dist/)"
+    echo "  • Shadow Mirror:         https://naroaonline.vercel.app"
+    echo "═══════════════════════════════════════════════════════════════"
+    echo ""
+    exit 0
+    ;;
+  --build-only|build-only|build)
+    MODE="build-only"
+    ;;
+  --preview|preview)
+    MODE="preview"
+    ;;
+  --test-only|test-only|test)
+    MODE="test-only"
+    ;;
+  production|--prod|--production|"")
+    MODE="production"
+    ;;
+  *)
+    echo "Error: Opción desconocida '$1'. Usa ./deploy.sh --help para ver las opciones." >&2
+    exit 1
+    ;;
+esac
+
+BRANCH="$MODE"
 
 # Colores
 RED='\033[0;31m'
@@ -28,8 +74,16 @@ log()  { echo -e "${CYAN}[DEPLOY]${NC} $1"; }
 ok()   { echo -e "${GREEN}[  OK  ]${NC} $1"; }
 fail() { echo -e "${RED}[FATAL]${NC} $1"; exit 1; }
 
+# ── 0. Modo Solo Tests ───────────────────────────────────────
+if [ "$MODE" = "test-only" ]; then
+  log "Ejecutando suite completa de validación (Linter, Tipos, DOM)..."
+  npm run test || fail "Validación de tests falló"
+  ok "Suite completa de tests verificada (PASS)"
+  exit 0
+fi
+
 # ── 1. Preflight ─────────────────────────────────────────────
-[ "$BRANCH" = "--build-only" ] || command -v wrangler >/dev/null 2>&1 || fail "wrangler no encontrado. Instala con: npm i -g wrangler"
+[ "$MODE" = "build-only" ] || command -v wrangler >/dev/null 2>&1 || fail "wrangler no encontrado. Instala con: npm i -g wrangler"
 
 # ── 2. Construir Galería 3D / SPA (dist/) ──────────
 log "Construyendo SPA (Vite + React + Three.js)..."
@@ -169,12 +223,12 @@ node --max-old-space-size=4096 tools/test_immersive_dom.cjs || fail "Validación
 ok "Portfolio completo compilado → .deploy/"
 
 # ── 6. Deploy a Cloudflare Pages ─────────────────────────────
-if [ "$BRANCH" = "--build-only" ]; then
+if [ "$MODE" = "build-only" ]; then
   ok "Build completado en .deploy/ y dist/ (Modo --build-only)"
   exit 0
 fi
 
-if [ "$BRANCH" = "production" ] && command -v c5_biometric_gate >/dev/null 2>&1; then
+if [ "$MODE" = "production" ] && command -v c5_biometric_gate >/dev/null 2>&1; then
   if [ -t 0 ] || [ "${FORCE_BIOMETRIC:-0}" = "1" ]; then
     log "Solicitando atestación biométrica Touch ID en Secure Enclave..."
     c5_biometric_gate --action deploy --agent naroa --scope production --causal-hash "$(git rev-parse HEAD)" --no-sound || fail "Atestación biométrica requerida para despliegue en producción"
@@ -191,7 +245,7 @@ if [ -n "${CLOUDFLARE_API_TOKEN:-}" ]; then
 fi
 
 log "Desplegando EL MUSEO → CF Pages proyecto ${BOLD}naroagutierrezgil-com${NC}..."
-if [ "$BRANCH" = "--preview" ]; then
+if [ "$MODE" = "preview" ]; then
   wrangler pages deploy .deploy --project-name "naroagutierrezgil-com" --branch preview --commit-dirty=true
   wrangler pages deploy "$BUILD_DIR" --project-name "naroaonline" --branch preview --commit-dirty=true
   ok "Deploy PREVIEW completado"
@@ -220,7 +274,7 @@ if command -v npx >/dev/null 2>&1; then
 fi
 
 # ── 9. Notificación Instantánea IndexNow (Bing / Copilot / Perplexity) ──
-if [ "$BRANCH" = "production" ] && [ -f ".deploy/indexnow.json" ]; then
+if [ "$MODE" = "production" ] && [ -f ".deploy/indexnow.json" ]; then
   log "Notificando a IndexNow (Bing, Copilot, Perplexity, ChatGPT Search)..."
   curl -s -X POST "https://api.indexnow.org/indexnow" \
     -H "Content-Type: application/json; charset=utf-8" \
