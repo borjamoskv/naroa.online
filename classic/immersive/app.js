@@ -2861,6 +2861,13 @@
         }
       } else {
         lauraVisited = false;
+        lauraVaivenCount = 1;
+        lauraDirection = 0;
+        lauraLastProgress = 0;
+        stage.style.removeProperty('--laura-vaiven-zoom');
+        stage.style.removeProperty('--laura-vaiven-bright');
+        const lauraPanReset = stage.querySelector('.art-scene[data-work="lauralore"] .art-pan');
+        if (lauraPanReset) lauraPanReset.style.transform = '';
       }
       if (works[base].slug === 'can-dy-queen' || works[incoming].slug === 'can-dy-queen') {
         if (works[state.index]?.slug === 'can-dy-queen' && !transition) {
@@ -3099,8 +3106,10 @@
         cue.textContent = 'Jose Manuel Ezquerra · Aturdido por el impacto (3s) ↓';
       } else if (isMurrayToEzquerra) {
         cue.textContent = '¡PUMBA en el monitor! · sigue ↓';
-      } else if (works[state.index]?.slug === 'lauralore' && !transition) {
-        cue.textContent = 'LauraLore · Flor de cerámica y eguzkilore vegetal ✦';
+      } else if ((works[state.index]?.slug === 'lauralore' || (transition && (works[base]?.slug === 'lauralore' || works[incoming]?.slug === 'lauralore'))) && !still) {
+        cue.textContent = lauraVaivenCount > 1
+          ? `LauraLore · Vaivén ×${lauraVaivenCount} · Zoom ${(1.68 + (lauraVaivenCount - 1) * 0.36).toFixed(2)}× en eguzkilore ↓↑`
+          : 'LauraLore · Flor de cerámica y eguzkilore vegetal ✦';
       } else if (works[state.index]?.slug === 'can-dy-queen' && !transition) {
         cue.textContent = 'Can-dy Queen · Slow-Motion Caramelo ↓';
       } else if (isPensadoraToFreddy) {
