@@ -2178,25 +2178,13 @@
     let lastMonkeyFraction = 0, monkeyDirection = 0, monkeyStrumCount = 1, monkeyInSector = false, monkeyStrumFired = false;
 
     const INTERWORK_PAIRS = {
-      'infusion-de-berto->buena-fuente': 'berto',
-      'red-red-wine->i-remember-when-your-head-caught-flame': 'wineflame',
-      'pajarraca-azul->flying-dragon': 'pajarraca',
-      'sistashark->multi-dimensional-love': 'shark3d',
-      'eneko-el-marino->aupas': 'ancla',
-      'el-hombre-que-susurraba-a-las-estrellas->olinga-a-la-naranja': 'bowiestar',
-      'audreys-lightning->cantinflowers': 'audreybolt',
-      'rosetta->la-famiglia': 'rosettabirds'
+      'el-hombre-que-susurraba-a-las-estrellas->olinga-a-la-naranja': 'bowiestar'
     };
     const interworkState = {};
     Object.values(INTERWORK_PAIRS).forEach(k => {
       interworkState[k] = { count: 1, lastFrac: 0, dir: 0, inSector: false, fired: false };
     });
 
-    const ROSETTA_BIRD_URLS = [
-      '/images/catalogo/rosetta-bird-pink.webp',
-      '/images/catalogo/rosetta-bird-lime.webp',
-      '/images/catalogo/rosetta-bird-teal.webp'
-    ];
     let interworkStage = stage.querySelector('[data-interwork-stage]');
     if (!interworkStage) {
       interworkStage = document.createElement('div');
@@ -2205,82 +2193,9 @@
       interworkStage.setAttribute('aria-hidden', 'true');
       interworkStage.setAttribute('hidden', '');
 
-      const wineDropsHtml = Array.from({ length: 8 }, (_, i) =>
-        `<div class="iw-wine-drop" data-wine-drop="${i}"></div>`
-      ).join('');
-      const wineFlamesHtml = Array.from({ length: 5 }, (_, i) =>
-        `<path class="iw-wine-flame" data-wine-flame="${i}" fill="${['rgba(255,30,115,0.72)','rgba(255,180,0,0.75)','rgba(255,68,0,0.70)','rgba(255,230,60,0.68)','rgba(255,40,140,0.65)'][i]}" />`
-      ).join('');
-      const dragonSparksHtml = Array.from({ length: 7 }, (_, i) =>
-        `<circle class="iw-dragon-spark" data-dragon-spark="${i}" r="${5 + (i % 3) * 3}" fill="${i % 2 === 0 ? '#ffb703' : '#ff2a55'}" />`
-      ).join('');
-      const sharkBubblesHtml = Array.from({ length: 8 }, (_, i) =>
-        `<circle class="iw-shark-bubble" data-shark-bubble="${i}" r="${6 + (i % 4) * 3.5}" fill="none" stroke="${i % 2 === 0 ? '#00f0ff' : '#ff004c'}" stroke-width="2.2" />`
-      ).join('');
-      const popeyeRingsHtml = Array.from({ length: 5 }, (_, i) =>
-        `<ellipse class="iw-popeye-ring" data-popeye-ring="${i}" rx="18" ry="11" fill="none" stroke="rgba(244,240,228,0.72)" stroke-width="3.2" />`
-      ).join('');
-      const rosettaBirdsHtml = Array.from({ length: 9 }, (_, i) =>
-        `<div class="iw-rosetta-bird" data-rosetta-bird="${i}" style="background-image:url(&quot;${ROSETTA_BIRD_URLS[i % 3]}&quot;)"></div>`
-      ).join('');
-
       interworkStage.innerHTML = `
-        <div class="iw-rig" data-fx="berto" hidden>
-          <svg class="iw-svg" viewBox="0 0 1000 1000" preserveAspectRatio="none">
-            <path data-berto-string stroke="rgba(248,244,232,0.9)" stroke-width="2.4" fill="none" stroke-linecap="round"/>
-            <path data-berto-steam="0" stroke="rgba(168,214,132,0.58)" stroke-width="5" fill="none" stroke-linecap="round"/>
-            <path data-berto-steam="1" stroke="rgba(245,208,118,0.52)" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <circle data-berto-fork-glow r="34" fill="rgba(42,130,255,0.34)"/>
-          </svg>
-          <div class="iw-cutout iw-berto-teabag" data-berto-bag style="background-image:url(&quot;/images/catalogo/berto-teabag-cutout.webp&quot;)"></div>
-          <div class="iw-cutout iw-berto-fork" data-berto-fork style="background-image:url(&quot;/images/catalogo/buenafuente-fork-cutout.webp&quot;)"></div>
-        </div>
-        <div class="iw-rig" data-fx="wineflame" hidden>
-          <svg class="iw-svg" viewBox="0 0 1000 1000" preserveAspectRatio="none">${wineFlamesHtml}</svg>
-          ${wineDropsHtml}
-        </div>
-        <div class="iw-rig" data-fx="pajarraca" hidden>
-          <svg class="iw-svg" viewBox="0 0 1000 1000" preserveAspectRatio="none">
-            <path data-dragon-flame fill="rgba(255,72,28,0.44)" stroke="rgba(255,206,56,0.78)" stroke-width="2.5"/>
-            ${dragonSparksHtml}
-          </svg>
-          <div class="iw-cutout iw-pajarraca-mask" data-pajarraca-bird style="background-image:url(&quot;/images/catalogo/pajarraca-mask-cutout.webp&quot;)"></div>
-        </div>
-        <div class="iw-rig" data-fx="shark3d" hidden>
-          <svg class="iw-svg" viewBox="0 0 1000 1000" preserveAspectRatio="none">
-            <circle data-shark-anaglyph-r r="180" fill="rgba(255,0,64,0.22)"/>
-            <circle data-shark-anaglyph-c r="180" fill="rgba(0,240,255,0.22)"/>
-            ${sharkBubblesHtml}
-          </svg>
-          <div class="iw-cutout iw-shark-goggles" data-shark-goggles style="background-image:url(&quot;/images/catalogo/sistashark-goggles-cutout.webp&quot;)"></div>
-        </div>
-        <div class="iw-rig" data-fx="ancla" hidden>
-          <svg class="iw-svg" viewBox="0 0 1000 1000" preserveAspectRatio="none">
-            <path data-ancla-rope stroke="#d6b37c" stroke-width="5.5" stroke-dasharray="12 6" fill="none" stroke-linecap="round"/>
-            ${popeyeRingsHtml}
-            <g data-ancla-hook>
-              <circle cx="0" cy="-42" r="11" fill="none" stroke="#f7d594" stroke-width="5"/>
-              <line x1="0" y1="-31" x2="0" y2="34" stroke="#f7d594" stroke-width="7" stroke-linecap="round"/>
-              <line x1="-24" y1="-14" x2="24" y2="-14" stroke="#f7d594" stroke-width="6" stroke-linecap="round"/>
-              <path d="M -38 12 Q 0 54 38 12" fill="none" stroke="#f7d594" stroke-width="7" stroke-linecap="round"/>
-              <polygon points="-38,12 -46,26 -28,20" fill="#f7d594"/>
-              <polygon points="38,12 46,26 28,20" fill="#f7d594"/>
-            </g>
-          </svg>
-        </div>
         <div class="iw-rig" data-fx="bowiestar" hidden>
           <div class="iw-cutout iw-bowie-star" data-bowie-star style="background-image:url(&quot;/images/catalogo/bowie-star-cutout.webp&quot;)"></div>
-        </div>
-        <div class="iw-rig" data-fx="audreybolt" hidden>
-          <svg class="iw-svg" viewBox="0 0 1000 1000" preserveAspectRatio="none">
-            <polyline data-audrey-bolt-blue fill="none" stroke="#0055ff" stroke-width="14" stroke-linejoin="round" stroke-linecap="round"/>
-            <polyline data-audrey-bolt-red fill="none" stroke="#ff1e42" stroke-width="12" stroke-linejoin="round" stroke-linecap="round"/>
-            <polyline data-audrey-bolt-core fill="none" stroke="#fff9db" stroke-width="4.2" stroke-linejoin="round" stroke-linecap="round"/>
-            <circle data-audrey-ignition r="28" fill="rgba(255,146,36,0.68)"/>
-          </svg>
-        </div>
-        <div class="iw-rig" data-fx="rosettabirds" hidden>
-          ${rosettaBirdsHtml}
         </div>
       `;
       stage.appendChild(interworkStage);
@@ -3144,9 +3059,6 @@
             soundscape?.puff?.(dragProgress);
           }
           applyCantinflowersDrag(cantinRig, dragProgress, cantinPuffCount);
-          if (interworkState.audreybolt?.count >= 1 && (works[base]?.slug === 'audreys-lightning' || interworkState.audreybolt.fired || interworkState.audreybolt.count > 1)) {
-            cantinRig.dataset.audreyIgnited = String(interworkState.audreybolt.count);
-          }
         }
         if (works[index].slug === 'lauralore') {
           const holdSpan = Math.max(0.01, entry.transitionStart - entry.start);
@@ -3534,14 +3446,12 @@
           const nextD = dFrac > 0 ? 1 : -1;
           if (st.dir !== 0 && nextD !== st.dir) {
             st.count = Math.min(16, st.count + 1);
-            soundscape?.interworkCue?.(activePairKey, st.count);
           }
           st.dir = nextD;
           st.lastFrac = fraction;
         }
         if (fraction >= 0.34 && fraction <= 0.78 && !st.fired) {
           st.fired = true;
-          soundscape?.interworkCue?.(activePairKey, st.count);
         } else if (fraction < 0.22) {
           st.fired = false;
         }
@@ -3558,169 +3468,8 @@
         const stageW = geometry.width || window.innerWidth || 1280;
         const stageH = geometry.height || window.innerHeight || 800;
         const fSmooth = smooth(fraction);
-        const dirH = entry.direction || 1;
-        const outShiftX = mode === 'H' ? (-progress * stageW * dirH) : 0;
-        const inShiftX = mode === 'H' ? ((1 - progress) * stageW * dirH) : 0;
 
-        if (activePairKey === 'berto' && rig) {
-          const bagEl = rig.querySelector('[data-berto-bag]');
-          const forkEl = rig.querySelector('[data-berto-fork]');
-          const strEl = rig.querySelector('[data-berto-string]');
-          const glowEl = rig.querySelector('[data-berto-fork-glow]');
-          const swing = Math.sin(fraction * Math.PI * (2.5 + Math.min(5, st.count))) * (1 - fSmooth * 0.65) * 44;
-          const forkX = stageW * 0.79 - 48;
-          const forkY = stageH * 0.79 - 92;
-          const bx = stageW * (0.71 + 0.08 * fSmooth) + swing - 74;
-          const by = stageH * (0.48 + 0.28 * fSmooth) - Math.sin(fSmooth * Math.PI) * 38 - 100;
-          const rot = (swing * 0.42) + fSmooth * 6;
-          const sc = 0.72 + Math.sin(fSmooth * Math.PI) * 0.14;
-          if (bagEl) {
-            bagEl.style.opacity = '1';
-            bagEl.style.transform = `translate3d(${bx.toFixed(1)}px,${by.toFixed(1)}px,0) scale(${sc.toFixed(3)}) rotate(${rot.toFixed(1)}deg)`;
-          }
-          const dunk = clamp((fraction - 0.46) / 0.54, 0, 1);
-          if (forkEl) {
-            const forkBob = dunk > 0 ? Math.sin(dunk * Math.PI * 3) * 4 : 0;
-            forkEl.style.opacity = smooth(clamp((fraction - 0.24) / 0.34, 0, 1)).toFixed(3);
-            forkEl.style.transform = `translate3d(${forkX.toFixed(1)}px,${(forkY + forkBob).toFixed(1)}px,0) scale(${(0.86 + dunk * 0.12).toFixed(3)})`;
-          }
-          if (strEl) {
-            const ax = 710 + 80 * fSmooth, ay = 180 + 180 * fSmooth;
-            const tx = ((bx + 74) / stageW) * 1000, ty = ((by + 24) / stageH) * 1000;
-            strEl.setAttribute('d', `M ${ax.toFixed(1)} ${ay.toFixed(1)} Q ${(ax + swing * 1.4).toFixed(1)} ${((ay + ty) * 0.5).toFixed(1)} ${tx.toFixed(1)} ${ty.toFixed(1)}`);
-          }
-          if (glowEl) {
-            glowEl.setAttribute('cx', '790');
-            glowEl.setAttribute('cy', '785');
-            glowEl.setAttribute('r', (28 + dunk * 42 + st.count * 4).toFixed(1));
-            glowEl.style.opacity = (dunk * 0.85).toFixed(3);
-          }
-          [0, 1].forEach(si => {
-            const stPath = rig.querySelector(`[data-berto-steam="${si}"]`);
-            if (stPath) {
-              const rise = dunk * (140 + si * 55 + st.count * 12);
-              const wave = Math.sin(fraction * 14 + si * 2) * 28;
-              stPath.setAttribute('d', `M ${782 + si * 18} 760 Q ${782 + wave} ${760 - rise * 0.5} ${788 - wave * 0.7} ${760 - rise}`);
-              stPath.style.opacity = (dunk * 0.82).toFixed(3);
-            }
-          });
-        } else if (activePairKey === 'wineflame' && rig) {
-          const activeDrops = Math.min(8, 2 + st.count);
-          rig.querySelectorAll('[data-wine-drop]').forEach((drop, idx) => {
-            if (idx >= activeDrops) {
-              drop.style.opacity = '0';
-              return;
-            }
-            const stag = idx * 0.06;
-            const t = clamp((fraction - stag) / Math.max(0.28, 0.78 - stag), 0, 1);
-            const ts = smooth(t);
-            const sx = clamp(stageW * (0.61 + (idx % 3) * 0.045) + outShiftX * 0.58, 24, stageW - 24);
-            const sy = stageH * 0.62;
-            const ex = clamp(stageW * (0.55 + ((idx % 3) - 1) * 0.035) + inShiftX * 0.58, 24, stageW - 24);
-            const ey = stageH * 0.39;
-            const arc = -Math.sin(ts * Math.PI) * stageH * (0.18 + (idx % 3) * 0.04);
-            const x = sx + (ex - sx) * ts - 16;
-            const y = sy + (ey - sy) * ts + arc - 22;
-            const rot = -35 + ts * 85;
-            const sc = 0.75 + (idx % 3) * 0.16;
-            drop.style.opacity = (t <= 0.01 || t >= 0.98) ? '0' : '0.94';
-            drop.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0) scale(${sc.toFixed(2)}) rotate(${rot.toFixed(1)}deg)`;
-          });
-          const ignite = clamp((fraction - 0.34) / 0.66, 0, 1);
-          const headNormX = clamp(555 + (inShiftX / stageW) * 580, 80, 920);
-          rig.querySelectorAll('[data-wine-flame]').forEach((fl, idx) => {
-            const bx = headNormX + (idx - 2) * 28;
-            const by = 420;
-            const fh = ignite * (125 + (idx % 2) * 48 + Math.min(80, st.count * 12));
-            const sway = Math.sin(fraction * 18 + idx * 1.5) * 26;
-            fl.setAttribute('d', `M ${bx - 22} ${by} Q ${bx - 28 + sway} ${by - fh * 0.55} ${bx + sway * 1.2} ${by - fh} Q ${bx + 28 + sway} ${by - fh * 0.55} ${bx + 22} ${by} Z`);
-            fl.style.opacity = (Math.sin(ignite * Math.PI * 0.92) * 0.88).toFixed(3);
-          });
-        } else if (activePairKey === 'pajarraca' && rig) {
-          const birdEl = rig.querySelector('[data-pajarraca-bird]');
-          const flameEl = rig.querySelector('[data-dragon-flame]');
-          const flap = Math.sin(fraction * Math.PI * (5 + Math.min(6, st.count)));
-          const sx = clamp(stageW * 0.32 + outShiftX * 0.45, 40, stageW - 120);
-          const ex = clamp(stageW * 0.64 + inShiftX * 0.45, 80, stageW - 80);
-          const px = sx + (ex - sx) * fSmooth - 85;
-          const py = stageH * (0.34 + 0.10 * fSmooth) - Math.sin(fSmooth * Math.PI) * 68 + flap * 16 - 115;
-          const scY = 0.88 + flap * 0.14;
-          const rot = 12 * fSmooth + flap * 9;
-          if (birdEl) {
-            birdEl.style.opacity = '1';
-            birdEl.style.transform = `translate3d(${px.toFixed(1)}px,${py.toFixed(1)}px,0) scale(0.76,${(0.76 * scY).toFixed(3)}) rotate(${rot.toFixed(1)}deg)`;
-          }
-          const clash = clamp((fraction - 0.30) / 0.70, 0, 1);
-          const jawNormX = clamp(760 + (inShiftX / stageW) * 460, 220, 960);
-          if (flameEl) {
-            const reach = jawNormX - clash * (195 + Math.min(90, st.count * 10));
-            const jit = Math.sin(fraction * 24) * 18;
-            flameEl.setAttribute('d', `M ${jawNormX.toFixed(1)} 555 Q ${(jawNormX - 100).toFixed(1)} ${520 + jit} ${reach.toFixed(1)} ${505 - jit} Q ${(jawNormX - 95).toFixed(1)} ${575 + jit} ${jawNormX.toFixed(1)} 572 Z`);
-            flameEl.style.opacity = (Math.sin(clash * Math.PI) * 0.86).toFixed(3);
-          }
-          rig.querySelectorAll('[data-dragon-spark]').forEach((sp, idx) => {
-            const stT = clamp((clash - idx * 0.07) / 0.65, 0, 1);
-            const spX = jawNormX - 20 - stT * (180 + idx * 24);
-            const spY = 555 - stT * (45 + (idx - 3) * 26) + Math.sin(stT * 9 + idx) * 16;
-            sp.setAttribute('cx', spX.toFixed(1));
-            sp.setAttribute('cy', spY.toFixed(1));
-            sp.style.opacity = (Math.sin(stT * Math.PI) * 0.92).toFixed(3);
-          });
-        } else if (activePairKey === 'shark3d' && rig) {
-          const gogEl = rig.querySelector('[data-shark-goggles]');
-          const anaR = rig.querySelector('[data-shark-anaglyph-r]');
-          const anaC = rig.querySelector('[data-shark-anaglyph-c]');
-          const gx = stageW * (0.61 - 0.11 * fSmooth) - 125;
-          const gy = stageH * (0.58 - 0.09 * fSmooth) - 72;
-          const gScale = 0.68 + fSmooth * 1.48;
-          const gRot = (1 - fSmooth) * -10 + Math.sin(fraction * Math.PI * 4) * 4;
-          const gOp = fraction < 0.82 ? 1 : clamp((1 - fraction) / 0.18, 0.18, 1);
-          if (gogEl) {
-            gogEl.style.opacity = gOp.toFixed(3);
-            gogEl.style.transform = `translate3d(${gx.toFixed(1)}px,${gy.toFixed(1)}px,0) scale(${gScale.toFixed(3)}) rotate(${gRot.toFixed(1)}deg)`;
-          }
-          const sep = (22 + st.count * 11) * Math.sin(fraction * Math.PI);
-          if (anaR && anaC) {
-            anaR.setAttribute('cx', (500 - sep).toFixed(1));
-            anaR.setAttribute('cy', '500');
-            anaR.setAttribute('r', (140 + fSmooth * 220).toFixed(1));
-            anaC.setAttribute('cx', (500 + sep).toFixed(1));
-            anaC.setAttribute('cy', '500');
-            anaC.setAttribute('r', (140 + fSmooth * 220).toFixed(1));
-          }
-          rig.querySelectorAll('[data-shark-bubble]').forEach((bb, idx) => {
-            const bt = (fraction + idx * 0.12) % 1;
-            const bx = 340 + idx * 46 + Math.sin(bt * 8 + idx) * 24;
-            const by = 780 - bt * 560;
-            bb.setAttribute('cx', bx.toFixed(1));
-            bb.setAttribute('cy', by.toFixed(1));
-            bb.style.opacity = (Math.sin(bt * Math.PI) * 0.82).toFixed(3);
-          });
-        } else if (activePairKey === 'ancla' && rig) {
-          const ropeEl = rig.querySelector('[data-ancla-rope]');
-          const hookEl = rig.querySelector('[data-ancla-hook]');
-          const sway = Math.sin(fraction * Math.PI * (2 + Math.min(4, st.count))) * 58;
-          const anchorBaseX = clamp(520 + (inShiftX / stageW) * 320, 180, 840);
-          const hx = anchorBaseX + sway;
-          const hy = 160 + smooth(clamp(fraction / 0.62, 0, 1)) * 520 - clamp((fraction - 0.62) / 0.38, 0, 1) * 190;
-          if (ropeEl) {
-            ropeEl.setAttribute('d', `M ${anchorBaseX.toFixed(1)} 0 Q ${(anchorBaseX + sway * 0.45).toFixed(1)} ${(hy * 0.5).toFixed(1)} ${hx.toFixed(1)} ${(hy - 42).toFixed(1)}`);
-          }
-          if (hookEl) {
-            hookEl.setAttribute('transform', `translate(${hx.toFixed(1)} ${hy.toFixed(1)}) rotate(${(-sway * 0.28).toFixed(1)}) scale(${(1 + Math.min(0.35, (st.count - 1) * 0.06)).toFixed(3)})`);
-          }
-          const pipeNormX = clamp(845 + (outShiftX / stageW) * 480, 120, 950);
-          rig.querySelectorAll('[data-popeye-ring]').forEach((rng, idx) => {
-            const rt = clamp((fraction - idx * 0.11) / 0.68, 0, 1);
-            const rx = pipeNormX - rt * (210 + idx * 34);
-            const ry = 485 - rt * (175 + idx * 28);
-            rng.setAttribute('cx', rx.toFixed(1));
-            rng.setAttribute('cy', ry.toFixed(1));
-            rng.setAttribute('rx', (12 + rt * (34 + st.count * 4)).toFixed(1));
-            rng.setAttribute('ry', (8 + rt * (22 + st.count * 2.5)).toFixed(1));
-            rng.style.opacity = (Math.sin(rt * Math.PI) * 0.84).toFixed(3);
-          });
-        } else if (activePairKey === 'bowiestar' && rig) {
+        if (activePairKey === 'bowiestar' && rig) {
           const starEl = rig.querySelector('[data-bowie-star]');
           const sx = stageW * (0.34 + 0.16 * fSmooth) - 58;
           const sy = stageH * (0.16 + 0.34 * fSmooth) - Math.sin(fSmooth * Math.PI) * 44 - 58;
@@ -3730,65 +3479,6 @@
             starEl.style.opacity = (fraction > 0.94 ? clamp((1 - fraction) / 0.06, 0.2, 1) : 1).toFixed(3);
             starEl.style.transform = `translate3d(${sx.toFixed(1)}px,${sy.toFixed(1)}px,0) scale(${sc.toFixed(3)}) rotate(${spin.toFixed(1)}deg)`;
           }
-        } else if (activePairKey === 'audreybolt' && rig) {
-          const boltBlue = rig.querySelector('[data-audrey-bolt-blue]');
-          const boltRed = rig.querySelector('[data-audrey-bolt-red]');
-          const boltCore = rig.querySelector('[data-audrey-bolt-core]');
-          const ignEl = rig.querySelector('[data-audrey-ignition]');
-          // Coordenadas acopladas a la mejilla de Audrey saliente y la punta del cigarrillo (58.15%, 69.01%) de Cantinflowers entrante
-          const xOutNorm = -progress * 1000 * dirH;
-          const xInNorm = (1 - progress) * 1000 * dirH;
-          const ax = clamp(435 + xOutNorm * 0.55, 40, 960);
-          const ay = 445;
-          const cx = clamp(581.5 + xInNorm * 0.55, 60, 960);
-          const cy = 690.1;
-          const segs = 7;
-          const ptsRed = [], ptsBlue = [];
-          for (let s = 0; s <= segs; s++) {
-            const u = s / segs;
-            const jag = (s === 0 || s === segs) ? 0 : ((s % 2 === 0 ? 1 : -1) * (28 + Math.sin(fraction * 32 + s) * 16));
-            const px = ax + (cx - ax) * u + jag * 0.45;
-            const py = ay + (cy - ay) * u - jag;
-            ptsRed.push(`${px.toFixed(1)},${py.toFixed(1)}`);
-            ptsBlue.push(`${(px - 8).toFixed(1)},${(py + 5).toFixed(1)}`);
-          }
-          const boltOp = Math.sin(clamp(fraction / 0.96, 0, 1) * Math.PI);
-          if (boltRed) { boltRed.setAttribute('points', ptsRed.join(' ')); boltRed.style.opacity = (boltOp * 0.95).toFixed(3); }
-          if (boltBlue) { boltBlue.setAttribute('points', ptsBlue.join(' ')); boltBlue.style.opacity = (boltOp * 0.92).toFixed(3); }
-          if (boltCore) { boltCore.setAttribute('points', ptsRed.join(' ')); boltCore.style.opacity = boltOp.toFixed(3); }
-          if (ignEl) {
-            const hit = clamp((fraction - 0.32) / 0.68, 0, 1);
-            ignEl.setAttribute('cx', cx.toFixed(1));
-            ignEl.setAttribute('cy', cy.toFixed(1));
-            ignEl.setAttribute('r', (16 + Math.sin(hit * Math.PI) * (38 + st.count * 7)).toFixed(1));
-            ignEl.style.opacity = (Math.sin(hit * Math.PI) * 0.94).toFixed(3);
-          }
-        } else if (activePairKey === 'rosettabirds' && rig) {
-          // Simbiosis causal: los guitarrazos previos de Mr. Nilsson en Rosetta amplifican la bandada espantada hacia La Famiglia
-          const activeBirds = Math.min(9, 3 + (st.count - 1) * 2 + Math.max(0, monkeyStrumCount - 1));
-          interworkStage.dataset.coupledFlock = String(activeBirds);
-          rig.querySelectorAll('[data-rosetta-bird]').forEach((bEl, idx) => {
-            if (idx >= activeBirds) {
-              bEl.style.opacity = '0';
-              return;
-            }
-            const stag = (idx % 5) * 0.055;
-            const t = clamp((fraction - stag) / Math.max(0.35, 0.92 - stag), 0, 1);
-            const ts = smooth(t);
-            const sx = clamp(stageW * (0.18 + (idx % 5) * 0.085) + outShiftX * 0.46, 30, stageW - 60);
-            const sy = stageH * (0.11 + (idx % 2) * 0.04);
-            const ex = clamp(stageW * (0.34 + (idx % 5) * 0.082) + inShiftX * 0.46, 40, stageW - 60);
-            const ey = stageH * (0.30 + (idx % 3) * 0.055);
-            const swoop = Math.sin(ts * Math.PI * 1.5 + idx) * -54;
-            const flap = Math.sin(fraction * Math.PI * (7 + (idx % 3) * 2) + idx);
-            const x = sx + (ex - sx) * ts - 46;
-            const y = sy + (ey - sy) * ts + swoop - 46;
-            const facing = (ex - sx) >= 0 ? 0.76 : -0.76;
-            const scY = 0.84 + flap * 0.18;
-            const rot = -12 + Math.cos(ts * Math.PI * 2 + idx) * 18;
-            bEl.style.opacity = (t <= 0.005 ? 0 : 0.96).toFixed(3);
-            bEl.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0) scale(${facing.toFixed(2)},${(0.76 * scY).toFixed(3)}) rotate(${rot.toFixed(1)}deg)`;
-          });
         }
       } else if (interworkStage && !interworkStage.hasAttribute('hidden')) {
         interworkStage.setAttribute('hidden', '');
@@ -4017,14 +3707,7 @@
       } else if (activePairKey) {
         const iwCount = interworkState[activePairKey]?.count || 1;
         const INTERWORK_CUES = {
-          berto: iwCount > 1 ? `Infusión de Berto · Remojo ×${iwCount} en el tenedor de Andreu ↓↑` : 'La bolsita de romero cae al tenedor de Buena Fuente ↓',
-          wineflame: iwCount > 1 ? `Red Red Wine · Llamarada Beronia ×${iwCount} en el celofán ↓↑` : 'Gotas de vino tinto prenden la llama de Carole ↓',
-          pajarraca: iwCount > 1 ? `Pajarraca vs. Flying Dragon · Duelo aéreo ×${iwCount} ↓↑` : 'La Pajarraca Azul cruza contra el aliento del Dragón ↔',
-          shark3d: iwCount > 1 ? `Sistashark 3D · Inmersión anaglifo ×${iwCount} ↓↑` : 'Gafas de buceo rosas a filtro estereoscópico 3D ↓',
-          ancla: iwCount > 1 ? `Eneko el Marino · Cabo y ancla ×${iwCount} izando Aupas ↓↑` : 'Pipa de Popeye y ancla naval enganchando Aupas ↓',
-          bowiestar: iwCount > 1 ? `Susurro Estelar · Estrella plateada ×${iwCount} hacia Olinga ↓↑` : 'La estrella plateada de Bowie viaja hacia Olinga a la Naranja ↓',
-          audreybolt: iwCount > 1 ? `Audrey’s Lightning · ¡Chispazo ×${iwCount} al cigarrillo de Cantinflas! ⚡↓↑` : 'El rayo de Audrey enciende el cigarrillo de Cantinflowers ⚡↓',
-          rosettabirds: iwCount > 1 ? `Bandada de Rosetta · ×${iwCount} vuelos hacia La Famiglia ↓↑` : 'Los pajaritos de Rosetta vuelan hacia La Famiglia ↓'
+          bowiestar: iwCount > 1 ? `Susurro Estelar · Estrella plateada ×${iwCount} hacia Olinga ↓↑` : 'La estrella plateada de Bowie viaja hacia Olinga a la Naranja ↓'
         };
         cue.textContent = INTERWORK_CUES[activePairKey] || 'Atravesando obra ↓';
       } else if ((works[state.index]?.slug === 'cantinflowers' || (transition && (works[base]?.slug === 'cantinflowers' || works[incoming]?.slug === 'cantinflowers'))) && !still) {

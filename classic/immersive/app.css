@@ -1141,8 +1141,7 @@ html:not(.motion-opt-in) [data-kinetic-card] {
 .iw-rig[hidden] {
   display: none !important;
 }
-.iw-rig,
-.iw-svg {
+.iw-rig {
   position: absolute;
   inset: 0;
   width: 100%;

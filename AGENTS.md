@@ -14,7 +14,7 @@ Toda alta o mutación de obra exige paridad simultánea en 3 capas:
 3. `src/artworks.ts`: Registro TypeScript con `category` restringido a `'rocks' | 'divinos' | 'kintsugi' | 'drawing'`.
 
 ### 2. Paridad con Suite JSDOM (`test_immersive_dom.cjs`)
-- Valida la secuencia exacta de modos (`entry.mode`) y el total de obras (86). Actualizar la cadena esperada en `tools/test_immersive_dom.cjs` ante cualquier mutación del recorrido.
+- Valida la secuencia exacta de modos (`entry.mode`) y el total de obras (85). Actualizar la cadena esperada en `tools/test_immersive_dom.cjs` ante cualquier mutación del recorrido.
 
 ### 3. Arquitectura de Audio y Guardas de Ciclo de Vida
 - Sintetizadores reactivos residen en `classic/immersive/soundscape.js` y `src/utils/audio.ts`, desacoplados del loop ambiental y protegidos ante `AudioContext` suspendido o entornos headless.
