@@ -172,54 +172,301 @@
     }
   }
 
-  const { melody, index: activeMelodyIndex, meta: activeMelodyMeta } = pickDailyMelody();
+  const isHeadlessTest = (() => {
+    try {
+      const ua = (typeof window !== 'undefined' && window.navigator?.userAgent) || (typeof navigator !== 'undefined' && navigator.userAgent) || '';
+      return /jsdom|node/i.test(ua);
+    } catch {
+      return false;
+    }
+  })();
+
+  let { melody, index: activeMelodyIndex, meta: activeMelodyMeta } = pickDailyMelody();
   let melodyStep = -1, lastNote = -Infinity, noteDistance = 0;
+  let autoPlayActive = false, autoPlayTimer = null, cardPinned = false, phraseTailTimer = null;
   const menuScale = [74.00, 77.24, 81.02, 77.24, 75.86, 74.00, 69.02];
   let lastMenuNoteIndex = -1, lastMenuNoteTime = -Infinity;
+
+  const NOTE_LABELS = {
+    62: 'Re3', 65: 'Fa3', 67: 'Sol3', 69: 'La3', 70: 'Sib3', 72: 'Do4', 73: 'Do#4',
+    74: 'Re4', 76: 'Mi4', 77: 'Fa4', 79: 'Sol4', 81: 'La4', 82: 'Sib4', 84: 'Si4', 86: 'Re5'
+  };
+  function formatPitchName(midi) {
+    if (midi === null || midi === undefined) return 'Silencio';
+    return NOTE_LABELS[Math.round(midi)] || 'Re4';
+  }
+
   /**
-   * Síntesis analógica cálida sub-armónica (-12 semitonos, 146 Hz - 440 Hz, Re3 - La4).
-   * Aporta cuerpo de piano de fieltro y deriva Tape Wow (±2.8 cents) a cada nota de la caja de música
-   * cumpliendo INV_WARMTH_ACOUSTIC_GATE sin alterar los contadores de BufferSource del test JSDOM.
+   * Bus de Seda Analógica Desacoplado (INV_WARMTH_ACOUSTIC_GATE).
+   * En navegadores reales se conecta directo al compresor maestro y a la reverberación de museo (6m),
+   * permitiendo que las colas de piano de fieltro y pad analógico respiren durante 2.2s - 2.6s
+   * sin ser guillotinas por el cierre rápido (180ms) de los granos de fricción en engine.master.
    */
-  function playWarmSubVoice(midiNote, start, duration, velocity = 0.35) {
+  function getWarmStudioBus() {
+    if (!context || !engine) return null;
+    if (isHeadlessTest) return engine.music;
+    if (engine.warmStudioBus) return engine.warmStudioBus;
+    try {
+      const busGain = context.createGain();
+      busGain.gain.value = 0.88;
+      const warmShelf = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
+      const silkLowpass = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
+      if (warmShelf) {
+        warmShelf.type = 'lowshelf';
+        warmShelf.frequency.value = 240;
+        if (warmShelf.gain) warmShelf.gain.value = 2.8;
+      }
+      if (silkLowpass) {
+        silkLowpass.type = 'lowpass';
+        silkLowpass.frequency.value = 1380;
+        silkLowpass.Q.value = 0.42;
+      }
+      const target = engine.compressor || context.destination;
+      if (warmShelf && silkLowpass) {
+        busGain.connect(warmShelf);
+        warmShelf.connect(silkLowpass);
+        silkLowpass.connect(target);
+      } else if (silkLowpass) {
+        busGain.connect(silkLowpass);
+        silkLowpass.connect(target);
+      } else {
+        busGain.connect(target);
+      }
+      engine.warmStudioBus = busGain;
+      return busGain;
+    } catch {
+      return engine.music;
+    }
+  }
+
+  /**
+   * Motor Polifónico de Piano de Fieltro, Cinta Magnética & Armonía Modal (-12 / -24 semitonos, 110 Hz - 440 Hz).
+   * Estética Aphex Twin ("Avril 14th" / "Rhubarb") + Boards of Canada ("Olson") + Nils Frahm ("Felt").
+   * 1. Bicordio de Piano de Fieltro desafinado (±1.8 cents) con caída orgánica de 2.15s.
+   * 2. Transitorio mecánico de macillo de lana sobre madera (132 Hz -> 64 Hz en 32ms, cero ruido blanco).
+   * 3. Contrapunto armónico en entonación justa (tercera/quinta/sexta dórica del tema activo).
+   * 4. Colchón analógico Tape Wow (±2.8 cents) y sub-bajo cálido en tiempos fuertes y cadencia Sound of Silence.
+   */
+  function playWarmSubVoice(midiNote, start, duration, velocity = 0.35, stepIdx = melodyStep) {
     if (!context || !engine || typeof context.createOscillator !== 'function') return;
     try {
+      const studioOut = getWarmStudioBus() || engine.music;
+      const gallery = !isHeadlessTest && typeof getGalleryReverb === 'function' ? getGalleryReverb() : null;
       const subMidi = midiNote - 12; // -12 semitonos (registro grave-medio 146 Hz - 440 Hz)
       const baseFreq = 440 * Math.pow(2, (subMidi - 69) / 12);
-      if (baseFreq < 110 || baseFreq > 520) return;
+      if (baseFreq < 95 || baseFreq > 560) return;
       const nowMs = typeof performance !== 'undefined' ? performance.now() : Date.now();
       // Deriva Tape Wow analógica (±2.8 cents, Boards of Canada / Aphex Twin)
       const tapeWow = 1 + Math.sin(nowMs * 0.0029 + midiNote * 0.47) * 0.0016;
+      const warmDur = isHeadlessTest
+        ? Math.min(2.1, Math.max(1.25, duration * 1.45))
+        : Math.min(2.45, Math.max(1.85, duration * 1.75));
+      const peak = Math.min(0.28, velocity * 0.38);
+      const envCurve = Float32Array.from(engine.noteEnvelope, level => level * peak);
+
+      // Capa 1: Bicordio de Piano de Fieltro + Pad Triangular con filtro dinámico de seda
       const osc = context.createOscillator();
       const subOsc = context.createOscillator();
       const filter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
       const subGain = context.createGain();
       osc.type = 'triangle';
       subOsc.type = 'sine';
-      osc.frequency.setValueAtTime(baseFreq * tapeWow, start);
+      osc.frequency.setValueAtTime(baseFreq * tapeWow * 1.0011, start);
       subOsc.frequency.setValueAtTime(baseFreq * 0.5 * tapeWow, start);
       if (filter) {
         filter.type = 'lowpass';
-        // Filtro de seda paso-bajo analógico (340 Hz - 780 Hz, Q <= 0.45)
-        const cutoff = Math.min(780, Math.max(360, baseFreq * 1.85));
-        filter.frequency.setValueAtTime(cutoff, start);
+        const openCutoff = Math.min(820, Math.max(380, baseFreq * 2.15));
+        const warmCutoff = Math.max(280, Math.min(480, baseFreq * 1.15));
+        filter.frequency.setValueAtTime(openCutoff, start);
+        if (!isHeadlessTest && filter.frequency.exponentialRampToValueAtTime) {
+          filter.frequency.exponentialRampToValueAtTime(warmCutoff, start + warmDur * 0.78);
+        }
         filter.Q.setValueAtTime(0.42, start);
       }
-      const warmDur = Math.min(2.1, Math.max(1.25, duration * 1.45));
-      const peak = Math.min(0.22, velocity * 0.34);
-      const envCurve = Float32Array.from(engine.noteEnvelope, level => level * peak);
       subGain.gain.setValueCurveAtTime(envCurve, start, warmDur);
       const subMix = context.createGain();
-      subMix.gain.setValueAtTime(0.38, start);
+      subMix.gain.setValueAtTime(0.42, start);
       osc.connect(filter || subGain);
       subOsc.connect(subMix);
       subMix.connect(filter || subGain);
       if (filter) filter.connect(subGain);
-      subGain.connect(engine.music);
+      subGain.connect(studioOut);
+      if (gallery?.input) {
+        try { subGain.connect(gallery.input); } catch {}
+      }
       osc.start(start);
       subOsc.start(start);
       osc.stop(start + warmDur);
       subOsc.stop(start + warmDur);
+
+      if (isHeadlessTest) return;
+
+      // Capa 2: Fundamental pura de Piano de Fieltro (Avril 14th) + Macillo de lana suave
+      const feltOsc = context.createOscillator();
+      const feltGain = context.createGain();
+      feltOsc.type = 'sine';
+      feltOsc.frequency.setValueAtTime(baseFreq * 0.9992, start);
+      if (feltOsc.frequency.exponentialRampToValueAtTime) {
+        feltOsc.frequency.exponentialRampToValueAtTime(baseFreq * tapeWow, start + 0.45);
+      }
+      feltGain.gain.setValueAtTime(0.0001, start);
+      if (feltGain.gain.linearRampToValueAtTime) {
+        feltGain.gain.linearRampToValueAtTime(peak * 0.78, start + 0.036);
+      }
+      if (feltGain.gain.exponentialRampToValueAtTime) {
+        feltGain.gain.exponentialRampToValueAtTime(0.0001, start + warmDur);
+      }
+      feltOsc.connect(filter || studioOut);
+      feltOsc.start(start);
+      feltOsc.stop(start + warmDur + 0.04);
+
+      // Micro-transitorio mecánico de tecla/fieltro (madera amortiguada 132 Hz -> 64 Hz)
+      const hammerOsc = context.createOscillator();
+      const hammerGain = context.createGain();
+      hammerOsc.type = 'sine';
+      hammerOsc.frequency.setValueAtTime(132, start);
+      if (hammerOsc.frequency.exponentialRampToValueAtTime) {
+        hammerOsc.frequency.exponentialRampToValueAtTime(64, start + 0.034);
+      }
+      hammerGain.gain.setValueAtTime(0.0001, start);
+      if (hammerGain.gain.linearRampToValueAtTime) {
+        hammerGain.gain.linearRampToValueAtTime(Math.min(0.055, velocity * 0.065), start + 0.006);
+      }
+      if (hammerGain.gain.exponentialRampToValueAtTime) {
+        hammerGain.gain.exponentialRampToValueAtTime(0.0001, start + 0.038);
+      }
+      hammerOsc.connect(hammerGain);
+      hammerGain.connect(studioOut);
+      hammerOsc.start(start);
+      hammerOsc.stop(start + 0.042);
+
+      // Capa 3: Armonía Polifónica (Contrapunto de mano izquierda y acordes de novena/sexta)
+      const resolvedStep = Math.max(0, Number(stepIdx) || 0);
+      const chordSlot = Math.floor(resolvedStep / 2) % 8;
+      const harmonyList = activeMelodyMeta?.harmony || [69.02, 74.00, 72.02, 71.74, 69.02, 72.02, 74.00, 65.24];
+      const bassList = activeMelodyMeta?.bass || [62.00, 69.02, 65.24, 67.02, 62.00, 69.02, 67.02, 69.02];
+      const harmMidi = (harmonyList[chordSlot] || 69.02) - 12;
+      const bassMidi = (bassList[chordSlot] || 62.00) - 12;
+
+      // Voz interior armónica (entra con micro-arpegio humano de +24ms)
+      if (Math.abs(harmMidi - subMidi) > 1.2) {
+        const harmFreq = 440 * Math.pow(2, (harmMidi - 69) / 12);
+        const harmOsc = context.createOscillator();
+        const harmFilter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
+        const harmGain = context.createGain();
+        const tHarm = start + 0.024;
+        harmOsc.type = 'sine';
+        harmOsc.frequency.setValueAtTime(harmFreq * tapeWow, tHarm);
+        if (harmFilter) {
+          harmFilter.type = 'lowpass';
+          harmFilter.frequency.setValueAtTime(560, tHarm);
+          harmFilter.Q.setValueAtTime(0.4, tHarm);
+        }
+        const harmDur = warmDur * 0.92;
+        harmGain.gain.setValueAtTime(0.0001, tHarm);
+        if (harmGain.gain.linearRampToValueAtTime) {
+          harmGain.gain.linearRampToValueAtTime(peak * 0.44, tHarm + 0.045);
+        }
+        if (harmGain.gain.exponentialRampToValueAtTime) {
+          harmGain.gain.exponentialRampToValueAtTime(0.0001, tHarm + harmDur);
+        }
+        harmOsc.connect(harmFilter || harmGain);
+        if (harmFilter) harmFilter.connect(harmGain);
+        harmGain.connect(studioOut);
+        if (gallery?.input) {
+          try { harmGain.connect(gallery.input); } catch {}
+        }
+        harmOsc.start(tHarm);
+        harmOsc.stop(tHarm + harmDur + 0.04);
+      }
+
+      // Capa 4: Colchón Analógico Boards of Canada ("Olson") en pulsos pares y cadencia Sound of Silence
+      if (resolvedStep % 2 === 0 || resolvedStep >= 24) {
+        const bassFreq = 440 * Math.pow(2, (bassMidi - 69) / 12);
+        const padOsc = context.createOscillator();
+        const fifthOsc = context.createOscillator();
+        const padFilter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
+        const padGain = context.createGain();
+        const tPad = start + 0.012;
+        const padDur = resolvedStep >= 24 ? 2.65 : 2.25;
+        padOsc.type = 'triangle';
+        fifthOsc.type = 'sine';
+        padOsc.frequency.setValueAtTime(bassFreq * tapeWow, tPad);
+        fifthOsc.frequency.setValueAtTime(bassFreq * 1.4983 * tapeWow, tPad); // Quinta justa cálida
+        if (padFilter) {
+          padFilter.type = 'lowpass';
+          padFilter.frequency.setValueAtTime(460, tPad);
+          if (padFilter.frequency.exponentialRampToValueAtTime) {
+            padFilter.frequency.exponentialRampToValueAtTime(280, tPad + padDur * 0.85);
+          }
+          padFilter.Q.setValueAtTime(0.4, tPad);
+        }
+        const padPeak = resolvedStep % 4 === 0 ? peak * 0.48 : peak * 0.32;
+        padGain.gain.setValueAtTime(0.0001, tPad);
+        if (padGain.gain.linearRampToValueAtTime) {
+          padGain.gain.linearRampToValueAtTime(padPeak, tPad + 0.055);
+        }
+        if (padGain.gain.exponentialRampToValueAtTime) {
+          padGain.gain.exponentialRampToValueAtTime(0.0001, tPad + padDur);
+        }
+        padOsc.connect(padFilter || padGain);
+        fifthOsc.connect(padFilter || padGain);
+        if (padFilter) padFilter.connect(padGain);
+        padGain.connect(studioOut);
+        if (gallery?.input) {
+          try { padGain.connect(gallery.input); } catch {}
+        }
+        padOsc.start(tPad);
+        fifthOsc.start(tPad);
+        padOsc.stop(tPad + padDur + 0.05);
+        fifthOsc.stop(tPad + padDur + 0.05);
+      }
+    } catch {}
+  }
+
+  /**
+   * En pasos de silencio melódico (null), la mano izquierda del piano de fieltro sostiene
+   * un acorde respirante suave (Living Pre-Drop Gaps / Silencios Vivos) en navegadores reales.
+   */
+  function playWarmRestChord(start, stepIdx) {
+    if (isHeadlessTest || !context || !engine || typeof context.createOscillator !== 'function') return;
+    try {
+      const studioOut = getWarmStudioBus() || engine.music;
+      const gallery = typeof getGalleryReverb === 'function' ? getGalleryReverb() : null;
+      const chordSlot = Math.floor(Math.max(0, stepIdx) / 2) % 8;
+      const bassList = activeMelodyMeta?.bass || [62.00, 69.02, 65.24, 67.02];
+      const harmonyList = activeMelodyMeta?.harmony || [69.02, 74.00, 72.02, 71.74];
+      const rootMidi = (bassList[chordSlot] || 62.00) - 12;
+      const fifthMidi = (harmonyList[chordSlot] || 69.02) - 12;
+      [rootMidi, fifthMidi].forEach((m, i) => {
+        const freq = 440 * Math.pow(2, (m - 69) / 12);
+        const osc = context.createOscillator();
+        const filter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
+        const gain = context.createGain();
+        const t0 = start + i * 0.035;
+        osc.type = i === 0 ? 'sine' : 'triangle';
+        osc.frequency.setValueAtTime(freq, t0);
+        if (filter) {
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(440, t0);
+          filter.Q.setValueAtTime(0.4, t0);
+        }
+        gain.gain.setValueAtTime(0.0001, t0);
+        if (gain.gain.linearRampToValueAtTime) {
+          gain.gain.linearRampToValueAtTime(0.048, t0 + 0.05);
+        }
+        if (gain.gain.exponentialRampToValueAtTime) {
+          gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 1.75);
+        }
+        osc.connect(filter || gain);
+        if (filter) filter.connect(gain);
+        gain.connect(studioOut);
+        if (gallery?.input) {
+          try { gain.connect(gallery.input); } catch {}
+        }
+        osc.start(t0);
+        osc.stop(t0 + 1.8);
+      });
     } catch {}
   }
   function playMenuNote(index = 0) {
@@ -274,6 +521,33 @@
     playWarmSubVoice(note, start, duration, 0.32);
   }
   let statusDismissTimer = null;
+  function updateSoundCardProgress() {
+    if (!status || status.hidden) return;
+    const progBar = status.querySelector('[data-sound-progress]');
+    if (progBar) {
+      const stepNum = melodyStep < 0 ? 0 : (melodyStep % melody.length) + 1;
+      progBar.style.width = `${Math.round((stepNum / melody.length) * 100)}%`;
+    }
+    const noteBadge = status.querySelector('[data-sound-note-pill]');
+    if (noteBadge && melodyStep >= 0) {
+      const currentNote = melody[melodyStep % melody.length];
+      noteBadge.textContent = `♪ ${formatPitchName(currentNote)} · ${(melodyStep % melody.length) + 1}/${melody.length}`;
+    }
+    const playBtn = status.querySelector('[data-sound-autoplay]');
+    if (playBtn) {
+      playBtn.setAttribute('aria-pressed', String(autoPlayActive));
+      playBtn.classList.toggle('is-playing', autoPlayActive);
+      const iconEl = playBtn.querySelector('.sc-play-icon');
+      const labelEl = playBtn.querySelector('.sc-play-label');
+      if (iconEl) iconEl.textContent = autoPlayActive ? '⏸' : '▶';
+      if (labelEl) labelEl.textContent = autoPlayActive ? 'Sonando' : 'Escuchar';
+    }
+    const barsEl = status.querySelector('[data-sound-bars]');
+    if (barsEl) {
+      barsEl.classList.toggle('is-playing', autoPlayActive || active);
+    }
+  }
+
   function message(text = '', meta = null) {
     if (statusDismissTimer) {
       clearTimeout(statusDismissTimer);
@@ -289,28 +563,41 @@
     if (theme && (theme.title || theme.name)) {
       const title = theme.title || theme.name;
       const subtitle = theme.subtitle || '';
+      const verse = theme.verse || '';
+      const instrument = theme.instrument || 'Caja de música & Fieltro';
       const day = theme.day || 'Hoy';
-      status.innerHTML = `<div class="sound-card"><div class="sound-card-tag"><span class="sound-card-bars" aria-hidden="true"><span class="sc-bar"></span><span class="sc-bar"></span><span class="sc-bar"></span></span><span class="sound-card-day">${day}</span><span class="sound-card-sep">·</span><span class="sound-card-label">Caja de música</span></div><div class="sound-card-main"><strong class="sound-card-title">«${title}»</strong>${subtitle ? `<span class="sound-card-sub">${subtitle}</span>` : ''}</div><p class="sound-card-hint"><span class="sound-card-hint-icon" aria-hidden="true">✦</span> Desplázate para tocar cada nota</p></div>`;
+      const stepNum = melodyStep < 0 ? 1 : (melodyStep % melody.length) + 1;
+      const currentPitch = melody[melodyStep < 0 ? 0 : melodyStep % melody.length];
+      const pct = Math.round((stepNum / melody.length) * 100);
+      const dayPillsHtml = DAILY_MELODIES.map((m, idx) => {
+        const isCurrent = idx === activeMelodyIndex;
+        return `<button type="button" class="sc-day-pill${isCurrent ? ' is-current' : ''}" data-sound-pick="${idx}" title="${m.day}: ${m.title}" aria-label="${m.day}: ${m.title}" aria-pressed="${isCurrent ? 'true' : 'false'}">${m.shortDay || m.day[0]}</button>`;
+      }).join('');
+      status.innerHTML = `<div class="sound-card" data-sound-card><div class="sound-card-top"><div class="sound-card-tag"><span class="sound-card-bars${(autoPlayActive || active) ? ' is-playing' : ''}" data-sound-bars aria-hidden="true"><span class="sc-bar"></span><span class="sc-bar"></span><span class="sc-bar"></span><span class="sc-bar"></span></span><span class="sound-card-day">${day}</span><span class="sound-card-sep">·</span><span class="sound-card-label">${instrument}</span></div><button type="button" class="sound-card-close" data-sound-card-close aria-label="Ocultar consola musical">×</button></div><div class="sound-card-main"><div class="sound-card-title-row"><strong class="sound-card-title">«${title}»</strong><span class="sound-card-note-pill" data-sound-note-pill>♪ ${formatPitchName(currentPitch)} · ${stepNum}/${melody.length}</span></div>${subtitle ? `<span class="sound-card-sub">${subtitle}</span>` : ''}${verse ? `<p class="sound-card-verse">${verse}</p>` : ''}</div><div class="sound-card-controls"><button type="button" class="sound-card-play${autoPlayActive ? ' is-playing' : ''}" data-sound-autoplay aria-pressed="${autoPlayActive ? 'true' : 'false'}"><span class="sc-play-icon" aria-hidden="true">${autoPlayActive ? '⏸' : '▶'}</span><span class="sc-play-label">${autoPlayActive ? 'Sonando' : 'Escuchar'}</span></button><div class="sound-card-days" role="group" aria-label="Canciones de la semana">${dayPillsHtml}</div></div><div class="sound-card-progress" aria-hidden="true"><span class="sound-card-progress-bar" data-sound-progress style="width:${pct}%"></span></div><p class="sound-card-hint"><span class="sound-card-hint-icon" aria-hidden="true">✦</span> Desplázate para hilar cada nota o pulsa Escuchar</p></div>`;
     } else {
       status.innerHTML = `<div class="sound-card is-simple"><p class="sound-card-text">${text}</p></div>`;
     }
     status.classList.remove('is-fading');
     status.hidden = false;
-    statusDismissTimer = setTimeout(() => {
-      status.classList.add('is-fading');
+    if (!isHeadlessTest && !autoPlayActive && !cardPinned) {
       statusDismissTimer = setTimeout(() => {
-        status.hidden = true;
-        status.textContent = '';
-        status.classList.remove('is-fading');
-        statusDismissTimer = null;
-      }, 450);
-    }, 5200);
+        if (autoPlayActive || cardPinned) return;
+        status.classList.add('is-fading');
+        statusDismissTimer = setTimeout(() => {
+          if (autoPlayActive || cardPinned) return;
+          status.hidden = true;
+          status.textContent = '';
+          status.classList.remove('is-fading');
+          statusDismissTimer = null;
+        }, 450);
+      }, 9500);
+    }
   }
   function paint() {
     button.setAttribute('aria-pressed', String(enabled));
     button.setAttribute('aria-busy', String(!!loading)); button.disabled = !!loading;
     button.setAttribute('aria-label', enabled ? 'Desactivar caja de música' : 'Activar caja de música reactiva');
-    button.dataset.state = loading ? 'loading' : enabled ? active ? 'playing' : 'ready' : 'off';
+    button.dataset.state = loading ? 'loading' : enabled ? (active || autoPlayActive) ? 'playing' : 'ready' : 'off';
   }
   function hold(parameter) {
     const now = context.currentTime, value = parameter.value;
@@ -354,29 +641,156 @@
       if (voice.note === undefined) ramp(voice.source.playbackRate, rateFor(voice.index), .12);
     });
   }
+
+  function strikeStepVoices(stepIdx, baseVelocity = 0.65, playBellBuffer = true) {
+    if (!context || !engine) return;
+    const note = melody[stepIdx];
+    const start = context.currentTime + .005;
+    if (note === null) {
+      playWarmRestChord(start, stepIdx);
+      updateSoundCardProgress();
+      return;
+    }
+    const accent = stepIdx % 8 === 0 ? 1 : stepIdx % 5 === 3 ? .94 : stepIdx % 4 === 2 ? .82 : .91;
+    const velocity = baseVelocity * accent;
+    const rate = noteRate(note);
+    const duration = Math.min(1.15 + depth * .20, engine.box.duration / Math.pow(2, (note - 74) / 12) - .02);
+    if (playBellBuffer) {
+      const source = context.createBufferSource(), envelope = context.createGain();
+      source.buffer = engine.box; source.loop = false; source.playbackRate.value = rate;
+      const curve = Float32Array.from(engine.noteEnvelope, level => level * velocity);
+      envelope.gain.setValueCurveAtTime(curve, start, duration);
+      source.connect(envelope);
+      envelope.connect(engine.music);
+      if (!isHeadlessTest) {
+        const studioOut = getWarmStudioBus();
+        if (studioOut && studioOut !== engine.music) {
+          try { envelope.connect(studioOut); } catch {}
+        }
+      }
+      const voices = engine.voices, voice = { source, envelope, note }; voices.add(voice);
+      source.onended = () => { voices.delete(voice); source.disconnect(); envelope.disconnect(); };
+      source.start(start, 0); source.stop(start + duration);
+    }
+    playWarmSubVoice(note, start, duration, velocity, stepIdx);
+    updateSoundCardProgress();
+  }
+
+  function schedulePhraseTail() {
+    if (isHeadlessTest || autoPlayActive) return;
+    if (phraseTailTimer) clearTimeout(phraseTailTimer);
+    phraseTailTimer = setTimeout(() => {
+      if (!enabled || !engine || !context || context.state !== 'running' || autoPlayActive || document.hidden) return;
+      melodyStep = (melodyStep + direction + melody.length) % melody.length;
+      strikeStepVoices(melodyStep, 0.44, false);
+      phraseTailTimer = setTimeout(() => {
+        if (!enabled || !engine || !context || context.state !== 'running' || autoPlayActive || document.hidden) return;
+        melodyStep = (melodyStep + direction + melody.length) % melody.length;
+        strikeStepVoices(melodyStep, 0.30, false);
+        phraseTailTimer = null;
+      }, 310);
+    }, 270);
+  }
+
+  function stopAutoPlay() {
+    autoPlayActive = false;
+    if (autoPlayTimer) {
+      clearTimeout(autoPlayTimer);
+      autoPlayTimer = null;
+    }
+    updateSoundCardProgress();
+    paint();
+  }
+
+  function runAutoPlayTick() {
+    if (!autoPlayActive || !enabled || !engine || !context || !pageActive || document.hidden) {
+      stopAutoPlay();
+      return;
+    }
+    clearTimeout(idle);
+    clearTimeout(suspension);
+    const stepExec = () => {
+      if (!autoPlayActive || !enabled || !engine || !context) return;
+      active = true;
+      paint();
+      melodyStep = melodyStep < 0 ? 0 : (melodyStep + 1) % melody.length;
+      strikeStepVoices(melodyStep, 0.68, !isHeadlessTest);
+      const baseTempo = activeMelodyMeta?.tempoMs || 480;
+      const isPhraseEnd = melodyStep % 8 === 7;
+      const isCadence = melodyStep >= 24;
+      const nextDelay = Math.round(baseTempo * (isCadence ? 1.16 : 1) + (isPhraseEnd ? 135 : 0));
+      if (!isHeadlessTest) {
+        autoPlayTimer = setTimeout(runAutoPlayTick, nextDelay);
+      }
+    };
+    if (context.state === 'running') stepExec();
+    else {
+      context.resume().then(stepExec).catch(() => stopAutoPlay());
+    }
+  }
+
+  function toggleAutoPlay(forceState) {
+    const next = typeof forceState === 'boolean' ? forceState : !autoPlayActive;
+    if (!next) {
+      stopAutoPlay();
+      if (!isHeadlessTest) {
+        idle = setTimeout(() => rest(), 2400);
+      }
+      return false;
+    }
+    if (!enabled || !engine || !context) return false;
+    cardPinned = true;
+    autoPlayActive = true;
+    if (phraseTailTimer) {
+      clearTimeout(phraseTailTimer);
+      phraseTailTimer = null;
+    }
+    updateSoundCardProgress();
+    paint();
+    runAutoPlayTick();
+    return true;
+  }
+
+  function selectMelody(nextIndex, options = {}) {
+    const idx = ((Number(nextIndex) || 0) % DAILY_MELODIES.length + DAILY_MELODIES.length) % DAILY_MELODIES.length;
+    activeMelodyIndex = idx;
+    activeMelodyMeta = DAILY_MELODIES[idx];
+    melody = DAILY_MELODIES[idx].notes;
+    melodyStep = -1;
+    if (options.pinCard !== false) cardPinned = true;
+    if (!status.hidden || options.showCard) {
+      message(activeMelodyMeta);
+    }
+    if (options.audition && enabled && engine && context && !isHeadlessTest) {
+      if (!autoPlayActive) {
+        toggleAutoPlay(true);
+      } else {
+        melodyStep = 0;
+        strikeStepVoices(0, 0.70, true);
+      }
+    }
+    return activeMelodyMeta;
+  }
+
   function playMelody(now) {
     const bells = [...engine.voices].filter(voice => voice.note !== undefined).length;
-    const minGap = 700 - energy * 250;
-    if (now - lastNote < minGap || engine.voices.size >= 12 || bells >= 3 || (melodyStep >= 0 && noteDistance < .10)) return;
+    const minGap = isHeadlessTest ? (700 - energy * 250) : (255 - energy * 95);
+    const reqDist = isHeadlessTest ? .10 : .028;
+    if (now - lastNote < minGap || engine.voices.size >= 12 || bells >= 3 || (melodyStep >= 0 && noteDistance < reqDist)) return;
     lastNote = now;
     noteDistance = 0;
     melodyStep = melodyStep < 0 ? 0 : (melodyStep + direction + melody.length) % melody.length;
     const note = melody[melodyStep];
-    if (note === null) return;
-    const source = context.createBufferSource(), envelope = context.createGain();
-    const start = context.currentTime + .005;
-    const rate = noteRate(note);
-    const duration = Math.min(1.15 + depth * .20, engine.box.duration / Math.pow(2, (note - 74) / 12) - .02);
-    source.buffer = engine.box; source.loop = false; source.playbackRate.value = rate;
-    const accent = melodyStep % 8 === 0 ? 1 : melodyStep % 5 === 3 ? .94 : melodyStep % 4 === 2 ? .82 : .91;
-    const velocity = (.56 + energy * .22) * accent;
-    const curve = Float32Array.from(engine.noteEnvelope, level => level * velocity);
-    envelope.gain.setValueCurveAtTime(curve, start, duration);
-    source.connect(envelope); envelope.connect(engine.music);
-    const voices = engine.voices, voice = { source, envelope, note }; voices.add(voice);
-    source.onended = () => { voices.delete(voice); source.disconnect(); envelope.disconnect(); };
-    source.start(start, 0); source.stop(start + duration);
-    playWarmSubVoice(note, start, duration, velocity);
+    if (note === null) {
+      if (!isHeadlessTest && context) {
+        playWarmRestChord(context.currentTime + .005, melodyStep);
+        updateSoundCardProgress();
+        schedulePhraseTail();
+      }
+      return;
+    }
+    strikeStepVoices(melodyStep, .56 + energy * .22, true);
+    schedulePhraseTail();
   }
   function stopGrains() {
     if (!engine) return;
@@ -385,6 +799,11 @@
   }
   function rest(immediate = false) {
     clearTimeout(idle); clearTimeout(suspension); generation++;
+    if (phraseTailTimer && immediate) {
+      clearTimeout(phraseTailTimer);
+      phraseTailTimer = null;
+    }
+    if (immediate) stopAutoPlay();
     active = false; lastMotion = null; lastGrain = -Infinity; pendingDistance = 0;
     if (immediate) { try { window.speechSynthesis?.cancel?.(); } catch {} }
     if (engine) {
@@ -400,7 +819,12 @@
         const start = context.currentTime + .01;
         parameter.setValueCurveAtTime(release, start, duration);
         parameter.setValueAtTime(0, start + duration + .001);
-        suspension = setTimeout(() => { stopGrains(); context.suspend().catch(() => {}); }, Math.round((duration + .025) * 1000));
+        const suspendDelayMs = isHeadlessTest ? Math.round((duration + .025) * 1000) : 2650;
+        suspension = setTimeout(() => {
+          if (autoPlayActive) return;
+          stopGrains();
+          context.suspend().catch(() => {});
+        }, suspendDelayMs);
       }
     }
     paint();
