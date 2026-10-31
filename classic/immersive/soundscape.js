@@ -21,7 +21,9 @@
   // Cada día de la semana tiene su tema emblemático, culminando siempre en SOUND OF SILENCE:
   const DAILY_MELODIES = [
     {
-      name: 'Landa (Alboka pastoral de Arratia)',
+      title: 'Landa',
+      subtitle: 'Alboka pastoral de Arratia',
+      name: 'Landa · Alboka pastoral de Arratia',
       day: 'Lunes',
       notes: [
         74.00, 77.24, 81.02, 77.24, 75.86, 74.00, 69.02, null,
@@ -31,7 +33,9 @@
       ]
     },
     {
-      name: 'Haurtxo Polita (Nana tradicional en cinta cálida)',
+      title: 'Haurtxo Polita',
+      subtitle: 'Nana popular en cinta cálida',
+      name: 'Haurtxo Polita · Nana popular en cinta cálida',
       day: 'Martes',
       notes: [
         69.02, null, 74.00, 75.86, 77.24, null, 75.86, 74.00,
@@ -41,7 +45,9 @@
       ]
     },
     {
-      name: 'Harria eta Marea (Deriva ambiental tipo Rhubarb / Olson)',
+      title: 'Harria eta Marea',
+      subtitle: 'Aire de costa en Re menor',
+      name: 'Harria eta Marea · Aire de costa en Re menor',
       day: 'Miércoles',
       notes: [
         74.00, 69.02, null, 77.24, 74.00, null, 78.98, 75.86,
@@ -51,7 +57,9 @@
       ]
     },
     {
-      name: 'Txoria Txori (Mikel Laboa en piano de fieltro)',
+      title: 'Txoria Txori',
+      subtitle: 'Mikel Laboa en piano de fieltro',
+      name: 'Txoria Txori · Mikel Laboa en piano de fieltro',
       day: 'Jueves',
       notes: [
         74.00, null, 77.24, 75.86, null, 74.00, 71.74, 74.00,
@@ -61,7 +69,9 @@
       ]
     },
     {
-      name: 'Mi Gran Noche (Raphael en piano íntimo Avril 14th)',
+      title: 'Mi Gran Noche',
+      subtitle: 'Caja de música íntima',
+      name: 'Mi Gran Noche · Caja de música íntima',
       day: 'Viernes',
       notes: [
         69.02, 74.00, null, 77.24, 75.86, null, 69.02, 74.00,
@@ -71,7 +81,9 @@
       ]
     },
     {
-      name: 'Gaua (Nocturno analógico de Bilbao)',
+      title: 'Gaua',
+      subtitle: 'Nocturno de Bilbao',
+      name: 'Gaua · Nocturno de Bilbao',
       day: 'Sábado',
       notes: [
         74.00, null, 71.74, 69.02, null, 74.00, 77.24, 74.00,
@@ -81,7 +93,9 @@
       ]
     },
     {
-      name: 'Haizea (Viento cálido Boards of Canada en los pinos)',
+      title: 'Haizea',
+      subtitle: 'Brisa marina entre los pinos',
+      name: 'Haizea · Brisa marina entre los pinos',
       day: 'Domingo',
       notes: [
         74.00, 77.24, null, 81.02, 86.00, null, 83.74, 77.24,
@@ -216,7 +230,39 @@
     source.start(start, 0); source.stop(start + duration);
     playWarmSubVoice(note, start, duration, 0.32);
   }
-  function message(text = '') { status.textContent = text; status.hidden = !text; }
+  let statusDismissTimer = null;
+  function message(text = '', meta = null) {
+    if (statusDismissTimer) {
+      clearTimeout(statusDismissTimer);
+      statusDismissTimer = null;
+    }
+    if (!text && !meta) {
+      status.textContent = '';
+      status.hidden = true;
+      status.classList.remove('is-fading');
+      return;
+    }
+    const theme = (typeof text === 'object' && text !== null) ? text : (meta || null);
+    if (theme && (theme.title || theme.name)) {
+      const title = theme.title || theme.name;
+      const subtitle = theme.subtitle || '';
+      const day = theme.day || 'Hoy';
+      status.innerHTML = `<div class="sound-card"><div class="sound-card-tag"><span class="sound-card-bars" aria-hidden="true"><span class="sc-bar"></span><span class="sc-bar"></span><span class="sc-bar"></span></span><span class="sound-card-day">${day}</span><span class="sound-card-sep">·</span><span class="sound-card-label">Caja de música</span></div><div class="sound-card-main"><strong class="sound-card-title">«${title}»</strong>${subtitle ? `<span class="sound-card-sub">${subtitle}</span>` : ''}</div><p class="sound-card-hint"><span class="sound-card-hint-icon" aria-hidden="true">✦</span> Desplázate para tocar cada nota</p></div>`;
+    } else {
+      status.innerHTML = `<div class="sound-card is-simple"><p class="sound-card-text">${text}</p></div>`;
+    }
+    status.classList.remove('is-fading');
+    status.hidden = false;
+    statusDismissTimer = setTimeout(() => {
+      status.classList.add('is-fading');
+      statusDismissTimer = setTimeout(() => {
+        status.hidden = true;
+        status.textContent = '';
+        status.classList.remove('is-fading');
+        statusDismissTimer = null;
+      }, 450);
+    }, 5200);
+  }
   function paint() {
     button.setAttribute('aria-pressed', String(enabled));
     button.setAttribute('aria-busy', String(!!loading)); button.disabled = !!loading;
@@ -1364,7 +1410,7 @@
         enabled = true;
         if (!managedPage) lastDistance = scrollY / Math.max(1, innerHeight);
         rest(true); mix();
-        message(`Caja de música activada (${activeMelodyMeta.day} · ${activeMelodyMeta.name}). Desplázate para tocar.`);
+        message(activeMelodyMeta);
       })().catch(async () => {
         enabled = false;
         if (context) await context.close().catch(() => {});
@@ -1387,6 +1433,8 @@
     dailyMelody: Object.freeze({
       index: activeMelodyIndex,
       name: activeMelodyMeta.name,
+      title: activeMelodyMeta.title,
+      subtitle: activeMelodyMeta.subtitle,
       day: activeMelodyMeta.day
     }),
     depth(value) { depth = Math.max(0, Math.min(1, value)); if (enabled) mix(); },

@@ -1318,21 +1318,80 @@
     $('.art-layers', stage).after(galleryTrigger);
     const workGallery = createGalleryElement('dialog', 'work-gallery-dialog');
     workGallery.id = 'work-gallery-dialog';
+    workGallery.dataset.loupeActive = 'true';
+    workGallery.dataset.xrayActive = 'false';
     workGallery.setAttribute('aria-labelledby', 'work-gallery-title');
     workGallery.setAttribute('aria-describedby', 'work-gallery-meta');
+    const galleryBackdrop = createGalleryElement('div', 'work-gallery-backdrop');
+    galleryBackdrop.setAttribute('aria-hidden', 'true');
     const galleryHeader = createGalleryElement('div', 'work-gallery-header');
     const galleryClose = createGalleryElement('button', '', 'Cerrar ×');
     galleryClose.type = 'button'; galleryClose.autofocus = true;
-    galleryHeader.append(createGalleryElement('p', 'eyebrow', 'La obra, de cerca'), galleryClose);
+    galleryHeader.append(createGalleryElement('p', 'eyebrow', 'Mesa de disección · La obra, de cerca'), galleryClose);
     const galleryIntro = createGalleryElement('div', 'work-gallery-intro');
+    const gallerySerial = createGalleryElement('span', 'work-gallery-serial');
+    gallerySerial.dataset.workGallerySerial = '';
     const galleryTitle = createGalleryElement('h2'); galleryTitle.id = 'work-gallery-title';
     const galleryMeta = createGalleryElement('p');
     galleryMeta.id = 'work-gallery-meta'; galleryMeta.dataset.workGalleryMeta = '';
-    galleryIntro.append(galleryTitle, galleryMeta);
+    const dissectionDeck = createGalleryElement('div', 'work-dissection-deck');
+    dissectionDeck.dataset.workDissection = '';
+    const dissectionStory = createGalleryElement('blockquote', 'work-dissection-story');
+    dissectionStory.dataset.workStoryExcerpt = '';
+    const dissectionPills = createGalleryElement('div', 'work-dissection-pills');
+    dissectionPills.dataset.workPills = '';
+    const dissectionTools = createGalleryElement('div', 'work-dissection-tools');
+    const loupeToggleBtn = createGalleryElement('button', 'dissection-tool-btn is-active', '🔍 Lupa matérica 3×');
+    loupeToggleBtn.type = 'button';
+    loupeToggleBtn.dataset.galleryLoupeToggle = '';
+    loupeToggleBtn.setAttribute('aria-pressed', 'true');
+    const xrayToggleBtn = createGalleryElement('button', 'dissection-tool-btn', '✦ Luz rasante / Relieve');
+    xrayToggleBtn.type = 'button';
+    xrayToggleBtn.dataset.galleryXrayToggle = '';
+    xrayToggleBtn.setAttribute('aria-pressed', 'false');
+    const storyOpenBtn = createGalleryElement('button', 'dissection-tool-btn', 'Sobre esta obra +');
+    storyOpenBtn.type = 'button';
+    storyOpenBtn.dataset.galleryStoryOpen = '';
+    const prevWorkBtn = createGalleryElement('button', 'dissection-tool-btn', '← Obra anterior');
+    prevWorkBtn.type = 'button';
+    prevWorkBtn.dataset.galleryPrevWork = '';
+    const nextWorkBtn = createGalleryElement('button', 'dissection-tool-btn', 'Siguiente obra →');
+    nextWorkBtn.type = 'button';
+    nextWorkBtn.dataset.galleryNextWork = '';
+    dissectionTools.append(loupeToggleBtn, xrayToggleBtn, storyOpenBtn, prevWorkBtn, nextWorkBtn);
+    dissectionDeck.append(dissectionStory, dissectionPills, dissectionTools);
+    galleryIntro.append(gallerySerial, galleryTitle, galleryMeta, dissectionDeck);
     const galleryGrid = createGalleryElement('div', 'work-gallery-grid');
-    workGallery.append(galleryHeader, galleryIntro, galleryGrid,
-      createGalleryElement('p', 'work-gallery-footer', 'Pulsa una imagen para ampliarla'));
+    workGallery.append(galleryBackdrop, galleryHeader, galleryIntro, galleryGrid,
+      createGalleryElement('p', 'work-gallery-footer', 'Desliza la lupa sobre el lienzo para inspeccionar el grano · Pulsa una plancha para abrirla a pantalla completa'));
     document.body.append(workGallery);
+    loupeToggleBtn.addEventListener('click', () => {
+      const nextState = workGallery.dataset.loupeActive !== 'true';
+      workGallery.dataset.loupeActive = String(nextState);
+      loupeToggleBtn.classList.toggle('is-active', nextState);
+      loupeToggleBtn.setAttribute('aria-pressed', String(nextState));
+    });
+    xrayToggleBtn.addEventListener('click', () => {
+      const nextState = workGallery.dataset.xrayActive !== 'true';
+      workGallery.dataset.xrayActive = String(nextState);
+      xrayToggleBtn.classList.toggle('is-active', nextState);
+      xrayToggleBtn.setAttribute('aria-pressed', String(nextState));
+      window.NAROA_SOUND?.stencilRollerWipe?.('Pizarra');
+    });
+    storyOpenBtn.addEventListener('click', () => {
+      workGallery.close();
+      openDialog('#story-dialog');
+    });
+    prevWorkBtn.addEventListener('click', () => {
+      const prevIdx = (state.index - 1 + works.length) % works.length;
+      workGallery.close();
+      inspect(works[prevIdx].slug);
+    });
+    nextWorkBtn.addEventListener('click', () => {
+      const nextIdx = (state.index + 1) % works.length;
+      workGallery.close();
+      inspect(works[nextIdx].slug);
+    });
     let galleryReturnFocus = null, photoReturnFocus = null;
     galleryClose.addEventListener('click', () => workGallery.close());
     workGallery.addEventListener('click', event => {
@@ -3483,13 +3542,35 @@
       galleryReturnFocus = trigger;
       state.photo = 0;
       workGallery.dataset.work = p.slug;
+      workGallery.style.setProperty('--gallery-backdrop', `url("${p.cover}")`);
+      gallerySerial.textContent = `EXPEDIENTE MATÉRICO Nº ${String(state.index + 1).padStart(2, '0')} / ${String(works.length).padStart(2, '0')} · ${(p.series || p.category || 'ESTUDIO BILBAO').toUpperCase()}`;
       galleryTitle.textContent = p.title;
       galleryMeta.textContent = `${p.label} · ${p.photos.length} ${p.photos.length === 1 ? 'fotografía' : 'fotografías'}`;
+      dissectionStory.textContent = p.story ? `«${p.story}»` : '';
+      dissectionStory.hidden = !p.story;
+      const pillItems = [
+        p.technique ? `Técnica: ${p.technique}` : null,
+        p.support ? `Soporte: ${p.support}` : null,
+        p.dimensions ? `Formato: ${p.dimensions}` : null,
+        p.series ? `Serie: ${p.series}` : null,
+        p.year ? `Año: ${p.year}` : null,
+        `${p.photos.length} ${p.photos.length === 1 ? 'plancha' : 'planchas'} de archivo`
+      ].filter(Boolean);
+      dissectionPills.replaceChildren(...pillItems.map(txt => createGalleryElement('span', 'work-dissection-pill', txt)));
       galleryGrid.dataset.count = String(p.photos.length);
       workGallery.dataset.category = p.category || '';
       workGallery.dataset.support = p.support || '';
+      const roman = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII'];
       const figures = p.photos.map((photo, index) => {
         const figure = createGalleryElement('figure', 'work-gallery-figure');
+        figure.dataset.plateIndex = String(index);
+        const plateHead = createGalleryElement('div', 'work-gallery-plate-bar');
+        const plateRole = index === 0 ? 'VISTA DE ESTUDIO' : `DETALLE MATÉRICO · ${roman[index] || index + 1}`;
+        const plateRes = photo.width && photo.height ? `${photo.width}×${photo.height}px` : '4K MASTER';
+        plateHead.append(
+          createGalleryElement('span', 'work-gallery-plate-tag', `PLANCHA ${roman[index] || index + 1} // ${plateRole}`),
+          createGalleryElement('span', 'work-gallery-plate-spec', plateRes)
+        );
         const link = createGalleryElement('a', 'work-gallery-image');
         link.href = photo.original || photo.src;
         link.setAttribute('aria-label', `Ampliar ${p.title}: ${photo.caption}`);
@@ -3503,7 +3584,24 @@
         image.addEventListener('error', () => {
           if (photo.original && image.getAttribute('src') !== photo.original) image.src = photo.original;
         }, { once: true });
-        link.append(image);
+        const loupe = createGalleryElement('span', 'work-gallery-loupe');
+        loupe.dataset.workLoupe = '';
+        loupe.setAttribute('aria-hidden', 'true');
+        loupe.style.backgroundImage = `url("${photo.original || photo.src}")`;
+        link.addEventListener('pointermove', e => {
+          if (workGallery.dataset.loupeActive !== 'true') return;
+          const r = link.getBoundingClientRect();
+          if (!r.width || !r.height) return;
+          const nx = clamp((e.clientX - r.left) / r.width, 0, 1);
+          const ny = clamp((e.clientY - r.top) / r.height, 0, 1);
+          link.style.setProperty('--loupe-x', `${(nx * 100).toFixed(1)}%`);
+          link.style.setProperty('--loupe-y', `${(ny * 100).toFixed(1)}%`);
+          link.classList.add('is-loupe-hover');
+        }, { passive: true });
+        link.addEventListener('pointerleave', () => {
+          link.classList.remove('is-loupe-hover');
+        }, { passive: true });
+        link.append(image, loupe);
         const openPhoto = event => {
           if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
           event.preventDefault();
@@ -3511,7 +3609,7 @@
           showPhoto(); openDialog('#photos-dialog');
         };
         link.addEventListener('click', openPhoto);
-        const expand = createGalleryElement('a', 'work-gallery-expand', 'Ampliar ↗');
+        const expand = createGalleryElement('a', 'work-gallery-expand', 'Abrir plancha ↗');
         expand.href = link.href;
         expand.setAttribute('aria-label', link.getAttribute('aria-label'));
         expand.setAttribute('aria-haspopup', 'dialog');
@@ -3521,7 +3619,7 @@
         description.append(
           createGalleryElement('span', 'work-gallery-number', `${String(index + 1).padStart(2, '0')} / ${String(p.photos.length).padStart(2, '0')}`),
           createGalleryElement('span', '', photo.caption), expand);
-        figure.append(link, description);
+        figure.append(plateHead, link, description);
         return figure;
       });
       galleryGrid.replaceChildren(...figures);

@@ -20,46 +20,62 @@ set -euo pipefail
 PROJECT="naroaonline"
 BUILD_DIR="dist"
 MODE="production"
+TARGET="all"
+SKIP_BUILD=0
 
-case "${1:-}" in
-  --help|-h|help)
-    echo ""
-    echo "═══════════════════════════════════════════════════════════════"
-    echo "  NAROA.ONLINE · PIPELINE DE DESPLIEGUE MULTI-SUPERFICIE C5-REAL"
-    echo "═══════════════════════════════════════════════════════════════"
-    echo ""
-    echo "Comandos disponibles:"
-    echo "  ./deploy.sh               Compilar, validar y desplegar a PRODUCCIÓN"
-    echo "  ./deploy.sh --preview     Compilar y desplegar a ramas PREVIEW"
-    echo "  ./deploy.sh --build-only  Compilar y verificar en local (sin subir)"
-    echo "  ./deploy.sh --test-only   Ejecutar linter, tipos y tests JSDOM"
-    echo "  ./deploy.sh --help        Mostrar esta ayuda"
-    echo ""
-    echo "Superficies de destino:"
-    echo "  • El Museo (Inmersivo):  https://naroagutierrezgil.com (.deploy/)"
-    echo "  • El Lab (3D / Three):   https://naroaonline.pages.dev (dist/)"
-    echo "  • Shadow Mirror:         https://naroaonline.vercel.app"
-    echo "═══════════════════════════════════════════════════════════════"
-    echo ""
-    exit 0
-    ;;
-  --build-only|build-only|build)
-    MODE="build-only"
-    ;;
-  --preview|preview)
-    MODE="preview"
-    ;;
-  --test-only|test-only|test)
-    MODE="test-only"
-    ;;
-  production|--prod|--production|"")
-    MODE="production"
-    ;;
-  *)
-    echo "Error: Opción desconocida '$1'. Usa ./deploy.sh --help para ver las opciones." >&2
-    exit 1
-    ;;
-esac
+for arg in "$@"; do
+  case "$arg" in
+    --help|-h|help)
+      echo ""
+      echo "═══════════════════════════════════════════════════════════════"
+      echo "  NAROA.ONLINE · PIPELINE DE DESPLIEGUE MULTI-SUPERFICIE C5-REAL"
+      echo "═══════════════════════════════════════════════════════════════"
+      echo ""
+      echo "Comandos disponibles:"
+      echo "  ./deploy.sh               Compilar, validar y desplegar TODO a PRODUCCIÓN"
+      echo "  ./deploy.sh --museum      Compilar y desplegar solo EL MUSEO (.deploy/)"
+      echo "  ./deploy.sh --lab         Compilar y desplegar solo EL LAB 3D (dist/)"
+      echo "  ./deploy.sh --quick       Desplegar artefactos ya compilados (<5s, sin rebuild)"
+      echo "  ./deploy.sh --preview     Compilar y desplegar a ramas PREVIEW"
+      echo "  ./deploy.sh --build-only  Compilar y verificar en local (sin subir)"
+      echo "  ./deploy.sh --test-only   Ejecutar linter, tipos y tests JSDOM"
+      echo "  ./deploy.sh --help        Mostrar esta ayuda"
+      echo ""
+      echo "Superficies de destino:"
+      echo "  • El Museo (Inmersivo):  https://naroagutierrezgil.com (.deploy/)"
+      echo "  • El Lab (3D / Three):   https://naroaonline.pages.dev (dist/)"
+      echo "  • Shadow Mirror:         https://naroaonline.vercel.app"
+      echo "═══════════════════════════════════════════════════════════════"
+      echo ""
+      exit 0
+      ;;
+    --museum|--classic|museum)
+      TARGET="museum"
+      ;;
+    --lab|--3d|lab)
+      TARGET="lab"
+      ;;
+    --quick|--no-build|quick)
+      SKIP_BUILD=1
+      ;;
+    --build-only|build-only|build)
+      MODE="build-only"
+      ;;
+    --preview|preview)
+      MODE="preview"
+      ;;
+    --test-only|test-only|test)
+      MODE="test-only"
+      ;;
+    production|--prod|--production|--all|all|"")
+      MODE="production"
+      ;;
+    *)
+      echo "Error: Opción desconocida '$arg'. Usa ./deploy.sh --help para ver las opciones." >&2
+      exit 1
+      ;;
+  esac
+done
 
 BRANCH="$MODE"
 
@@ -86,16 +102,17 @@ fi
 [ "$MODE" = "build-only" ] || command -v wrangler >/dev/null 2>&1 || fail "wrangler no encontrado. Instala con: npm i -g wrangler"
 
 # ── 2. Construir Galería 3D / SPA (dist/) ──────────
-log "Construyendo SPA (Vite + React + Three.js)..."
-export NODE_ENV=production
-rm -rf "$BUILD_DIR"
-npm run build || fail "Build de Vite falló"
-ok "Galería 3D compilada → dist/"
+if [ "$SKIP_BUILD" = "0" ] && { [ "$TARGET" = "all" ] || [ "$TARGET" = "lab" ]; }; then
+  log "Construyendo SPA (Vite + React + Three.js)..."
+  export NODE_ENV=production
+  rm -rf "$BUILD_DIR"
+  npm run build || fail "Build de Vite falló"
+  ok "Galería 3D compilada → dist/"
 
-# ── 3. Inyectar _headers y _redirects de CF Pages ───────────
-log "Inyectando _headers y _redirects..."
+  # ── 3. Inyectar _headers y _redirects de CF Pages ───────────
+  log "Inyectando _headers y _redirects..."
 
-cat > "$BUILD_DIR/_headers" << 'EOF'
+  cat > "$BUILD_DIR/_headers" << 'EOF'
 /*
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
@@ -120,7 +137,7 @@ cat > "$BUILD_DIR/_headers" << 'EOF'
   Cache-Control: public, max-age=31536000, immutable
 EOF
 
-cat > "$BUILD_DIR/_redirects" << 'EOF'
+  cat > "$BUILD_DIR/_redirects" << 'EOF'
 # Redirecciones canónicas del Laboratorio Experimental
 /lab /#/lab 302
 /experiments /#/experiments 302
@@ -138,11 +155,11 @@ cat > "$BUILD_DIR/_redirects" << 'EOF'
 /* /index.html 200
 EOF
 
-ok "_headers y _redirects inyectados"
+  ok "_headers y _redirects inyectados"
 
-# ── 4. Robots.txt ───────────────────────────────────────────
-if [ ! -f "$BUILD_DIR/robots.txt" ]; then
-  cat > "$BUILD_DIR/robots.txt" << 'EOF'
+  # ── 4. Robots.txt ───────────────────────────────────────────
+  if [ ! -f "$BUILD_DIR/robots.txt" ]; then
+    cat > "$BUILD_DIR/robots.txt" << 'EOF'
 User-agent: OAI-SearchBot
 Allow: /
 
@@ -177,50 +194,53 @@ Disallow: /assets/backup_pre4k/
 
 Sitemap: https://naroagutierrezgil.com/sitemap.xml
 EOF
-  ok "robots.txt creado"
+    ok "robots.txt creado"
+  fi
 fi
 
 # Build the approved immersive design directly from reviewed source data.
 # Original catalogue, photographs and legacy generators are preserved.
-log "Compilando portfolio inmersivo completo..."
-PIL_CHECK="from PIL import Image, ImageOps, ImageDraw, ImageFont, ImageFilter"
-PYTHON_CMD=""
-for candidate in "python3" "python3.14" "python3.13" "python3.12" "python3.11"; do
-  if command -v "$candidate" >/dev/null 2>&1 && "$candidate" -c "$PIL_CHECK" 2>/dev/null; then
-    PYTHON_CMD="$candidate"
-    break
+if [ "$SKIP_BUILD" = "0" ] && { [ "$TARGET" = "all" ] || [ "$TARGET" = "museum" ]; }; then
+  log "Compilando portfolio inmersivo completo..."
+  PIL_CHECK="from PIL import Image, ImageOps, ImageDraw, ImageFont, ImageFilter"
+  PYTHON_CMD=""
+  for candidate in "python3" "python3.14" "python3.13" "python3.12" "python3.11"; do
+    if command -v "$candidate" >/dev/null 2>&1 && "$candidate" -c "$PIL_CHECK" 2>/dev/null; then
+      PYTHON_CMD="$candidate"
+      break
+    fi
+  done
+  if [ -z "$PYTHON_CMD" ] && command -v uv >/dev/null 2>&1; then
+    UV_PY=$(uv python find 3.14 2>/dev/null || uv python find 2>/dev/null || true)
+    if [ -n "$UV_PY" ] && "$UV_PY" -c "$PIL_CHECK" 2>/dev/null; then
+      PYTHON_CMD="$UV_PY"
+    elif PYTHONPATH="" uv run --with Pillow python3 -c "$PIL_CHECK" 2>/dev/null; then
+      unset PYTHONPATH
+      PYTHON_CMD="uv run --with Pillow python3"
+    fi
   fi
-done
-if [ -z "$PYTHON_CMD" ] && command -v uv >/dev/null 2>&1; then
-  UV_PY=$(uv python find 3.14 2>/dev/null || uv python find 2>/dev/null || true)
-  if [ -n "$UV_PY" ] && "$UV_PY" -c "$PIL_CHECK" 2>/dev/null; then
-    PYTHON_CMD="$UV_PY"
-  elif PYTHONPATH="" uv run --with Pillow python3 -c "$PIL_CHECK" 2>/dev/null; then
+  if [ -z "$PYTHON_CMD" ]; then
+    log "Saneando PYTHONPATH e instalando Pillow para $(python3 --version 2>&1)..."
     unset PYTHONPATH
-    PYTHON_CMD="uv run --with Pillow python3"
-  fi
-fi
-if [ -z "$PYTHON_CMD" ]; then
-  log "Saneando PYTHONPATH e instalando Pillow para $(python3 --version 2>&1)..."
-  unset PYTHONPATH
-  if ! python3 -c "$PIL_CHECK" 2>/dev/null; then
-    if python3 -m venv .venv-build 2>/dev/null && .venv-build/bin/pip install --quiet -r requirements.txt 2>/dev/null; then
-      PYTHON_CMD=".venv-build/bin/python3"
+    if ! python3 -c "$PIL_CHECK" 2>/dev/null; then
+      if python3 -m venv .venv-build 2>/dev/null && .venv-build/bin/pip install --quiet -r requirements.txt 2>/dev/null; then
+        PYTHON_CMD=".venv-build/bin/python3"
+      else
+        python3 -m pip install --quiet --break-system-packages --ignore-installed -r requirements.txt 2>/dev/null || \
+        python3 -m pip install --quiet --ignore-installed -r requirements.txt 2>/dev/null || \
+        python3 -m pip install --quiet --user --ignore-installed -r requirements.txt 2>/dev/null || \
+        fail "Error instalando Pillow para build_immersive_site.py"
+        PYTHON_CMD="python3"
+      fi
     else
-      python3 -m pip install --quiet --break-system-packages --ignore-installed -r requirements.txt 2>/dev/null || \
-      python3 -m pip install --quiet --ignore-installed -r requirements.txt 2>/dev/null || \
-      python3 -m pip install --quiet --user --ignore-installed -r requirements.txt 2>/dev/null || \
-      fail "Error instalando Pillow para build_immersive_site.py"
       PYTHON_CMD="python3"
     fi
-  else
-    PYTHON_CMD="python3"
   fi
+  $PYTHON_CMD tools/build_immersive_site.py || fail "Compilación del portfolio falló"
+  $PYTHON_CMD tools/check_immersive_site.py || fail "Validación del portfolio falló"
+  node --max-old-space-size=4096 tools/test_immersive_dom.cjs || fail "Validación de interacciones falló"
+  ok "Portfolio completo compilado → .deploy/"
 fi
-$PYTHON_CMD tools/build_immersive_site.py || fail "Compilación del portfolio falló"
-$PYTHON_CMD tools/check_immersive_site.py || fail "Validación del portfolio falló"
-node --max-old-space-size=4096 tools/test_immersive_dom.cjs || fail "Validación de interacciones falló"
-ok "Portfolio completo compilado → .deploy/"
 
 # ── 6. Deploy a Cloudflare Pages ─────────────────────────────
 if [ "$MODE" = "build-only" ]; then
@@ -244,16 +264,20 @@ if [ -n "${CLOUDFLARE_API_TOKEN:-}" ]; then
   export CLOUDFLARE_API_TOKEN
 fi
 
-log "Desplegando EL MUSEO → CF Pages proyecto ${BOLD}naroagutierrezgil-com${NC}..."
-if [ "$MODE" = "preview" ]; then
-  wrangler pages deploy .deploy --project-name "naroagutierrezgil-com" --branch preview --commit-dirty=true
-  wrangler pages deploy "$BUILD_DIR" --project-name "naroaonline" --branch preview --commit-dirty=true
-  ok "Deploy PREVIEW completado"
-else
-  wrangler pages deploy .deploy --project-name "naroagutierrezgil-com" --branch production --commit-dirty=true
-  log "Desplegando EL SÓTANO / LAB → CF Pages proyecto ${BOLD}naroaonline${NC}..."
-  wrangler pages deploy "$BUILD_DIR" --project-name "naroaonline" --branch production --commit-dirty=true
-  ok "Deploy PRODUCCIÓN completado → https://naroagutierrezgil.com/"
+DEPLOY_BRANCH=$([ "$MODE" = "preview" ] && echo "preview" || echo "production")
+
+if [ "$TARGET" = "all" ] || [ "$TARGET" = "museum" ]; then
+  [ -d ".deploy" ] || fail "Directorio .deploy no encontrado. Ejecuta sin --quick primero."
+  log "Desplegando EL MUSEO → CF Pages proyecto ${BOLD}naroagutierrezgil-com${NC} (${DEPLOY_BRANCH})..."
+  wrangler pages deploy .deploy --project-name "naroagutierrezgil-com" --branch "$DEPLOY_BRANCH" --commit-dirty=true
+  ok "Deploy EL MUSEO completado → https://naroagutierrezgil.com/"
+fi
+
+if [ "$TARGET" = "all" ] || [ "$TARGET" = "lab" ]; then
+  [ -d "$BUILD_DIR" ] || fail "Directorio $BUILD_DIR no encontrado. Ejecuta sin --quick primero."
+  log "Desplegando EL SÓTANO / LAB → CF Pages proyecto ${BOLD}naroaonline${NC} (${DEPLOY_BRANCH})..."
+  wrangler pages deploy "$BUILD_DIR" --project-name "naroaonline" --branch "$DEPLOY_BRANCH" --commit-dirty=true
+  ok "Deploy EL LAB completado → https://naroaonline.pages.dev/"
 fi
 
 # ── 7. Purga de Caché Global en Cloudflare Edge ──────────────
