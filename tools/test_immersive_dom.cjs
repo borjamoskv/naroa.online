@@ -1080,12 +1080,17 @@ async function eyeMatch(ui, base, points) {
 
     assert.ok(armigoPage.w.NAROA_KINETICS, 'NAROA_KINETICS telemetry API exposed');
     const kinInit = armigoPage.w.NAROA_KINETICS.getState();
-    assert.equal(kinInit.backend, 'c5-substep-inertial-kinetics-v4', 'Kinetics uses C5 substep inertial kinetics v4 backend');
-    assert.equal(kinInit.scrollFeel, 'critically-damped-substep-v4', 'Critically-damped 2nd-order velocity blending is active');
+    assert.equal(kinInit.backend, 'c5-substep-inertial-kinetics-v5', 'Kinetics uses C5 substep inertial kinetics v5 backend');
+    assert.equal(kinInit.scrollFeel, 'critically-damped-substep-v5', 'Critically-damped 2nd-order velocity blending is active');
     assert.equal(kinInit.substepScroll, true, 'Substep scroll is active');
     assert.equal(kinInit.holdOpticalBreath, true, 'Continuous optical breath during viewing hold is active');
     assert.equal(kinInit.zeroScrollLock, true, 'Zero scroll hijacking lock is enforced');
     assert.equal(kinInit.microPan25D, true, '2.5D micro-pan is active on gallery');
+    assert.equal(kinInit.springPan2ndOrder, true, '2nd-order spring-damped pointer micro-inertia is active');
+    assert.equal(kinInit.velocityDepthCoupling, true, 'Optical velocity depth coupling is active');
+    assert.equal(kinInit.differentialLayerParallax, true, 'Multi-layer differential parallax is active');
+    assert.equal(armigoPage.find('[data-gallery]').style.getPropertyValue('--velocity-depth'), '0px', '--velocity-depth converges to 0px at rest');
+    assert.equal(armigoPage.find('[data-gallery]').style.getPropertyValue('--velocity-tilt-x'), '0deg', '--velocity-tilt-x converges to 0deg at rest');
     assert.equal(kinInit.gyroPan3D, true, '3D gyroscopic tilt is active on gallery');
     assert.equal(kinInit.indexGaussianWave, true, 'Gaussian proximity wave is active on vertical index spine');
     assert.ok(kinInit.magneticCount >= 6, 'Magnetic spring-damper controls registered');

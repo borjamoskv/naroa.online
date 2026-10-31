@@ -1560,6 +1560,85 @@
       });
     } catch {}
   }
+  let lastInterworkCueTime = 0, lastInterworkCueKind = '', lastInterworkCueCount = 0;
+  const INTERWORK_CUE_PROFILES = {
+    berto:        { notes: [146.83, 220.00, 349.23], wave: 'triangle', subWave: 'sine',     cutoff: 560, endCut: 340, attack: 0.036, decay: 1.85, stagger: 0.045, glide: 1.004 },
+    wineflame:    { notes: [164.81, 220.00, 277.18], wave: 'sawtooth', subWave: 'triangle', cutoff: 640, endCut: 350, attack: 0.048, decay: 2.05, stagger: 0.038, glide: 1.012 },
+    pajarraca:    { notes: [146.83, 174.61, 233.08], wave: 'sawtooth', subWave: 'sine',     cutoff: 520, endCut: 340, attack: 0.038, decay: 1.90, stagger: 0.028, glide: 0.988 },
+    llorona:      { notes: [293.66, 261.63, 220.00, 174.61], wave: 'sine', subWave: 'triangle', cutoff: 620, endCut: 360, attack: 0.034, decay: 2.25, stagger: 0.065, glide: 0.996 },
+    arkatz:       { notes: [146.83, 293.66, 349.23], wave: 'triangle', subWave: 'sine',     cutoff: 510, endCut: 340, attack: 0.034, decay: 1.85, stagger: 0.055, glide: 1.002 },
+    shark3d:      { notes: [146.83, 174.61, 220.00, 261.63], wave: 'sawtooth', subWave: 'sine', cutoff: 680, endCut: 360, attack: 0.052, decay: 2.15, stagger: 0.032, glide: 1.008 },
+    ancla:        { notes: [196.00, 233.08, 293.66], wave: 'sawtooth', subWave: 'triangle', cutoff: 580, endCut: 345, attack: 0.050, decay: 2.10, stagger: 0.040, glide: 0.994 },
+    bowiestar:    { notes: [146.83, 220.00, 261.63, 329.63, 440.00], wave: 'triangle', subWave: 'sine', cutoff: 820, endCut: 390, attack: 0.035, decay: 2.15, stagger: 0.042, glide: 1.006 },
+    audreybolt:   { notes: [293.66, 220.00, 146.83], wave: 'sawtooth', subWave: 'triangle', cutoff: 760, endCut: 340, attack: 0.032, decay: 1.95, stagger: 0.020, glide: 0.972 },
+    rosettabirds: { notes: [349.23, 440.00, 392.00, 293.66], wave: 'triangle', subWave: 'sine', cutoff: 740, endCut: 410, attack: 0.034, decay: 1.90, stagger: 0.052, glide: 1.010 }
+  };
+  function playInterworkCue(kind, count = 1) {
+    const profile = INTERWORK_CUE_PROFILES[kind];
+    if (!profile) return;
+    lastInterworkCueKind = kind;
+    lastInterworkCueCount = Math.max(1, Number(count) || 1);
+    const nowMs = typeof performance !== 'undefined' ? performance.now() : Date.now();
+    if (nowMs - lastInterworkCueTime < 155) return;
+    lastInterworkCueTime = nowMs;
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      try { navigator.vibrate([14, 22, 16]); } catch {}
+    }
+    if (!enabled || !context || !engine || context.state !== 'running') return;
+    try {
+      const now = context.currentTime + 0.005;
+      const target = engine.compressor || engine.master;
+      const gallery = getGalleryReverb();
+      const baseNotes = (lastInterworkCueCount % 2 === 0)
+        ? profile.notes.slice().reverse()
+        : profile.notes;
+      baseNotes.forEach((freq, i) => {
+        if (typeof context.createOscillator !== 'function') return;
+        const osc = context.createOscillator();
+        const sub = context.createOscillator();
+        const filter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
+        const gain = context.createGain();
+        const t0 = now + i * profile.stagger;
+        const wowCents = Math.sin(lastInterworkCueCount * 1.6 + i * 1.1) * 2.8;
+        const tuned = freq * Math.pow(2, wowCents / 1200);
+        osc.type = profile.wave;
+        sub.type = profile.subWave;
+        osc.frequency.setValueAtTime(tuned, t0);
+        sub.frequency.setValueAtTime(tuned * 0.5, t0);
+        if (osc.frequency.exponentialRampToValueAtTime) {
+          osc.frequency.exponentialRampToValueAtTime(tuned * profile.glide, t0 + 0.12);
+          osc.frequency.exponentialRampToValueAtTime(tuned, t0 + 0.52);
+        }
+        if (filter) {
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(profile.cutoff, t0);
+          if (filter.frequency.exponentialRampToValueAtTime) {
+            filter.frequency.exponentialRampToValueAtTime(profile.endCut, t0 + profile.decay);
+          }
+          filter.Q.setValueAtTime(0.44, t0);
+        }
+        const vol = 0.062 * Math.pow(0.9, i);
+        gain.gain.setValueAtTime(0.0001, t0);
+        if (gain.gain.linearRampToValueAtTime) {
+          gain.gain.linearRampToValueAtTime(vol, t0 + profile.attack);
+        }
+        if (gain.gain.exponentialRampToValueAtTime) {
+          gain.gain.exponentialRampToValueAtTime(0.0001, t0 + profile.decay);
+        }
+        osc.connect(filter || gain);
+        sub.connect(filter || gain);
+        if (filter) filter.connect(gain);
+        gain.connect(target);
+        if (gallery?.input) {
+          try { gain.connect(gallery.input); } catch {}
+        }
+        osc.start(t0);
+        sub.start(t0);
+        osc.stop(t0 + profile.decay + 0.06);
+        sub.stop(t0 + profile.decay + 0.06);
+      });
+    } catch {}
+  }
   let lastGameOverSlug = '', lastKissSlug = '', lastPuffSlug = '', lastKissTime = 0, lastPuffTime = 0;
   function play8BitGameOver() {
     lastGameOverSlug = 'game-over';
@@ -2141,6 +2220,9 @@
     guitarStrum(strumCount) {
       playMonkeyGuitarStrum(strumCount);
     },
+    interworkCue(kind, count) {
+      playInterworkCue(kind, count);
+    },
     eguzkilore() {
       playEguzkiloreChime();
     },
@@ -2291,6 +2373,8 @@
     get lastPuffSlug() { return lastPuffSlug; },
     get lastKutxaSlug() { return lastKutxaSlug; },
     get lastGuitarStrumSlug() { return lastGuitarStrumSlug; },
+    get lastInterworkCueKind() { return lastInterworkCueKind; },
+    get lastInterworkCueCount() { return lastInterworkCueCount; },
     get lastMenuNoteIndex() { return lastMenuNoteIndex; },
     get lastPhonographCategory() { return lastPhonographCategory; },
     get lastPhonographFreq() { return lastPhonographFreq; },

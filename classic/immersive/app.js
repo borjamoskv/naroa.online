@@ -1065,10 +1065,89 @@
     getState: () => ({ ...stencilWallState })
   };
 
+  const HERO_POOL_SLUGS = [
+    'marilyn-rocks',
+    'amy-rocks',
+    'rara-avis',
+    'amor-en-conserva',
+    'entre-tantas-flores-de-dia',
+    'johnny-rocks',
+    'rockagipsy',
+    'cantinflowers',
+    'out-por-los-pelos',
+    'lauralore',
+    'dar-la-lata',
+    'julio-iglesias-como-un-reloj-suizo',
+    'hugo-box',
+    'el-hombre-que-susurraba-a-las-estrellas'
+  ];
+
+  const focals = { 'marilyn-rocks': '50.4% 51.7%', 'amy-rocks': '51.2% 42.4%', 'rara-avis': '56% 42%', 'amor-en-conserva': '50% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'johnny-rocks': '50% 42%', 'rockagipsy': '50% 43%', 'cantinflowers': '50% 48%', 'out-por-los-pelos': '52% 44%', 'hugo-box': '47.8% 42.7%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '54% 44%', 'lauralore': '46% 44%', 'izei': '48% 42%', 'the-love-boat': '50% 44%', 'marian-de-miranda': '66% 36%', 'la-famiglia': '50% 40%', 'smile-and-the-world-smiles-back': '50% 50%', 'luis-and-sis': '50% 45%', 'de-color': '50% 45%', 'el-reencuentro': '50% 45%', 'papitxulo': '50% 40%', 'starchild': '50% 40%', 'las-rosalias': '50% 50%', 'baroque-farrokh': '50% 38%', 'el-gran-dakari': '50% 42%', 'audrey-hepburn': '50% 36%', 'geisha': '50% 38%', 'lagrimas-de-oro': '50% 38%', 'the-golden-couple': '50% 40%', 'pink-and-sparkles': '50% 45%', 'love': '50% 44%', 'julio-iglesias-como-un-reloj-suizo': '50% 50%' };
+  const mobileFocals = { 'marilyn-rocks': '50.4% 51.7%', 'amy-rocks': '51.2% 42.4%', 'rara-avis': '61% 40%', 'amor-en-conserva': '48% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'cantinflowers': '50% 48%', 'out-por-los-pelos': '52% 44%', 'denbora-nora-zoaz': '18% 45%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '56% 44%', 'lauralore': '48% 44%', 'izei': '48% 42%', 'the-love-boat': '50% 44%', 'marian-de-miranda': '66% 36%', 'la-famiglia': '50% 40%', 'smile-and-the-world-smiles-back': '50% 50%', 'luis-and-sis': '50% 45%', 'de-color': '50% 45%', 'el-reencuentro': '50% 45%', 'papitxulo': '50% 40%', 'starchild': '50% 40%', 'las-rosalias': '50% 50%', 'baroque-farrokh': '50% 38%', 'el-gran-dakari': '50% 42%', 'audrey-hepburn': '50% 36%', 'geisha': '50% 38%', 'lagrimas-de-oro': '50% 38%', 'the-golden-couple': '50% 40%', 'pink-and-sparkles': '50% 45%', 'love': '50% 44%', 'julio-iglesias-como-un-reloj-suizo': '50% 50%' };
+
+  function getSessionHeroSlug(works) {
+    if (typeof window === 'undefined') return works[0]?.slug || 'marilyn-rocks';
+    if (window.__IS_JSDOM__ || (typeof navigator !== 'undefined' && navigator.userAgent && navigator.userAgent.includes('jsdom'))) {
+      return works[0]?.slug || 'marilyn-rocks';
+    }
+    try {
+      const sessionKey = 'naroa_session_hero';
+      const lastKey = 'naroa_last_hero';
+      const existing = sessionStorage.getItem(sessionKey);
+      if (existing && works.some(w => w.slug === existing)) {
+        return existing;
+      }
+      const pool = HERO_POOL_SLUGS.filter(slug => works.some(w => w.slug === slug));
+      if (!pool.length) return works[0]?.slug || 'marilyn-rocks';
+      const lastHero = localStorage.getItem(lastKey);
+      const candidates = pool.length > 1 && lastHero ? pool.filter(slug => slug !== lastHero) : pool;
+      const chosen = candidates[Math.floor(Math.random() * candidates.length)] || pool[0];
+      sessionStorage.setItem(sessionKey, chosen);
+      localStorage.setItem(lastKey, chosen);
+      return chosen;
+    } catch {
+      return works[0]?.slug || 'marilyn-rocks';
+    }
+  }
+
   const stage = $('[data-gallery]');
   if (stage) {
     stage.classList.add('is-resting');
-    const works = catalogue.projects.filter(p => stage.dataset.subset !== 'Vaivenes' || p.series === 'Vaivenes');
+    let works = catalogue.projects.filter(p => stage.dataset.subset !== 'Vaivenes' || p.series === 'Vaivenes');
+    const heroThresholdEl = $('[data-hero-threshold]', stage);
+    if (heroThresholdEl && (!stage.dataset.initial || stage.dataset.initial === '0') && (!stage.dataset.subset || stage.dataset.subset === 'all')) {
+      const sessionHeroSlug = getSessionHeroSlug(works);
+      if (sessionHeroSlug && sessionHeroSlug !== works[0].slug) {
+        const heroIdx = works.findIndex(w => w.slug === sessionHeroSlug);
+        if (heroIdx > 0) {
+          const [heroWork] = works.splice(heroIdx, 1);
+          works.unshift(heroWork);
+          const artLayers = $('.art-layers', stage);
+          const heroSceneEl = stage.querySelector(`.art-scene[data-work="${sessionHeroSlug}"]`);
+          if (artLayers && heroSceneEl) {
+            artLayers.insertBefore(heroSceneEl, artLayers.firstElementChild);
+            const heroImg = $('img', heroSceneEl);
+            if (heroImg) {
+              if (!heroImg.src && heroImg.dataset.src) heroImg.src = heroImg.dataset.src;
+              heroImg.setAttribute('fetchpriority', 'high');
+            }
+            $$('.art-scene', stage).forEach((s, i) => {
+              s.classList.toggle('is-current', i === 0);
+              s.setAttribute('aria-hidden', String(i !== 0));
+              s.dataset.scene = String(i);
+            });
+          }
+          const focal = (innerWidth < 760 ? mobileFocals[heroWork.slug] : focals[heroWork.slug]) || '50% 50%';
+          heroThresholdEl.style.setProperty('--monocle-preview', `url("${heroWork.cover || heroWork.photos[0].src}")`);
+          heroThresholdEl.style.setProperty('--hero-focal', focal);
+          const previewEl = $('.hero-monocle-marilyn', heroThresholdEl);
+          if (previewEl) {
+            previewEl.style.setProperty('background-position', focal);
+            previewEl.style.setProperty('transform-origin', focal);
+          }
+        }
+      }
+    }
     const scenes = $$('.art-scene', stage), images = scenes.map(s => $('img', s));
     scenes.forEach((s, i) => {
       if (works[i]) {
@@ -1484,8 +1563,6 @@
       galleryReturnFocus = null;
       scheduleScroll();
     });
-    const focals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '56% 42%', 'amor-en-conserva': '50% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'johnny-rocks': '50% 42%', 'rockagipsy': '50% 43%', 'hugo-box': '47.8% 42.7%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '54% 44%', 'lauralore': '46% 44%', 'izei': '48% 42%', 'the-love-boat': '50% 44%', 'marian-de-miranda': '66% 36%', 'la-famiglia': '50% 40%', 'smile-and-the-world-smiles-back': '50% 50%', 'luis-and-sis': '50% 45%', 'de-color': '50% 45%', 'el-reencuentro': '50% 45%', 'papitxulo': '50% 40%', 'starchild': '50% 40%', 'las-rosalias': '50% 50%', 'baroque-farrokh': '50% 38%', 'el-gran-dakari': '50% 42%', 'audrey-hepburn': '50% 36%', 'geisha': '50% 38%', 'lagrimas-de-oro': '50% 38%', 'the-golden-couple': '50% 40%', 'pink-and-sparkles': '50% 45%', 'love': '50% 44%', 'julio-iglesias-como-un-reloj-suizo': '50% 50%' };
-    const mobileFocals = { 'marilyn-rocks': '50.4% 51.7%', 'rara-avis': '61% 40%', 'amor-en-conserva': '48% 54%', 'entre-tantas-flores-de-dia': '50% 0%', 'denbora-nora-zoaz': '18% 45%', 'el-hombre-que-susurraba-a-las-estrellas': '65.2% 57.4%', 'i-got-you-babe': '38% 46%', 'jose-manuel-ezquerra': '62% 42%', 'dar-la-lata': '56% 44%', 'lauralore': '48% 44%', 'izei': '48% 42%', 'the-love-boat': '50% 44%', 'marian-de-miranda': '66% 36%', 'la-famiglia': '50% 40%', 'smile-and-the-world-smiles-back': '50% 50%', 'luis-and-sis': '50% 45%', 'de-color': '50% 45%', 'el-reencuentro': '50% 45%', 'papitxulo': '50% 40%', 'starchild': '50% 40%', 'las-rosalias': '50% 50%', 'baroque-farrokh': '50% 38%', 'el-gran-dakari': '50% 42%', 'audrey-hepburn': '50% 36%', 'geisha': '50% 38%', 'lagrimas-de-oro': '50% 38%', 'the-golden-couple': '50% 40%', 'pink-and-sparkles': '50% 45%', 'love': '50% 44%', 'julio-iglesias-como-un-reloj-suizo': '50% 50%' };
     // Pupil centres measured on the unaltered cover photographs, in source-image coordinates.
     const eyes = {
       'marilyn-rocks': { x: .635, y: .392, iris: .030 },
@@ -2295,7 +2372,6 @@
     }
     const SCENE_ACCENTS = ['#edbca4', '#f7d594', '#ff69b4', '#93c572', '#6897ff', '#f4d06f', '#e07a5f'];
     const heroPointer = { x: 0, y: 0, tx: 0, ty: 0, raf: null };
-    const heroThresholdEl = $('[data-hero-threshold]', stage);
 
     function initMonocleAnamorphicShader(container) {
       if (!container || typeof window === 'undefined') return null;
@@ -2430,9 +2506,8 @@
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([247, 213, 148, 255]));
 
       let textureLoaded = false;
-      const previewAttr = container.style.getPropertyValue('--monocle-preview') || '';
-      const previewUrl = previewAttr.replace(/^url\(["']?|["']?\)$/g, '').trim() || (works && works[0] && works[0].cover);
-      if (previewUrl) {
+      function loadTexture(url) {
+        if (!url || !gl) return;
         const img = new Image();
         img.crossOrigin = 'anonymous';
         img.onload = () => {
@@ -2443,7 +2518,12 @@
             render(0, 0, 0);
           } catch {}
         };
-        img.src = previewUrl;
+        img.src = url;
+      }
+      const previewAttr = container.style.getPropertyValue('--monocle-preview') || '';
+      const previewUrl = previewAttr.replace(/^url\(["']?|["']?\)$/g, '').trim() || (works && works[0] && works[0].cover);
+      if (previewUrl) {
+        loadTexture(previewUrl);
       }
 
       function render(mx, my, time) {
@@ -2461,7 +2541,8 @@
 
       return {
         render,
-        canvas
+        canvas,
+        loadTexture
       };
     }
 
@@ -2575,13 +2656,14 @@
         if (still) { image.style.transform = ''; return; }
         if (!transition) {
           const isBowie = works[index].slug === 'el-hombre-que-susurraba-a-las-estrellas';
-          const isMarilyn = index === 0;
+          const isHero = index === 0;
           if (isBowie) {
             image.style.transformOrigin = '65.2% 57.4%';
             const holdZoom = 1.25 + smooth(pose.explore) * 0.50;
             image.style.transform = `scale(${holdZoom.toFixed(5)})`;
-          } else if (isMarilyn) {
-            image.style.transformOrigin = '50.4% 51.7%';
+          } else if (isHero) {
+            const heroFocal = (innerWidth < 760 ? mobileFocals[works[0].slug] : focals[works[0].slug]) || '50.4% 51.7%';
+            image.style.transformOrigin = heroFocal;
             if (!still && heroThreshold && pose.distance < 0.36) {
               const tRaw = clamp(pose.distance / 0.36, 0, 1);
               const t = smooth(tRaw);

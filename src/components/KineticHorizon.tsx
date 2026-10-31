@@ -72,6 +72,15 @@ export function KineticHorizon({
   )
   const [mouseCoord, setMouseCoord] = useState({ x: 0, y: 0 })
   const [cursorOverArtwork, setCursorOverArtwork] = useState<number | null>(null)
+  const targetMouseRef = useRef({
+    x: typeof window !== 'undefined' ? window.innerWidth / 2 : 720,
+    y: typeof window !== 'undefined' ? window.innerHeight / 2 : 450,
+  })
+  const smoothMouseRef = useRef({
+    x: typeof window !== 'undefined' ? window.innerWidth / 2 : 720,
+    y: typeof window !== 'undefined' ? window.innerHeight / 2 : 450,
+  })
+  const mouseVelRef = useRef({ x: 0, y: 0 })
 
   // Espaciado continuo armónico entre monolitos (compone obra hero central + alas laterales visibles)
   const itemSpacing =
@@ -236,8 +245,32 @@ export function KineticHorizon({
       setVelocitySkew(nextSkew)
       setRenderPos(currentXRef.current)
 
+      // Integrador de 2º orden para puntero (inercia elástica en inclinación 3D y reflejo de mica)
+      const mdx = targetMouseRef.current.x - smoothMouseRef.current.x
+      const mdy = targetMouseRef.current.y - smoothMouseRef.current.y
+      mouseVelRef.current.x = mouseVelRef.current.x * 0.58 + mdx * 0.22 * dt
+      mouseVelRef.current.y = mouseVelRef.current.y * 0.58 + mdy * 0.22 * dt
+      const mouseSettled =
+        Math.abs(mdx) < 0.35 &&
+        Math.abs(mdy) < 0.35 &&
+        Math.abs(mouseVelRef.current.x) < 0.15 &&
+        Math.abs(mouseVelRef.current.y) < 0.15
+      if (mouseSettled) {
+        smoothMouseRef.current.x = targetMouseRef.current.x
+        smoothMouseRef.current.y = targetMouseRef.current.y
+        mouseVelRef.current.x = 0
+        mouseVelRef.current.y = 0
+      } else {
+        smoothMouseRef.current.x += mouseVelRef.current.x
+        smoothMouseRef.current.y += mouseVelRef.current.y
+      }
+      setMouseCoord({
+        x: Math.round(smoothMouseRef.current.x * 10) / 10,
+        y: Math.round(smoothMouseRef.current.y * 10) / 10,
+      })
+
       const remaining = Math.abs(targetXRef.current - currentXRef.current)
-      if (isDraggingRef.current || remaining >= 0.25 || Math.abs(smoothVelRef.current) >= 0.08) {
+      if (isDraggingRef.current || remaining >= 0.25 || Math.abs(smoothVelRef.current) >= 0.08 || !mouseSettled) {
         animationFrameRef.current = requestAnimationFrame(updatePhysics)
       } else {
         currentXRef.current = targetXRef.current
@@ -376,7 +409,9 @@ export function KineticHorizon({
   }
 
   const handlePointerMove = (e: React.PointerEvent) => {
-    setMouseCoord({ x: e.clientX, y: e.clientY })
+    targetMouseRef.current.x = e.clientX
+    targetMouseRef.current.y = e.clientY
+    startPhysicsLoopRef.current()
 
     if (!isDraggingRef.current) return
 
@@ -667,8 +702,9 @@ export function KineticHorizon({
           const normDist = offset / itemSpacing
           const absDist = Math.abs(normDist)
 
-          // Modulación física continua de escala, rotación 3D, opacidad y desenfoque
+          // Modulación física continua de escala, curvatura cilíndrica Z, rotación 3D y opacidad
           const scale = Math.max(0.70, 1 - absDist * 0.18)
+          const cylinderZ = -Math.pow(absDist, 1.45) * 85
           const rotateY = Math.max(-18, Math.min(18, -normDist * 14))
           const opacity = Math.max(0.24, 1 - absDist * 0.46)
           const zIndex = Math.round(50 - absDist * 18)
@@ -705,7 +741,7 @@ export function KineticHorizon({
                 position: 'absolute',
                 left: `calc(50% + ${offset}px)`,
                 top: '50%',
-                transform: `translate(-50%, -50%) scale(${scale}) rotateX(${interactiveTiltX}deg) rotateY(${rotateY + interactiveTiltY}deg) skewX(${velocitySkew}deg)`,
+                transform: `translate3d(-50%, -50%, ${cylinderZ.toFixed(1)}px) scale(${scale}) rotateX(${interactiveTiltX}deg) rotateY(${rotateY + interactiveTiltY}deg) skewX(${velocitySkew}deg)`,
                 transformOrigin: 'center center',
                 transformStyle: 'preserve-3d',
                 opacity,
@@ -1193,12 +1229,12 @@ export function KineticHorizon({
             })}
           </div>
 
-          {/* Maneta áurea flotante en tiempo real */}
+          {/* Maneta áurea flotante en tiempo real con respuesta elástica a velocidad */}
           <div
             style={{
               position: 'absolute',
               left: `${(renderPos / ((ARTWORKS.length - 1) * itemSpacing)) * 100}%`,
-              transform: 'translateX(-50%)',
+              transform: `translateX(-50%) scaleX(${(1 + Math.min(0.65, Math.abs(velocitySkew) * 0.18)).toFixed(2)}) scaleY(${(1 - Math.min(0.22, Math.abs(velocitySkew) * 0.06)).toFixed(2)})`,
               width: '12px',
               height: '12px',
               borderRadius: '50%',
