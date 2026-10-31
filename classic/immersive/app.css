@@ -1135,7 +1135,7 @@ html:not(.motion-opt-in) [data-kinetic-card] {
   display: none !important;
 }
 
-/* --- El Rasgado Kintsugi: Dual-State Scraper (Mario Moreno B/N 2013 -> Cantinflowers Color 2021) --- */
+/* --- El Rasgado Kintsugi: Dual-State Scraper Dialog (Mario Moreno B/N 2013 -> Cantinflowers Color 2021) --- */
 .kintsugi-toggle-btn {
   background: rgba(247, 213, 148, 0.12) !important;
   color: #f7d594 !important;
@@ -1158,41 +1158,49 @@ html:not(.motion-opt-in) [data-kinetic-card] {
   box-shadow: 0 0 24px rgba(247, 213, 148, 0.6) !important;
 }
 
-.kintsugi-scraper-rig {
-  position: absolute;
-  inset: 0;
-  z-index: 15;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  pointer-events: auto;
-  user-select: none;
-  -webkit-user-select: none;
-  background: radial-gradient(circle at 50% 50%, rgba(10, 10, 8, 0.88) 0%, rgba(4, 5, 3, 0.96) 100%);
+.kintsugi-dialog {
+  width: min(92vw, 840px);
+  max-height: 92svh;
+  background: rgba(14, 15, 12, 0.94);
+  border: 1px solid rgba(247, 213, 148, 0.35);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.9), 0 0 40px rgba(247, 213, 148, 0.15);
+  border-radius: 20px;
+  overflow: hidden;
+  padding: 0;
+}
+.kintsugi-dialog::backdrop {
+  background: rgba(4, 5, 3, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  animation: kintsugiFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.kintsugi-scraper-rig[hidden] {
-  display: none !important;
+.kintsugi-dialog-title {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #f7d594;
 }
-@keyframes kintsugiFadeIn {
-  from { opacity: 0; transform: scale(0.98); }
-  to { opacity: 1; transform: scale(1); }
+.kintsugi-dialog-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 18px 24px 24px;
+  gap: 16px;
 }
 
 .kintsugi-stage {
   position: relative;
-  width: min(85vw, 680px);
+  width: min(100%, 540px);
   aspect-ratio: 3 / 4;
-  max-height: min(72vh, 800px);
-  border-radius: 14px;
+  height: min(58vh, 560px);
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.8), 0 0 30px rgba(247, 213, 148, 0.15);
-  border: 1px solid rgba(247, 213, 148, 0.3);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(247, 213, 148, 0.25);
   touch-action: none;
   cursor: ew-resize;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .kintsugi-layer {
@@ -1206,6 +1214,8 @@ html:not(.motion-opt-in) [data-kinetic-card] {
   height: 100%;
   object-fit: cover;
   display: block;
+  user-select: none;
+  pointer-events: none;
 }
 .kintsugi-layer--bn {
   clip-path: inset(0 calc(100% - var(--split, 50%)) 0 0);
@@ -1316,72 +1326,41 @@ html:not(.motion-opt-in) [data-kinetic-card] {
 }
 
 .kintsugi-quote-card {
-  margin-top: 18px;
-  max-width: min(85vw, 680px);
-  padding: 14px 20px;
+  width: min(100%, 540px);
+  padding: 12px 18px;
   background: rgba(20, 18, 14, 0.72);
   border: 1px solid rgba(247, 213, 148, 0.25);
   border-radius: 12px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  position: relative;
+  gap: 5px;
 }
 .kintsugi-quote-card p {
   font-family: 'Cormorant Garamond', Georgia, serif;
-  font-size: clamp(14px, 1.8vw, 16px);
+  font-size: clamp(14px, 1.8vw, 15.5px);
   font-style: italic;
-  line-height: 1.45;
+  line-height: 1.4;
   color: #fffdf4;
   margin: 0;
-  padding-right: 60px;
 }
 .kintsugi-quote-card cite {
   font-family: 'DM Sans', sans-serif;
-  font-size: 10.5px;
+  font-size: 10px;
   font-style: normal;
   letter-spacing: 0.04em;
   color: #f7d594;
 }
-.kintsugi-close-btn {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #fffdf4;
-  padding: 4px 10px;
-  border-radius: 16px;
-  font-size: 11px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-.kintsugi-close-btn:hover {
-  background: rgba(247, 213, 148, 0.2);
-  border-color: #f7d594;
-  color: #f7d594;
-}
 @media (max-width: 600px) {
-  .kintsugi-stage {
-    width: 92vw;
-    max-height: 58vh;
+  .kintsugi-dialog-body {
+    padding: 12px 14px 18px;
   }
-  .kintsugi-quote-card {
-    width: 92vw;
-    padding: 12px 14px;
+  .kintsugi-stage {
+    height: 50vh;
   }
   .kintsugi-quote-card p {
     font-size: 13px;
-    padding-right: 50px;
   }
-}
-  z-index: 3;
-  pointer-events: none;
-  will-change: transform, opacity;
-}
-.art-stage.is-fit .cantinflowers-smoke-rig {
-  display: none !important;
 }
 
 /* ═══ GABINETE DE MIRADAS & MESA DE DISECCIÓN MATÉRICA (Disruptive Obra Overhaul) ═══ */

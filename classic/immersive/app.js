@@ -2455,6 +2455,14 @@
       if (ouroboros) ouroboros.hidden = (state.index !== works.length - 1);
       const finaleShare = $('[data-finale-share]', stage);
       if (finaleShare) finaleShare.hidden = (state.index !== works.length - 1);
+      const kintsugiBtn = $('[data-kintsugi-toggle]', stage);
+      if (kintsugiBtn) {
+        const isKintsugiPair = (p.slug === 'cantinflowers' || p.slug === 'mario-moreno');
+        kintsugiBtn.hidden = !isKintsugiPair;
+        if (!isKintsugiPair && typeof closeKintsugi === 'function') {
+          closeKintsugi();
+        }
+      }
       stage.style.setProperty('--count', works.length);
       stage.classList.toggle('is-fit', state.fit); document.body.classList.toggle('is-quiet', state.quiet);
       $('[data-restore]', stage).hidden = !state.quiet;
@@ -4273,6 +4281,108 @@
       scheduleScroll();
     });
     $('[data-open-story]', stage).addEventListener('click', () => openDialog('#story-dialog'));
+
+    // --- El Rasgado Kintsugi: Dual-State Scraper Controller ---
+    const kintsugiRig = $('[data-kintsugi-rig]', stage);
+    const kintsugiToggle = $('[data-kintsugi-toggle]', stage);
+    const kintsugiHandle = $('[data-kintsugi-handle]', stage);
+    const kintsugiClose = $('[data-kintsugi-close]', stage);
+    let kintsugiSplit = 50;
+    let kintsugiDragging = false;
+
+    function setKintsugiSplit(val, playSound = false) {
+      kintsugiSplit = clamp(val, 5, 95);
+      if (kintsugiRig) {
+        kintsugiRig.style.setProperty('--split', `${kintsugiSplit.toFixed(1)}%`);
+      }
+      if (kintsugiHandle) {
+        kintsugiHandle.setAttribute('aria-valuenow', String(Math.round(kintsugiSplit)));
+      }
+      if (playSound && window.NAROA_SOUND?.playHapticSlide) {
+        window.NAROA_SOUND.playHapticSlide(kintsugiSplit / 100);
+      }
+    }
+
+    function openKintsugi() {
+      if (!kintsugiRig) return;
+      kintsugiRig.hidden = false;
+      if (kintsugiToggle) {
+        kintsugiToggle.setAttribute('aria-pressed', 'true');
+        kintsugiToggle.textContent = 'Cerrar Rasgado ×';
+      }
+      setKintsugiSplit(50, true);
+    }
+
+    function closeKintsugi() {
+      if (!kintsugiRig) return;
+      kintsugiRig.hidden = true;
+      if (kintsugiToggle) {
+        kintsugiToggle.setAttribute('aria-pressed', 'false');
+        kintsugiToggle.textContent = 'Rasgado Kintsugi ✦';
+      }
+    }
+
+    if (kintsugiToggle) {
+      kintsugiToggle.addEventListener('click', () => {
+        if (kintsugiRig && !kintsugiRig.hidden) {
+          closeKintsugi();
+        } else {
+          openKintsugi();
+        }
+      });
+    }
+
+    if (kintsugiClose) {
+      kintsugiClose.addEventListener('click', closeKintsugi);
+    }
+
+    if (kintsugiRig) {
+      const kStage = $('.kintsugi-stage', kintsugiRig);
+      const updateSplitFromPointer = (clientX) => {
+        if (!kStage) return;
+        const rect = kStage.getBoundingClientRect();
+        if (rect.width <= 0) return;
+        const percent = ((clientX - rect.left) / rect.width) * 100;
+        setKintsugiSplit(percent, true);
+      };
+
+      kStage?.addEventListener('pointerdown', (e) => {
+        kintsugiDragging = true;
+        kStage.setPointerCapture?.(e.pointerId);
+        updateSplitFromPointer(e.clientX);
+      });
+
+      kStage?.addEventListener('pointermove', (e) => {
+        if (!kintsugiDragging) return;
+        updateSplitFromPointer(e.clientX);
+      });
+
+      const onPointerEnd = (e) => {
+        if (!kintsugiDragging) return;
+        kintsugiDragging = false;
+        kStage?.releasePointerCapture?.(e.pointerId);
+      };
+      kStage?.addEventListener('pointerup', onPointerEnd);
+      kStage?.addEventListener('pointercancel', onPointerEnd);
+
+      kintsugiHandle?.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          setKintsugiSplit(kintsugiSplit - 5, true);
+        } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          setKintsugiSplit(kintsugiSplit + 5, true);
+        } else if (e.key === 'Home') {
+          e.preventDefault();
+          setKintsugiSplit(5, true);
+        } else if (e.key === 'End') {
+          e.preventDefault();
+          setKintsugiSplit(95, true);
+        } else if (e.key === 'Escape') {
+          closeKintsugi();
+        }
+      });
+    }
     document.querySelector('[data-share-link]')?.addEventListener('click', e => {
       const p = works[state.index];
       const url = location.origin + '/obra/' + p.slug + '/';

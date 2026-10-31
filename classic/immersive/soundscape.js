@@ -1457,6 +1457,108 @@
       });
     } catch {}
   }
+  let lastCommissionBridgeTime = 0, lastCommissionBridge = '';
+  function playCommissionBridgeCue(bridgeKey = 'jaio-amy', vaivenCount = 1) {
+    lastCommissionBridge = String(bridgeKey || 'jaio-amy');
+    const nowMs = typeof performance !== 'undefined' ? performance.now() : Date.now();
+    if (nowMs - lastCommissionBridgeTime < 165) return;
+    lastCommissionBridgeTime = nowMs;
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      try { navigator.vibrate([12, 22]); } catch {}
+    }
+    if (!enabled || !context || !engine || context.state !== 'running') return;
+    try {
+      const now = context.currentTime + 0.006;
+      const target = engine.compressor || engine.master;
+      const gallery = getGalleryReverb();
+      // INV_WARMTH_ACOUSTIC_GATE: registro grave-medio cálido (146.83 - 440 Hz, Re menor), ataque de fieltro, filtro de seda y Tape Wow (±2.8 cents)
+      const BRIDGE_VOICINGS = {
+        'jaio-amy': {
+          notes: [146.83, 220.00, 293.66, 349.23], // Botón cosido sobre pizarra: pizzicato de fieltro Dm7
+          wave: 'triangle',
+          subWave: 'sine',
+          cutoff: 660,
+          attack: 0.034,
+          decay: 1.88,
+          spread: 0.036,
+          vol: 0.062
+        },
+        'amy-amor': {
+          notes: [174.61, 220.00, 261.63, 329.63], // Rosas de papel hacia la lata: marimba cálida Fmaj7
+          wave: 'sine',
+          subWave: 'triangle',
+          cutoff: 620,
+          attack: 0.040,
+          decay: 1.98,
+          spread: 0.045,
+          vol: 0.058
+        },
+        'amor-rara': {
+          notes: [196.00, 233.08, 293.66, 392.00], // Cala blanca hacia Rara Avis: Rhodes Boards-of-Canada Gm7
+          wave: 'triangle',
+          subWave: 'sine',
+          cutoff: 720,
+          attack: 0.046,
+          decay: 2.15,
+          spread: 0.052,
+          vol: 0.056
+        },
+        'rara-closing': {
+          notes: [146.83, 220.00, 293.66, 440.00], // Pluma de pavo real hacia El Comienzo: cadencia Sound of Silence Re menor
+          wave: 'sine',
+          subWave: 'sine',
+          cutoff: 580,
+          attack: 0.050,
+          decay: 2.30,
+          spread: 0.060,
+          vol: 0.060
+        }
+      };
+      const cfg = BRIDGE_VOICINGS[lastCommissionBridge] || BRIDGE_VOICINGS['jaio-amy'];
+      const ordered = vaivenCount % 2 === 0 ? cfg.notes.slice().reverse() : cfg.notes;
+      ordered.forEach((freq, idx) => {
+        if (typeof context.createOscillator !== 'function') return;
+        const osc = context.createOscillator();
+        const sub = context.createOscillator();
+        const filter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
+        const gain = context.createGain();
+        const t0 = now + idx * cfg.spread;
+        const wowCents = Math.sin(vaivenCount * 1.43 + idx * 1.11) * 2.8;
+        const tuned = freq * Math.pow(2, wowCents / 1200);
+        osc.type = cfg.wave;
+        sub.type = cfg.subWave;
+        osc.frequency.setValueAtTime(tuned, t0);
+        sub.frequency.setValueAtTime(Math.max(110, tuned * 0.5), t0);
+        if (filter) {
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(cfg.cutoff, t0);
+          if (filter.frequency.exponentialRampToValueAtTime) {
+            filter.frequency.exponentialRampToValueAtTime(340, t0 + cfg.decay);
+          }
+          filter.Q.setValueAtTime(0.38, t0);
+        }
+        const voiceVol = cfg.vol * Math.pow(0.9, idx);
+        gain.gain.setValueAtTime(0.0001, t0);
+        if (gain.gain.linearRampToValueAtTime) {
+          gain.gain.linearRampToValueAtTime(voiceVol, t0 + cfg.attack);
+        }
+        if (gain.gain.exponentialRampToValueAtTime) {
+          gain.gain.exponentialRampToValueAtTime(0.0001, t0 + cfg.decay);
+        }
+        osc.connect(filter || gain);
+        sub.connect(filter || gain);
+        if (filter) filter.connect(gain);
+        gain.connect(target);
+        if (gallery?.input) {
+          try { gain.connect(gallery.input); } catch {}
+        }
+        osc.start(t0);
+        sub.start(t0);
+        osc.stop(t0 + cfg.decay + 0.05);
+        sub.stop(t0 + cfg.decay + 0.05);
+      });
+    } catch {}
+  }
   let lastGameOverSlug = '', lastKissSlug = '', lastPuffSlug = '', lastKissTime = 0, lastPuffTime = 0;
   function play8BitGameOver() {
     lastGameOverSlug = 'game-over';
@@ -2045,6 +2147,9 @@
     guitarStrum(strumCount) {
       playMonkeyGuitarStrum(strumCount);
     },
+    commissionBridge(bridgeKey, vaivenCount) {
+      playCommissionBridgeCue(bridgeKey, vaivenCount);
+    },
     eguzkilore() {
       playEguzkiloreChime();
     },
@@ -2195,6 +2300,7 @@
     get lastPuffSlug() { return lastPuffSlug; },
     get lastKutxaSlug() { return lastKutxaSlug; },
     get lastGuitarStrumSlug() { return lastGuitarStrumSlug; },
+    get lastCommissionBridge() { return lastCommissionBridge; },
     get lastMenuNoteIndex() { return lastMenuNoteIndex; },
     get lastPhonographCategory() { return lastPhonographCategory; },
     get lastPhonographFreq() { return lastPhonographFreq; },
