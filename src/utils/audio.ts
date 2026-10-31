@@ -23,44 +23,43 @@ const MODAL_PITCHES = [
   69.02, 71.74, 72.02, 74.00, 75.86, 77.16, 78.98, 81.02, 83.74, 86.00
 ]
 
-// Células motívicas pastorales y asincopadas suaves (respiración orgánica tipo Avril 14th / Olson)
+// Células motívicas minimalistas (haikus monofónicos tipo Erik Satie / Nils Frahm "Felt" / Ryuichi Sakamoto "async")
 const MOTIF_CELLS_A: (number | null)[][] = [
-  [74.00, null, 77.16, 81.02],
-  [74.00, 69.02, null, 77.16],
-  [74.00, 75.86, 77.16, null],
-  [74.00, null, 71.74, 74.00],
-  [69.02, 74.00, null, 77.16],
-  [74.00, 78.98, null, 77.16],
-  [74.00, null, 81.02, 77.16],
-  [72.02, 74.00, 75.86, null]
+  [74.00, null, null, 77.16],
+  [74.00, null, 69.02, null],
+  [74.00, null, null, 81.02],
+  [null, 74.00, null, 71.74],
+  [69.02, null, 74.00, null],
+  [74.00, null, 78.98, null],
+  [null, 81.02, null, 77.16],
+  [72.02, null, 75.86, null]
 ]
 
 const MOTIF_CELLS_B: (number | null)[][] = [
-  [78.98, null, 81.02, 86.00],
-  [81.02, 78.98, null, 77.16],
-  [77.16, null, 83.74, 81.02],
-  [78.98, 77.16, 75.86, null],
-  [81.02, null, 78.98, 74.00],
-  [74.00, 78.98, null, 81.02],
-  [83.74, null, 81.02, 77.16],
-  [77.16, 78.98, null, 81.02]
+  [78.98, null, null, 81.02],
+  [81.02, null, 77.16, null],
+  [77.16, null, null, 83.74],
+  [null, 77.16, null, 75.86],
+  [81.02, null, null, 74.00],
+  [74.00, null, 81.02, null],
+  [null, 81.02, null, 77.16],
+  [77.16, null, 78.98, null]
 ]
 
 const MOTIF_CELLS_C: (number | null)[][] = [
-  [75.86, null, 72.02, 69.02],
-  [71.74, 75.86, null, 78.98],
-  [77.16, 75.86, 74.00, null],
-  [69.02, null, 72.02, 75.86],
-  [77.16, 75.86, null, 74.00],
-  [77.16, null, 75.86, 71.74],
-  [74.00, 72.02, 69.02, null],
-  [75.86, null, 69.02, 72.02]
+  [75.86, null, null, 69.02],
+  [null, 75.86, null, 78.98],
+  [77.16, null, 74.00, null],
+  [69.02, null, null, 75.86],
+  [null, 75.86, null, 74.00],
+  [77.16, null, null, 71.74],
+  [74.00, null, 69.02, null],
+  [null, 72.02, null, 69.02]
 ]
 
 /**
- * Generador procedural infinito de melodías cálidas para el sintetizador analógico / piano de fieltro.
- * Cada refresco de página produce una secuencia virgen e irrepetible en entonación justa consonante,
- * auditada contra un buffer FIFO en localStorage.
+ * Generador procedural minimalista de melodías para piano de fieltro monofónico.
+ * Preserva silencios amplios (nunca rellena pausas null con notas extra) y culmina en SOUND OF SILENCE.
  */
 export function generateInfiniteSessionMelody(): (number | null)[] {
   const HISTORY_KEY = 'naroa_musicbox_fingerprint_history'
@@ -74,18 +73,17 @@ export function generateInfiniteSessionMelody(): (number | null)[] {
 
   const getRandomChoice = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)]
 
-  // Mutación orgánica suave sobre cada célula
+  // Mutación orgánica minimalista: preserva siempre los silencios null y solo desplaza grados vecinos
   const mutateCell = (cell: (number | null)[], allowVariation = true): (number | null)[] => {
     const copy = [...cell]
-    if (!allowVariation || Math.random() > 0.55) return copy
+    if (!allowVariation || Math.random() > 0.45) return copy
     const mutateIdx = 1 + Math.floor(Math.random() * (copy.length - 1))
     const current = copy[mutateIdx]
     if (current === null) {
-      copy[mutateIdx] = getRandomChoice(MODAL_PITCHES)
-    } else if (Math.random() < 0.28) {
-      if (copy[mutateIdx - 1] !== null) {
-        copy[mutateIdx] = null
-      }
+      return copy
+    }
+    if (Math.random() < 0.25) {
+      copy[mutateIdx] = null
     } else {
       const pIdx = MODAL_PITCHES.indexOf(current)
       if (pIdx >= 0) {
@@ -132,17 +130,17 @@ export interface WeekdayTheme {
   notes: (number | null)[]
 }
 
-// 7 TEMAS CANÓNICOS DE LA SEMANA (TONOS CÁLIDOS ANALÓGICOS · ESTÉTICA APHEX TWIN / BOARDS OF CANADA)
+// 7 TEMAS CANÓNICOS DE LA SEMANA (HAIKUS MINIMALISTAS EN PIANO DE FIELTRO CÁLIDO · ERIK SATIE / NILS FRAHM)
 export const WEEKDAY_THEMES: WeekdayTheme[] = [
   // 0. Lunes (Astelehena)
   {
     day: 'Lunes',
     name: 'Txoria Txori',
-    subtitle: 'Mikel Laboa · Piano de fieltro cálido y cinta analógica',
+    subtitle: 'Mikel Laboa · Piano de fieltro minimalista',
     notes: [
-      74.00, null, 77.16, 75.86, null, 74.00, 72.02, 74.00,
-      null, 69.02, 72.02, null, 74.00, 75.86, 77.16, 75.86,
-      74.00, null, 81.02, 78.98, null, 77.16, 72.02, null,
+      74.00, null, 75.86, null, 77.16, null, 74.00, null,
+      null, 69.02, null, 74.00, null, 77.16, null, null,
+      81.02, null, 78.98, null, 75.86, null, 72.02, null,
       ...SOUND_OF_SILENCE_CADENCE
     ]
   },
@@ -150,11 +148,11 @@ export const WEEKDAY_THEMES: WeekdayTheme[] = [
   {
     day: 'Martes',
     name: 'Haurtxo Polita',
-    subtitle: 'Nana vasca en cinta magnética · Calidez nostálgica',
+    subtitle: 'Nana vasca íntima · Fieltro y silencio',
     notes: [
-      69.02, null, 74.00, 75.86, 77.16, null, 75.86, 74.00,
-      77.16, null, 78.98, 81.02, null, 78.98, 77.16, 75.86,
-      null, 74.00, 71.74, 69.02, null, 72.02, 75.86, null,
+      69.02, null, 74.00, null, 77.16, null, null, 74.00,
+      null, 78.98, null, 81.02, null, null, 77.16, null,
+      null, 74.00, null, 69.02, null, 72.02, null, null,
       ...SOUND_OF_SILENCE_CADENCE
     ]
   },
@@ -162,11 +160,11 @@ export const WEEKDAY_THEMES: WeekdayTheme[] = [
   {
     day: 'Miércoles',
     name: 'Harria eta Marea',
-    subtitle: 'Deriva ambiental tipo Rhubarb / Olson · Piedra y marea',
+    subtitle: 'Piedra y marea · Espacio contemplativo',
     notes: [
-      74.00, 69.02, null, 77.16, 74.00, null, 78.98, 75.86,
-      71.74, null, 74.00, 75.86, null, 69.02, 72.02, 74.00,
-      77.16, null, 81.02, 86.00, null, 83.74, 77.16, null,
+      74.00, null, null, 81.02, null, 75.86, null, null,
+      77.16, null, 83.74, null, null, 78.98, null, 74.00,
+      null, 75.86, null, null, 72.02, null, 69.02, null,
       ...SOUND_OF_SILENCE_CADENCE
     ]
   },
@@ -174,11 +172,11 @@ export const WEEKDAY_THEMES: WeekdayTheme[] = [
   {
     day: 'Jueves',
     name: 'Landa / Alboka pastoral',
-    subtitle: 'Horizonte analógico de Arratia · Tierra y roble',
+    subtitle: 'Valle de Arratia · Notas solitarias de fieltro',
     notes: [
-      74.00, 77.16, null, 81.02, 77.16, null, 74.00, 69.02,
-      72.02, null, 75.86, 78.98, 75.86, null, 72.02, 69.02,
-      74.00, null, 77.16, 83.74, null, 81.02, 77.16, null,
+      74.00, null, 77.16, null, 81.02, null, 74.00, null,
+      null, 71.74, null, 75.86, null, null, 69.02, null,
+      74.00, null, 77.16, null, null, 75.86, null, null,
       ...SOUND_OF_SILENCE_CADENCE
     ]
   },
@@ -186,11 +184,11 @@ export const WEEKDAY_THEMES: WeekdayTheme[] = [
   {
     day: 'Viernes',
     name: 'Mi Gran Noche',
-    subtitle: 'Raphael en piano íntimo Avril 14th · Qué misterio habrá',
+    subtitle: 'Fieltro nocturno desnudo · Qué misterio habrá',
     notes: [
-      69.02, 74.00, null, 77.16, 75.86, null, 69.02, 74.00,
-      77.16, 75.86, null, 74.00, 75.86, null, 78.98, 77.16,
-      74.00, null, 77.16, 81.02, null, 78.98, 75.86, null,
+      74.00, null, 75.86, null, 77.16, null, null, 81.02,
+      null, 78.98, null, 75.86, null, null, 69.02, null,
+      81.02, null, null, 78.98, null, 77.16, null, null,
       ...SOUND_OF_SILENCE_CADENCE
     ]
   },
@@ -198,11 +196,11 @@ export const WEEKDAY_THEMES: WeekdayTheme[] = [
   {
     day: 'Sábado',
     name: 'Gaua / Nocturno de Bilbao',
-    subtitle: 'Sintetizador analógico cálido en penumbra de ría',
+    subtitle: 'Nocturno minimalista en penumbra de ría',
     notes: [
-      74.00, null, 72.02, 69.02, null, 74.00, 77.16, 74.00,
-      69.02, 74.00, null, 78.98, 81.02, null, 77.16, 74.00,
-      81.02, null, 83.74, 81.02, null, 75.86, 71.74, null,
+      74.00, null, null, 81.02, null, 77.16, null, null,
+      69.02, null, 74.00, null, null, 78.98, null, null,
+      74.00, null, 81.02, null, null, 75.86, null, null,
       ...SOUND_OF_SILENCE_CADENCE
     ]
   },
@@ -210,11 +208,11 @@ export const WEEKDAY_THEMES: WeekdayTheme[] = [
   {
     day: 'Domingo',
     name: 'Haizea / Viento en los pinos',
-    subtitle: 'Cinta cálida Boards of Canada · Retorno al origen',
+    subtitle: 'Aire y silencio · Retorno al origen',
     notes: [
-      74.00, 77.16, null, 81.02, 86.00, null, 83.74, 77.16,
-      78.98, null, 75.86, 74.00, 69.02, null, 72.02, 74.00,
-      77.16, null, 81.02, 78.98, null, 75.86, 69.02, null,
+      74.00, null, 77.16, null, 81.02, null, null, 78.98,
+      null, 75.86, null, 74.00, null, 69.02, null, null,
+      75.86, null, 81.02, null, null, 75.86, null, null,
       ...SOUND_OF_SILENCE_CADENCE
     ]
   }
@@ -260,12 +258,9 @@ class SoundEngine {
         this.enabled = saved === 'true'
       }
 
-      // Resume AudioContext and ambient music on initial user gesture
+      // Resume AudioContext on initial user gesture (zero background MP3 loop — pure minimalist silence at rest)
       const handleUserInteraction = () => {
         this.initCtx()
-        if (this.enabled) {
-          this.playMusic()
-        }
         window.removeEventListener('pointerdown', handleUserInteraction)
         window.removeEventListener('keydown', handleUserInteraction)
       }
@@ -371,11 +366,10 @@ class SoundEngine {
   }
 
   /**
-   * Sintetizador Analógico Cálido & Piano de Fieltro (Estética Aphex Twin "Avril 14th / Rhubarb" + Boards of Canada "Olson"):
-   * - Transposición de -12 semitonos hacia el registro grave-medio aterciopelado (D4 = 293.66 Hz, A3 = 220 Hz, D3 = 146.83 Hz).
-   * - Ataque de fieltro suave (32 ms – 50 ms) sin clics ni transitorios metálicos.
-   * - Deriva analógica de cinta magnética (tape wow/flutter sutil de ±2.8 cents).
-   * - Filtro paso-bajo cremoso (680 Hz -> 340 Hz, Q = 0.45) con cola larga y envolvente cálida (2.1 s).
+   * Voz Monofónica Minimalista de Piano de Fieltro (Estética Erik Satie / Nils Frahm "Felt" / Ryuichi Sakamoto "async"):
+   * - Transposición de -12 semitonos al registro grave-medio aterciopelado (146 Hz – 440 Hz).
+   * - Una única fundamental senoidal pura con ataque de fieltro suave (45 ms) y caída larga de seda (2.15 s).
+   * - Filtro paso-bajo sedoso (460 Hz -> 230 Hz, Q = 0.34) y deriva sutil Tape Wow (±2.0 cents).
    */
   public playMusicBoxNote(
     midiNote: number = 74.00,
@@ -392,79 +386,65 @@ class SoundEngine {
       const now = this.ctx.currentTime + 0.005 + Math.max(0, delaySec)
       const out = this.getOut()
 
-      // Bajamos una octava completa (-12 semitonos) para lograr el registro cálido y profundo de Boards of Canada / Aphex Twin
       const warmMidi = midiNote - 12
       const rootHz = 440 * Math.pow(2, (warmMidi + detuneCents / 100 - 69) / 12)
 
       const masterVoiceGain = this.ctx.createGain()
-      masterVoiceGain.gain.setValueAtTime(volume * 0.28, now)
+      masterVoiceGain.gain.setValueAtTime(volume * 0.14, now)
 
       if (typeof this.ctx.createStereoPanner === 'function') {
         const panner = this.ctx.createStereoPanner()
-        panner.pan.setValueAtTime(Math.max(-0.45, Math.min(0.45, pan)), now)
+        panner.pan.setValueAtTime(Math.max(-0.28, Math.min(0.28, pan)), now)
         masterVoiceGain.connect(panner)
         panner.connect(out)
       } else {
         masterVoiceGain.connect(out)
       }
 
-      // Filtro analógico de seda sin pico de resonancia (Q = 0.38)
       const filter = this.ctx.createBiquadFilter()
       filter.type = 'lowpass'
-      const openCutoff = Math.min(680, rootHz * 1.8)
-      const warmCutoff = Math.max(220, Math.min(420, rootHz * 0.95))
+      const openCutoff = Math.min(480, Math.max(240, rootHz * 1.4))
+      const warmCutoff = Math.max(195, Math.min(310, rootHz * 0.82))
       filter.frequency.setValueAtTime(openCutoff, now)
-      filter.frequency.exponentialRampToValueAtTime(warmCutoff, now + 1.65)
-      filter.Q.setValueAtTime(0.38, now)
+      filter.frequency.exponentialRampToValueAtTime(warmCutoff, now + 1.75)
+      filter.Q.setValueAtTime(0.34, now)
       filter.connect(masterVoiceGain)
 
-      // Voces analógicas cálidas: sub-octava redonda + fundamental de fieltro + pad sutil
-      const voices: { type: OscillatorType; ratio: number; detune: number; driftCents: number; level: number; attack: number; decay: number }[] = [
-        { type: 'sine',     ratio: 0.5, detune: -1.0, driftCents:  1.2, level: 0.20, attack: 0.052, decay: 2.65 }, // Sub-bajo analógico cálido
-        { type: 'sine',     ratio: 1.0, detune:  0.0, driftCents: -1.4, level: 0.62, attack: 0.046, decay: 2.45 }, // Fundamental piano de fieltro (Avril 14th)
-        { type: 'triangle', ratio: 1.0, detune:  2.4, driftCents:  2.6, level: 0.16, attack: 0.065, decay: 2.40 }, // Pad analógico sutil con tape wow
-        { type: 'sine',     ratio: 2.0, detune: -1.6, driftCents:  0.8, level: 0.04, attack: 0.038, decay: 1.10 }  // Armónico de octava casi inaudible
-      ]
+      const osc = this.ctx.createOscillator()
+      const gain = this.ctx.createGain()
+      const attack = 0.045
+      const decay = 2.15
+      const driftedFreq = rootHz * Math.pow(2, -1.8 / 1200)
 
-      voices.forEach(({ type, ratio, detune, driftCents, level, attack, decay }) => {
-        if (!this.ctx) return
-        const osc = this.ctx.createOscillator()
-        const gain = this.ctx.createGain()
+      osc.type = 'sine'
+      osc.frequency.setValueAtTime(rootHz * 0.9991, now)
+      osc.frequency.exponentialRampToValueAtTime(driftedFreq, now + 0.65)
+      osc.frequency.exponentialRampToValueAtTime(rootHz, now + decay)
 
-        osc.type = type
-        const baseFreq = rootHz * ratio * Math.pow(2, detune / 1200)
-        const driftedFreq = baseFreq * Math.pow(2, driftCents / 1200)
+      gain.gain.setValueAtTime(0.0001, now)
+      gain.gain.linearRampToValueAtTime(0.72, now + attack)
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + decay)
 
-        // Suave deriva analógica de cinta magnética (tape wow)
-        osc.frequency.setValueAtTime(baseFreq * 0.9988, now)
-        osc.frequency.exponentialRampToValueAtTime(driftedFreq, now + 0.55)
-        osc.frequency.exponentialRampToValueAtTime(baseFreq, now + decay)
+      osc.connect(gain)
+      gain.connect(filter)
 
-        gain.gain.setValueAtTime(0.0001, now)
-        gain.gain.linearRampToValueAtTime(level, now + attack)
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + decay)
-
-        osc.connect(gain)
-        gain.connect(filter)
-
-        osc.start(now)
-        osc.stop(now + decay + 0.05)
-      })
+      osc.start(now)
+      osc.stop(now + decay + 0.05)
     } catch {
       // Ignore audio errors
     }
   }
 
   /**
-   * Motor de Cinta Analógica & Piano de Fieltro (Ciclo de 32 pasos).
-   * - Control anti-saturación (115 ms mínimo entre pasos) para que el scroll rápido jamás genere ruido.
-   * - Pasos 0..23: Melodía cálida arropada por un único colchón sub-armónico consonante (quinta justa o tónica grave) con síncopa suave.
-   * - Pasos 24..31: Cadencia sagrada inmutable de SOUND OF SILENCE sobre pedal analógico profundo.
+   * Motor Minimalista de Piano de Fieltro (Ciclo de 32 pasos).
+   * - Respiración amplia (980 ms mínimo entre notas) para que cada desplazamiento emita a lo sumo una nota solitaria.
+   * - Cero acordes sincopados apilados; los pasos null permanecen en silencio contemplativo absoluto.
+   * - Pasos 24..31: Cadencia inmutable de SOUND OF SILENCE en Re menor.
    */
   public playSessionStep(stepIndex?: number) {
     if (!this.enabled) return
     const nowMs = typeof performance !== 'undefined' ? performance.now() : Date.now()
-    if (nowMs - this.lastSessionStepTime < 180) return
+    if (nowMs - this.lastSessionStepTime < 980) return
     this.lastSessionStepTime = nowMs
 
     const mel = this.getSessionMelody()
@@ -482,45 +462,21 @@ class SoundEngine {
       return
     }
 
-    const accent = step % 4 === 0 ? 1.0 : step % 3 === 0 ? 0.90 : 0.82
-    const panMain = Math.sin(step * 0.9) * 0.18
+    const accent = step % 8 === 0 ? 1.0 : step % 4 === 0 ? 0.90 : 0.80
+    const panMain = Math.sin(step * 0.7) * 0.12
 
-    // 1. VOZ PRINCIPAL CÁLIDA (Piano de fieltro / Sintetizador analógico en t0)
-    this.playMusicBoxNote(note, 0.38 * accent, 0, panMain, 0)
+    // Nota solitaria de fieltro
+    this.playMusicBoxNote(note, 0.34 * accent, 0, panMain, 0)
 
-    if (isSilenceCadence) {
-      // En SOUND OF SILENCE: colchón analógico grave en Re y La (estilo Rhubarb / Olson)
-      if (step === mel.length - 8 || step === mel.length - 1) {
-        this.playMusicBoxNote(62.00, 0.24, 0.035, 0, 0)
-      } else if (step === mel.length - 6) {
-        this.playMusicBoxNote(69.02, 0.20, 0.045, -0.12, 0)
-      }
-      return
-    }
-
-    // 2. COLCHÓN SUB-ARMÓNICO CONSONANTE EN SÍNCOPA SUAVE (solo en pasos pares o cadenciales para dejar respirar el aire)
-    if (step % 2 === 0) {
-      const syncopatedDelays = [0.115, 0.145, 0.125, 0.155]
-      const delayHarmony = syncopatedDelays[step % syncopatedDelays.length]
-      const harmonyNote = note >= 77.0 ? note - 7.02 : 69.02 // Quinta justa inferior o pedal cálido en La
-      this.playMusicBoxNote(harmonyNote, 0.18 * accent, delayHarmony, -panMain, -1.5)
+    // Susurro sub-octava exclusivo en el arranque y reposo final de SOUND OF SILENCE
+    if (isSilenceCadence && (step === mel.length - 8 || step === mel.length - 1)) {
+      this.playMusicBoxNote(62.00, 0.14, 0.045, 0, 0)
     }
   }
 
   public playMusic() {
-    if (!this.enabled || typeof window === 'undefined') return
-    try {
-      if (!this.bgMusic) {
-        this.bgMusic = new Audio('/audio/boards-of-burgos.mp3')
-        this.bgMusic.loop = true
-        this.bgMusic.volume = 0.32
-      }
-      this.bgMusic.play().catch(() => {
-        // Autoplay policy fallback
-      })
-    } catch {
-      // Ignore audio error
-    }
+    // Minimalismo estricto: ningún bucle MP3 continuo de fondo invade el silencio del estudio.
+    this.pauseMusic()
   }
 
   public pauseMusic() {
@@ -538,7 +494,6 @@ class SoundEngine {
     localStorage.setItem('naroa_audio_enabled', String(this.enabled))
     if (this.enabled) {
       this.playTick()
-      this.playMusic()
     } else {
       this.pauseMusic()
     }
@@ -550,12 +505,12 @@ class SoundEngine {
   }
 
   /**
-   * Pulso analógico grave de fieltro (cero clics agudos).
+   * Pulso minimalista grave de fieltro (cero clics agudos).
    */
   public playHapticClick(pitchMultiplier: number = 1.0) {
     if (!this.enabled) return
     const nowMs = performance.now()
-    if (nowMs - this.lastHapticClickTime < 65) return
+    if (nowMs - this.lastHapticClickTime < 140) return
     this.lastHapticClickTime = nowMs
 
     try {
@@ -565,22 +520,21 @@ class SoundEngine {
       const now = this.ctx.currentTime
       const out = this.getOut()
 
-      // Nota grave de fieltro en Re3 (146.83 Hz) con ataque redondo
       const root = 146.83 * Math.max(0.75, Math.min(1.25, pitchMultiplier))
       const osc = this.ctx.createOscillator()
       const gain = this.ctx.createGain()
       const filter = this.ctx.createBiquadFilter()
 
       osc.type = 'sine'
-      osc.frequency.setValueAtTime(root * 1.12, now)
+      osc.frequency.setValueAtTime(root * 1.08, now)
       osc.frequency.exponentialRampToValueAtTime(root, now + 0.045)
 
       filter.type = 'lowpass'
-      filter.frequency.setValueAtTime(420, now)
-      filter.Q.setValueAtTime(0.5, now)
+      filter.frequency.setValueAtTime(360, now)
+      filter.Q.setValueAtTime(0.4, now)
 
       gain.gain.setValueAtTime(0.0001, now)
-      gain.gain.linearRampToValueAtTime(0.028, now + 0.012)
+      gain.gain.linearRampToValueAtTime(0.012, now + 0.014)
       gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.075)
 
       osc.connect(filter)
@@ -598,12 +552,12 @@ class SoundEngine {
    * Deslizamiento silencioso / sub-respiración analógica cálida (CERO ruido blanco).
    */
   public playHapticSlide(_velocity: number = 1.0) {
-    // Silenciado el generador de ruido blanco para preservar la pureza tonal de los pads analógicos
+    // Silenciado el generador de ruido blanco para preservar la pureza tonal minimalista
     return
   }
 
   /**
-   * Acorde cálido tipo Boards of Canada ("Olson") en Re menor novena al abrir la lupa.
+   * Quinta abierta minimalista de fieltro (D3 + A3) al abrir la lupa.
    */
   public playLoupeReveal() {
     if (!this.enabled) return
@@ -615,29 +569,27 @@ class SoundEngine {
       const out = this.getOut()
 
       const d3 = 146.832
-      const warmChord = [
-        { freq: d3 * 1.0,  delay: 0.000, dur: 1.65, level: 0.032 }, // D3 (146.8 Hz)
-        { freq: d3 * 1.5,  delay: 0.045, dur: 1.55, level: 0.026 }, // A3 (220.2 Hz)
-        { freq: d3 * 1.8,  delay: 0.095, dur: 1.45, level: 0.022 }, // C4 (264.3 Hz)
-        { freq: d3 * 2.4,  delay: 0.145, dur: 1.35, level: 0.018 }  // F4 (352.4 Hz)
+      const warmDyad = [
+        { freq: d3 * 1.0, delay: 0.000, dur: 1.85, level: 0.015 }, // D3 (146.8 Hz)
+        { freq: d3 * 1.5, delay: 0.085, dur: 1.75, level: 0.011 }  // A3 (220.2 Hz)
       ]
 
-      warmChord.forEach(({ freq, delay, dur, level }) => {
+      warmDyad.forEach(({ freq, delay, dur, level }) => {
         if (!this.ctx) return
         const osc = this.ctx.createOscillator()
         const gain = this.ctx.createGain()
         const filter = this.ctx.createBiquadFilter()
 
-        osc.type = 'triangle'
-        osc.frequency.setValueAtTime(freq * 0.998, now + delay)
-        osc.frequency.exponentialRampToValueAtTime(freq, now + delay + 0.35)
+        osc.type = 'sine'
+        osc.frequency.setValueAtTime(freq * 0.9985, now + delay)
+        osc.frequency.exponentialRampToValueAtTime(freq, now + delay + 0.40)
 
         filter.type = 'lowpass'
-        filter.frequency.setValueAtTime(580, now + delay)
-        filter.Q.setValueAtTime(0.5, now + delay)
+        filter.frequency.setValueAtTime(460, now + delay)
+        filter.Q.setValueAtTime(0.4, now + delay)
 
         gain.gain.setValueAtTime(0.0001, now + delay)
-        gain.gain.linearRampToValueAtTime(level, now + delay + 0.045)
+        gain.gain.linearRampToValueAtTime(level, now + delay + 0.048)
         gain.gain.exponentialRampToValueAtTime(0.0001, now + delay + dur)
 
         osc.connect(filter)
@@ -658,7 +610,7 @@ class SoundEngine {
   }
 
   /**
-   * Susurro analógico cálido en registro grave-medio (D3 -> A3).
+   * Susurro minimalista casi imperceptible en registro grave-medio (D3 -> A3).
    */
   public playHover() {
     if (!this.enabled) return
@@ -675,29 +627,29 @@ class SoundEngine {
 
       osc.type = 'sine'
       osc.frequency.setValueAtTime(146.83, now)
-      osc.frequency.exponentialRampToValueAtTime(220.00, now + 0.12)
+      osc.frequency.exponentialRampToValueAtTime(220.00, now + 0.14)
 
       filter.type = 'lowpass'
-      filter.frequency.setValueAtTime(440, now)
-      filter.Q.setValueAtTime(0.5, now)
+      filter.frequency.setValueAtTime(380, now)
+      filter.Q.setValueAtTime(0.4, now)
 
       gain.gain.setValueAtTime(0.0001, now)
-      gain.gain.linearRampToValueAtTime(0.016, now + 0.025)
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.16)
+      gain.gain.linearRampToValueAtTime(0.007, now + 0.032)
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.17)
 
       osc.connect(filter)
       filter.connect(gain)
       gain.connect(out)
 
       osc.start(now)
-      osc.stop(now + 0.17)
+      osc.stop(now + 0.18)
     } catch {
       // Ignore audio errors
     }
   }
 
   /**
-   * Apertura de pad analógico cálido en Re menor (D3, A3, F4).
+   * Apertura minimalista en quinta abierta (D3 + A3) de piano de fieltro.
    */
   public playOpen() {
     if (!this.enabled) return
@@ -710,21 +662,19 @@ class SoundEngine {
 
       const d3 = 146.832
       const notes = [
-        { f: d3 * 1.0, delay: 0.000, weight: 0.30 },
-        { f: d3 * 1.5, delay: 0.040, weight: 0.22 },
-        { f: d3 * 2.4, delay: 0.085, weight: 0.15 }
+        { f: d3 * 1.0, delay: 0.000, weight: 0.24 },
+        { f: d3 * 1.5, delay: 0.065, weight: 0.16 }
       ]
       const filter = this.ctx.createBiquadFilter()
       filter.type = 'lowpass'
-      filter.frequency.setValueAtTime(480, now)
-      filter.frequency.exponentialRampToValueAtTime(720, now + 0.18)
-      filter.frequency.exponentialRampToValueAtTime(360, now + 0.55)
-      filter.Q.setValueAtTime(0.5, now)
+      filter.frequency.setValueAtTime(420, now)
+      filter.frequency.exponentialRampToValueAtTime(280, now + 0.65)
+      filter.Q.setValueAtTime(0.4, now)
 
       const masterGain = this.ctx.createGain()
       masterGain.gain.setValueAtTime(0.0001, now)
-      masterGain.gain.linearRampToValueAtTime(0.045, now + 0.05)
-      masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.58)
+      masterGain.gain.linearRampToValueAtTime(0.018, now + 0.045)
+      masterGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.68)
 
       filter.connect(masterGain)
       masterGain.connect(out)
@@ -733,16 +683,16 @@ class SoundEngine {
         if (!this.ctx) return
         const osc = this.ctx.createOscillator()
         const oscGain = this.ctx.createGain()
-        osc.type = 'triangle'
-        osc.frequency.setValueAtTime(f * 0.997, now + delay)
-        osc.frequency.exponentialRampToValueAtTime(f, now + delay + 0.12)
+        osc.type = 'sine'
+        osc.frequency.setValueAtTime(f * 0.998, now + delay)
+        osc.frequency.exponentialRampToValueAtTime(f, now + delay + 0.14)
 
         oscGain.gain.setValueAtTime(weight, now + delay)
         osc.connect(oscGain)
         oscGain.connect(filter)
 
         osc.start(now + delay)
-        osc.stop(now + delay + 0.6)
+        osc.stop(now + delay + 0.7)
       })
     } catch {
       // Ignore audio errors
@@ -750,7 +700,7 @@ class SoundEngine {
   }
 
   /**
-   * Cierre de pad analógico descendente hacia la tónica grave D3 (146.83 Hz).
+   * Cierre minimalista monofónico descendente hacia la tónica grave D3 (146.83 Hz).
    */
   public playClose() {
     if (!this.enabled) return
@@ -762,36 +712,28 @@ class SoundEngine {
       const out = this.getOut()
 
       const osc = this.ctx.createOscillator()
-      const subOsc = this.ctx.createOscillator()
       const filter = this.ctx.createBiquadFilter()
       const gain = this.ctx.createGain()
 
       osc.type = 'sine'
       osc.frequency.setValueAtTime(220.00, now)
-      osc.frequency.exponentialRampToValueAtTime(146.83, now + 0.24)
-
-      subOsc.type = 'sine'
-      subOsc.frequency.setValueAtTime(110.00, now + 0.02)
-      subOsc.frequency.exponentialRampToValueAtTime(73.416, now + 0.24)
+      osc.frequency.exponentialRampToValueAtTime(146.83, now + 0.26)
 
       filter.type = 'lowpass'
-      filter.frequency.setValueAtTime(420, now)
-      filter.frequency.exponentialRampToValueAtTime(190, now + 0.25)
-      filter.Q.setValueAtTime(0.5, now)
+      filter.frequency.setValueAtTime(380, now)
+      filter.frequency.exponentialRampToValueAtTime(190, now + 0.27)
+      filter.Q.setValueAtTime(0.4, now)
 
       gain.gain.setValueAtTime(0.0001, now)
-      gain.gain.linearRampToValueAtTime(0.038, now + 0.025)
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.26)
+      gain.gain.linearRampToValueAtTime(0.016, now + 0.032)
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.28)
 
       osc.connect(filter)
-      subOsc.connect(filter)
       filter.connect(gain)
       gain.connect(out)
 
       osc.start(now)
-      subOsc.start(now + 0.02)
-      osc.stop(now + 0.28)
-      subOsc.stop(now + 0.28)
+      osc.stop(now + 0.30)
     } catch {
       // Ignore audio errors
     }

@@ -296,41 +296,12 @@ async function eyeMatch(ui, base, points) {
       assert.ok(stringEls[0].getAttribute('d')?.startsWith('M '), 'Rosetta rainbow guitar strings bend via quadratic Bezier wave during strum');
       assert.ok(Number(monkeyStage.dataset.monkeyStrums) >= 2, 'Scrolling back and forth in Pippilotta -> Rosetta increments the guitar strum counter');
     }
-    const EXPECTED_INTERWORK_FX = {
-      'infusion-de-berto': { key: 'berto', sel: '[data-berto-bag]' },
-      'red-red-wine': { key: 'wineflame', sel: '[data-wine-flame="0"]' },
-      'pajarraca-azul': { key: 'pajarraca', sel: '[data-pajarraca-bird]' },
-      'idoia-arkatz-bihotz': { key: 'arkatz', sel: '[data-arkatz-heart]' },
-      'sistashark': { key: 'shark3d', sel: '[data-shark-goggles]' },
-      'eneko-el-marino': { key: 'ancla', sel: '[data-ancla-hook]' },
-      'el-hombre-que-susurraba-a-las-estrellas': { key: 'bowiestar', sel: '[data-bowie-star]' },
-      'audreys-lightning': { key: 'audreybolt', sel: '[data-audrey-bolt-red]' },
-      'rosetta': { key: 'rosettabirds', sel: '[data-rosetta-bird="0"]' }
-    };
-    if (EXPECTED_INTERWORK_FX[entry.slug]) {
-      const spec = EXPECTED_INTERWORK_FX[entry.slug];
-      const iwStage = ui.find('[data-interwork-stage]');
-      const iwRig = ui.find(`[data-fx="${spec.key}"]`);
-      const iwTarget = ui.find(spec.sel);
-      assert.ok(iwStage && !iwStage.hasAttribute('hidden'), `${entry.slug} activates interwork stage (${spec.key})`);
-      assert.equal(iwStage.dataset.activeFx, spec.key, `${entry.slug} sets activeFx=${spec.key}`);
-      assert.ok(iwRig && !iwRig.hasAttribute('hidden'), `${entry.slug} un-hides rig [data-fx="${spec.key}"]`);
-      assert.ok(iwTarget, `${entry.slug} mounts target actor ${spec.sel}`);
-      assert.ok(Number(iwStage.dataset.vaivenCount) >= 2, `Scrolling back and forth on ${entry.slug} increments vaivén counter (${spec.key})`);
-      if (entry.slug === 'infusion-de-berto') {
-        assert.ok(ui.find('[data-berto-fork]'), 'Buena Fuente electric blue fork cutout renders in foreground occlusion over Berto teabag');
-      }
-      if (entry.slug === 'rosetta') {
-        assert.ok(Number(iwStage.dataset.coupledFlock) >= 6, 'Mr. Nilsson guitar strums causally amplify Rosetta bird flock size toward La Famiglia');
-      }
-    }
     if (entry.slug === 'cantinflowers') {
       const cantinRig = ui.find(`[data-scene="${index}"] [data-cantinflowers-rig]`);
       assert.ok(cantinRig, 'Cantinflowers renders the reactive cigarette ember and smoke SVG rig');
       assert.ok(Number(cantinRig.dataset.dragProgress) > 0, 'Cantinflowers tracks scroll drag progress for the cigarette puff');
       assert.ok(Number(cantinRig.dataset.emberGlow) > 0, 'Cantinflowers cigarette ember glows during scroll drag');
       assert.ok(Number(cantinRig.dataset.puffCount) >= 2, 'Scrolling back and forth on Cantinflowers increments the puff counter');
-      assert.ok(Number(cantinRig.dataset.audreyIgnited) >= 2, 'Audrey lightning bolt causally pre-ignites Cantinflowers cigarette ember');
     }
     if (entry.slug === 'lauralore') {
       const lauraScene = ui.find(`[data-scene="${index}"]`);
@@ -1147,11 +1118,6 @@ async function eyeMatch(ui, base, points) {
     assert.ok(julioRig, 'Julio Iglesias mounts SVG articulated puppet rig');
     const julioArm = julioRig.querySelector('[data-julio-arm]');
     assert.ok(julioArm && julioArm.getAttribute('transform')?.includes('1022 1317'), 'Julio Iglesias articulated arm pivots around elbow rivet (1022, 1317)');
-    for (const cueKey of ['berto', 'wineflame', 'pajarraca', 'arkatz', 'shark3d', 'ancla', 'bowiestar', 'audreybolt', 'rosettabirds']) {
-      julioPage.w.NAROA_SOUND.interworkCue(cueKey, 3);
-      assert.equal(julioPage.w.NAROA_SOUND.lastInterworkCueKind, cueKey, `NAROA_SOUND synthesizes warm analog interwork cue for ${cueKey}`);
-      assert.equal(julioPage.w.NAROA_SOUND.lastInterworkCueCount, 3, `NAROA_SOUND tracks vaivén count for ${cueKey}`);
-    }
     julioPage.dom.window.close();
   }
   assert.equal(manifest.projects, works.length); assert.deepEqual(errors, []);

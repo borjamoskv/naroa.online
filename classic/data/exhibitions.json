@@ -177,6 +177,10 @@
         {
           "label": "Relato de Naroa",
           "url": "https://naroagutierrez.wordpress.com/2022/10/04/walking-gallery-bilbao-octubre-2022-por-amor-al-arte/"
+        },
+        {
+          "label": "Reportaje en GARA",
+          "url": "https://gara.naiz.eus/paperezkoa/20130427/399965/es/Walking-gallery-arte-aire-libre-movimiento-arte-evolucion"
         }
       ],
       "published": "2022-10-04",
@@ -199,6 +203,10 @@
         {
           "label": "Relato de Naroa",
           "url": "https://naroagutierrez.wordpress.com/2022/03/22/repoker-de-reinas-vaivenes-en-siarte/"
+        },
+        {
+          "label": "Ficha curatorial en Siarte",
+          "url": "https://siarte.com/2022-03-25-siarte-exposicion-pintura-collage-arte-naroa-gutierrez.php"
         }
       ],
       "published": "2022-03-22",
@@ -495,13 +503,13 @@
       "dateLabel": "Marzo de 2010 · hasta el día 31",
       "location": "Hegoak · Bilbao",
       "type": "solo",
-      "description": "Documentada en la agenda cultural de GARA (marzo de 2010).",
+      "description": "Documentada en la agenda cultural de El Correo (marzo de 2010).",
       "endDate": "2010-03-31",
       "year": 2010,
       "sources": [
         {
-          "label": "Referencia de prensa",
-          "url": "https://gara.naiz.eus/paperezkoa/20100305/186538/eu/Agenda"
+          "label": "Agenda El Correo",
+          "url": "https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-112114.html"
         }
       ],
       "published": null,

@@ -485,8 +485,10 @@ def build(output):
         "https://instagram.com/naroa_art/",
         "https://naroagutierrez.wordpress.com/",
         "https://www.deia.eus/bizkaia/vida-social/2026/06/05/bwall-collective-inaugura-exposicion-ocho-11159371.html",
-        "https://gara.naiz.eus/paperezkoa/20100305/186538/eu/Agenda",
+        "https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-112114.html",
         "https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-476343.html",
+        "https://gara.naiz.eus/paperezkoa/20130427/399965/es/Walking-gallery-arte-aire-libre-movimiento-arte-evolucion",
+        "https://siarte.com/2022-03-25-siarte-exposicion-pintura-collage-arte-naroa-gutierrez.php",
         "https://www.youtube.com/@naroagutierrezgil",
     ]
     bilbao_place = {
@@ -1850,8 +1852,10 @@ def build(output):
         "  - Instagram: https://instagram.com/naroa_art/\n"
         "  - Cuaderno WordPress: https://naroagutierrez.wordpress.com/\n"
         "  - DEIA Bizkaia: https://www.deia.eus/bizkaia/vida-social/2026/06/05/bwall-collective-inaugura-exposicion-ocho-11159371.html\n"
-        "  - GARA Agenda: https://gara.naiz.eus/paperezkoa/20100305/186538/eu/Agenda\n"
-        "  - El Correo Agenda: https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-476343.html\n"
+        "  - El Correo Agenda (2010): https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-112114.html\n"
+        "  - El Correo Agenda (2015): https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-476343.html\n"
+        "  - GARA Reportaje: https://gara.naiz.eus/paperezkoa/20130427/399965/es/Walking-gallery-arte-aire-libre-movimiento-arte-evolucion\n"
+        "  - Siarte Leku: https://siarte.com/2022-03-25-siarte-exposicion-pintura-collage-arte-naroa-gutierrez.php\n"
         "  - YouTube: https://www.youtube.com/@naroagutierrezgil\n"
         "- Lenguaje y Práctica Artística: Retratos de autor y obra plástica multidisciplinar (dibujo, óleo, técnicas mixtas, collage textil sobre madera y objetos intervenidos, con exploraciones recientes sobre soportes minerales como la pizarra natural de cantera y mica).\n"
         f"- Servicio Canónico de Encargos: {ORIGIN}/retratos-por-encargo-bilbao/\n"

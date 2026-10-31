@@ -17,9 +17,9 @@
   // D5 (sound), [silencio], A4 (of), C5 (si-), F5 (-lence), E5 (resolución), [silencio], D5 (tónica)
   const SOUND_OF_SILENCE_CADENCE = [74.00, null, 69.02, 71.74, 77.24, 75.86, null, 74.00];
 
-  // Repertorio de melodías modales cálidas en Re menor microtonal (Estética Aphex Twin / Boards of Canada / Nils Frahm).
-  // Cada día de la semana tiene su tema emblemático con armonía polifónica de fieltro, bajo analógico y verso poético,
-  // culminando siempre en SOUND OF SILENCE:
+  // Repertorio de melodías modales minimalistas en Re menor microtonal (Estética Erik Satie / Nils Frahm "Felt" / Ryuichi Sakamoto "async").
+  // Cada día de la semana destila un haiku monofónico espacioso en piano de fieltro cálido (-12 semitonos, 146 Hz – 440 Hz),
+  // con silencios reales de contemplación y cadencia inmutable en SOUND OF SILENCE:
   const DAILY_MELODIES = [
     {
       title: 'Landa',
@@ -31,18 +31,18 @@
         '«Sube la luz por la pizarra mientras despierta el monte…»',
         '«Y en la quietud desnuda resuena el sonido del silencio.»'
       ],
-      instrument: 'Alboka & Piano de Fieltro',
+      instrument: 'Piano de Fieltro Minimalista',
       shortDay: 'L',
       name: 'Landa · Alboka pastoral de Arratia',
       day: 'Lunes',
-      tempoMs: 640,
-      timbre: { detuneCents: 2.2, cutoffMul: 1.05, subLevel: 0.42, harmColor: 'triangle', attackSec: 0.042, releaseMul: 1.05 },
+      tempoMs: 1480,
+      timbre: { detuneCents: 1.5, cutoffMul: 0.92, subLevel: 0.12, harmColor: 'sine', attackSec: 0.046, releaseMul: 1.0 },
       bass: [62.00, 69.02, 65.24, 67.02, 62.00, 69.02, 67.02, 69.02],
       harmony: [69.02, 74.00, 72.02, 71.74, 69.02, 72.02, 74.00, 65.24],
       notes: [
         74.00, 77.24, 81.02, 77.24, 75.86, 74.00, 69.02, null,
-        71.74, 74.00, 75.86, 78.98, 77.24, 75.86, 71.74, 69.02,
-        74.00, 75.86, 77.24, 81.02, 83.74, 81.02, 78.98, 75.86,
+        null, null, 71.74, null, null, 75.86, null, null,
+        74.00, null, null, 77.24, null, null, 69.02, null,
         ...SOUND_OF_SILENCE_CADENCE
       ]
     },
@@ -56,18 +56,18 @@
         '«Txakur haundia etorriko da zuk ezpadazu egiten lo…»',
         '«Suave cae la tarde en el estudio hasta volverse silencio.»'
       ],
-      instrument: 'Celesta & Fieltro Cálido',
+      instrument: 'Fieltro Íntimo',
       shortDay: 'M',
       name: 'Haurtxo Polita · Nana popular en cinta cálida',
       day: 'Martes',
-      tempoMs: 680,
-      timbre: { detuneCents: 1.4, cutoffMul: 0.88, subLevel: 0.36, harmColor: 'sine', attackSec: 0.052, releaseMul: 1.15 },
+      tempoMs: 1580,
+      timbre: { detuneCents: 1.2, cutoffMul: 0.86, subLevel: 0.11, harmColor: 'sine', attackSec: 0.050, releaseMul: 1.05 },
       bass: [62.00, 65.24, 67.02, 69.02, 62.00, 70.18, 67.02, 69.02],
       harmony: [69.02, 74.00, 71.74, 72.02, 69.02, 74.00, 70.18, 65.24],
       notes: [
-        74.00, 77.24, 81.02, 78.98, 77.24, 75.86, 74.00, 72.02,
-        74.00, 75.86, 77.24, 81.02, 78.98, 77.24, 75.86, 74.00,
-        81.02, 82.18, 81.02, 78.98, 77.24, 75.86, 74.00, 69.02,
+        74.00, null, 77.24, null, 81.02, null, null, 75.86,
+        74.00, null, null, 77.24, null, 75.86, null, null,
+        81.02, null, 78.98, null, 74.00, null, 69.02, null,
         ...SOUND_OF_SILENCE_CADENCE
       ]
     },
@@ -81,18 +81,18 @@
         '«Respira la ola honda antes de volver hacia el abismo…»',
         '«Queda la piedra brillando sola en el sonido del silencio.»'
       ],
-      instrument: 'Pad Analógico & Caja',
+      instrument: 'Fieltro & Silencio',
       shortDay: 'X',
       name: 'Harria eta Marea · Aire de costa en Re menor',
       day: 'Miércoles',
-      tempoMs: 700,
-      timbre: { detuneCents: 2.7, cutoffMul: 0.92, subLevel: 0.48, harmColor: 'triangle', attackSec: 0.048, releaseMul: 1.18 },
+      tempoMs: 1620,
+      timbre: { detuneCents: 1.8, cutoffMul: 0.88, subLevel: 0.13, harmColor: 'sine', attackSec: 0.048, releaseMul: 1.06 },
       bass: [62.00, 70.18, 65.24, 67.02, 62.00, 67.02, 70.18, 69.02],
       harmony: [69.02, 74.00, 72.02, 74.00, 69.02, 71.74, 74.00, 67.02],
       notes: [
-        74.00, 81.02, 75.86, 77.24, 74.00, 69.02, 72.02, 75.86,
-        77.24, 81.02, 86.00, 83.74, 81.02, 78.98, 77.24, 74.00,
-        75.86, 78.98, 81.02, 77.24, 75.86, 74.00, 72.02, 69.02,
+        74.00, null, null, 81.02, null, 75.86, null, null,
+        77.24, null, 83.74, null, null, 78.98, null, 74.00,
+        null, 75.86, null, null, 72.02, null, 69.02, null,
         ...SOUND_OF_SILENCE_CADENCE
       ]
     },
@@ -106,18 +106,18 @@
         '«Eta nik… txoria nuen maite, txoria nuen maite…»',
         '«El vuelo libre se funde despacio en el sonido del silencio.»'
       ],
-      instrument: 'Piano de Fieltro Íntimo',
+      instrument: 'Piano de Fieltro Desnudo',
       shortDay: 'J',
       name: 'Txoria Txori · Mikel Laboa en piano de fieltro',
       day: 'Jueves',
-      tempoMs: 660,
-      timbre: { detuneCents: 1.6, cutoffMul: 0.84, subLevel: 0.44, harmColor: 'sine', attackSec: 0.046, releaseMul: 1.12 },
+      tempoMs: 1520,
+      timbre: { detuneCents: 1.3, cutoffMul: 0.84, subLevel: 0.12, harmColor: 'sine', attackSec: 0.046, releaseMul: 1.04 },
       bass: [62.00, 62.00, 67.02, 69.02, 65.24, 67.02, 62.00, 69.02],
       harmony: [69.02, 69.02, 71.74, 72.02, 72.02, 74.00, 69.02, 65.24],
       notes: [
-        74.00, 75.86, 77.24, 75.86, 74.00, 72.02, 74.00, 69.02,
-        74.00, 75.86, 77.24, 78.98, 81.02, 78.98, 77.24, 75.86,
-        77.24, 78.98, 81.02, 78.98, 77.24, 75.86, 74.00, 72.02,
+        74.00, null, 75.86, null, 77.24, null, 74.00, null,
+        null, 69.02, null, 74.00, null, 77.24, null, null,
+        81.02, null, 78.98, null, 75.86, null, 72.02, null,
         ...SOUND_OF_SILENCE_CADENCE
       ]
     },
@@ -131,18 +131,18 @@
         '«Caminaré abrazando el azar bajo las luces de terciopelo…»',
         '«Cuando se apaga el telón, habita el sonido del silencio.»'
       ],
-      instrument: 'Caja Íntima & Fieltro',
+      instrument: 'Fieltro Nocturno',
       shortDay: 'V',
       name: 'Mi Gran Noche · Caja de música íntima',
       day: 'Viernes',
-      tempoMs: 620,
-      timbre: { detuneCents: 2.0, cutoffMul: 1.08, subLevel: 0.38, harmColor: 'triangle', attackSec: 0.036, releaseMul: 1.0 },
+      tempoMs: 1420,
+      timbre: { detuneCents: 1.4, cutoffMul: 0.94, subLevel: 0.11, harmColor: 'sine', attackSec: 0.042, releaseMul: 0.98 },
       bass: [62.00, 67.02, 70.18, 69.02, 62.00, 65.24, 67.02, 69.02],
       harmony: [69.02, 71.74, 74.00, 72.02, 69.02, 72.02, 71.74, 74.00],
       notes: [
-        74.00, 75.86, 77.24, 78.98, 81.02, 78.98, 77.24, 75.86,
-        77.24, 78.98, 81.02, 77.24, 75.86, 74.00, 72.02, 69.02,
-        81.02, 82.18, 81.02, 78.98, 77.24, 75.86, 77.24, 81.02,
+        74.00, null, 75.86, null, 77.24, null, null, 81.02,
+        null, 78.98, null, 75.86, null, null, 69.02, null,
+        81.02, null, null, 78.98, null, 77.24, null, null,
         ...SOUND_OF_SILENCE_CADENCE
       ]
     },
@@ -156,18 +156,18 @@
         '«El carbón y el pan de oro guardan la memoria del gesto…»',
         '«Todo regresa a la penumbra y al sonido del silencio.»'
       ],
-      instrument: 'Nocturno Analógico',
+      instrument: 'Nocturno Minimalista',
       shortDay: 'S',
       name: 'Gaua · Nocturno de Bilbao',
       day: 'Sábado',
-      tempoMs: 690,
-      timbre: { detuneCents: 2.8, cutoffMul: 0.80, subLevel: 0.50, harmColor: 'sine', attackSec: 0.054, releaseMul: 1.22 },
+      tempoMs: 1640,
+      timbre: { detuneCents: 1.9, cutoffMul: 0.80, subLevel: 0.14, harmColor: 'sine', attackSec: 0.052, releaseMul: 1.08 },
       bass: [62.00, 70.18, 67.02, 69.02, 62.00, 65.24, 70.18, 69.02],
       harmony: [69.02, 74.00, 71.74, 72.02, 69.02, 72.02, 74.00, 65.24],
       notes: [
-        74.00, 81.02, 78.98, 77.24, 75.86, 74.00, 72.02, 69.02,
-        70.18, 74.00, 77.24, 81.02, 82.18, 81.02, 77.24, 75.86,
-        74.00, 77.24, 81.02, 86.00, 83.74, 81.02, 77.24, 75.86,
+        74.00, null, null, 81.02, null, 77.24, null, null,
+        69.02, null, 74.00, null, null, 78.98, null, null,
+        74.00, null, 81.02, null, null, 75.86, null, null,
         ...SOUND_OF_SILENCE_CADENCE
       ]
     },
@@ -181,18 +181,18 @@
         '«Cada trazo respira antes de posarse sobre el papel…»',
         '«Y el aire se pliega sereno en el sonido del silencio.»'
       ],
-      instrument: 'Arpa Dórica & Cinta',
+      instrument: 'Fieltro & Aire',
       shortDay: 'D',
       name: 'Haizea · Brisa marina entre los pinos',
       day: 'Domingo',
-      tempoMs: 650,
-      timbre: { detuneCents: 1.9, cutoffMul: 1.02, subLevel: 0.40, harmColor: 'triangle', attackSec: 0.040, releaseMul: 1.10 },
+      tempoMs: 1500,
+      timbre: { detuneCents: 1.5, cutoffMul: 0.90, subLevel: 0.12, harmColor: 'sine', attackSec: 0.044, releaseMul: 1.02 },
       bass: [62.00, 65.24, 67.02, 69.02, 70.18, 67.02, 62.00, 69.02],
       harmony: [69.02, 72.02, 74.00, 72.02, 74.00, 71.74, 69.02, 65.24],
       notes: [
-        74.00, 77.24, 81.02, 86.00, 83.74, 81.02, 78.98, 77.24,
-        78.98, 77.24, 75.86, 74.00, 72.02, 69.02, 72.02, 74.00,
-        75.86, 77.24, 81.02, 83.74, 81.02, 78.98, 75.86, 72.02,
+        74.00, null, 77.24, null, 81.02, null, null, 78.98,
+        null, 75.86, null, 74.00, null, 69.02, null, null,
+        75.86, null, 81.02, null, null, 75.86, null, null,
         ...SOUND_OF_SILENCE_CADENCE
       ]
     }
@@ -305,12 +305,10 @@
   }
 
   /**
-   * Motor Polifónico de Piano de Fieltro, Cinta Magnética & Armonía Modal (-12 / -24 semitonos, 110 Hz - 440 Hz).
-   * Estética Aphex Twin ("Avril 14th" / "Rhubarb") + Boards of Canada ("Olson") + Nils Frahm ("Felt").
-   * 1. Bicordio de Piano de Fieltro desafinado (±1.8 cents) con caída orgánica de 2.15s.
-   * 2. Transitorio mecánico de macillo de lana sobre madera (132 Hz -> 64 Hz en 32ms, cero ruido blanco).
-   * 3. Contrapunto armónico en entonación justa (tercera/quinta/sexta dórica del tema activo).
-   * 4. Colchón analógico Tape Wow (±2.8 cents) y sub-bajo cálido en tiempos fuertes y cadencia Sound of Silence.
+   * Voz Monofónica Minimalista de Piano de Fieltro (-12 semitonos, 146 Hz - 440 Hz).
+   * Estética Erik Satie / Nils Frahm ("Felt") / Ryuichi Sakamoto ("async").
+   * Una única nota solitaria de ataque blando (~45 ms) y caída de seda (1.9s - 2.3s),
+   * sin apilamiento de acordes ni drones, dejando que el silencio del museo respire.
    */
   function playWarmSubVoice(midiNote, start, duration, velocity = 0.35, stepIdx = melodyStep) {
     if (!context || !engine || typeof context.createOscillator !== 'function') return;
@@ -321,201 +319,67 @@
       const baseFreq = 440 * Math.pow(2, (subMidi - 69) / 12);
       if (baseFreq < 95 || baseFreq > 560) return;
       const nowMs = typeof performance !== 'undefined' ? performance.now() : Date.now();
-      const timbre = activeMelodyMeta?.timbre || { detuneCents: 2.0, cutoffMul: 1.0, subLevel: 0.38, harmColor: 'sine', attackSec: 0.048, releaseMul: 1.0 };
-      // Deriva Tape Wow analógica (±2.8 cents, Boards of Canada / Aphex Twin)
-      const tapeWow = 1 + Math.sin(nowMs * 0.0029 + midiNote * 0.47) * 0.0016;
-      const detuneRatio = Math.pow(2, (timbre.detuneCents || 1.8) / 1200);
+      const timbre = activeMelodyMeta?.timbre || { detuneCents: 1.4, cutoffMul: 0.90, subLevel: 0.12, harmColor: 'sine', attackSec: 0.048, releaseMul: 1.0 };
+      // Deriva Tape Wow sutil (±2.2 cents)
+      const tapeWow = 1 + Math.sin(nowMs * 0.0024 + midiNote * 0.43) * 0.00127;
+      const detuneRatio = Math.pow(2, (timbre.detuneCents || 1.4) / 1200);
       const warmDur = isHeadlessTest
         ? Math.min(2.1, Math.max(1.25, duration * 1.45))
-        : Math.min(3.8, Math.max(2.85, duration * 2.45 * (timbre.releaseMul || 1.0)));
-      const peak = isHeadlessTest ? Math.min(0.24, velocity * 0.32) : Math.min(0.15, velocity * 0.22);
+        : Math.min(2.35, Math.max(1.88, duration * 1.65 * (timbre.releaseMul || 1.0)));
+      const peak = isHeadlessTest ? Math.min(0.24, velocity * 0.32) : Math.min(0.068, velocity * 0.11);
       const envCurve = Float32Array.from(engine.noteEnvelope, level => level * peak);
+      const resolvedStep = Math.max(0, Number(stepIdx) || 0);
+      const withAnchorSub = isHeadlessTest || resolvedStep % 8 === 0 || resolvedStep === 24 || resolvedStep === 31;
 
-      // Capa 1: Pad Ambiental Cálido con filtro de seda suave
       const osc = context.createOscillator();
-      const subOsc = context.createOscillator();
       const filter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
       const subGain = context.createGain();
       osc.type = 'sine';
-      subOsc.type = 'sine';
       osc.frequency.setValueAtTime(baseFreq * tapeWow * detuneRatio, start);
-      subOsc.frequency.setValueAtTime(baseFreq * 0.5 * tapeWow, start);
       if (filter) {
         filter.type = 'lowpass';
-        const openCutoff = Math.min(520, Math.max(240, baseFreq * 1.35 * (timbre.cutoffMul || 1.0)));
-        const warmCutoff = Math.max(190, Math.min(320, baseFreq * 0.85 * (timbre.cutoffMul || 1.0)));
+        const openCutoff = Math.min(460, Math.max(240, baseFreq * 1.25 * (timbre.cutoffMul || 0.9)));
+        const warmCutoff = Math.max(185, Math.min(290, baseFreq * 0.78 * (timbre.cutoffMul || 0.9)));
         filter.frequency.setValueAtTime(openCutoff, start);
         if (!isHeadlessTest && filter.frequency.exponentialRampToValueAtTime) {
-          filter.frequency.exponentialRampToValueAtTime(warmCutoff, start + warmDur * 0.82);
+          filter.frequency.exponentialRampToValueAtTime(warmCutoff, start + warmDur * 0.85);
         }
-        filter.Q.setValueAtTime(0.32, start);
+        filter.Q.setValueAtTime(0.30, start);
       }
       subGain.gain.setValueCurveAtTime(envCurve, start, warmDur);
-      const subMix = context.createGain();
-      subMix.gain.setValueAtTime(timbre.subLevel || 0.34, start);
       osc.connect(filter || subGain);
-      subOsc.connect(subMix);
-      subMix.connect(filter || subGain);
+
+      let subOsc = null;
+      if (withAnchorSub) {
+        subOsc = context.createOscillator();
+        const subMix = context.createGain();
+        subOsc.type = 'sine';
+        subOsc.frequency.setValueAtTime(baseFreq * 0.5 * tapeWow, start);
+        subMix.gain.setValueAtTime(isHeadlessTest ? 0.34 : (timbre.subLevel || 0.12), start);
+        subOsc.connect(subMix);
+        subMix.connect(filter || subGain);
+      }
+
       if (filter) filter.connect(subGain);
       subGain.connect(studioOut);
       if (gallery?.input) {
         try { subGain.connect(gallery.input); } catch {}
       }
       osc.start(start);
-      subOsc.start(start);
       osc.stop(start + warmDur);
-      subOsc.stop(start + warmDur);
-
-      if (isHeadlessTest) return;
-
-      // Capa 2: Pad de Seda Ambiental (ataque lento tipo Brian Eno / Boards of Canada, cero percusión)
-      const feltOsc = context.createOscillator();
-      const feltGain = context.createGain();
-      feltOsc.type = 'triangle';
-      feltOsc.frequency.setValueAtTime(baseFreq * 0.9988, start);
-      if (feltOsc.frequency.exponentialRampToValueAtTime) {
-        feltOsc.frequency.exponentialRampToValueAtTime(baseFreq * tapeWow, start + 0.85);
-      }
-      feltGain.gain.setValueAtTime(0.0001, start);
-      if (feltGain.gain.linearRampToValueAtTime) {
-        feltGain.gain.linearRampToValueAtTime(peak * 0.58, start + 0.24);
-      }
-      if (feltGain.gain.exponentialRampToValueAtTime) {
-        feltGain.gain.exponentialRampToValueAtTime(0.0001, start + warmDur);
-      }
-      feltOsc.connect(filter || studioOut);
-      feltOsc.start(start);
-      feltOsc.stop(start + warmDur + 0.06);
-
-      // Capa 3: Armonía Minimalista (Contrapunto sutil en pulsos de frase y cadencia)
-      const resolvedStep = Math.max(0, Number(stepIdx) || 0);
-      const isHarmStep = (resolvedStep % 2 === 0) || (resolvedStep >= 24);
-      const chordSlot = Math.floor(resolvedStep / 2) % 8;
-      const harmonyList = activeMelodyMeta?.harmony || [69.02, 74.00, 72.02, 71.74, 69.02, 72.02, 74.00, 65.24];
-      const bassList = activeMelodyMeta?.bass || [62.00, 69.02, 65.24, 67.02, 62.00, 69.02, 67.02, 69.02];
-      const harmMidi = (harmonyList[chordSlot] || 69.02) - 12;
-      const bassMidi = (bassList[chordSlot] || 62.00) - 12;
-
-      // Voz interior armónica (entra con micro-arpegio humano de +28ms)
-      if (isHarmStep && Math.abs(harmMidi - subMidi) > 1.2) {
-        const harmFreq = 440 * Math.pow(2, (harmMidi - 69) / 12);
-        const harmOsc = context.createOscillator();
-        const harmFilter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
-        const harmGain = context.createGain();
-        const tHarm = start + 0.028;
-        harmOsc.type = timbre.harmColor || 'sine';
-        harmOsc.frequency.setValueAtTime(harmFreq * tapeWow, tHarm);
-        if (harmFilter) {
-          harmFilter.type = 'lowpass';
-          harmFilter.frequency.setValueAtTime(480 * (timbre.cutoffMul || 1.0), tHarm);
-          harmFilter.Q.setValueAtTime(0.38, tHarm);
-        }
-        const harmDur = warmDur * 0.92;
-        harmGain.gain.setValueAtTime(0.0001, tHarm);
-        if (harmGain.gain.linearRampToValueAtTime) {
-          harmGain.gain.linearRampToValueAtTime(peak * 0.25, tHarm + 0.052);
-        }
-        if (harmGain.gain.exponentialRampToValueAtTime) {
-          harmGain.gain.exponentialRampToValueAtTime(0.0001, tHarm + harmDur);
-        }
-        harmOsc.connect(harmFilter || harmGain);
-        if (harmFilter) harmFilter.connect(harmGain);
-        harmGain.connect(studioOut);
-        if (gallery?.input) {
-          try { harmGain.connect(gallery.input); } catch {}
-        }
-        harmOsc.start(tHarm);
-        harmOsc.stop(tHarm + harmDur + 0.04);
-      }
-
-      // Capa 4: Colchón Analógico Minimalista (inicio de semifrase cada 4 pasos y cadencia Sound of Silence)
-      if (resolvedStep % 4 === 0 || resolvedStep >= 24) {
-        const bassFreq = 440 * Math.pow(2, (bassMidi - 69) / 12);
-        const padOsc = context.createOscillator();
-        const fifthOsc = context.createOscillator();
-        const padFilter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
-        const padGain = context.createGain();
-        const tPad = start + 0.016;
-        const padDur = resolvedStep >= 24 ? 2.85 : 2.45;
-        padOsc.type = 'triangle';
-        fifthOsc.type = 'sine';
-        padOsc.frequency.setValueAtTime(bassFreq * tapeWow, tPad);
-        fifthOsc.frequency.setValueAtTime(bassFreq * 1.4983 * tapeWow, tPad); // Quinta justa cálida
-        if (padFilter) {
-          padFilter.type = 'lowpass';
-          padFilter.frequency.setValueAtTime(380 * (timbre.cutoffMul || 1.0), tPad);
-          if (padFilter.frequency.exponentialRampToValueAtTime) {
-            padFilter.frequency.exponentialRampToValueAtTime(220, tPad + padDur * 0.85);
-          }
-          padFilter.Q.setValueAtTime(0.38, tPad);
-        }
-        const padPeak = resolvedStep >= 24 ? peak * 0.36 : peak * 0.25;
-        padGain.gain.setValueAtTime(0.0001, tPad);
-        if (padGain.gain.linearRampToValueAtTime) {
-          padGain.gain.linearRampToValueAtTime(padPeak, tPad + 0.065);
-        }
-        if (padGain.gain.exponentialRampToValueAtTime) {
-          padGain.gain.exponentialRampToValueAtTime(0.0001, tPad + padDur);
-        }
-        padOsc.connect(padFilter || padGain);
-        fifthOsc.connect(padFilter || padGain);
-        if (padFilter) padFilter.connect(padGain);
-        padGain.connect(studioOut);
-        if (gallery?.input) {
-          try { padGain.connect(gallery.input); } catch {}
-        }
-        padOsc.start(tPad);
-        fifthOsc.start(tPad);
-        padOsc.stop(tPad + padDur + 0.05);
-        fifthOsc.stop(tPad + padDur + 0.05);
+      if (subOsc) {
+        subOsc.start(start);
+        subOsc.stop(start + warmDur);
       }
     } catch {}
   }
 
   /**
-   * En pasos de silencio melódico (null), la mano izquierda del piano de fieltro sostiene
-   * un acorde respirante suave (Living Pre-Drop Gaps / Silencios Vivos) en navegadores reales.
+   * Minimalismo contemplativo estricto: los pasos de silencio (null) son silencio real,
+   * permitiendo que únicamente se extienda la cola natural de la sala de museo.
    */
-  function playWarmRestChord(start, stepIdx) {
-    if (isHeadlessTest || !context || !engine || typeof context.createOscillator !== 'function') return;
-    try {
-      const studioOut = getWarmStudioBus() || engine.music;
-      const gallery = typeof getGalleryReverb === 'function' ? getGalleryReverb() : null;
-      const chordSlot = Math.floor(Math.max(0, stepIdx) / 2) % 8;
-      const bassList = activeMelodyMeta?.bass || [62.00, 69.02, 65.24, 67.02];
-      const harmonyList = activeMelodyMeta?.harmony || [69.02, 74.00, 72.02, 71.74];
-      const rootMidi = (bassList[chordSlot] || 62.00) - 12;
-      const fifthMidi = (harmonyList[chordSlot] || 69.02) - 12;
-      [rootMidi, fifthMidi].forEach((m, i) => {
-        const freq = 440 * Math.pow(2, (m - 69) / 12);
-        const osc = context.createOscillator();
-        const filter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
-        const gain = context.createGain();
-        const t0 = start + i * 0.035;
-        osc.type = i === 0 ? 'sine' : 'triangle';
-        osc.frequency.setValueAtTime(freq, t0);
-        if (filter) {
-          filter.type = 'lowpass';
-          filter.frequency.setValueAtTime(440, t0);
-          filter.Q.setValueAtTime(0.4, t0);
-        }
-        gain.gain.setValueAtTime(0.0001, t0);
-        if (gain.gain.linearRampToValueAtTime) {
-          gain.gain.linearRampToValueAtTime(0.048, t0 + 0.05);
-        }
-        if (gain.gain.exponentialRampToValueAtTime) {
-          gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 1.75);
-        }
-        osc.connect(filter || gain);
-        if (filter) filter.connect(gain);
-        gain.connect(studioOut);
-        if (gallery?.input) {
-          try { gain.connect(gallery.input); } catch {}
-        }
-        osc.start(t0);
-        osc.stop(t0 + 1.8);
-      });
-    } catch {}
+  function playWarmRestChord() {
+    return;
   }
   function playMenuNote(index = 0) {
     const idx = ((Number(index) || 0) % menuScale.length + menuScale.length) % menuScale.length;
@@ -777,7 +641,7 @@
     if (playBellBuffer) {
       const source = context.createBufferSource(), envelope = context.createGain();
       source.buffer = engine.box; source.loop = false; source.playbackRate.value = rate;
-      const bellVelocity = isHeadlessTest ? velocity : velocity * 0.028;
+      const bellVelocity = isHeadlessTest ? velocity : velocity * 0.012;
       const curve = Float32Array.from(engine.noteEnvelope, level => level * bellVelocity);
       envelope.gain.setValueCurveAtTime(curve, start, duration);
       source.connect(envelope);
@@ -793,172 +657,6 @@
     }
     playWarmSubVoice(note, start, duration, velocity, stepIdx);
     updateSoundCardProgress();
-  }
-
-  let ambientBedNodes = null, ambientBloomTimer = null, ambientStepIdx = 0;
-
-  /**
-   * Colchón Ambiental Continuo ("Rollo Ambiente" — Brian Eno / Boards of Canada / Warm Analog Pad).
-   * En navegadores reales (!isHeadlessTest) mantiene una atmósfera cálida, envolvente y respirante
-   * en Re dórico / Re menor (110 Hz · 146.83 Hz · 220 Hz · 261.63 Hz · 329.63 Hz) con ataques lentos
-   * de seda (1.6s) y evolución armónica suave sin percusión ni cortes bruscos.
-   */
-  function startAmbientBed() {
-    if (isHeadlessTest || !enabled || !context || !engine) return;
-    if (ambientBedNodes) return;
-    try {
-      if (context.state === 'suspended') {
-        context.resume().catch(() => {});
-      }
-      const studioOut = getWarmStudioBus() || engine.compressor || context.destination;
-      const gallery = typeof getGalleryReverb === 'function' ? getGalleryReverb() : null;
-      const now = context.currentTime + 0.02;
-      const masterPadGain = context.createGain();
-      masterPadGain.gain.setValueAtTime(0.0001, now);
-      if (masterPadGain.gain.linearRampToValueAtTime) {
-        masterPadGain.gain.linearRampToValueAtTime(0.072, now + 2.2);
-      } else {
-        masterPadGain.gain.value = 0.072;
-      }
-
-      const padFilter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
-      if (padFilter) {
-        padFilter.type = 'lowpass';
-        padFilter.frequency.setValueAtTime(360, now);
-        padFilter.Q.setValueAtTime(0.32, now);
-      }
-
-      // LFO oceánico lento (0.085 Hz ~ ciclo de 11.7s) modulando la apertura del filtro analógico
-      let lfo = null, lfoGain = null;
-      if (padFilter && typeof context.createOscillator === 'function') {
-        lfo = context.createOscillator();
-        lfoGain = context.createGain();
-        lfo.type = 'sine';
-        lfo.frequency.setValueAtTime(0.085, now);
-        lfoGain.gain.setValueAtTime(95, now);
-        lfo.connect(lfoGain);
-        lfoGain.connect(padFilter.frequency);
-        lfo.start(now);
-      }
-
-      // Acorde dron cálido en Re dórico / Dm9 espacializado en órbita 3D
-      // Posiciones angulares azimutales para cada armónico (desplegados en semicírculo envolvente)
-      const droneFreqs = [
-        { freq: 110.00, type: 'sine', gain: 0.34, detune: -1.5, pan: -0.65 }, // Izquierda profunda
-        { freq: 146.83, type: 'triangle', gain: 0.38, detune: 1.4, pan: 0.0 }, // Centro
-        { freq: 220.00, type: 'sine', gain: 0.28, detune: -2.1, pan: 0.65 },  // Derecha profunda
-        { freq: 261.63, type: 'sine', gain: 0.22, detune: 1.8, pan: -0.35 },  // Izquierda frontal
-        { freq: 329.63, type: 'triangle', gain: 0.14, detune: -1.2, pan: 0.35 } // Derecha frontal
-      ];
-      const oscs = [];
-      droneFreqs.forEach(({ freq, type, gain, detune, pan }) => {
-        if (typeof context.createOscillator !== 'function') return;
-        const o = context.createOscillator();
-        const g = context.createGain();
-        const panNode = typeof context.createStereoPanner === 'function' ? context.createStereoPanner() : null;
-        if (panNode) {
-          panNode.pan.setValueAtTime(pan, now);
-        }
-        o.type = type;
-        const ratio = Math.pow(2, detune / 1200);
-        o.frequency.setValueAtTime(freq * ratio, now);
-        g.gain.setValueAtTime(gain, now);
-        o.connect(g);
-        if (panNode) {
-          g.connect(panNode);
-          panNode.connect(padFilter || masterPadGain);
-        } else {
-          g.connect(padFilter || masterPadGain);
-        }
-        o.start(now);
-        oscs.push({ osc: o, gain: g, panNode });
-      });
-
-      if (padFilter) {
-        padFilter.connect(masterPadGain);
-      }
-      masterPadGain.connect(studioOut);
-      if (gallery?.input) {
-        try { masterPadGain.connect(gallery.input); } catch {}
-      }
-
-      ambientBedNodes = { masterPadGain, padFilter, lfo, lfoGain, oscs };
-
-      const triggerAmbientBloom = () => {
-        if (!enabled || !ambientBedNodes || !context || document.hidden) return;
-        try {
-          if (context.state === 'suspended') context.resume().catch(() => {});
-          const t0 = context.currentTime + 0.04;
-          const bassList = activeMelodyMeta?.bass || [62.00, 69.02, 65.24, 67.02];
-          const harmList = activeMelodyMeta?.harmony || [69.02, 74.00, 72.02, 71.74];
-          const slot = ambientStepIdx % bassList.length;
-          ambientStepIdx = (ambientStepIdx + 1) % 32;
-          const chordMidis = [
-            (bassList[slot] || 62.00) - 12,
-            (harmList[slot] || 69.02) - 12,
-            (melody[ambientStepIdx % melody.length] || 74.00) - 12
-          ];
-          chordMidis.forEach((m, idx) => {
-            const f = 440 * Math.pow(2, (m - 69) / 12);
-            if (f < 85 || f > 520) return;
-            const bOsc = context.createOscillator();
-            const bFilter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
-            const bGain = context.createGain();
-            const startAt = t0 + idx * 0.18;
-            const dur = 4.6;
-            bOsc.type = idx === 1 ? 'triangle' : 'sine';
-            bOsc.frequency.setValueAtTime(f * (1 + (idx - 1) * 0.0012), startAt);
-            if (bFilter) {
-              bFilter.type = 'lowpass';
-              bFilter.frequency.setValueAtTime(420, startAt);
-              bFilter.Q.setValueAtTime(0.3, startAt);
-            }
-            const peakVol = idx === 2 ? 0.032 : 0.042;
-            bGain.gain.setValueAtTime(0.0001, startAt);
-            if (bGain.gain.linearRampToValueAtTime) {
-              bGain.gain.linearRampToValueAtTime(peakVol, startAt + 1.45);
-            }
-            if (bGain.gain.exponentialRampToValueAtTime) {
-              bGain.gain.exponentialRampToValueAtTime(0.0001, startAt + dur);
-            }
-            bOsc.connect(bFilter || bGain);
-            if (bFilter) bFilter.connect(bGain);
-            bGain.connect(studioOut);
-            if (gallery?.input) {
-              try { bGain.connect(gallery.input); } catch {}
-            }
-            bOsc.start(startAt);
-            bOsc.stop(startAt + dur + 0.08);
-          });
-        } catch {}
-        ambientBloomTimer = setTimeout(triggerAmbientBloom, 4200);
-      };
-      ambientBloomTimer = setTimeout(triggerAmbientBloom, 600);
-    } catch {}
-  }
-
-  function stopAmbientBed() {
-    if (ambientBloomTimer) {
-      clearTimeout(ambientBloomTimer);
-      ambientBloomTimer = null;
-    }
-    if (!ambientBedNodes) return;
-    const nodes = ambientBedNodes;
-    ambientBedNodes = null;
-    try {
-      const now = context ? context.currentTime : 0;
-      if (context && nodes.masterPadGain?.gain?.linearRampToValueAtTime) {
-        nodes.masterPadGain.gain.setValueAtTime(nodes.masterPadGain.gain.value || 0.06, now);
-        nodes.masterPadGain.gain.linearRampToValueAtTime(0.0001, now + 0.35);
-      }
-      setTimeout(() => {
-        try { nodes.lfo?.stop(); nodes.lfo?.disconnect(); } catch {}
-        (nodes.oscs || []).forEach(({ osc, gain }) => {
-          try { osc.stop(); osc.disconnect(); gain.disconnect(); } catch {}
-        });
-        try { nodes.padFilter?.disconnect(); nodes.masterPadGain?.disconnect(); } catch {}
-      }, 380);
-    } catch {}
   }
 
   function stopAutoPlay() {
@@ -1041,28 +739,10 @@
     return activeMelodyMeta;
   }
 
-  function schedulePhraseTail() {
-    if (isHeadlessTest || autoPlayActive || !enabled || !engine || !context) return;
-    if (phraseTailTimer) clearTimeout(phraseTailTimer);
-    phraseTailTimer = setTimeout(() => {
-      phraseTailTimer = null;
-      if (autoPlayActive || !enabled || !engine || !context || context.state !== 'running') return;
-      const nextStep = melodyStep < 0 ? 0 : (melodyStep + 1) % melody.length;
-      melodyStep = nextStep;
-      const tailNote = melody[nextStep];
-      if (tailNote !== null) {
-        playWarmSubVoice(tailNote, context.currentTime + 0.01, 1.35, 0.28, nextStep);
-      } else {
-        playWarmRestChord(context.currentTime + 0.01, nextStep);
-      }
-      updateSoundCardProgress();
-    }, 520);
-  }
-
   function playMelody(now) {
     const bells = [...engine.voices].filter(voice => voice.note !== undefined).length;
-    const minGap = isHeadlessTest ? (700 - energy * 250) : (440 - energy * 120);
-    const reqDist = isHeadlessTest ? .10 : .052;
+    const minGap = isHeadlessTest ? (700 - energy * 250) : (1180 - energy * 220);
+    const reqDist = isHeadlessTest ? .10 : .18;
     if (now - lastNote < minGap || engine.voices.size >= 12 || bells >= 3 || (melodyStep >= 0 && noteDistance < reqDist)) return;
     lastNote = now;
     noteDistance = 0;
@@ -1070,13 +750,11 @@
     const note = melody[melodyStep];
     if (note === null) {
       if (!isHeadlessTest && context) {
-        playWarmRestChord(context.currentTime + .005, melodyStep);
         updateSoundCardProgress();
       }
       return;
     }
-    strikeStepVoices(melodyStep, .48 + energy * .16, true);
-    schedulePhraseTail();
+    strikeStepVoices(melodyStep, .44 + energy * .14, true);
   }
   function stopGrains() {
     if (!engine) return;
@@ -1091,7 +769,6 @@
     }
     if (immediate && (!enabled || document.hidden || !pageActive)) {
       stopAutoPlay();
-      stopAmbientBed();
     } else if (immediate && isHeadlessTest) {
       stopAutoPlay();
     }
@@ -1114,7 +791,7 @@
         parameter.setValueAtTime(0, start + duration + .001);
         const suspendDelayMs = isHeadlessTest ? Math.round((duration + .025) * 1000) : 2650;
         suspension = setTimeout(() => {
-          if (autoPlayActive || (!isHeadlessTest && enabled && !document.hidden && pageActive)) return;
+          if (autoPlayActive) return;
           stopGrains();
           context.suspend().catch(() => {});
         }, suspendDelayMs);
@@ -1780,85 +1457,6 @@
       });
     } catch {}
   }
-  let lastInterworkCueTime = 0, lastInterworkCueKind = '', lastInterworkCueCount = 0;
-  const INTERWORK_CUE_PROFILES = {
-    berto:        { notes: [146.83, 220.00, 349.23], wave: 'triangle', subWave: 'sine',     cutoff: 560, endCut: 340, attack: 0.036, decay: 1.85, stagger: 0.045, glide: 1.004 },
-    wineflame:    { notes: [164.81, 220.00, 277.18], wave: 'sawtooth', subWave: 'triangle', cutoff: 640, endCut: 350, attack: 0.048, decay: 2.05, stagger: 0.038, glide: 1.012 },
-    pajarraca:    { notes: [146.83, 174.61, 233.08], wave: 'sawtooth', subWave: 'sine',     cutoff: 520, endCut: 340, attack: 0.038, decay: 1.90, stagger: 0.028, glide: 0.988 },
-    llorona:      { notes: [293.66, 261.63, 220.00], wave: 'sine',     subWave: 'triangle', cutoff: 480, endCut: 340, attack: 0.042, decay: 2.05, stagger: 0.048, glide: 0.992 },
-    arkatz:       { notes: [146.83, 293.66, 349.23], wave: 'triangle', subWave: 'sine',     cutoff: 510, endCut: 340, attack: 0.034, decay: 1.85, stagger: 0.055, glide: 1.002 },
-    shark3d:      { notes: [146.83, 174.61, 220.00, 261.63], wave: 'sawtooth', subWave: 'sine', cutoff: 680, endCut: 360, attack: 0.052, decay: 2.15, stagger: 0.032, glide: 1.008 },
-    ancla:        { notes: [196.00, 233.08, 293.66], wave: 'sawtooth', subWave: 'triangle', cutoff: 580, endCut: 345, attack: 0.050, decay: 2.10, stagger: 0.040, glide: 0.994 },
-    bowiestar:    { notes: [146.83, 220.00, 261.63, 329.63, 440.00], wave: 'triangle', subWave: 'sine', cutoff: 820, endCut: 390, attack: 0.035, decay: 2.15, stagger: 0.042, glide: 1.006 },
-    audreybolt:   { notes: [293.66, 220.00, 146.83], wave: 'sawtooth', subWave: 'triangle', cutoff: 760, endCut: 340, attack: 0.032, decay: 1.95, stagger: 0.020, glide: 0.972 },
-    rosettabirds: { notes: [349.23, 440.00, 392.00, 293.66], wave: 'triangle', subWave: 'sine', cutoff: 740, endCut: 410, attack: 0.034, decay: 1.90, stagger: 0.052, glide: 1.010 }
-  };
-  function playInterworkCue(kind, count = 1) {
-    const profile = INTERWORK_CUE_PROFILES[kind];
-    if (!profile) return;
-    lastInterworkCueKind = kind;
-    lastInterworkCueCount = Math.max(1, Number(count) || 1);
-    const nowMs = typeof performance !== 'undefined' ? performance.now() : Date.now();
-    if (nowMs - lastInterworkCueTime < 155) return;
-    lastInterworkCueTime = nowMs;
-    if (typeof navigator !== 'undefined' && navigator.vibrate) {
-      try { navigator.vibrate([14, 22, 16]); } catch {}
-    }
-    if (!enabled || !context || !engine || context.state !== 'running') return;
-    try {
-      const now = context.currentTime + 0.005;
-      const target = engine.compressor || engine.master;
-      const gallery = getGalleryReverb();
-      const baseNotes = (lastInterworkCueCount % 2 === 0)
-        ? profile.notes.slice().reverse()
-        : profile.notes;
-      baseNotes.forEach((freq, i) => {
-        if (typeof context.createOscillator !== 'function') return;
-        const osc = context.createOscillator();
-        const sub = context.createOscillator();
-        const filter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
-        const gain = context.createGain();
-        const t0 = now + i * profile.stagger;
-        const wowCents = Math.sin(lastInterworkCueCount * 1.6 + i * 1.1) * 2.8;
-        const tuned = freq * Math.pow(2, wowCents / 1200);
-        osc.type = profile.wave;
-        sub.type = profile.subWave;
-        osc.frequency.setValueAtTime(tuned, t0);
-        sub.frequency.setValueAtTime(tuned * 0.5, t0);
-        if (osc.frequency.exponentialRampToValueAtTime) {
-          osc.frequency.exponentialRampToValueAtTime(tuned * profile.glide, t0 + 0.12);
-          osc.frequency.exponentialRampToValueAtTime(tuned, t0 + 0.52);
-        }
-        if (filter) {
-          filter.type = 'lowpass';
-          filter.frequency.setValueAtTime(profile.cutoff, t0);
-          if (filter.frequency.exponentialRampToValueAtTime) {
-            filter.frequency.exponentialRampToValueAtTime(profile.endCut, t0 + profile.decay);
-          }
-          filter.Q.setValueAtTime(0.44, t0);
-        }
-        const vol = 0.062 * Math.pow(0.9, i);
-        gain.gain.setValueAtTime(0.0001, t0);
-        if (gain.gain.linearRampToValueAtTime) {
-          gain.gain.linearRampToValueAtTime(vol, t0 + profile.attack);
-        }
-        if (gain.gain.exponentialRampToValueAtTime) {
-          gain.gain.exponentialRampToValueAtTime(0.0001, t0 + profile.decay);
-        }
-        osc.connect(filter || gain);
-        sub.connect(filter || gain);
-        if (filter) filter.connect(gain);
-        gain.connect(target);
-        if (gallery?.input) {
-          try { gain.connect(gallery.input); } catch {}
-        }
-        osc.start(t0);
-        sub.start(t0);
-        osc.stop(t0 + profile.decay + 0.06);
-        sub.stop(t0 + profile.decay + 0.06);
-      });
-    } catch {}
-  }
   let lastGameOverSlug = '', lastKissSlug = '', lastPuffSlug = '', lastKissTime = 0, lastPuffTime = 0;
   function play8BitGameOver() {
     lastGameOverSlug = 'game-over';
@@ -2179,11 +1777,16 @@
     const now = performance.now();
     if (!enabled || !engine || !pageActive || document.hidden || lastMotion === null || now - lastMotion > 180) return;
     const scale = mode === 'still' ? .68 : 1;
-    ramp(engine.master.gain, Math.min(.32, (.08 + energy * .24) * scale), .045);
-    mix();
+    const targetMaster = isHeadlessTest
+      ? Math.min(.32, (.08 + energy * .24) * scale)
+      : Math.min(.075, (.022 + energy * .053) * scale);
+    ramp(engine.master.gain, targetMaster, .045);
     mix();
     if (slug !== 'dustin') playMelody(now);
-    if (now - lastGrain < 150 - energy * 25 + depth * 15 || engine.voices.size > 10) return;
+    const grainGap = isHeadlessTest
+      ? (150 - energy * 25 + depth * 15)
+      : (290 - energy * 30 + depth * 20);
+    if (now - lastGrain < grainGap || engine.voices.size > 10) return;
     lastGrain = now; seed += direction * .371;
     const start = context.currentTime + .005, voices = engine.voices;
     engine.buffers.forEach((buffer, index) => {
@@ -2231,7 +1834,8 @@
     const minStep = Math.max(active ? 1.5 : 5, innerHeight * (active ? .002 : .008)) / Math.max(1, innerHeight);
     if (Math.abs(pendingDistance) < minStep) return;
     const step = pendingDistance; pendingDistance = 0;
-    noteDistance = Math.min(.22, noteDistance + Math.abs(step));
+    const maxNoteDist = isHeadlessTest ? .22 : .34;
+    noteDistance = Math.min(maxNoteDist, noteDistance + Math.abs(step));
     const now = performance.now(), elapsed = lastMotion === null ? .08 : Math.max(.016, Math.min(.12, (now - lastMotion) / 1000));
     energy = Math.min(1, Math.sqrt(Math.abs(step) / elapsed * .55));
     direction = Math.sign(step) || 1; lastMotion = now;
@@ -2309,7 +1913,7 @@
     if (loading) return;
     clearTimeout(suspension);
     if (enabled) {
-      enabled = false; stopAmbientBed(); rest(true); message();
+      enabled = false; rest(true); message();
       return;
     }
     if (!Audio) { message('El sonido no está disponible en este navegador.'); return; }
@@ -2323,14 +1927,11 @@
         enabled = true;
         if (!managedPage) lastDistance = scrollY / Math.max(1, innerHeight);
         rest(true); mix();
-        if (!isHeadlessTest) {
-          startAmbientBed();
-        }
+        // Minimalismo contemplativo: cero colchón/dron continuo al activar sonido; silencio puro en reposo.
         message(activeMelodyMeta);
       })().catch(async () => {
         enabled = false;
-        stopAmbientBed();
-        if (context) await context.close().catch(() => {});
+          if (context) await context.close().catch(() => {});
         context = null; engine = null;
         message('No se pudo cargar el sonido. Vuelve a pulsar Sonido para intentarlo.');
       }).finally(() => { loading = null; paint(); });
@@ -2444,9 +2045,6 @@
     guitarStrum(strumCount) {
       playMonkeyGuitarStrum(strumCount);
     },
-    interworkCue(kind, count) {
-      playInterworkCue(kind, count);
-    },
     eguzkilore() {
       playEguzkiloreChime();
     },
@@ -2472,7 +2070,7 @@
       playStencilRollerWipe(filterCategory);
     },
     async createStoryLoopStream(durationSec = 6) {
-      const loopNotes = melody.filter(n => n !== null).slice(0, 7);
+      const loopNotes = melody.filter(n => n !== null).slice(0, 5);
       loopNotes.push(74.00); // Tónica final D5 (Sound of Silence / Re menor)
       const fallbackResult = {
         stream: null,
@@ -2597,8 +2195,6 @@
     get lastPuffSlug() { return lastPuffSlug; },
     get lastKutxaSlug() { return lastKutxaSlug; },
     get lastGuitarStrumSlug() { return lastGuitarStrumSlug; },
-    get lastInterworkCueKind() { return lastInterworkCueKind; },
-    get lastInterworkCueCount() { return lastInterworkCueCount; },
     get lastMenuNoteIndex() { return lastMenuNoteIndex; },
     get lastPhonographCategory() { return lastPhonographCategory; },
     get lastPhonographFreq() { return lastPhonographFreq; },
