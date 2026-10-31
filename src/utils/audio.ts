@@ -1431,6 +1431,54 @@ class SoundEngine {
       // Ignore audio errors
     }
   }
+
+  /**
+   * Warm analog commission bridge cue (INV_WARMTH_ACOUSTIC_GATE: 146.83–440 Hz, felt attack, silk lowpass <= 720 Hz, Tape Wow ±2.8 cents).
+   */
+  public playCommissionBridgeCue(
+    bridgeKey: 'jaio-amy' | 'amy-amor' | 'amor-rara' | 'rara-closing' = 'jaio-amy',
+    vaivenCount = 1
+  ) {
+    if (!this.enabled) return
+    try {
+      this.initCtx()
+      if (!this.ctx) return
+      const now = this.ctx.currentTime + 0.006
+      const out = this.getOut()
+      const voicings: Record<string, { notes: number[]; wave: OscillatorType; cutoff: number; attack: number; decay: number; spread: number }> = {
+        'jaio-amy': { notes: [146.83, 220.00, 293.66, 349.23], wave: 'triangle', cutoff: 660, attack: 0.034, decay: 1.88, spread: 0.036 },
+        'amy-amor': { notes: [174.61, 220.00, 261.63, 329.63], wave: 'sine', cutoff: 620, attack: 0.040, decay: 1.98, spread: 0.045 },
+        'amor-rara': { notes: [196.00, 233.08, 293.66, 392.00], wave: 'triangle', cutoff: 720, attack: 0.046, decay: 2.15, spread: 0.052 },
+        'rara-closing': { notes: [146.83, 220.00, 293.66, 440.00], wave: 'sine', cutoff: 580, attack: 0.050, decay: 2.30, spread: 0.060 }
+      }
+      const cfg = voicings[bridgeKey] || voicings['jaio-amy']
+      const ordered = vaivenCount % 2 === 0 ? [...cfg.notes].reverse() : cfg.notes
+      ordered.forEach((freq, idx) => {
+        if (!this.ctx) return
+        const osc = this.ctx.createOscillator()
+        const filter = this.ctx.createBiquadFilter()
+        const gain = this.ctx.createGain()
+        const t0 = now + idx * cfg.spread
+        const wowCents = Math.sin(vaivenCount * 1.43 + idx * 1.11) * 2.8
+        osc.type = cfg.wave
+        osc.frequency.setValueAtTime(freq * Math.pow(2, wowCents / 1200), t0)
+        filter.type = 'lowpass'
+        filter.frequency.setValueAtTime(cfg.cutoff, t0)
+        filter.frequency.exponentialRampToValueAtTime(340, t0 + cfg.decay)
+        filter.Q.setValueAtTime(0.38, t0)
+        gain.gain.setValueAtTime(0.0001, t0)
+        gain.gain.linearRampToValueAtTime(0.058 * Math.pow(0.9, idx), t0 + cfg.attack)
+        gain.gain.exponentialRampToValueAtTime(0.0001, t0 + cfg.decay)
+        osc.connect(filter)
+        filter.connect(gain)
+        gain.connect(out)
+        osc.start(t0)
+        osc.stop(t0 + cfg.decay + 0.05)
+      })
+    } catch {
+      // Ignore audio errors
+    }
+  }
 }
 
 export const sound = new SoundEngine()

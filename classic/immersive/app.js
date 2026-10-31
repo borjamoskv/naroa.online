@@ -2181,7 +2181,6 @@
       'infusion-de-berto->buena-fuente': 'berto',
       'red-red-wine->i-remember-when-your-head-caught-flame': 'wineflame',
       'pajarraca-azul->flying-dragon': 'pajarraca',
-      'idoia-arkatz-bihotz->little-adi': 'arkatz',
       'sistashark->multi-dimensional-love': 'shark3d',
       'eneko-el-marino->aupas': 'ancla',
       'el-hombre-que-susurraba-a-las-estrellas->olinga-a-la-naranja': 'bowiestar',
@@ -2221,9 +2220,6 @@
       const popeyeRingsHtml = Array.from({ length: 5 }, (_, i) =>
         `<ellipse class="iw-popeye-ring" data-popeye-ring="${i}" rx="18" ry="11" fill="none" stroke="rgba(244,240,228,0.72)" stroke-width="3.2" />`
       ).join('');
-      const olingaSlicesHtml = Array.from({ length: 8 }, (_, i) =>
-        `<path class="iw-olinga-slice" data-olinga-slice="${i}" fill="rgba(255,148,24,0.42)" stroke="#ffd166" stroke-width="2.2" />`
-      ).join('');
       const rosettaBirdsHtml = Array.from({ length: 9 }, (_, i) =>
         `<div class="iw-rosetta-bird" data-rosetta-bird="${i}" style="background-image:url(&quot;${ROSETTA_BIRD_URLS[i % 3]}&quot;)"></div>`
       ).join('');
@@ -2250,18 +2246,6 @@
           </svg>
           <div class="iw-cutout iw-pajarraca-mask" data-pajarraca-bird style="background-image:url(&quot;/images/catalogo/pajarraca-mask-cutout.webp&quot;)"></div>
         </div>
-        <div class="iw-rig" data-fx="arkatz" hidden>
-          <svg class="iw-svg" viewBox="0 0 1000 1000" preserveAspectRatio="none">
-            <path data-arkatz-heart d="M 500 660 C 310 530, 260 355, 385 285 C 455 245, 500 315, 500 355 C 500 315, 545 245, 615 285 C 740 355, 690 530, 500 660 Z" fill="none" stroke="#e11d48" stroke-width="5.5" stroke-linecap="round" stroke-dasharray="1500" stroke-dashoffset="1500"/>
-            <path data-arkatz-graphite d="M 500 672 C 296 536, 246 346, 380 274 C 456 234, 500 308, 500 348 C 500 308, 544 234, 620 274 C 754 346, 704 536, 500 672 Z" fill="none" stroke="rgba(38,38,42,0.82)" stroke-width="3.2" stroke-linecap="round" stroke-dasharray="1560" stroke-dashoffset="1560"/>
-            <g data-arkatz-pencil>
-              <polygon points="0,0 18,-10 18,10" fill="#e11d48"/>
-              <polygon points="18,-10 34,-12 34,12 18,10" fill="#f3d5b5"/>
-              <rect x="34" y="-12" width="110" height="24" rx="3" fill="#27272a" stroke="#f4f4f5" stroke-width="1.6"/>
-              <rect x="144" y="-12" width="16" height="24" rx="2" fill="#f43f5e"/>
-            </g>
-          </svg>
-        </div>
         <div class="iw-rig" data-fx="shark3d" hidden>
           <svg class="iw-svg" viewBox="0 0 1000 1000" preserveAspectRatio="none">
             <circle data-shark-anaglyph-r r="180" fill="rgba(255,0,64,0.22)"/>
@@ -2285,7 +2269,6 @@
           </svg>
         </div>
         <div class="iw-rig" data-fx="bowiestar" hidden>
-          <svg class="iw-svg" viewBox="0 0 1000 1000" preserveAspectRatio="none">${olingaSlicesHtml}</svg>
           <div class="iw-cutout iw-bowie-star" data-bowie-star style="background-image:url(&quot;/images/catalogo/bowie-star-cutout.webp&quot;)"></div>
         </div>
         <div class="iw-rig" data-fx="audreybolt" hidden>
@@ -3683,27 +3666,6 @@
             sp.setAttribute('cy', spY.toFixed(1));
             sp.style.opacity = (Math.sin(stT * Math.PI) * 0.92).toFixed(3);
           });
-        } else if (activePairKey === 'arkatz' && rig) {
-          const heartEl = rig.querySelector('[data-arkatz-heart]');
-          const graphEl = rig.querySelector('[data-arkatz-graphite]');
-          const pencilEl = rig.querySelector('[data-arkatz-pencil]');
-          const drawT = smooth(clamp(fraction / 0.88, 0, 1));
-          const beat = 1 + Math.sin(fraction * Math.PI * (3 + st.count)) * 0.04 * st.count * 0.3;
-          if (heartEl) {
-            heartEl.setAttribute('stroke-dashoffset', (1500 * (1 - drawT)).toFixed(1));
-            heartEl.setAttribute('stroke-width', (4.8 + Math.min(6, st.count * 0.75)).toFixed(2));
-            heartEl.setAttribute('transform', `translate(500 475) scale(${beat.toFixed(3)}) translate(-500 -475)`);
-          }
-          if (graphEl) {
-            graphEl.setAttribute('stroke-dashoffset', (1560 * (1 - clamp((fraction - 0.06) / 0.88, 0, 1))).toFixed(1));
-          }
-          if (pencilEl) {
-            const ang = drawT * Math.PI * 2;
-            const px = 500 + 160 * Math.pow(Math.sin(ang), 3);
-            const py = 465 - (130 * Math.cos(ang) - 50 * Math.cos(2 * ang) - 20 * Math.cos(3 * ang) - 10 * Math.cos(4 * ang));
-            const tilt = -36 + Math.cos(ang * 2) * 18;
-            pencilEl.setAttribute('transform', `translate(${px.toFixed(1)} ${py.toFixed(1)}) rotate(${tilt.toFixed(1)})`);
-          }
         } else if (activePairKey === 'shark3d' && rig) {
           const gogEl = rig.querySelector('[data-shark-goggles]');
           const anaR = rig.querySelector('[data-shark-anaglyph-r]');
@@ -3768,18 +3730,6 @@
             starEl.style.opacity = (fraction > 0.94 ? clamp((1 - fraction) / 0.06, 0.2, 1) : 1).toFixed(3);
             starEl.style.transform = `translate3d(${sx.toFixed(1)}px,${sy.toFixed(1)}px,0) scale(${sc.toFixed(3)}) rotate(${spin.toFixed(1)}deg)`;
           }
-          const burst = clamp((fraction - 0.38) / 0.62, 0, 1);
-          rig.querySelectorAll('[data-olinga-slice]').forEach((sl, idx) => {
-            const a0 = (idx * Math.PI * 2) / 8 + burst * 0.45;
-            const a1 = a0 + (Math.PI * 2) / 9.5;
-            const rad = 36 + burst * (165 + st.count * 14);
-            const rIn = burst * 28;
-            const x1 = 500 + Math.cos(a0) * rad, y1 = 500 + Math.sin(a0) * rad;
-            const x2 = 500 + Math.cos(a1) * rad, y2 = 500 + Math.sin(a1) * rad;
-            const cx0 = 500 + Math.cos((a0 + a1) * 0.5) * rIn, cy0 = 500 + Math.sin((a0 + a1) * 0.5) * rIn;
-            sl.setAttribute('d', `M ${cx0.toFixed(1)} ${cy0.toFixed(1)} L ${x1.toFixed(1)} ${y1.toFixed(1)} A ${rad.toFixed(1)} ${rad.toFixed(1)} 0 0 1 ${x2.toFixed(1)} ${y2.toFixed(1)} Z`);
-            sl.style.opacity = (Math.sin(burst * Math.PI) * 0.84).toFixed(3);
-          });
         } else if (activePairKey === 'audreybolt' && rig) {
           const boltBlue = rig.querySelector('[data-audrey-bolt-blue]');
           const boltRed = rig.querySelector('[data-audrey-bolt-red]');
@@ -4070,10 +4020,9 @@
           berto: iwCount > 1 ? `Infusión de Berto · Remojo ×${iwCount} en el tenedor de Andreu ↓↑` : 'La bolsita de romero cae al tenedor de Buena Fuente ↓',
           wineflame: iwCount > 1 ? `Red Red Wine · Llamarada Beronia ×${iwCount} en el celofán ↓↑` : 'Gotas de vino tinto prenden la llama de Carole ↓',
           pajarraca: iwCount > 1 ? `Pajarraca vs. Flying Dragon · Duelo aéreo ×${iwCount} ↓↑` : 'La Pajarraca Azul cruza contra el aliento del Dragón ↔',
-          arkatz: iwCount > 1 ? `Arkatz & Bihotz · Trazo de corazón ×${iwCount} sobre Little Adi ↓↑` : 'El lápiz-corazón traza a Little Adi en vivo ↓',
           shark3d: iwCount > 1 ? `Sistashark 3D · Inmersión anaglifo ×${iwCount} ↓↑` : 'Gafas de buceo rosas a filtro estereoscópico 3D ↓',
           ancla: iwCount > 1 ? `Eneko el Marino · Cabo y ancla ×${iwCount} izando Aupas ↓↑` : 'Pipa de Popeye y ancla naval enganchando Aupas ↓',
-          bowiestar: iwCount > 1 ? `Susurro Estelar · Estrella ×${iwCount} cortando gajos en Olinga ↓↑` : 'La estrella plateada de Bowie corta Olinga a la Naranja ↓',
+          bowiestar: iwCount > 1 ? `Susurro Estelar · Estrella plateada ×${iwCount} hacia Olinga ↓↑` : 'La estrella plateada de Bowie viaja hacia Olinga a la Naranja ↓',
           audreybolt: iwCount > 1 ? `Audrey’s Lightning · ¡Chispazo ×${iwCount} al cigarrillo de Cantinflas! ⚡↓↑` : 'El rayo de Audrey enciende el cigarrillo de Cantinflowers ⚡↓',
           rosettabirds: iwCount > 1 ? `Bandada de Rosetta · ×${iwCount} vuelos hacia La Famiglia ↓↑` : 'Los pajaritos de Rosetta vuelan hacia La Famiglia ↓'
         };

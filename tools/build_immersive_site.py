@@ -94,6 +94,7 @@ def build(output):
     for cutout_src in (
         "/images/catalogo/la-pensadora-lips.webp",
         "/images/catalogo/pippi-monkey-cutout.webp",
+        "/images/catalogo/bowie-star-cutout.webp",
         "/images/catalogo/commission-jaio-button.webp",
         "/images/catalogo/commission-amor-purple-rose.webp",
         "/images/catalogo/commission-amor-red-rose.webp",
