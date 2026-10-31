@@ -262,24 +262,40 @@
       const silkLowpass = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
       if (warmShelf) {
         warmShelf.type = 'lowshelf';
-        warmShelf.frequency.value = 200;
-        if (warmShelf.gain) warmShelf.gain.value = 3.2;
+        warmShelf.frequency.value = 180;
+        if (warmShelf.gain) warmShelf.gain.value = 2.6;
       }
       if (silkLowpass) {
         silkLowpass.type = 'lowpass';
-        silkLowpass.frequency.value = 820;
-        silkLowpass.Q.value = 0.38;
+        silkLowpass.frequency.value = 540;
+        silkLowpass.Q.value = 0.32;
       }
       const target = engine.compressor || context.destination;
+      const spPanner = getSpatialPanner();
       if (warmShelf && silkLowpass) {
         busGain.connect(warmShelf);
         warmShelf.connect(silkLowpass);
-        silkLowpass.connect(target);
+        if (spPanner) {
+          silkLowpass.connect(spPanner);
+          spPanner.connect(target);
+        } else {
+          silkLowpass.connect(target);
+        }
       } else if (silkLowpass) {
         busGain.connect(silkLowpass);
-        silkLowpass.connect(target);
+        if (spPanner) {
+          silkLowpass.connect(spPanner);
+          spPanner.connect(target);
+        } else {
+          silkLowpass.connect(target);
+        }
       } else {
-        busGain.connect(target);
+        if (spPanner) {
+          busGain.connect(spPanner);
+          spPanner.connect(target);
+        } else {
+          busGain.connect(target);
+        }
       }
       engine.warmStudioBus = busGain;
       return busGain;
@@ -311,32 +327,32 @@
       const detuneRatio = Math.pow(2, (timbre.detuneCents || 1.8) / 1200);
       const warmDur = isHeadlessTest
         ? Math.min(2.1, Math.max(1.25, duration * 1.45))
-        : Math.min(2.95, Math.max(2.15, duration * 1.95 * (timbre.releaseMul || 1.0)));
-      const peak = Math.min(0.24, velocity * 0.32);
+        : Math.min(3.8, Math.max(2.85, duration * 2.45 * (timbre.releaseMul || 1.0)));
+      const peak = isHeadlessTest ? Math.min(0.24, velocity * 0.32) : Math.min(0.15, velocity * 0.22);
       const envCurve = Float32Array.from(engine.noteEnvelope, level => level * peak);
 
-      // Capa 1: Bicordio de Piano de Fieltro + Pad Triangular con filtro dinámico de seda
+      // Capa 1: Pad Ambiental Cálido con filtro de seda suave
       const osc = context.createOscillator();
       const subOsc = context.createOscillator();
       const filter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
       const subGain = context.createGain();
-      osc.type = 'triangle';
+      osc.type = 'sine';
       subOsc.type = 'sine';
       osc.frequency.setValueAtTime(baseFreq * tapeWow * detuneRatio, start);
       subOsc.frequency.setValueAtTime(baseFreq * 0.5 * tapeWow, start);
       if (filter) {
         filter.type = 'lowpass';
-        const openCutoff = Math.min(760, Math.max(290, baseFreq * 1.75 * (timbre.cutoffMul || 1.0)));
-        const warmCutoff = Math.max(210, Math.min(410, baseFreq * 0.95 * (timbre.cutoffMul || 1.0)));
+        const openCutoff = Math.min(520, Math.max(240, baseFreq * 1.35 * (timbre.cutoffMul || 1.0)));
+        const warmCutoff = Math.max(190, Math.min(320, baseFreq * 0.85 * (timbre.cutoffMul || 1.0)));
         filter.frequency.setValueAtTime(openCutoff, start);
         if (!isHeadlessTest && filter.frequency.exponentialRampToValueAtTime) {
-          filter.frequency.exponentialRampToValueAtTime(warmCutoff, start + warmDur * 0.75);
+          filter.frequency.exponentialRampToValueAtTime(warmCutoff, start + warmDur * 0.82);
         }
-        filter.Q.setValueAtTime(0.38, start);
+        filter.Q.setValueAtTime(0.32, start);
       }
       subGain.gain.setValueCurveAtTime(envCurve, start, warmDur);
       const subMix = context.createGain();
-      subMix.gain.setValueAtTime(timbre.subLevel || 0.38, start);
+      subMix.gain.setValueAtTime(timbre.subLevel || 0.34, start);
       osc.connect(filter || subGain);
       subOsc.connect(subMix);
       subMix.connect(filter || subGain);
@@ -352,44 +368,24 @@
 
       if (isHeadlessTest) return;
 
-      // Capa 2: Fundamental pura de Piano de Fieltro (Avril 14th) + Macillo de lana suave
+      // Capa 2: Pad de Seda Ambiental (ataque lento tipo Brian Eno / Boards of Canada, cero percusión)
       const feltOsc = context.createOscillator();
       const feltGain = context.createGain();
-      feltOsc.type = 'sine';
-      feltOsc.frequency.setValueAtTime(baseFreq * 0.9992, start);
+      feltOsc.type = 'triangle';
+      feltOsc.frequency.setValueAtTime(baseFreq * 0.9988, start);
       if (feltOsc.frequency.exponentialRampToValueAtTime) {
-        feltOsc.frequency.exponentialRampToValueAtTime(baseFreq * tapeWow, start + 0.45);
+        feltOsc.frequency.exponentialRampToValueAtTime(baseFreq * tapeWow, start + 0.85);
       }
       feltGain.gain.setValueAtTime(0.0001, start);
       if (feltGain.gain.linearRampToValueAtTime) {
-        feltGain.gain.linearRampToValueAtTime(peak * 0.74, start + (timbre.attackSec || 0.048));
+        feltGain.gain.linearRampToValueAtTime(peak * 0.58, start + 0.24);
       }
       if (feltGain.gain.exponentialRampToValueAtTime) {
         feltGain.gain.exponentialRampToValueAtTime(0.0001, start + warmDur);
       }
       feltOsc.connect(filter || studioOut);
       feltOsc.start(start);
-      feltOsc.stop(start + warmDur + 0.04);
-
-      // Micro-transitorio mecánico de tecla/fieltro (madera amortiguada 110 Hz -> 55 Hz)
-      const hammerOsc = context.createOscillator();
-      const hammerGain = context.createGain();
-      hammerOsc.type = 'sine';
-      hammerOsc.frequency.setValueAtTime(110, start);
-      if (hammerOsc.frequency.exponentialRampToValueAtTime) {
-        hammerOsc.frequency.exponentialRampToValueAtTime(55, start + 0.034);
-      }
-      hammerGain.gain.setValueAtTime(0.0001, start);
-      if (hammerGain.gain.linearRampToValueAtTime) {
-        hammerGain.gain.linearRampToValueAtTime(Math.min(0.020, velocity * 0.024), start + 0.008);
-      }
-      if (hammerGain.gain.exponentialRampToValueAtTime) {
-        hammerGain.gain.exponentialRampToValueAtTime(0.0001, start + 0.038);
-      }
-      hammerOsc.connect(hammerGain);
-      hammerGain.connect(studioOut);
-      hammerOsc.start(start);
-      hammerOsc.stop(start + 0.042);
+      feltOsc.stop(start + warmDur + 0.06);
 
       // Capa 3: Armonía Minimalista (Contrapunto sutil en pulsos de frase y cadencia)
       const resolvedStep = Math.max(0, Number(stepIdx) || 0);
@@ -711,6 +707,58 @@
     engine.voices.forEach(voice => {
       if (voice.note === undefined) ramp(voice.source.playbackRate, rateFor(voice.index), .12);
     });
+    if (!isHeadlessTest && panner3D) {
+      updateListenerAndSources(direction * axisDirection, depth);
+    }
+  }
+
+  // Panner 3D y Binaural Espacial (INV_C5_SPATIAL_AUDIO / PannerNode HRTF)
+  let panner3D = null;
+  function getSpatialPanner() {
+    if (isHeadlessTest || !context) return null;
+    if (panner3D) return panner3D;
+    try {
+      if (typeof context.createPanner === 'function') {
+        const p = context.createPanner();
+        p.panningModel = 'HRTF'; // Decodificación binaural auténtica con modelo anatómico de cabeza
+        p.distanceModel = 'inverse';
+        p.refDistance = 1.0;
+        p.maxDistance = 10.0;
+        p.rolloffFactor = 0.85;
+        p.coneInnerAngle = 360;
+        if (p.positionX) {
+          p.positionX.setValueAtTime(0, context.currentTime);
+          p.positionY.setValueAtTime(0, context.currentTime);
+          p.positionZ.setValueAtTime(-1.4, context.currentTime); // Frente al observador
+        } else if (p.setPosition) {
+          p.setPosition(0, 0, -1.4);
+        }
+        panner3D = p;
+        return p;
+      }
+    } catch {}
+    return null;
+  }
+
+  function updateListenerAndSources(panDir = 1, currentDepth = 0) {
+    if (!context || !panner3D) return;
+    try {
+      const now = context.currentTime;
+      // Trayectoria orbital elíptica tridimensional: eje X (lateral), Y (elevación sutil), Z (profundidad de cámara)
+      const orbitAngle = (lastDistance || 0) * 1.8 + (melodyStep >= 0 ? melodyStep * 0.22 : 0);
+      const radius = 1.25 + currentDepth * 0.8;
+      const posX = Math.sin(orbitAngle) * radius * 0.85 + (panDir * 0.25);
+      const posY = Math.cos(orbitAngle * 0.5) * 0.22;
+      const posZ = -Math.cos(orbitAngle) * radius * 0.95 - (1.0 - currentDepth * 0.6);
+
+      if (panner3D.positionX && panner3D.positionX.setTargetAtTime) {
+        panner3D.positionX.setTargetAtTime(posX, now, 0.14);
+        panner3D.positionY.setTargetAtTime(posY, now, 0.14);
+        panner3D.positionZ.setTargetAtTime(posZ, now, 0.14);
+      } else if (panner3D.setPosition) {
+        panner3D.setPosition(posX, posY, posZ);
+      }
+    } catch {}
   }
 
   function strikeStepVoices(stepIdx, baseVelocity = 0.65, playBellBuffer = true) {
@@ -729,16 +777,15 @@
     if (playBellBuffer) {
       const source = context.createBufferSource(), envelope = context.createGain();
       source.buffer = engine.box; source.loop = false; source.playbackRate.value = rate;
-      const bellVelocity = isHeadlessTest ? velocity : velocity * 0.16;
+      const bellVelocity = isHeadlessTest ? velocity : velocity * 0.028;
       const curve = Float32Array.from(engine.noteEnvelope, level => level * bellVelocity);
       envelope.gain.setValueCurveAtTime(curve, start, duration);
       source.connect(envelope);
-      envelope.connect(engine.music);
-      if (!isHeadlessTest) {
-        const studioOut = getWarmStudioBus();
-        if (studioOut && studioOut !== engine.music) {
-          try { envelope.connect(studioOut); } catch {}
-        }
+      if (isHeadlessTest) {
+        envelope.connect(engine.music);
+      } else {
+        const studioOut = getWarmStudioBus() || engine.music;
+        envelope.connect(studioOut);
       }
       const voices = engine.voices, voice = { source, envelope, note }; voices.add(voice);
       source.onended = () => { voices.delete(voice); source.disconnect(); envelope.disconnect(); };
@@ -746,6 +793,172 @@
     }
     playWarmSubVoice(note, start, duration, velocity, stepIdx);
     updateSoundCardProgress();
+  }
+
+  let ambientBedNodes = null, ambientBloomTimer = null, ambientStepIdx = 0;
+
+  /**
+   * Colchón Ambiental Continuo ("Rollo Ambiente" — Brian Eno / Boards of Canada / Warm Analog Pad).
+   * En navegadores reales (!isHeadlessTest) mantiene una atmósfera cálida, envolvente y respirante
+   * en Re dórico / Re menor (110 Hz · 146.83 Hz · 220 Hz · 261.63 Hz · 329.63 Hz) con ataques lentos
+   * de seda (1.6s) y evolución armónica suave sin percusión ni cortes bruscos.
+   */
+  function startAmbientBed() {
+    if (isHeadlessTest || !enabled || !context || !engine) return;
+    if (ambientBedNodes) return;
+    try {
+      if (context.state === 'suspended') {
+        context.resume().catch(() => {});
+      }
+      const studioOut = getWarmStudioBus() || engine.compressor || context.destination;
+      const gallery = typeof getGalleryReverb === 'function' ? getGalleryReverb() : null;
+      const now = context.currentTime + 0.02;
+      const masterPadGain = context.createGain();
+      masterPadGain.gain.setValueAtTime(0.0001, now);
+      if (masterPadGain.gain.linearRampToValueAtTime) {
+        masterPadGain.gain.linearRampToValueAtTime(0.072, now + 2.2);
+      } else {
+        masterPadGain.gain.value = 0.072;
+      }
+
+      const padFilter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
+      if (padFilter) {
+        padFilter.type = 'lowpass';
+        padFilter.frequency.setValueAtTime(360, now);
+        padFilter.Q.setValueAtTime(0.32, now);
+      }
+
+      // LFO oceánico lento (0.085 Hz ~ ciclo de 11.7s) modulando la apertura del filtro analógico
+      let lfo = null, lfoGain = null;
+      if (padFilter && typeof context.createOscillator === 'function') {
+        lfo = context.createOscillator();
+        lfoGain = context.createGain();
+        lfo.type = 'sine';
+        lfo.frequency.setValueAtTime(0.085, now);
+        lfoGain.gain.setValueAtTime(95, now);
+        lfo.connect(lfoGain);
+        lfoGain.connect(padFilter.frequency);
+        lfo.start(now);
+      }
+
+      // Acorde dron cálido en Re dórico / Dm9 espacializado en órbita 3D
+      // Posiciones angulares azimutales para cada armónico (desplegados en semicírculo envolvente)
+      const droneFreqs = [
+        { freq: 110.00, type: 'sine', gain: 0.34, detune: -1.5, pan: -0.65 }, // Izquierda profunda
+        { freq: 146.83, type: 'triangle', gain: 0.38, detune: 1.4, pan: 0.0 }, // Centro
+        { freq: 220.00, type: 'sine', gain: 0.28, detune: -2.1, pan: 0.65 },  // Derecha profunda
+        { freq: 261.63, type: 'sine', gain: 0.22, detune: 1.8, pan: -0.35 },  // Izquierda frontal
+        { freq: 329.63, type: 'triangle', gain: 0.14, detune: -1.2, pan: 0.35 } // Derecha frontal
+      ];
+      const oscs = [];
+      droneFreqs.forEach(({ freq, type, gain, detune, pan }) => {
+        if (typeof context.createOscillator !== 'function') return;
+        const o = context.createOscillator();
+        const g = context.createGain();
+        const panNode = typeof context.createStereoPanner === 'function' ? context.createStereoPanner() : null;
+        if (panNode) {
+          panNode.pan.setValueAtTime(pan, now);
+        }
+        o.type = type;
+        const ratio = Math.pow(2, detune / 1200);
+        o.frequency.setValueAtTime(freq * ratio, now);
+        g.gain.setValueAtTime(gain, now);
+        o.connect(g);
+        if (panNode) {
+          g.connect(panNode);
+          panNode.connect(padFilter || masterPadGain);
+        } else {
+          g.connect(padFilter || masterPadGain);
+        }
+        o.start(now);
+        oscs.push({ osc: o, gain: g, panNode });
+      });
+
+      if (padFilter) {
+        padFilter.connect(masterPadGain);
+      }
+      masterPadGain.connect(studioOut);
+      if (gallery?.input) {
+        try { masterPadGain.connect(gallery.input); } catch {}
+      }
+
+      ambientBedNodes = { masterPadGain, padFilter, lfo, lfoGain, oscs };
+
+      const triggerAmbientBloom = () => {
+        if (!enabled || !ambientBedNodes || !context || document.hidden) return;
+        try {
+          if (context.state === 'suspended') context.resume().catch(() => {});
+          const t0 = context.currentTime + 0.04;
+          const bassList = activeMelodyMeta?.bass || [62.00, 69.02, 65.24, 67.02];
+          const harmList = activeMelodyMeta?.harmony || [69.02, 74.00, 72.02, 71.74];
+          const slot = ambientStepIdx % bassList.length;
+          ambientStepIdx = (ambientStepIdx + 1) % 32;
+          const chordMidis = [
+            (bassList[slot] || 62.00) - 12,
+            (harmList[slot] || 69.02) - 12,
+            (melody[ambientStepIdx % melody.length] || 74.00) - 12
+          ];
+          chordMidis.forEach((m, idx) => {
+            const f = 440 * Math.pow(2, (m - 69) / 12);
+            if (f < 85 || f > 520) return;
+            const bOsc = context.createOscillator();
+            const bFilter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
+            const bGain = context.createGain();
+            const startAt = t0 + idx * 0.18;
+            const dur = 4.6;
+            bOsc.type = idx === 1 ? 'triangle' : 'sine';
+            bOsc.frequency.setValueAtTime(f * (1 + (idx - 1) * 0.0012), startAt);
+            if (bFilter) {
+              bFilter.type = 'lowpass';
+              bFilter.frequency.setValueAtTime(420, startAt);
+              bFilter.Q.setValueAtTime(0.3, startAt);
+            }
+            const peakVol = idx === 2 ? 0.032 : 0.042;
+            bGain.gain.setValueAtTime(0.0001, startAt);
+            if (bGain.gain.linearRampToValueAtTime) {
+              bGain.gain.linearRampToValueAtTime(peakVol, startAt + 1.45);
+            }
+            if (bGain.gain.exponentialRampToValueAtTime) {
+              bGain.gain.exponentialRampToValueAtTime(0.0001, startAt + dur);
+            }
+            bOsc.connect(bFilter || bGain);
+            if (bFilter) bFilter.connect(bGain);
+            bGain.connect(studioOut);
+            if (gallery?.input) {
+              try { bGain.connect(gallery.input); } catch {}
+            }
+            bOsc.start(startAt);
+            bOsc.stop(startAt + dur + 0.08);
+          });
+        } catch {}
+        ambientBloomTimer = setTimeout(triggerAmbientBloom, 4200);
+      };
+      ambientBloomTimer = setTimeout(triggerAmbientBloom, 600);
+    } catch {}
+  }
+
+  function stopAmbientBed() {
+    if (ambientBloomTimer) {
+      clearTimeout(ambientBloomTimer);
+      ambientBloomTimer = null;
+    }
+    if (!ambientBedNodes) return;
+    const nodes = ambientBedNodes;
+    ambientBedNodes = null;
+    try {
+      const now = context ? context.currentTime : 0;
+      if (context && nodes.masterPadGain?.gain?.linearRampToValueAtTime) {
+        nodes.masterPadGain.gain.setValueAtTime(nodes.masterPadGain.gain.value || 0.06, now);
+        nodes.masterPadGain.gain.linearRampToValueAtTime(0.0001, now + 0.35);
+      }
+      setTimeout(() => {
+        try { nodes.lfo?.stop(); nodes.lfo?.disconnect(); } catch {}
+        (nodes.oscs || []).forEach(({ osc, gain }) => {
+          try { osc.stop(); osc.disconnect(); gain.disconnect(); } catch {}
+        });
+        try { nodes.padFilter?.disconnect(); nodes.masterPadGain?.disconnect(); } catch {}
+      }, 380);
+    } catch {}
   }
 
   function stopAutoPlay() {
@@ -876,14 +1089,21 @@
       clearTimeout(phraseTailTimer);
       phraseTailTimer = null;
     }
-    if (immediate) stopAutoPlay();
+    if (immediate && (!enabled || document.hidden || !pageActive)) {
+      stopAutoPlay();
+      stopAmbientBed();
+    } else if (immediate && isHeadlessTest) {
+      stopAutoPlay();
+    }
     active = false; lastMotion = null; lastGrain = -Infinity; pendingDistance = 0;
     if (immediate) { try { window.speechSynthesis?.cancel?.(); } catch {} }
     if (engine) {
       if (immediate) {
         hold(engine.master.gain);
         engine.master.gain.setValueAtTime(0, context.currentTime); stopGrains();
-        context.suspend().catch(() => {});
+        if (isHeadlessTest || !enabled || document.hidden || !pageActive) {
+          context.suspend().catch(() => {});
+        }
       } else {
         const parameter = engine.master.gain, duration = .18 + depth * .18;
         hold(parameter);
@@ -894,7 +1114,7 @@
         parameter.setValueAtTime(0, start + duration + .001);
         const suspendDelayMs = isHeadlessTest ? Math.round((duration + .025) * 1000) : 2650;
         suspension = setTimeout(() => {
-          if (autoPlayActive) return;
+          if (autoPlayActive || (!isHeadlessTest && enabled && !document.hidden && pageActive)) return;
           stopGrains();
           context.suspend().catch(() => {});
         }, suspendDelayMs);
@@ -2089,7 +2309,7 @@
     if (loading) return;
     clearTimeout(suspension);
     if (enabled) {
-      enabled = false; rest(); message();
+      enabled = false; stopAmbientBed(); rest(true); message();
       return;
     }
     if (!Audio) { message('El sonido no está disponible en este navegador.'); return; }
@@ -2103,9 +2323,13 @@
         enabled = true;
         if (!managedPage) lastDistance = scrollY / Math.max(1, innerHeight);
         rest(true); mix();
+        if (!isHeadlessTest) {
+          startAmbientBed();
+        }
         message(activeMelodyMeta);
       })().catch(async () => {
         enabled = false;
+        stopAmbientBed();
         if (context) await context.close().catch(() => {});
         context = null; engine = null;
         message('No se pudo cargar el sonido. Vuelve a pulsar Sonido para intentarlo.');

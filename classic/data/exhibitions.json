@@ -22,7 +22,11 @@
           "url": "https://www.deia.eus/bizkaia/vida-social/2026/06/05/bwall-collective-inaugura-exposicion-ocho-11159371.html"
         }
       ],
-      "published": "2026-06-01"
+      "published": "2026-06-01",
+      "artworks": [
+        "sistashark",
+        "rockagipsy"
+      ]
     },
     {
       "id": "2995",
@@ -41,7 +45,10 @@
         }
       ],
       "published": "2026-05-14",
-      "artwork": "/obra/rara-avis/"
+      "artwork": "/obra/rara-avis/",
+      "artworks": [
+        "rara-avis"
+      ]
     },
     {
       "id": "2917",
@@ -59,7 +66,12 @@
           "url": "https://naroagutierrez.wordpress.com/2026/01/15/divinos-vaivenes-muestra-plastica-en-politena-espacio-de-arte/"
         }
       ],
-      "published": "2026-01-15"
+      "published": "2026-01-15",
+      "artworks": [
+        "cantinflowers",
+        "amy-rocks",
+        "marilyn-rocks"
+      ]
     },
     {
       "id": "2809",
@@ -77,7 +89,11 @@
           "url": "https://naroagutierrez.wordpress.com/2025/05/22/25-mayo-2025-azoka-en-lataska-sopela/"
         }
       ],
-      "published": "2025-05-22"
+      "published": "2025-05-22",
+      "artworks": [
+        "enlatadas",
+        "the-golden-couple"
+      ]
     },
     {
       "id": "2712",
@@ -95,7 +111,11 @@
           "url": "https://naroagutierrez.wordpress.com/2025/05/09/udaberriko-jaia-2025-market-en-sopelana-18-de-mayo/"
         }
       ],
-      "published": "2025-05-09"
+      "published": "2025-05-09",
+      "artworks": [
+        "the-love-boat",
+        "multi-dimensional-love"
+      ]
     },
     {
       "id": "2569",
@@ -113,7 +133,12 @@
           "url": "https://naroagutierrez.wordpress.com/2022/12/16/muestra-colectiva-emakumeen-artean/"
         }
       ],
-      "published": "2022-12-16"
+      "published": "2022-12-16",
+      "artworks": [
+        "las-rosalias",
+        "lauralore",
+        "leire"
+      ]
     },
     {
       "id": "2458",
@@ -131,7 +156,12 @@
           "url": "https://naroagutierrez.wordpress.com/2022/11/06/expo-bwall-collective-girls-en-el-dock/"
         }
       ],
-      "published": "2022-11-06"
+      "published": "2022-11-06",
+      "artworks": [
+        "marilyn-rocks",
+        "audreys-lightning",
+        "sistashark"
+      ]
     },
     {
       "id": "2423",
@@ -149,7 +179,11 @@
           "url": "https://naroagutierrez.wordpress.com/2022/10/04/walking-gallery-bilbao-octubre-2022-por-amor-al-arte/"
         }
       ],
-      "published": "2022-10-04"
+      "published": "2022-10-04",
+      "artworks": [
+        "rockagipsy",
+        "euskolander-no-hay-mas-que-uno"
+      ]
     },
     {
       "id": "2359",
@@ -167,7 +201,12 @@
           "url": "https://naroagutierrez.wordpress.com/2022/03/22/repoker-de-reinas-vaivenes-en-siarte/"
         }
       ],
-      "published": "2022-03-22"
+      "published": "2022-03-22",
+      "artworks": [
+        "roisin",
+        "mr-fahrenheit",
+        "pippilotta"
+      ]
     },
     {
       "id": "2254",
@@ -185,7 +224,12 @@
           "url": "https://naroagutierrez.wordpress.com/2020/09/27/iconos-pop-muestra-colectiva-de-retratos/"
         }
       ],
-      "published": "2020-09-27"
+      "published": "2020-09-27",
+      "artworks": [
+        "johnny-rocks",
+        "james-rocks",
+        "mario-moreno"
+      ]
     },
     {
       "id": "2204",
@@ -203,7 +247,12 @@
           "url": "https://naroagutierrez.wordpress.com/2020/09/20/vaivenes-en-el-haika-de-sodupe/"
         }
       ],
-      "published": "2020-09-20"
+      "published": "2020-09-20",
+      "artworks": [
+        "roisin",
+        "out-por-los-pelos",
+        "audreys-lightning"
+      ]
     },
     {
       "id": "2127",
@@ -221,7 +270,12 @@
           "url": "https://naroagutierrez.wordpress.com/2019/11/25/vaivenes-en-el-copper-deli-museo/"
         }
       ],
-      "published": "2019-11-25"
+      "published": "2019-11-25",
+      "artworks": [
+        "mr-fahrenheit",
+        "pippilotta",
+        "out-por-los-pelos"
+      ]
     },
     {
       "id": "2056",
@@ -239,7 +293,11 @@
           "url": "https://naroagutierrez.wordpress.com/2018/06/27/exposicion-colectiva-multidisciplinar-360/"
         }
       ],
-      "published": "2018-06-27"
+      "published": "2018-06-27",
+      "artworks": [
+        "peru-pura-natura",
+        "eneko-el-marino"
+      ]
     },
     {
       "id": "1895",
@@ -261,7 +319,12 @@
           "url": "https://sarean.info/events/exposicion-personas/"
         }
       ],
-      "published": "2017-09-05"
+      "published": "2017-09-05",
+      "artworks": [
+        "aquellos-maravillosos-anos",
+        "aupas",
+        "el-hombre-que-susurraba-a-las-estrellas"
+      ]
     },
     {
       "id": "1457",
@@ -279,7 +342,12 @@
           "url": "https://naroagutierrez.wordpress.com/2017/04/02/madera-papel-y-tijera-en-ambigu/"
         }
       ],
-      "published": "2017-04-02"
+      "published": "2017-04-02",
+      "artworks": [
+        "custom-jaio",
+        "pablo",
+        "olinga-a-la-naranja"
+      ]
     },
     {
       "id": "1356",
@@ -297,7 +365,12 @@
           "url": "https://naroagutierrez.wordpress.com/2016/11/30/sacame-los-colores-en-tegobi/"
         }
       ],
-      "published": "2016-11-30"
+      "published": "2016-11-30",
+      "artworks": [
+        "de-color",
+        "el-gran-dakari",
+        "starchild"
+      ]
     },
     {
       "id": "414",
@@ -319,7 +392,11 @@
           "url": "https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-476343.html"
         }
       ],
-      "published": "2015-05-24"
+      "published": "2015-05-24",
+      "artworks": [
+        "la-pensadora",
+        "la-llorona"
+      ]
     },
     {
       "id": "395",
@@ -337,7 +414,11 @@
           "url": "https://naroagutierrez.wordpress.com/2015/05/10/walking-gallery-bilbao-art-district-2015/"
         }
       ],
-      "published": "2015-05-10"
+      "published": "2015-05-10",
+      "artworks": [
+        "marian-de-miranda",
+        "euskolander-no-hay-mas-que-uno"
+      ]
     },
     {
       "id": "195",
@@ -355,7 +436,11 @@
           "url": "https://naroagutierrez.wordpress.com/2014/07/10/la-muestra-espejos-del-alma-visita-la-portugaluja-torre-salazar/"
         }
       ],
-      "published": "2014-07-10"
+      "published": "2014-07-10",
+      "artworks": [
+        "la-pensadora",
+        "rara-avis"
+      ]
     },
     {
       "id": "3",
@@ -373,7 +458,12 @@
           "url": "https://naroagutierrez.wordpress.com/2013/05/20/la-bolsa-y-la-vida/"
         }
       ],
-      "published": "2013-05-20"
+      "published": "2013-05-20",
+      "artworks": [
+        "mario-moreno",
+        "papitxulo",
+        "el-reencuentro"
+      ]
     },
     {
       "id": "gaztebulegoa-2011",
@@ -391,7 +481,12 @@
           "url": "https://www.barakaldodigital.com/2011/09/agenda-recital-acustico-de-porco.html"
         }
       ],
-      "published": null
+      "published": null,
+      "artworks": [
+        "boy",
+        "geisha",
+        "lagrimas-de-oro"
+      ]
     },
     {
       "id": "hegoak-2010",
@@ -409,7 +504,11 @@
           "url": "https://gara.naiz.eus/paperezkoa/20100305/186538/eu/Agenda"
         }
       ],
-      "published": null
+      "published": null,
+      "artworks": [
+        "la-pensadora",
+        "la-llorona"
+      ]
     }
   ],
   "hero": {

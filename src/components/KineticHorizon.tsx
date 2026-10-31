@@ -91,7 +91,7 @@ export function KineticHorizon({
   const currentXRef = useRef(currentIndex * itemSpacing)
   const velocityRef = useRef(0)
   const smoothVelRef = useRef(0)
-  const wheelSettleTimerRef = useRef<number | null>(null)
+  const lastWheelTimeRef = useRef<number>(0)
   const isDraggingRef = useRef(false)
   const isScrubbingRef = useRef(false)
   const hasDraggedRef = useRef(false)
@@ -209,6 +209,23 @@ export function KineticHorizon({
       const prevX = currentXRef.current
 
       if (!isDraggingRef.current) {
+        // Pozo de potencial magnético continuo (cero jerk de timer discreto) cuando cede el impulso de rueda
+        if (lastWheelTimeRef.current > 0 && now - lastWheelTimeRef.current > 95) {
+          const snappedIdx = Math.max(
+            0,
+            Math.min(ARTWORKS.length - 1, Math.round(targetXRef.current / Math.max(1, itemSpacing)))
+          )
+          const snappedTarget = snappedIdx * itemSpacing
+          const snapDiff = snappedTarget - targetXRef.current
+          if (Math.abs(snapDiff) < 0.25) {
+            targetXRef.current = snappedTarget
+            lastWheelTimeRef.current = 0
+          } else {
+            const snapAlpha = 1 - Math.pow(1 - 0.24, dt)
+            targetXRef.current += snapDiff * snapAlpha
+          }
+        }
+
         const diff = targetXRef.current - currentXRef.current
         // Amortiguamiento continuo invariante al framerate (alpha base 0.165..0.21)
         const baseAlpha = Math.min(0.21, 0.165 + Math.abs(diff / Math.max(1, itemSpacing)) * 0.045)
@@ -270,7 +287,14 @@ export function KineticHorizon({
       })
 
       const remaining = Math.abs(targetXRef.current - currentXRef.current)
-      if (isDraggingRef.current || remaining >= 0.25 || Math.abs(smoothVelRef.current) >= 0.08 || !mouseSettled) {
+      const wheelMagnetPending = lastWheelTimeRef.current > 0
+      if (
+        isDraggingRef.current ||
+        wheelMagnetPending ||
+        remaining >= 0.25 ||
+        Math.abs(smoothVelRef.current) >= 0.08 ||
+        !mouseSettled
+      ) {
         animationFrameRef.current = requestAnimationFrame(updatePhysics)
       } else {
         currentXRef.current = targetXRef.current
@@ -295,9 +319,7 @@ export function KineticHorizon({
         cancelAnimationFrame(animationFrameRef.current)
         animationFrameRef.current = null
       }
-      if (wheelSettleTimerRef.current) {
-        window.clearTimeout(wheelSettleTimerRef.current)
-      }
+      lastWheelTimeRef.current = 0
     }
   }, [itemSpacing, onSelectArtwork, triggerArtworkVocal])
 
@@ -375,19 +397,10 @@ export function KineticHorizon({
       sound.playHapticSlide(delta * 0.04)
     }
 
-    // Acumular desplazamiento continuo en el objetivo de inercia
+    // Acumular desplazamiento continuo en el objetivo de inercia; el pozo magnético en RAF asentará sin jerk
     targetXRef.current = Math.max(0, Math.min(maxX, targetXRef.current + delta * 1.15))
+    lastWheelTimeRef.current = performance.now()
     startPhysicsLoopRef.current()
-
-    // Asentamiento magnético suave al detener el gesto de rueda/trackpad
-    if (wheelSettleTimerRef.current) {
-      window.clearTimeout(wheelSettleTimerRef.current)
-    }
-    wheelSettleTimerRef.current = window.setTimeout(() => {
-      const snappedIdx = Math.max(0, Math.min(ARTWORKS.length - 1, Math.round(targetXRef.current / itemSpacing)))
-      targetXRef.current = snappedIdx * itemSpacing
-      startPhysicsLoopRef.current()
-    }, 150)
   }
 
   // Interacción de Arrastre (Drag / Swipe con momentum)

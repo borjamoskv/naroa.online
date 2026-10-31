@@ -7,11 +7,46 @@ ROOT=Path(__file__).resolve().parents[1]/'classic'
 data=json.loads((ROOT/'data/exhibitions.json').read_text())
 items=data['exhibitions'];hero=data['hero']
 labels={'solo':'Individual','group':'Colectiva','street':'Arte en la calle','market':'Mercado de arte'}
+catalogue_data = json.loads((ROOT / 'data/catalogo.json').read_text())
+series_data = json.loads((ROOT / 'data/vaivenes.json').read_text())
+artwork_lookup = {}
+for p in catalogue_data['projects']:
+    s = p['slug']
+    artwork_lookup[s] = {
+        'slug': s,
+        'title': p['title'],
+        'thumb': p['images'][0]['src'],
+        'medium': p.get('technique') or p.get('support') or 'Técnica mixta',
+        'url': f'/obra/{s}/'
+    }
+for im in series_data.get('images', []):
+    s = im.get('work_slug') or im['slug']
+    if s not in artwork_lookup:
+        artwork_lookup[s] = {
+            'slug': s,
+            'title': im['title'],
+            'thumb': im['src'],
+            'medium': 'Técnica mixta · Vaivenes',
+            'url': f'/obra/{s}/'
+        }
+
 def links(x):
  return ' '.join(f'<a href="{e(s["url"])}" target="_blank" rel="noopener noreferrer">{e(s["label"])} ↗</a>' for s in x['sources'])
 def row(x):
  art_text = f'<a href="{x["artwork"]}">{e(x.get("artworkLabel", "Ver Rara Avis"))} →</a>' if x.get('artwork') else ''
- return f'''<article class="career-entry" data-kind="{x['type']}"><div class="career-entry__date"><time datetime="{x['date']}">{e(x['dateLabel'])}</time><span>{labels[x['type']]}</span></div><div><h4>{e(x['title'])}</h4><p class="career-venue">{e(x['location'])}</p><p class="career-description">{e(x['description'])}</p><div class="career-sources">{links(x)}{art_text}</div></div></article>'''
+ art_slugs = x.get('artworks', [])
+ arts = [artwork_lookup[s] for s in art_slugs if s in artwork_lookup]
+ art_json = e(json.dumps(arts, ensure_ascii=False))
+ cards_html = ''
+ if arts:
+     cards_html = '<div class="timeline-cards-strip" role="group" aria-label="Obras de este encuentro">' + ''.join(
+         f'<a href="{e(a["url"])}" class="timeline-cromo" data-cromo-slug="{e(a["slug"])}" title="{e(a["title"])}">'
+         f'<span class="timeline-cromo-frame"><img src="{e(a["thumb"])}" alt="{e(a["title"])}" width="80" height="96" loading="lazy" decoding="async"></span>'
+         f'<span class="timeline-cromo-meta"><strong>{e(a["title"])}</strong><small>{e(a["medium"])}</small></span>'
+         f'</a>'
+         for a in arts
+     ) + '</div>'
+ return f'''<article class="career-entry" data-kind="{x['type']}" data-artworks="{art_json}"><div class="career-entry__date"><time datetime="{x['date']}">{e(x['dateLabel'])}</time><span>{labels[x['type']]}</span></div><div><h4>{e(x['title'])}</h4><p class="career-venue">{e(x['location'])}</p><p class="career-description">{e(x['description'])}</p>{cards_html}<div class="career-sources">{links(x)}{art_text}</div></div></article>'''
 years=sorted(set(x['year'] for x in items),reverse=True)
 body=f'''<div class="career" data-career>
 <header class="career-heading"><p class="career-kicker">Naroa Gutiérrez Gil · 2010 — 2026</p><h2 id="career-title">Trayectoria</h2><p class="career-deck">El retrato como encuentro.</p></header>

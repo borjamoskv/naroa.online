@@ -94,6 +94,7 @@ def build(output):
     originals.add("/images/catalogo/la-pensadora-lips.webp")
     originals.add("/images/catalogo/pippi-monkey-cutout.webp")
     originals.add("/images/catalogo/berto-teabag-cutout.webp")
+    originals.add("/images/catalogo/buenafuente-fork-cutout.webp")
     originals.add("/images/catalogo/llorona-tear-cutout.webp")
     originals.add("/images/catalogo/bowie-star-cutout.webp")
     originals.add("/images/catalogo/rosetta-bird-pink.webp")
@@ -138,6 +139,8 @@ def build(output):
     menu_img_manostijeras = derivative("/images/menu/menu-03-manostijeras.jpg", 900)
     menu_img_bastidor = derivative("/images/menu/menu-04-bastidor-flores.jpg", 900)
     menu_img_homer_pepe = derivative("/images/menu/menu-05-homer-pepe.jpg", 900)
+    menu_img_cuaderno = derivative("/images/menu/menu-05-cuaderno-twister.jpg", 900)
+    cuaderno_hero = derivative("/images/cuaderno/cuaderno-twister-collage.jpg", 2048, quality=92)
     menu_img_iloveyou = derivative("/images/menu/menu-06-iloveyou.jpg", 900)
     menu_img_frankenstein = derivative("/images/menu/menu-07-frankenstein.jpg", 900)
     menu_img_pepa = derivative("/images/menu/menu-08-pepa-glitter.jpg", 900)
@@ -224,8 +227,8 @@ def build(output):
         )
         create_card(
             "naroa-share-card-cuaderno.jpg",
+            source_dir / "images/cuaderno/cuaderno-twister-collage.jpg",
             source_dir / "images/menu/menu-05-homer-pepe.jpg",
-            source_dir / "images/menu/menu-01-luz.jpg",
             source_dir / "images/menu/menu-04-bastidor-flores.jpg",
             "CUADERNO DE ESTUDIO · BILBAO",
             "HISTORIAS,\nPROCESOS Y\nENCUENTROS",
@@ -414,9 +417,9 @@ def build(output):
             {"src": work["rara-avis"]["thumb"], "title": "Rara Avis", "meta": "Encuentros de arte y creación", "href": "/obra/rara-avis/"},
         ]
         cuaderno_reel = [
-            {"src": menu_img_homer_pepe, "title": "Rara Avis", "meta": "Proceso creativo y textos de estudio", "href": "/cuaderno/"},
+            {"src": menu_img_cuaderno, "title": "Twister · Enredados en el Juego", "meta": "Collage textil, dibujo y chapas · NAROA '25", "href": "/cuaderno/"},
+            {"src": menu_img_homer_pepe, "title": "Homer & Pepe", "meta": "Pop-surrealismo · Dibujo sobre madera", "href": "/cuaderno/"},
             {"src": work["entre-tantas-flores-de-dia"]["thumb"], "title": "Entre Tantas Flores de Día", "meta": "Del trazo sobre poliéster al collage textil", "href": "/obra/entre-tantas-flores-de-dia/"},
-            {"src": work["la-llorona"]["thumb"], "title": "La Llorona", "meta": "Sal rosa, lágrimas y simbolismo en el taller", "href": "/obra/la-llorona/"},
             {"src": menu_img_bastidor, "title": "Apuntes al natural", "meta": "Bitácora de materiales y bocetos", "href": "/cuaderno/"},
         ]
         encargos_reel = [
@@ -434,7 +437,7 @@ def build(output):
             ("/series/vaivenes/", "Vaivenes", "Dibujo, materia y transformación", menu_img_celia, "Celia Cruz · ¡Azúcar!", "Todo va y viene.", f"Collage y transformación · {len(vaivenes_list)} obras", False, vaivenes_reel, "#267ba8"),
             ("/sobre-mi/", "Naroa", "La artista", menu_img_manostijeras, "Naroa Gutiérrez Gil", "Me encontré a mí en los demás.", "Retratista y artista plástica · Bilbao", False, None, "#3f63ab"),
             ("/trayectoria/", "Trayectoria", "Exposiciones y encuentros", menu_img_bastidor, "Cantinflowers", "El arte también sale de paseo.", "Exposiciones colectivas e individuales", False, trayectoria_reel, "#6b5a35"),
-            ("/cuaderno/", "Cuaderno", "Historias desde el estudio", menu_img_homer_pepe, "Rara Avis", "Apuntes desde el estudio.", "Proceso creativo y textos de estudio", False, cuaderno_reel, "#1b7874"),
+            ("/cuaderno/", "Cuaderno", "Historias desde el estudio", menu_img_cuaderno, "Twister · Collage y juego", "Apuntes desde el estudio.", "Collage textil, dibujo y procesos de estudio", False, cuaderno_reel, "#1b7874"),
             ("/retratos-por-encargo-bilbao/", "Encargos", "Un retrato con tu historia", menu_img_iloveyou, "I Love You · Pop Art", "Cada rostro guarda un mundo.", "Retrato personalizado a medida · Bilbao", False, encargos_reel, "#6b395c"),
             ("/contacto/", "Contacto", "Hablemos de tu idea", menu_img_frankenstein, "Naroa Gutiérrez Gil", "¿Qué historia retratamos?", "Estudio en Bilbao · Consulta directa", True, None, "#385fa8"),
         ]
@@ -1007,10 +1010,46 @@ def build(output):
     years = sorted({x["year"] for x in exhibitions}, reverse=True)
     career = hero(cantinflowers, "Exposiciones y encuentros", "El arte también<br><span>sale de paseo.</span>", "«Una galería sin muros, sin duros, abierta y flexible. De tú a tú, haciendo piña, haciendo amig@s, apetecible».", alt="Cantinflowers, pintura y collage en torno a Mario Moreno")
     career += '<section id="contenido" class="career editorial"><div class="section-opening"><p class="eyebrow">Trayectoria documentada</p><h2>El camino<br>de las obras.</h2><p>«Porque las exposiciones colectivas son como el corro de las patatas o el pilla-pilla de la vida artística: es enseñarnos los nuevos cromos al reunirnos con las amigas; es pegar en la misma pared todas nuestras pegatinas».</p></div><div class="year-filters" role="group" aria-label="Filtrar exposiciones por año"><button type="button" data-year="all" aria-pressed="true">Todos</button>' + ''.join(f'<button type="button" data-year="{y}" aria-pressed="false">{y}</button>' for y in years) + '</div><p class="career-count" role="status" aria-live="polite">' + str(len(exhibitions)) + ' encuentros documentados</p><div class="timeline">'
+    
+    artwork_lookup = {}
+    for p in catalogue["projects"]:
+        s = p["slug"]
+        artwork_lookup[s] = {
+            "slug": s,
+            "title": p["title"],
+            "thumb": derivative(p["images"][0]["src"], 360, thumb=True),
+            "year": str(p.get("year") or ""),
+            "medium": p.get("technique") or p.get("support") or "Técnica mixta",
+            "url": f"/obra/{s}/"
+        }
+    for im in series.get("images", []):
+        s = im.get("work_slug") or im["slug"]
+        if s not in artwork_lookup:
+            artwork_lookup[s] = {
+                "slug": s,
+                "title": im["title"],
+                "thumb": derivative(im["src"], 360, thumb=True),
+                "year": "2020–2026",
+                "medium": "Técnica mixta · Vaivenes",
+                "url": f"/obra/{s}/"
+            }
+
     for x in exhibitions:
         sources = ''.join(f'<a href="{esc(s["url"])}" target="_blank" rel="noopener noreferrer">{esc(s["label"])} ↗</a>' for s in x["sources"])
-        career += f'''<article class="timeline-entry" data-exhibition-year="{x['year']}"><p>{esc(x['dateLabel'])}</p><div><h3>{esc(x['title'])}</h3><p class="timeline-location">{esc(x['location'])}</p><p>{esc(x['description'])}</p><div class="timeline-sources">{sources}</div></div></article>'''
-    career += '</div></section>'
+        art_slugs = x.get("artworks", [])
+        arts = [artwork_lookup[s] for s in art_slugs if s in artwork_lookup]
+        art_json = esc(json.dumps(arts, ensure_ascii=False))
+        cards_html = ""
+        if arts:
+            cards_html = '<div class="timeline-cards-strip" role="group" aria-label="Obras de este encuentro">' + ''.join(
+                f'<a href="{esc(a["url"])}" class="timeline-cromo" data-cromo-slug="{esc(a["slug"])}" title="{esc(a["title"])}">'
+                f'<span class="timeline-cromo-frame"><img src="{esc(a["thumb"])}" alt="{esc(a["title"])}" width="80" height="96" loading="lazy" decoding="async"></span>'
+                f'<span class="timeline-cromo-meta"><strong>{esc(a["title"])}</strong><small>{esc(a["medium"])}</small></span>'
+                f'</a>'
+                for a in arts
+            ) + '</div>'
+        career += f'''<article class="timeline-entry" data-exhibition-year="{x['year']}" data-artworks="{art_json}"><p>{esc(x['dateLabel'])}</p><div><h3>{esc(x['title'])}</h3><p class="timeline-location">{esc(x['location'])}</p><p>{esc(x['description'])}</p>{cards_html}<div class="timeline-sources">{sources}</div></div></article>'''
+    career += '</div><aside id="timeline-cursor-cards" class="timeline-cursor-cards" aria-hidden="true"></aside></section>'
     exhibition_events = []
     for ex in exhibitions:
         loc = ex.get("location", "")
@@ -1064,7 +1103,7 @@ def build(output):
 
     blog_data = read_data("blog")
     posts = blog_data["posts"]
-    notebook = hero(rara["cover"], "El cuaderno de Naroa", "Entre una obra<br><span>y la siguiente.</span>", "«Con las comisuras de par en par agradezco el volver a mi ser y soplo un beso a tu presencia que me alumbró el camino de regreso. Gracias por brindarme reflejo, gracias por ser mi espejo».", alt="Rara Avis, autorretrato de Naroa")
+    notebook = hero(cuaderno_hero, "El cuaderno de Naroa", "Entre una obra<br><span>y la siguiente.</span>", "«Con las comisuras de par en par agradezco el volver a mi ser y soplo un beso a tu presencia que me alumbró el camino de regreso. Gracias por brindarme reflejo, gracias por ser mi espejo».", alt="Collage coral Twister (Naroa '25): retratos, telas, chapas y juego en el estudio de Naroa Gutiérrez Gil", position="50% 48%")
     notebook += f'<section class="editorial notebook" id="contenido" data-notebook-sync="{esc(blog_data.get("api", ""))}"><div class="section-opening"><p class="eyebrow">Cuaderno abierto · Sincronizado con su blog</p><h2>Lo que ocurre<br>alrededor de una obra.</h2><p>«Siempre andan en busca de la complicidad —aunque sea a través del boli sobre el papel— y usan al observador como hilo conductor de sus tertulias privadas, en las que a menudo se merienda complicidad con sabor a saber reír».</p></div><div class="notebook-posts" data-notebook-posts>'
     for x in posts:
         im = x.get("image") or {}
@@ -1109,7 +1148,7 @@ def build(output):
             for post in posts
         ],
     }
-    page("/cuaderno/", "Cuaderno", "Historias de obras, procesos y encuentros. El cuaderno de la artista Naroa Gutiérrez Gil.", '<main id="main">' + notebook + '</main>', rara["photos"][0]["original"], schema=blog_schema)
+    page("/cuaderno/", "Cuaderno", "Historias de obras, procesos y encuentros. El cuaderno de la artista Naroa Gutiérrez Gil.", '<main id="main">' + notebook + '</main>', "/images/cuaderno/cuaderno-twister-collage.jpg", schema=blog_schema)
 
     commission_examples = [
         (jaio, "Madera y textil"),
