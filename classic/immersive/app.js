@@ -6889,6 +6889,7 @@
     entries.forEach(entry => {
       entry.addEventListener('pointerenter', () => {
         if (!isFinePointer.matches) return;
+        if (entry.querySelector('.timeline-cards-strip')) return;
         if (activeEntry === entry) return;
         activeEntry = entry;
         try {

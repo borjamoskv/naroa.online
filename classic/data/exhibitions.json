@@ -4,7 +4,7 @@
   "exhibitions": [
     {
       "id": "3055",
-      "title": "Bwall Collective",
+      "title": "Bwall Collective · Brotes de Alma y Manos",
       "date": "2026-06-04",
       "dateLabel": "Junio de 2026 · inauguración el 4",
       "location": "Dock · Bilbao",
@@ -25,7 +25,8 @@
       "published": "2026-06-01",
       "artworks": [
         "sistashark",
-        "rockagipsy"
+        "baroque-farrokh",
+        "hugo-box"
       ]
     },
     {
@@ -158,9 +159,9 @@
       ],
       "published": "2022-11-06",
       "artworks": [
-        "marilyn-rocks",
-        "audreys-lightning",
-        "sistashark"
+        "lady-rebel",
+        "can-dy-queen",
+        "vino-para-quedarse"
       ]
     },
     {
@@ -186,7 +187,7 @@
       "published": "2022-10-04",
       "artworks": [
         "rockagipsy",
-        "euskolander-no-hay-mas-que-uno"
+        "amor-en-conserva"
       ]
     },
     {
@@ -212,8 +213,8 @@
       "published": "2022-03-22",
       "artworks": [
         "roisin",
-        "mr-fahrenheit",
-        "pippilotta"
+        "pippilotta",
+        "rosetta"
       ]
     },
     {
@@ -236,12 +237,12 @@
       "artworks": [
         "johnny-rocks",
         "james-rocks",
-        "mario-moreno"
+        "infusion-de-berto"
       ]
     },
     {
       "id": "2204",
-      "title": "Vaivenes",
+      "title": "Vaivenes · El Ojo del Huracán",
       "date": "2020-09-30",
       "dateLabel": "30 de septiembre — 27 de octubre de 2020",
       "location": "Haika · Sodupe",
@@ -257,14 +258,14 @@
       ],
       "published": "2020-09-20",
       "artworks": [
-        "roisin",
-        "out-por-los-pelos",
-        "audreys-lightning"
+        "audreys-lightning",
+        "haram",
+        "billy-saw"
       ]
     },
     {
       "id": "2127",
-      "title": "Vaivenes",
+      "title": "Vaivenes · Primera Muestra",
       "date": "2019-11-28",
       "dateLabel": "28 de noviembre de 2019 · inauguración",
       "location": "Copper Deli Museo · Bilbao",
@@ -281,8 +282,8 @@
       "published": "2019-11-25",
       "artworks": [
         "mr-fahrenheit",
-        "pippilotta",
-        "out-por-los-pelos"
+        "out-por-los-pelos",
+        "dustin"
       ]
     },
     {
@@ -382,7 +383,7 @@
     },
     {
       "id": "414",
-      "title": "Espejos del Alma",
+      "title": "Espejos del Alma · Galería de los Espejos",
       "date": "2015-05-28",
       "dateLabel": "28 de mayo — 24 de julio de 2015",
       "location": "Colegio de Abogados · Bilbao",
@@ -430,7 +431,7 @@
     },
     {
       "id": "195",
-      "title": "Espejos del Alma",
+      "title": "Espejos del Alma · Laberinto de Espejos",
       "date": "2014-07",
       "dateLabel": "Julio — 31 de agosto de 2014",
       "location": "Torre Salazar · Portugalete",
@@ -446,8 +447,8 @@
       ],
       "published": "2014-07-10",
       "artworks": [
-        "la-pensadora",
-        "rara-avis"
+        "elene",
+        "beatriz-de-pandora"
       ]
     },
     {
@@ -498,7 +499,7 @@
     },
     {
       "id": "hegoak-2010",
-      "title": "Espejos del Alma",
+      "title": "Espejos del Alma · Primera Edición",
       "date": "2010-03",
       "dateLabel": "Marzo de 2010 · hasta el día 31",
       "location": "Hegoak · Bilbao",
@@ -514,8 +515,9 @@
       ],
       "published": null,
       "artworks": [
-        "la-pensadora",
-        "la-llorona"
+        "buena-fuente",
+        "carol",
+        "amaya"
       ]
     }
   ],

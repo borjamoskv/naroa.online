@@ -357,12 +357,14 @@ body.page-cuaderno .site-footer{color:#06241e;border-top:1px solid rgba(6,36,30,
 html:has(body.page-trayectoria),body.page-trayectoria{background:#F4D06F;background:radial-gradient(circle at 80% 18%,#fbe08e 0%,#F4D06F 58%,#e2b646 100%);color:#231a07}
 body.page-trayectoria .site-nav.is-scrolled{background:rgba(244,208,111,0.88);color:#231a07;border-bottom:1px solid rgba(35,26,7,0.12)}
 body.page-trayectoria .page-hero{border-radius:0 0 56px 36px / 0 0 38px 52px;box-shadow:0 22px 54px rgba(35,26,7,0.22)}
-body.page-trayectoria .career.editorial{background:rgba(255,253,244,0.52);border:1px solid rgba(35,26,7,0.15);border-radius:44px 20px 40px 24px;box-shadow:0 24px 60px rgba(35,26,7,0.12);color:#231a07}
+body.page-trayectoria .career.editorial{width:min(1280px,92vw);background:rgba(255,253,244,0.52);border:1px solid rgba(35,26,7,0.15);border-radius:44px 20px 40px 24px;box-shadow:0 24px 60px rgba(35,26,7,0.12);color:#231a07}
+body.page-trayectoria .section-opening{padding:8px 0 28px}
 body.page-trayectoria .section-opening h2,body.page-trayectoria .section-opening p,body.page-trayectoria .section-opening .eyebrow,body.page-trayectoria .career-count{color:#231a07}
 body.page-trayectoria .year-filters{border-bottom:1px solid rgba(35,26,7,0.2);gap:12px}
 body.page-trayectoria .year-filters button{color:#3d2e0e;padding:6px 16px;border-radius:22px 12px 20px 14px;background:rgba(35,26,7,0.06);min-height:38px;transition:all .25s ease}
 body.page-trayectoria .year-filters button[aria-pressed=true]{background:#231a07;color:#F4D06F;text-decoration:none;box-shadow:0 6px 18px rgba(35,26,7,0.22)}
 body.page-trayectoria .timeline-entry{border-bottom:1px solid rgba(35,26,7,0.16);background:rgba(255,254,248,0.62);padding:34px 32px;margin:18px 0;border-radius:30px 16px 28px 18px;box-shadow:0 10px 30px rgba(35,26,7,0.07)}
+body.page-trayectoria .timeline-entry>*{min-width:0}
 body.page-trayectoria .timeline-entry h3,body.page-trayectoria .timeline-entry p,body.page-trayectoria .timeline-entry a{color:#231a07}
 body.page-trayectoria .site-footer{color:#231a07;border-top:1px solid rgba(35,26,7,0.16)}
 
