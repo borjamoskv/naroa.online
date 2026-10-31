@@ -4,6 +4,7 @@ dist-ssr/
 .output/
 .deploy/
 .tempmediaStorage/
+scratch/
 
 # Dependencies
 node_modules/

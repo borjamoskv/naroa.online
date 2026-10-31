@@ -6,13 +6,17 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:spa": "tsc -b && vite build",
     "build:site": "python3 tools/build_immersive_site.py",
-    "test:site": "python3 tools/check_immersive_site.py && node tools/test_immersive_dom.cjs",
-    "lint": "oxlint --ignore-pattern 'classic/assets/**'",
-    "test": "oxlint --ignore-pattern 'classic/assets/**' && tsc -b",
+    "build:all": "./deploy.sh --build-only",
+    "test:lint": "oxlint --ignore-pattern 'classic/assets/**'",
+    "test:types": "tsc -b",
+    "test:site": "python3 tools/check_immersive_site.py && node --max-old-space-size=4096 tools/test_immersive_dom.cjs",
+    "test": "npm run test:lint && npm run test:types && npm run test:site",
     "preview": "vite preview",
     "deploy": "./deploy.sh",
     "deploy:preview": "./deploy.sh --preview",
+    "deploy:build-only": "./deploy.sh --build-only",
     "watch:deploy": "chokidar 'src/**/*' 'live-site/**/*' -c './deploy.sh'"
   },
   "dependencies": {

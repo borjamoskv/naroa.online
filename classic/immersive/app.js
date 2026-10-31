@@ -1419,6 +1419,163 @@
         threadPath.setAttribute('d', `M${tx.toFixed(1)},${ty.toFixed(1)} L995,1490`);
       }
     }
+    let cantinLastProgress = 0, cantinDirection = 0, cantinPuffCount = 1;
+    function ensureCantinflowersSmokeRig(scene) {
+      let rig = scene.querySelector('.cantinflowers-smoke-rig');
+      if (rig) return rig;
+      rig = svgNode('svg', {
+        viewBox: '0 0 3656 2456',
+        preserveAspectRatio: state.fit ? 'xMidYMid meet' : 'xMidYMid slice',
+        'aria-hidden': 'true',
+        focusable: 'false',
+        class: 'cantinflowers-smoke-rig',
+        'data-cantinflowers-rig': ''
+      });
+      const defs = svgNode('defs');
+      const emberGrad = svgNode('radialGradient', { id: 'cantin-ember-grad', cx: '50%', cy: '50%', r: '50%' });
+      emberGrad.append(
+        svgNode('stop', { offset: '0%', 'stop-color': '#fff6c2', 'stop-opacity': '1' }),
+        svgNode('stop', { offset: '34%', 'stop-color': '#ff6a00', 'stop-opacity': '0.95' }),
+        svgNode('stop', { offset: '68%', 'stop-color': '#e01e00', 'stop-opacity': '0.62' }),
+        svgNode('stop', { offset: '100%', 'stop-color': '#ff2a00', 'stop-opacity': '0' })
+      );
+      const smokeGrad = svgNode('radialGradient', { id: 'cantin-smoke-grad', cx: '50%', cy: '50%', r: '50%' });
+      smokeGrad.append(
+        svgNode('stop', { offset: '0%', 'stop-color': '#f4f6f8', 'stop-opacity': '0.68' }),
+        svgNode('stop', { offset: '52%', 'stop-color': '#d8dee6', 'stop-opacity': '0.36' }),
+        svgNode('stop', { offset: '100%', 'stop-color': '#bac4d0', 'stop-opacity': '0' })
+      );
+      defs.append(emberGrad, smokeGrad);
+      rig.append(defs);
+
+      const emberGroup = svgNode('g', { 'data-cantin-ember': '' });
+      const emberHalo = svgNode('circle', {
+        'data-cantin-ember-halo': '',
+        cx: '2126',
+        cy: '1695',
+        r: '86',
+        fill: 'url(#cantin-ember-grad)',
+        opacity: '0'
+      });
+      const emberCore = svgNode('ellipse', {
+        'data-cantin-ember-core': '',
+        cx: '2126',
+        cy: '1695',
+        rx: '19',
+        ry: '15',
+        transform: 'rotate(-36 2126 1695)',
+        fill: '#ff7b1a',
+        opacity: '0'
+      });
+      const emberHotspot = svgNode('circle', {
+        'data-cantin-ember-hotspot': '',
+        cx: '2127',
+        cy: '1696',
+        r: '8',
+        fill: '#fff5ba',
+        opacity: '0'
+      });
+      emberGroup.append(emberHalo, emberCore, emberHotspot);
+
+      const cigSmokeGroup = svgNode('g', { 'data-cantin-cig-smoke': '', fill: 'none', 'stroke-linecap': 'round' });
+      for (let i = 0; i < 3; i++) {
+        cigSmokeGroup.append(svgNode('path', {
+          'data-cantin-wisp': String(i),
+          d: 'M2126,1688 C2145,1560 2085,1420 2135,1260',
+          stroke: i === 0 ? 'rgba(244, 247, 250, 0.62)' : i === 1 ? 'rgba(222, 230, 238, 0.46)' : 'rgba(255, 248, 238, 0.38)',
+          'stroke-width': String(18 + i * 11),
+          opacity: '0'
+        }));
+      }
+
+      const mouthSmokeGroup = svgNode('g', { 'data-cantin-mouth-smoke': '' });
+      for (let i = 0; i < 5; i++) {
+        const puffGroup = svgNode('g', { 'data-cantin-puff': String(i), opacity: '0' });
+        puffGroup.append(
+          svgNode('ellipse', {
+            cx: '0',
+            cy: '0',
+            rx: String(95 + i * 28),
+            ry: String(58 + i * 18),
+            fill: 'url(#cantin-smoke-grad)'
+          }),
+          svgNode('path', {
+            d: 'M-55,10 C-15,-42 48,-36 85,8 C42,38 -18,36 -55,10 Z',
+            fill: 'rgba(245, 247, 250, 0.28)'
+          })
+        );
+        mouthSmokeGroup.append(puffGroup);
+      }
+
+      rig.append(emberGroup, cigSmokeGroup, mouthSmokeGroup);
+      const pan = $('.art-pan', scene) || scene;
+      pan.appendChild(rig);
+      return rig;
+    }
+    function applyCantinflowersDrag(rig, rawProgress, puffCount = 1) {
+      if (!rig) return;
+      const p = clamp(rawProgress, 0, 1);
+      const mult = clamp(puffCount, 1, 8);
+      // Inhale peaks in the first half of the scroll pass; exhale billows out right after.
+      const inhale = Math.pow(Math.sin(clamp(p / 0.68, 0, 1) * Math.PI), 0.85);
+      const emberPulse = clamp(inhale * (0.85 + Math.min(0.35, (mult - 1) * 0.06)) + Math.sin(p * Math.PI * 5) * 0.12 * inhale, 0, 1);
+      const exhale = smooth(clamp((p - 0.14) / 0.82, 0, 1));
+      const smokeAlive = Math.sin(p * Math.PI);
+
+      rig.dataset.dragProgress = p.toFixed(3);
+      rig.dataset.puffCount = String(mult);
+      rig.dataset.emberGlow = emberPulse.toFixed(3);
+
+      const halo = rig.querySelector('[data-cantin-ember-halo]');
+      const core = rig.querySelector('[data-cantin-ember-core]');
+      const hotspot = rig.querySelector('[data-cantin-ember-hotspot]');
+      if (halo) {
+        halo.setAttribute('r', (64 + emberPulse * 88).toFixed(1));
+        halo.setAttribute('opacity', (0.18 + emberPulse * 0.82).toFixed(3));
+      }
+      if (core) {
+        core.setAttribute('rx', (17 + emberPulse * 9).toFixed(1));
+        core.setAttribute('ry', (13 + emberPulse * 7).toFixed(1));
+        core.setAttribute('opacity', (0.28 + emberPulse * 0.72).toFixed(3));
+      }
+      if (hotspot) {
+        hotspot.setAttribute('r', (5 + emberPulse * 8.5).toFixed(1));
+        hotspot.setAttribute('opacity', (0.15 + emberPulse * 0.85).toFixed(3));
+      }
+
+      const wisps = rig.querySelectorAll('[data-cantin-wisp]');
+      wisps.forEach((wisp, idx) => {
+        const wProg = clamp((p - idx * 0.08) / 0.84, 0, 1);
+        const rise = wProg * (390 + idx * 95);
+        const sway1 = Math.sin(p * 6.2 + idx * 1.7) * (42 + idx * 16);
+        const sway2 = Math.cos(p * 5.4 + idx * 2.1) * (68 + idx * 22);
+        const x0 = 2126 + (idx - 1) * 8;
+        const y0 = 1686;
+        const d = `M${x0},${y0} C${(x0 + sway1).toFixed(1)},${(y0 - rise * 0.36).toFixed(1)} ${(x0 - sway2).toFixed(1)},${(y0 - rise * 0.72).toFixed(1)} ${(x0 + sway2 * 0.65).toFixed(1)},${(y0 - rise).toFixed(1)}`;
+        wisp.setAttribute('d', d);
+        wisp.setAttribute('opacity', (smokeAlive * (0.58 - idx * 0.11) * Math.min(1.25, 0.85 + mult * 0.08)).toFixed(3));
+      });
+
+      const puffs = rig.querySelectorAll('[data-cantin-puff]');
+      puffs.forEach((puff, idx) => {
+        const stagger = idx * 0.11;
+        const localT = clamp((exhale - stagger) / Math.max(0.22, 1 - stagger), 0, 1);
+        if (localT <= 0.005) {
+          puff.setAttribute('opacity', '0');
+          return;
+        }
+        // Start at Cantinflas's parted lips (1345, 1344) and curl outward/upward toward the cigarette & plates
+        const startX = 1358;
+        const startY = 1346;
+        const driftX = localT * (280 + idx * 78) + Math.sin(localT * Math.PI * 2 + idx) * 34;
+        const driftY = -localT * (195 + idx * 64) - Math.pow(localT, 1.5) * 90;
+        const scale = 0.28 + localT * (1.15 + idx * 0.22) * Math.min(1.35, 0.92 + mult * 0.07);
+        const rot = -14 + localT * (28 + idx * 9) * (idx % 2 === 0 ? 1 : -1);
+        const op = Math.sin(localT * Math.PI) * (0.76 - idx * 0.09) * Math.min(1.2, 0.85 + mult * 0.08);
+        puff.setAttribute('transform', `translate(${(startX + driftX).toFixed(1)} ${(startY + driftY).toFixed(1)}) scale(${scale.toFixed(3)}) rotate(${rot.toFixed(1)})`);
+        puff.setAttribute('opacity', clamp(op, 0, 0.92).toFixed(3));
+      });
+    }
     function stepJulioClockwork() {
       julioRaf = null;
       const isTestEnv = typeof window !== 'undefined' && (window.location.hostname === 'portfolio.test' || reduced.matches);
@@ -1624,6 +1781,45 @@
     const stickSpark3 = stickman.querySelector('[data-stick-spark-3]');
     let lastStickFraction = 0;
     let stickDirection = 1;
+
+    const MAX_KISS_CUTOUTS = 12;
+    const pensadoraWork = works.find(w => w.slug === 'la-pensadora');
+    const pensadoraCoverUrl = pensadoraWork?.cover || '/images/catalogo/la-pensadora-original-01-2048.jpg';
+    let kissStage = stage.querySelector('[data-kiss-stage]');
+    if (!kissStage) {
+      kissStage = document.createElement('div');
+      kissStage.className = 'art-kiss-stage';
+      kissStage.setAttribute('data-kiss-stage', '');
+      kissStage.setAttribute('aria-hidden', 'true');
+      kissStage.setAttribute('hidden', '');
+      for (let k = 0; k < MAX_KISS_CUTOUTS; k++) {
+        const cutout = document.createElement('div');
+        cutout.className = 'pensadora-kiss-cutout';
+        cutout.setAttribute('data-kiss-cutout', String(k));
+        const lips = document.createElement('div');
+        lips.className = 'pensadora-kiss-lips';
+        lips.style.backgroundImage = `url("${pensadoraCoverUrl}")`;
+        cutout.appendChild(lips);
+        kissStage.appendChild(cutout);
+      }
+      stage.appendChild(kissStage);
+    }
+    const kissCutouts = Array.from(kissStage.querySelectorAll('[data-kiss-cutout]'));
+    const KISS_LANDING_OFFSETS = [
+      { dx: 0.000, dy: 0.000, arc: -0.15, rot: -11, scale: 0.88, stagger: 0.00 },
+      { dx: 0.055, dy: -0.048, arc: -0.22, rot: 14, scale: 0.72, stagger: 0.05 },
+      { dx: -0.062, dy: 0.042, arc: -0.11, rot: -18, scale: 0.68, stagger: 0.09 },
+      { dx: 0.145, dy: -0.135, arc: -0.26, rot: 9, scale: 0.64, stagger: 0.13 },
+      { dx: -0.038, dy: -0.095, arc: -0.19, rot: -6, scale: 0.74, stagger: 0.16 },
+      { dx: 0.088, dy: 0.065, arc: -0.14, rot: 17, scale: 0.62, stagger: 0.19 },
+      { dx: -0.110, dy: -0.025, arc: -0.24, rot: -15, scale: 0.60, stagger: 0.22 },
+      { dx: 0.180, dy: -0.175, arc: -0.29, rot: 12, scale: 0.58, stagger: 0.25 },
+      { dx: 0.025, dy: 0.092, arc: -0.12, rot: -9, scale: 0.66, stagger: 0.28 },
+      { dx: -0.085, dy: 0.085, arc: -0.17, rot: 15, scale: 0.56, stagger: 0.31 },
+      { dx: 0.115, dy: -0.085, arc: -0.21, rot: -14, scale: 0.60, stagger: 0.34 },
+      { dx: -0.015, dy: -0.145, arc: -0.25, rot: 7, scale: 0.54, stagger: 0.37 }
+    ];
+    let lastKissFraction = 0, kissDirection = 0, kissVolleyCount = 1, kissInSector = false;
 
     function updateStickmanPose(phase, leapArc = 0, portalStyle = 0) {
       const isFlip = portalStyle === 1 && leapArc > 0.05;
@@ -2441,6 +2637,32 @@
             applyJulioArmAngle(julioRig, -6.0);
           }
         }
+        if (works[index].slug === 'cantinflowers') {
+          const cantinRig = ensureCantinflowersSmokeRig(scene);
+          cantinRig.setAttribute('preserveAspectRatio', state.fit ? 'xMidYMid meet' : 'xMidYMid slice');
+          cantinRig.style.transformOrigin = image.style.transformOrigin;
+          cantinRig.style.transform = still ? '' : image.style.transform;
+          cantinRig.style.filter = image.style.filter;
+          const holdSpan = Math.max(0.01, entry.transitionStart - entry.start);
+          const localHold = clamp((pose.distance - entry.start) / holdSpan, 0, 1);
+          const dragProgress = still ? 0 : transition
+            ? (outgoing ? clamp(0.28 + fraction * 0.72, 0, 1) : clamp(fraction * 0.75, 0, 1))
+            : clamp(0.16 + localHold * 0.68, 0, 1);
+          const deltaCantin = dragProgress - cantinLastProgress;
+          if (Math.abs(deltaCantin) > 0.018) {
+            const nextDir = deltaCantin > 0 ? 1 : -1;
+            if (cantinDirection !== 0 && nextDir !== cantinDirection) {
+              cantinPuffCount = Math.min(8, cantinPuffCount + 1);
+              soundscape?.puff?.(0.75);
+            }
+            cantinDirection = nextDir;
+            cantinLastProgress = dragProgress;
+          }
+          if (dragProgress >= 0.22 && dragProgress <= 0.55) {
+            soundscape?.puff?.(dragProgress);
+          }
+          applyCantinflowersDrag(cantinRig, dragProgress, cantinPuffCount);
+        }
       });
       const activeSlug = transition && fraction >= .5 ? works[incoming].slug : works[base].slug;
       stage.style.setProperty('--scene-accent', SCENE_ACCENTS[(transition && fraction >= .5 ? incoming : base) % SCENE_ACCENTS.length]);
@@ -2599,6 +2821,81 @@
       const isSeriesPortal = transition && (works[base]?.category !== works[incoming]?.category || works[base]?.series !== works[incoming]?.series);
       const isFloresToJohnny = transition && works[base]?.slug === 'entre-tantas-flores-de-dia' && works[incoming]?.slug === 'johnny-rocks';
       const isMunsterPortal = transition && works[base]?.slug === 'out-por-los-pelos' && works[incoming]?.slug === 'lily-munster';
+      const isPensadoraToFreddy = transition && !still && works[base]?.slug === 'la-pensadora' && works[incoming]?.slug === 'baroque-farrokh';
+      const inPensadoraFreddySector = works[base]?.slug === 'la-pensadora' || works[incoming]?.slug === 'baroque-farrokh' || works[base]?.slug === 'baroque-farrokh';
+      if (!inPensadoraFreddySector) {
+        kissVolleyCount = 1;
+        kissDirection = 0;
+        lastKissFraction = 0;
+        kissInSector = false;
+      }
+      if (isPensadoraToFreddy && kissStage) {
+        kissStage.removeAttribute('hidden');
+        kissStage.classList.add('is-kissing');
+        const deltaKiss = fraction - lastKissFraction;
+        if (!kissInSector) {
+          kissInSector = true;
+          lastKissFraction = fraction;
+          kissDirection = fraction >= 0.5 ? -1 : 1;
+          soundscape?.kiss?.(kissVolleyCount);
+        } else if (Math.abs(deltaKiss) > 0.015) {
+          const nextDir = deltaKiss > 0 ? 1 : -1;
+          if (kissDirection !== 0 && nextDir !== kissDirection) {
+            kissVolleyCount = Math.min(MAX_KISS_CUTOUTS, kissVolleyCount + 1);
+            soundscape?.kiss?.(kissVolleyCount);
+          }
+          kissDirection = nextDir;
+          lastKissFraction = fraction;
+        }
+        kissStage.dataset.kissVolley = String(kissVolleyCount);
+        const stageW = geometry.width || window.innerWidth || 1280;
+        const stageH = geometry.height || window.innerHeight || 800;
+        const dirH = entry.direction || 1;
+        // Outgoing La Pensadora lips start around (80.71%, 33.07%) of her canvas; incoming Freddie cheek/face is around (48.5%, 49.5%)
+        const outSceneShiftX = -progress * stageW * dirH;
+        const inSceneShiftX = (1 - progress) * stageW * dirH;
+        const startBaseX = stageW * 0.77 + outSceneShiftX * 0.42;
+        const startBaseY = stageH * 0.34;
+        const endBaseX = stageW * 0.49 + inSceneShiftX * 0.28;
+        const endBaseY = stageH * 0.49;
+
+        kissCutouts.forEach((cutout, k) => {
+          if (k >= kissVolleyCount) {
+            cutout.classList.remove('is-active');
+            cutout.style.opacity = '0';
+            return;
+          }
+          const spec = KISS_LANDING_OFFSETS[k % KISS_LANDING_OFFSETS.length];
+          const localRaw = clamp((fraction - spec.stagger * 0.55) / Math.max(0.28, 1 - spec.stagger * 0.55), 0, 1);
+          const flight = smooth(localRaw);
+          const startX = startBaseX + (k === 0 ? 0 : (k % 2 === 0 ? -1 : 1) * (k * 6));
+          const startY = startBaseY + (k === 0 ? 0 : ((k % 3) - 1) * 10);
+          const targetX = endBaseX + spec.dx * stageW;
+          const targetY = endBaseY + spec.dy * stageH;
+          const arcLift = Math.sin(flight * Math.PI) * (spec.arc * stageH);
+          const flutter = Math.sin(flight * Math.PI * (2.2 + (k % 3) * 0.6)) * (k === 0 ? 6 : 12);
+          const x = startX + (targetX - startX) * flight - 120;
+          const y = startY + (targetY - startY) * flight + arcLift + flutter - 64;
+          const pucker = localRaw < 0.22
+            ? 1 + Math.sin((localRaw / 0.22) * Math.PI) * 0.28
+            : localRaw > 0.82
+              ? 1 + Math.sin(((localRaw - 0.82) / 0.18) * Math.PI) * 0.18
+              : 1;
+          const scale = spec.scale * pucker;
+          const rot = spec.rot * flight + Math.sin(flight * Math.PI * 2) * 8;
+          const op = localRaw <= 0.01 ? 0 : localRaw > 0.94 ? clamp((1 - localRaw) / 0.06, 0.25, 1) : 1;
+          cutout.classList.add('is-active');
+          cutout.style.opacity = op.toFixed(3);
+          cutout.style.transform = `translate3d(${x.toFixed(2)}px,${y.toFixed(2)}px,0) scale(${scale.toFixed(3)}) rotate(${rot.toFixed(2)}deg)`;
+        });
+      } else if (kissStage && !kissStage.hasAttribute('hidden')) {
+        kissStage.setAttribute('hidden', '');
+        kissStage.classList.remove('is-kissing');
+        kissCutouts.forEach(cutout => {
+          cutout.classList.remove('is-active');
+          cutout.style.opacity = '0';
+        });
+      }
       const isTinCanPeelOuter = isAmorToAmy || (transition && (works[base]?.slug === 'dar-la-lata' || works[base]?.slug === 'enlatadas'));
       if (isTinCanPeelOuter && fraction >= 0.08 && fraction <= 0.35) {
         soundscape?.canPeel?.();
@@ -2744,6 +3041,14 @@
         cue.textContent = 'LauraLore · Flor de cerámica y eguzkilore vegetal ✦';
       } else if (works[state.index]?.slug === 'can-dy-queen' && !transition) {
         cue.textContent = 'Can-dy Queen · Slow-Motion Caramelo ↓';
+      } else if (isPensadoraToFreddy) {
+        cue.textContent = kissVolleyCount > 1
+          ? `LIPS en acción · ×${kissVolleyCount} besos a Freddie ↓↑`
+          : 'LIPS en acción · Beso a Freddie ↓';
+      } else if ((works[state.index]?.slug === 'cantinflowers' || (transition && (works[base]?.slug === 'cantinflowers' || works[incoming]?.slug === 'cantinflowers'))) && !still) {
+        cue.textContent = cantinPuffCount > 1
+          ? `Cantinflowers · Calada ×${cantinPuffCount} y volutas de humo ↓↑`
+          : 'Cantinflowers · Una calada con el scroll ↓';
       } else if (isSistaToMulti) {
         cue.textContent = 'Gafas de buceo a filtro 3D rojo ↓';
       } else if (isMunsterWork && !transition) {
@@ -3796,6 +4101,75 @@
         dwellChapters: { ...kState.dwellChapters },
         fractureStates: { ...kState.fractureStates },
         xrayTouches: kState.xrayTouches
+      })
+    };
+  }
+  const commissionHorizontal = $('[data-commission-horizontal]');
+  if (commissionHorizontal) {
+    const track = $('[data-horizontal-track]', commissionHorizontal);
+    const cards = $$('[data-parallax-card]', commissionHorizontal);
+    const hState = {
+      targetY: scrollY || 0,
+      currentY: scrollY || 0,
+      progress: 0,
+      translateX: 0,
+      raf: null
+    };
+    function stepCommissionHorizontal() {
+      hState.raf = null;
+      const dy = hState.targetY - hState.currentY;
+      if (reduced.matches || Math.abs(dy) < 0.25) {
+        hState.currentY = hState.targetY;
+      } else {
+        hState.currentY += dy * 0.16;
+      }
+      const vh = innerHeight || 900;
+      const vw = innerWidth || 1440;
+      const stageHeight = commissionHorizontal.offsetHeight || vh * 4.2;
+      const maxScroll = Math.max(1, stageHeight - vh);
+      const progress = clamp(hState.currentY / maxScroll, 0, 1);
+      hState.progress = Number(progress.toFixed(4));
+      const trackWidth = track ? Math.max(track.scrollWidth || 0, vw * 3.2) : vw * 3.2;
+      const maxTx = Math.max(0, trackWidth - vw);
+      const tx = reduced.matches ? 0 : -progress * maxTx;
+      hState.translateX = Number(tx.toFixed(2));
+      if (track) {
+        track.style.setProperty('--hx', `${tx.toFixed(2)}px`);
+      }
+      const total = Math.max(1, cards.length - 1);
+      cards.forEach((card, idx) => {
+        const anchor = idx / total;
+        const rel = reduced.matches ? 0 : clamp((anchor - progress) * 2.2, -1, 1);
+        card.style.setProperty('--parallax-x', rel.toFixed(4));
+      });
+      $('.site-nav')?.classList.toggle('is-scrolled', hState.currentY > 24);
+      if (!reduced.matches && Math.abs(hState.targetY - hState.currentY) >= 0.25) {
+        hState.raf = requestAnimationFrame(stepCommissionHorizontal);
+      }
+    }
+    function scheduleCommissionHorizontal() {
+      hState.targetY = scrollY || 0;
+      if (hState.raf === null) {
+        hState.raf = requestAnimationFrame(stepCommissionHorizontal);
+      }
+    }
+    addEventListener('scroll', scheduleCommissionHorizontal, { passive: true });
+    addEventListener('resize', scheduleCommissionHorizontal, { passive: true });
+    stepCommissionHorizontal();
+    window.NAROA_COMMISSION_HORIZONTAL = {
+      scrollToProgress(p = 0.5) {
+        const vh = innerHeight || 900;
+        const stageHeight = commissionHorizontal.offsetHeight || vh * 4.2;
+        hState.targetY = clamp(p, 0, 1) * Math.max(1, stageHeight - vh);
+        hState.currentY = hState.targetY;
+        stepCommissionHorizontal();
+        return this.getState();
+      },
+      getState: () => ({
+        backend: 'substep-horizontal-parallax-v1',
+        progress: hState.progress,
+        translateX: hState.translateX,
+        cards: cards.length
       })
     };
   }

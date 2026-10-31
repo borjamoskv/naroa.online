@@ -846,11 +846,105 @@
       audio.play().catch(() => {});
     } catch {}
   }
-  let lastGameOverSlug = '';
+  let lastGameOverSlug = '', lastKissSlug = '', lastPuffSlug = '', lastKissTime = 0, lastPuffTime = 0;
   function play8BitGameOver() {
     lastGameOverSlug = 'game-over';
     // Game Over permanece en silencio contemplativo absoluto (directiva de diseño)
     return;
+  }
+  function playKissPop(volleyCount = 1) {
+    lastKissSlug = 'la-pensadora';
+    const nowMs = typeof performance !== 'undefined' ? performance.now() : Date.now();
+    if (nowMs - lastKissTime < 220) return;
+    lastKissTime = nowMs;
+    if (!enabled || !context || !engine || context.state !== 'running') return;
+    try {
+      const now = context.currentTime + 0.005;
+      const target = engine.compressor || engine.master;
+      const gallery = getGalleryReverb();
+      if (typeof context.createOscillator === 'function') {
+        const osc = context.createOscillator();
+        const sub = context.createOscillator();
+        const filter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
+        const gain = context.createGain();
+        const baseFreq = 196.0 * Math.pow(2, ((Math.min(12, Math.max(1, volleyCount)) - 1) % 5) / 12);
+        osc.type = 'sine';
+        sub.type = 'triangle';
+        osc.frequency.setValueAtTime(baseFreq, now);
+        sub.frequency.setValueAtTime(baseFreq * 0.5, now);
+        if (osc.frequency.exponentialRampToValueAtTime) {
+          osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.48, now + 0.048);
+          osc.frequency.exponentialRampToValueAtTime(baseFreq * 0.88, now + 0.14);
+        }
+        if (filter) {
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(760, now);
+          filter.Q.setValueAtTime(0.44, now);
+        }
+        gain.gain.setValueAtTime(0.0001, now);
+        if (gain.gain.linearRampToValueAtTime) {
+          gain.gain.linearRampToValueAtTime(0.11, now + 0.032);
+        }
+        if (gain.gain.exponentialRampToValueAtTime) {
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.24);
+        }
+        osc.connect(filter || gain);
+        sub.connect(filter || gain);
+        if (filter) filter.connect(gain);
+        gain.connect(target);
+        if (gallery?.input) {
+          try { gain.connect(gallery.input); } catch {}
+        }
+        osc.start(now);
+        sub.start(now);
+        osc.stop(now + 0.26);
+        sub.stop(now + 0.26);
+      }
+    } catch {}
+  }
+  function playCigarettePuff(intensity = 0.6) {
+    lastPuffSlug = 'cantinflowers';
+    const nowMs = typeof performance !== 'undefined' ? performance.now() : Date.now();
+    if (nowMs - lastPuffTime < 340) return;
+    lastPuffTime = nowMs;
+    if (!enabled || !context || !engine || context.state !== 'running') return;
+    try {
+      const now = context.currentTime + 0.006;
+      const target = engine.compressor || engine.master;
+      const gallery = getGalleryReverb();
+      if (typeof context.createOscillator === 'function') {
+        const osc = context.createOscillator();
+        const filter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
+        const gain = context.createGain();
+        const level = Math.max(0.2, Math.min(1, Number(intensity) || 0.6));
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(146.83, now);
+        if (osc.frequency.exponentialRampToValueAtTime) {
+          osc.frequency.exponentialRampToValueAtTime(196.00, now + 0.18);
+          osc.frequency.exponentialRampToValueAtTime(130.81, now + 0.42);
+        }
+        if (filter) {
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(520, now);
+          filter.Q.setValueAtTime(0.42, now);
+        }
+        gain.gain.setValueAtTime(0.0001, now);
+        if (gain.gain.linearRampToValueAtTime) {
+          gain.gain.linearRampToValueAtTime(0.085 * level, now + 0.045);
+        }
+        if (gain.gain.exponentialRampToValueAtTime) {
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.46);
+        }
+        osc.connect(filter || gain);
+        if (filter) filter.connect(gain);
+        gain.connect(target);
+        if (gallery?.input) {
+          try { gain.connect(gallery.input); } catch {}
+        }
+        osc.start(now);
+        osc.stop(now + 0.48);
+      }
+    } catch {}
   }
   function playCameraFlash() {
     lastFlashSlug = 'ajenjo-cam';
@@ -1280,6 +1374,12 @@
     canPeel() {
       playCanPeel();
     },
+    kiss(volleyCount) {
+      playKissPop(volleyCount);
+    },
+    puff(intensity) {
+      playCigarettePuff(intensity);
+    },
     eguzkilore() {
       playEguzkiloreChime();
     },
@@ -1426,6 +1526,8 @@
     get lastWinkSlug() { return lastWinkSlug; },
     get lastDeltoyaSlug() { return lastDeltoyaSlug; },
     get lastGameOverSlug() { return lastGameOverSlug; },
+    get lastKissSlug() { return lastKissSlug; },
+    get lastPuffSlug() { return lastPuffSlug; },
     get lastMenuNoteIndex() { return lastMenuNoteIndex; },
     get lastPhonographCategory() { return lastPhonographCategory; },
     get lastPhonographFreq() { return lastPhonographFreq; },

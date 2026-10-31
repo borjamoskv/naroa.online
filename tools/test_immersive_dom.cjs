@@ -269,6 +269,22 @@ async function eyeMatch(ui, base, points) {
       assert.ok(runner.style.transform.includes('translate3d('), 'Stickman runner translates horizontally across the black void');
       assert.ok(ui.find('[data-stick-scarf]')?.getAttribute('d')?.startsWith('M'), 'Stickman scarf waves dynamically during sprint');
     }
+    if (entry.slug === 'la-pensadora') {
+      const kissStage = ui.find('[data-kiss-stage]');
+      assert.ok(kissStage && !kissStage.hasAttribute('hidden'), 'La Pensadora activates the collage lip-cutout kiss stage toward Freddie');
+      assert.ok(kissStage.classList.contains('is-kissing'), 'Kiss stage has active kissing class');
+      const volleyAfterBackAndForth = Number(kissStage.dataset.kissVolley);
+      assert.ok(volleyAfterBackAndForth >= 3, 'Scrolling back and forth in La Pensadora -> Baroque Farrokh multiplies the number of lip cutouts launched');
+      const activeKisses = ui.findAll('[data-kiss-cutout].is-active');
+      assert.equal(activeKisses.length, volleyAfterBackAndForth, 'Active lip-cutout elements match the back-and-forth volley multiplier');
+    }
+    if (entry.slug === 'cantinflowers') {
+      const cantinRig = ui.find(`[data-scene="${index}"] [data-cantinflowers-rig]`);
+      assert.ok(cantinRig, 'Cantinflowers renders the reactive cigarette ember and smoke SVG rig');
+      assert.ok(Number(cantinRig.dataset.dragProgress) > 0, 'Cantinflowers tracks scroll drag progress for the cigarette puff');
+      assert.ok(Number(cantinRig.dataset.emberGlow) > 0, 'Cantinflowers cigarette ember glows during scroll drag');
+      assert.ok(Number(cantinRig.dataset.puffCount) >= 2, 'Scrolling back and forth on Cantinflowers increments the puff counter');
+    }
     if (entry.mode === 'H') {
       const specDir = ui.w.NAROA_CATALOG.journey.scenes.find(s => s.slug === entry.slug)?.direction;
       if (specDir !== undefined) {
@@ -936,6 +952,10 @@ async function eyeMatch(ui, base, points) {
     if (route === '/retratos-por-encargo-bilbao/') {
       assert.equal(page.document.querySelectorAll('.commission-example').length, 4, 'Commissions landing displays 4 monumental artworks');
       assert.ok(page.find('.closing a[href^="https://wa.me/"]'), 'Commissions landing includes direct WhatsApp CTA');
+      assert.ok(page.w.NAROA_COMMISSION_HORIZONTAL, 'NAROA_COMMISSION_HORIZONTAL horizontal parallax engine exposed on window');
+      const hParallax = page.w.NAROA_COMMISSION_HORIZONTAL.scrollToProgress(0.5);
+      assert.equal(hParallax.backend, 'substep-horizontal-parallax-v1', 'Commissions uses substep horizontal parallax backend');
+      assert.ok(hParallax.translateX < 0, 'Scrolling advances horizontal parallax track');
       assert.ok(page.w.NAROA_ATTRIBUTION, 'First-party attribution telemetry exposed on window');
       assert.ok(page.w.WebMCP, 'WebMCP interface exposed on window');
       const catalogResults = await page.w.WebMCP.callTool('search_catalogue', { query: 'pizarra' });
