@@ -2096,6 +2096,78 @@
       });
     } catch {}
   }
+  let lastAtelierMaterialTime = 0, lastAtelierMaterial = '';
+  function playAtelierMaterialCue(materialKey = 'madera') {
+    lastAtelierMaterial = String(materialKey || 'madera');
+    const nowMs = typeof performance !== 'undefined' ? performance.now() : Date.now();
+    if (nowMs - lastAtelierMaterialTime < 140) return;
+    lastAtelierMaterialTime = nowMs;
+    if (!enabled) return;
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      try { navigator.vibrate(10); } catch {}
+    }
+    if (isPortalOrganicPage) {
+      const touchMap = {
+        madera: 'wood-breeze',
+        pizarra: 'stone-slate',
+        lata: 'water-ripple',
+        papel: 'leaf-rustle',
+        asesoramiento: 'kintsugi-stream',
+        step: 'wood-breeze'
+      };
+      playOrganicPortalTouch(touchMap[lastAtelierMaterial] || 'wood-breeze', 0.68);
+      if (!isHeadlessTest) return;
+    }
+    if (!context || !engine || context.state !== 'running') return;
+    try {
+      const now = context.currentTime + 0.005;
+      const target = engine.compressor || engine.master;
+      const gallery = getGalleryReverb();
+      const ATELIER_VOICINGS = {
+        madera: { notes: [146.83, 220.00, 349.23], wave: 'triangle', cutoff: 640, attack: 0.034, decay: 1.65, spread: 0.032, vol: 0.056 },
+        pizarra: { notes: [220.00, 293.66, 329.63, 440.00], wave: 'sine', cutoff: 720, attack: 0.038, decay: 1.85, spread: 0.038, vol: 0.052 },
+        lata: { notes: [196.00, 233.08, 293.66], wave: 'triangle', cutoff: 620, attack: 0.032, decay: 1.58, spread: 0.030, vol: 0.054 },
+        papel: { notes: [174.61, 261.63, 329.63], wave: 'sine', cutoff: 580, attack: 0.042, decay: 1.72, spread: 0.036, vol: 0.050 },
+        asesoramiento: { notes: [146.83, 220.00, 293.66, 440.00], wave: 'sine', cutoff: 600, attack: 0.045, decay: 1.92, spread: 0.044, vol: 0.052 },
+        step: { notes: [220.00, 293.66], wave: 'sine', cutoff: 560, attack: 0.032, decay: 1.35, spread: 0.028, vol: 0.044 }
+      };
+      const cfg = ATELIER_VOICINGS[lastAtelierMaterial] || ATELIER_VOICINGS.madera;
+      cfg.notes.forEach((freq, idx) => {
+        if (typeof context.createOscillator !== 'function') return;
+        const osc = context.createOscillator();
+        const filter = typeof context.createBiquadFilter === 'function' ? context.createBiquadFilter() : null;
+        const gain = context.createGain();
+        const t0 = now + idx * cfg.spread;
+        const wowCents = Math.sin((idx + 1) * 1.37) * 2.8;
+        osc.type = cfg.wave;
+        osc.frequency.setValueAtTime(freq * Math.pow(2, wowCents / 1200), t0);
+        if (filter) {
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(cfg.cutoff, t0);
+          if (filter.frequency.exponentialRampToValueAtTime) {
+            filter.frequency.exponentialRampToValueAtTime(340, t0 + cfg.decay);
+          }
+          filter.Q.setValueAtTime(0.38, t0);
+        }
+        const voiceVol = cfg.vol * Math.pow(0.9, idx);
+        gain.gain.setValueAtTime(0.0001, t0);
+        if (gain.gain.linearRampToValueAtTime) {
+          gain.gain.linearRampToValueAtTime(voiceVol, t0 + cfg.attack);
+        }
+        if (gain.gain.exponentialRampToValueAtTime) {
+          gain.gain.exponentialRampToValueAtTime(0.0001, t0 + cfg.decay);
+        }
+        osc.connect(filter || gain);
+        if (filter) filter.connect(gain);
+        gain.connect(target);
+        if (gallery?.input) {
+          try { gain.connect(gallery.input); } catch {}
+        }
+        osc.start(t0);
+        osc.stop(t0 + cfg.decay + 0.05);
+      });
+    } catch {}
+  }
   let lastGameOverSlug = '', lastKissSlug = '', lastPuffSlug = '', lastKissTime = 0, lastPuffTime = 0;
   function play8BitGameOver() {
     lastGameOverSlug = 'game-over';
@@ -2727,6 +2799,9 @@
     commissionBridge(bridgeKey, vaivenCount) {
       playCommissionBridgeCue(bridgeKey, vaivenCount);
     },
+    atelierMaterial(materialKey) {
+      playAtelierMaterialCue(materialKey);
+    },
     eguzkilore() {
       playEguzkiloreChime();
     },
@@ -2878,6 +2953,7 @@
     get lastKutxaSlug() { return lastKutxaSlug; },
     get lastGuitarStrumSlug() { return lastGuitarStrumSlug; },
     get lastCommissionBridge() { return lastCommissionBridge; },
+    get lastAtelierMaterial() { return lastAtelierMaterial; },
     get lastMenuNoteIndex() { return lastMenuNoteIndex; },
     get lastPhonographCategory() { return lastPhonographCategory; },
     get lastPhonographFreq() { return lastPhonographFreq; },

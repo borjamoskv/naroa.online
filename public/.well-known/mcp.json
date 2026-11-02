@@ -161,6 +161,10 @@
               "Fecha señalada próxima"
             ],
             "description": "Plazo estimado de entrega deseado."
+          },
+          "note": {
+            "type": "string",
+            "description": "Historia personal, canción u objeto opcional para integrar en el retrato."
           }
         },
         "required": [

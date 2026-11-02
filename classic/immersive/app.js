@@ -4959,12 +4959,31 @@
       return c * c * (3 - 2 * c);
     };
 
-    const bridgeEnvelope = u => {
-      if (u <= -0.12 || u >= 1.12) return 0;
-      if (u < 0.08) return smoothStep01((u + 0.12) / 0.20);
-      if (u > 0.92) return smoothStep01((1.12 - u) / 0.20);
+    const bridgeEnvelope = (u, restStart = 0, restEnd = 0) => {
+      if (u <= -0.35 || u >= 1.35) return 0;
+      if (u < 0.08) {
+        const ramp = smoothStep01((u + 0.35) / 0.43);
+        return restStart > 0 ? (restStart * smoothStep01((u + 0.35) / 0.25) + (1 - restStart) * smoothStep01((u + 0.12) / 0.20)) : smoothStep01((u + 0.12) / 0.20) * ramp;
+      }
+      if (u > 0.92) {
+        const ramp = smoothStep01((1.35 - u) / 0.43);
+        return restEnd > 0 ? (restEnd * smoothStep01((1.35 - u) / 0.25) + (1 - restEnd) * smoothStep01((1.12 - u) / 0.20)) : smoothStep01((1.12 - u) / 0.20) * ramp;
+      }
       return 1;
     };
+
+    let pointerNormX = 0;
+    let pointerNormY = 0;
+    commissionHorizontal.addEventListener('pointermove', e => {
+      if (reduced.matches) return;
+      const vw = innerWidth || 1440;
+      const vh = innerHeight || 900;
+      pointerNormX = clamp((e.clientX / vw - 0.5) * 2, -1, 1);
+      pointerNormY = clamp((e.clientY / vh - 0.5) * 2, -1, 1);
+      if (hState.raf === null) {
+        hState.raf = requestAnimationFrame(stepCommissionHorizontal);
+      }
+    }, { passive: true });
 
     function measureCards() {
       if (!track) return;
@@ -4979,16 +4998,24 @@
       });
     }
 
-    function applyActorPose(el, x, y, rotDeg, scale, opacity, rotYDeg = 0) {
+    function applyActorPose(el, x, y, rotDeg, scale, opacity, rotYDeg = 0, lift = 0) {
       if (!el) return;
       if (opacity <= 0.004) {
         el.style.opacity = '0';
         return;
       }
       el.style.opacity = opacity.toFixed(3);
+      const px = x + pointerNormX * 10 * lift;
+      const py = y + pointerNormY * 7 * lift;
+      const sy = Math.round(8 + lift * 24);
+      const sb = Math.round(12 + lift * 18);
+      el.style.setProperty('--cutout-sy', `${sy}px`);
+      el.style.setProperty('--cutout-sb', `${sb}px`);
       const ry = rotYDeg ? ` rotateY(${rotYDeg.toFixed(1)}deg)` : '';
-      el.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0) translate(-50%,-50%) rotate(${rotDeg.toFixed(1)}deg)${ry} scale(${scale.toFixed(3)})`;
+      el.style.transform = `translate3d(${px.toFixed(1)}px,${py.toFixed(1)}px,0) translate(-50%,-50%) rotate(${rotDeg.toFixed(1)}deg)${ry} scale(${scale.toFixed(3)})`;
     }
+
+    let currentActiveCardIdx = 0;
 
     function stepCommissionHorizontal() {
       hState.raf = null;
@@ -5006,8 +5033,12 @@
       const maxScroll = Math.max(1, stageHeight - vh);
       const progress = clamp(hState.currentY / maxScroll, 0, 1);
       hState.progress = Number(progress.toFixed(4));
+      const hasRealLayout = cachedCenters.length >= 2 && cachedCenters[1] > cachedCenters[0];
       const trackWidth = track ? Math.max(track.scrollWidth || 0, vw * 3.5) : vw * 3.5;
-      const maxTx = Math.max(0, trackWidth - vw);
+      const lastCardCenter = hasRealLayout ? cachedCenters[cards.length - 1] : 0;
+      const maxTx = hasRealLayout && lastCardCenter > vw * 0.5
+        ? Math.max(0, lastCardCenter - vw * 0.5)
+        : Math.max(0, trackWidth - vw);
       const tx = reduced.matches ? 0 : -progress * maxTx;
       hState.translateX = Number(tx.toFixed(2));
       if (track) {
@@ -5020,7 +5051,6 @@
       }
       const viewportCenter = vw * 0.5;
       const effectiveRadius = vw * 0.58;
-      const hasRealLayout = cachedCenters.length >= 2 && cachedCenters[1] > cachedCenters[0];
       const fallbackSpan = maxTx / Math.max(1, cards.length - 1);
       const screenXs = [];
       const dims = [];
@@ -5047,6 +5077,7 @@
           activeIdx = idx;
         }
       });
+      currentActiveCardIdx = activeIdx;
 
       if (!reduced.matches && screenXs.length >= 4) {
         const centerY = vh * 0.50;
@@ -5071,16 +5102,17 @@
           }
         });
 
-        // 1. Custom Jaio -> Amy Rocks: botón rojo cosido saltando con giro 3D hacia la pizarra
+        // 1. Custom Jaio -> Amy Rocks: botón rojo cosido despegándose de la manga vaquera hacia la pizarra
         {
           const u0 = bridgeState['jaio-amy'].u;
-          const op0 = bridgeEnvelope(u0);
+          const op0 = bridgeEnvelope(u0, 0.36, 0.22);
           const t0 = smoothStep01(u0);
+          const lift0 = Math.sin(Math.PI * t0);
           const xStart = screenXs[0] - dims[0].w * 0.35;
           const yStart = centerY + dims[0].h * 0.21;
           const xEnd = screenXs[1] - dims[1].w * 0.38;
           const yEnd = centerY + dims[1].h * 0.06;
-          const arc0 = -Math.sin(Math.PI * t0) * Math.min(vh * 0.19, 165) + velLift * Math.sin(Math.PI * t0);
+          const arc0 = -lift0 * Math.min(vh * 0.19, 165) + velLift * lift0;
           const bx = xStart + (xEnd - xStart) * t0;
           const by = yStart + (yEnd - yStart) * t0 + arc0;
           applyActorPose(
@@ -5088,82 +5120,95 @@
             bx,
             by,
             t0 * 540,
-            0.90 + Math.sin(Math.PI * t0) * 0.28,
+            0.90 + lift0 * 0.28,
             op0,
-            Math.sin(t0 * Math.PI * 2) * 32
+            Math.sin(t0 * Math.PI * 2) * 32,
+            lift0
           );
         }
 
         // 2. Amy Rocks -> Amor en Conserva: rosas de papel violeta y carmesí flotando hacia la lata
         {
           const u1 = bridgeState['amy-amor'].u;
-          const op1 = bridgeEnvelope(u1);
+          const op1 = bridgeEnvelope(u1, 0.18, 0.38);
           const tP = smoothStep01(clamp(u1 * 1.06, 0, 1));
           const tR = smoothStep01(clamp((u1 - 0.07) * 1.08, 0, 1));
+          const liftP = Math.sin(Math.PI * tP);
+          const liftR = Math.sin(Math.PI * tR);
           const x1Start = screenXs[1] + dims[1].w * 0.35;
           const y1Start = centerY - dims[1].h * 0.10;
           const pxEnd = screenXs[2] - dims[2].w * 0.31;
           const pyEnd = centerY + dims[2].h * 0.27;
           const rxEnd = screenXs[2] - dims[2].w * 0.20;
           const ryEnd = centerY + dims[2].h * 0.29;
-          const pArc = -Math.sin(Math.PI * tP) * Math.min(vh * 0.14, 120) + velLift * 0.7;
-          const rArc = Math.sin(Math.PI * tR) * Math.min(vh * 0.08, 68) - Math.sin(Math.PI * tR) * 44;
+          const pArc = -liftP * Math.min(vh * 0.14, 120) + velLift * 0.7;
+          const rArc = liftR * Math.min(vh * 0.08, 68) - liftR * 44;
           applyActorPose(
             actorPurpleRose,
             x1Start + (pxEnd - x1Start) * tP,
             y1Start + (pyEnd - y1Start) * tP + pArc,
             -26 + tP * 26 + Math.sin(tP * Math.PI * 2) * 14,
-            0.88 + Math.sin(Math.PI * tP) * 0.24,
-            op1
+            0.88 + liftP * 0.24,
+            op1,
+            0,
+            liftP
           );
           applyActorPose(
             actorRedRose,
             (x1Start + 22) + (rxEnd - (x1Start + 22)) * tR,
             (y1Start + 34) + (ryEnd - (y1Start + 34)) * tR + rArc,
             30 - tR * 30 - Math.sin(tR * Math.PI * 2) * 16,
-            0.85 + Math.sin(Math.PI * tR) * 0.22,
-            op1 * smoothStep01((u1 + 0.08) / 0.18)
+            0.85 + liftR * 0.22,
+            op1 * smoothStep01((u1 + 0.08) / 0.18),
+            0,
+            liftR
           );
         }
 
         // 3. Amor en Conserva -> Rara Avis: cala blanca inclinándose hacia el marco dorado
         {
           const u2 = bridgeState['amor-rara'].u;
-          const op2 = bridgeEnvelope(u2);
+          const op2 = bridgeEnvelope(u2, 0.34, 0.24);
           const t2 = smoothStep01(u2);
+          const lift2 = Math.sin(Math.PI * t2);
           const x2Start = screenXs[2] + dims[2].w * 0.06;
           const y2Start = centerY - dims[2].h * 0.35;
           const x2End = screenXs[3] - dims[3].w * 0.30;
           const y2End = centerY - dims[3].h * 0.14;
-          const arc2 = -Math.sin(Math.PI * t2) * Math.min(vh * 0.13, 112) + velLift * 0.6;
+          const arc2 = -lift2 * Math.min(vh * 0.13, 112) + velLift * 0.6;
           applyActorPose(
             actorCalla,
             x2Start + (x2End - x2Start) * t2,
             y2Start + (y2End - y2Start) * t2 + arc2,
-            -6 + Math.sin(Math.PI * t2) * 26,
-            0.92 + Math.sin(Math.PI * t2) * 0.18,
-            op2
+            -6 + lift2 * 26,
+            0.92 + lift2 * 0.18,
+            op2,
+            0,
+            lift2
           );
         }
 
         // 4. Rara Avis -> El Comienzo: pluma de pavo real flotando como cálamo hacia la invitación final
         if (screenXs[4] !== undefined) {
           const u3 = bridgeState['rara-closing'].u;
-          const op3 = bridgeEnvelope(u3);
+          const op3 = bridgeEnvelope(u3, 0.34, 0.28);
           const t3 = smoothStep01(u3);
+          const lift3 = Math.sin(Math.PI * t3);
           const x3Start = screenXs[3] + dims[3].w * 0.27;
           const y3Start = centerY + dims[3].h * 0.32;
           const x3End = screenXs[4] - dims[4].w * 0.24;
           const y3End = centerY - dims[4].h * 0.18;
           const swayX = Math.sin(t3 * Math.PI * 2.5) * 18;
-          const arc3 = -Math.sin(Math.PI * t3) * Math.min(vh * 0.14, 118);
+          const arc3 = -lift3 * Math.min(vh * 0.14, 118);
           applyActorPose(
             actorPeacock,
             x3Start + (x3End - x3Start) * t3 + swayX,
             y3Start + (y3End - y3Start) * t3 + arc3,
             -16 + t3 * 28 + Math.cos(t3 * Math.PI * 2) * 11,
-            0.90 + Math.sin(Math.PI * t3) * 0.22,
-            op3
+            0.90 + lift3 * 0.22,
+            op3,
+            0,
+            lift3
           );
         }
       }
@@ -5184,25 +5229,64 @@
       }
     }
 
+    function jumpToCommissionCard(targetIdx) {
+      const idx = clamp(targetIdx, 0, cards.length - 1);
+      const vh = innerHeight || 900;
+      const vw = innerWidth || 1440;
+      const stageHeight = commissionHorizontal.offsetHeight || vh * 4.5;
+      const maxScroll = Math.max(1, stageHeight - vh);
+      const hasRealLayout = cachedCenters.length >= 2 && cachedCenters[1] > cachedCenters[0];
+      const trackWidth = track ? Math.max(track.scrollWidth || 0, vw * 3.5) : vw * 3.5;
+      const lastCardCenter = hasRealLayout ? cachedCenters[cards.length - 1] : 0;
+      const maxTx = hasRealLayout && lastCardCenter > vw * 0.5
+        ? Math.max(0, lastCardCenter - vw * 0.5)
+        : Math.max(0, trackWidth - vw);
+      const cX = hasRealLayout
+        ? (cachedCenters[idx] || 0)
+        : (vw * 0.5 + idx * (maxTx / Math.max(1, cards.length - 1)));
+      const targetTx = clamp(cX - vw * 0.5, 0, maxTx);
+      const p = maxTx > 0 ? targetTx / maxTx : 0;
+      window.scrollTo({ top: p * maxScroll, behavior: 'smooth' });
+    }
+
     measureCards();
+    if (track && typeof ResizeObserver === 'function') {
+      const ro = new ResizeObserver(() => {
+        measureCards();
+        scheduleCommissionHorizontal();
+      });
+      ro.observe(track);
+      cards.forEach(c => ro.observe(c));
+    }
+    $$('img', commissionHorizontal).forEach(img => {
+      if (!img.complete) {
+        img.addEventListener('load', () => {
+          measureCards();
+          scheduleCommissionHorizontal();
+        }, { once: true });
+      }
+    });
     addEventListener('scroll', scheduleCommissionHorizontal, { passive: true });
     addEventListener('resize', () => { measureCards(); scheduleCommissionHorizontal(); }, { passive: true });
+    addEventListener('keydown', e => {
+      if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
+      const tag = (e.target?.tagName || '').toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || tag === 'select' || e.target?.isContentEditable) return;
+      const vh = innerHeight || 900;
+      const stageHeight = commissionHorizontal.offsetHeight || vh * 4.5;
+      if ((scrollY || 0) > stageHeight - vh * 0.25) return;
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        jumpToCommissionCard(currentActiveCardIdx + 1);
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        jumpToCommissionCard(currentActiveCardIdx - 1);
+      }
+    });
     dotBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         const targetIdx = parseInt(btn.dataset.jumpCard, 10);
-        const vh = innerHeight || 900;
-        const vw = innerWidth || 1440;
-        const stageHeight = commissionHorizontal.offsetHeight || vh * 4.5;
-        const maxScroll = Math.max(1, stageHeight - vh);
-        const trackWidth = track ? Math.max(track.scrollWidth || 0, vw * 3.5) : vw * 3.5;
-        const maxTx = Math.max(0, trackWidth - vw);
-        const hasRealLayout = cachedCenters.length >= 2 && cachedCenters[1] > cachedCenters[0];
-        const cX = hasRealLayout
-          ? (cachedCenters[targetIdx] || 0)
-          : (vw * 0.5 + targetIdx * (maxTx / Math.max(1, cards.length - 1)));
-        const targetTx = clamp(cX - vw * 0.5, 0, maxTx);
-        const p = maxTx > 0 ? targetTx / maxTx : 0;
-        window.scrollTo({ top: p * maxScroll, behavior: 'smooth' });
+        if (!Number.isNaN(targetIdx)) jumpToCommissionCard(targetIdx);
       });
     });
     stepCommissionHorizontal();
@@ -5216,11 +5300,17 @@
         stepCommissionHorizontal();
         return this.getState();
       },
+      jumpToCard(idx = 0) {
+        jumpToCommissionCard(idx);
+        return this.getState();
+      },
       getState: () => ({
         backend: 'substep-horizontal-parallax-v1',
         progress: hState.progress,
         translateX: hState.translateX,
         cards: cards.length,
+        dots: dotBtns.length,
+        activeCardIndex: currentActiveCardIdx,
         hasDetailPips: $$('.commission-detail-pip', commissionHorizontal).length,
         cutoutActors: $$('[data-commission-actor]', commissionHorizontal).length,
         activeBridge: activeBridgeKey,
@@ -5329,12 +5419,14 @@
   window.NAROA_ATTRIBUTION = attribution;
 
   const configurator = $('[data-commission-configurator]');
-  let supportEl, motifEl, timingEl, updateLink = () => {};
+  let supportEl, motifEl, timingEl, noteEl, updateLink = () => {};
   const commissionState = {
     backend: 'commission-atelier-configurator-v2',
     selectedSupport: 'Collage textil sobre madera',
     selectedMotif: 'Retrato individual',
     selectedTiming: 'Sin prisa (2 a 4 semanas)',
+    selectedNote: '',
+    lastCopiedMessage: '',
     seededFromUrl: false,
     seedSupport: null
   };
@@ -5342,24 +5434,70 @@
     supportEl = $('#cfg-support');
     motifEl = $('#cfg-motif');
     timingEl = $('#cfg-timing');
+    noteEl = $('#cfg-note');
     const btn = $('#cfg-whatsapp-btn');
     const emailBtn = $('#cfg-email-btn');
+    const copyBtn = $('#cfg-copy-btn');
     const previewEl = $('#cfg-preview');
     const seedBanner = $('#cfg-seed-banner');
     const visualImg = $('#cfg-visual-img');
     const visualTitle = $('#cfg-visual-title');
     const visualTag = $('#cfg-visual-tag');
+    const swatchCutout = $('#cfg-swatch-cutout');
     const supportCards = $$('[data-support-card]');
     const compareRows = $$('[data-compare-support]');
     const pickBtns = $$('[data-pick-support]');
     const pillBtns = $$('[data-cfg-pill]', configurator);
+    const mobileCta = $('[data-atelier-mobile-cta]');
+    const mobileCtaSummary = $('[data-mobile-cta-summary]');
+    const mobileCtaWa = $('[data-mobile-cta-wa]');
 
     const supportVisualMap = {
-      'Collage textil sobre madera': { slug: 'custom-jaio', title: 'Custom Jaio · Collage textil y madera', tag: 'Tela vaquera, costuras y dibujo' },
-      'Caja personalizada u objeto': { slug: 'amor-en-conserva', title: 'Amor en Conserva · Caja de memoria 3D', tag: 'Objeto tridimensional intervenido' },
-      'Pizarra natural rústica': { slug: 'amy-rocks', title: 'Amy Rocks · Pizarra natural y mica', tag: 'Piedra de cantera con escamas minerales' },
-      'Retrato al óleo o grafito': { slug: 'rara-avis', title: 'Rara Avis · Pastel, grafito y lápiz', tag: 'Pastel Conté y collage sobre papel' },
-      'Asesoramiento en estudio': { slug: 'el-armigo-atomico', title: 'El Armigo Atómico · Asesoramiento con Naroa', tag: 'Elección conjunta en el estudio de Bilbao' }
+      'Collage textil sobre madera': {
+        slug: 'custom-jaio',
+        title: 'Custom Jaio · Collage textil y madera',
+        tag: 'Tela vaquera, costuras y dibujo',
+        shortName: 'Tela Vaquera & Costuras Vivas',
+        mobileTag: 'Tela Vaquera',
+        swatchSrc: '/images/catalogo/commission-jaio-button.webp',
+        swatchAlt: 'Botón rojo cosido a mano sobre tela vaquera'
+      },
+      'Caja personalizada u objeto': {
+        slug: 'amor-en-conserva',
+        title: 'Amor en Conserva · Caja de memoria 3D',
+        tag: 'Objeto tridimensional intervenido',
+        shortName: 'Amor en Conserva · Lata 3D',
+        mobileTag: 'Lata 3D',
+        swatchSrc: '/images/catalogo/commission-amor-purple-rose.webp',
+        swatchAlt: 'Rosa morada de collage en lata de conserva'
+      },
+      'Pizarra natural rústica': {
+        slug: 'amy-rocks',
+        title: 'Amy Rocks · Pizarra natural y mica',
+        tag: 'Piedra de cantera con escamas minerales',
+        shortName: 'Pizarra Natural & Mica Mineral',
+        mobileTag: 'Pizarra & Mica',
+        swatchSrc: '/images/catalogo/commission-amor-red-rose.webp',
+        swatchAlt: 'Rosa carmesí sobre pizarra con mica mineral'
+      },
+      'Retrato al óleo o grafito': {
+        slug: 'rara-avis',
+        title: 'Rara Avis · Pastel, grafito y lápiz',
+        tag: 'Pastel Conté y collage sobre papel',
+        shortName: 'Papel de Algodón, Pastel & Grafito',
+        mobileTag: 'Papel & Grafito',
+        swatchSrc: '/images/catalogo/commission-rara-peacock.webp',
+        swatchAlt: 'Pluma de pavo real sobre papel de algodón'
+      },
+      'Asesoramiento en estudio': {
+        slug: 'el-armigo-atomico',
+        title: 'El Armigo Atómico · Asesoramiento con Naroa',
+        tag: 'Elección conjunta en el estudio de Bilbao',
+        shortName: 'Asesoramiento en estudio con Naroa',
+        mobileTag: 'Asesoramiento',
+        swatchSrc: '/images/catalogo/commission-amor-calla.webp',
+        swatchAlt: 'Cala blanca esculpida de estudio'
+      }
     };
 
     const syncActiveSupportUI = supportVal => {
@@ -5381,6 +5519,10 @@
       if (visualImg && foundWork?.cover) visualImg.src = foundWork.cover;
       if (visualTitle) visualTitle.textContent = vMeta.title;
       if (visualTag) visualTag.textContent = vMeta.tag;
+      if (swatchCutout && vMeta.swatchSrc) {
+        swatchCutout.src = vMeta.swatchSrc;
+        swatchCutout.alt = vMeta.swatchAlt;
+      }
     };
 
     updateLink = () => {
@@ -5388,16 +5530,27 @@
       const s = supportEl.value;
       const m = motifEl.value;
       const t = timingEl.value;
+      const n = (noteEl?.value || '').trim();
       commissionState.selectedSupport = s;
       commissionState.selectedMotif = m;
       commissionState.selectedTiming = t;
+      commissionState.selectedNote = n;
       syncActiveSupportUI(s);
+      const vMeta = supportVisualMap[s] || supportVisualMap['Collage textil sobre madera'];
+      const supportDesc = vMeta?.shortName ? `${vMeta.shortName} (${s})` : s;
+      const noteClause = n ? ` Historia o recuerdo a integrar: «${n}».` : ' Tengo una idea y fotos para contarte.';
       const refSuffix = attribution.generative ? ` [vía ${attribution.source}]` : '';
-      const msg = `Hola Naroa, me gustaría consultar un encargo de retrato sobre ${s} para ${m} con plazo ${t}.${refSuffix}`;
+      const msg = `Aupa Naroa! Me gustaría consultar un encargo de retrato sobre ${supportDesc} para ${m} con plazo ${t}.${noteClause}${refSuffix}`;
       if (previewEl) previewEl.textContent = msg;
-      btn.href = `https://wa.me/34636060609?text=${encodeURIComponent(msg)}`;
+      const waHref = `https://wa.me/34636060609?text=${encodeURIComponent(msg)}`;
+      btn.href = waHref;
       if (emailBtn) {
         emailBtn.href = `mailto:naroa@naroa.eu?subject=${encodeURIComponent('Consulta encargo: ' + s)}&body=${encodeURIComponent(msg)}`;
+      }
+      if (mobileCtaWa) mobileCtaWa.href = waHref;
+      if (mobileCtaSummary) {
+        const shortMotif = m === 'Retrato individual' ? 'Individual' : m;
+        mobileCtaSummary.textContent = `${vMeta?.mobileTag || s} · ${shortMotif}`;
       }
     };
 
@@ -5427,9 +5580,13 @@
       const params = new URLSearchParams(location.search);
       const urlSupport = params.get('soporte') || params.get('support');
       const urlMotif = params.get('motivo') || params.get('motif');
+      const urlNote = params.get('nota') || params.get('note');
       if (urlMotif && motifEl) {
         const mOpt = Array.from(motifEl.options).find(o => o.value.toLowerCase().includes(urlMotif.toLowerCase()));
         if (mOpt) motifEl.value = mOpt.value;
+      }
+      if (urlNote && noteEl) {
+        noteEl.value = urlNote.slice(0, 180);
       }
       if (urlSupport) {
         selectSupport(urlSupport, true);
@@ -5443,22 +5600,38 @@
     pickBtns.forEach(pickBtn => {
       pickBtn.addEventListener('click', () => {
         const sup = pickBtn.dataset.pickSupport;
+        const wTitle = pickBtn.dataset.workTitle;
         if (selectSupport(sup, false)) {
           if (seedBanner) {
             seedBanner.hidden = false;
-            seedBanner.textContent = `✦ Soporte elegido en el archivo: ${supportEl.value}`;
+            seedBanner.textContent = wTitle
+              ? `✦ Materia cargada desde «${wTitle}»: ${supportEl.value}`
+              : `✦ Soporte elegido en el archivo: ${supportEl.value}`;
           }
+          window.NAROA_SOUND?.atelierMaterial?.(supportEl.value);
           configurator.scrollIntoView?.({ behavior: 'smooth', block: 'center' });
         }
       });
     });
 
-    compareRows.forEach(row => {
-      row.addEventListener('click', () => {
-        const sup = row.dataset.compareSupport;
-        if (selectSupport(sup, false) && seedBanner) {
+    const handleCompareRowActivate = row => {
+      const sup = row.dataset.compareSupport;
+      if (selectSupport(sup, false)) {
+        if (seedBanner) {
           seedBanner.hidden = false;
           seedBanner.textContent = `✦ Soporte seleccionado de la tabla técnica: ${supportEl.value}`;
+        }
+        window.NAROA_SOUND?.atelierMaterial?.(supportEl.value);
+        configurator.scrollIntoView?.({ behavior: 'smooth', block: 'center' });
+      }
+    };
+
+    compareRows.forEach(row => {
+      row.addEventListener('click', () => handleCompareRowActivate(row));
+      row.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleCompareRowActivate(row);
         }
       });
     });
@@ -5472,30 +5645,37 @@
         if (group === 'timing' && timingEl) timingEl.value = val;
         updateLink();
         if (group === 'support') {
-          if (val.includes('Pizarra')) {
-            window.NAROA_SOUND?.organicTouch?.('stone-slate', 0.88);
-            window.NAROA_SOUND?.eguzkilore?.();
-          } else if (val.includes('Caja') || val.includes('Lata') || val.includes('objeto')) {
-            window.NAROA_SOUND?.organicTouch?.('water-ripple', 0.85);
-            window.NAROA_SOUND?.canPeel?.();
-          } else if (val.includes('Collage') || val.includes('madera') || val.includes('Vaquera')) {
-            window.NAROA_SOUND?.organicTouch?.('wood-breeze', 0.86);
-          } else if (val.includes('óleo') || val.includes('grafito') || val.includes('Papel')) {
-            window.NAROA_SOUND?.organicTouch?.('leaf-rustle', 0.82);
-            window.NAROA_SOUND?.shaker?.();
-          } else {
-            window.NAROA_SOUND?.stencilRollerWipe?.(val);
-          }
+          window.NAROA_SOUND?.atelierMaterial?.(val);
         } else {
-          window.NAROA_SOUND?.stencilRollerWipe?.(val);
+          window.NAROA_SOUND?.atelierMaterial?.(group || val);
         }
       });
     });
 
+    if (copyBtn) {
+      copyBtn.addEventListener('click', async () => {
+        const msg = previewEl?.textContent || '';
+        commissionState.lastCopiedMessage = msg;
+        try {
+          await navigator.clipboard?.writeText?.(msg);
+        } catch {}
+        const span = $('span', copyBtn) || copyBtn;
+        const prevText = span.textContent;
+        span.textContent = '✦ Carta copiada al portapapeles';
+        copyBtn.classList.add('is-copied');
+        window.NAROA_SOUND?.atelierMaterial?.('paper');
+        setTimeout(() => {
+          span.textContent = prevText;
+          copyBtn.classList.remove('is-copied');
+        }, 2200);
+      });
+    }
+
     [supportEl, motifEl, timingEl].forEach(el => el?.addEventListener('change', updateLink));
-    const mobileCta = $('[data-atelier-mobile-cta]');
+    noteEl?.addEventListener('input', updateLink);
+    noteEl?.addEventListener('change', updateLink);
     if (mobileCta && 'IntersectionObserver' in window) {
-      const hideZones = [configurator, $('.atelier-hero')].filter(Boolean);
+      const hideZones = [configurator, $('.commission-minimal'), $('.atelier-hero')].filter(Boolean);
       const visible = new Set();
       const ctaObserver = new IntersectionObserver(entries => {
         entries.forEach(entry => entry.isIntersecting ? visible.add(entry.target) : visible.delete(entry.target));
@@ -5505,6 +5685,11 @@
     }
     window.NAROA_COMMISSION = {
       selectSupport,
+      setNote(note = '') {
+        if (noteEl) noteEl.value = String(note).slice(0, 180);
+        updateLink();
+        return this.getState();
+      },
       getState: () => ({ ...commissionState })
     };
   }
@@ -5573,15 +5758,19 @@
           const s = params.support || 'Collage textil sobre madera';
           const m = params.motif || 'Retrato individual';
           const t = params.timing || 'Sin prisa (2 a 4 semanas)';
+          const n = typeof params.note === 'string' ? params.note.trim().slice(0, 180) : '';
           if (supportEl) { supportEl.value = s; }
           if (motifEl) { motifEl.value = m; }
           if (timingEl) { timingEl.value = t; }
+          if (noteEl && typeof params.note === 'string') { noteEl.value = n; }
           updateLink();
-          const msg = `Hola Naroa, me gustaría consultar un encargo de retrato sobre ${s} para ${m} con plazo ${t}.`;
+          const noteSuffix = n ? ` Historia o recuerdo a integrar: «${n}».` : '';
+          const msg = `Aupa Naroa! Me gustaría consultar un encargo de retrato sobre ${s} para ${m} con plazo ${t}.${noteSuffix}`;
           return {
             support: s,
             motif: m,
             timing: t,
+            note: n,
             message: msg,
             attribution: window.NAROA_ATTRIBUTION,
             whatsapp_url: `https://wa.me/34636060609?text=${encodeURIComponent(msg)}`,

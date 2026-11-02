@@ -1479,6 +1479,55 @@ class SoundEngine {
       // Ignore audio errors
     }
   }
+
+  /**
+   * Warm analog tactile material cue for the Bespoke Commission Atelier (#configurador).
+   * Strictly respects this.enabled and INV_WARMTH_ACOUSTIC_GATE (146.83–440 Hz, Re menor, felt attack, silk lowpass <= 720 Hz).
+   */
+  public playAtelierMaterialCue(
+    materialKey: 'madera' | 'pizarra' | 'lata' | 'papel' | 'asesoramiento' | 'step' = 'madera'
+  ) {
+    if (!this.enabled) return
+    try {
+      this.initCtx()
+      if (!this.ctx) return
+      const now = this.ctx.currentTime + 0.005
+      const out = this.getOut()
+      const voicings: Record<string, { notes: number[]; wave: OscillatorType; cutoff: number; attack: number; decay: number; spread: number }> = {
+        madera: { notes: [146.83, 220.00, 349.23], wave: 'triangle', cutoff: 640, attack: 0.034, decay: 1.65, spread: 0.032 },
+        pizarra: { notes: [220.00, 293.66, 329.63, 440.00], wave: 'sine', cutoff: 720, attack: 0.038, decay: 1.85, spread: 0.038 },
+        lata: { notes: [196.00, 233.08, 293.66], wave: 'triangle', cutoff: 620, attack: 0.032, decay: 1.58, spread: 0.030 },
+        papel: { notes: [174.61, 261.63, 329.63], wave: 'sine', cutoff: 580, attack: 0.042, decay: 1.72, spread: 0.036 },
+        asesoramiento: { notes: [146.83, 220.00, 293.66, 440.00], wave: 'sine', cutoff: 600, attack: 0.045, decay: 1.92, spread: 0.044 },
+        step: { notes: [220.00, 293.66], wave: 'sine', cutoff: 560, attack: 0.032, decay: 1.35, spread: 0.028 }
+      }
+      const cfg = voicings[materialKey] || voicings.madera
+      cfg.notes.forEach((freq, idx) => {
+        if (!this.ctx) return
+        const osc = this.ctx.createOscillator()
+        const filter = this.ctx.createBiquadFilter()
+        const gain = this.ctx.createGain()
+        const t0 = now + idx * cfg.spread
+        const wowCents = Math.sin((idx + 1) * 1.37) * 2.8
+        osc.type = cfg.wave
+        osc.frequency.setValueAtTime(freq * Math.pow(2, wowCents / 1200), t0)
+        filter.type = 'lowpass'
+        filter.frequency.setValueAtTime(cfg.cutoff, t0)
+        filter.frequency.exponentialRampToValueAtTime(340, t0 + cfg.decay)
+        filter.Q.setValueAtTime(0.38, t0)
+        gain.gain.setValueAtTime(0.0001, t0)
+        gain.gain.linearRampToValueAtTime(0.052 * Math.pow(0.9, idx), t0 + cfg.attack)
+        gain.gain.exponentialRampToValueAtTime(0.0001, t0 + cfg.decay)
+        osc.connect(filter)
+        filter.connect(gain)
+        gain.connect(out)
+        osc.start(t0)
+        osc.stop(t0 + cfg.decay + 0.05)
+      })
+    } catch {
+      // Ignore audio errors
+    }
+  }
 }
 
 export const sound = new SoundEngine()

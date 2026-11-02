@@ -787,6 +787,10 @@ def build(output):
                             ],
                             "description": "Plazo estimado de entrega deseado.",
                         },
+                        "note": {
+                            "type": "string",
+                            "description": "Historia personal, canción u objeto opcional para integrar en el retrato.",
+                        },
                     },
                     "required": ["support", "motif"],
                 },
@@ -1259,13 +1263,13 @@ def build(output):
     page("/cuaderno/", "Cuaderno", "Historias de obras, procesos y encuentros. El cuaderno de la artista Naroa Gutiérrez Gil.", '<main id="main">' + notebook + '</main>', "/images/cuaderno/cuaderno-twister-collage.jpg", schema=blog_schema)
 
     commission_examples = [
-        (jaio, "Madera y textil"),
-        (amy, "Pizarra y mica"),
-        (amor, "Caja 3D"),
-        (rara, "Papel y grafito"),
+        (jaio, "Madera noble & textil cosido", "Collage textil sobre madera"),
+        (amy, "Pizarra natural & mica mineral", "Pizarra natural rústica"),
+        (amor, "Lata de conserva 3D", "Caja personalizada u objeto"),
+        (rara, "Papel algodón & grafito", "Retrato al óleo o grafito"),
     ]
     examples_html = ''.join(
-        f'<article class="commission-example" data-parallax-card data-card-index="{idx}">'
+        f'<article class="commission-example" data-parallax-card data-card-index="{idx}" data-work-slug="{ex["slug"]}">'
         f'<span class="commission-parallax-num" aria-hidden="true">0{idx + 1}</span>'
         f'<div class="commission-stage-wrap">'
         f'<a class="commission-example-photo" href="/obra/{ex["slug"]}/">'
@@ -1275,16 +1279,25 @@ def build(output):
         f'<img src="{ex["photos"][1]["src"] if len(ex.get("photos", [])) > 1 else ex["cover"]}" alt="{esc(ex["title"])} · Detalle matérico" loading="lazy" decoding="async">'
         f'</a>'
         f'<div class="commission-example-bar">'
+        f'<div class="commission-work-meta">'
         f'<a class="commission-work-title" href="/obra/{ex["slug"]}/">{esc(ex["title"])}</a>'
+        f'<span class="commission-support-tag">{esc(support_label)}</span>'
+        f'</div>'
+        f'<div class="commission-bar-actions">'
+        f'<button type="button" class="commission-seed-btn" data-pick-support="{esc(support_val)}" data-work-title="{esc(ex["title"])}">En esta materia ↓</button>'
         f'<a class="commission-pick-btn" href="https://wa.me/34636060609?text={quote("Hola Naroa, me gustaría un encargo inspirado en " + ex["title"] + ".")}" target="_blank" rel="noopener noreferrer">Encargar ↗</a>'
         f'</div>'
         f'</div>'
+        f'</div>'
         f'</article>'
-        for idx, (ex, _) in enumerate(commission_examples)
+        for idx, (ex, support_label, support_val) in enumerate(commission_examples)
     )
-    progress_dots = ''.join(
-        f'<button type="button" class="commission-dot{" is-active" if idx == 0 else ""}" data-jump-card="{idx}" aria-label="Ir a obra {idx + 1}: {esc(ex["title"])}"><span>0{idx + 1}</span></button>'
-        for idx, (ex, _) in enumerate(commission_examples)
+    progress_dots = (
+        ''.join(
+            f'<button type="button" class="commission-dot{" is-active" if idx == 0 else ""}" data-jump-card="{idx}" aria-label="Ir a obra {idx + 1}: {esc(ex["title"])}"><span>0{idx + 1}</span></button>'
+            for idx, (ex, _, _) in enumerate(commission_examples)
+        )
+        + '<button type="button" class="commission-dot" data-jump-card="4" aria-label="Ir a cierre: Componer tu encargo"><span>05</span></button>'
     )
 
     commission_faqs = [
@@ -1317,7 +1330,7 @@ def build(output):
         '<thead><tr><th scope="col">Materia</th><th scope="col">Materiales</th><th scope="col">Dimensiones</th><th scope="col">Plazo</th><th scope="col">Alma de la pieza</th></tr></thead>'
         '<tbody>'
         + ''.join(
-            f'<tr data-compare-support="{esc(s)}"><th scope="row">{esc(s)}</th><td>{esc(m)}</td><td>{esc(d)}</td><td>{esc(t)}</td><td>{esc(c)}</td></tr>'
+            f'<tr data-compare-support="{esc(s)}" tabindex="0" role="button" aria-label="Seleccionar materia: {esc(s)}"><th scope="row">{esc(s)}</th><td>{esc(m)}</td><td>{esc(d)}</td><td>{esc(t)}</td><td>{esc(c)}</td></tr>'
             for s, m, d, t, c in compare_rows
         )
         + '</tbody></table></div>'
@@ -1377,6 +1390,10 @@ def build(output):
         '<option value="Fecha señalada próxima">Fecha señalada próxima</option>'
         '</select>'
         '</div>'
+        '<div class="configurator-field">'
+        '<label for="cfg-note"><span class="field-step">PASO 04</span> <span class="field-title">Un guiño, canción o recuerdo para colar en el cuadro <small style="font-weight:400;opacity:0.72">(opcional)</small></span></label>'
+        '<input id="cfg-note" type="text" class="configurator-note-input" maxlength="180" placeholder="Ej.: Le flipa Extremoduro, tiene un perro salchicha o guardamos entradas de aquel concierto..." autocomplete="off" data-cfg-note>'
+        '</div>'
         '</div>'
         '<aside class="atelier-OrderCard" aria-label="Carta manuscrita a Naroa">'
         '<div class="atelier-card-postit">'
@@ -1385,6 +1402,7 @@ def build(output):
         '</div>'
         '<div class="atelier-card-visual">'
         f'<img id="cfg-visual-img" src="{jaio["cover"]}" alt="Muestra de soporte seleccionado" width="480" height="360" loading="lazy">'
+        '<img id="cfg-swatch-cutout" class="atelier-card-swatch" src="/images/catalogo/commission-jaio-button.webp" width="131" height="140" alt="Relieve táctil del soporte seleccionado" decoding="async">'
         '<div class="atelier-card-caption">'
         '<span id="cfg-visual-tag">Tela vaquera, costuras y dibujo</span>'
         '<strong id="cfg-visual-title">Custom Jaio · Collage textil y madera</strong>'
@@ -1400,6 +1418,9 @@ def build(output):
         f'<a id="cfg-email-btn" class="commission-cta-secondary" href="mailto:naroa@naroa.eu?subject={quote("Consulta encargo con Naroa")}&body={quote(default_cfg_msg)}">'
         '<span>Enviar por Correo Electrónico ↗</span>'
         '</a>'
+        '<button type="button" id="cfg-copy-btn" class="commission-copy-btn" data-cfg-copy>'
+        '<span>Copiar texto de la carta ⎘</span>'
+        '</button>'
         '</div>'
         '<div class="atelier-handshake-guarantee">'
         '<span>🤝 Trato directo con la artista</span>'
@@ -1421,21 +1442,21 @@ def build(output):
         f'</header>'
         f'<div class="commission-examples" data-horizontal-track>'
         f'{examples_html}'
-        f'<div class="closing" data-parallax-card>'
+        f'<div class="closing" data-parallax-card data-card-index="4">'
         f'<div class="atelier-tape-label">✦ EL COMIENZO ✦</div>'
         f'<p class="hand" style="font-size:clamp(38px,4.8vw,60px);margin:0;color:#fffdf4">¿A quién te gustaría retratar?</p>'
         f'<p style="max-width:520px;text-align:center;font-size:15px;line-height:1.6;color:rgba(255,253,244,0.85);margin:-4px 0 8px">Una persona, una historia, un tesoro guardado en una caja de galletas. No hace falta traerlo todo pensado.</p>'
         f'<div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center">'
         f'<a class="commission-cta-btn" href="https://wa.me/34636060609?text=Hola%20Naroa%2C%20quiero%20encargar%20una%20obra." target="_blank" rel="noopener noreferrer">WhatsApp directo ↗</a>'
-        f'<a class="commission-pick-btn" href="#taller" style="background:transparent;color:#fffdf4;border:1px solid rgba(255,255,255,0.45)">Componer en el taller ↓</a>'
+        f'<a class="commission-pick-btn" href="#configurador" style="background:transparent;color:#fffdf4;border:1px solid rgba(255,255,255,0.45)">Componer en el taller ↓</a>'
         f'</div>'
         f'<a class="text-link" href="mailto:naroa@naroa.eu?subject=Encargo">naroa@naroa.eu ↗</a>'
         f'</div>'
         f'</div>'
         f'<div class="commission-cutouts-stage" data-commission-cutouts aria-hidden="true">'
         f'<img class="commission-cutout-actor commission-cutout--button" data-commission-actor="jaio-button" src="/images/catalogo/commission-jaio-button.webp" width="131" height="140" alt="Botón decorativo de costura intervenido" decoding="async">'
-        f'<img class="commission-cutout-actor commission-cutout--purple-rose" data-commission-actor="amor-purple-rose" src="/images/catalogo/commission-amor-purple-rose.webp" width="230" height="250" alt="Rosa morada de tela superpuesta en collage" decoding="async">'
-        f'<img class="commission-cutout-actor commission-cutout--red-rose" data-commission-actor="amor-red-rose" src="/images/catalogo/commission-amor-red-rose.webp" width="181" height="221" alt="Rosa roja matérica de collage" decoding="async">'
+        f'<img class="commission-cutout-actor commission-cutout--purple-rose" data-commission-actor="amor-purple-rose" src="/images/catalogo/commission-amor-purple-rose.webp" width="246" height="252" alt="Rosa morada de tela superpuesta en collage" decoding="async">'
+        f'<img class="commission-cutout-actor commission-cutout--red-rose" data-commission-actor="amor-red-rose" src="/images/catalogo/commission-amor-red-rose.webp" width="182" height="223" alt="Rosa roja matérica de collage" decoding="async">'
         f'<img class="commission-cutout-actor commission-cutout--calla" data-commission-actor="amor-calla" src="/images/catalogo/commission-amor-calla.webp" width="418" height="442" alt="Cala blanca de tela esculpida" decoding="async">'
         f'<img class="commission-cutout-actor commission-cutout--peacock" data-commission-actor="rara-peacock" src="/images/catalogo/commission-rara-peacock.webp" width="229" height="269" alt="Pluma de pavo real con reflejos tornasolados" decoding="async">'
         f'</div>'
@@ -1518,6 +1539,10 @@ def build(output):
         f'<a class="text-link" href="/obra/#indice">Ver las {len(projects)} miradas del archivo ↗</a>'
         f'</div>'
         f'</div>'
+        f'<aside class="atelier-mobile-cta" data-atelier-mobile-cta aria-label="Acceso rápido a tu encargo">'
+        f'<a class="atelier-mobile-cta-config" href="#configurador"><span>✦ Configurar encargo</span><small data-mobile-cta-summary>Tela Vaquera · Individual</small></a>'
+        f'<a class="atelier-mobile-cta-wa" data-mobile-cta-wa href="https://wa.me/34636060609?text={quote(default_cfg_msg)}" target="_blank" rel="noopener noreferrer">WhatsApp ↗</a>'
+        f'</aside>'
         f'</article>'
     )
     commissions_schema = {
@@ -1570,6 +1595,39 @@ def build(output):
             "Cajas personalizadas y objetos intervenidos",
             "Retrato en técnica mixta sobre pizarra natural y mica mineral",
         ],
+        "workExample": [
+            {
+                "@type": "VisualArtwork",
+                "@id": ORIGIN + "/obra/" + ex["slug"] + "/#artwork",
+                "name": ex["title"],
+                "url": ORIGIN + "/obra/" + ex["slug"] + "/",
+                "image": ORIGIN + ex["photos"][0]["original"],
+                "artMedium": ex.get("technique"),
+                "artworkSurface": ex.get("support") or support_label,
+            }
+            for ex, support_label, _ in commission_examples
+        ],
+        "subjectOf": {
+            "@type": "ItemList",
+            "@id": ORIGIN + "/retratos-por-encargo-bilbao/#proceso-y-dudas",
+            "name": "Guía de taller para encargos de retratos personalizados en Bilbao",
+            "numberOfItems": len(commission_faqs),
+            "itemListElement": [
+                {
+                    "@type": "ListItem",
+                    "position": idx + 1,
+                    "item": {
+                        "@type": "Question",
+                        "name": q,
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": a,
+                        },
+                    },
+                }
+                for idx, (q, a) in enumerate(commission_faqs)
+            ],
+        },
         "hasOfferCatalog": {
             "@type": "OfferCatalog",
             "name": "Formatos y técnicas de retratos personalizados",
