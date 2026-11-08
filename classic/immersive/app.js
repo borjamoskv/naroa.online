@@ -820,7 +820,7 @@
   });
   menu.addEventListener('keydown', e => {
     if (!menu.open || e.altKey || e.ctrlKey || e.metaKey) return;
-    if (e.key >= '1' && e.key <= '7') {
+    if (e.key >= '1' && e.key <= String(menuLinks.length)) {
       const idx = Number(e.key) - 1;
       const target = menuLinks[idx];
       if (target) {
@@ -1517,7 +1517,7 @@
     nextWorkBtn.type = 'button';
     nextWorkBtn.dataset.galleryNextWork = '';
     dissectionTools.append(loupeToggleBtn, xrayToggleBtn, storyOpenBtn, prevWorkBtn, nextWorkBtn);
-    dissectionDeck.append(dissectionStory, dissectionPills, dissectionTools);
+    dissectionDeck.append(dissectionPills, dissectionTools, dissectionStory);
     galleryIntro.append(gallerySerial, galleryTitle, galleryMeta, dissectionDeck);
     const galleryGrid = createGalleryElement('div', 'work-gallery-grid');
     workGallery.append(galleryBackdrop, galleryHeader, galleryIntro, galleryGrid,
@@ -1537,8 +1537,13 @@
       window.NAROA_SOUND?.stencilRollerWipe?.('Pizarra');
     });
     storyOpenBtn.addEventListener('click', () => {
-      workGallery.close();
-      openDialog('#story-dialog');
+      const isExpanded = dissectionStory.dataset.expanded === 'true';
+      const nextExpanded = !isExpanded;
+      dissectionStory.dataset.expanded = String(nextExpanded);
+      dissectionStory.hidden = !nextExpanded;
+      storyOpenBtn.setAttribute('aria-expanded', String(nextExpanded));
+      storyOpenBtn.textContent = nextExpanded ? 'Ocultar historia −' : 'Historia de la obra +';
+      storyOpenBtn.classList.toggle('is-active', nextExpanded);
     });
     prevWorkBtn.addEventListener('click', () => {
       const prevIdx = (state.index - 1 + works.length) % works.length;
@@ -2975,6 +2980,8 @@
             if (!outgoing) scene.style.opacity = smooth((fraction - .40) / .20).toFixed(4);
             if (outgoing && isHugoToJames) {
               scene.style.opacity = fraction >= 0.50 ? smooth((0.75 - fraction) / 0.25).toFixed(4) : '1';
+            } else if (outgoing) {
+              scene.style.opacity = fraction >= 0.65 ? smooth((0.90 - fraction) / 0.25).toFixed(4) : '1';
             }
           }
         } else if (mode === 'P') {
@@ -4029,8 +4036,20 @@
       gallerySerial.textContent = `Obra ${String(state.index + 1).padStart(2, '0')} de ${String(works.length).padStart(2, '0')} · ${p.series || p.category || 'Estudio Bilbao'}`;
       galleryTitle.textContent = p.title;
       galleryMeta.textContent = `${p.label} · ${p.photos.length} ${p.photos.length === 1 ? 'mirada' : 'miradas'}`;
-      dissectionStory.textContent = p.story ? `«${p.story}»` : '';
-      dissectionStory.hidden = !p.story;
+      const rawStory = (p.story || '').replace(/^[«“"\s]+|[»”"\s]+$/g, '').trim();
+      dissectionStory.textContent = rawStory ? `«${rawStory}»` : '';
+      dissectionStory.dataset.expanded = 'false';
+      dissectionStory.hidden = true;
+      if (p.story) {
+        storyOpenBtn.hidden = false;
+        storyOpenBtn.style.display = '';
+        storyOpenBtn.textContent = 'Historia de la obra +';
+        storyOpenBtn.classList.remove('is-active');
+        storyOpenBtn.setAttribute('aria-expanded', 'false');
+      } else {
+        storyOpenBtn.hidden = true;
+        storyOpenBtn.style.display = 'none';
+      }
       const pillItems = [
         p.technique || null,
         p.support || null,
@@ -4241,7 +4260,7 @@
     const artwork = $('[data-portrait-artwork]', hero), artCopy = $('[data-portrait-work-copy]', hero);
     const controls = $('[data-portrait-controls]', hero), previous = $('[data-portrait-prev]', hero), next = $('[data-portrait-next]', hero);
     const cue = $('.hero-down', hero), wink = $('[data-portrait-wink]', hero), monocleGlint = $('[data-portrait-monocle-glint]', hero);
-    const eye = { x: 571 / 1248, y: 766 / 1966, iris: .032 };
+    const eye = { x: 0.4516, y: 0.4005, iris: .030 };
     const eyes = {
       'rara-avis': { x: .670, y: .391, iris: .025 },
       'marilyn-rocks': { x: .635, y: .392, iris: .030 },
@@ -7100,5 +7119,6 @@
     };
   })();
 
-  if (location.hash === '#indice') openDialog('#index-dialog');
+  const isObraIndexRoute = location.pathname.replace(/\/$/, '') === '/obra';
+  if (location.hash === '#indice' || isObraIndexRoute) openDialog('#index-dialog');
 })();

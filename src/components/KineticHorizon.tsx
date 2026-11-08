@@ -166,6 +166,15 @@ export function KineticHorizon({
       } catch {
         // Ignore audio playback errors
       }
+    } else if ((slug === 'infusion-de-berto' || slug === 'el-gato-que-es-kutxa') && lastSpokenSlugRef.current !== slug) {
+      lastSpokenSlugRef.current = slug
+      try {
+        const audio = new window.Audio('/audio/apm-zasca-berto.mp3')
+        audio.volume = 0.92
+        audio.play().catch(() => {})
+      } catch {
+        // Ignore audio playback errors
+      }
     } else if (slug === 'entre-tantas-flores-de-dia' && lastSpokenSlugRef.current !== slug) {
       lastSpokenSlugRef.current = slug
       sound.playDeltoya()
@@ -181,7 +190,7 @@ export function KineticHorizon({
     } else if (slug === 'game-over' && lastSpokenSlugRef.current !== slug) {
       lastSpokenSlugRef.current = slug
       // Game Over: clausura en silencio contemplativo absoluto
-    } else if (slug !== 'denbora-nora-zoaz' && slug !== 'el-hombre-que-susurraba-a-las-estrellas' && slug !== 'jose-manuel-ezquerra' && slug !== 'i-got-you-babe' && slug !== 'dustin' && slug !== 'asucar-celia-cruz' && slug !== 'entre-tantas-flores-de-dia' && slug !== 'saio-puzzle' && slug !== 'julio-iglesias-como-un-reloj-suizo' && slug !== 'red-red-wine' && slug !== 'game-over') {
+    } else if (slug !== 'denbora-nora-zoaz' && slug !== 'el-hombre-que-susurraba-a-las-estrellas' && slug !== 'jose-manuel-ezquerra' && slug !== 'i-got-you-babe' && slug !== 'dustin' && slug !== 'asucar-celia-cruz' && slug !== 'entre-tantas-flores-de-dia' && slug !== 'saio-puzzle' && slug !== 'julio-iglesias-como-un-reloj-suizo' && slug !== 'red-red-wine' && slug !== 'game-over' && slug !== 'infusion-de-berto' && slug !== 'el-gato-que-es-kutxa') {
       lastSpokenSlugRef.current = ''
     }
   }, [])
@@ -243,10 +252,9 @@ export function KineticHorizon({
 
         if (nearestIdx !== lastAnnouncedIndexRef.current) {
           lastAnnouncedIndexRef.current = nearestIdx
-          activeIndexRef.current = nearestIdx
-          setActiveIdx(nearestIdx)
+          const velFactor = Math.min(1.3, Math.max(0.65, 0.85 + Math.abs(smoothVelRef.current) * 0.05))
           sound.playHapticClick(1.0 + (nearestIdx % 3) * 0.08)
-          sound.playSessionStep(nearestIdx)
+          sound.playSessionStep(nearestIdx, velFactor)
           triggerArtworkVocal(nearestIdx)
           onSelectArtwork(nearestIdx)
         }
