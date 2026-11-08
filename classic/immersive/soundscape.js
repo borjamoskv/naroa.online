@@ -828,6 +828,17 @@
         subMix.connect(filter || subGain);
       }
 
+      let harmOsc = null;
+      if (!isHeadlessTest) {
+        harmOsc = context.createOscillator();
+        const harmMix = context.createGain();
+        harmOsc.type = 'sine';
+        harmOsc.frequency.setValueAtTime(baseFreq * 2 * tapeWow, start);
+        harmMix.gain.setValueAtTime(0.08, start);
+        harmOsc.connect(harmMix);
+        harmMix.connect(filter || subGain);
+      }
+
       if (filter) filter.connect(subGain);
       subGain.connect(studioOut);
       if (gallery?.input) {
@@ -838,6 +849,10 @@
       if (subOsc) {
         subOsc.start(start);
         subOsc.stop(start + warmDur);
+      }
+      if (harmOsc) {
+        harmOsc.start(start);
+        harmOsc.stop(start + warmDur);
       }
     } catch {}
   }

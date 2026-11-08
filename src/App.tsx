@@ -6,6 +6,7 @@ import { ErrorBoundary } from './components/ErrorBoundary'
 import { CustomCursor } from './components/CustomCursor'
 import { KineticHorizon } from './components/KineticHorizon'
 import { NavigationPill, type ActiveMode } from './components/NavigationPill'
+import { SoundDeckOverlay } from './components/SoundDeckOverlay'
 
 // Carga diferida de modales y WebGL para rendimiento inicial sub-segundo
 const Scene = lazy(() => import('./components/Scene'))
@@ -300,6 +301,9 @@ export default function App() {
           />
         )}
       </Suspense>
+
+      {/* APARATO DE MÚSICA REACTIVA ANALÓGICA */}
+      <SoundDeckOverlay />
 
       {/* ESCENA 3D ARQUITECTÓNICA (THREE.JS WEBGL) */}
       {isWebGLMounted && (

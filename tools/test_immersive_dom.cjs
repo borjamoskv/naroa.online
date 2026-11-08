@@ -395,7 +395,7 @@ async function eyeMatch(ui, base, points) {
   ui.click('[data-open-menu]'); await ui.flush();
   assert.equal(ui.find('[data-open-menu]').getAttribute('aria-expanded'), 'true');
   assert.equal(ui.find('[data-menu-item][aria-current]').getAttribute('href'), '/obra/');
-  assert.equal(ui.document.querySelectorAll('[data-menu-item]').length, 7);
+  assert.equal(ui.document.querySelectorAll('[data-menu-item]').length, 6);
   assert.equal(ui.find('[data-menu-preview-title]').textContent, 'Amy Rocks');
   assert.equal(ui.find('[data-menu-reel]').hidden, false, 'Obras displays the 4-frame curated filmstrip');
   assert.equal(ui.document.querySelectorAll('[data-menu-reel] [data-reel-index]').length, 4);
@@ -414,11 +414,11 @@ async function eyeMatch(ui, base, points) {
   assert.equal(ui.find('[data-menu-picture]').dataset.portraitMode, 'true', 'Portrait mode avoids colliding with the physical naroa sign');
   assert.equal(ui.w.NAROA_SOUND.lastMenuNoteIndex, 2, 'Pointer hover triggers the matching scale degree');
   assert.equal(ui.find('[data-menu-item][aria-current]').getAttribute('href'), '/obra/', 'A preview never changes the current location');
-  ui.find('[data-menu-item][href="/contacto/"]').focus(); await ui.flush();
-  assert.equal(ui.find('[data-menu-preview-label]').textContent, 'Contacto', 'A shared photograph still updates the focused section label');
-  assert.equal(ui.find('[data-menu-picture]').classList.contains('is-winking'), true, 'Contacto activates the complicit portrait wink');
+  ui.find('[data-menu-item][href="/retratos-por-encargo-bilbao/"]').focus(); await ui.flush();
+  assert.equal(ui.find('[data-menu-preview-label]').textContent, 'Encargos', 'A shared photograph still updates the focused section label');
+  assert.equal(ui.find('[data-menu-picture]').classList.contains('is-winking'), true, 'Encargos activates the complicit portrait wink');
   ui.find('#menu-dialog').dispatchEvent(new ui.w.KeyboardEvent('keydown', { key: '4', bubbles: true, cancelable: true })); await ui.flush();
-  assert.equal(ui.find('[data-menu-preview-label]').textContent, 'Trayectoria', 'Numeric shortcut 1-7 previews and focuses the corresponding section');
+  assert.equal(ui.find('[data-menu-preview-label]').textContent, 'Trayectoria', 'Numeric shortcut 1-6 previews and focuses the corresponding section');
   assert.equal(ui.find('[data-menu-preview-meta]').textContent, 'Exposiciones colectivas e individuales');
   assert.equal(ui.find('[data-menu-reel]').hidden, false, 'Trayectoria renders its 4-frame curated filmstrip');
   assert.equal(ui.find('#menu-dialog').style.getPropertyValue('--menu-glow'), '#6b5a35', 'Menu atmosphere glow adapts dynamically to the active section');
@@ -628,17 +628,17 @@ async function eyeMatch(ui, base, points) {
     }
     await scrollPortrait(.09);
     assert.equal(Number(wink.getAttribute('opacity')), 1, 'First Naroa winks her left eye immediately as scroll begins');
-    assert.ok(readPose(plane, [571 / 1248, 766 / 1966], .032).scale < 1.15, 'Portrait stays at full framing during the initial left-eye wink');
+    assert.ok(readPose(plane, [0.4516, 0.4005], .030).scale < 1.15, 'Portrait stays at full framing during the initial left-eye wink');
     await scrollPortrait(.23);
     assert.notEqual(plane.style.transform, initial, 'The portrait moves into its monocle eye');
     assert.equal(Number(wink.getAttribute('opacity')), 1, 'The existing photographic wink remains in the approach');
-    assert.ok(readPose(plane, [571 / 1248, 766 / 1966], .032).scale < 1.15, 'Monocle zoom waits until the left-eye wink completes');
+    assert.ok(readPose(plane, [0.4516, 0.4005], .030).scale < 1.15, 'Monocle zoom waits until the left-eye wink completes');
     assert.ok(Number(portrait.find('[data-portrait-monocle-glint]').getAttribute('opacity')) > 0.3, 'Optical monocle glint ignites to cue the monocle plunge');
     const closed = wink.getAttribute('opacity');
     let previousIris = 0;
     for (const progress of [.46, .51, .56]) {
       await scrollPortrait(progress);
-      const source = readPose(plane, [571 / 1248, 766 / 1966], .032), target = readPose(artwork, [.670, .391], .025);
+      const source = readPose(plane, [0.4516, 0.4005], .030), target = readPose(artwork, [.670, .391], .025);
       assert.ok(source.scale > 5 && target.scale > 5, 'The camera travels inside both eyes');
       assert.ok(Math.abs(source.x - viewport.width * .5) < .03 && Math.abs(source.y - viewport.height * .46) < .03, 'Naroa pupil stays on the camera axis');
       assert.ok(Math.abs(source.x - target.x) < .03 && Math.abs(source.y - target.y) < .03, 'Both pupils coincide throughout the dissolve, including on mobile');
@@ -981,7 +981,7 @@ async function eyeMatch(ui, base, points) {
   assert.equal(denied.requests.length, 0, 'Blocked playback does not start downloading audio');
   assert.equal(deniedMusic.find('[data-sound]').disabled, false); deniedMusic.dom.window.close();
 
-  for (const route of ['/sobre-mi/', '/trayectoria/', '/cuaderno/', '/retratos-por-encargo-bilbao/', '/contacto/']) {
+  for (const route of ['/sobre-mi/', '/trayectoria/', '/cuaderno/', '/retratos-por-encargo-bilbao/']) {
     const page = create(route); await page.flush(); page.click('[data-open-menu]'); await page.flush();
     assert.equal(page.find('#menu-dialog').open, true);
     assert.equal(page.find('[data-menu-item][aria-current]').getAttribute('href'), route, 'The menu identifies the current editorial section');

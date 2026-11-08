@@ -4,7 +4,7 @@
 // Cadencia final inmutable: notas icónicas de SOUND OF SILENCE en Re menor microtonal cálido
 // D5 (sound), [silencio], A4 (of), C5 (si-), F5 (-lence), E5 (resolución), [silencio], D5 (tónica final)
 export const SOUND_OF_SILENCE_CADENCE: (number | null)[] = [
-  74.00, null, 69.02, 72.02, 77.16, 75.86, null, 74.00
+  74.00, null, 69.02, 71.74, 77.24, 75.86, null, 74.00
 ]
 
 // Escala Dórica / Eólica Cálida en Re (Entonación Justa Consonante · Estética Aphex Twin "Rhubarb" / Boards of Canada "Olson"):
@@ -14,45 +14,45 @@ export const SOUND_OF_SILENCE_CADENCE: (number | null)[] = [
 // 72.02: C5 (Séptima menor cálida)
 // 74.00: D5 (Tónica fundamental Re)
 // 75.86: E5 (Novena / Segunda mayor dulce)
-// 77.16: F5 (Tercera menor justa pura 6/5)
+// 77.24: F5 (Tercera menor justa pura 6/5)
 // 78.98: G5 (Cuarta justa pura 4/3)
 // 81.02: A5 (Quinta justa pura 3/2)
 // 83.74: B5 (Sexta dórica superior)
 // 86.00: D6 (Octava pura 2/1)
 const MODAL_PITCHES = [
-  69.02, 71.74, 72.02, 74.00, 75.86, 77.16, 78.98, 81.02, 83.74, 86.00
+  69.02, 71.74, 72.02, 74.00, 75.86, 77.24, 78.98, 81.02, 83.74, 86.00
 ]
 
 // Células motívicas minimalistas (haikus monofónicos tipo Erik Satie / Nils Frahm "Felt" / Ryuichi Sakamoto "async")
 const MOTIF_CELLS_A: (number | null)[][] = [
-  [74.00, null, null, 77.16],
+  [74.00, null, null, 77.24],
   [74.00, null, 69.02, null],
   [74.00, null, null, 81.02],
   [null, 74.00, null, 71.74],
   [69.02, null, 74.00, null],
   [74.00, null, 78.98, null],
-  [null, 81.02, null, 77.16],
+  [null, 81.02, null, 77.24],
   [72.02, null, 75.86, null]
 ]
 
 const MOTIF_CELLS_B: (number | null)[][] = [
   [78.98, null, null, 81.02],
-  [81.02, null, 77.16, null],
-  [77.16, null, null, 83.74],
-  [null, 77.16, null, 75.86],
+  [81.02, null, 77.24, null],
+  [77.24, null, null, 83.74],
+  [null, 77.24, null, 75.86],
   [81.02, null, null, 74.00],
   [74.00, null, 81.02, null],
-  [null, 81.02, null, 77.16],
-  [77.16, null, 78.98, null]
+  [null, 81.02, null, 77.24],
+  [77.24, null, 78.98, null]
 ]
 
 const MOTIF_CELLS_C: (number | null)[][] = [
   [75.86, null, null, 69.02],
   [null, 75.86, null, 78.98],
-  [77.16, null, 74.00, null],
+  [77.24, null, 74.00, null],
   [69.02, null, null, 75.86],
   [null, 75.86, null, 74.00],
-  [77.16, null, null, 71.74],
+  [77.24, null, null, 71.74],
   [74.00, null, 69.02, null],
   [null, 72.02, null, 69.02]
 ]
@@ -126,7 +126,12 @@ export function generateInfiniteSessionMelody(): (number | null)[] {
 export interface WeekdayTheme {
   day: 'Lunes' | 'Martes' | 'Miércoles' | 'Jueves' | 'Viernes' | 'Sábado' | 'Domingo'
   name: string
+  title: string
   subtitle: string
+  verse: string
+  phrases: string[]
+  shortDay: string
+  tempoMs: number
   notes: (number | null)[]
 }
 
@@ -135,35 +140,65 @@ export const WEEKDAY_THEMES: WeekdayTheme[] = [
   // 0. Lunes (Astelehena)
   {
     day: 'Lunes',
-    name: 'Txoria Txori',
-    subtitle: 'Mikel Laboa · Piano de fieltro minimalista',
+    title: 'Landa',
+    name: 'Landa · Alboka pastoral de Arratia',
+    subtitle: 'Valle de Arratia · Notas solitarias de fieltro',
+    verse: '«Piedra húmeda y niebla tibia sobre el valle de Arratia»',
+    phrases: [
+      '«Piedra húmeda y niebla tibia sobre el valle de Arratia…»',
+      '«El eco del cuerno dormido entre hayedos y musgo antiguo…»',
+      '«Sube la luz por la pizarra mientras despierta el monte…»',
+      '«Y en la quietud desnuda resuena el sonido del silencio.»'
+    ],
+    shortDay: 'L',
+    tempoMs: 1480,
     notes: [
-      74.00, null, 75.86, null, 77.16, null, 74.00, null,
-      null, 69.02, null, 74.00, null, 77.16, null, null,
-      81.02, null, 78.98, null, 75.86, null, 72.02, null,
+      74.00, 77.24, 81.02, 77.24, 75.86, 74.00, 69.02, null,
+      null, null, 71.74, null, null, 75.86, null, null,
+      74.00, null, null, 77.24, null, null, 69.02, null,
       ...SOUND_OF_SILENCE_CADENCE
     ]
   },
   // 1. Martes (Asteartea)
   {
     day: 'Martes',
-    name: 'Haurtxo Polita',
+    title: 'Haurtxo Polita',
+    name: 'Haurtxo Polita · Nana popular en cinta cálida',
     subtitle: 'Nana vasca íntima · Fieltro y silencio',
+    verse: '«Haurtxo polita sehaskan dago, zapi zuritan txit bero…»',
+    phrases: [
+      '«Haurtxo polita sehaskan dago, zapi zuritan txit bero…»',
+      '«Amonak dio: ene potxolo, arren egin ba lo, lo…»',
+      '«Txakur haundia etorriko da zuk ezpadazu egiten lo…»',
+      '«Suave cae la tarde en el estudio hasta volverse silencio.»'
+    ],
+    shortDay: 'M',
+    tempoMs: 1580,
     notes: [
-      69.02, null, 74.00, null, 77.16, null, null, 74.00,
-      null, 78.98, null, 81.02, null, null, 77.16, null,
-      null, 74.00, null, 69.02, null, 72.02, null, null,
+      74.00, null, 77.24, null, 81.02, null, null, 75.86,
+      74.00, null, null, 77.24, null, 75.86, null, null,
+      81.02, null, 78.98, null, 74.00, null, 69.02, null,
       ...SOUND_OF_SILENCE_CADENCE
     ]
   },
   // 2. Miércoles (Asteazkena)
   {
     day: 'Miércoles',
-    name: 'Harria eta Marea',
+    title: 'Harria eta Marea',
+    name: 'Harria eta Marea · Aire de costa en Re menor',
     subtitle: 'Piedra y marea · Espacio contemplativo',
+    verse: '«Donde rompe la espuma contra la pizarra del Cantábrico»',
+    phrases: [
+      '«Donde rompe la espuma contra la pizarra del Cantábrico…»',
+      '«Salitre y grafito sobre la veta oscura de la pleamar…»',
+      '«Respira la ola honda antes de volver hacia el abismo…»',
+      '«Queda la piedra brillando sola en el sonido del silencio.»'
+    ],
+    shortDay: 'X',
+    tempoMs: 1620,
     notes: [
       74.00, null, null, 81.02, null, 75.86, null, null,
-      77.16, null, 83.74, null, null, 78.98, null, 74.00,
+      77.24, null, 83.74, null, null, 78.98, null, 74.00,
       null, 75.86, null, null, 72.02, null, 69.02, null,
       ...SOUND_OF_SILENCE_CADENCE
     ]
@@ -171,34 +206,64 @@ export const WEEKDAY_THEMES: WeekdayTheme[] = [
   // 3. Jueves (Osteguna)
   {
     day: 'Jueves',
-    name: 'Landa / Alboka pastoral',
-    subtitle: 'Valle de Arratia · Notas solitarias de fieltro',
+    title: 'Txoria Txori',
+    name: 'Txoria Txori · Mikel Laboa en piano de fieltro',
+    subtitle: 'Mikel Laboa · Piano de fieltro minimalista',
+    verse: '«Hegoak ebaki banizkio, nerea izango zen…»',
+    phrases: [
+      '«Hegoak ebaki banizkio, nerea izango zen, ez zuen aldegingo…»',
+      '«Bainan, honela, ez zen gehiago txoria izango…»',
+      '«Eta nik… txoria nuen maite, txoria nuen maite…»',
+      '«El vuelo libre se funde despacio en el sonido del silencio.»'
+    ],
+    shortDay: 'J',
+    tempoMs: 1520,
     notes: [
-      74.00, null, 77.16, null, 81.02, null, 74.00, null,
-      null, 71.74, null, 75.86, null, null, 69.02, null,
-      74.00, null, 77.16, null, null, 75.86, null, null,
+      74.00, null, 75.86, null, 77.24, null, 74.00, null,
+      null, 69.02, null, 74.00, null, 77.24, null, null,
+      81.02, null, 78.98, null, 75.86, null, 72.02, null,
       ...SOUND_OF_SILENCE_CADENCE
     ]
   },
   // 4. Viernes (Ostirala)
   {
     day: 'Viernes',
-    name: 'Mi Gran Noche',
+    title: 'Mi Gran Noche',
+    name: 'Mi Gran Noche · Caja de música íntima',
     subtitle: 'Fieltro nocturno desnudo · Qué misterio habrá',
+    verse: '«¿Qué pasará, qué misterio habrá? Puede ser mi gran noche…»',
+    phrases: [
+      '«¿Qué pasará, qué misterio habrá? Puede ser mi gran noche…»',
+      '«Y al despertar ya mi vida sabrá algo que no conoce…»',
+      '«Caminaré abrazando el azar bajo las luces de terciopelo…»',
+      '«Cuando se apaga el telón, habita el sonido del silencio.»'
+    ],
+    shortDay: 'V',
+    tempoMs: 1420,
     notes: [
-      74.00, null, 75.86, null, 77.16, null, null, 81.02,
+      74.00, null, 75.86, null, 77.24, null, null, 81.02,
       null, 78.98, null, 75.86, null, null, 69.02, null,
-      81.02, null, null, 78.98, null, 77.16, null, null,
+      81.02, null, null, 78.98, null, 77.24, null, null,
       ...SOUND_OF_SILENCE_CADENCE
     ]
   },
   // 5. Sábado (Larunbata)
   {
     day: 'Sábado',
-    name: 'Gaua / Nocturno de Bilbao',
+    title: 'Gaua',
+    name: 'Gaua · Nocturno de Bilbao',
     subtitle: 'Nocturno minimalista en penumbra de ría',
+    verse: '«Luces de ámbar reflejadas sobre la ría en calma»',
+    phrases: [
+      '«Luces de ámbar reflejadas sobre la ría en calma…»',
+      '«Cinta magnética lenta en la madrugada del taller…»',
+      '«El carbón y el pan de oro guardan la memoria del gesto…»',
+      '«Todo regresa a la penumbra y al sonido del silencio.»'
+    ],
+    shortDay: 'S',
+    tempoMs: 1640,
     notes: [
-      74.00, null, null, 81.02, null, 77.16, null, null,
+      74.00, null, null, 81.02, null, 77.24, null, null,
       69.02, null, 74.00, null, null, 78.98, null, null,
       74.00, null, 81.02, null, null, 75.86, null, null,
       ...SOUND_OF_SILENCE_CADENCE
@@ -207,10 +272,20 @@ export const WEEKDAY_THEMES: WeekdayTheme[] = [
   // 6. Domingo (Igandea)
   {
     day: 'Domingo',
-    name: 'Haizea / Viento en los pinos',
+    title: 'Haizea',
+    name: 'Haizea · Brisa marina entre los pinos',
     subtitle: 'Aire y silencio · Retorno al origen',
+    verse: '«El viento peina las agujas de pino hacia el origen»',
+    phrases: [
+      '«El viento peina las agujas de pino hacia el origen…»',
+      '«Arpa dórica suspendida entre la niebla y el acantilado…»',
+      '«Cada trazo respira antes de posarse sobre el papel…»',
+      '«Y el aire se pliega sereno en el sonido del silencio.»'
+    ],
+    shortDay: 'D',
+    tempoMs: 1500,
     notes: [
-      74.00, null, 77.16, null, 81.02, null, null, 78.98,
+      74.00, null, 77.24, null, 81.02, null, null, 78.98,
       null, 75.86, null, 74.00, null, 69.02, null, null,
       75.86, null, 81.02, null, null, 75.86, null, null,
       ...SOUND_OF_SILENCE_CADENCE
@@ -233,23 +308,31 @@ class SoundEngine {
 
   private bgMusic: HTMLAudioElement | null = null
 
-  // Master Warmth Acoustic Bus
+  // Master Warmth Acoustic Bus & Gallery Space
   private warmBus: GainNode | null = null
   private warmShelf: BiquadFilterNode | null = null
   private warmLowpass: BiquadFilterNode | null = null
   private masterCompressor: DynamicsCompressorNode | null = null
+  private galleryReverb: ConvolverNode | null = null
+  private galleryWet: GainNode | null = null
 
   private lastHapticClickTime = 0
   private lastSessionStepTime = 0
 
   private sessionMelodyIndex: number = 0
+  private currentThemeIndex: number = 0
   private currentMelody: (number | null)[] = []
   private sessionStep: number = -1
 
+  private autoPlayActive: boolean = false
+  private autoPlayTimer: any = null
+  private listeners: Set<() => void> = new Set()
+
   constructor() {
     this.sessionMelodyIndex = this.pickSessionMelodyIndex()
-    // En cada carga / refresco de página: generación de melodía procedural virgen y jamás repetida
-    this.currentMelody = generateInfiniteSessionMelody()
+    this.currentThemeIndex = this.sessionMelodyIndex
+    // Por defecto: el tema canónico del día de la semana (Lunes a Domingo)
+    this.currentMelody = [...(WEEKDAY_THEMES[this.currentThemeIndex]?.notes || WEEKDAY_THEMES[0].notes)]
 
     // Lazy init audio context on first user interaction
     if (typeof window !== 'undefined') {
@@ -276,36 +359,130 @@ class SoundEngine {
         const stored = window.sessionStorage.getItem(key)
         if (stored !== null) {
           const idx = parseInt(stored, 10)
-          if (!isNaN(idx) && idx >= 0 && idx < SESSION_MELODIES.length) {
+          if (!isNaN(idx) && idx >= 0 && idx < WEEKDAY_THEMES.length) {
             return idx
           }
         }
-        let lastIdx = -1
-        try {
-          const lastStr = window.localStorage.getItem('naroa_last_session_melody')
-          if (lastStr !== null) lastIdx = parseInt(lastStr, 10)
-        } catch {}
-        let nextIdx = Math.floor(Math.random() * SESSION_MELODIES.length)
-        if (lastIdx >= 0 && SESSION_MELODIES.length > 1) {
-          nextIdx = (lastIdx + 1 + Math.floor(Math.random() * (SESSION_MELODIES.length - 1))) % SESSION_MELODIES.length
-        }
-        window.sessionStorage.setItem(key, String(nextIdx))
-        try { window.localStorage.setItem('naroa_last_session_melody', String(nextIdx)) } catch {}
-        return nextIdx
       }
+      // Por defecto en día actual (Lunes = 0 .. Domingo = 6)
+      const now = new Date()
+      const dayOfWeek = (now.getDay() + 6) % 7
+      return dayOfWeek >= 0 && dayOfWeek < WEEKDAY_THEMES.length ? dayOfWeek : 0
     } catch {}
     return 0
   }
 
+  public subscribe(listener: () => void): () => void {
+    this.listeners.add(listener)
+    return () => {
+      this.listeners.delete(listener)
+    }
+  }
+
+  private notify() {
+    this.listeners.forEach(fn => {
+      try { fn() } catch {}
+    })
+  }
+
   public getSessionMelodyIndex(): number {
-    return this.sessionMelodyIndex
+    return this.currentThemeIndex
   }
 
   public getSessionMelody(): (number | null)[] {
     if (this.currentMelody && this.currentMelody.length > 0) {
       return this.currentMelody
     }
-    return SESSION_MELODIES[this.sessionMelodyIndex] || SESSION_MELODIES[0]
+    return WEEKDAY_THEMES[this.currentThemeIndex]?.notes || WEEKDAY_THEMES[0].notes
+  }
+
+  public getCurrentTheme(): WeekdayTheme {
+    return WEEKDAY_THEMES[this.currentThemeIndex] || WEEKDAY_THEMES[0]
+  }
+
+  public selectTheme(index: number) {
+    const idx = ((index % WEEKDAY_THEMES.length) + WEEKDAY_THEMES.length) % WEEKDAY_THEMES.length
+    this.currentThemeIndex = idx
+    this.sessionMelodyIndex = idx
+    this.currentMelody = [...WEEKDAY_THEMES[idx].notes]
+    this.sessionStep = -1
+    try {
+      if (typeof window !== 'undefined' && window.sessionStorage) {
+        window.sessionStorage.setItem('naroa_session_melody_idx', String(idx))
+      }
+    } catch {}
+    this.notify()
+    if (this.enabled) {
+      this.playSessionStep(0, 0.8)
+    }
+  }
+
+  public setProceduralMelody() {
+    this.currentMelody = generateInfiniteSessionMelody()
+    this.sessionStep = -1
+    this.notify()
+    if (this.enabled) {
+      this.playSessionStep(0, 0.8)
+    }
+  }
+
+  public getStep(): number {
+    return this.sessionStep
+  }
+
+  public getCurrentNote(): number | null {
+    const mel = this.getSessionMelody()
+    if (this.sessionStep < 0 || this.sessionStep >= mel.length) return null
+    return mel[this.sessionStep]
+  }
+
+  public isAutoPlaying(): boolean {
+    return this.autoPlayActive
+  }
+
+  public toggleAutoPlay(forceState?: boolean): boolean {
+    const next = typeof forceState === 'boolean' ? forceState : !this.autoPlayActive
+    if (!next) {
+      this.stopAutoPlay()
+      return false
+    }
+    if (!this.enabled) {
+      this.toggleSound()
+    }
+    this.initCtx()
+    this.autoPlayActive = true
+    this.notify()
+    this.runAutoPlayTick()
+    return true
+  }
+
+  public stopAutoPlay() {
+    this.autoPlayActive = false
+    if (this.autoPlayTimer) {
+      clearTimeout(this.autoPlayTimer)
+      this.autoPlayTimer = null
+    }
+    this.notify()
+  }
+
+  private runAutoPlayTick() {
+    if (!this.autoPlayActive || !this.enabled) {
+      this.stopAutoPlay()
+      return
+    }
+    const theme = this.getCurrentTheme()
+    const mel = this.getSessionMelody()
+    const nextStep = (this.sessionStep + 1) % mel.length
+    this.playSessionStep(nextStep, 0.72)
+
+    const baseTempo = theme.tempoMs || 1500
+    const isPhraseEnd = nextStep % 8 === 7
+    const isCadence = nextStep >= 24
+    const nextDelay = Math.round(baseTempo * (isCadence ? 1.15 : 1.0) + (isPhraseEnd ? 220 : 0))
+
+    this.autoPlayTimer = setTimeout(() => {
+      this.runAutoPlayTick()
+    }, nextDelay)
   }
 
   private initCtx() {
@@ -324,10 +501,11 @@ class SoundEngine {
   }
 
   /**
-   * Bus maestro de calidez analógica (Estética Boards of Canada / Aphex Twin SAW II):
-   * 1. Realce low-shelf en 220 Hz (+3.0 dB) para cuerpo cálido de cinta y madera.
-   * 2. Filtro paso-bajo sedoso en 1450 Hz (Q = 0.5) que elimina cualquier aspereza o brillo digital.
-   * 3. Compresor de pegamento analógico suave.
+   * Bus maestro de calidez analógica y espacio acústico de galería europea (6m):
+   * 1. Realce low-shelf en 200 Hz (+3.2 dB) para cuerpo de madera y fieltro.
+   * 2. Filtro paso-bajo sedoso en 820 Hz (Q = 0.38) que elimina asperezas digitales.
+   * 3. Compresor de pegamento analógico suave (-10 dB, ratio 2.8:1, attack 15ms).
+   * 4. Reverberación convolutiva de sala de museo de alta densidad (1.35s).
    */
   private setupWarmthBus() {
     if (!this.ctx || this.warmBus) return
@@ -352,13 +530,70 @@ class SoundEngine {
       this.masterCompressor.attack.value = 0.015
       this.masterCompressor.release.value = 0.16
 
+      // Creación del espacio acústico convolutivo de museo (1.35s)
+      this.setupGallerySpace()
+
       this.warmBus.connect(this.warmShelf)
       this.warmShelf.connect(this.warmLowpass)
       this.warmLowpass.connect(this.masterCompressor)
       this.masterCompressor.connect(this.ctx.destination)
     } catch {
-      // Fallback: warmBus null will route straight to ctx.destination
+      // Fallback
     }
+  }
+
+  private setupGallerySpace() {
+    if (!this.ctx || this.galleryReverb) return
+    try {
+      if (typeof this.ctx.createConvolver !== 'function') return
+      const sampleRate = this.ctx.sampleRate || 44100
+      const duration = 1.35
+      const length = Math.ceil(sampleRate * duration)
+      const buffer = this.ctx.createBuffer(2, length, sampleRate)
+      const fc = 1800
+      const alpha = 1 - Math.exp(-2 * Math.PI * fc / sampleRate)
+
+      for (let channel = 0; channel < 2; channel++) {
+        const samples = buffer.getChannelData(channel)
+        let random = (1337 + channel * 9973) >>> 0
+        let lp = 0
+        const preDelay = Math.floor(sampleRate * 0.018)
+
+        for (let i = preDelay; i < length; i++) {
+          random = (random * 1664525 + 1013904223) >>> 0
+          const noise = (random / 4294967296 * 2 - 1)
+          lp += alpha * (noise - lp)
+          const t = i / sampleRate
+          const decay = Math.exp(-t / 0.32) * (1 - i / length)
+          samples[i] = lp * 0.026 * decay
+        }
+
+        const reflections = [
+          [0.024, 0.15],
+          [0.045, 0.11],
+          [0.072, 0.07],
+          [0.108, 0.04]
+        ]
+        reflections.forEach(([delay, level]) => {
+          const idx = Math.round((delay + channel * 0.0024) * sampleRate)
+          if (idx < length) {
+            samples[idx] += level * (channel === 0 ? 0.9 : 0.7)
+          }
+        })
+      }
+
+      this.galleryReverb = this.ctx.createConvolver()
+      this.galleryReverb.normalize = false
+      this.galleryReverb.buffer = buffer
+
+      this.galleryWet = this.ctx.createGain()
+      this.galleryWet.gain.value = 0.19
+
+      this.galleryReverb.connect(this.galleryWet)
+      if (this.warmBus) {
+        this.galleryWet.connect(this.warmBus)
+      }
+    } catch {}
   }
 
   private getOut(): AudioNode {
@@ -366,17 +601,21 @@ class SoundEngine {
   }
 
   /**
-   * Voz Monofónica Minimalista de Piano de Fieltro (Estética Erik Satie / Nils Frahm "Felt" / Ryuichi Sakamoto "async"):
-   * - Transposición de -12 semitonos al registro grave-medio aterciopelado (146 Hz – 440 Hz).
-   * - Una única fundamental senoidal pura con ataque de fieltro suave (45 ms) y caída larga de seda (2.15 s).
-   * - Filtro paso-bajo sedoso (460 Hz -> 230 Hz, Q = 0.34) y deriva sutil Tape Wow (±2.0 cents).
+   * Voz Multicapa de Piano de Fieltro Analógico (-12 semitonos, 146 Hz – 440 Hz):
+   * - Oscilador F0 fundamental con deriva Tape Wow (±2.2 cents).
+   * - Oscilador F1 segundo parcial de arce/madera a -22 dB.
+   * - Sub-oscilador en tónicas (0.5 * F0) para soporte orgánico de caballete.
+   * - Ataque de fieltro suave (42 ms) y caída larga (2.15 s).
+   * - Filtro dinámico de seda (460 Hz -> 210 Hz, Q = 0.32).
    */
   public playMusicBoxNote(
     midiNote: number = 74.00,
     volume: number = 0.5,
     delaySec: number = 0,
     pan: number = 0,
-    detuneCents: number = 0
+    detuneCents: number = 0,
+    velocityFactor: number = 1.0,
+    isAnchorSub: boolean = false
   ) {
     if (!this.enabled) return
     try {
@@ -388,9 +627,11 @@ class SoundEngine {
 
       const warmMidi = midiNote - 12
       const rootHz = 440 * Math.pow(2, (warmMidi + detuneCents / 100 - 69) / 12)
+      if (rootHz < 95 || rootHz > 580) return
 
+      const velClamped = Math.max(0.4, Math.min(1.3, velocityFactor))
       const masterVoiceGain = this.ctx.createGain()
-      masterVoiceGain.gain.setValueAtTime(volume * 0.14, now)
+      masterVoiceGain.gain.setValueAtTime(volume * 0.14 * velClamped, now)
 
       if (typeof this.ctx.createStereoPanner === 'function') {
         const panner = this.ctx.createStereoPanner()
@@ -401,19 +642,31 @@ class SoundEngine {
         masterVoiceGain.connect(out)
       }
 
+      // Enviar una fracción sutil a la sala de museo
+      if (this.galleryReverb) {
+        try {
+          const sendGain = this.ctx.createGain()
+          sendGain.gain.value = 0.22
+          masterVoiceGain.connect(sendGain)
+          sendGain.connect(this.galleryReverb)
+        } catch {}
+      }
+
+      // Filtro dinámico de seda
       const filter = this.ctx.createBiquadFilter()
       filter.type = 'lowpass'
-      const openCutoff = Math.min(480, Math.max(240, rootHz * 1.4))
-      const warmCutoff = Math.max(195, Math.min(310, rootHz * 0.82))
+      const openCutoff = Math.min(520, Math.max(250, rootHz * (1.35 + (velClamped - 1.0) * 0.25)))
+      const warmCutoff = Math.max(190, Math.min(290, rootHz * 0.80))
       filter.frequency.setValueAtTime(openCutoff, now)
-      filter.frequency.exponentialRampToValueAtTime(warmCutoff, now + 1.75)
-      filter.Q.setValueAtTime(0.34, now)
+      filter.frequency.exponentialRampToValueAtTime(warmCutoff, now + 1.85)
+      filter.Q.setValueAtTime(0.32, now)
       filter.connect(masterVoiceGain)
 
+      // 1. Oscilador F0 Fundamental
       const osc = this.ctx.createOscillator()
       const gain = this.ctx.createGain()
-      const attack = 0.045
-      const decay = 2.15
+      const attack = 0.042
+      const decay = 2.18
       const driftedFreq = rootHz * Math.pow(2, -1.8 / 1200)
 
       osc.type = 'sine'
@@ -427,9 +680,47 @@ class SoundEngine {
 
       osc.connect(gain)
       gain.connect(filter)
-
       osc.start(now)
       osc.stop(now + decay + 0.05)
+
+      // 2. Segundo Armónico Cálido (2 * F0)
+      const harmOsc = this.ctx.createOscillator()
+      const harmGain = this.ctx.createGain()
+      const harmFilter = this.ctx.createBiquadFilter()
+
+      harmOsc.type = 'triangle'
+      harmOsc.frequency.setValueAtTime(rootHz * 2.0, now)
+
+      harmFilter.type = 'lowpass'
+      harmFilter.frequency.setValueAtTime(420, now)
+      harmFilter.Q.setValueAtTime(0.30, now)
+
+      harmGain.gain.setValueAtTime(0.0001, now)
+      harmGain.gain.linearRampToValueAtTime(0.085, now + 0.048)
+      harmGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.75)
+
+      harmOsc.connect(harmFilter)
+      harmFilter.connect(harmGain)
+      harmGain.connect(filter)
+      harmOsc.start(now)
+      harmOsc.stop(now + 1.80)
+
+      // 3. Sub-oscilador de Anclaje de Caballete (0.5 * F0)
+      if (isAnchorSub && rootHz * 0.5 >= 45) {
+        const subOsc = this.ctx.createOscillator()
+        const subGain = this.ctx.createGain()
+        subOsc.type = 'sine'
+        subOsc.frequency.setValueAtTime(rootHz * 0.5, now)
+
+        subGain.gain.setValueAtTime(0.0001, now)
+        subGain.gain.linearRampToValueAtTime(0.12, now + 0.052)
+        subGain.gain.exponentialRampToValueAtTime(0.0001, now + 2.25)
+
+        subOsc.connect(subGain)
+        subGain.connect(filter)
+        subOsc.start(now)
+        subOsc.stop(now + 2.30)
+      }
     } catch {
       // Ignore audio errors
     }
@@ -437,14 +728,14 @@ class SoundEngine {
 
   /**
    * Motor Minimalista de Piano de Fieltro (Ciclo de 32 pasos).
-   * - Respiración amplia (980 ms mínimo entre notas) para que cada desplazamiento emita a lo sumo una nota solitaria.
-   * - Cero acordes sincopados apilados; los pasos null permanecen en silencio contemplativo absoluto.
+   * - Guarda anti-saturación de 115 ms (INV_WARMTH_ACOUSTIC_GATE #4).
+   * - Modulación de energía por velocidad de inercia de scroll.
    * - Pasos 24..31: Cadencia inmutable de SOUND OF SILENCE en Re menor.
    */
-  public playSessionStep(stepIndex?: number) {
+  public playSessionStep(stepIndex?: number, velocityFactor: number = 1.0) {
     if (!this.enabled) return
     const nowMs = typeof performance !== 'undefined' ? performance.now() : Date.now()
-    if (nowMs - this.lastSessionStepTime < 980) return
+    if (nowMs - this.lastSessionStepTime < 115) return
     this.lastSessionStepTime = nowMs
 
     const mel = this.getSessionMelody()
@@ -458,19 +749,22 @@ class SoundEngine {
     const isSilenceCadence = step >= mel.length - 8
     const note = mel[step]
 
+    this.notify()
+
     if (note === null) {
       return
     }
 
     const accent = step % 8 === 0 ? 1.0 : step % 4 === 0 ? 0.90 : 0.80
     const panMain = Math.sin(step * 0.7) * 0.12
+    const isAnchor = isSilenceCadence || step % 8 === 0 || step === 24 || step === 31
 
-    // Nota solitaria de fieltro
-    this.playMusicBoxNote(note, 0.34 * accent, 0, panMain, 0)
+    // Nota de fieltro multicapa con modulación de velocidad
+    this.playMusicBoxNote(note, 0.34 * accent, 0, panMain, 0, velocityFactor, isAnchor)
 
     // Susurro sub-octava exclusivo en el arranque y reposo final de SOUND OF SILENCE
     if (isSilenceCadence && (step === mel.length - 8 || step === mel.length - 1)) {
-      this.playMusicBoxNote(62.00, 0.14, 0.045, 0, 0)
+      this.playMusicBoxNote(62.00, 0.14, 0.045, 0, 0, 0.9, true)
     }
   }
 
