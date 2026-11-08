@@ -2335,3 +2335,88 @@ html:not(.motion-opt-in) [data-kinetic-card] {
   [data-art-copy] { padding-left: 12px; }
   .art-view-actions { opacity: 1; }
 }
+
+/* ─── ENRIQUECIMIENTO EDITORIAL · ENCARGOS TALLER BILBAO ─────────────────
+   Atmósfera analógica, calidez táctil y vínculos de obra.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+.atelier-hand-note {
+  display: block;
+  font-family: 'Caveat', cursive, sans-serif;
+  font-size: 24px;
+  color: #b82226;
+  margin-bottom: 6px;
+  transform: rotate(-1.5deg);
+  opacity: 0.9;
+  letter-spacing: 0.02em;
+}
+
+body.page-retratos-por-encargo-bilbao .commission-minimal-head h1 {
+  background: rgba(18, 2, 4, 0.42);
+  border: 1px solid rgba(255, 253, 244, 0.28);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+  font-size: clamp(24px, 2.8vw, 36px);
+  padding: 8px 24px;
+}
+
+body.page-retratos-por-encargo-bilbao .commission-parallax-num {
+  color: rgba(255, 253, 244, 0.12);
+  text-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+}
+
+body.page-retratos-por-encargo-bilbao .atelier-manifesto {
+  background: #fffdf8 !important;
+  position: relative;
+}
+body.page-retratos-por-encargo-bilbao .atelier-manifesto::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  left: 48px;
+  width: 140px;
+  height: 24px;
+  background: rgba(247, 213, 148, 0.55);
+  transform: rotate(-1deg);
+  border-radius: 2px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+.story-artwork-cue {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px dashed rgba(247, 213, 148, 0.25);
+}
+.story-artwork-link {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #f7d594;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+.story-artwork-link:hover {
+  color: #fffdf4;
+  transform: translateX(3px);
+}
+
+body.page-retratos-por-encargo-bilbao .atelier-OrderCard {
+  background: #fffdf7;
+  border: 1.5px solid rgba(247, 213, 148, 0.6);
+  box-shadow: 0 30px 70px rgba(12, 2, 4, 0.65);
+}
+body.page-retratos-por-encargo-bilbao .atelier-OrderCard::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  right: 40px;
+  width: 110px;
+  height: 22px;
+  background: rgba(247, 213, 148, 0.65);
+  transform: rotate(2deg);
+  border-radius: 2px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  z-index: 5;
+}
