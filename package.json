@@ -15,6 +15,7 @@
     "test": "npm run test:lint && npm run test:types && npm run test:site",
     "preview": "vite preview",
     "deploy": "./deploy.sh",
+    "deploy:vercel": "vercel build --prod && vercel deploy --prebuilt --prod",
     "deploy:preview": "./deploy.sh --preview",
     "deploy:build-only": "./deploy.sh --build-only",
     "watch:deploy": "chokidar 'src/**/*' 'live-site/**/*' -c './deploy.sh'"
