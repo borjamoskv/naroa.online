@@ -85,7 +85,29 @@ for config in [ROOT/'vercel.json',ROOT.parent/'vercel.json']:
  d=json.loads(config.read_text());red={'source':'/landing-bilbao','destination':'/'+SLUG+'/','permanent':True}
  if red not in d.setdefault('redirects',[]):d['redirects'].append(red)
  config.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n')
-(ROOT/'robots.txt').write_text('User-agent: *\nAllow: /\nDisallow: /test/\nDisallow: /assets/backup_pre4k/\n\nSitemap: '+BASE+'/sitemap.xml\n')
+def _build_robots_txt() -> str:
+ allow_bots = [
+  "OAI-SearchBot", "PerplexityBot", "Googlebot", "Bingbot",
+  "ClaudeBot", "anthropic-ai", "Applebot-Extended",
+  "cohere-ai", "Meta-ExternalAgent",
+ ]
+ deny_bots = ["GPTBot", "CCBot", "Google-Extended", "Bytespider", "Amazonbot"]
+ lines: list[str] = []
+ for bot in allow_bots:
+  lines += [f"User-agent: {bot}", "Allow: /", ""]
+ for bot in deny_bots:
+  lines += [f"User-agent: {bot}", "Disallow: /", ""]
+ lines += [
+  "User-agent: *", "Allow: /",
+  "Disallow: /test/", "Disallow: /assets/backup_pre4k/", "",
+  f"Sitemap: {BASE}/sitemap.xml", "",
+  "# LLM Knowledge Graph & Discovery Directives (GEO SOTA 2026)",
+  f"# {BASE}/llms.txt",
+  f"# {BASE}/llms-full.txt",
+  f"# {BASE}/api/catalog.json",
+ ]
+ return "\n".join(lines) + "\n"
+(ROOT/'robots.txt').write_text(_build_robots_txt())
 # Sitemap includes the actual public image URLs; no invented license or image credits.
 NS='http://www.sitemaps.org/schemas/sitemap/0.9';IMG='http://www.google.com/schemas/sitemap-image/1.1'
 ET.register_namespace('',NS);ET.register_namespace('image',IMG)

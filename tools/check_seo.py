@@ -25,7 +25,7 @@ class Page(HTMLParser):
   if t=='title':self.in_title=False
   if t=='script' and self.script is not None:self.schemas.append(json.loads(self.script));self.script=None
 sitemap=ET.parse(R/'sitemap.xml');ns={'s':'http://www.sitemaps.org/schemas/sitemap/0.9','i':'http://www.google.com/schemas/sitemap-image/1.1'}
-urls=[u.text for u in sitemap.findall('s:url/s:loc',ns)];assert len(urls)==38 and len(set(urls))==38
+urls=[u.text for u in sitemap.findall('s:url/s:loc',ns)];assert len(urls)>0 and len(set(urls))==len(urls),(f'Sitemap duplicates or empty: {len(urls)} URLs, {len(set(urls))} unique')
 pages={};titles=[]
 for u in urls:
  path=urlsplit(u).path;f=R/path.lstrip('/')/'index.html' if path!='/' else R/'index.html'

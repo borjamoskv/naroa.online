@@ -178,6 +178,15 @@ Allow: /
 User-agent: Applebot-Extended
 Allow: /
 
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
 User-agent: GPTBot
 Disallow: /
 
@@ -185,6 +194,12 @@ User-agent: CCBot
 Disallow: /
 
 User-agent: Google-Extended
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: Amazonbot
 Disallow: /
 
 User-agent: *
@@ -299,11 +314,16 @@ fi
 
 # ── 9. Notificación Instantánea IndexNow (Bing / Copilot / Perplexity) ──
 if [ "$MODE" = "production" ] && [ -f ".deploy/indexnow.json" ]; then
-  log "Notificando a IndexNow (Bing, Copilot, Perplexity, ChatGPT Search)..."
-  curl -s -X POST "https://api.indexnow.org/indexnow" \
-    -H "Content-Type: application/json; charset=utf-8" \
-    --data-binary "@.deploy/indexnow.json" > /dev/null 2>&1 || true
-  ok "IndexNow notificado con 63 rutas canónicas"
+  log "Notificando a IndexNow (IndexNow.org, Bing/Copilot, Yandex)..."
+  for INDEXNOW_ENDPOINT in \
+    "https://api.indexnow.org/indexnow" \
+    "https://www.bing.com/indexnow" \
+    "https://yandex.com/indexnow"; do
+    curl -s -X POST "$INDEXNOW_ENDPOINT" \
+      -H "Content-Type: application/json; charset=utf-8" \
+      --data-binary "@.deploy/indexnow.json" > /dev/null 2>&1 || true
+  done
+  ok "IndexNow notificado en 3 endpoints con rutas canónicas"
 fi
 
 # ── 10. Finalización ─────────────────────────────────────────
