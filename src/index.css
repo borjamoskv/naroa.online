@@ -1609,23 +1609,3 @@ a:focus:not(:focus-visible) {
   }
 }
 
-/* Animaciones de Carretes Analógicos (SoundDeckOverlay) */
-@keyframes sc-reel-spin-cw {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@keyframes sc-reel-spin-ccw {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(-360deg); }
-}
-
-.sc-reel-left-anim {
-  animation: sc-reel-spin-cw 2.4s linear infinite;
-}
-
-.sc-reel-right-anim {
-  animation: sc-reel-spin-cw 2.4s linear infinite;
-}
-
-
