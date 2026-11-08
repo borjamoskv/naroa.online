@@ -13,9 +13,6 @@ Allow: /
 User-agent: ClaudeBot
 Allow: /
 
-User-agent: anthropic-ai
-Allow: /
-
 User-agent: Applebot-Extended
 Allow: /
 
@@ -36,6 +33,9 @@ Disallow: /
 
 User-agent: Bytespider
 Disallow: /
+
+User-agent: anthropic-ai
+Allow: /
 
 User-agent: Amazonbot
 Disallow: /

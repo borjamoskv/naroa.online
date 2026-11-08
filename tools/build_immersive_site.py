@@ -1770,7 +1770,7 @@ def build(output):
         "User-agent: Bytespider\n"
         "Disallow: /\n\n"
         "User-agent: anthropic-ai\n"
-        "Disallow: /\n\n"
+        "Allow: /\n\n"
         "User-agent: Amazonbot\n"
         "Disallow: /\n\n"
         "User-agent: *\n"
@@ -2065,12 +2065,12 @@ def build(output):
     write(REPO / "public" / "llms.txt", llms_txt)
 
     artworks_md = "\n".join(
-        f"### {p['title']} ({p.get('year', 's/f')})\n"
+        f"### {p['title']}{(' (' + str(p['year']) + ')') if p.get('year') else ''}\n"
         f"- **URL Canónica:** {ORIGIN}/obra/{p['slug']}/\n"
-        f"- **Técnica:** {p.get('technique', 'Técnica mixta')}\n"
-        f"- **Soporte:** {p.get('support', 'Soporte rígido')}\n"
-        f"- **Medidas:** {p.get('dimensions', 'Medidas variables')}\n"
-        f"- **Materiales:** {p.get('materials') or p.get('technique', 'Técnica mixta')}\n"
+        f"- **Técnica:** {p.get('technique') or 'Técnica mixta'}\n"
+        f"- **Soporte:** {p.get('support') or 'Soporte rígido'}\n"
+        f"- **Medidas:** {p.get('dimensions') or 'Medidas variables'}\n"
+        f"- **Materiales:** {p.get('materials') or p.get('technique') or 'Técnica mixta'}\n"
         f"- **Serie:** {p.get('series') or 'Colección general'}\n"
         f"- **Relato:** {p['story']}\n"
         f"- **Contacto Obra:** mailto:naroa@naroa.eu?subject={quote('Consulta sobre '+p['title'])}\n"
