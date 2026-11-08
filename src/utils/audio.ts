@@ -154,12 +154,12 @@ export const WEEKDAY_THEMES: WeekdayTheme[] = [
     tempoMs: 1480,
     notes: [
       74.00, 77.24, 81.02, 77.24, 75.86, 74.00, 69.02, null,
-      null, null, 71.74, null, null, 75.86, null, null,
-      74.00, null, null, 77.24, null, null, 69.02, null,
+      74.00, 76.00, 77.00, 79.00, 81.00, 79.00, 77.00, 76.00,
+      74.00, 77.00, 79.00, 81.00, 79.00, 77.00, 76.00, 74.00,
       ...SOUND_OF_SILENCE_CADENCE
     ]
   },
-  // 1. Martes (Asteartea)
+  // 1. Martes (Asteartea) - Haurtxo Polita (Nana popular vasca)
   {
     day: 'Martes',
     title: 'Haurtxo Polita',
@@ -175,13 +175,15 @@ export const WEEKDAY_THEMES: WeekdayTheme[] = [
     shortDay: 'M',
     tempoMs: 1580,
     notes: [
-      74.00, null, 77.24, null, 81.02, null, null, 75.86,
-      74.00, null, null, 77.24, null, 75.86, null, null,
-      81.02, null, 78.98, null, 74.00, null, 69.02, null,
+      // «Haurtxo polita sehaskan dago, zapi zuritan txit bero…»
+      74.00, 77.00, 81.00, 81.00, 79.00, 77.00, 79.00, 81.00,
+      74.00, 77.00, 81.00, 81.00, 79.00, 77.00, 76.00, 74.00,
+      // «Amonak dio: ene potxolo, arren egin ba lo, lo…»
+      77.00, 79.00, 81.00, 81.00, 82.00, 81.00, 79.00, 77.00,
       ...SOUND_OF_SILENCE_CADENCE
     ]
   },
-  // 2. Miércoles (Asteazkena)
+  // 2. Miércoles (Asteazkena) - Harria eta Marea (Boga Boga)
   {
     day: 'Miércoles',
     title: 'Harria eta Marea',
@@ -197,13 +199,14 @@ export const WEEKDAY_THEMES: WeekdayTheme[] = [
     shortDay: 'X',
     tempoMs: 1620,
     notes: [
-      74.00, null, null, 81.02, null, 75.86, null, null,
-      77.24, null, 83.74, null, null, 78.98, null, 74.00,
-      null, 75.86, null, null, 72.02, null, 69.02, null,
+      // «Boga, boga, marinela, joan behar dugu urrunera…»
+      69.00, 74.00, 76.00, 77.00, 76.00, 74.00, 73.00, 74.00,
+      76.00, 77.00, 79.00, 81.00, 82.00, 81.00, 79.00, 77.00,
+      81.00, 79.00, 77.00, 76.00, 74.00, 73.00, 74.00, null,
       ...SOUND_OF_SILENCE_CADENCE
     ]
   },
-  // 3. Jueves (Osteguna)
+  // 3. Jueves (Osteguna) - Txoria Txori (Mikel Laboa)
   {
     day: 'Jueves',
     title: 'Txoria Txori',
@@ -219,13 +222,15 @@ export const WEEKDAY_THEMES: WeekdayTheme[] = [
     shortDay: 'J',
     tempoMs: 1520,
     notes: [
-      74.00, null, 75.86, null, 77.24, null, 74.00, null,
-      null, 69.02, null, 74.00, null, 77.24, null, null,
-      81.02, null, 78.98, null, 75.86, null, 72.02, null,
+      // «Hegoak ebaki banizkio, nerea izango zen…»
+      74.00, 77.00, 76.00, 74.00, 73.00, 74.00, 76.00, null,
+      77.00, 79.00, 81.00, 79.00, 77.00, 76.00, 74.00, null,
+      // «Bainan honela ez zen gehiago txoria izango…»
+      81.00, 81.00, 82.00, 81.00, 79.00, 77.00, 76.00, 74.00,
       ...SOUND_OF_SILENCE_CADENCE
     ]
   },
-  // 4. Viernes (Ostirala)
+  // 4. Viernes (Ostirala) - Mi Gran Noche (Raphael / Salvatore Adamo)
   {
     day: 'Viernes',
     title: 'Mi Gran Noche',
@@ -241,13 +246,14 @@ export const WEEKDAY_THEMES: WeekdayTheme[] = [
     shortDay: 'V',
     tempoMs: 1420,
     notes: [
-      74.00, null, 75.86, null, 77.24, null, null, 81.02,
-      null, 78.98, null, 75.86, null, null, 69.02, null,
-      81.02, null, null, 78.98, null, 77.24, null, null,
+      // «¿Qué pasará? ¿Qué misterio habrá? Puede ser mi gran noche…»
+      69.00, 74.00, 77.00, 76.00, null, 69.00, 74.00, 77.00,
+      76.00, null, 77.00, 77.00, 77.00, 79.00, 77.00, 76.00,
+      74.00, 76.00, 69.00, 74.00, 77.00, 76.00, 74.00, null,
       ...SOUND_OF_SILENCE_CADENCE
     ]
   },
-  // 5. Sábado (Larunbata)
+  // 5. Sábado (Larunbata) - Gaua (Nocturno de Bilbao)
   {
     day: 'Sábado',
     title: 'Gaua',
@@ -263,13 +269,13 @@ export const WEEKDAY_THEMES: WeekdayTheme[] = [
     shortDay: 'S',
     tempoMs: 1640,
     notes: [
-      74.00, null, null, 81.02, null, 77.24, null, null,
-      69.02, null, 74.00, null, null, 78.98, null, null,
-      74.00, null, 81.02, null, null, 75.86, null, null,
+      74.00, 76.00, 77.00, 81.00, 79.00, 77.00, 76.00, 74.00,
+      69.00, 74.00, 76.00, 77.00, 79.00, 77.00, 76.00, 74.00,
+      77.00, 79.00, 81.00, 82.00, 81.00, 79.00, 77.00, 74.00,
       ...SOUND_OF_SILENCE_CADENCE
     ]
   },
-  // 6. Domingo (Igandea)
+  // 6. Domingo (Igandea) - Haizea (Xalbadorren Heriotzean)
   {
     day: 'Domingo',
     title: 'Haizea',
@@ -285,9 +291,10 @@ export const WEEKDAY_THEMES: WeekdayTheme[] = [
     shortDay: 'D',
     tempoMs: 1500,
     notes: [
-      74.00, null, 77.24, null, 81.02, null, null, 78.98,
-      null, 75.86, null, 74.00, null, 69.02, null, null,
-      75.86, null, 81.02, null, null, 75.86, null, null,
+      // «Adiskide bat bazen, oroitzen gara orain…»
+      74.00, 77.00, 79.00, 81.00, 81.00, 79.00, 77.00, 79.00,
+      81.00, 77.00, 79.00, 76.00, 74.00, 73.00, 74.00, 76.00,
+      77.00, 79.00, 81.00, 81.00, 82.00, 81.00, 79.00, 77.00,
       ...SOUND_OF_SILENCE_CADENCE
     ]
   }
