@@ -41,11 +41,97 @@
           "value": "public, max-age=31536000, immutable"
         }
       ]
+    },
+    {
+      "source": "/immersive/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/images/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/audio/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, stale-while-revalidate=86400"
+        }
+      ]
+    },
+    {
+      "source": "/.well-known/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, stale-while-revalidate=86400"
+        }
+      ]
+    },
+    {
+      "source": "/(llms|llms-full).txt",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/markdown; charset=utf-8"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, stale-while-revalidate=86400"
+        }
+      ]
     }
   ],
   "redirects": [
     {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.naroagutierrezgil.com"
+        }
+      ],
+      "destination": "https://naroagutierrezgil.com/:path*",
+      "permanent": true
+    },
+    {
       "source": "/landing-bilbao",
+      "destination": "/retratos-por-encargo-bilbao/",
+      "permanent": true
+    },
+    {
+      "source": "/landing-bilbao/",
       "destination": "/retratos-por-encargo-bilbao/",
       "permanent": true
     },
@@ -55,7 +141,17 @@
       "permanent": true
     },
     {
+      "source": "/retratos-por-encargo/",
+      "destination": "/retratos-por-encargo-bilbao/",
+      "permanent": true
+    },
+    {
       "source": "/retrato-por-encargo",
+      "destination": "/retratos-por-encargo-bilbao/",
+      "permanent": true
+    },
+    {
+      "source": "/retrato-por-encargo/",
       "destination": "/retratos-por-encargo-bilbao/",
       "permanent": true
     },
@@ -65,8 +161,68 @@
       "permanent": true
     },
     {
+      "source": "/retrato-por-encargo-bilbao/",
+      "destination": "/retratos-por-encargo-bilbao/",
+      "permanent": true
+    },
+    {
       "source": "/encargos",
       "destination": "/retratos-por-encargo-bilbao/",
+      "permanent": true
+    },
+    {
+      "source": "/encargos/",
+      "destination": "/retratos-por-encargo-bilbao/",
+      "permanent": true
+    },
+    {
+      "source": "/bio",
+      "destination": "/sobre-mi/",
+      "permanent": true
+    },
+    {
+      "source": "/bio/",
+      "destination": "/sobre-mi/",
+      "permanent": true
+    },
+    {
+      "source": "/exposiciones",
+      "destination": "/trayectoria/",
+      "permanent": true
+    },
+    {
+      "source": "/exposiciones/",
+      "destination": "/trayectoria/",
+      "permanent": true
+    },
+    {
+      "source": "/prensa",
+      "destination": "/cuaderno/",
+      "permanent": true
+    },
+    {
+      "source": "/prensa/",
+      "destination": "/cuaderno/",
+      "permanent": true
+    },
+    {
+      "source": "/blog",
+      "destination": "/cuaderno/",
+      "permanent": true
+    },
+    {
+      "source": "/blog/",
+      "destination": "/cuaderno/",
+      "permanent": true
+    },
+    {
+      "source": "/obra/marian-de-miranda-luciendo-la-pantorrilla",
+      "destination": "/obra/marian-de-miranda/",
+      "permanent": true
+    },
+    {
+      "source": "/obra/marian-de-miranda-luciendo-la-pantorrilla/",
+      "destination": "/obra/marian-de-miranda/",
       "permanent": true
     }
   ]
