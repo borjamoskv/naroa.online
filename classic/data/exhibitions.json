@@ -432,8 +432,8 @@
     {
       "id": "195",
       "title": "Espejos del Alma · Laberinto de Espejos",
-      "date": "2014-07",
-      "dateLabel": "Julio — 31 de agosto de 2014",
+      "date": "2014-07-03",
+      "dateLabel": "3 de julio — 31 de agosto de 2014",
       "location": "Torre Salazar · Portugalete",
       "type": "solo",
       "description": "«El pasado 1 de Julio terminé de montar mi actual exposición de pintura “Espejos del Alma” en la Torre Salazar de Portugalete. El cuerpo, como torre y como mundo… Y el mundo… un laberinto de espejos».",
@@ -443,6 +443,10 @@
         {
           "label": "Relato de Naroa",
           "url": "https://naroagutierrez.wordpress.com/2014/07/10/la-muestra-espejos-del-alma-visita-la-portugaluja-torre-salazar/"
+        },
+        {
+          "label": "Agenda El Correo",
+          "url": "https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-430614.html"
         }
       ],
       "published": "2014-07-10",
