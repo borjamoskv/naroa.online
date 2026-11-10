@@ -115,14 +115,14 @@
   ],
   "redirects": [
     {
-      "source": "/:path*",
+      "source": "/(.*)",
       "has": [
         {
           "type": "host",
           "value": "www.naroagutierrezgil.com"
         }
       ],
-      "destination": "https://naroagutierrezgil.com/:path*",
+      "destination": "https://naroagutierrezgil.com/$1",
       "permanent": true
     },
     {
