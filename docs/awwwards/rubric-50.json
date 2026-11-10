@@ -1,0 +1,460 @@
+{
+  "title": "AWWWARDS LAB NAROA / matriz propia inspirada en 4 categorías",
+  "version": "2026-11-11",
+  "site": "https://naroagutierrezgil.com/",
+  "repo": "borjamoskv/naroa.online",
+  "official": false,
+  "formula": "50 criterios × 0.02 = 100%; diseño 40, usabilidad 30, creatividad 20, contenido 10",
+  "criteria": [
+    {
+      "id": "D01",
+      "category": "Diseño",
+      "title": "Concepto editorial",
+      "question": "¿La primera pantalla transmite una idea artística diferenciada?",
+      "proof": "home y captura desktop",
+      "lead": "art-director",
+      "weight": 0.02
+    },
+    {
+      "id": "D02",
+      "category": "Diseño",
+      "title": "Coherencia visual",
+      "question": "¿Portada, galería, biografía y encargos comparten una dirección artística?",
+      "proof": "capturas comparadas de 4 rutas",
+      "lead": "art-director",
+      "weight": 0.02
+    },
+    {
+      "id": "D03",
+      "category": "Diseño",
+      "title": "Impacto del hero",
+      "question": "¿La primera obra genera un momento memorable sin bloquear orientación?",
+      "proof": "captura y vídeo de entrada",
+      "lead": "art-director",
+      "weight": 0.02
+    },
+    {
+      "id": "D04",
+      "category": "Diseño",
+      "title": "Jerarquía editorial",
+      "question": "¿Se entiende qué es obra, título, acción y navegación?",
+      "proof": "estructura DOM y capturas",
+      "lead": "art-director",
+      "weight": 0.02
+    },
+    {
+      "id": "D05",
+      "category": "Diseño",
+      "title": "Familias tipográficas",
+      "question": "¿Las fuentes forman un sistema expresivo y no caótico?",
+      "proof": "CSS y capturas",
+      "lead": "art-director",
+      "weight": 0.02
+    },
+    {
+      "id": "D06",
+      "category": "Diseño",
+      "title": "Legibilidad del texto",
+      "question": "¿Los textos mantienen tamaño, interlineado y medida legibles?",
+      "proof": "capturas y estilos computados",
+      "lead": "art-director",
+      "weight": 0.02
+    },
+    {
+      "id": "D07",
+      "category": "Diseño",
+      "title": "Escala responsive tipográfica",
+      "question": "¿La tipografía cambia deliberadamente entre móvil y escritorio?",
+      "proof": "capturas 390 y 1440",
+      "lead": "art-director",
+      "weight": 0.02
+    },
+    {
+      "id": "D08",
+      "category": "Diseño",
+      "title": "Espacio negativo",
+      "question": "¿El vacío potencia la obra y evita saturación visual?",
+      "proof": "capturas de 4 rutas",
+      "lead": "art-director",
+      "weight": 0.02
+    },
+    {
+      "id": "D09",
+      "category": "Diseño",
+      "title": "Retícula y alineación",
+      "question": "¿Los ejes de composición están controlados?",
+      "proof": "capturas con guías",
+      "lead": "art-director",
+      "weight": 0.02
+    },
+    {
+      "id": "D10",
+      "category": "Diseño",
+      "title": "Paleta y contraste visual",
+      "question": "¿La paleta hace visible la obra sin comprometer lectura?",
+      "proof": "capturas y medición de contraste",
+      "lead": "art-director",
+      "weight": 0.02
+    },
+    {
+      "id": "D11",
+      "category": "Diseño",
+      "title": "Originalidad del material visual",
+      "question": "¿La imagen procede de obra real y no de recursos genéricos?",
+      "proof": "catálogo y créditos de imagen",
+      "lead": "art-director",
+      "weight": 0.02
+    },
+    {
+      "id": "D12",
+      "category": "Diseño",
+      "title": "Traducción digital de la materia",
+      "question": "¿Las fichas permiten distinguir pizarra, collage, madera y soportes?",
+      "proof": "fichas y fotos de detalle",
+      "lead": "art-director",
+      "weight": 0.02
+    },
+    {
+      "id": "D13",
+      "category": "Diseño",
+      "title": "Integración de títulos",
+      "question": "¿Los textos dialogan con los retratos sin taparlos?",
+      "proof": "capturas de 5 obras",
+      "lead": "art-director",
+      "weight": 0.02
+    },
+    {
+      "id": "D14",
+      "category": "Diseño",
+      "title": "Diseño de controles",
+      "question": "¿Botones como Sonido, Solo obra e Índice tienen propósito claro?",
+      "proof": "portada y paneles",
+      "lead": "art-director",
+      "weight": 0.02
+    },
+    {
+      "id": "D15",
+      "category": "Diseño",
+      "title": "Microinteracciones",
+      "question": "¿Hover y transiciones refuerzan significado sin exhibicionismo?",
+      "proof": "vídeo comparativo",
+      "lead": "art-director",
+      "weight": 0.02
+    },
+    {
+      "id": "D16",
+      "category": "Diseño",
+      "title": "Estados de interfaz",
+      "question": "¿Focus, hover, active y disabled son reconocibles?",
+      "proof": "CSS y pruebas de teclado",
+      "lead": "art-director",
+      "weight": 0.02
+    },
+    {
+      "id": "D17",
+      "category": "Diseño",
+      "title": "Diseño del detalle de obra",
+      "question": "¿La ficha respeta identidad y prioriza la obra?",
+      "proof": "DOM, ficha y captura",
+      "lead": "art-director",
+      "weight": 0.02
+    },
+    {
+      "id": "D18",
+      "category": "Diseño",
+      "title": "Ritmo de transiciones",
+      "question": "¿La secuencia visual tiene cadencia sin jank?",
+      "proof": "vídeo y fotogramas",
+      "lead": "art-director",
+      "weight": 0.02
+    },
+    {
+      "id": "D19",
+      "category": "Diseño",
+      "title": "Composición móvil",
+      "question": "¿La dirección artística se mantiene en 390×844?",
+      "proof": "capturas dispositivo real",
+      "lead": "art-director",
+      "weight": 0.02
+    },
+    {
+      "id": "D20",
+      "category": "Diseño",
+      "title": "Cierre y contacto",
+      "question": "¿Pie, créditos y salida mantienen intención editorial?",
+      "proof": "footer de rutas y enlaces",
+      "lead": "art-director",
+      "weight": 0.02
+    },
+    {
+      "id": "U21",
+      "category": "Usabilidad",
+      "title": "Arquitectura de información",
+      "question": "¿Las rutas y secciones se encuentran sin explicación?",
+      "proof": "mapa de navegación real",
+      "lead": "ux-adversary",
+      "weight": 0.02
+    },
+    {
+      "id": "U22",
+      "category": "Usabilidad",
+      "title": "Orientación de recorrido",
+      "question": "¿El visitante conoce su posición en la secuencia?",
+      "proof": "indicador 01/85 y navegación",
+      "lead": "ux-adversary",
+      "weight": 0.02
+    },
+    {
+      "id": "U23",
+      "category": "Usabilidad",
+      "title": "Índice alternativo",
+      "question": "¿Se puede saltar libremente sin recorrer 85 obras?",
+      "proof": "índice y enlace catálogo",
+      "lead": "ux-adversary",
+      "weight": 0.02
+    },
+    {
+      "id": "U24",
+      "category": "Usabilidad",
+      "title": "Búsqueda de obra",
+      "question": "¿El buscador permite encontrar títulos o técnicas?",
+      "proof": "prueba de búsquedas",
+      "lead": "ux-adversary",
+      "weight": 0.02
+    },
+    {
+      "id": "U25",
+      "category": "Usabilidad",
+      "title": "Filtrado del catálogo",
+      "question": "¿Los filtros separan materiales y series con coherencia?",
+      "proof": "prueba de categorías",
+      "lead": "ux-adversary",
+      "weight": 0.02
+    },
+    {
+      "id": "U26",
+      "category": "Usabilidad",
+      "title": "Retorno y reversibilidad",
+      "question": "¿Se sale de un modal o recorrido sin perder control?",
+      "proof": "controles volver y cerrar",
+      "lead": "ux-adversary",
+      "weight": 0.02
+    },
+    {
+      "id": "U27",
+      "category": "Usabilidad",
+      "title": "Ficha de información",
+      "question": "¿Se accede a técnica, soporte, dimensiones y acciones?",
+      "proof": "fichas de al menos tres obras",
+      "lead": "ux-adversary",
+      "weight": 0.02
+    },
+    {
+      "id": "U28",
+      "category": "Usabilidad",
+      "title": "Ruta de conversión",
+      "question": "¿Se llega a un encargo en pocos pasos?",
+      "proof": "flujo desde portada a WhatsApp",
+      "lead": "ux-adversary",
+      "weight": 0.02
+    },
+    {
+      "id": "U29",
+      "category": "Usabilidad",
+      "title": "Configurador de encargo",
+      "question": "¿Los pasos de materiales, destinatarios y plazo son entendibles?",
+      "proof": "flujo completo de formulario",
+      "lead": "ux-adversary",
+      "weight": 0.02
+    },
+    {
+      "id": "U30",
+      "category": "Usabilidad",
+      "title": "Ergonomía táctil",
+      "question": "¿Todos los objetivos táctiles son cómodos y sin colisiones?",
+      "proof": "prueba touch 390×844",
+      "lead": "ux-adversary",
+      "weight": 0.02
+    },
+    {
+      "id": "U31",
+      "category": "Usabilidad",
+      "title": "Navegación por teclado",
+      "question": "¿Skip link, orden de foco y escape funcionan?",
+      "proof": "prueba teclado completa",
+      "lead": "ux-adversary",
+      "weight": 0.02
+    },
+    {
+      "id": "U32",
+      "category": "Usabilidad",
+      "title": "Accesibilidad de foco y contraste",
+      "question": "¿WCAG AA y señales de foco son suficientes en todas las pantallas?",
+      "proof": "axe y contraste computado",
+      "lead": "ux-adversary",
+      "weight": 0.02
+    },
+    {
+      "id": "U33",
+      "category": "Usabilidad",
+      "title": "Reducción de movimiento",
+      "question": "¿prefers-reduced-motion respeta equivalencia funcional?",
+      "proof": "emulación reduce en navegador",
+      "lead": "ux-adversary",
+      "weight": 0.02
+    },
+    {
+      "id": "U34",
+      "category": "Usabilidad",
+      "title": "Core Web Vitals",
+      "question": "¿LCP≤2.5s, CLS≤0.1, INP≤200ms en móvil p75?",
+      "proof": "CrUX/PageSpeed/Lighthouse identificado",
+      "lead": "ux-adversary",
+      "weight": 0.02
+    },
+    {
+      "id": "U35",
+      "category": "Usabilidad",
+      "title": "Robustez de navegación",
+      "question": "¿No hay enlaces rotos, JS errors o contenido vacío?",
+      "proof": "crawler y consola en rutas",
+      "lead": "ux-adversary",
+      "weight": 0.02
+    },
+    {
+      "id": "R36",
+      "category": "Creatividad",
+      "title": "Idea diferencial",
+      "question": "¿La exposición digital tiene concepto propio y no plantilla?",
+      "proof": "análisis de propuesta",
+      "lead": "creative-tech",
+      "weight": 0.02
+    },
+    {
+      "id": "R37",
+      "category": "Creatividad",
+      "title": "Narrativa de recorrido",
+      "question": "¿Cada obra participa de una secuencia significativa?",
+      "proof": "recorrido completo y journey.json",
+      "lead": "creative-tech",
+      "weight": 0.02
+    },
+    {
+      "id": "R38",
+      "category": "Creatividad",
+      "title": "Diseño sonoro contextual",
+      "question": "¿El audio profundiza la experiencia sin imponerla?",
+      "proof": "sonido real, mute y controles",
+      "lead": "creative-tech",
+      "weight": 0.02
+    },
+    {
+      "id": "R39",
+      "category": "Creatividad",
+      "title": "Interacción Kintsugi",
+      "question": "¿La ruptura visual tiene función simbólica reconocible?",
+      "proof": "vídeo del efecto",
+      "lead": "creative-tech",
+      "weight": 0.02
+    },
+    {
+      "id": "R40",
+      "category": "Creatividad",
+      "title": "Materialidad de objetos",
+      "question": "¿Se perciben singularidades físicas de cada soporte?",
+      "proof": "fotos multiperspectiva",
+      "lead": "creative-tech",
+      "weight": 0.02
+    },
+    {
+      "id": "R41",
+      "category": "Creatividad",
+      "title": "Firma en transiciones",
+      "question": "¿Existe un lenguaje de transición memorable y consistente?",
+      "proof": "vídeos en tres obras",
+      "lead": "creative-tech",
+      "weight": 0.02
+    },
+    {
+      "id": "R42",
+      "category": "Creatividad",
+      "title": "Exploración aleatoria",
+      "question": "¿El índice/oráculo ofrece rutas no lineales valiosas?",
+      "proof": "prueba del oráculo",
+      "lead": "creative-tech",
+      "weight": 0.02
+    },
+    {
+      "id": "R43",
+      "category": "Creatividad",
+      "title": "Originalidad acústica",
+      "question": "¿La pieza y motor WebAudio son originales y acreditados?",
+      "proof": "créditos y código de audio",
+      "lead": "creative-tech",
+      "weight": 0.02
+    },
+    {
+      "id": "R44",
+      "category": "Creatividad",
+      "title": "Agencia del visitante",
+      "question": "¿El usuario controla audio, efectos y exploración?",
+      "proof": "botones opt-in y pausa",
+      "lead": "creative-tech",
+      "weight": 0.02
+    },
+    {
+      "id": "R45",
+      "category": "Creatividad",
+      "title": "Riesgo creativo vs utilidad",
+      "question": "¿Los efectos no compiten con la obra y no marean?",
+      "proof": "test 5 min y reduce motion",
+      "lead": "creative-tech",
+      "weight": 0.02
+    },
+    {
+      "id": "C46",
+      "category": "Contenido",
+      "title": "Profundidad de fichas",
+      "question": "¿Cada obra ofrece texto, técnica, soporte, medidas o contexto?",
+      "proof": "muestreo de obras",
+      "lead": "art-director",
+      "weight": 0.02
+    },
+    {
+      "id": "C47",
+      "category": "Contenido",
+      "title": "Voz autoral",
+      "question": "¿La escritura tiene carácter y no clichés comerciales?",
+      "proof": "sobre mí y encargos",
+      "lead": "art-director",
+      "weight": 0.02
+    },
+    {
+      "id": "C48",
+      "category": "Contenido",
+      "title": "Créditos y procedencia",
+      "question": "¿Imágenes, fuentes y audio tienen atribución rastreable?",
+      "proof": "catálogo, links y créditos",
+      "lead": "art-director",
+      "weight": 0.02
+    },
+    {
+      "id": "C49",
+      "category": "Contenido",
+      "title": "Trayectoria documentada",
+      "question": "¿Exposiciones están fechadas y vinculadas a fuentes?",
+      "proof": "trayectoria y enlaces",
+      "lead": "art-director",
+      "weight": 0.02
+    },
+    {
+      "id": "C50",
+      "category": "Contenido",
+      "title": "Consistencia editorial y SEO",
+      "question": "¿Conteo de obras y claims coinciden en todas las rutas y metadatos?",
+      "proof": "conteo catálogo, JSON-LD y rutas",
+      "lead": "art-director",
+      "weight": 0.02
+    }
+  ]
+}
