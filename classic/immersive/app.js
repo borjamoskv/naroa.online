@@ -764,7 +764,7 @@
       btn.dataset.reelTitle = frame.title;
       if (frame.href) btn.dataset.reelHref = frame.href;
       btn.tabIndex = -1;
-      btn.title = `${frame.title} · Clic para previsualizar`;
+      btn.setAttribute('aria-label', frame.title);
       btn.style.backgroundImage = `url("${frame.src}")`;
       const selectFrame = e => {
         e.stopPropagation();
@@ -819,10 +819,9 @@
     if (menuMelodyToday) {
       const info = window.NAROA_SOUND?.getActiveMelodyInfo?.();
       if (info && info.name) {
-        menuMelodyToday.textContent = `${info.day || 'Hoy'} · «${info.name}» (Re menor · 146–440 Hz)`;
+        menuMelodyToday.textContent = `${info.day || 'Hoy'} · «${info.name}»`;
       } else {
-        const days = ['Domingo · «Haizea»', 'Lunes · «Landa»', 'Martes · «Haurtxo Polita»', 'Miércoles · «Harria eta Marea»', 'Jueves · «Txoria Txori»', 'Viernes · «Mi Gran Noche»', 'Sábado · «Gaua»'];
-        menuMelodyToday.textContent = `${days[new Date().getDay()] || 'Ciclo Semanal'} · Síntesis cálida Re menor`;
+        menuMelodyToday.textContent = 'Banda sonora · «Apirila»';
       }
     }
   }
@@ -1072,7 +1071,7 @@
         count++;
       }
     });
-    $('.index-count').textContent = `${count} ${count === 1 ? 'proyecto' : 'proyectos'}`;
+    $('.index-count').textContent = `${count} ${count === 1 ? 'obra' : 'obras'}`;
     $('.index-empty').hidden = count !== 0;
     filters.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.filter === filter)));
     if (firstVisible) updateIndexSpotlight(firstVisible);

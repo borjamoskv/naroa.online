@@ -33,46 +33,8 @@ dialog{color:#fffdf4;background:#11120f;border:0;padding:0;max-width:none;max-he
 @keyframes scroll-cue{0%,100%{translate:0 0;opacity:.5}50%{translate:0 8px;opacity:1}}
 .has-motion .art-layers{animation:scene-arrival 1.15s cubic-bezier(.16,1,.3,1) both}.has-motion [data-art-title]{animation:type-arrival .95s .16s cubic-bezier(.16,1,.3,1) both}.has-motion .art-counter,.has-motion .art-material{animation:index-arrival .8s .35s both}.has-motion .page-hero-copy>*,.has-motion .contact-copy>*{animation:type-arrival 1.1s cubic-bezier(.16,1,.3,1) both}.has-motion .page-hero-copy>:nth-child(2),.has-motion .contact-copy>:nth-child(2){animation-delay:.12s}.has-motion .page-hero-copy>:nth-child(n+3),.has-motion .contact-copy>:nth-child(n+3){animation-delay:.25s}.has-motion .hero-down{animation:scroll-cue 2s ease-in-out 2}.has-motion .menu-dialog[open],.has-motion .story-dialog[open]{animation:panel-arrival .65s cubic-bezier(.16,1,.3,1) both}.has-motion .menu-dialog[open]>nav>a{animation:type-arrival .6s cubic-bezier(.16,1,.3,1) both}.menu-dialog>nav>a:nth-child(2){animation-delay:.06s}.menu-dialog>nav>a:nth-child(3){animation-delay:.12s}.menu-dialog>nav>a:nth-child(4){animation-delay:.18s}.menu-dialog>nav>a:nth-child(5){animation-delay:.24s}.menu-dialog>nav>a:nth-child(6){animation-delay:.3s}.menu-dialog>nav>a:nth-child(7){animation-delay:.36s}.menu-dialog>nav>a{transition:translate .4s,color .3s}.menu-dialog>nav>a:hover{translate:12px 0}.has-motion .index-dialog[open] .index-controls,.has-motion .index-dialog[open] .index-list{animation:index-arrival .7s cubic-bezier(.16,1,.3,1) both}.has-motion .index-dialog[open] .index-list{animation-delay:.12s}.index-work img{transition:transform .6s cubic-bezier(.16,1,.3,1),border-radius .6s}.index-work:hover img{transform:scale(1.12) rotate(-3deg);border-radius:4px}.index-work>span:last-child{transition:translate .4s}.index-work:hover>span:last-child{translate:5px -5px}.motion-reveal{opacity:0;transform:translate3d(0,12px,0);transition:opacity .9s,transform 1.1s cubic-bezier(.16,1,.3,1)}.motion-reveal.is-revealed{opacity:1;transform:translate3d(0,0,0)}.notebook-posts article:nth-child(even),.commission-steps article:nth-child(even){transition-delay:.09s}.page-hero-copy{will-change:transform,opacity}.full-figure img{transition:filter .5s}.full-figure:hover img{filter:saturate(1.12)}
 .site-nav nav>.sound-toggle{gap:7px;white-space:nowrap}.site-nav nav>.sound-toggle span{font-size:11px;letter-spacing:.03em}.sound-toggle svg{width:20px;height:14px;fill:none;stroke:currentColor;stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round;opacity:.62;transition:opacity .25s,color .25s}.sound-toggle[aria-pressed=true]{color:#d8b47c}.sound-toggle[aria-pressed=true] svg{opacity:.95}.sound-toggle[data-state=playing] .reel-wheel{transform-box:fill-box;transform-origin:center;animation:analog-reel-spin 4.5s linear infinite}.sound-toggle[data-state=loading]{opacity:.5}
-.sound-status{position:absolute;right:4.5%;top:calc(100% + 6px);width:max-content;max-width:min(256px,88vw);padding:0;background:transparent;border:0;font-size:10px;text-shadow:none;border-radius:6px;pointer-events:none;z-index:50;animation:sound-card-in .32s cubic-bezier(.16,1,.3,1) both}
-.sound-status.is-fading{animation:sound-card-out .38s cubic-bezier(.16,1,.3,1) forwards}
-@keyframes sound-card-in{from{opacity:0;transform:translate3d(0,-5px,0) scale(.98)}to{opacity:1;transform:translate3d(0,0,0) scale(1)}}
-@keyframes sound-card-out{from{opacity:1;transform:translate3d(0,0,0) scale(1)}to{opacity:0;transform:translate3d(0,-4px,0) scale(.98)}}
+.sound-status{position:absolute;right:4.5%;top:calc(100% + 6px);width:max-content;max-width:min(256px,88vw);padding:6px 10px;background:rgba(18,16,13,.92);color:#ece0cc;border:0;font-size:12px;line-height:1.4;text-shadow:none;border-radius:6px;pointer-events:none;z-index:50}
 @keyframes analog-reel-spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-.sound-card{position:relative;overflow:hidden;padding:9px 11px 8px;background:linear-gradient(180deg,#1a1713 0%,#12100d 100%);border:1px solid rgba(196,164,112,0.34);border-radius:6px;box-shadow:0 12px 28px rgba(0,0,0,0.78),inset 0 1px 0 rgba(255,244,218,0.12),inset 0 -1px 0 rgba(0,0,0,0.7);display:flex;flex-direction:column;gap:5px;pointer-events:auto;text-align:left;min-width:218px;max-width:254px;opacity:.94;transition:opacity .25s ease}
-.sound-card:hover{opacity:1}
-.sound-card:before{content:'';position:absolute;inset:2px;border:1px solid rgba(196,164,112,0.1);border-radius:4px;pointer-events:none}
-.sound-card.is-simple{padding:8px 12px;border-radius:5px;min-width:0}
-.sound-card-text{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:10px;line-height:1.4;color:#d8cbb8;margin:0}
-.sound-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-bottom:4px;border-bottom:1px solid rgba(196,164,112,0.14)}
-.sound-card-close{appearance:none;background:transparent;border:0;color:#9e8e76;font-size:13px;line-height:1;padding:1px 4px;margin:-2px -2px -2px 0;cursor:pointer;border-radius:3px;transition:color .2s,background .2s;min-height:0;min-width:0}
-.sound-card-close:hover{color:#e6c891;background:rgba(196,164,112,0.12)}
-.sound-card-tag{display:inline-flex;align-items:center;gap:5px;font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:8.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#b89f78}
-.sound-card-bars{display:inline-flex;align-items:center;gap:5px;height:14px;margin-right:1px}
-.sc-pilot-lamp{width:5px;height:5px;border-radius:50%;background:#5c4324;border:1px solid rgba(255,220,160,0.28);box-shadow:inset 0 1px 1px rgba(0,0,0,0.6);transition:background .3s,box-shadow .3s}
-.sound-card-bars.is-playing .sc-pilot-lamp{background:#e59a38;box-shadow:0 0 7px rgba(229,154,56,0.85),0 0 2px #fff2d6}
-.analog-reels-svg{width:32px;height:13px;display:block;overflow:visible}
-.analog-reels-svg .reel-window-frame{fill:#0b0a08;stroke:rgba(196,164,112,0.28);stroke-width:1}
-.analog-reels-svg .reel-tape-line{stroke:rgba(196,164,112,0.35);stroke-width:.8}
-.analog-reels-svg .reel-spool{fill:none;stroke:#c4a470;stroke-width:1;transform-box:fill-box;transform-origin:center}
-.sound-card-bars.is-playing .reel-spool{animation:analog-reel-spin 3.8s linear infinite}
-.sound-card-day{color:#d8b47c;font-weight:700}
-.sound-card-sep{opacity:.4;color:#b89f78}
-.sound-card-label{color:#9e8e76;letter-spacing:.06em;max-width:105px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sound-card-main{display:flex;flex-direction:column;gap:2px;padding:3px 6px;background:#0c0b09;border:1px solid rgba(196,164,112,0.18);border-radius:3px;box-shadow:inset 0 1px 4px rgba(0,0,0,0.85)}
-.sound-card-title-row{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
-.sound-card-title{font-family:'Cormorant Garamond',Georgia,serif;font-size:15px;font-weight:600;font-style:italic;line-height:1.15;letter-spacing:.01em;color:#ece0cc;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sound-card-note-pill{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:8.5px;letter-spacing:.04em;color:#d8b47c;background:transparent;border:0;padding:0;white-space:nowrap;opacity:.88}
-.sound-card-verse{margin:1px 0 0;font-family:'Cormorant Garamond',Georgia,serif;font-size:11.5px;font-style:italic;line-height:1.25;color:#b8a589;letter-spacing:.01em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sound-card-progress{height:2px;width:100%;background:#0a0907;border:1px solid rgba(196,164,112,0.16);border-radius:1px;overflow:hidden;margin-top:1px}
-.sound-card-progress-bar{display:block;height:100%;background:linear-gradient(90deg,#8f6d3d,#d8b47c);transition:width .24s cubic-bezier(.22,1,.36,1)}
-.sound-card-controls{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:1px;padding-top:3px}
-.sound-card-play{appearance:none;display:inline-flex;align-items:center;gap:4px;padding:2px 7px;min-height:20px;min-width:0;border-radius:3px;border:1px solid rgba(196,164,112,0.38);background:linear-gradient(180deg,#26211a 0%,#171410 100%);color:#d8cbb8;font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:8.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,244,218,0.1);transition:all .18s}
-.sound-card-play:hover,.sound-card-play.is-active,.sound-card-play.is-playing{background:linear-gradient(180deg,#c9a469 0%,#9e7b44 100%);color:#12100d;border-color:#e0be86;box-shadow:0 0 8px rgba(216,180,124,0.3)}
-.sound-card-play-icon,.sc-play-icon{font-size:8px;line-height:1}
-.sound-card-days{display:inline-flex;align-items:center;gap:2px}
-.sc-day-pill{appearance:none;width:18px;height:18px;min-width:18px;min-height:18px;padding:0;border-radius:2px;border:1px solid rgba(196,164,112,0.22);background:linear-gradient(180deg,#211d17 0%,#14110e 100%);color:#9e8e76;font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:8px;font-weight:700;line-height:1;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 1px 1px rgba(0,0,0,0.5);transition:all .16s}
-.sc-day-pill:hover{border-color:#d8b47c;color:#ece0cc}
-.sc-day-pill.is-active,.sc-day-pill.is-current{background:linear-gradient(180deg,#c9a469 0%,#9e7b44 100%);color:#12100d;border-color:#e0be86;box-shadow:inset 0 1px 2px rgba(0,0,0,0.35)}
 @media(min-width:1700px){.art-index{right:4%}.art-bottom{bottom:45px}.site-nav{padding-top:35px}}
 @media(max-width:760px){.site-nav{padding:20px 6%;align-items:flex-start;gap:16px}.sound-status{right:6%;top:calc(100% + 4px);max-width:min(300px,88vw)}.signature{display:block}.signature>span{font-size:35px;display:block}.signature small{font-size:8px;display:block;margin-top:4px}.site-nav nav{gap:12px}.site-nav nav>.desktop-link{display:none}.site-nav nav>a,.site-nav nav>button{font-size:11px}.site-nav nav>button:last-child{min-width:auto}.art-stage{min-height:0}.art-index{right:7px;top:25%}.art-bottom{bottom:20px;left:6%;right:6%;display:block}.art-bottom h1{font-size:clamp(29px,7.4vw,43px);max-width:calc(100% - 55px);margin-bottom:8px}.art-counter{margin-bottom:12px}.art-counter small{font-size:10px;margin-left:12px}.art-material{font-size:11px}.art-controls{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:end;padding:0;margin-top:6px}.art-view-actions{align-items:flex-start;flex-direction:column;gap:0}.art-view-actions button{min-height:34px}.art-arrows{gap:10px}.art-stage.is-fit .art-pan{inset:90px 12px 245px}.restore-ui{top:22px;right:6%;font-size:11px}.art-progress{left:6%;right:6%}.dialog-top{padding:18px 7%;min-height:78px}.menu-dialog>nav{padding:20px 7%;gap:8px}.menu-dialog>nav>a{font-size:32px}.menu-foot{padding:23px 7%}.story-body{padding:28px 7%}.story-body h2{font-size:34px}.story-footer{padding:22px 7%}.photo-view{grid-template-columns:35px minmax(0,1fr) 35px;padding:0 2%;gap:5px;height:calc(100svh - 180px)}.photo-view>button{min-width:35px}.photos-dialog>p{padding:18px 7%;font-size:11px}.index-controls{display:block;padding-top:20px}.index-controls>label{min-width:0;max-width:none}.index-filters{gap:8px 10px;margin-top:16px}.index-filters button{padding:7px 11px;font-size:10px}.index-list{grid-template-columns:1fr;gap:16px}.index-work{grid-template-columns:84px minmax(0,1fr) 20px;gap:14px;padding:14px}.stencil-stamp{display:none}.index-work img{width:84px;height:92px}.index-work strong{font-size:16px}.page-hero{min-height:640px}.page-hero-copy{left:6%;right:6%;bottom:10%;padding:14px 18px!important}.page-hero-copy h1{font-size:clamp(13px,3.8vw,15.5px)!important;margin:6px 0 8px!important}.hero-lead{font-size:10.5px!important;max-width:320px!important}.page-hero-copy>.text-link{font-size:12px}.hero-down{right:5%;bottom:22px}.editorial{padding:0 6%}.chapter{grid-template-columns:1fr;gap:24px;padding:65px 0}.chapter>.eyebrow{padding:0}.chapter h2{font-size:clamp(36px,9vw,54px);margin-bottom:28px}.chapter p:not(.eyebrow){font-size:14px;line-height:1.9;margin-bottom:22px}.chapter p.lead{font-size:16px}.editorial blockquote{padding:65px 0;font-size:45px}.editorial blockquote cite{font-size:11px}.full-figure{height:70svh;min-height:400px;margin:35px -6.8%}.full-figure figcaption{left:5%;bottom:20px;font-size:10px;line-height:1.8}.full-figure figcaption a{display:block;margin-left:0}.section-opening{padding:65px 0 35px}.section-opening h2{font-size:clamp(37px,9vw,55px)}.section-opening>p:last-child:not(.eyebrow){font-size:14px}.year-filters{gap:10px 24px}.timeline-entry{grid-template-columns:1fr;gap:16px;padding:30px 0}.timeline-entry>p{padding:0}.timeline-entry h3{font-size:29px}.timeline-sources{gap:12px}.notebook-posts{grid-template-columns:1fr}.notebook-posts h3{font-size:30px}.commission-steps{grid-template-columns:1fr;padding-top:20px}.commission-steps article{padding:30px 0}.closing{padding:50px 0 70px}.contact-copy{padding:150px 6% 65px}.contact-copy h1{font-size:90px}.contact-copy>p:not(.eyebrow){font-size:13px}.contact-email{font-size:clamp(26px,7.7vw,38px)}.contact-details{margin-top:50px;gap:18px 25px}.contact-shade{background:#11120fd9}.site-footer{padding:30px 6%;gap:25px}.site-footer>*{min-width:40%}.site-footer .signature{font-size:35px}.not-found{padding:160px 6% 65px}.not-found h1{font-size:45px}}
 @media(max-width:760px){.portrait-travel-controls{bottom:5%;right:6%;left:6%;justify-content:flex-end}.portrait-travel-controls>a{margin-right:auto}.portrait-work-copy{left:6%;right:6%;bottom:19%}.portrait-work-copy h2{font-size:clamp(45px,10.6vw,72px)}}
@@ -2429,3 +2391,414 @@ body.page-retratos-por-encargo-bilbao .atelier-OrderCard::before {
 :where(body.page-retratos-por-encargo-bilbao) :where(.atelier-specs-chapter,.commission-specs-grid,.atelier-workbench,.atelier-controls,.configurator-field,.cfg-pill-group)>*{min-width:0}
 body.page-retratos-por-encargo-bilbao .commission-compare-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 @media(max-width:900px){body.page-retratos-por-encargo-bilbao .atelier-card-visual{min-height:0;width:100%}}
+
+/* ─── /obra/ · ÍNDICE A SANGRE ────────────────────────────────────────────
+   El índice habla el mismo idioma que las obras a pantalla completa:
+   imagen de borde a borde, sin cajas ni cintas, título DM Sans con acento
+   vertical, nota en Cormorant y controles como texto, no como píldoras.
+   ─────────────────────────────────────────────────────────────────────── */
+dialog.index-dialog { background: #0b0b0a !important; }
+dialog.index-dialog .index-backdrop { display: none; }
+dialog.index-dialog > .dialog-top {
+  background: linear-gradient(180deg, #0b0b0af2 0%, #0b0b0ad9 70%, #0b0b0a00 100%) !important;
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+  border-bottom: 0 !important; box-shadow: none !important;
+  padding: 22px 4.5% 26px !important; min-height: 0; align-items: baseline;
+}
+dialog.index-dialog h2 {
+  font-family: 'DM Sans', sans-serif !important; font-style: normal; font-weight: 400 !important;
+  font-size: clamp(28px, 3.4vw, 48px) !important; letter-spacing: -.06em !important; line-height: 1;
+}
+dialog.index-dialog .stencil-subtag { display: none; }
+dialog.index-dialog .index-top-actions { gap: 6px 26px; align-items: baseline; }
+dialog.index-dialog .index-mode-switcher { background: none; border: 0; border-radius: 0; padding: 0; gap: 22px; }
+dialog.index-dialog .index-mode-switcher button,
+dialog.index-dialog .index-oracle-btn,
+dialog.index-dialog .stencil-close-btn,
+dialog.index-dialog .index-filters button {
+  min-height: 38px; padding: 0 !important; border: 0 !important; border-radius: 0 !important;
+  background: none !important; box-shadow: none !important; transform: none !important;
+  font-family: 'DM Sans', sans-serif !important; font-size: 10px !important; font-weight: 500 !important;
+  letter-spacing: .12em !important; text-transform: uppercase; color: #fffdf4a6 !important;
+  display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
+  transition: color .25s ease !important;
+}
+dialog.index-dialog .index-mode-switcher button:hover,
+dialog.index-dialog .index-oracle-btn:hover,
+dialog.index-dialog .stencil-close-btn:hover,
+dialog.index-dialog .index-filters button:hover { color: #fffdf4 !important; background: none !important; }
+dialog.index-dialog .index-mode-switcher button[aria-pressed="true"],
+dialog.index-dialog .index-filters button[aria-pressed="true"] {
+  color: #fffdf4 !important; background: none !important; font-weight: 500 !important;
+  box-shadow: inset 0 -1.5px 0 #edbca4 !important;
+}
+dialog.index-dialog .stencil-close-btn { color: #fffdf4 !important; }
+dialog.index-dialog .index-controls { padding: 6px 4.5% 10px !important; align-items: flex-end; }
+dialog.index-dialog .index-controls > label {
+  color: #fffdf49e !important; font-size: 10px; font-weight: 400; letter-spacing: .18em !important; gap: 4px;
+}
+dialog.index-dialog .index-controls input {
+  background: none !important; border: 0 !important; border-bottom: 1px solid #fffdf440 !important;
+  border-radius: 0 !important; box-shadow: none !important; padding: 8px 0 !important; min-height: 44px;
+  font-size: 16px; letter-spacing: -.01em; text-transform: none;
+}
+dialog.index-dialog .index-controls input:focus { border-bottom-color: #edbca4 !important; box-shadow: none !important; }
+dialog.index-dialog .index-controls input::placeholder { color: #fffdf466; }
+dialog.index-dialog .index-filters { gap: 4px 24px; }
+dialog.index-dialog .index-filters .spray-dot { display: none; }
+dialog.index-dialog .index-filters .filter-num { background: none; padding: 0; margin: 0; font: inherit; font-size: 9px; opacity: .55; }
+dialog.index-dialog .index-status-bar { padding: 8px 4.5% 16px; border-bottom: 0; align-items: baseline; }
+dialog.index-dialog .index-count { color: #fffdf49e !important; font-size: 10px; letter-spacing: .18em !important; }
+dialog.index-dialog .index-count::before { content: none; }
+dialog.index-dialog .index-spotlight-hud { background: none; border: 0; border-radius: 0; padding: 0; gap: 12px; }
+dialog.index-dialog .spotlight-hud-num { color: #fffdf49e; font-weight: 400; letter-spacing: .18em; }
+dialog.index-dialog .spotlight-hud-title { font-family: 'DM Sans', sans-serif; font-style: normal; font-size: 15px; letter-spacing: -.03em; }
+dialog.index-dialog .spotlight-hud-meta { font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 14px; color: #fffdf4c0; }
+dialog.index-dialog .spotlight-hud-quote { display: none; }
+
+/* Mosaico: cada obra es una ventana a sangre, como en el recorrido */
+dialog.index-dialog .index-list {
+  padding: 0 0 2px !important; gap: 2px !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+dialog.index-dialog .index-work {
+  display: block !important; position: relative; overflow: hidden;
+  height: clamp(340px, 72svh, 860px); padding: 0 !important; margin: 0 !important;
+  background: #11120f !important; border: 0 !important; border-radius: 0 !important;
+  box-shadow: none !important; backdrop-filter: none; transform: none !important;
+  transition: opacity .45s ease !important;
+}
+dialog.index-dialog .index-work[hidden] { display: none !important; }
+dialog.index-dialog .index-work::before { content: none; }
+dialog.index-dialog .index-work-frame { position: absolute; inset: 0; height: auto !important; border-radius: 0; }
+dialog.index-dialog .index-work-frame::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, #0b0b0a59 0%, #0b0b0a00 24%, #0b0b0a00 48%, #0b0b0ad9 100%);
+}
+dialog.index-dialog .index-work img {
+  transform: scale(1.001) !important; filter: none !important;
+  transition: transform 1.4s cubic-bezier(.16, 1, .3, 1) !important;
+}
+dialog.index-dialog .index-work:hover img,
+dialog.index-dialog .index-work:focus-visible img { transform: scale(1.045) !important; }
+dialog.index-dialog .index-work-num {
+  top: 20px; left: 24px; padding: 0; border: 0; border-radius: 0; background: none;
+  color: #fffdf4b8; font-size: 10px; letter-spacing: .18em;
+}
+dialog.index-dialog .index-work-whisper {
+  inset: 46px 24px auto 24px; padding: 0; background: none; max-width: 30ch;
+  font-size: 17px; line-height: 1.3; text-shadow: 0 1px 14px #000c, 0 0 2px #0009;
+}
+dialog.index-dialog .index-work > span:nth-of-type(1) {
+  position: absolute; z-index: 2; left: 24px; right: 44px; bottom: 22px;
+  display: grid; gap: 5px; padding: 0 0 0 16px; border-left: 1.5px solid #edbca4;
+}
+dialog.index-dialog .index-work small {
+  color: #fffdf49e !important; font-size: 10px !important; font-weight: 400; letter-spacing: .18em !important;
+}
+dialog.index-dialog .index-work strong {
+  font-family: 'DM Sans', sans-serif !important; font-weight: 400 !important; color: #fffdf4 !important;
+  font-size: clamp(22px, 2.3vw, 36px) !important; line-height: 1.02 !important; letter-spacing: -.06em !important;
+}
+dialog.index-dialog .index-work:hover strong { color: #fffdf4 !important; }
+dialog.index-dialog .index-work em {
+  font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic !important; font-weight: 300;
+  font-size: 14px !important; line-height: 1.3; color: #fffdf4c0 !important; -webkit-line-clamp: 1;
+}
+dialog.index-dialog .index-work .stencil-stamp { display: none; }
+dialog.index-dialog .index-work .index-work-arrow {
+  position: absolute; z-index: 2; right: 22px; bottom: 20px; color: #fffdf4 !important;
+  font-family: 'DM Sans', sans-serif; font-size: 15px; opacity: .55; transform: none !important;
+  transition: opacity .25s ease, translate .4s cubic-bezier(.16, 1, .3, 1);
+}
+dialog.index-dialog .index-work:hover .index-work-arrow { opacity: 1; translate: 3px -3px; }
+dialog.index-dialog .index-work:focus-visible { outline: 2px solid #fffdf4; outline-offset: -2px; }
+dialog.index-dialog .index-work.is-oracle-chosen {
+  border: 0 !important; box-shadow: none !important; outline: 1.5px solid #edbca4; outline-offset: -1.5px; z-index: 1;
+}
+@keyframes index-tile-in { from { opacity: 0; } to { opacity: 1; } }
+dialog.index-dialog .index-list.is-stencil-wiping .index-work:not([hidden]) { animation: index-tile-in .55s ease both; }
+
+/* Mesa de luz: hoja de contactos densa, misma piel */
+dialog.index-dialog[data-obra-view="mesa"] .index-list { grid-template-columns: repeat(6, minmax(0, 1fr)) !important; gap: 2px !important; }
+dialog.index-dialog[data-obra-view="mesa"] .index-work { height: auto; aspect-ratio: 4 / 5; padding: 0 !important; border: 0 !important; border-radius: 0 !important; background: #11120f !important; }
+dialog.index-dialog[data-obra-view="mesa"] .index-work-frame { height: auto !important; border-radius: 0; }
+dialog.index-dialog[data-obra-view="mesa"] .index-work > span:nth-of-type(1) { left: 12px; right: 12px; bottom: 12px; padding-left: 10px; }
+dialog.index-dialog[data-obra-view="mesa"] .index-work strong { font-size: 15px !important; letter-spacing: -.04em !important; }
+dialog.index-dialog[data-obra-view="mesa"] .index-work small,
+dialog.index-dialog[data-obra-view="mesa"] .index-work em,
+dialog.index-dialog[data-obra-view="mesa"] .index-work-whisper,
+dialog.index-dialog[data-obra-view="mesa"] .index-work-arrow { display: none; }
+dialog.index-dialog[data-obra-view="mesa"] .index-work-num { top: 10px; left: 12px; }
+
+/* Hilo: al posar la mirada en una obra, se apaga lo que no resuena con ella */
+dialog.index-dialog[data-obra-view="constelacion"] .index-work,
+dialog.index-dialog[data-obra-view="constelacion"] .index-work.is-constellation-linked { border: 0 !important; box-shadow: none !important; }
+dialog.index-dialog[data-obra-view="constelacion"] .index-list:hover .index-work:not(.is-constellation-linked):not(:hover) { opacity: .22; }
+
+@media (min-width: 1700px) {
+  dialog.index-dialog .index-list { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+  dialog.index-dialog[data-obra-view="mesa"] .index-list { grid-template-columns: repeat(8, minmax(0, 1fr)) !important; }
+}
+@media (max-width: 1099px) {
+  dialog.index-dialog .index-list { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  dialog.index-dialog[data-obra-view="mesa"] .index-list { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+}
+@media (max-width: 760px) {
+  dialog.index-dialog > .dialog-top { padding: 14px 6% 12px !important; gap: 0 16px; }
+  dialog.index-dialog h2 { font-size: 30px !important; flex: 1; order: 1; }
+  dialog.index-dialog .index-top-actions { display: contents; }
+  dialog.index-dialog .stencil-close-btn { order: 2; }
+  dialog.index-dialog .index-mode-switcher { order: 3; gap: 16px; }
+  dialog.index-dialog .index-oracle-btn { order: 4; margin-left: auto; }
+  dialog.index-dialog .index-oracle-btn .oracle-word { display: none; }
+  dialog.index-dialog .index-mode-switcher button,
+  dialog.index-dialog .index-oracle-btn,
+  dialog.index-dialog .stencil-close-btn,
+  dialog.index-dialog .index-filters button { letter-spacing: .09em !important; min-height: 40px; }
+  dialog.index-dialog .index-controls { padding: 0 6% 4px !important; }
+  dialog.index-dialog .search-label-stencil { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  dialog.index-dialog .index-filters { flex-wrap: nowrap; overflow-x: auto; gap: 0 20px; margin: 8px -6.5% 0; padding: 0 6.5%; scrollbar-width: none; }
+  dialog.index-dialog .index-filters::-webkit-scrollbar { display: none; }
+  dialog.index-dialog .index-filters button { flex: 0 0 auto; }
+  dialog.index-dialog .index-status-bar { padding: 4px 6% 12px; }
+  dialog.index-dialog .index-list { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  dialog.index-dialog .index-work { height: clamp(250px, 46svh, 460px); }
+  dialog.index-dialog .index-work-num { top: 12px; left: 12px; }
+  dialog.index-dialog .index-work-whisper { display: none; }
+  dialog.index-dialog .index-work > span:nth-of-type(1) { left: 12px; right: 12px; bottom: 14px; padding-left: 10px; gap: 4px; }
+  dialog.index-dialog .index-work small { font-size: 8.5px !important; letter-spacing: .14em !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  dialog.index-dialog .index-work strong { font-size: 19px !important; letter-spacing: -.05em !important; }
+  dialog.index-dialog .index-work em { font-size: 12.5px !important; }
+  dialog.index-dialog .index-work .index-work-arrow { display: none; }
+  dialog.index-dialog[data-obra-view="mesa"] .index-list { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+  dialog.index-dialog[data-obra-view="mesa"] .index-work { height: auto; }
+  dialog.index-dialog[data-obra-view="mesa"] .index-work strong { font-size: 12.5px !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html:not(.motion-opt-in) dialog.index-dialog .index-work img { transform: none !important; }
+}
+dialog.index-dialog .index-work-num,
+dialog.index-dialog .index-work small { text-shadow: 0 1px 10px #000b; }
+dialog.index-dialog .index-oracle-btn { gap: 0; }
+dialog.index-dialog .index-oracle-btn > span[aria-hidden] { margin-right: 7px; }
+dialog.index-dialog .index-oracle-btn .oracle-word { white-space: pre; }
+
+/* ─── MENÚ · EL MONÓCULO ──────────────────────────────────────────────────
+   «Otra manera de mirar»: la sección se ve a través de una gran lente que
+   deriva hacia donde apuntas. Los nombres, gigantes, cruzan el cristal e
+   invierten el color de la obra donde lo pisan. Entre imagen e imagen, la
+   pintura no se funde: florece como una mancha de tinta o se abre como un ojo.
+   Solo estilos; el comportamiento del menú no cambia.
+   ─────────────────────────────────────────────────────────────────────── */
+@property --ink-a { syntax: '<percentage>'; inherits: false; initial-value: 0%; }
+@property --ink-b { syntax: '<percentage>'; inherits: false; initial-value: 0%; }
+@property --ink-c { syntax: '<percentage>'; inherits: false; initial-value: 0%; }
+@property --ink-d { syntax: '<percentage>'; inherits: false; initial-value: 0%; }
+@property --ink-e { syntax: '<percentage>'; inherits: false; initial-value: 0%; }
+@property --lid { syntax: '<percentage>'; inherits: false; initial-value: 0%; }
+
+dialog.menu-dialog {
+  background: #0b0b0a; color: #fffdf4;
+  --lens: min(80svh, 52vw); --lens-x: 30vw; --lens-dim: .64; --ink-x: 58%; --ink-y: 42%;
+}
+dialog.menu-dialog .menu-top,
+dialog.menu-dialog .menu-foot,
+dialog.menu-dialog .menu-sound-drawer { position: relative; z-index: 3; }
+dialog.menu-dialog .menu-top { border-bottom: 0; background: none; padding: 20px 4.5%; min-height: 84px; }
+dialog.menu-dialog .menu-top > #menu-heading { color: #fffdf49e; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; }
+dialog.menu-dialog .menu-top > [data-close-dialog] {
+  gap: 8px; min-height: 44px; padding: 0; border: 0; border-radius: 0; background: none; backdrop-filter: none;
+  box-shadow: none; font-size: 10px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: #fffdf4;
+}
+dialog.menu-dialog .menu-top > [data-close-dialog]:is(:hover, :focus-visible) { background: none; box-shadow: none; color: #edbca4; }
+dialog.menu-dialog .menu-top > [data-close-dialog]:focus-visible { outline: 1px solid #fffdf4; outline-offset: 6px; }
+dialog.menu-dialog .menu-top > [data-close-dialog] > span {
+  width: auto; height: auto; border: 0; border-radius: 0; background: none; font: 400 16px/1 'DM Sans', sans-serif;
+}
+dialog.menu-dialog .menu-top > [data-close-dialog]:is(:hover, :focus-visible) > span { background: none; color: inherit; }
+
+dialog.menu-dialog .menu-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; padding: 0; overflow-x: hidden; }
+dialog.menu-dialog .menu-preview { display: contents; }
+
+/* La lente */
+dialog.menu-dialog .menu-preview-picture {
+  --lens-drift: 0svh;
+  position: fixed; z-index: 0; width: var(--lens); height: var(--lens);
+  left: calc(var(--lens-x) - var(--lens) / 2); top: calc(50% - var(--lens) / 2 + var(--lens-drift));
+  border: 0; border-radius: 50%; background: #11120f;
+  box-shadow: 0 0 0 1px #fffdf4e6, 0 0 0 11px #0b0b0a, 0 0 0 12px #fffdf433, 0 40px 120px #000;
+  transition: top 1.1s cubic-bezier(.16, 1, .3, 1), box-shadow .5s ease;
+}
+dialog.menu-dialog .menu-preview-picture:hover {
+  border: 0; box-shadow: 0 0 0 1px #fffdf4, 0 0 0 11px #0b0b0a, 0 0 0 12px #edbca4, 0 40px 120px #000;
+}
+dialog.menu-dialog .menu-preview-picture::after {
+  z-index: 2; background: radial-gradient(circle at 34% 26%, #fffdf414 0%, #fffdf400 34%), radial-gradient(circle, #0b0b0a00 58%, #0b0b0a99 100%);
+}
+dialog.menu-dialog .menu-preview-picture::before { border: 1px solid #fffdf4cc; box-shadow: 0 0 0 1px #0b0b0a59; }
+dialog.menu-dialog .menu-layout:has(.menu-pages > a:nth-child(1):is(:hover, :focus-visible)) .menu-preview-picture { --lens-drift: -6svh; }
+dialog.menu-dialog .menu-layout:has(.menu-pages > a:nth-child(2):is(:hover, :focus-visible)) .menu-preview-picture { --lens-drift: -3.6svh; }
+dialog.menu-dialog .menu-layout:has(.menu-pages > a:nth-child(3):is(:hover, :focus-visible)) .menu-preview-picture { --lens-drift: -1.2svh; }
+dialog.menu-dialog .menu-layout:has(.menu-pages > a:nth-child(4):is(:hover, :focus-visible)) .menu-preview-picture { --lens-drift: 1.2svh; }
+dialog.menu-dialog .menu-layout:has(.menu-pages > a:nth-child(5):is(:hover, :focus-visible)) .menu-preview-picture { --lens-drift: 3.6svh; }
+dialog.menu-dialog .menu-layout:has(.menu-pages > a:nth-child(6):is(:hover, :focus-visible)) .menu-preview-picture { --lens-drift: 6svh; }
+/* La tinta nace a la altura de la fila que señalas */
+dialog.menu-dialog:has(.menu-pages > a:nth-child(1):is(:hover, :focus-visible)) { --ink-x: 72%; --ink-y: 16%; }
+dialog.menu-dialog:has(.menu-pages > a:nth-child(2):is(:hover, :focus-visible)) { --ink-x: 82%; --ink-y: 30%; }
+dialog.menu-dialog:has(.menu-pages > a:nth-child(3):is(:hover, :focus-visible)) { --ink-x: 88%; --ink-y: 44%; }
+dialog.menu-dialog:has(.menu-pages > a:nth-child(4):is(:hover, :focus-visible)) { --ink-x: 88%; --ink-y: 58%; }
+dialog.menu-dialog:has(.menu-pages > a:nth-child(5):is(:hover, :focus-visible)) { --ink-x: 82%; --ink-y: 72%; }
+dialog.menu-dialog:has(.menu-pages > a:nth-child(6):is(:hover, :focus-visible)) { --ink-x: 72%; --ink-y: 86%; }
+
+/* Transiciones entre imágenes: la saliente se queda debajo, se aleja y se enturbia;
+   la entrante se pinta encima. Las dos capas se turnan → se alternan tinta y párpado. */
+dialog.menu-dialog .menu-preview-picture > img[data-menu-image] {
+  opacity: 0; z-index: 0; transform: scale(1.1); filter: brightness(.34) saturate(.7) blur(5px);
+  transition: opacity 0s 1.25s, transform 1.25s cubic-bezier(.4, 0, .2, 1), filter 1.25s ease;
+}
+dialog.menu-dialog .menu-preview-picture > img[data-menu-image].is-visible {
+  opacity: 1; z-index: 1; transform: scale(1); filter: brightness(var(--lens-dim)) saturate(1.12);
+  transition: filter .6s ease;
+}
+dialog.menu-dialog .menu-preview-picture:hover { --lens-dim: 1; }
+dialog.menu-dialog .menu-preview-picture > img[data-menu-image]:nth-of-type(1).is-visible {
+  -webkit-mask-image:
+    radial-gradient(circle at var(--ink-x) var(--ink-y), #000 calc(var(--ink-a) - 9%), #0000 var(--ink-a)),
+    radial-gradient(circle at calc(var(--ink-x) - 34%) calc(var(--ink-y) + 22%), #000 calc(var(--ink-b) - 12%), #0000 var(--ink-b)),
+    radial-gradient(circle at calc(var(--ink-x) - 12%) calc(var(--ink-y) - 30%), #000 calc(var(--ink-c) - 7%), #0000 var(--ink-c)),
+    radial-gradient(circle at 20% 78%, #000 calc(var(--ink-d) - 14%), #0000 var(--ink-d)),
+    radial-gradient(circle at 38% 34%, #000 calc(var(--ink-e) - 8%), #0000 var(--ink-e));
+  mask-image:
+    radial-gradient(circle at var(--ink-x) var(--ink-y), #000 calc(var(--ink-a) - 9%), #0000 var(--ink-a)),
+    radial-gradient(circle at calc(var(--ink-x) - 34%) calc(var(--ink-y) + 22%), #000 calc(var(--ink-b) - 12%), #0000 var(--ink-b)),
+    radial-gradient(circle at calc(var(--ink-x) - 12%) calc(var(--ink-y) - 30%), #000 calc(var(--ink-c) - 7%), #0000 var(--ink-c)),
+    radial-gradient(circle at 20% 78%, #000 calc(var(--ink-d) - 14%), #0000 var(--ink-d)),
+    radial-gradient(circle at 38% 34%, #000 calc(var(--ink-e) - 8%), #0000 var(--ink-e));
+  animation: lens-ink-bloom 1.25s cubic-bezier(.3, .1, .2, 1) both;
+}
+dialog.menu-dialog .menu-preview-picture > img[data-menu-image]:nth-of-type(2).is-visible {
+  -webkit-mask-image: radial-gradient(ellipse 150% var(--lid) at 50% 46%, #000 86%, #0000 100%);
+  mask-image: radial-gradient(ellipse 150% var(--lid) at 50% 46%, #000 86%, #0000 100%);
+  animation: lens-eyelid 1.15s cubic-bezier(.7, 0, .2, 1) both;
+}
+@keyframes lens-ink-bloom {
+  0%   { --ink-a: 0%; --ink-b: 0%; --ink-c: 0%; --ink-d: 0%; --ink-e: 0%; transform: scale(1.16) rotate(-2.5deg); filter: brightness(1.05) saturate(1.9) contrast(1.15); }
+  18%  { --ink-a: 16%; --ink-b: 0%; --ink-c: 4%; --ink-d: 0%; --ink-e: 0%; }
+  42%  { --ink-a: 34%; --ink-b: 22%; --ink-c: 24%; --ink-d: 6%; --ink-e: 12%; }
+  70%  { --ink-a: 66%; --ink-b: 58%; --ink-c: 50%; --ink-d: 40%; --ink-e: 46%; filter: brightness(.8) saturate(1.5) contrast(1.05); }
+  100% { --ink-a: 135%; --ink-b: 135%; --ink-c: 135%; --ink-d: 135%; --ink-e: 135%; transform: scale(1) rotate(0deg); filter: brightness(var(--lens-dim)) saturate(1.12); }
+}
+@keyframes lens-eyelid {
+  0%   { --lid: 0%; transform: scale(1.12) translateY(2%); filter: brightness(1.2) saturate(1.6); }
+  38%  { --lid: 9%; }
+  52%  { --lid: 5%; }
+  100% { --lid: 160%; transform: scale(1) translateY(0); filter: brightness(var(--lens-dim)) saturate(1.12); }
+}
+
+/* Tira de fotogramas: cuatro pequeñas lentes dentro del cristal */
+dialog.menu-dialog .menu-preview-reel {
+  z-index: 3; left: 50%; right: auto; bottom: 7%; translate: -50% 0; width: auto;
+  grid-template-columns: repeat(4, 36px); gap: 9px; padding: 0; background: none; border: 0; border-radius: 0; backdrop-filter: none;
+}
+dialog.menu-dialog .menu-reel-frame { height: 36px; border: 1px solid #fffdf480; border-radius: 50%; background-color: #11120f; opacity: .6; }
+dialog.menu-dialog .menu-reel-frame:is(:hover, .is-active) { opacity: 1; border-color: #edbca4; transform: scale(1.14); }
+dialog.menu-dialog .menu-reel-frame.is-active::after { content: none; }
+
+/* Pie de imagen, discreto, al lado de la lente */
+dialog.menu-dialog .menu-preview-caption {
+  position: fixed; z-index: 2; left: 4.5%; bottom: 62px; max-width: 250px;
+  display: grid; gap: 5px; padding: 0 0 0 14px; border-left: 1.5px solid #edbca4; text-shadow: 0 1px 12px #000;
+}
+dialog.menu-dialog .menu-caption-main,
+dialog.menu-dialog .menu-caption-sub { display: contents; }
+dialog.menu-dialog .menu-caption-main [data-menu-preview-label] { order: 1; color: #fffdf49e; font-size: 10px; font-weight: 400; letter-spacing: .18em; }
+dialog.menu-dialog .menu-caption-main [data-menu-preview-title] { order: 2; text-align: left; font-weight: 400; font-size: 19px; line-height: 1.1; letter-spacing: -.04em; }
+dialog.menu-dialog .menu-caption-quote {
+  order: 3; text-align: left; font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-weight: 300;
+  font-size: 16px; line-height: 1.25; letter-spacing: .01em; color: #fffdf4d1; white-space: normal;
+}
+dialog.menu-dialog .menu-preview-meta { display: none; }
+dialog.menu-dialog .menu-caption-actions { order: 5; gap: 20px; margin-top: 4px; }
+dialog.menu-dialog .menu-open-work-pill,
+dialog.menu-dialog .menu-index-pill {
+  padding: 0; min-height: 30px; border: 0; border-radius: 0; background: none; color: #fffdf4;
+  font-size: 10px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; gap: 7px;
+}
+dialog.menu-dialog .menu-open-work-pill:hover,
+dialog.menu-dialog .menu-index-pill:hover { background: none; color: #edbca4; transform: none; }
+dialog.menu-dialog .menu-index-pill kbd { background: none; padding: 0; color: #fffdf480; font-size: 10px; }
+
+/* Los nombres: gigantes, cruzando el cristal e invirtiendo lo que pisan */
+dialog.menu-dialog .menu-pages {
+  position: relative; z-index: 1; mix-blend-mode: difference;
+  align-self: center; padding: 0 4.5% 0 calc(var(--lens-x) + 3vw);
+}
+dialog.menu-dialog .menu-pages > a {
+  grid-template-columns: 30px minmax(0, 1fr) 34px; column-gap: 14px; align-items: start;
+  padding: .5svh 0; border-bottom: 0; color: #fffdf4;
+}
+dialog.menu-dialog .menu-pages:has(> a:hover) > a:not(:hover) { opacity: .3; }
+dialog.menu-dialog .menu-number {
+  padding: 0; margin-top: 1.6svh; border: 0; border-radius: 0; background: none; box-shadow: none;
+  justify-content: flex-start; color: #fffdf4b8; font-size: 10px; letter-spacing: .18em;
+}
+dialog.menu-dialog .menu-name {
+  display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 22px;
+  font-size: clamp(44px, min(8.6vw, 11.6svh), 150px); line-height: .98; letter-spacing: -.07em;
+  transition: translate .7s cubic-bezier(.16, 1, .3, 1), letter-spacing .7s cubic-bezier(.16, 1, .3, 1);
+}
+dialog.menu-dialog .menu-name > small {
+  display: inline; margin: 0; font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-weight: 300;
+  font-size: clamp(14px, 1.25vw, 19px); line-height: 1.2; letter-spacing: .01em; color: #fffdf4c7;
+}
+dialog.menu-dialog .menu-arrow { align-self: center; font-size: 24px; color: #fffdf4; opacity: 0; translate: -10px 10px; transition: opacity .35s ease, translate .5s cubic-bezier(.16, 1, .3, 1); }
+dialog.menu-dialog .menu-pages > a:is(:hover, :focus-visible) { color: #fffdf4; outline: none; }
+dialog.menu-dialog .menu-pages > a:is(:hover, :focus-visible) .menu-name { translate: -2.4vw 0; letter-spacing: -.045em; }
+dialog.menu-dialog .menu-pages > a:is(:hover, :focus-visible) .menu-number { background: none; box-shadow: none; color: #fffdf4; }
+dialog.menu-dialog .menu-pages > a:is(:hover, :focus-visible) .menu-arrow { opacity: 1; translate: 0 0; color: #fffdf4; }
+dialog.menu-dialog .menu-pages > a:focus-visible .menu-name { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .12em; }
+dialog.menu-dialog .menu-pages > a[aria-current] .menu-number { background: none; color: #fffdf4; }
+dialog.menu-dialog .menu-pages > a[aria-current] .menu-number::before { content: '●'; display: inline; width: auto; height: auto; background: none; margin-right: 5px; font-size: 7px; }
+dialog.menu-dialog .menu-pages > a.is-key-flash .menu-number { background: none; color: #fffdf4; transform: none; }
+
+dialog.menu-dialog .menu-foot { border-top: 0; padding: 10px 4.5% 14px; }
+dialog.menu-dialog .menu-foot > span { color: #fffdf4b8; }
+dialog.menu-dialog .menu-kbd-hint { color: #fffdf466; }
+dialog.menu-dialog .menu-foot > a { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+dialog.menu-dialog .menu-foot > a:hover { color: #edbca4; }
+dialog.menu-dialog .menu-sound-drawer { background: #0b0b0af2; border-top: 1px solid #fffdf41f; backdrop-filter: none; }
+dialog.menu-dialog .menu-sound-drawer-inner { color: #fffdf4b8; }
+dialog.menu-dialog .menu-sound-eyebrow { color: #fffdf49e; font-weight: 400; letter-spacing: .18em; }
+dialog.menu-dialog .menu-sound-links a,
+dialog.menu-dialog .menu-sound-links button { color: #edbca4; }
+
+@media (max-width: 760px) {
+  dialog.menu-dialog { --lens: 124vw; --lens-x: 50vw; --lens-dim: .3; --ink-x: 50%; --ink-y: 40%; }
+  dialog.menu-dialog .menu-top { padding: 14px 6%; min-height: 72px; }
+  dialog.menu-dialog .menu-layout { display: block; padding: 4px 6% 16px; }
+  dialog.menu-dialog .menu-preview-picture { pointer-events: none; top: calc(47% - var(--lens) / 2); box-shadow: 0 0 0 1px #fffdf480; }
+  dialog.menu-dialog .menu-preview-caption { position: relative; left: auto; bottom: auto; max-width: none; display: flex; align-items: baseline; gap: 10px; padding-left: 12px; margin: 0 0 10px; }
+  dialog.menu-dialog .menu-caption-main [data-menu-preview-label] { font-size: 9px; }
+  dialog.menu-dialog .menu-caption-main [data-menu-preview-title] { font-size: 14px; letter-spacing: -.03em; }
+  dialog.menu-dialog .menu-caption-quote,
+  dialog.menu-dialog .menu-caption-actions { display: none; }
+  dialog.menu-dialog .menu-preview-caption { display: none; }
+  dialog.menu-dialog .menu-pages { padding: 0; mix-blend-mode: normal; }
+  dialog.menu-dialog .menu-pages > a { grid-template-columns: 24px minmax(0, 1fr) 0; column-gap: 8px; padding: .9svh 0; }
+  dialog.menu-dialog .menu-number { margin-top: 1.1svh; }
+  dialog.menu-dialog .menu-name { display: block; font-size: min(15.4vw, 8.6svh); letter-spacing: -.07em; }
+  dialog.menu-dialog .menu-name > small { display: block; font-size: 14px; margin-top: 3px; }
+  dialog.menu-dialog .menu-arrow { display: none; }
+  dialog.menu-dialog .menu-pages > a:is(:hover, :focus-visible) .menu-name { translate: 0 0; }
+  dialog.menu-dialog .menu-foot { padding: 6px 6% 10px; }
+  dialog.menu-dialog .menu-foot > a:last-child { color: #fffdf480; }
+}
+@media (max-width: 370px) { dialog.menu-dialog .menu-name { font-size: min(14.6vw, 8.2svh); } }
+@media (prefers-contrast: more) { dialog.menu-dialog .menu-pages { mix-blend-mode: normal; } }
+/* El guiño solo tiene sentido sobre el retrato de Naroa: nunca se superpone a una obra */
+dialog.menu-dialog .menu-preview-picture:not([data-portrait-mode="true"]) > img.menu-preview-wink { opacity: 0 !important; }
+/* El menú no rotula la obra: la imagen habla sola (el título sigue en el DOM para lectores de pantalla) */
+dialog.menu-dialog .menu-caption-main [data-menu-preview-title] {
+  position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}

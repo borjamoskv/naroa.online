@@ -17,21 +17,23 @@ Toda alta o mutación de obra exige paridad simultánea en 3 capas:
 - Valida la secuencia exacta de modos (`entry.mode`) y el total de obras (85). Actualizar la cadena esperada en `tools/test_immersive_dom.cjs` ante cualquier mutación del recorrido.
 
 ### 3. Arquitectura de Audio y Guardas de Ciclo de Vida
-- Sintetizadores reactivos residen en `classic/immersive/soundscape.js` y `src/utils/audio.ts`, desacoplados del loop ambiental y protegidos ante `AudioContext` suspendido o entornos headless.
+- El portfolio inmersivo suena con un único motor: `classic/immersive/soundscape.js`. Contiene la banda sonora «Apirila» (`window.NAROA_SCORE`) y su conexión con la web (`window.NAROA_SOUND.frame`). Es síntesis pura Web Audio: no descarga muestras ni crea `AudioContext` antes de un gesto del visitante.
+- La música se funde al ocultar la pestaña y vuelve al regresar; si el visitante la paró, no vuelve sola.
+- `src/utils/audio.ts` pertenece a la SPA y conserva su propio motor.
 
 ### 4. Transiciones de Ruptura (Glitch) y Bucle Ouroboros
 - Las transiciones terminales emplean aberración cromática RGB (`#ff0055` / `#00f0ff`), jitter horizontal y scanlines CSS, cerrando el bucle hacia el origen (`change(0)`).
 
-### 5. Invariante Acústica Awwwards & Tonalidad Cálida (`INV_WARMTH_ACOUSTIC_GATE`)
-1. **Cero Ruido Blanco en UI:** Prohibido usar buffers de ruido blanco en `playHapticSlide`; usar impulsos sub-graves senoidales o silencio.
-2. **Timbre Analógico Cálido (Aphex Twin / Boards of Canada):**
-   - **Registro Grave-Medio:** Transposición `-12` semitonos (`146 Hz – 440 Hz`, Re3–La4), sin parciales metálicos agudos.
-   - **Ataque de Fieltro y Filtro de Seda:** Ataque suave (`30 ms – 55 ms`), caída larga (`1.8 s – 2.4 s`), paso-bajo analógico (`Q ≤ 0.5`, corte `340 Hz – 860 Hz`, master a `1450 Hz`) y deriva *Tape Wow* (`±2.8 cents`).
-3. **Ciclo Melódico Semanal y Cadencia:**
-   - **7 Temas Canónicos (Lunes–Domingo):** *Landa*, *Haurtxo Polita*, *Harria eta Marea*, *Txoria Txori*, *Mi Gran Noche*, *Gaua*, *Haizea*.
-   - **Cadencia Sound of Silence:** Pasos `24..31` cierran siempre con el motivo de *The Sound of Silence* en Re menor.
-   - **Silencio en `Game Over`:** La obra `game-over` exige silencio contemplativo absoluto (cero jingles 8-bit).
-4. **Anti-Saturación de Scroll:** Guarda mínima de `100 ms – 115 ms` entre notas para evitar apilamiento polifónico.
+### 5. Invariante Acústica de la Banda Sonora «Apirila» (`INV_WARMTH_ACOUSTIC_GATE`)
+1. **Una sola pieza, sin tarjeta:** el botón SONIDO enciende y apaga «Apirila». No hay tarjeta visual, selector de temas ni efectos sonoros por obra.
+2. **Timbre cálido, húmedo y humano:**
+   - Piano de casa en Do mayor a 96 pulsos por minuto, filtro general a `2000 Hz`, refuerzo de graves y ataque blando.
+   - Sala larga y oscura, eco de cinta, delays cruzados a tempo (corchea con puntillo y negra), phaser lento y deriva de cinta.
+   - Microfallos de mano aleatorios: dudas, notas fantasma, teclas vecinas rozadas, corcheas perdidas y tempo que deriva.
+   - **Cero ruido blanco:** fieltro, pedal y aire de sala usan ruido pardo filtrado.
+3. **Forma:** entrada, A, A en eco, B (puente con tres trombones que deslizan entre acordes), A de regreso y cierre; después repite sin la entrada.
+4. **Mano derecha en reposo por defecto:** la intensidad inicial es `0.31`, por debajo del umbral `0.35` en el que entra la melodía.
+5. **Silencio en `Game Over`:** la obra `game-over` exige silencio contemplativo absoluto; `NAROA_SOUND.frame` calla la pieza mientras está en pantalla.
 
 ### 6. Invariante de Story 9:16 Detail Obsession y Share Limpio (`INV_DETAIL_OBSESSION_STORY_GATE`)
 1. **Layout *Detail Obsession* (`1080×1920`):**
