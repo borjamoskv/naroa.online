@@ -98,6 +98,15 @@ if [ "$MODE" = "test-only" ]; then
   exit 0
 fi
 
+# ── 0b. Cerrojo: un solo deploy a la vez ────────────────────
+# Dos ejecuciones solapadas (p. ej. watch:deploy) comparten .vercel/output y pueden publicar un build a medias.
+# --build-only queda fuera porque `vercel build` lo invoca desde dentro de un deploy.
+if [ "$MODE" != "build-only" ]; then
+  LOCK_DIR="${TMPDIR:-/tmp}/naroa-deploy.lock"
+  mkdir "$LOCK_DIR" 2>/dev/null || fail "Ya hay otro deploy en curso. Si no es así, borra $LOCK_DIR y reintenta."
+  trap 'rmdir "$LOCK_DIR" 2>/dev/null || true' EXIT
+fi
+
 # ── 1. Preflight ─────────────────────────────────────────────
 [ "$MODE" = "build-only" ] || command -v wrangler >/dev/null 2>&1 || fail "wrangler no encontrado. Instala con: npm i -g wrangler"
 
