@@ -307,9 +307,18 @@ fi
 
 # ── 8. Despliegue Paralelo a Vercel ──────────────────────────
 if command -v npx >/dev/null 2>&1; then
-  log "Sincronizando espejo en Vercel Producción..."
-  (npx vercel build --prod --yes > /dev/null 2>&1 && npx vercel deploy --prebuilt --prod --yes > /dev/null 2>&1) || true
-  ok "Mirror Vercel actualizado (o protegido por límite de cuota)"
+  # Vercel sirve el dominio real (el DNS apunta ahí): nunca subir un build vacío ni ocultar errores.
+  VERCEL_LOG="${TMPDIR:-/tmp}/naroa-vercel-deploy.log"
+  log "Publicando en Vercel Producción (log: $VERCEL_LOG)..."
+  if ! npx vercel build --prod --yes > "$VERCEL_LOG" 2>&1; then
+    echo -e "${RED}[AVISO]${NC} vercel build falló: NO se sube nada, producción conserva el despliegue anterior. Ver $VERCEL_LOG"
+  elif [ ! -s ".vercel/output/static/index.html" ]; then
+    echo -e "${RED}[AVISO]${NC} vercel build no generó .vercel/output/static/index.html: NO se sube nada (evita un 404 global). Ver $VERCEL_LOG"
+  elif ! npx vercel deploy --prebuilt --prod --yes >> "$VERCEL_LOG" 2>&1; then
+    echo -e "${RED}[AVISO]${NC} vercel deploy falló (¿cuota?): producción conserva el despliegue anterior. Ver $VERCEL_LOG"
+  else
+    ok "Vercel Producción actualizado"
+  fi
 fi
 
 # ── 9. Notificación Instantánea IndexNow (Bing / Copilot / Perplexity) ──

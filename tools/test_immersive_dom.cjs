@@ -362,7 +362,13 @@ async function eyeMatch(ui, base, points) {
   const originalTransform = ui.find('.art-scene img').style.transform;
   assert.equal(ui.wheel(100).defaultPrevented, false, 'Do not hijack native wheel scrolling');
   assert.equal(ui.wheel(-100, { ctrlKey: true }).defaultPrevented, false, 'Preserve browser zoom');
+  // The app clears is-camera-moving on a real 180 ms timer; on slow CI the flush alone can outlast it.
+  // Record the class while the scroll is processed instead of sampling it afterwards.
+  let cameraTookFrame = false;
+  const cameraWatch = new ui.w.MutationObserver(() => { if (ui.find('[data-gallery]').classList.contains('is-camera-moving')) cameraTookFrame = true; });
+  cameraWatch.observe(ui.find('[data-gallery]'), { attributes: true, attributeFilter: ['class'] });
   ui.scroll(.28); await ui.flush();
+  cameraWatch.disconnect();
   assert.notEqual(ui.find('.art-scene img').style.transform, originalTransform);
   assert.equal(ui.find('[data-art-title]').textContent, 'Marilyn Rocks');
   assert.equal(ui.find('[data-scene="1"]').style.visibility, 'visible');
@@ -371,7 +377,7 @@ async function eyeMatch(ui, base, points) {
   assert.equal(ui.find('[data-kinetic-title]').textContent, '', 'Floating kinetic titles are retired');
   assert.equal(ui.find('[data-art-copy]').style.opacity, '1', 'The reading layer remains available when the camera rests');
   assert.ok(Number(ui.find('[data-gallery]').style.getPropertyValue('--camera-veil')) <= .65, 'Caption attenuation never drops below 35% opacity');
-  assert.ok(ui.find('[data-gallery]').classList.contains('is-camera-moving'), 'Actual scrolling gives the camera the frame');
+  assert.ok(cameraTookFrame || ui.find('[data-gallery]').classList.contains('is-camera-moving'), 'Actual scrolling gives the camera the frame');
   const stoppedTransform = ui.find('.art-scene img').style.transform;
   await wait(220); await ui.flush();
   assert.equal(ui.find('.art-scene img').style.transform, stoppedTransform, 'Stopping the scroll must not force another movement');
