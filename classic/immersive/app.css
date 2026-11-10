@@ -2420,3 +2420,12 @@ body.page-retratos-por-encargo-bilbao .atelier-OrderCard::before {
   box-shadow: 0 2px 6px rgba(0,0,0,0.12);
   z-index: 5;
 }
+
+/* ─── Encargos · sin desbordamiento horizontal en móvil y tablet ───────────
+   Los hijos de rejilla llevan min-width:auto por defecto: la tabla comparativa
+   y la tarjeta 4:3 con alto mínimo ensanchaban la página entera (666 px en un
+   móvil de 390). Se les deja encoger y la tabla se desplaza dentro de su caja.
+   ─────────────────────────────────────────────────────────────────────── */
+:where(body.page-retratos-por-encargo-bilbao) :where(.atelier-specs-chapter,.commission-specs-grid,.atelier-workbench,.atelier-controls,.configurator-field,.cfg-pill-group)>*{min-width:0}
+body.page-retratos-por-encargo-bilbao .commission-compare-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+@media(max-width:900px){body.page-retratos-por-encargo-bilbao .atelier-card-visual{min-height:0;width:100%}}
