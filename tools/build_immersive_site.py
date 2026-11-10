@@ -31,6 +31,53 @@ ORIGIN = "https://naroagutierrezgil.com"
 LABELS = {"pizarra": "Pizarra · DiviNos", "collage": "Dibujo y collage", "objetos": "Retratos y objetos", "caracterizacion": "Caracterización"}
 CURATED = ["marilyn-rocks", "rara-avis", "amor-en-conserva", "amy-rocks", "entre-tantas-flores-de-dia", "johnny-rocks", "rockagipsy", "hugo-box"]
 
+# Responsive artwork variants. Every 1800px "-view.webp" cover also ships as
+# "-w{N}.webp" (q82) / "-w{N}.avif" (q62), N = target width, never larger than the view.
+# 1280 exists because a 3:4 portrait drawn with object-fit:cover on a 375px phone at
+# DPR 2 needs ~1250 device px; 1800 because a landscape work covering that same phone
+# needs ~2200. The q88 "-view" is only for the enlarged fit view.
+# classic/immersive/app.js mirrors these widths.
+RESPONSIVE_WIDTHS = (640, 1024, 1280, 1600, 1800)
+VIEW_LIMIT = 1800
+try:
+    from PIL import features as _pil_features
+    AVIF = bool(_pil_features.check("avif"))
+except Exception:
+    AVIF = False
+RESPONSIVE = {}  # view url -> (view_width, view_height)
+_VIEW_IMG_RE = re.compile(r'<img\b[^>]*>')
+_VIEW_SRC_RE = re.compile(r'(?<![\w-])src="(/immersive/media/[^"]+-view\.webp)"')
+
+
+def variant_url(view_url, width, ext="webp"):
+    return view_url[: -len("-view.webp")] + f"-w{width}.{ext}"
+
+
+def view_srcset(view_url, ext="webp"):
+    vw, vh = RESPONSIVE[view_url]
+    entries = []
+    for w in RESPONSIVE_WIDTHS:
+        if w >= vw:
+            # A variant at or past the view width is the full picture at q82, lighter than the q88 view.
+            entries.append(f"{variant_url(view_url, w, ext)} {vw}w")
+            break
+        entries.append(f"{variant_url(view_url, w, ext)} {w}w")
+    return ", ".join(entries)
+
+
+def responsive_html(text):
+    """Give every eager <img src="...-view.webp"> a WebP srcset (data-src stays for the JS loader)."""
+    def fix(match):
+        tag = match.group(0)
+        src = _VIEW_SRC_RE.search(tag)
+        if not src or src.group(1) not in RESPONSIVE or " srcset=" in tag:
+            return tag
+        extra = f' srcset="{view_srcset(src.group(1))}"'
+        if " sizes=" not in tag:
+            extra += ' sizes="100vw"'
+        return tag[:src.end()] + extra + tag[src.end():]
+    return _VIEW_IMG_RE.sub(fix, text)
+
 
 def read_data(name):
     return json.loads((SOURCE / "data" / f"{name}.json").read_text())
@@ -41,6 +88,8 @@ def data_json(value):
 
 
 def write(path, text):
+    if path.suffix == ".html":
+        text = responsive_html(text)
     path.parent.mkdir(parents=True, exist_ok=True)
     if not path.exists() or path.read_text() != text:
         path.write_text(text)
@@ -58,13 +107,26 @@ def build(output):
         if not source.is_file():
             raise FileNotFoundError(f"Reviewed image missing: {src}")
         digest = hashlib.sha256(source.read_bytes()).hexdigest()[:12]
-        variant = "thumb" if thumb else "view" if limit == 1800 else f"view-{limit}"
+        variant = "thumb" if thumb else "view" if limit == VIEW_LIMIT else f"view-{limit}"
         name = f"{source.stem}-{digest}-{variant}.webp"
         dest = media / name
         q = quality if quality is not None else (72 if thumb else 88)
-        jobs[dest] = (source, limit, q)
+        jobs[dest] = (source, limit, q, "WEBP", None)
         originals.add(src)
-        return "/immersive/media/" + name
+        url = "/immersive/media/" + name
+        if variant == "view" and url not in RESPONSIVE:
+            with Image.open(source) as probe:
+                sw, sh = probe.size
+                if probe.getexif().get(0x0112) in (5, 6, 7, 8):
+                    sw, sh = sh, sw
+            scale = min(1, VIEW_LIMIT / max(sw, sh))
+            RESPONSIVE[url] = (max(1, round(sw * scale)), max(1, round(sh * scale)))
+            for w in RESPONSIVE_WIDTHS:
+                stem = f"{source.stem}-{digest}-w{w}"
+                jobs[media / f"{stem}.webp"] = (source, VIEW_LIMIT, 82, "WEBP", w)
+                if AVIF:
+                    jobs[media / f"{stem}.avif"] = (source, VIEW_LIMIT, 62, "AVIF", w)
+        return url
 
     catalogue = read_data("catalogo")
     series = read_data("vaivenes")
@@ -127,11 +189,27 @@ def build(output):
     cantinflowers = derivative("/images/trayectoria/cantinflowers.jpg")
     assert [scene["slug"] for scene in journey["scenes"]] == [p["slug"] for p in projects], "Camera score must cover the ordered catalogue exactly"
     assert all(scene["mode"] in journey["durations"] for scene in journey["scenes"])
-    content = {"journey": journey, "projects": projects, "reviewed": catalogue["reviewed"], "labels": LABELS}
+    content = {"journey": journey, "projects": projects, "reviewed": catalogue["reviewed"], "labels": LABELS, "avif": AVIF}
     amy = next(p for p in projects if p["slug"] == "amy-rocks")
     icon_viewbox = "131 56 223 223"
     icon_hash = hashlib.sha256((SOURCE / amy["photos"][0]["original"].lstrip("/")).read_bytes() + icon_viewbox.encode()).hexdigest()[:12]
     favicon_path = f"/immersive/favicon-amy-{icon_hash}.svg"
+    def width_srcset(src, full_url, quality=86):
+        """srcset with true width descriptors for a full-bleed photo (object-fit: cover)."""
+        sw, sh = image_info(src)[:2]
+        entries = []
+        for w in RESPONSIVE_WIDTHS[:-1]:
+            if w >= sw:
+                break
+            limit = -(-w * max(sw, sh) // sw)  # long side that yields width w
+            entries.append(f"{derivative(src, limit, quality=quality)} {round(sw * limit / max(sw, sh))}w")
+        entries.append(f"{full_url} {sw}w")
+        return ", ".join(entries)
+
+    portrait_srcset = width_srcset("/images/sobre-mi/naroa-monoculo.jpg", portrait)
+    portrait_wink_srcset = width_srcset("/images/sobre-mi/naroa-monoculo-guino.png", portrait_wink)
+    # Full-bleed cover: a tall phone is height-bound (x0.9 = the 10% upscale tolerance of app.js).
+    portrait_sizes = "(max-aspect-ratio: 2201/3468) calc(100vh * 0.5712), calc(90vw + 2px)"
     menu_portrait = derivative("/images/sobre-mi/naroa-monoculo.jpg", 900)
     menu_portrait_wink = derivative("/images/sobre-mi/naroa-monoculo-guino.png", 900)
     menu_flowers = derivative("/images/trayectoria/cantinflowers.jpg", 900)
@@ -575,10 +653,10 @@ def build(output):
             'Vaivenes': sum(1 for p in projects if p.get('series') == 'Vaivenes' or p.get('category') == 'Vaivenes')
         }
         index = ''.join(f'''<a class="index-work" href="/obra/{p['slug']}/" data-work="{p['slug']}" data-index-num="{idx+1:02d}" data-category="{p['category']}" data-series="{esc(p['series'] or '')}" data-cover="{esc(p['cover'])}" data-dimensions="{esc(p.get('dimensions') or '')}" data-photos-count="{len(p.get('photos') or [])}" data-story="{esc((p.get('story') or '')[:140])}" data-search="{esc(' '.join(str(p[k] or '') for k in ['title','technique','support','series','story','materials']))}"><div class="index-work-frame"><img src="{p['thumb']}" width="280" height="320" alt="{esc(p['title'])}" loading="lazy"><span class="index-work-num" aria-hidden="true">{idx+1:02d}</span><span class="index-work-whisper" aria-hidden="true">«{esc((p.get('story') or p.get('label') or '')[:92]).rstrip()}…»</span></div><span><small>// {esc(p['label'])}</small><strong>{esc(p['title'])}</strong><em>{esc(p['support'] or p['technique'] or '')}{f" · {esc(p['dimensions'])}" if p.get('dimensions') else ""}</em></span><span class="stencil-stamp" aria-hidden="true">{esc((p.get('series') or p.get('category') or 'ORIGINAL').upper())}</span><span class="index-work-arrow" aria-hidden="true">↗</span></a>''' for idx, p in enumerate(projects))
-        return f'''<dialog id="menu-dialog" class="menu-dialog" aria-labelledby="menu-heading"><div class="dialog-top menu-top"><a class="signature" href="/" aria-label="Naroa Gutiérrez Gil, inicio"><span>Naroa</span><small>GUTIÉRREZ GIL</small></a><span id="menu-heading">Otra manera de mirar</span><button type="button" data-close-dialog autofocus>Cerrar <span aria-hidden="true">×</span></button></div><div class="menu-layout"><figure class="menu-preview"><div class="menu-preview-picture" data-menu-picture data-preview-href="/obra/" title="Ir a la sección u obra en vista previa"><img data-menu-image alt="Amy Rocks" aria-hidden="true" width="480" height="360"><img data-menu-image alt="Amy Rocks" aria-hidden="true" width="480" height="360"><img class="menu-preview-wink" data-menu-wink src="{menu_portrait_wink}" alt="Guiño de Naroa Gutiérrez Gil" aria-hidden="true" width="480" height="360"><div class="menu-preview-loupe" data-menu-loupe aria-hidden="true"></div><div class="menu-preview-reel" data-menu-reel hidden aria-hidden="true"></div></div><figcaption class="menu-preview-caption"><div class="menu-caption-main"><span data-menu-preview-label>Obras</span><span class="menu-caption-quote" data-menu-quote>Otra manera de mirar.</span><span data-menu-preview-title>Amy Rocks</span></div><div class="menu-caption-sub"><span class="menu-preview-meta" data-menu-preview-meta>Pizarra, collage y objetos · {len(projects)} obras</span><div class="menu-caption-actions"><a class="menu-open-work-pill" href="/obra/" data-menu-open-work title="Entrar en esta vista"><span>Entrar</span><span aria-hidden="true">↗</span></a><button type="button" class="menu-index-pill" data-menu-open-index title="Abrir catálogo completo (atajo: / o I)"><span>Índice</span><span aria-hidden="true">⌕</span><kbd aria-hidden="true">/</kbd></button></div></div></figcaption></figure><nav class="menu-pages" aria-label="Todas las páginas">{links()}</nav></div><div class="menu-sound-drawer" data-menu-sound-drawer hidden aria-label="Paisaje sonoro y créditos"><div class="menu-sound-drawer-inner"><div class="menu-sound-col"><span class="menu-sound-eyebrow">CAJA DE MÚSICA ANALÓGICA · HOY SUENA</span><strong class="menu-sound-theme" data-menu-melody-today>Ciclo Melódico Semanal · Re menor (340–860 Hz)</strong><p>Síntesis cálida reactiva al paso de cada obra con ataque de fieltro, filtro de seda y cadencia <em>The Sound of Silence</em>.</p></div><div class="menu-sound-col"><span class="menu-sound-eyebrow">CRÉDITOS Y LICENCIAS DE AUDIO</span><p>Ambiente natural CC0 (Freesound) · Arreglos de caja de música y síntesis WebAudio original para el estudio de Naroa Gutiérrez Gil.</p><div class="menu-sound-links"><a href="/immersive/audio/creditos.txt" target="_blank" rel="noopener noreferrer">Ver ficha técnica completa (.txt) ↗</a><button type="button" data-close-sound-drawer>Ocultar ×</button></div></div></div></div><div class="menu-foot"><span>Desde Bilbao, con otra mirada. <em class="menu-kbd-hint" aria-hidden="true">· Teclas [1–6] Secciones · [/] Índice</em></span><a href="mailto:naroa@naroa.eu">naroa@naroa.eu ↗</a><a href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer">Facebook ↗</a><a href="https://instagram.com/naroa_art/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="/immersive/audio/creditos.txt" data-menu-sound-credits aria-expanded="false">Créditos del sonido ↗</a></div></dialog>
+        return f'''<dialog id="menu-dialog" class="menu-dialog" aria-labelledby="menu-heading"><div class="dialog-top menu-top"><a class="signature" href="/" aria-label="Naroa Gutiérrez Gil, inicio"><span>Naroa</span><small>GUTIÉRREZ GIL</small></a><span id="menu-heading">Otra manera de mirar</span><button type="button" data-close-dialog autofocus>Cerrar <span aria-hidden="true">×</span></button></div><div class="menu-layout"><figure class="menu-preview"><div class="menu-preview-picture" data-menu-picture data-preview-href="/obra/" title="Ir a la sección u obra en vista previa"><img data-menu-image alt="Amy Rocks" aria-hidden="true" width="480" height="360"><img data-menu-image alt="Amy Rocks" aria-hidden="true" width="480" height="360"><img class="menu-preview-wink" data-menu-wink data-dialog-src="{menu_portrait_wink}" alt="Guiño de Naroa Gutiérrez Gil" aria-hidden="true" width="480" height="360"><div class="menu-preview-loupe" data-menu-loupe aria-hidden="true"></div><div class="menu-preview-reel" data-menu-reel hidden aria-hidden="true"></div></div><figcaption class="menu-preview-caption"><div class="menu-caption-main"><span data-menu-preview-label>Obras</span><span class="menu-caption-quote" data-menu-quote>Otra manera de mirar.</span><span data-menu-preview-title>Amy Rocks</span></div><div class="menu-caption-sub"><span class="menu-preview-meta" data-menu-preview-meta>Pizarra, collage y objetos · {len(projects)} obras</span><div class="menu-caption-actions"><a class="menu-open-work-pill" href="/obra/" data-menu-open-work title="Entrar en esta vista"><span>Entrar</span><span aria-hidden="true">↗</span></a><button type="button" class="menu-index-pill" data-menu-open-index title="Abrir catálogo completo (atajo: / o I)"><span>Índice</span><span aria-hidden="true">⌕</span><kbd aria-hidden="true">/</kbd></button></div></div></figcaption></figure><nav class="menu-pages" aria-label="Todas las páginas">{links()}</nav></div><div class="menu-sound-drawer" data-menu-sound-drawer hidden aria-label="Paisaje sonoro y créditos"><div class="menu-sound-drawer-inner"><div class="menu-sound-col"><span class="menu-sound-eyebrow">CAJA DE MÚSICA ANALÓGICA · HOY SUENA</span><strong class="menu-sound-theme" data-menu-melody-today>Ciclo Melódico Semanal · Re menor (340–860 Hz)</strong><p>Síntesis cálida reactiva al paso de cada obra con ataque de fieltro, filtro de seda y cadencia <em>The Sound of Silence</em>.</p></div><div class="menu-sound-col"><span class="menu-sound-eyebrow">CRÉDITOS Y LICENCIAS DE AUDIO</span><p>Ambiente natural CC0 (Freesound) · Arreglos de caja de música y síntesis WebAudio original para el estudio de Naroa Gutiérrez Gil.</p><div class="menu-sound-links"><a href="/immersive/audio/creditos.txt" target="_blank" rel="noopener noreferrer">Ver ficha técnica completa (.txt) ↗</a><button type="button" data-close-sound-drawer>Ocultar ×</button></div></div></div></div><div class="menu-foot"><span>Desde Bilbao, con otra mirada. <em class="menu-kbd-hint" aria-hidden="true">· Teclas [1–6] Secciones · [/] Índice</em></span><a href="mailto:naroa@naroa.eu">naroa@naroa.eu ↗</a><a href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer">Facebook ↗</a><a href="https://instagram.com/naroa_art/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="/immersive/audio/creditos.txt" data-menu-sound-credits aria-expanded="false">Créditos del sonido ↗</a></div></dialog>
 <dialog id="index-dialog" class="index-dialog" data-obra-view="muro" aria-labelledby="index-heading"><div class="index-backdrop" data-index-backdrop aria-hidden="true"><div class="index-backdrop-image" data-index-backdrop-img style="background-image:url('{projects[0]['cover']}')"></div><div class="index-backdrop-vignette"></div></div><div class="dialog-top"><h2 id="index-heading">La obra <span class="stencil-subtag" aria-hidden="true">✦ GABINETE DE MIRADAS &amp; MATERIA VIVA</span></h2><div class="index-top-actions"><div class="index-mode-switcher" role="group" aria-label="Modo de visualización del gabinete"><button type="button" data-obra-mode="muro" aria-pressed="true">Muro de Taller</button><button type="button" data-obra-mode="mesa" aria-pressed="false">Mesa de Luz</button><button type="button" data-obra-mode="constelacion" aria-pressed="false">Hilo Kintsugi</button></div><button type="button" class="index-oracle-btn" data-index-oracle title="Dejar que el azar elija una mirada">🎲 Oráculo del azar</button><button type="button" data-close-dialog class="stencil-close-btn">Cerrar ×</button></div></div><div class="index-controls"><label for="art-search"><span class="search-label-stencil">⌕ BUSCAR EN EL ESTUDIO // TRAZO, MATERIA O ROSTRO</span><input type="search" id="art-search" placeholder="Título, pizarra, lata, collage o personaje…" autocomplete="off"></label><div class="index-filters" role="group" aria-label="Filtrar obras"><button type="button" data-filter="all" aria-pressed="true"><span class="spray-dot" aria-hidden="true">●</span> Todas <span class="filter-num" aria-hidden="true">{counts['all']}</span></button><button type="button" data-filter="pizarra" aria-pressed="false"><span class="spray-dot" aria-hidden="true">●</span> Pizarra <span class="filter-num" aria-hidden="true">{counts['pizarra']}</span></button><button type="button" data-filter="collage" aria-pressed="false"><span class="spray-dot" aria-hidden="true">●</span> Collage <span class="filter-num" aria-hidden="true">{counts['collage']}</span></button><button type="button" data-filter="objetos" aria-pressed="false"><span class="spray-dot" aria-hidden="true">●</span> Objetos <span class="filter-num" aria-hidden="true">{counts['objetos']}</span></button><button type="button" data-filter="caracterizacion" aria-pressed="false"><span class="spray-dot" aria-hidden="true">●</span> Caracterización <span class="filter-num" aria-hidden="true">{counts['caracterizacion']}</span></button><button type="button" data-filter="Vaivenes" aria-pressed="false"><span class="spray-dot" aria-hidden="true">●</span> Vaivenes <span class="filter-num" aria-hidden="true">{counts['Vaivenes']}</span></button></div></div><div class="index-status-bar"><p class="index-count" role="status" aria-live="polite">{len(projects)} proyectos</p><div class="index-spotlight-hud" data-index-spotlight-hud aria-hidden="true"><span class="spotlight-hud-num" data-hud-num>01 / {len(projects):02d}</span><strong class="spotlight-hud-title" data-hud-title>{esc(projects[0]['title'])}</strong><span class="spotlight-hud-meta" data-hud-meta>{esc(projects[0]['label'])}</span><span class="spotlight-hud-quote" data-hud-quote>«{esc((projects[0].get('story') or '')[:110])}…»</span></div></div><div class="index-list">{index}</div><p class="index-empty" hidden>No hay obras que coincidan con esta búsqueda. <button type="button" data-reset-index>Ver todas</button></p></dialog>
 <dialog id="story-remix-dialog" class="story-remix-dialog" aria-labelledby="story-remix-heading"><div class="dialog-top"><span id="story-remix-heading">Modo Story · Detail Obsession</span><button type="button" data-close-dialog autofocus>Cerrar ×</button></div><div class="story-remix-content"><div class="story-remix-preview-frame"><img data-story-remix-img alt="Story Detail Obsession de Naroa Gutiérrez Gil" width="360" height="640"><div class="story-remix-spinner" data-story-remix-spinner hidden><span>Generando detalle matérico...</span></div></div><div class="story-remix-actions"><button type="button" class="remix-btn remix-btn--shuffle" data-remix-shuffle>🎲 Otra obra</button><button type="button" class="remix-btn remix-btn--share" data-remix-share>Subir a Instagram Stories ↗</button><button type="button" class="remix-btn remix-btn--video" data-remix-video-loop>🎵 Grabar Loop 6s (Audio + Macro)</button><a class="remix-btn remix-btn--download" data-remix-download href="#" download="naroa-detail-obsession.jpg">Descargar Story HD ⤓</a></div></div></dialog>
-<dialog id="kintsugi-dialog" class="kintsugi-dialog" aria-labelledby="kintsugi-heading"><div class="dialog-top"><span id="kintsugi-heading" class="kintsugi-dialog-title">El Rasgado Kintsugi · 2013 ➔ 2021</span><button type="button" data-close-dialog autofocus>Cerrar ×</button></div><div class="kintsugi-dialog-body"><div class="kintsugi-stage" data-kintsugi-stage style="--split:50%"><div class="kintsugi-layer kintsugi-layer--color"><img src="/immersive/media/cantinflowers-rostro-4k-f585c8dca309-view.webp" alt="Cantinflowers (Color, 2021) — Acrílico rascado y collage" width="1350" height="1800"><div class="kintsugi-badge kintsugi-badge--color">2021 · Pandemia (Color)</div></div><div class="kintsugi-layer kintsugi-layer--bn"><img src="/immersive/media/mario-moreno-hq-01-b0d9bf3e15f7-view.webp" alt="Mario Moreno (Grafito, 2013) — Retrato en B/N" width="1375" height="1800"><div class="kintsugi-badge kintsugi-badge--bn">2013 · Grafito (B/N)</div></div><div class="kintsugi-seam" data-kintsugi-seam><div class="kintsugi-seam-glow"></div><div class="kintsugi-seam-line"></div><button type="button" class="kintsugi-handle" data-kintsugi-handle role="slider" aria-label="Deslizar rasgado Kintsugi" aria-valuenow="50" aria-valuemin="5" aria-valuemax="95"><span class="kintsugi-handle-gold">✦</span><span class="kintsugi-handle-icon">↔</span><span class="kintsugi-handle-text">Rasgar</span></button></div></div><aside class="kintsugi-quote-card"><p>«Comienzo a rascar sobre una base que no me permitía difuminar y ¡premio!, encuentro una textura inédita: puro kintsugi, el problema hecho trampolín».</p><cite>Naroa Gutiérrez Gil · De Mario Moreno (2013) a Cantinflowers (2021)</cite></aside></div></dialog>'''
+<dialog id="kintsugi-dialog" class="kintsugi-dialog" aria-labelledby="kintsugi-heading"><div class="dialog-top"><span id="kintsugi-heading" class="kintsugi-dialog-title">El Rasgado Kintsugi · 2013 ➔ 2021</span><button type="button" data-close-dialog autofocus>Cerrar ×</button></div><div class="kintsugi-dialog-body"><div class="kintsugi-stage" data-kintsugi-stage style="--split:50%"><div class="kintsugi-layer kintsugi-layer--color"><img data-src="/immersive/media/cantinflowers-rostro-4k-f585c8dca309-view.webp" decoding="async" alt="Cantinflowers (Color, 2021) — Acrílico rascado y collage" width="1350" height="1800"><div class="kintsugi-badge kintsugi-badge--color">2021 · Pandemia (Color)</div></div><div class="kintsugi-layer kintsugi-layer--bn"><img data-src="/immersive/media/mario-moreno-hq-01-b0d9bf3e15f7-view.webp" decoding="async" alt="Mario Moreno (Grafito, 2013) — Retrato en B/N" width="1375" height="1800"><div class="kintsugi-badge kintsugi-badge--bn">2013 · Grafito (B/N)</div></div><div class="kintsugi-seam" data-kintsugi-seam><div class="kintsugi-seam-glow"></div><div class="kintsugi-seam-line"></div><button type="button" class="kintsugi-handle" data-kintsugi-handle role="slider" aria-label="Deslizar rasgado Kintsugi" aria-valuenow="50" aria-valuemin="5" aria-valuemax="95"><span class="kintsugi-handle-gold">✦</span><span class="kintsugi-handle-icon">↔</span><span class="kintsugi-handle-text">Rasgar</span></button></div></div><aside class="kintsugi-quote-card"><p>«Comienzo a rascar sobre una base que no me permitía difuminar y ¡premio!, encuentro una textura inédita: puro kintsugi, el problema hecho trampolín».</p><cite>Naroa Gutiérrez Gil · De Mario Moreno (2013) a Cantinflowers (2021)</cite></aside></div></dialog>'''
 
     def footer():
         return f'''<footer class="site-footer"><a class="signature" href="/">Naroa</a>{social_share_dock()}<a href="mailto:naroa@naroa.eu">naroa@naroa.eu ↗</a><a href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer">Facebook ↗</a><a href="https://instagram.com/naroa_art/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="/contacto/">¿Hablamos? ↗</a><span>Bilbao · © 2026</span></footer>'''
@@ -877,6 +955,21 @@ def build(output):
         if not not_found:
             pages.append((path, image, title, im_alt))
 
+    def cover_dims(url):
+        return f' width="{RESPONSIVE[url][0]}" height="{RESPONSIVE[url][1]}"' if url in RESPONSIVE else ''
+
+    def cover_sizes(url):
+        # .art-pan is the viewport + 10px each side and the picture is object-fit:cover,
+        # so a portrait on a tall phone is height-bound: width = (100vh + 20px) * aspect.
+        if url not in RESPONSIVE:
+            return ''
+        vw, vh = RESPONSIVE[url]
+        # x0.9 matches the 10% upscale tolerance of artSrc() in app.js.
+        return f' sizes="(max-aspect-ratio: {vw}/{vh}) calc((100vh + 20px) * {0.9 * vw / vh:.4f}), calc(90vw + 18px)"'
+
+    def lens_preview(url):
+        return variant_url(url, RESPONSIVE_WIDTHS[0]) if url in RESPONSIVE else url
+
     def work_alt(q, caption=None):
         medium = " · ".join(filter(None, [q.get("technique"), q.get("support")])) or q["label"]
         detail = f" ({caption})" if caption else ""
@@ -885,7 +978,11 @@ def build(output):
     def gallery(path, initial=0, subset="all", title=None, description=None, schema=None):
         selected = [p for p in projects if subset != "Vaivenes" or p["series"] == "Vaivenes"]
         p = selected[initial]
-        stages = ''.join(f'''<div class="art-scene{' is-current' if q['slug']==p['slug'] else ''}" data-scene="{i}" data-work="{q['slug']}"{' aria-hidden="true"' if q['slug']!=p['slug'] else ''}><div class="art-pan"><img {'src' if q['slug']==p['slug'] else 'data-src'}="{q['cover']}" alt="{esc(work_alt(q))}" decoding="async" draggable="false"{' fetchpriority="high"' if q['slug']==p['slug'] else ''}></div></div>''' for i, q in enumerate(selected))
+        # On the home the first scene sits under the monocle threshold and app.js swaps in a
+        # per-session hero, so no artwork is fetched until that choice is made.
+        threshold_page = path == "/" and initial == 0
+        eager = lambda q: q['slug'] == p['slug'] and not threshold_page
+        stages = ''.join(f'''<div class="art-scene{' is-current' if q['slug']==p['slug'] else ''}" data-scene="{i}" data-work="{q['slug']}"{' aria-hidden="true"' if q['slug']!=p['slug'] else ''}><div class="art-pan"><img {'src' if eager(q) else 'data-src'}="{q['cover']}"{cover_sizes(q['cover']) if eager(q) else ''}{cover_dims(q['cover'])} alt="{esc(work_alt(q))}" decoding="async" draggable="false"{' fetchpriority="high"' if eager(q) else ''}></div></div>''' for i, q in enumerate(selected))
         nav = ''.join(f'<button type="button" data-select="{i}" aria-label="Ver {esc(q["title"])}" aria-pressed="{str(i==initial).lower()}"{ " hidden" if abs(i-initial)>2 else ""}>{i+1:02d}</button>' for i, q in enumerate(selected))
         facts_items = [
             ("Técnica", p["technique"]),
@@ -901,8 +998,8 @@ def build(output):
             if val
         )
         threshold_html = ""
-        if path == "/" and initial == 0:
-            threshold_html = f'''<div class="hero-threshold" data-hero-threshold data-threshold-enter aria-hidden="true" style="--monocle-preview:url('{p['cover']}')"><div class="hero-threshold-plane" data-threshold-plane><img class="hero-threshold-portrait" src="{portrait}" srcset="{menu_portrait} 900w, {portrait} 2201w" sizes="100vw" width="2201" height="3468" alt="Naroa Gutiérrez Gil con chistera y monóculo en el umbral del estudio" fetchpriority="high" decoding="sync"><img class="hero-threshold-wink" data-threshold-wink src="{portrait_wink}" srcset="{menu_portrait_wink} 900w, {portrait_wink} 2201w" sizes="100vw" width="2201" height="3468" alt="Guiño de bienvenida de Naroa Gutiérrez Gil" decoding="async"><div class="hero-monocle-portal" data-monocle-portal><div class="hero-monocle-lens"><div class="hero-monocle-marilyn" data-monocle-marilyn></div><canvas class="hero-monocle-canvas" data-monocle-canvas width="256" height="256" aria-hidden="true"></canvas><div class="hero-monocle-caustics"></div></div><svg class="hero-monocle-ring" viewBox="0 0 220 220" focusable="false" aria-hidden="true"><circle class="hero-monocle-bezel" cx="110" cy="110" r="98"/><circle class="hero-monocle-inner-ring" cx="110" cy="110" r="74"/></svg></div></div><div class="hero-threshold-shade"></div><div class="hero-spotlight" data-hero-spotlight></div><div class="hero-shards" data-hero-shards><span class="hero-shard hero-shard--1" data-shard-depth="1.4"></span><span class="hero-shard hero-shard--2" data-shard-depth="-1.1"></span><span class="hero-shard hero-shard--3" data-shard-depth="1.8"></span><span class="hero-shard hero-shard--4" data-shard-depth="-1.5"></span><span class="hero-shard hero-shard--5" data-shard-depth="0.9"></span><span class="hero-shard hero-shard--6" data-shard-depth="2.1"></span></div></div>'''
+        if threshold_page:
+            threshold_html = f'''<div class="hero-threshold" data-hero-threshold data-threshold-enter aria-hidden="true"><div class="hero-threshold-plane" data-threshold-plane><img class="hero-threshold-portrait" src="{portrait}" srcset="{portrait_srcset}" sizes="{portrait_sizes}" width="2201" height="3468" alt="Naroa Gutiérrez Gil con chistera y monóculo en el umbral del estudio" fetchpriority="high" decoding="sync"><img class="hero-threshold-wink" data-threshold-wink src="{portrait_wink}" srcset="{portrait_wink_srcset}" sizes="{portrait_sizes}" width="2201" height="3468" alt="Guiño de bienvenida de Naroa Gutiérrez Gil" decoding="async"><div class="hero-monocle-portal" data-monocle-portal><div class="hero-monocle-lens"><div class="hero-monocle-marilyn" data-monocle-marilyn></div><canvas class="hero-monocle-canvas" data-monocle-canvas width="256" height="256" aria-hidden="true"></canvas><div class="hero-monocle-caustics"></div></div><svg class="hero-monocle-ring" viewBox="0 0 220 220" focusable="false" aria-hidden="true"><circle class="hero-monocle-bezel" cx="110" cy="110" r="98"/><circle class="hero-monocle-inner-ring" cx="110" cy="110" r="74"/></svg></div></div><div class="hero-threshold-shade"></div><div class="hero-spotlight" data-hero-spotlight></div><div class="hero-shards" data-hero-shards><span class="hero-shard hero-shard--1" data-shard-depth="1.4"></span><span class="hero-shard hero-shard--2" data-shard-depth="-1.1"></span><span class="hero-shard hero-shard--3" data-shard-depth="1.8"></span><span class="hero-shard hero-shard--4" data-shard-depth="-1.5"></span><span class="hero-shard hero-shard--5" data-shard-depth="0.9"></span><span class="hero-shard hero-shard--6" data-shard-depth="2.1"></span></div></div>'''
         body = f'''<main id="main" class="art-scroll" style="--steps:{len(selected)-1}"><section class="art-stage" data-gallery data-initial="{initial}" data-subset="{subset}"><div class="art-layers">{stages}</div>{threshold_html}<div class="art-shade" aria-hidden="true"></div><div class="art-stickman" data-stickman aria-hidden="true" hidden><div class="stickman-runner" data-stick-runner><svg viewBox="0 0 110 120" class="stickman-svg" aria-hidden="true"><ellipse data-stick-shadow cx="50" cy="103" rx="18" ry="2.6" fill="rgba(247,213,148,0.28)" /><path data-stick-scarf-gold d="M52,34 Q30,24 10,38" stroke="#f7d594" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.78" /><path data-stick-scarf d="M54,32 Q34,28 16,36" stroke="#fffdf4" stroke-width="2.6" stroke-linecap="round" fill="none" opacity="0.92" /><polyline data-stick-hair points="49,10 54,3 57,10 63,4 62,12" stroke="#fffdf4" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none" /><circle data-stick-head cx="58" cy="20" r="9.5" stroke="#fffdf4" stroke-width="3.2" fill="#070706" /><circle data-stick-eye cx="62" cy="18.5" r="1.8" fill="#fffdf4" /><line data-stick-torso x1="56" y1="29" x2="50" y2="62" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" /><polyline data-stick-arm-l points="55,36 39,48 29,39" stroke="#fffdf4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none" /><polyline data-stick-arm-r points="55,36 69,46 81,34" stroke="#fffdf4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none" /><polyline data-stick-leg-l points="50,62 34,82 22,102" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" fill="none" /><polyline data-stick-leg-r points="50,62 68,80 80,100" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" fill="none" /><line data-stick-dust-1 x1="26" y1="98" x2="6" y2="98" stroke="rgba(255,253,244,0.82)" stroke-width="2.6" stroke-linecap="round" /><line data-stick-dust-2 x1="32" y1="105" x2="12" y2="105" stroke="rgba(255,253,244,0.55)" stroke-width="2.2" stroke-linecap="round" /><circle data-stick-spark cx="18" cy="93" r="2.2" fill="rgba(255,253,244,0.85)" /><circle data-stick-spark-2 cx="10" cy="88" r="1.7" fill="rgba(247,213,148,0.9)" /><circle data-stick-spark-3 cx="24" cy="97" r="1.4" fill="rgba(237,188,164,0.85)" /></svg></div></div><div class="kinetic-title" data-kinetic-title aria-hidden="true"></div><nav class="art-index" aria-label="Recorrido de obras">{nav}</nav><div class="art-bottom"><div><div data-art-copy aria-live="polite"><p class="art-counter"><span data-counter>{initial+1:02d} / {len(selected):02d}</span><small data-journey-cue>Desplázate para recorrer ↕</small></p><h1 data-art-title>{esc(p['title'])}</h1><p class="art-material" data-art-material>{esc(p['label'])}</p></div><button type="button" class="art-story-link" data-open-story>Sobre esta obra <span aria-hidden="true">+</span></button></div><div class="art-controls"><div class="art-view-actions"><button type="button" data-effects aria-pressed="false">Activar efectos</button><button type="button" class="kintsugi-toggle-btn" data-kintsugi-toggle hidden aria-pressed="false">Rasgado Kintsugi ✦</button><button type="button" data-fit aria-pressed="false">Ver imagen completa ↗</button><button type="button" data-open-photos>Otras miradas ↗</button><button type="button" class="ouroboros-loop-btn" data-ouroboros hidden aria-label="Volver al origen de la exposición">Volver al origen ↺</button>{social_share_dock(is_finale=True)}</div><div class="art-arrows"><button type="button" data-prev aria-label="Obra anterior"{' disabled' if initial==0 else ''}>←</button><button type="button" data-next aria-label="Obra siguiente"{' disabled' if initial==len(selected)-1 else ''}>→</button></div></div></div><button type="button" class="restore-ui" data-restore hidden>Volver a la navegación ↙</button><div class="art-progress" aria-hidden="true"><span></span></div></section></main>
 <dialog id="story-dialog" class="story-dialog" aria-labelledby="story-title"><div class="dialog-top"><span data-story-category>{esc(p['label'])}</span><button type="button" data-close-dialog>Cerrar ×</button></div><div class="story-body"><h2 id="story-title">{esc(p['title'])}</h2><p data-story>{esc(p['story'])}</p><dl data-facts>{facts_html}</dl><p class="art-credit" data-credit>{esc(p['credit'] or '')}</p><div class="story-actions"><a class="text-link" data-art-email href="mailto:naroa@naroa.eu?subject={quote('Consulta sobre '+p['title'])}">Consultar por email ↗</a><a class="text-link" data-art-whatsapp href="https://wa.me/34636060609?text={quote('Hola Naroa, me gustaría consultar sobre la obra ' + p['title'])}" target="_blank" rel="noopener noreferrer">Consultar por WhatsApp ↗</a><button type="button" class="text-link" data-share-link>Compartir enlace directo ↗</button>{social_share_dock(url=ORIGIN + '/obra/' + p['slug'] + '/', title=p['title'])}</div><a class="source-link" data-art-video{' hidden' if not p.get('video') else ''} href="{esc(p.get('video') or '')}" target="_blank" rel="noopener noreferrer">Ver proceso en YouTube ↗</a><a class="source-link" data-art-source{' hidden' if not p['source'] else ''} href="{esc(p['source'] or '')}" target="_blank" rel="noopener noreferrer">Ver publicación de la artista ↗</a></div><a class="story-footer" href="/retratos-por-encargo-bilbao/">Tu propio retrato empieza aquí ↗</a></dialog>
 <dialog id="photos-dialog" class="photos-dialog" aria-labelledby="photos-heading"><div class="dialog-top"><span id="photos-heading">{esc(p['title'])}</span><button type="button" data-close-dialog>Cerrar ×</button></div><div class="photo-view"><button type="button" data-photo-prev aria-label="Fotografía anterior">←</button><img data-photo-image data-src="{p['photos'][0]['src']}" alt="{esc(work_alt(p, p['photos'][0]['caption']))}" decoding="async"><button type="button" data-photo-next aria-label="Fotografía siguiente">→</button></div><p data-photo-caption aria-live="polite"></p></dialog>'''
@@ -1400,7 +1497,7 @@ def build(output):
         '<span class="postit-badge">HOJA DE ENCARGO</span>'
         '</div>'
         '<div class="atelier-card-visual">'
-        f'<img id="cfg-visual-img" src="{jaio["cover"]}" alt="Muestra de soporte seleccionado" width="480" height="360" loading="lazy">'
+        f'<img id="cfg-visual-img" src="{jaio["cover"]}" sizes="(max-width: 520px) 92vw, 480px" alt="Muestra de soporte seleccionado" width="480" height="360" loading="lazy">'
         '<img id="cfg-swatch-cutout" class="atelier-card-swatch" src="/images/catalogo/commission-jaio-button.webp" width="131" height="140" alt="Relieve táctil del soporte seleccionado" decoding="async">'
         '<div class="atelier-card-caption">'
         '<span id="cfg-visual-tag">Tela vaquera, costuras y dibujo</span>'
@@ -1713,13 +1810,18 @@ def build(output):
         write(output / src.lstrip("/") / "index.html", f'<!doctype html><html lang="es"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0;url={dest}"><link rel="canonical" href="{ORIGIN}{dest}"><title>Naroa Gutiérrez Gil</title></head><body><a href="{dest}">Continuar →</a></body></html>')
 
     def optimize(job):
-        dest, (src, limit, quality) = job
+        dest, (src, limit, quality, fmt, width) = job
         if dest.exists():
             return
         with Image.open(src) as original:
             im = ImageOps.exif_transpose(original).convert("RGB")
             im.thumbnail((limit, limit), Image.Resampling.LANCZOS)
-            im.save(dest, "WEBP", quality=quality, method=6)
+            if width:
+                im.thumbnail((width, limit), Image.Resampling.LANCZOS)
+            if fmt == "AVIF":
+                im.save(dest, "AVIF", quality=quality, speed=6)
+            else:
+                im.save(dest, "WEBP", quality=quality, method=6)
     with ThreadPoolExecutor(max_workers=6) as pool:
         list(pool.map(optimize, jobs.items()))
     for src in originals:

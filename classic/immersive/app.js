@@ -6,6 +6,59 @@
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
+  // Responsive artwork variants — mirrors RESPONSIVE_WIDTHS in tools/build_immersive_site.py.
+  // Every "-view.webp" (1800px, q88) has "-w{N}.webp|avif" siblings; the q88 view is kept for
+  // the enlarged fit view. The choice is container size × DPR (≤ 2), cover-aware.
+  const RESPONSIVE_WIDTHS = [640, 1024, 1280, 1600, 1800];
+  const VIEW_RE = /-view\.webp$/;
+  // Optimistic: every current engine decodes AVIF. The probe and the error hook below
+  // drop to WebP for the rare one that does not, without a broken frame.
+  let avifReady = !!catalogue.avif;
+  if (avifReady) {
+    const probe = new Image();
+    probe.onload = () => { if (!probe.naturalWidth) avifReady = false; };
+    probe.onerror = () => { avifReady = false; };
+    probe.src = 'data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAADrbWV0YQAAAAAAAAAhaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAAAAAAAOcGl0bQAAAAAAAQAAAB5pbG9jAAAAAEQAAAEAAQAAAAEAAAETAAAAIQAAAChpaW5mAAAAAAABAAAAGmluZmUCAAAAAAEAAGF2MDFDb2xvcgAAAABqaXBycAAAAEtpcGNvAAAAFGlzcGUAAAAAAAAAAQAAAAEAAAAQcGl4aQAAAAADCAgIAAAADGF2MUOBAAwAAAAAE2NvbHJuY2x4AAEADQAGgAAAABdpcG1hAAAAAAAAAAEAAQQBAoMEAAAAKW1kYXQSAAoIGAAGiAhoNCAyExlHh4Yhh5555oAAAJBAyRxhQr4=';
+  }
+  const AVIF_RE = /-w\d+\.avif$/;
+  function avifFallback(img) {
+    const src = img?.getAttribute?.('src') || '';
+    if (!AVIF_RE.test(src)) return false;
+    avifReady = false; img.src = src.replace(/\.avif$/, '.webp'); return true;
+  }
+  document.addEventListener('error', e => { if (e.target instanceof HTMLImageElement) avifFallback(e.target); }, true);
+  // box: CSS px of the element the picture fills; aspect: picture width / height (0 = unknown).
+  function artSrc(url, box, aspect = 0, fit = 'cover') {
+    if (!url || !VIEW_RE.test(url)) return url;
+    const w = box?.width || innerWidth, h = box?.height || innerHeight;
+    const drawn = !aspect ? Math.max(w, h) : fit === 'contain' ? Math.min(w, h * aspect) : Math.max(w, h * aspect);
+    const need = drawn * Math.min(devicePixelRatio || 1, 2);
+    const width = RESPONSIVE_WIDTHS.find(c => c >= need * 0.9) || RESPONSIVE_WIDTHS[RESPONSIVE_WIDTHS.length - 1];
+    return url.replace(VIEW_RE, `-w${width}.${avifReady ? 'avif' : 'webp'}`);
+  }
+  function imgAspect(img) {
+    const w = Number(img?.getAttribute('width')), h = Number(img?.getAttribute('height'));
+    return w > 0 && h > 0 ? w / h : 0;
+  }
+  // Resolve a "-view" URL for an <img> that fills its parent (object-fit: cover by default).
+  // Layout size, not getBoundingClientRect: camera zooms must not inflate the request.
+  function fitSrc(url, img, fit = 'cover') {
+    const box = img?.parentElement;
+    return artSrc(url, box && box.offsetWidth ? { width: box.offsetWidth, height: box.offsetHeight } : null, imgAspect(img), fit);
+  }
+  // Assign a JS-chosen source. A server srcset would otherwise win over .src.
+  function setArtSrc(img, url) {
+    if (!img || !url) return;
+    if (img.hasAttribute('srcset')) { img.removeAttribute('srcset'); img.removeAttribute('sizes'); }
+    if (img.getAttribute('src') !== url) img.src = url;
+  }
+  // Hand an eager, server-srcset <img> over to JS control without re-downloading it.
+  function adoptSrcset(img, fallback) {
+    if (!img?.hasAttribute('srcset')) return;
+    const chosen = img.currentSrc;
+    img.removeAttribute('srcset'); img.removeAttribute('sizes');
+    if (chosen) img.src = chosen; else if (fallback) img.src = fitSrc(fallback, img);
+  }
   const soundscape = window.NAROA_SOUND;
   const systemMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const galleryPage = !!$('[data-gallery]'), motionListeners = new Set();
@@ -47,6 +100,8 @@
     if (!dialog || dialog.open) return;
     if (gallery) gallery.pause();
     dialog.showModal();
+    // Decorative dialog images (data-dialog-src) are fetched on first open, not with the page.
+    $$('img[data-dialog-src]', dialog).forEach(img => { img.src = img.dataset.dialogSrc; img.removeAttribute('data-dialog-src'); });
     if (selector === '#menu-dialog') refreshMenu();
     if (selector === '#index-dialog') $('#art-search').focus();
   }
@@ -904,7 +959,7 @@
     stencilWallState.spotlightSlug = slug;
     const cover = cardEl.dataset.cover || $('img', cardEl)?.getAttribute('src') || '';
     if (indexBackdropImg && cover) {
-      indexBackdropImg.style.backgroundImage = `url("${cover}")`;
+      indexBackdropImg.style.backgroundImage = `url("${artSrc(cover)}")`;
     }
     const num = cardEl.dataset.indexNum || '01';
     const title = $('strong', cardEl)?.textContent || '';
@@ -1126,29 +1181,38 @@
           const heroSceneEl = stage.querySelector(`.art-scene[data-work="${sessionHeroSlug}"]`);
           if (artLayers && heroSceneEl) {
             artLayers.insertBefore(heroSceneEl, artLayers.firstElementChild);
-            const heroImg = $('img', heroSceneEl);
-            if (heroImg) {
-              if (!heroImg.src && heroImg.dataset.src) heroImg.src = heroImg.dataset.src;
-              heroImg.setAttribute('fetchpriority', 'high');
-            }
             $$('.art-scene', stage).forEach((s, i) => {
               s.classList.toggle('is-current', i === 0);
               s.setAttribute('aria-hidden', String(i !== 0));
               s.dataset.scene = String(i);
             });
           }
-          const focal = (innerWidth < 760 ? mobileFocals[heroWork.slug] : focals[heroWork.slug]) || '50% 50%';
-          heroThresholdEl.style.setProperty('--monocle-preview', `url("${heroWork.cover || heroWork.photos[0].src}")`);
-          heroThresholdEl.style.setProperty('--hero-focal', focal);
-          const previewEl = $('.hero-monocle-marilyn', heroThresholdEl);
-          if (previewEl) {
-            previewEl.style.setProperty('background-position', focal);
-            previewEl.style.setProperty('transform-origin', focal);
-          }
         }
+      }
+      // The server renders the threshold scene without a source: load the chosen hero
+      // (swapped or not) and point the monocle lens at a 640px variant of it.
+      const heroWork = works[0];
+      const heroScene = stage.querySelector(`.art-scene[data-work="${heroWork.slug}"]`);
+      const heroImg = heroScene && $('img', heroScene);
+      if (heroImg) {
+        if (!heroImg.getAttribute('src') && heroImg.dataset.src) heroImg.src = fitSrc(heroImg.dataset.src, heroImg);
+        heroImg.setAttribute('fetchpriority', 'high');
+      }
+      const focal = (innerWidth < 760 ? mobileFocals[heroWork.slug] : focals[heroWork.slug]) || '50% 50%';
+      const lensSrc = heroWork.cover || heroWork.photos[0].src;
+      heroThresholdEl.style.setProperty('--monocle-preview', `url("${VIEW_RE.test(lensSrc) ? lensSrc.replace(VIEW_RE, '-w640.webp') : lensSrc}")`);
+      heroThresholdEl.style.setProperty('--hero-focal', focal);
+      const previewEl = $('.hero-monocle-marilyn', heroThresholdEl);
+      if (previewEl) {
+        previewEl.style.setProperty('background-position', focal);
+        previewEl.style.setProperty('transform-origin', focal);
       }
     }
     const scenes = $$('.art-scene', stage), images = scenes.map(s => $('img', s));
+    images.forEach((img, i) => adoptSrcset(img, works[i]?.cover));
+    // Scenes cover the stage (.art-pan is inset -10px); measured on the stage so fit mode
+    // and camera transforms never skew the choice.
+    const coverSrc = (url, img) => artSrc(url, { width: stage.offsetWidth + 20, height: stage.offsetHeight + 20 }, imgAspect(img));
     scenes.forEach((s, i) => {
       if (works[i]) {
         s.dataset.work = works[i].slug;
@@ -2330,15 +2394,27 @@
     function ensureImage(i) {
       if (!images[i]) return Promise.resolve();
       const img = images[i];
-      if (!img.getAttribute('src')) img.src = works[i].cover;
+      if (!img.getAttribute('src')) img.src = coverSrc(works[i].cover, img);
       if (img.complete && img.naturalWidth) return Promise.resolve();
       if (pendingImages.has(i)) return pendingImages.get(i);
       const ready = (img.decode ? img.decode() : new Promise(resolve => { img.addEventListener('load', resolve, { once: true }); img.addEventListener('error', resolve, { once: true }); })).catch(() => {
+        if (avifFallback(img)) return;
         if (Math.abs(i - state.index) > 1 && Math.abs(i - motion.desired) > 1) return;
         if (img.src !== new URL(works[i].photos[0].original, location.origin).href) img.src = works[i].photos[0].original;
       });
       pendingImages.set(i, ready); return ready;
     }
+    // Neighbours are hidden until the visitor moves, so they wait for the first intent
+    // (or 4 s after the current work has loaded). The motion loop still requests the
+    // image it travels towards, so the first transition never waits on this.
+    let neighboursArmed = false;
+    function armNeighbours() {
+      if (neighboursArmed) return;
+      neighboursArmed = true;
+      ['pointerdown', 'wheel', 'touchstart', 'keydown'].forEach(type => removeEventListener(type, armNeighbours, true));
+      preloadNeighbours();
+    }
+    ['pointerdown', 'wheel', 'touchstart', 'keydown'].forEach(type => addEventListener(type, armNeighbours, { passive: true, capture: true }));
     function preloadNeighbours() {
       images.forEach((img, i) => {
         if (Math.abs(i - state.index) > 1 && img.hasAttribute('src')) {
@@ -2346,7 +2422,9 @@
           puzzles.get(i)?.picture.removeAttribute('href');
         }
       });
-      [state.index - 1, state.index, state.index + 1].forEach(i => { ensureImage(i); });
+      const reach = neighboursArmed ? 1 : 0;
+      for (let i = state.index - reach; i <= state.index + reach; i++) ensureImage(i);
+      if (!neighboursArmed) Promise.resolve(ensureImage(state.index)).then(() => setTimeout(armNeighbours, 4000));
     }
     function metadata() {
       const p = works[state.index], begin = clamp(state.index - 2, 0, Math.max(0, works.length - 5));
@@ -2691,7 +2769,7 @@
         if (works[index].interaction === 'puzzle' && (!still || puzzles.has(index))) drawPuzzle(index, outgoing && transition ? fraction : 0, still);
         if (works[index].slug === 'custom-jaio' && !state.fit) {
           const step = outgoing && transition ? (fraction < .34 ? 0 : fraction < .67 ? 1 : 2) : 0;
-          const nextSrc = works[index].photos[step]?.src || works[index].cover;
+          const nextSrc = coverSrc(works[index].photos[step]?.src || works[index].cover, image);
           if (image.getAttribute('src') !== nextSrc) image.src = nextSrc;
         }
         if (still) { image.style.transform = ''; return; }
@@ -3749,7 +3827,7 @@
       geometry.top = bounds.top + scrollY;
       geometry.unit = (bounds.height - height) / journey.total || height;
     }
-    function leaveFit() { if (state.fit) { state.fit = false; images[state.index].src = works[state.index].cover; } }
+    function leaveFit() { if (state.fit) { state.fit = false; images[state.index].src = coverSrc(works[state.index].cover, images[state.index]); } }
     function syncScroll() {
       if (document.querySelector('dialog[open]')) return;
       let pixels = scrollY - geometry.top;
@@ -3913,7 +3991,7 @@
     $('[data-journey-cue]', stage)?.addEventListener('click', () => {
       if (works[state.index]?.slug === 'dustin' || works[state.index]?.slug === 'game-over') change(0);
     });
-    $('[data-fit]', stage).addEventListener('click', () => { pause(); state.fit = !state.fit; images[state.index].src = state.fit ? works[state.index].photos[0].src : works[state.index].cover; resetPan(); metadata(); render(); });
+    $('[data-fit]', stage).addEventListener('click', () => { pause(); state.fit = !state.fit; images[state.index].src = state.fit ? works[state.index].photos[0].src : coverSrc(works[state.index].cover, images[state.index]); resetPan(); metadata(); render(); });
     $('[data-threshold-enter]', stage)?.addEventListener('click', () => {
       window.NAROA_SOUND?.menuNote?.(0);
       window.scrollTo({ top: Math.ceil(geometry.top + 0.38 * geometry.unit), behavior: reduced.matches ? 'auto' : 'smooth' });
@@ -3946,6 +4024,9 @@
       kintsugiToggle.addEventListener('click', () => {
         setKintsugiSplit(50, false);
         openDialog('#kintsugi-dialog');
+        $$('img[data-src]', kintsugiDialog).forEach(img => {
+          if (!img.getAttribute('src')) img.src = artSrc(img.dataset.src, kintsugiStage?.getBoundingClientRect(), imgAspect(img));
+        });
       });
     }
 
@@ -4286,7 +4367,7 @@
         img.width = photo.width; img.height = photo.height;
         img.alt = work.title + ' — ' + work.label; img.decoding = 'async'; img.draggable = false;
         img.dataset.src = work.cover; scene.append(img); $('.portrait-frame', hero).append(scene);
-      } else img.dataset.src = img.getAttribute('src');
+      } else { adoptSrcset(img, work.cover); img.dataset.src = work.cover; }
       return scene;
     });
     const images = scenes.map(scene => $('img', scene)), decoded = new Set(), pending = new Map(), failed = new Set();
@@ -4336,7 +4417,7 @@
     function ensureScene(index) {
       const img = images[index]; if (!img || ready(index) || failed.has(index)) return Promise.resolve();
       if (pending.has(index)) return pending.get(index);
-      if (!img.getAttribute('src')) img.src = img.dataset.src;
+      if (!img.getAttribute('src')) img.src = fitSrc(img.dataset.src, img);
       const source = img.getAttribute('src');
       const job = Promise.resolve().then(async () => {
         try {
@@ -5535,7 +5616,7 @@
       });
       const vMeta = supportVisualMap[supportVal] || supportVisualMap['Collage textil sobre madera'];
       const foundWork = projects.find(p => p.slug === vMeta.slug) || projects[0];
-      if (visualImg && foundWork?.cover) visualImg.src = foundWork.cover;
+      if (visualImg && foundWork?.cover) setArtSrc(visualImg, artSrc(foundWork.cover, visualImg.getBoundingClientRect(), imgAspect(visualImg)));
       if (visualTitle) visualTitle.textContent = vMeta.title;
       if (visualTag) visualTag.textContent = vMeta.tag;
       if (swatchCutout && vMeta.swatchSrc) {
