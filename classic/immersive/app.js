@@ -4605,6 +4605,8 @@
   const portraitTrack = $('[data-portrait-scroll]');
   if (portraitTrack) {
     document.documentElement.classList.add('portrait-scroll-native');
+    // La cabecera sigue oscura mientras el retrato o el recorrido ocupan la pantalla; el rosa empieza con el artículo.
+    if ('IntersectionObserver' in window) new IntersectionObserver(entries => document.documentElement.classList.toggle('portrait-on-stage', entries.some(entry => entry.isIntersecting)), { rootMargin: '-72px 0px 0px 0px' }).observe(portraitTrack);
     const hero = $('[data-eye-portrait]', portraitTrack), plane = $('[data-portrait-plane]', hero);
     const photograph = $('img', plane), copy = $('.page-hero-copy', hero), shade = $('.page-hero-shade', hero);
     const artwork = $('[data-portrait-artwork]', hero), artCopy = $('[data-portrait-work-copy]', hero);
@@ -4634,8 +4636,6 @@
       scene.setAttribute('aria-hidden', 'true');
       if (index) {
         img.width = photo.width; img.height = photo.height;
-    // La cabecera sigue oscura mientras el retrato o el recorrido ocupan la pantalla; el rosa empieza con el artículo.
-    if ('IntersectionObserver' in window) new IntersectionObserver(entries => document.documentElement.classList.toggle('portrait-on-stage', entries.some(entry => entry.isIntersecting)), { rootMargin: '-72px 0px 0px 0px' }).observe(portraitTrack);
         img.alt = work.title + ' — ' + work.label; img.decoding = 'async'; img.draggable = false;
         img.dataset.src = work.cover; scene.append(img); $('.portrait-frame', hero).append(scene);
       } else { adoptSrcset(img, work.cover); img.dataset.src = work.cover; }
