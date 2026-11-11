@@ -4734,7 +4734,11 @@
         img.width = photo.width; img.height = photo.height;
         img.alt = work.title + ' — ' + work.label; img.decoding = 'async'; img.draggable = false;
         img.dataset.src = work.cover; scene.append(img); $('.portrait-frame', hero).append(scene);
-      } else { adoptSrcset(img, work.cover); img.dataset.src = work.cover; }
+      } else {
+        // Rara Avis abre el recorrido con la variante que el navegador eligió para el zoom del iris;
+        // se recuerda para volver a ella al regresar al retrato, en vez de a una más pequeña.
+        adoptSrcset(img, work.cover); img.dataset.src = work.cover; img.dataset.adopted = img.getAttribute('src') || '';
+      }
       return scene;
     });
     const images = scenes.map(scene => $('img', scene)), decoded = new Set(), pending = new Map(), failed = new Set();
@@ -4784,7 +4788,7 @@
     function ensureScene(index) {
       const img = images[index]; if (!img || ready(index) || failed.has(index)) return Promise.resolve();
       if (pending.has(index)) return pending.get(index);
-      if (!img.getAttribute('src')) img.src = fitSrc(img.dataset.src, img);
+      if (!img.getAttribute('src')) img.src = img.dataset.adopted || fitSrc(img.dataset.src, img);
       const source = img.getAttribute('src');
       const job = Promise.resolve().then(async () => {
         try {

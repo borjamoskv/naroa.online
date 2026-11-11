@@ -521,6 +521,9 @@ body.page-sobre-mi .artist-closing .text-link:first-child:hover{background:#b01e
 /* El rosa empieza con el artículo: mientras el retrato o el recorrido de obras ocupan la pantalla,
    la cabecera sigue oscura; el hero tiene fondo propio y la primera tarjeta no nace bajo la cabecera. */
 .portrait-hero{background:#11120f}
+/* El retrato mide siempre una pantalla (svh), también en móvil: la regla móvil de .page-hero le
+   devolvía un mínimo de 640 px y el recorrido, que se mide en alturas, dejaba de cuadrar al girar. */
+.page-hero.portrait-hero{min-height:0}
 html.portrait-on-stage body.page-sobre-mi .site-nav.is-scrolled{background:rgba(17,18,15,.9);color:#fffdf4;border-bottom-color:transparent}
 html.portrait-on-stage body.page-sobre-mi .site-nav.is-scrolled :is(a,button):focus-visible{outline-color:#edbca4}
 body.page-sobre-mi #contenido{padding-top:clamp(72px,11vh,120px)}
