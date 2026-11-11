@@ -4634,6 +4634,8 @@
       scene.setAttribute('aria-hidden', 'true');
       if (index) {
         img.width = photo.width; img.height = photo.height;
+    // La cabecera sigue oscura mientras el retrato o el recorrido ocupan la pantalla; el rosa empieza con el artículo.
+    if ('IntersectionObserver' in window) new IntersectionObserver(entries => document.documentElement.classList.toggle('portrait-on-stage', entries.some(entry => entry.isIntersecting)), { rootMargin: '-72px 0px 0px 0px' }).observe(portraitTrack);
         img.alt = work.title + ' — ' + work.label; img.decoding = 'async'; img.draggable = false;
         img.dataset.src = work.cover; scene.append(img); $('.portrait-frame', hero).append(scene);
       } else { adoptSrcset(img, work.cover); img.dataset.src = work.cover; }
@@ -5032,8 +5034,6 @@
     const chapters = $$('[data-kintsugi-chapter]', kintsugiEditorial);
     const xrays = $$('[data-monocle-xray]', kintsugiEditorial);
     const reverseBox = $('[data-reverse-portrait]', kintsugiEditorial);
-    const summaryEl = $('[data-gaze-summary]', kintsugiEditorial);
-    const detailEl = $('[data-gaze-detail]', kintsugiEditorial);
     const tempoEl = $('[data-gaze-tempo]', kintsugiEditorial);
     const elementEl = $('[data-gaze-element]', kintsugiEditorial);
     const workEl = $('[data-gaze-work]', kintsugiEditorial);
