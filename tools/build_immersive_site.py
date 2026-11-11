@@ -1363,7 +1363,7 @@ def build(output):
         f'<span class="commission-support-tag">{esc(support_label)}</span>'
         f'</div>'
         f'<div class="commission-bar-actions">'
-        f'<button type="button" class="commission-seed-btn" data-pick-support="{esc(support_val)}" data-work-title="{esc(ex["title"])}">En esta materia ↓</button>'
+        f'<button type="button" class="commission-seed-btn" data-pick-support="{esc(support_val)}" data-work-title="{esc(ex["title"])}">Elegir esta materia ↑</button>'
         f'<a class="commission-pick-btn" href="https://wa.me/34636060609?text={quote("Hola Naroa, me gustaría un encargo inspirado en " + ex["title"] + ".")}" target="_blank" rel="noopener noreferrer">Encargar ↗</a>'
         f'</div>'
         f'</div>'
@@ -1376,7 +1376,7 @@ def build(output):
             f'<button type="button" class="commission-dot{" is-active" if idx == 0 else ""}" data-jump-card="{idx}" aria-label="Ir a obra {idx + 1}: {esc(ex["title"])}"><span>0{idx + 1}</span></button>'
             for idx, (ex, _, _) in enumerate(commission_examples)
         )
-        + '<button type="button" class="commission-dot" data-jump-card="4" aria-label="Ir a cierre: Componer tu encargo"><span>05</span></button>'
+        + '<button type="button" class="commission-dot" data-jump-card="4" aria-label="Ir al cierre"><span>05</span></button>'
     )
 
     commission_faqs = [
@@ -1385,151 +1385,100 @@ def build(output):
         ("¿Cuánto vale un retrato por encargo y cuándo sé el precio exacto?", "Antes de tocar un pincel. Odio los presupuestos sorpresa tanto como tú. Primero hablamos de tu idea, elegimos soporte (pizarra, madera cosida, lata 3D o papel) y tamaño, y te doy una cifra cerrada y por escrito. Si te encaja, acordamos un 50% para arrancar y el 50% restante a la entrega. Siempre con presupuesto cerrado previo."),
         ("¿Cuáles son los plazos y qué pasa si tengo una fecha señalada?", "El ritmo habitual de taller es de 2 a 4 semanas: las capas de acrílico, las texturas y los barnices de protección UV necesitan su secado orgánico para no cuartear. Si tienes un cumpleaños, una boda o una sorpresa inminente, dímelo en el primer mensaje y buscamos un hueco prioritario de caballete."),
         ("¿Cómo llega la obra a mis manos si no vivo en Bilbao?", "Si estás en Bilbao o en Bizkaia (Casco Viejo, Indautxu, Getxo, margen derecha o izquierda), te lo doy en mano en el estudio o quedamos para dártelo en persona. Si estás fuera, viaja como una reina: en una caja rígida tricapa a medida, protegida contra humedad y golpes, con seguro a todo riesgo y número de seguimiento hasta la puerta de tu casa."),
+        ("¿Qué tamaños y materiales puedo elegir?", "Los formatos habituales son 20 × 30 cm, 30 × 40 cm y 40 × 50 cm, o a medida según el espacio donde vaya a vivir. Trabajo sobre madera, tela vaquera cosida, papel de algodón, cajas y latas intervenidas y pizarra natural, con acrílico, pastel, carbón Conté, rotuladores, pan de oro y costura a mano. Cada pieza va firmada, con certificado de autenticidad y lista para colgar."),
     ]
     faq_html = ''.join(f'<details class="commission-faq-item"><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q, a in commission_faqs)
 
-    specs_rows = [
-        ("Soportes de autor", "Madera noble tratada, tela vaquera con pespuntes reales, papel de algodón Canson Mi-Teintes, cajas de madera y latas de memoria intervenidas, y losas de pizarra fósil con escamas minerales de mica pura."),
-        ("Formatos habituales", "20 × 30 cm (íntimo y cercano), 30 × 40 cm (ideal para pared de salón o rincón especial), 40 × 50 cm (rotundo y monumental) o dimensiones a medida según el espacio donde vaya a vivir."),
-        ("Técnicas plásticas", "Acrílico al agua, pastel graso y carbón Conté, rotuladores Uni-Posca, pan de oro, costura manual con hilo torzal y barnices de conservación museo con filtro ultravioleta."),
-        ("Entrega & Garantía", "Cada pieza se entrega firmada por Naroa, con certificado de autenticidad de autor, lista para colgar, en mano en Bilbao o con embalaje rígido tricapa asegurado."),
-    ]
-    specs_html = '<div class="commission-specs-grid">' + ''.join(f'<div class="commission-spec-card"><span class="spec-label">{esc(lbl)}</span><p>{esc(desc)}</p></div>' for lbl, desc in specs_rows) + '</div>'
-
-    compare_rows = [
-        ("Collage textil sobre madera", "Madera noble + vaquero / telas cosidas", "20 × 30 a 40 × 50 cm", "2 a 4 semanas", "Táctil, cálido, con botones y pespuntes"),
-        ("Pizarra natural rústica", "Piedra de cantera milenaria + mica pura", "20 × 30 a 30 × 40 cm", "2 a 3 semanas", "Textura geológica que destella con la luz"),
-        ("Caja personalizada u objeto", "Lata de conserva, caja de recuerdos o relicario", "Tridimensional a medida", "2 a 4 semanas", "Secreto pop en capas articuladas"),
-        ("Retrato al óleo o grafito", "Papel de algodón Canson / tabla noble", "Desde 20 × 30 cm", "2 a 4 semanas", "Trazo puro, mirada desnuda y caricia"),
-    ]
-    specs_html += (
-        '<div id="muestrario" class="commission-compare-wrap">'
-        '<table class="commission-compare-table">'
-        '<caption>El Muestrario del Taller · Pulsa cualquier materia para cargarla en tu carta</caption>'
-        '<thead><tr><th scope="col">Materia</th><th scope="col">Materiales</th><th scope="col">Dimensiones</th><th scope="col">Plazo</th><th scope="col">Alma de la pieza</th></tr></thead>'
-        '<tbody>'
-        + ''.join(
-            f'<tr data-compare-support="{esc(s)}" tabindex="0" role="button" aria-label="Seleccionar materia: {esc(s)}"><th scope="row">{esc(s)}</th><td>{esc(m)}</td><td>{esc(d)}</td><td>{esc(t)}</td><td>{esc(c)}</td></tr>'
-            for s, m, d, t, c in compare_rows
-        )
-        + '</tbody></table></div>'
-    )
-
     default_cfg_msg = "Aupa Naroa! Me gustaría consultar un encargo de retrato sobre Tela Vaquera & Costuras Vivas (Collage textil sobre madera) para Retrato individual con plazo Sin prisa (2 a 4 semanas). Tengo una idea y fotos para contarte."
-    configurator_html = (
-        '<section id="configurador" class="commission-configurator" aria-labelledby="configurator-heading" data-commission-configurator>'
-        '<div class="configurator-header">'
-        '<div class="atelier-tape-label">✦ MESA DE ALQUIMIA EN VIVO ✦</div>'
-        '<h2 id="configurator-heading">Compón la carta de tu encargo<br><span>pieza a pieza.</span></h2>'
-        '<p>Toca la materia con la que sueñas, dime a quién va dedicado y qué ritmo necesitas. Tu carta se redacta sola en tiempo real para enviármela en un clic a mi WhatsApp o correo.</p>'
-        '<p id="cfg-seed-banner" class="configurator-seed-banner" data-cfg-seed-banner hidden></p>'
+    # La portada es el encargo: una frase gigante con tres palabras que se cambian al tocarlas.
+    # Cada <option> lleva en data-say cómo se dice dentro de la frase; app.js las recorre.
+    cfg_supports = [
+        ("Collage textil sobre madera", "tela vaquera cosida"),
+        ("Pizarra natural rústica", "pizarra natural"),
+        ("Caja personalizada u objeto", "una lata de conserva"),
+        ("Retrato al óleo o grafito", "papel, a pastel y grafito"),
+        ("Asesoramiento en estudio", "lo que tú me propongas"),
+    ]
+    cfg_motifs = [
+        ("Retrato individual", "de una persona"),
+        ("Pareja o familia", "de mi pareja o mi familia"),
+        ("Mascota", "de mi mascota"),
+        ("Homenaje o recuerdo", "en homenaje a alguien"),
+    ]
+    cfg_timings = [
+        ("Sin prisa (2 a 4 semanas)", "sin prisa"),
+        ("Fecha señalada próxima", "para una fecha señalada"),
+    ]
+
+    def cfg_select(field, label, options):
+        opts = ''.join(f'<option value="{esc(value)}" data-say="{esc(say)}">{esc(value)}</option>' for value, say in options)
+        return f'<select id="cfg-{field}" class="enc-state" aria-label="{esc(label)}" tabindex="-1" aria-hidden="true">{opts}</select>'
+
+    def cfg_word(field, label, options):
+        # <span role="button"> y no <button>: un botón es una caja indivisible y la frase tiene que poder partir línea por dentro.
+        return f'<span role="button" tabindex="0" class="enc-word" data-cfg-cycle="{field}" aria-label="{esc(label)}: {esc(options[0][1])}. Pulsa para cambiar." data-cycle-label="{esc(label)}">{esc(options[0][1])}</span>'
+
+    hero_html = (
+        '<section id="configurador" class="enc-hero" aria-labelledby="enc-title" data-commission-configurator>'
+        '<div class="enc-hero-copy">'
+        '<h1 id="enc-title" class="enc-kicker">Retrato por encargo en Bilbao <span>· retratos personalizados hechos a mano</span></h1>'
+        '<p class="enc-sentence">Naroa, quiero un retrato '
+        + cfg_word("motif", "A quién", cfg_motifs) + ' sobre '
+        + cfg_word("support", "Materia", cfg_supports) + ', '
+        + cfg_word("timing", "Plazo", cfg_timings) + '.</p>'
+        '<p class="enc-hint" aria-hidden="true">↑ Toca lo subrayado y la frase cambia.</p>'
+        '<p id="cfg-seed-banner" class="enc-seed" data-cfg-seed-banner hidden></p>'
+        '<label class="enc-note" for="cfg-note"><span>Y cuéntame algo suyo <small>(opcional)</small></span>'
+        '<input id="cfg-note" type="text" maxlength="180" placeholder="Le flipa Extremoduro, tiene un perro salchicha…" autocomplete="off" data-cfg-note></label>'
+        '<div class="enc-actions">'
+        f'<a id="cfg-whatsapp-btn" class="enc-btn" href="https://wa.me/34636060609?text={quote(default_cfg_msg)}" target="_blank" rel="noopener noreferrer">Enviárselo por WhatsApp ↗</a>'
+        f'<a id="cfg-email-btn" class="enc-link" href="mailto:naroa@naroa.eu?subject={quote("Consulta encargo con Naroa")}&body={quote(default_cfg_msg)}">o por correo ↗</a>'
+        '<button type="button" id="cfg-copy-btn" class="enc-link" data-cfg-copy><span>Copiar el mensaje</span></button>'
         '</div>'
-        '<div class="atelier-workbench">'
-        '<div class="atelier-controls">'
-        '<div class="configurator-field">'
-        '<label for="cfg-support"><span class="field-step">PASO 01</span> <span class="field-title">¿En qué materia vivirá el retrato?</span></label>'
-        '<div class="cfg-pill-group" role="group" aria-label="Selector visual de soporte">'
-        '<button type="button" class="cfg-pill is-active" data-cfg-pill="support" data-cfg-val="Collage textil sobre madera"><span class="cfg-pill-icon">🧵</span><div><strong>Tela Vaquera &amp; Costuras Vivas</strong><small>Collage textil cosido a mano sobre madera noble</small></div></button>'
-        '<button type="button" class="cfg-pill" data-cfg-pill="support" data-cfg-val="Pizarra natural rústica"><span class="cfg-pill-icon">✨</span><div><strong>Pizarra Natural &amp; Mica Mineral</strong><small>Piedra de cantera con destellos dorados a la luz</small></div></button>'
-        '<button type="button" class="cfg-pill" data-cfg-pill="support" data-cfg-val="Caja personalizada u objeto"><span class="cfg-pill-icon">🥫</span><div><strong>Amor en Conserva · Lata 3D</strong><small>Relicario tridimensional en lata u objeto intervenido</small></div></button>'
-        '<button type="button" class="cfg-pill" data-cfg-pill="support" data-cfg-val="Retrato al óleo o grafito"><span class="cfg-pill-icon">✏️</span><div><strong>Papel de Algodón, Pastel &amp; Grafito</strong><small>La caricia del carbón Conté y el trazo íntimo</small></div></button>'
-        '<button type="button" class="cfg-pill" data-cfg-pill="support" data-cfg-val="Asesoramiento en estudio"><span class="cfg-pill-icon">☕</span><div><strong>No lo sé aún · Sorpréndeme</strong><small>Naroa estudia tus fotos y te propone el soporte ideal</small></div></button>'
-        '</div>'
-        '<select id="cfg-support" class="configurator-select">'
-        '<option value="Collage textil sobre madera">Collage textil sobre madera</option>'
-        '<option value="Pizarra natural rústica">Pizarra natural rústica</option>'
-        '<option value="Caja personalizada u objeto">Caja personalizada u objeto</option>'
-        '<option value="Retrato al óleo o grafito">Retrato al óleo o grafito</option>'
-        '<option value="Asesoramiento en estudio">Asesoramiento en estudio</option>'
-        '</select>'
-        '</div>'
-        '<div class="configurator-field">'
-        '<label for="cfg-motif"><span class="field-step">PASO 02</span> <span class="field-title">¿A quién va dedicado este regalo?</span></label>'
-        '<div class="cfg-pill-group cfg-pill-group--compact" role="group" aria-label="Selector visual de motivo">'
-        '<button type="button" class="cfg-pill is-active" data-cfg-pill="motif" data-cfg-val="Retrato individual"><strong>Individual</strong><small>Un rostro, toda su alma</small></button>'
-        '<button type="button" class="cfg-pill" data-cfg-pill="motif" data-cfg-val="Pareja o familia"><strong>Pareja / Familia</strong><small>Reunir varias miradas</small></button>'
-        '<button type="button" class="cfg-pill" data-cfg-pill="motif" data-cfg-val="Mascota"><strong>Compañero Animal</strong><small>Perro, gato, lealtad pura</small></button>'
-        '<button type="button" class="cfg-pill" data-cfg-pill="motif" data-cfg-val="Homenaje o recuerdo"><strong>Memoria &amp; Raíces</strong><small>Homenaje o aniversario</small></button>'
-        '</div>'
-        '<select id="cfg-motif" class="configurator-select">'
-        '<option value="Retrato individual">Retrato individual</option>'
-        '<option value="Pareja o familia">Pareja o familia</option>'
-        '<option value="Mascota">Mascota</option>'
-        '<option value="Homenaje o recuerdo">Homenaje o recuerdo</option>'
-        '</select>'
-        '</div>'
-        '<div class="configurator-field">'
-        '<label for="cfg-timing"><span class="field-step">PASO 03</span> <span class="field-title">¿Qué ritmo necesitamos?</span></label>'
-        '<div class="cfg-pill-group cfg-pill-group--two" role="group" aria-label="Selector visual de plazo">'
-        '<button type="button" class="cfg-pill is-active" data-cfg-pill="timing" data-cfg-val="Sin prisa (2 a 4 semanas)"><strong>Ritmo de Taller (2 a 4 semanas)</strong><small>Secado orgánico de pinturas, barnices y fijación</small></button>'
-        '<button type="button" class="cfg-pill" data-cfg-pill="timing" data-cfg-val="Fecha señalada próxima"><strong>Fecha Especial Inminente</strong><small>Cumpleaños, boda o sorpresa (prioridad de caballete)</small></button>'
-        '</div>'
-        '<select id="cfg-timing" class="configurator-select">'
-        '<option value="Sin prisa (2 a 4 semanas)">Sin prisa (2 a 4 semanas)</option>'
-        '<option value="Fecha señalada próxima">Fecha señalada próxima</option>'
-        '</select>'
-        '</div>'
-        '<div class="configurator-field">'
-        '<label for="cfg-note"><span class="field-step">PASO 04</span> <span class="field-title">Un guiño, canción o recuerdo para colar en el cuadro <small style="font-weight:400;opacity:0.72">(opcional)</small></span></label>'
-        '<input id="cfg-note" type="text" class="configurator-note-input" maxlength="180" placeholder="Ej.: Le flipa Extremoduro, tiene un perro salchicha o guardamos entradas de aquel concierto..." autocomplete="off" data-cfg-note>'
-        '</div>'
-        '</div>'
-        '<aside class="atelier-OrderCard" aria-label="Carta manuscrita a Naroa">'
-        '<div class="atelier-card-postit">'
-        '<span class="atelier-card-stamp">ESTUDIO NAROA · BILBAO</span>'
-        '<span class="postit-badge">HOJA DE ENCARGO</span>'
-        '</div>'
-        '<div class="atelier-card-visual">'
-        f'<img id="cfg-visual-img" src="{jaio["cover"]}" sizes="(max-width: 520px) 92vw, 480px" alt="Muestra de soporte seleccionado" width="480" height="360" loading="lazy">'
-        '<img id="cfg-swatch-cutout" class="atelier-card-swatch" src="/images/catalogo/commission-jaio-button.webp" width="131" height="140" alt="Relieve táctil del soporte seleccionado" decoding="async">'
-        '<div class="atelier-card-caption">'
-        '<span id="cfg-visual-tag">Tela vaquera, costuras y dibujo</span>'
-        '<strong id="cfg-visual-title">Custom Jaio · Collage textil y madera</strong>'
-        '</div>'
-        '</div>'
-        '<div class="atelier-card-letter">'
-        '<span class="letter-greeting">Kaixo Naroa! 💌</span>'
-        f'<p id="cfg-preview" class="configurator-preview" aria-live="polite">{esc(default_cfg_msg)}</p>'
-        '<div class="configurator-action">'
-        f'<a id="cfg-whatsapp-btn" class="commission-cta-btn" href="https://wa.me/34636060609?text={quote(default_cfg_msg)}" target="_blank" rel="noopener noreferrer">'
-        '<span>Abrir en mi WhatsApp directo ↗</span>'
-        '</a>'
-        f'<a id="cfg-email-btn" class="commission-cta-secondary" href="mailto:naroa@naroa.eu?subject={quote("Consulta encargo con Naroa")}&body={quote(default_cfg_msg)}">'
-        '<span>Enviar por Correo Electrónico ↗</span>'
-        '</a>'
-        '<button type="button" id="cfg-copy-btn" class="commission-copy-btn" data-cfg-copy>'
-        '<span>Copiar texto de la carta ⎘</span>'
-        '</button>'
-        '</div>'
-        '<div class="atelier-handshake-guarantee">'
-        '<span>🤝 Trato directo con la artista</span>'
-        '<span>·</span>'
-        '<span>Presupuesto cerrado sin compromiso</span>'
-        '</div>'
-        '</div>'
-        '</aside>'
-        '</div>'
+        f'<p id="cfg-preview" class="enc-state" aria-live="polite">{esc(default_cfg_msg)}</p>'
+        + cfg_select("support", "Materia del retrato", cfg_supports)
+        + cfg_select("motif", "A quién retratar", cfg_motifs)
+        + cfg_select("timing", "Plazo", cfg_timings)
+        + '</div>'
+        '<figure class="enc-hero-art">'
+        f'<img id="cfg-visual-img" src="{jaio["cover"]}" alt="Obra de muestra de la materia elegida" width="{jaio["photos"][0]["width"]}" height="{jaio["photos"][0]["height"]}" decoding="async" fetchpriority="high">'
+        '<img id="cfg-swatch-cutout" class="enc-swatch" src="/images/catalogo/commission-jaio-button.webp" width="131" height="140" alt="Botón rojo cosido a mano sobre tela vaquera" decoding="async">'
+        '<figcaption><strong id="cfg-visual-title">Custom Jaio · Collage textil y madera</strong><span id="cfg-visual-tag">Tela vaquera, costuras y dibujo</span></figcaption>'
+        '</figure>'
         '</section>'
     )
 
+    stories = [
+        ("Reunir dos miradas en el tiempo.", "«Una hija me trajo una foto en blanco y negro de su padre cuando era joven. Él ya no estaba entre nosotros. Ella quería verse junto a él, abrazada. Logré esquivar los reflejos del cristal antiguo de la foto y los retraté juntos por primera vez en décadas. Cuando vio el cuadro terminado en el taller, no hicieron falta palabras: solo un abrazo en silencio y lágrimas de las que curan».", "/obra/13n/", "13N"),
+        ("Una felicitación colectiva con Don Vito.", "«Si una cuadrilla de amigos te encomienda la misión de realizar una felicitación familiar inolvidable, ¿qué mejor portavoz para verbalizar esta misiva colectiva que Don Vito Corleone? Al fin y al cabo \"La famiglia è la famiglia...\". Zorionak Jon de la Famiglia de corazón. Pop, solemne y gamberro a partes iguales».", "/obra/el-armigo-atomico/", "El Armigo Atómico"),
+        ("Vacaciones en el mar sobre madera.", "«“Mare mía, mecachisenlamar, que no me puedo imaginar algo más espectacular que junto a ti pasar unas vacaciones en el mar”. Retrato colorista doble sobre una tabla de madera maciza de 50×50 cm, con botones marineros, collage de postales veraniegas… y toneladas de amor mediterráneo y atlántico».", "/obra/lauralore/", "LauraLore"),
+        ("Capas articuladas en una lata de conserva.", "«Retrato 3D doble realizado a partir de tres fotografías que parecían no caber en un marco común. Trabajado en varias capas móviles articuladas dentro de una lata de conserva intervenida: al abrirlas, van desplegando una pequeña pero inmensa historia de amor como un acordeón secreto».", "/obra/amor-en-conserva/", "Amor en Conserva"),
+    ]
+    stories_html = ''.join(
+        f'<li><span class="enc-num" aria-hidden="true">0{idx + 1}</span><div><h3>{esc(title)}</h3><p>{esc(text)}</p><a class="enc-ink-link" href="{href}">Obra afín: {esc(work)} ↗</a></div></li>'
+        for idx, (title, text, href, work) in enumerate(stories)
+    )
+    facts = [
+        ("Precio cerrado", "Por escrito, antes de tocar un pincel. La mitad al empezar y la otra mitad a la entrega."),
+        ("2 a 4 semanas", "Lo que tardan en secar capas y barnices. Si hay fecha señalada, dímelo en el primer mensaje."),
+        ("20 × 30 a 40 × 50 cm", "O a medida del sitio donde vaya a vivir."),
+        ("En mano en Bilbao", "O por envío asegurado en caja rígida, con seguimiento hasta tu puerta."),
+    ]
+    facts_html = ''.join(f'<div><dt>{esc(dt)}</dt><dd>{esc(dd)}</dd></div>' for dt, dd in facts)
+
     commissions = (
-        f'<article class="editorial commission-minimal" id="contenido" data-commission-horizontal>'
+        f'{hero_html}'
+        f'<article class="editorial commission-minimal" id="contenido" data-commission-horizontal aria-label="Cuatro retratos, cuatro materias">'
         f'<div class="commission-horizontal-sticky">'
-        f'<header class="commission-minimal-head">'
-        f'<h1><span style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0">Retrato por encargo en Bilbao y retratos personalizados: </span><span>Encargos · Retratos con Alma</span></h1>'
-        f'<a class="commission-head-cta" href="https://wa.me/34636060609?text=Hola%20Naroa%2C%20quiero%20encargar%20un%20cuadro." target="_blank" rel="noopener noreferrer">WhatsApp directo ↗</a>'
-        f'</header>'
         f'<div class="commission-examples" data-horizontal-track>'
         f'{examples_html}'
         f'<div class="closing" data-parallax-card data-card-index="4">'
-        f'<div class="atelier-tape-label">✦ EL COMIENZO ✦</div>'
         f'<p class="hand" style="font-size:clamp(38px,4.8vw,60px);margin:0;color:#fffdf4">¿A quién te gustaría retratar?</p>'
         f'<p style="max-width:520px;text-align:center;font-size:15px;line-height:1.6;color:rgba(255,253,244,0.85);margin:-4px 0 8px">Una persona, una historia, un tesoro guardado en una caja de galletas. No hace falta traerlo todo pensado.</p>'
         f'<div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center">'
         f'<a class="commission-cta-btn" href="https://wa.me/34636060609?text=Hola%20Naroa%2C%20quiero%20encargar%20una%20obra." target="_blank" rel="noopener noreferrer">WhatsApp directo ↗</a>'
-        f'<a class="commission-pick-btn" href="#configurador" style="background:transparent;color:#fffdf4;border:1px solid rgba(255,255,255,0.45)">Componer en el taller ↓</a>'
+        f'<a class="commission-pick-btn" href="#configurador" style="background:transparent;color:#fffdf4;border:1px solid rgba(255,255,255,0.45)">Volver a mi frase ↑</a>'
         f'</div>'
-        f'<a class="text-link" href="mailto:naroa@naroa.eu?subject=Encargo">naroa@naroa.eu ↗</a>'
         f'</div>'
         f'</div>'
         f'<div class="commission-cutouts-stage" data-commission-cutouts aria-hidden="true">'
@@ -1545,89 +1494,32 @@ def build(output):
         f'</nav>'
         f'</div>'
         f'</article>'
-        f'<article class="editorial atelier-editorial" id="taller">'
-        f'<section class="chapter atelier-manifesto">'
-        f'<div class="atelier-stamp-badge">'
-        f'<span class="stamp-city">BILBAO · CASCO VIEJO</span>'
-        f'<span class="stamp-seal">✦ TALLER DE RETRATO BESPOKE ✦</span>'
-        f'</div>'
-        f'<div>'
-        f'<span class="atelier-hand-note" aria-hidden="true">«Pincel, madera noble y memoria viva»</span>'
-        f'<h2>No retrato solo tu cara.<br><span>Retrato tu historia.</span></h2>'
-        f'<p class="lead">«Detesto los cuadros vacíos que parecen impresiones digitales con barniz por encima. Un retrato de autor es otra cosa: es el gesto que solo tú reconoces, esa mirada que te desarma y las historias secretas que os unen».</p>'
-        f'<p>Para encargarme una obra no necesitas una sesión de fotos de estudio ni venir de punta en blanco. Al revés: dame esa foto de móvil movida donde se le ve la risa de verdad, o una fotografía antigua en blanco y negro del abuelo que quieres rescatar del olvido. Dime si le apasiona el rock de los 70, si guarda recuerdos en una lata o qué color le enciende el día.</p>'
-        f'<p>En el estudio mezclo esa memoria con pintura acrílica, pizarra natural milenaria, telas vaqueras, botones cosidos y destellos minerales de mica. Lo que sale de aquí no es un adorno de pared: es un pedazo vivo de vosotros.</p>'
-        f'<div class="commission-trust-pills" aria-label="El Pacto del Estudio de Bilbao">'
-        f'<span>✦ Presupuesto cerrado por escrito antes de tocar el pincel</span>'
-        f'<span>✦ 2 a 4 semanas a fuego lento con secado orgánico de capas</span>'
-        f'<span>✦ Entrega en mano en Bilbao o embalaje rígido tricapa asegurado</span>'
-        f'<span>✦ Hablas directamente conmigo de principio a fin, sin intermediarios</span>'
-        f'</div>'
+        f'<section id="taller" class="enc-band enc-band--ink" aria-labelledby="enc-manifesto">'
+        f'<h2 id="enc-manifesto" class="enc-shout">No retrato solo tu cara.<br><em>Retrato tu historia.</em></h2>'
+        f'<p class="enc-lead">No necesitas una sesión de fotos de estudio ni venir de punta en blanco. Al revés: dame esa foto de móvil movida donde se le ve la risa de verdad, o la fotografía antigua del abuelo que quieres rescatar del olvido. Dime si le apasiona el rock de los 70, si guarda recuerdos en una lata o qué color le enciende el día.</p>'
+        f'<dl class="enc-facts">{facts_html}</dl>'
+        f'</section>'
+        f'<section id="historias" class="enc-band enc-band--paper" aria-labelledby="commission-stories-heading">'
+        f'<h2 id="commission-stories-heading" class="enc-h2">Cuatro encargos <em>de verdad.</em></h2>'
+        f'<ol class="enc-stories">{stories_html}</ol>'
+        f'</section>'
+        f'<section id="dudas" class="enc-band enc-band--paper enc-faq" aria-labelledby="commission-faq-heading">'
+        f'<h2 id="commission-faq-heading" class="enc-h2">Dudas <em>sin tapujos.</em></h2>'
+        f'<div class="enc-faq-list">{faq_html}</div>'
+        f'</section>'
+        f'<section class="enc-band enc-close" aria-labelledby="enc-close-heading">'
+        f'<h2 id="enc-close-heading" class="enc-shout enc-shout--serif">¿A quién te gustaría emocionar?</h2>'
+        f'<p class="enc-lead">Cuéntame qué persona ronda por tu cabeza y qué fotos tienes. Te respondo yo misma desde el estudio de Bilbao.</p>'
+        f'<div class="enc-actions">'
+        f'<a class="enc-btn" href="https://wa.me/34636060609?text={quote("Aupa Naroa! Me gustaría consultarte una idea para un encargo.")}" target="_blank" rel="noopener noreferrer">Hablar por WhatsApp ↗</a>'
+        f'<a class="enc-link" href="mailto:naroa@naroa.eu?subject={quote("Consulta de retrato por encargo con Naroa")}">naroa@naroa.eu ↗</a>'
+        f'<a class="enc-link" href="/obra/#indice">Ver las {len(projects)} obras ↗</a>'
         f'</div>'
         f'</section>'
-        f'{configurator_html}'
-        f'<section id="historias" class="commission-steps" aria-label="Historias reales de encargos y regalos">'
-        f'<div class="commission-steps-header">'
-        f'<div class="atelier-tape-label">DIARIO DEL ESTUDIO · MEMORIA VIVA</div>'
-        f'<h2 id="commission-stories-heading">Así nacieron estas<br><span>cuatro historias reales.</span></h2>'
-        f'<p style="max-width:680px;font-size:15px;line-height:1.75;color:#ded3c6;margin-top:14px">Detrás de cada cuadro hay lágrimas de risa, reencuentros en el tiempo y regalos colectivos que dejaron sin habla a quien los recibió.</p>'
-        f'</div>'
-        f'<div class="commission-steps-grid">'
-        f'<article>'
-        f'<span class="step-tag">01 · REENCUENTRO</span>'
-        f'<h3>Reunir dos miradas en el tiempo.</h3>'
-        f'<p>«Una hija me trajo una foto en blanco y negro de su padre cuando era joven. Él ya no estaba entre nosotros. Ella quería verse junto a él, abrazada. Logré esquivar los reflejos del cristal antiguo de la foto y los retraté juntos por primera vez en décadas. Cuando vio el cuadro terminado en el taller, no hicieron falta palabras: solo un abrazo en silencio y lágrimas de las que curan».</p>'
-        f'<div class="story-artwork-cue"><a href="/obra/13n/" class="story-artwork-link">Ver obra afín: 13N (Plato de madera &amp; pan de oro) ↗</a></div>'
-        f'</article>'
-        f'<article>'
-        f'<span class="step-tag">02 · LA FAMIGLIA</span>'
-        f'<h3>Una felicitación colectiva con Don Vito.</h3>'
-        f'<p>«Si una cuadrilla de amigos te encomienda la misión de realizar una felicitación familiar inolvidable, ¿qué mejor portavoz para verbalizar esta misiva colectiva que Don Vito Corleone? Al fin y al cabo "La famiglia è la famiglia...". Zorionak Jon de la Famiglia de corazón. Pop, solemne y gamberro a partes iguales».</p>'
-        f'<div class="story-artwork-cue"><a href="/obra/el-armigo-atomico/" class="story-artwork-link">Ver obra afín: El Armigo Atómico ↗</a></div>'
-        f'</article>'
-        f'<article>'
-        f'<span class="step-tag">03 · THE LOVE BOAT</span>'
-        f'<h3>Vacaciones en el mar sobre madera noble.</h3>'
-        f'<p>«“Mare mía, mecachisenlamar, que no me puedo imaginar algo más espectacular que junto a ti pasar unas vacaciones en el mar”. Retrato colorista doble sobre una tabla de madera maciza de 50×50 cm, con botones marineros, collage de postales veraniegas… y toneladas de amor mediterráneo y atlántico».</p>'
-        f'<div class="story-artwork-cue"><a href="/obra/lauralore/" class="story-artwork-link">Ver obra afín: LauraLore (Cerámica &amp; Eguzkilore) ↗</a></div>'
-        f'</article>'
-        f'<article>'
-        f'<span class="step-tag">04 · MULTI-DIMENSIONAL LOVE</span>'
-        f'<h3>Capas articuladas en una lata de conserva.</h3>'
-        f'<p>«Retrato 3D doble realizado a partir de tres fotografías que parecían no caber en un marco común. Trabajado en varias capas móviles articuladas dentro de una lata de conserva intervenida: al abrirlas, van desplegando una pequeña pero inmensa historia de amor como un acordeón secreto».</p>'
-        f'<div class="story-artwork-cue"><a href="/obra/amor-en-conserva/" class="story-artwork-link">Ver obra afín: Amor en Conserva (Lata 3D) ↗</a></div>'
-        f'</article>'
-        f'</div>'
-        f'</section>'
-        f'<section class="chapter atelier-specs-chapter" aria-labelledby="commission-specs-heading">'
-        f'<p class="eyebrow">Especificaciones de taller</p>'
-        f'<div>'
-        f'<h2 id="commission-specs-heading">Materiales, formatos<br><span>y tabla comparativa.</span></h2>'
-        f'{specs_html}'
-        f'</div>'
-        f'</section>'
-        f'<section id="dudas" class="commission-faq" aria-labelledby="commission-faq-heading">'
-        f'<div class="section-opening">'
-        f'<div class="atelier-tape-label">DUDAS SIN TAPUJOS</div>'
-        f'<h2 id="commission-faq-heading">Las preguntas que todos se hacen<br><span>antes de escribir a Naroa.</span></h2>'
-        f'</div>'
-        f'<div class="commission-faq-list">{faq_html}</div>'
-        f'</section>'
-        f'<div class="closing">'
-        f'<div class="atelier-tape-label">✦ EL PRIMER PASO ES UNA CONVERSACIÓN ✦</div>'
-        f'<p class="hand" style="font-size:clamp(42px,5.8vw,74px);margin:8px 0 0;color:#fffdf4">¿A quién te gustaría emocionar?</p>'
-        f'<p style="max-width:640px;font-size:16px;line-height:1.75;color:#fde8e8">Cuéntame qué persona ronda por tu cabeza y qué fotos tienes. Te respondo yo misma desde el estudio de Bilbao.</p>'
-        f'<div class="closing-btn-dock">'
-        f'<a class="commission-cta-btn" href="https://wa.me/34636060609?text={quote("Aupa Naroa! Me gustaría consultarte una idea para un encargo.")}" target="_blank" rel="noopener noreferrer">Hablar directamente por WhatsApp ↗</a>'
-        f'<a class="commission-cta-secondary" href="mailto:naroa@naroa.eu?subject={quote("Consulta de retrato por encargo con Naroa")}">Escribirme por Correo ↗</a>'
-        f'<a class="text-link" href="/obra/#indice">Ver las {len(projects)} miradas del archivo ↗</a>'
-        f'</div>'
-        f'</div>'
         f'<aside class="atelier-mobile-cta" data-atelier-mobile-cta aria-label="Acceso rápido a tu encargo">'
-        f'<a class="atelier-mobile-cta-config" href="#configurador"><span>✦ Configurar encargo</span><small data-mobile-cta-summary>Tela Vaquera · Individual</small></a>'
+        f'<a class="atelier-mobile-cta-config" href="#configurador"><span>Mi encargo ↑</span><small data-mobile-cta-summary>Tela Vaquera · Individual</small></a>'
         f'<a class="atelier-mobile-cta-wa" data-mobile-cta-wa href="https://wa.me/34636060609?text={quote(default_cfg_msg)}" target="_blank" rel="noopener noreferrer">WhatsApp ↗</a>'
         f'</aside>'
-        f'</article>'
     )
     commissions_schema = {
         "@context": "https://schema.org",

@@ -5112,6 +5112,8 @@
       const c = clamp(v, 0, 1);
       return c * c * (3 - 2 * c);
     };
+    // Distancia de la galería al inicio del documento: el progreso se mide desde ahí.
+    const stageTop = () => Math.max(0, Math.round((commissionHorizontal.getBoundingClientRect?.().top || 0) + (scrollY || 0)));
 
     const bridgeEnvelope = (u, restStart = 0, restEnd = 0) => {
       if (u <= -0.35 || u >= 1.35) return 0;
@@ -5370,14 +5372,14 @@
       dotBtns.forEach((dot, dIdx) => {
         dot.classList.toggle('is-active', dIdx === activeIdx);
       });
-      $('.site-nav')?.classList.toggle('is-scrolled', hState.currentY > 30);
+      $('.site-nav')?.classList.toggle('is-scrolled', (scrollY || 0) > 30);
       if (!reduced.matches && Math.abs(hState.targetY - hState.currentY) >= 0.25) {
         hState.raf = requestAnimationFrame(stepCommissionHorizontal);
       }
     }
 
     function scheduleCommissionHorizontal() {
-      hState.targetY = scrollY || 0;
+      hState.targetY = (scrollY || 0) - stageTop();
       if (hState.raf === null) {
         hState.raf = requestAnimationFrame(stepCommissionHorizontal);
       }
@@ -5400,7 +5402,7 @@
         : (vw * 0.5 + idx * (maxTx / Math.max(1, cards.length - 1)));
       const targetTx = clamp(cX - vw * 0.5, 0, maxTx);
       const p = maxTx > 0 ? targetTx / maxTx : 0;
-      window.scrollTo({ top: p * maxScroll, behavior: 'smooth' });
+      window.scrollTo({ top: stageTop() + p * maxScroll, behavior: 'smooth' });
     }
 
     measureCards();
@@ -5426,9 +5428,12 @@
       if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
       const tag = (e.target?.tagName || '').toLowerCase();
       if (tag === 'input' || tag === 'textarea' || tag === 'select' || e.target?.isContentEditable) return;
+      // Sin movimiento la pista es una tira con scroll nativo: las flechas no deben mover la página.
+      if (reduced.matches) return;
       const vh = innerHeight || 900;
       const stageHeight = commissionHorizontal.offsetHeight || vh * 4.5;
-      if ((scrollY || 0) > stageHeight - vh * 0.25) return;
+      const stageY = (scrollY || 0) - stageTop();
+      if (stageY < -vh * 0.5 || stageY > stageHeight - vh * 0.25) return;
       if (e.key === 'ArrowRight') {
         e.preventDefault();
         jumpToCommissionCard(currentActiveCardIdx + 1);
@@ -5599,9 +5604,17 @@
     const visualTag = $('#cfg-visual-tag');
     const swatchCutout = $('#cfg-swatch-cutout');
     const supportCards = $$('[data-support-card]');
-    const compareRows = $$('[data-compare-support]');
     const pickBtns = $$('[data-pick-support]');
-    const pillBtns = $$('[data-cfg-pill]', configurator);
+    const cycleBtns = $$('[data-cfg-cycle]', configurator);
+    const cycleSelect = field => field === 'support' ? supportEl : field === 'motif' ? motifEl : field === 'timing' ? timingEl : null;
+    const syncCycleWords = () => cycleBtns.forEach(word => {
+      const select = cycleSelect(word.dataset.cfgCycle);
+      const option = select?.options[select.selectedIndex];
+      if (!option) return;
+      const say = option.dataset.say || option.textContent;
+      if (word.textContent !== say) word.textContent = say;
+      word.setAttribute('aria-label', `${word.dataset.cycleLabel || ''}: ${say}. Pulsa para cambiar.`);
+    });
     const mobileCta = $('[data-atelier-mobile-cta]');
     const mobileCtaSummary = $('[data-mobile-cta-summary]');
     const mobileCtaWa = $('[data-mobile-cta-wa]');
@@ -5658,16 +5671,6 @@
       supportCards.forEach(card => {
         card.classList.toggle('is-selected-support', card.dataset.supportCard === supportVal);
       });
-      compareRows.forEach(row => {
-        row.classList.toggle('is-selected-support', row.dataset.compareSupport === supportVal);
-      });
-      pillBtns.forEach(pill => {
-        const group = pill.dataset.cfgPill;
-        const val = pill.dataset.cfgVal;
-        if (group === 'support' && supportEl) pill.classList.toggle('is-active', val === supportEl.value);
-        if (group === 'motif' && motifEl) pill.classList.toggle('is-active', val === motifEl.value);
-        if (group === 'timing' && timingEl) pill.classList.toggle('is-active', val === timingEl.value);
-      });
       const vMeta = supportVisualMap[supportVal] || supportVisualMap['Collage textil sobre madera'];
       const foundWork = projects.find(p => p.slug === vMeta.slug) || projects[0];
       if (visualImg && foundWork?.cover) setArtSrc(visualImg, artSrc(foundWork.cover, visualImg.getBoundingClientRect(), imgAspect(visualImg)));
@@ -5690,6 +5693,7 @@
       commissionState.selectedTiming = t;
       commissionState.selectedNote = n;
       syncActiveSupportUI(s);
+      syncCycleWords();
       const vMeta = supportVisualMap[s] || supportVisualMap['Collage textil sobre madera'];
       const supportDesc = vMeta?.shortName ? `${vMeta.shortName} (${s})` : s;
       const noteClause = n ? ` Historia o recuerdo a integrar: «${n}».` : ' Tengo una idea y fotos para contarte.';
@@ -5723,7 +5727,7 @@
         commissionState.seedSupport = fuzzy.value;
         if (seedBanner) {
           seedBanner.hidden = false;
-          seedBanner.textContent = `✦ Soporte preseleccionado desde tu recorrido: ${fuzzy.value}`;
+          seedBanner.textContent = `Materia elegida en tu recorrido: ${fuzzy.value}`;
         }
       }
       updateLink();
@@ -5759,8 +5763,8 @@
           if (seedBanner) {
             seedBanner.hidden = false;
             seedBanner.textContent = wTitle
-              ? `✦ Materia cargada desde «${wTitle}»: ${supportEl.value}`
-              : `✦ Soporte elegido en el archivo: ${supportEl.value}`;
+              ? `Materia de «${wTitle}»: ${supportEl.value}`
+              : `Materia elegida: ${supportEl.value}`;
           }
           window.NAROA_SOUND?.atelierMaterial?.(supportEl.value);
           configurator.scrollIntoView?.({ behavior: 'smooth', block: 'center' });
@@ -5768,41 +5772,22 @@
       });
     });
 
-    const handleCompareRowActivate = row => {
-      const sup = row.dataset.compareSupport;
-      if (selectSupport(sup, false)) {
-        if (seedBanner) {
-          seedBanner.hidden = false;
-          seedBanner.textContent = `✦ Soporte seleccionado de la tabla técnica: ${supportEl.value}`;
-        }
-        window.NAROA_SOUND?.atelierMaterial?.(supportEl.value);
-        configurator.scrollIntoView?.({ behavior: 'smooth', block: 'center' });
-      }
-    };
-
-    compareRows.forEach(row => {
-      row.addEventListener('click', () => handleCompareRowActivate(row));
-      row.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          handleCompareRowActivate(row);
-        }
+    cycleBtns.forEach(word => {
+      word.addEventListener('keydown', e => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault();
+        word.click();
       });
-    });
-
-    pillBtns.forEach(pill => {
-      pill.addEventListener('click', () => {
-        const group = pill.dataset.cfgPill;
-        const val = pill.dataset.cfgVal;
-        if (group === 'support' && supportEl) supportEl.value = val;
-        if (group === 'motif' && motifEl) motifEl.value = val;
-        if (group === 'timing' && timingEl) timingEl.value = val;
+      word.addEventListener('click', () => {
+        const field = word.dataset.cfgCycle;
+        const select = cycleSelect(field);
+        if (!select) return;
+        select.selectedIndex = (select.selectedIndex + 1) % select.options.length;
         updateLink();
-        if (group === 'support') {
-          window.NAROA_SOUND?.atelierMaterial?.(val);
-        } else {
-          window.NAROA_SOUND?.atelierMaterial?.(group || val);
-        }
+        word.classList.toggle('is-flipped', false);
+        void word.offsetWidth;
+        word.classList.toggle('is-flipped', true);
+        window.NAROA_SOUND?.atelierMaterial?.(field === 'support' ? select.value : field);
       });
     });
 
@@ -5815,7 +5800,7 @@
         } catch {}
         const span = $('span', copyBtn) || copyBtn;
         const prevText = span.textContent;
-        span.textContent = '✦ Carta copiada al portapapeles';
+        span.textContent = 'Copiado ✓';
         copyBtn.classList.add('is-copied');
         window.NAROA_SOUND?.atelierMaterial?.('paper');
         setTimeout(() => {

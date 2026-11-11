@@ -924,6 +924,16 @@ async function eyeMatch(ui, base, points) {
       page.click('.commission-seed-btn[data-pick-support="Pizarra natural rústica"]');
       assert.equal(page.w.NAROA_COMMISSION.getState().selectedSupport, 'Pizarra natural rústica', 'Clicking showcase material seed button pre-selects support in #configurador');
       assert.ok(page.find('#cfg-swatch-cutout').getAttribute('src').includes('commission-amor-red-rose.webp'), 'Order card swatch updates to match selected support');
+      assert.equal(page.document.querySelectorAll('.enc-sentence [data-cfg-cycle]').length, 3, 'The commission sentence exposes three tappable words (who, material, timing)');
+      assert.equal(page.find('[data-cfg-cycle="support"]').textContent, 'pizarra natural', 'The sentence word follows a material picked from the showcase');
+      page.click('[data-cfg-cycle="support"]');
+      assert.equal(page.w.NAROA_COMMISSION.getState().selectedSupport, 'Caja personalizada u objeto', 'Tapping the material word advances to the next support');
+      assert.equal(page.find('[data-cfg-cycle="support"]').textContent, 'una lata de conserva', 'The tapped word is rewritten inside the sentence');
+      page.click('[data-cfg-cycle="timing"]'); page.click('[data-cfg-cycle="timing"]');
+      assert.equal(page.w.NAROA_COMMISSION.getState().selectedTiming, 'Sin prisa (2 a 4 semanas)', 'Tapping past the last option wraps back to the first');
+      page.find('[data-cfg-cycle="motif"]').dispatchEvent(new page.w.KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+      assert.equal(page.w.NAROA_COMMISSION.getState().selectedMotif, 'Pareja o familia', 'Sentence words respond to the keyboard');
+      assert.ok(page.find('#cfg-preview').textContent.includes('Caja personalizada u objeto') && page.find('#cfg-preview').textContent.includes('Pareja o familia'), 'The WhatsApp draft follows the sentence');
       page.w.NAROA_COMMISSION.setNote('Canción de Robe y entradas del concierto');
       assert.ok(page.find('#cfg-preview').textContent.includes('Canción de Robe y entradas del concierto'), 'Personal story note is interpolated live into the handwritten order preview');
       assert.ok(decodeURIComponent(page.find('#cfg-whatsapp-btn').getAttribute('href')).includes('Canción de Robe'), 'Personal story note is encoded into the WhatsApp CTA URL');
