@@ -522,6 +522,17 @@ body.page-sobre-mi .artist-facts a:hover{color:#b01e68}
 body.page-sobre-mi .chapter p.gaze-reading{font-weight:500;color:#14080e;margin-top:30px}
 body.page-sobre-mi .gaze-metrics{list-style:none;display:block;padding:0;margin:14px 0 26px;max-width:62ch;border-bottom:1px solid rgba(20,8,14,.16)}
 body.page-sobre-mi .gaze-metrics>li{padding:9px 0;border-top:1px solid rgba(20,8,14,.16);font-size:16px;line-height:1.5;color:#2d1421}
+/* Tipografía de la página. Titulares en la serif editorial del sitio (Cormorant); el acento, en letra
+   ligada escolar (Playwrite ES: la misma caligrafía del cartel que Naroa sostiene en su retrato); sus
+   citas, en cursiva. La voz del sitio (presentación, cierre, rótulos, enlaces) sigue en DM Sans y
+   Caveat queda para las notas manuscritas. */
+body.page-sobre-mi .chapter h2{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(42px,11vw,58px);letter-spacing:-.02em;line-height:1.02}
+body.page-sobre-mi .chapter h2 span,body.page-sobre-mi .portrait-hero .page-hero-copy h1 span{font-family:'Playwrite ES','Caveat',cursive!important;font-weight:300!important;letter-spacing:0!important}
+body.page-sobre-mi .chapter h2 span{font-size:.5em;line-height:1.75}
+body.page-sobre-mi .portrait-hero .page-hero-copy h1 span{font-size:.56em!important;line-height:1.75!important}
+body.page-sobre-mi .editorial blockquote{font-family:'Playwrite ES','Caveat',cursive;font-weight:300;font-size:clamp(26px,3.4vw,46px);line-height:1.7}
+body.page-sobre-mi .chapter .kintsugi-shard p:not(.eyebrow),body.page-sobre-mi .chapter p[data-gaze-summary],body.page-sobre-mi .chapter p[data-gaze-detail]{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:21px;line-height:1.55}
+body.page-sobre-mi .chapter .kintsugi-shard p.lead,body.page-sobre-mi .chapter p[data-gaze-summary]{font-size:clamp(24px,2vw,28px);line-height:1.38}
 /* Cierre: el encargo es la línea grande, subrayada a mano, y el resto enlaces de texto. Sin
    botones de plantilla: aquí los controles son tipografía. */
 body.page-sobre-mi .artist-closing .chapter-links:before{content:"";flex-basis:100%;height:0;order:1}
@@ -550,7 +561,7 @@ body.page-sobre-mi .site-footer>a:not(.signature){display:inline-flex;align-item
   /* Fuera la columna vacía: el rótulo va encima y el texto ocupa la tarjeta. */
   body.page-sobre-mi .chapter{grid-template-columns:1fr;row-gap:22px;padding:64px clamp(36px,5vw,72px)}
   body.page-sobre-mi .chapter>.eyebrow{padding-top:0}
-  body.page-sobre-mi .chapter h2{font-size:clamp(48px,5.2vw,64px);margin-bottom:26px}
+  body.page-sobre-mi .chapter h2{font-size:clamp(54px,6vw,80px);margin-bottom:26px}
 }
 @media(min-width:1100px){
   /* La cita manuscrita pasa a ser de verdad una nota al margen; en «La propia mirada» va reflejada. */
