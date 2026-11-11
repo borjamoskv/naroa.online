@@ -113,10 +113,6 @@
    "View {1}"
   ],
   [
-   "^(\\d\\d) · (.+)$",
-   "{=1} · {2}"
-  ],
-  [
    "^Leer la entrada completa: (.+)$",
    "Read the full post: {1}"
   ],

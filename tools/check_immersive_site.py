@@ -11,6 +11,8 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
 REPO = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from build_immersive_site import without_comments  # noqa: E402
 
 
 class Page(HTMLParser):
@@ -150,12 +152,28 @@ def check(output):
                 dest /= "index.html"
             assert dest.is_file(), (file, "missing target", ref)
     assert (output / "404.html").is_file()
-    # Recursos que citan los scripts y las hojas de estilo publicados: tienen que existir en la compilación.
-    cited_assets = set()
-    for asset in sorted((output / "immersive").glob("*.js")) + sorted((output / "immersive").glob("*.css")):
-        for cited in re.findall(r"""(?<![A-Za-z0-9_./-])(/(?:images|immersive|assets|audio)/[A-Za-z0-9_./-]+\.(?:webp|avif|jpe?g|png|svg|gif|ttf|otf|woff2?|cur|mp3|mp4|webm|json|txt))""", asset.read_text()):
-            cited_assets.add(cited)
+    # Recursos que citan los scripts y las hojas de estilo que cargan las páginas de esta compilación (en cada
+    # idioma) y los que esos scripts cargan a su vez: tienen que existir. No se recorre la carpeta entera: en una
+    # salida reutilizada quedan scripts con hash de compilaciones anteriores, que citan lo que ya no existe.
+    pending, scanned, cited_assets = set(), set(), set()
+    prefixes = [""] + ["/" + f.stem for f in sorted((REPO / "classic/data/i18n").glob("*.json")) if (output / f.stem / "index.html").is_file()]
+    for prefix in prefixes:
+        for route in manifest["canonical_routes"]:
+            html = output / (prefix + route).lstrip("/") / "index.html"
+            if html.is_file():
+                pending.update(re.findall(r"""(?:src|href)=["'](/immersive/[A-Za-z0-9_.-]+\.(?:js|css))["']""", html.read_text()))
+    assert pending, "no scripts or stylesheets found in the generated pages"
+    while pending:
+        ref = pending.pop()
+        scanned.add(ref)
+        asset = output / ref.lstrip("/")
+        assert asset.is_file(), ("missing script or stylesheet", ref)
+        for cited in re.findall(r"""(?<![A-Za-z0-9_./-])(/(?:images|immersive|assets|audio)/[A-Za-z0-9_./-]+\.(?:webp|avif|jpe?g|png|svg|gif|ttf|otf|woff2?|cur|mp3|mp4|webm|json|txt|js|css))""", without_comments(asset.read_text(), ref.endswith(".css"))):
             assert (output / cited.lstrip("/")).is_file(), (asset.name, "cites a missing asset", cited)
+            if not cited.endswith((".js", ".css")):
+                cited_assets.add(cited)
+            elif cited.startswith("/immersive/") and cited not in scanned:
+                pending.add(cited)
     assert cited_assets, "no asset references found in the published scripts and stylesheets"
     icon = ET.parse(output / page.favicon.lstrip("/")).getroot()
     assert icon.find("{http://www.w3.org/2000/svg}title").text == "Amy Rocks · Naroa"

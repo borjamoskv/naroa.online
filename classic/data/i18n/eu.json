@@ -139,10 +139,6 @@
    "Ikusi {1}"
   ],
   [
-   "^(\\d\\d) · (.+)$",
-   "{=1} · {2}"
-  ],
-  [
    "^Leer la entrada completa: (.+)$",
    "Irakurri sarrera osoa: {1}"
   ],

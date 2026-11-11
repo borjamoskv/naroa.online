@@ -95,6 +95,17 @@ def write(path, text):
         path.write_text(text)
 
 
+def without_comments(text, css):
+    """Quita los comentarios antes de buscar rutas citadas: una ruta de ejemplo en un comentario no es un recurso.
+
+    En CSS, todos los bloques. En JavaScript, solo los que empiezan la línea (bloque o `//`): un `/*` o un
+    `//` en mitad de una línea puede ser parte de una cadena ('image/*', 'https://…').
+    """
+    if css:
+        return re.sub(r"/\*.*?\*/", "", text, flags=re.S)
+    return re.sub(r"(?m)^[ \t]*(?:/\*.*?\*/|//[^\n]*)", "", text, flags=re.S)
+
+
 def build(output):
     output.mkdir(parents=True, exist_ok=True)
     media = output / "immersive" / "media"
@@ -169,7 +180,7 @@ def build(output):
     # en app.js que no llega a la compilación es un 404 en la galería (pasó con dos recortes de Julio Iglesias).
     # Vale cualquier cosa delante de la ruta (comilla, paréntesis, acento grave, &quot; dentro de un SVG en línea).
     for name in ("app.js", "app.css"):
-        for cited in sorted(set(re.findall(r"""(?<![A-Za-z0-9_./-])(/images/[A-Za-z0-9_./-]+\.(?:webp|avif|jpe?g|png|svg|gif))""", (SOURCE / "immersive" / name).read_text()))):
+        for cited in sorted(set(re.findall(r"""(?<![A-Za-z0-9_./-])(/images/[A-Za-z0-9_./-]+\.(?:webp|avif|jpe?g|png|svg|gif))""", without_comments((SOURCE / "immersive" / name).read_text(), name.endswith(".css"))))):
             if not (SOURCE / cited.lstrip("/")).is_file():
                 raise FileNotFoundError(f"classic/immersive/{name} cita una imagen que no existe: {cited}")
             originals.add(cited)

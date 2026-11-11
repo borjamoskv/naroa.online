@@ -3336,12 +3336,10 @@ body.page-retratos-por-encargo-bilbao .enc-note input:focus-visible{outline:3px 
 dialog.index-dialog .index-filters .filter-num{opacity:.8}
 
 /* Encargos: fuentes de reserva con la anchura de las web. Mientras llegan DM Sans y Cormorant Garamond,
-   la frase y el antetítulo ocupan las mismas líneas y nada salta al cambiar (CLS 0,11–0,68 según el ancho, medido el 2026-11-11).
-   Proporciones medidas contra Arial y Times New Roman; donde no existen, se usa la genérica como hasta ahora. */
+   la frase ocupa las mismas líneas y nada salta al cambiar (CLS 0,11–0,68 según el ancho, medido el 2026-11-11).
+   Proporciones medidas contra Arial y Times New Roman; donde no existen, se usa la genérica como hasta ahora.
+   El antetítulo se queda con la genérica: ajustarlo exigía reducirlo al 92 % y apenas movía el salto (≤ 0,03 sin ajuste). */
 @font-face{font-family:"DM Sans Reserva";src:local("Arial"),local("ArialMT");size-adjust:103.5%}
-@font-face{font-family:"DM Sans Reserva Versal";font-weight:400;src:local("Arial"),local("ArialMT");size-adjust:92.4%}
-@font-face{font-family:"DM Sans Reserva Versal";font-weight:600;src:local("Arial Bold"),local("Arial-BoldMT");size-adjust:92.3%}
 @font-face{font-family:"Cormorant Reserva";font-style:italic;src:local("Times New Roman Italic"),local("TimesNewRomanPS-ItalicMT");size-adjust:86.5%}
 body.page-retratos-por-encargo-bilbao .enc-sentence{font-family:'DM Sans','DM Sans Reserva',sans-serif}
-body.page-retratos-por-encargo-bilbao .enc-kicker{font-family:'DM Sans','DM Sans Reserva Versal',sans-serif}
 body.page-retratos-por-encargo-bilbao .enc-word{font-family:'Cormorant Garamond','Cormorant Reserva',serif}

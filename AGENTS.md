@@ -92,6 +92,7 @@ Toda alta o mutación de obra exige paridad simultánea en 3 capas:
 ### 7. Pureza Visual en Umbral Hero (`INV_HERO_THRESHOLD_PURITY`)
 - El retrato inaugural (umbral de estudio, índice `0`) debe mostrarse limpio de superposiciones tipográficas o telemetría flotante (`LA MIRADA`, `UMBRAL DE ESTUDIO`, texto en SVG del monóculo). El umbral no lleva ningún bloque de texto (la antigua `.portrait-hero-copy` ya no existe): el protagonismo es íntegro del retrato.
 - **Sin efectos de movimiento el retrato también recibe:** con `prefers-reduced-motion` o «Pausar efectos» el umbral sigue en pantalla, quieto (sin zoom, guiño ni giro del aro), y se disuelve en la primera obra con el scroll. Solo «Solo obra» lo retira.
+- **El pie de obra no recibe el foco mientras el umbral lo funde:** sus controles (`.art-more-row`, `.art-controls`) quedan inertes; el título sigue expuesto a los lectores de pantalla. Si el foco visible ya está dentro (al volver con teclado desde otra obra), el pie no se funde. El `inert` del pie entero es solo de «Solo obra».
 - **Tocar el retrato es entrar:** mientras el umbral está en pantalla, el clic o toque sobre la escena cruza a la primera obra; no abre la ficha de fotografías de una obra que aún no se ha visto.
 
 ### 7b. La Interfaz Desaparece al Contemplar (`INV_INTERFACE_DISSOLVES`)
