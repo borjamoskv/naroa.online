@@ -6467,6 +6467,8 @@
       const list = $('ol', group), item = document.createElement('li'), time = document.createElement('time'), entry = externalLink('', link.href);
       time.dateTime = iso; time.textContent = shortDate(iso); entry.textContent = link.textContent;
       item.append(time, entry);
+      const encounter = $('.notebook-encounter', card);
+      if (encounter) item.append(encounter.cloneNode(true));
       list.insertBefore(item, $$('li', list).find(other => ($('time', other)?.getAttribute('datetime') || '') < iso) || null);
       const count = $$('li', list).length;
       $('.notebook-year-count', group).textContent = count === 1 ? '1 entrada' : `${count} entradas`;
@@ -6496,7 +6498,9 @@
         });
         const next = [...wanted, ...current.filter(card => !wanted.includes(card))].slice(0, NOTEBOOK_VISIBLE);
         if (next.length !== current.length || next.some((card, index) => card !== current[index])) {
+          const latestMark = $('[data-notebook-latest]', notebookGrid), firstEyebrow = $('.eyebrow', next[0]);
           notebookGrid.replaceChildren(...next);
+          if (latestMark && firstEyebrow && latestMark.parentNode !== firstEyebrow) firstEyebrow.prepend(latestMark);
           // La entrada que cede su sitio no desaparece: pasa al archivo, en su año.
           current.filter(card => !next.includes(card)).forEach(archiveNotebookCard);
         }

@@ -1391,7 +1391,7 @@ def build(output):
                 f'</a>'
                 for a in arts
             ) + '</div>'
-        career += f'''<article class="timeline-entry" data-exhibition-year="{x['year']}" data-exhibition-kind="{x['type']}" data-wall="{esc(x.get('wall') or kind_walls[x['type']])}" data-artworks="{art_json}"><p>{esc(x['dateLabel'])} <span class="timeline-kind">{kind_labels[x['type']]}</span></p><div><h3>{esc(x['title'])}</h3><p class="timeline-location">{esc(x['location'])}</p><p>{esc(x['description'])}</p>{cards_html}<div class="timeline-sources">{sources}</div></div></article>'''
+        career += f'''<article class="timeline-entry" id="encuentro-{esc(str(x['id']))}" data-exhibition-year="{x['year']}" data-exhibition-kind="{x['type']}" data-wall="{esc(x.get('wall') or kind_walls[x['type']])}" data-artworks="{art_json}"><p>{esc(x['dateLabel'])} <span class="timeline-kind">{kind_labels[x['type']]}</span></p><div><h3>{esc(x['title'])}</h3><p class="timeline-location">{esc(x['location'])}</p><p>{esc(x['description'])}</p>{cards_html}<div class="timeline-sources">{sources}</div></div></article>'''
     career += '</div><aside id="timeline-cursor-cards" class="timeline-cursor-cards" aria-hidden="true"></aside></section>'
     exhibition_events = []
     for ex in exhibitions:
@@ -1449,6 +1449,13 @@ def build(output):
     blog_archive = blog_data.get("archive", [])
     blog_total = blog_data.get("total", len(posts) + len(blog_archive))
     blog_first_year = min(x["date"][:4] for x in posts + blog_archive)
+    # Los encuentros de Trayectoria llevan el id de la entrada del blog que los cuenta: la entrada enlaza con el suyo.
+    encounter_ids = {str(e["id"]) for e in read_data("exhibitions")["exhibitions"]}
+
+    def encounter_link(post, label):
+        if str(post["id"]) not in encounter_ids:
+            return ""
+        return f'<a class="notebook-encounter" href="/trayectoria/#encuentro-{post["id"]}">{label}</a>'
     notebook = hero(cuaderno_hero, "El blog de Naroa", "Entre una obra<br><span>y la siguiente.</span>", "«Con las comisuras de par en par agradezco el volver a mi ser y soplo un beso a tu presencia que me alumbró el camino de regreso. Gracias por brindarme reflejo, gracias por ser mi espejo».", alt="Collage coral Twister (Naroa '25): retratos, telas, chapas y juego en el estudio de Naroa Gutiérrez Gil", position="50% 48%")
     notebook += f'''<section class="editorial notebook" id="contenido" data-notebook-sync="{esc(blog_data.get("api", ""))}"><div class="section-opening"><p class="eyebrow">Blog · Sincronizado con su WordPress</p><h2>Lo que ocurre<br>alrededor de una obra.</h2><p>«Siempre andan en busca de la complicidad —aunque sea a través del boli sobre el papel— y usan al observador como hilo conductor de sus tertulias privadas, en las que a menudo se merienda complicidad con sabor a saber reír».</p></div><p class="notebook-status" data-notebook-status><span class="notebook-status-dot" aria-hidden="true"></span><span data-notebook-status-text>{blog_total} entradas desde {blog_first_year} · la última, del {esc(posts[0]["date_label"])}</span></p><div class="notebook-posts" data-notebook-posts>'''
     for x in posts:
@@ -1456,7 +1463,7 @@ def build(output):
         local_src = im.get("local")
         img_src = derivative(local_src, 960) if local_src else im.get("src", "")
         photo_html = f'''<a class="notebook-photo" href="{esc(x['url'])}" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true" style="--poster-ratio:{im.get('width', 1080)}/{im.get('height', 1080)}"><img src="{esc(img_src)}" width="{im.get('width', 1080)}" height="{im.get('height', 1080)}" alt="{esc(im.get('alt') or x['title'])}" loading="lazy" decoding="async"></a>''' if img_src else ""
-        notebook += f'''<article class="notebook-card" data-notebook-entry data-post-id="{x['id']}">{photo_html}<div class="notebook-card-body"><p class="eyebrow"><time datetime="{esc(x['date'])}">{esc(x['date_label'])}</time></p><h3><a href="{esc(x['url'])}" target="_blank" rel="noopener noreferrer">{esc(x['title'])} ↗</a></h3><p class="notebook-summary">{esc(x['summary'])}</p><a class="text-link" href="{esc(x['url'])}" target="_blank" rel="noopener noreferrer" aria-label="Leer la entrada completa: {esc(x['title'])}">Leer la entrada completa ↗</a></div></article>'''
+        notebook += f'''<article class="notebook-card" data-notebook-entry data-post-id="{x['id']}">{photo_html}<div class="notebook-card-body"><p class="eyebrow">{'<span class="notebook-latest" data-notebook-latest>Última entrada</span>' if x is posts[0] else ''}<time datetime="{esc(x['date'])}">{esc(x['date_label'])}</time></p><h3><a href="{esc(x['url'])}" target="_blank" rel="noopener noreferrer">{esc(x['title'])} ↗</a></h3><p class="notebook-summary">{esc(x['summary'])}</p><a class="text-link" href="{esc(x['url'])}" target="_blank" rel="noopener noreferrer" aria-label="Leer la entrada completa: {esc(x['title'])}">Leer la entrada completa ↗</a>{encounter_link(x, "Verlo en Trayectoria →")}</div></article>'''
     notebook += '</div>'
     if blog_archive:
         short_months = "ene feb mar abr may jun jul ago sep oct nov dic".split()
@@ -1467,7 +1474,7 @@ def build(output):
         notebook += f'''<section class="notebook-archive" aria-labelledby="notebook-archive-title"><div class="section-opening"><p class="eyebrow">Archivo del blog · {year_span}</p><h2 id="notebook-archive-title">Y todo<br><span>lo anterior.</span></h2><p>{len(blog_archive)} entradas más, año por año: exposiciones, mercados, paseos de la Walking Gallery y encuentros. Cada título abre la entrada en su WordPress.</p></div><div class="notebook-search" data-notebook-search hidden><label for="notebook-search-input">Buscar en el archivo</label><input id="notebook-search-input" type="search" autocomplete="off" spellcheck="false" enterkeyhint="search" placeholder="Por ejemplo: Walking Gallery" data-notebook-search-input><p class="notebook-search-count" data-notebook-search-count role="status"></p></div><div class="notebook-years" data-notebook-years>'''
         for index, (year, entries) in enumerate(sorted(archive_years.items(), reverse=True)):
             rows = "".join(
-                f'''<li><time datetime="{esc(x['date'])}">{int(x['date'][8:10])} {short_months[int(x['date'][5:7]) - 1]}</time><a href="{esc(x['url'])}" target="_blank" rel="noopener noreferrer">{esc(x['title'])} ↗</a></li>'''
+                f'''<li><time datetime="{esc(x['date'])}">{int(x['date'][8:10])} {short_months[int(x['date'][5:7]) - 1]}</time><a href="{esc(x['url'])}" target="_blank" rel="noopener noreferrer">{esc(x['title'])} ↗</a>{encounter_link(x, "En Trayectoria →")}</li>'''
                 for x in entries
             )
             count_label = "1 entrada" if len(entries) == 1 else f"{len(entries)} entradas"

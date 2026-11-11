@@ -996,6 +996,9 @@ async function eyeMatch(ui, base, points) {
     assert.equal(cards[0].querySelector('img'), null, 'Images from other hosts are never inserted');
     assert.equal(cards[1].querySelector('.notebook-summary').textContent, blog.posts[0].summary, 'Curated summaries survive the sync');
     assert.ok(cards[1].querySelector('.notebook-photo img').getAttribute('src').startsWith('/immersive/media/'), 'Curated cards keep their local poster');
+    assert.equal(synced.document.querySelectorAll('[data-notebook-latest]').length, 1);
+    assert.equal(cards[0].querySelector('.eyebrow').firstChild, synced.find('[data-notebook-latest]'), 'The "latest post" label moves to the new first card');
+    const syncedEncounters = new Set(JSON.parse(fs.readFileSync(path.resolve(__dirname, '../classic/data/exhibitions.json'), 'utf8')).exhibitions.map(item => String(item.id)));
     assert.equal(synced.find('[data-notebook-status]').dataset.state, 'new');
     assert.equal(synced.find('[data-notebook-status-text]').textContent, `1 entrada nueva · ${blog.total + 1} entradas · la última, del 2 de enero de 2031`);
     const displaced = blog.posts[5], displacedYear = synced.find('[data-notebook-years] .notebook-year');
@@ -1003,9 +1006,10 @@ async function eyeMatch(ui, base, points) {
     assert.equal(displacedYear.querySelector('.notebook-year-number').textContent, displaced.date.slice(0, 4), 'The post that leaves the grid joins the archive under its year');
     assert.equal(displacedYear.querySelector('li a').getAttribute('href'), displaced.url);
     assert.equal(displacedYear.querySelector('li a').textContent, `${displaced.title} ↗`);
+    assert.equal(displacedYear.querySelector('li .notebook-encounter')?.getAttribute('href') || null, syncedEncounters.has(String(displaced.id)) ? `/trayectoria/#encuentro-${displaced.id}` : null, 'In the archive the post keeps its link to Trayectoria');
     assert.equal(displacedYear.querySelector('li time').getAttribute('datetime'), displaced.date);
     assert.equal(displacedYear.querySelector('.notebook-year-count').textContent, '1 entrada');
-    assert.equal(synced.document.querySelectorAll('.notebook-year li a').length, blog.archive.length + 1);
+    assert.equal(synced.document.querySelectorAll('.notebook-year li a:not(.notebook-encounter)').length, blog.archive.length + 1);
     synced.document.dispatchEvent(new synced.w.Event('visibilitychange')); await synced.flush();
     assert.equal(calls.length, 1, 'Coming back to the tab does not query the blog again right away');
     synced.dom.window.close();
@@ -1069,10 +1073,18 @@ async function eyeMatch(ui, base, points) {
       const blog = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../classic/data/blog.json'), 'utf8'));
       assert.equal(page.document.querySelectorAll('.notebook-posts article').length, 6);
       assert.deepEqual(Array.from(page.document.querySelectorAll('[data-notebook-entry]'), card => Number(card.dataset.postId)), blog.posts.map(post => post.id), 'Blog cards follow blog.json order');
-      assert.equal(page.document.querySelectorAll('.notebook-year li a').length, blog.archive.length, 'The archive links every older post');
+      assert.equal(page.document.querySelectorAll('.notebook-year li a:not(.notebook-encounter)').length, blog.archive.length, 'The archive links every older post');
       assert.equal(page.document.querySelectorAll('.notebook-year[open]').length, 1, 'Only the most recent archive year starts open');
       assert.ok(page.find('[data-notebook-status-text]').textContent.startsWith(`${blog.total} entradas desde `), 'The status line counts the whole blog');
       assert.equal(page.find('[data-notebook-status]').dataset.state, undefined, 'Without network the status stays as built');
+      assert.equal(page.find('[data-notebook-latest]').closest('[data-notebook-entry]'), page.find('[data-notebook-entry]'), 'The "latest post" label sits on the first card');
+      // Blog → Trayectoria: cada entrada con encuentro lo enlaza, y el ancla existe en la otra página.
+      const encounters = new Set(JSON.parse(fs.readFileSync(path.resolve(__dirname, '../classic/data/exhibitions.json'), 'utf8')).exhibitions.map(item => String(item.id)));
+      const linked = [...blog.posts, ...blog.archive].filter(post => encounters.has(String(post.id)));
+      assert.ok(linked.length >= 10, 'Most encounters in Trayectoria come from a blog post');
+      assert.deepEqual(Array.from(page.document.querySelectorAll('.notebook-encounter'), link => link.getAttribute('href')), linked.map(post => `/trayectoria/#encuentro-${post.id}`), 'Posts with an encounter link to it in Trayectoria');
+      const careerHtml = fs.readFileSync(path.join(output, 'trayectoria/index.html'), 'utf8');
+      linked.forEach(post => assert.ok(careerHtml.includes(`id="encuentro-${post.id}"`), `Trayectoria has an anchor for encounter ${post.id}`));
       // Buscador del archivo: todas las palabras, sin tildes ni mayúsculas; al borrar, todo vuelve a su sitio.
       const search = page.find('[data-notebook-search-input]'), searchCount = page.find('[data-notebook-search-count]');
       const fold = text => text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
