@@ -1800,7 +1800,7 @@
     // Medidas sobre la fotografía, en milésimas de su lado.
     const PUZZLE_TRAYS = { 'saio-puzzle': { left: 104.5, top: 114.3, right: 892.6, bottom: 899.9, corner: 30 } };
     const PUZZLE_KNOB = [[.18, 0, .40, -.02, .42, .04], [.44, .10, .36, .14, .34, .21], [.32, .30, .42, .34, .50, .34], [.58, .34, .68, .30, .66, .21], [.64, .14, .56, .10, .58, .04], [.60, -.02, .82, 0, 1, 0]];
-    const PUZZLE_OUT = .24, PUZZLE_STAGGER = .22, PUZZLE_RETURN = .52;
+    const PUZZLE_OUT = .24, PUZZLE_STAGGER = .22, PUZZLE_RETURN = .52, PUZZLE_THICK = 3.6;
     function puzzleScene(index) {
       if (puzzles.has(index)) return puzzles.get(index);
       const tray = PUZZLE_TRAYS[works[index].slug] || { left: 0, top: 0, right: 1000, bottom: 1000, corner: 0 };
@@ -1814,7 +1814,10 @@
         defs.append(gradient); return `url(#puzzle-${id}-${index})`;
       };
       // El hueco de la bandeja: cartón a la vista, con la sombra del borde arriba y a la izquierda.
-      const well = svgNode('g', { class: 'puzzle-well' }), hollow = { x: left, y: top, width: right - left, height: bottom - top, rx: r };
+      // Solo asoma por el asiento de las piezas que faltan: la máscara suma un asiento por pieza suelta.
+      const open = svgNode('mask', { id: `puzzle-open-${index}`, maskUnits: 'userSpaceOnUse', x: left - 4, y: top - 4, width: right - left + 8, height: bottom - top + 8 });
+      defs.append(open);
+      const well = svgNode('g', { class: 'puzzle-well', mask: `url(#puzzle-open-${index})` }), hollow = { x: left, y: top, width: right - left, height: bottom - top, rx: r };
       well.append(svgNode('rect', { ...hollow, class: 'puzzle-well-board' }),
         svgNode('rect', { ...hollow, height: ch * .5, fill: shade('shade-top', 0, 1) }),
         svgNode('rect', { ...hollow, width: cw * .4, fill: shade('shade-left', 1, 0) }),
@@ -1847,10 +1850,15 @@
         const clip = svgNode('clipPath', { id: `puzzle-cut-${index}-${n}`, clipPathUnits: 'userSpaceOnUse' });
         clip.append(svgNode('path', { d: path })); defs.append(clip);
         const group = svgNode('g', { 'data-puzzle-piece': n });
-        group.append(svgNode('use', { href: `#puzzle-photo-${index}`, 'clip-path': `url(#puzzle-cut-${index}-${n})` }), svgNode('path', { d: path, class: 'puzzle-piece-edge', fill: 'none' }));
+        // Bajo la imagen, el canto del cartón: se ve por abajo cuando la pieza está suelta.
+        const side = svgNode('path', { d: path, class: 'puzzle-piece-side' });
+        group.append(side, svgNode('use', { href: `#puzzle-photo-${index}`, 'clip-path': `url(#puzzle-cut-${index}-${n})` }), svgNode('path', { d: path, class: 'puzzle-piece-edge', fill: 'none' }));
         seated.append(group);
+        // El trazo solapa los asientos vecinos: entre dos huecos seguidos no queda una rendija de la foto.
+        const seat = svgNode('path', { d: path, fill: '#fff', stroke: '#fff', 'stroke-width': 1.5, display: 'none' });
+        open.append(seat);
         pieces.push({
-          group, n, cx: x0 + cw / 2, cy: y0 + ch / 2, loose: false, x: 0, y: 0,
+          group, side, seat, n, cx: x0 + cw / 2, cy: y0 + ch / 2, loose: false, x: 0, y: 0,
           leave: .02 + ((n * 11 + 3) % 25) / 24 * PUZZLE_STAGGER,
           back: PUZZLE_RETURN + assembly.indexOf(n) / 24 * PUZZLE_STAGGER,
           turn: ((n * 37) % 11 - 5) * 13 + (n % 2 ? 8 : -8),
@@ -1914,8 +1922,19 @@
         const scale = 1 + .075 * air;
         total += away;
         piece.group.setAttribute('transform', `translate(${fixed(x)} ${fixed(y)}) rotate(${fixed(piece.turn * away)} ${piece.cx.toFixed(2)} ${piece.cy.toFixed(2)}) translate(${fixed(piece.cx * (1 - scale))} ${fixed(piece.cy * (1 - scale))}) scale(${scale.toFixed(4)})`);
-        piece.group.style.setProperty('--piece-lift', (isLoose ? .3 * away + .7 * air : 0).toFixed(3));
-        if (isLoose !== piece.loose) { piece.loose = isLoose; piece.group.classList.toggle('is-loose', isLoose); changed = true; }
+        if (isLoose || piece.loose) {
+          // La luz viene siempre de arriba: sombra y canto caen hacia abajo en pantalla, gire lo que gire la pieza.
+          const lift = isLoose ? .3 * away + .7 * air : 0, angle = piece.turn * away * Math.PI / 180;
+          const sin = Math.sin(angle) / scale, cos = Math.cos(angle) / scale, drop = 3 + lift * 24;
+          piece.group.style.setProperty('--piece-lift', lift.toFixed(3));
+          piece.group.style.setProperty('--piece-shadow-x', fixed(drop * sin));
+          piece.group.style.setProperty('--piece-shadow-y', fixed(drop * cos));
+          piece.side.setAttribute('transform', `translate(${fixed(PUZZLE_THICK * sin)} ${fixed(PUZZLE_THICK * cos)})`);
+        }
+        if (isLoose !== piece.loose) {
+          piece.loose = isLoose; piece.group.classList.toggle('is-loose', isLoose); changed = true;
+          if (isLoose) piece.seat.removeAttribute('display'); else piece.seat.setAttribute('display', 'none');
+        }
       });
       // El montón tiene orden: la última en caer queda encima y la primera en volver sale de arriba.
       // Depende solo de la posición del scroll, así que subir y bajar dibujan lo mismo.
@@ -1928,7 +1947,6 @@
       const amount = total / puzzle.pieces.length;
       puzzle.svg.dataset.scatter = amount.toFixed(4);
       puzzle.svg.style.setProperty('--puzzle-lift', amount.toFixed(3));
-      puzzle.well.style.opacity = clamp(amount * 30, 0, 1).toFixed(3);
       return puzzle;
     }
     const paintedScenes = new Set(scenes.map((_, index) => index));
