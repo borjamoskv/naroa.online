@@ -167,8 +167,9 @@ def build(output):
             originals.add(cutout_src)
     # Las imágenes que citan el script y la hoja de estilo viajan siempre con el sitio: una ruta escrita
     # en app.js que no llega a la compilación es un 404 en la galería (pasó con dos recortes de Julio Iglesias).
+    # Vale cualquier cosa delante de la ruta (comilla, paréntesis, acento grave, &quot; dentro de un SVG en línea).
     for name in ("app.js", "app.css"):
-        for cited in sorted(set(re.findall(r"""["'(](/images/[A-Za-z0-9_./-]+\.(?:webp|avif|jpe?g|png|svg|gif))""", (SOURCE / "immersive" / name).read_text()))):
+        for cited in sorted(set(re.findall(r"""(?<![A-Za-z0-9_./-])(/images/[A-Za-z0-9_./-]+\.(?:webp|avif|jpe?g|png|svg|gif))""", (SOURCE / "immersive" / name).read_text()))):
             if not (SOURCE / cited.lstrip("/")).is_file():
                 raise FileNotFoundError(f"classic/immersive/{name} cita una imagen que no existe: {cited}")
             originals.add(cited)
