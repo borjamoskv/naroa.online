@@ -5355,7 +5355,12 @@
         $('[data-portrait-title]', hero).textContent = work.title;
         $('[data-portrait-label]', hero).textContent = `${index ? work.label : 'Del rostro al autorretrato'} · ${String(index + 1).padStart(2, '0')} / ${works.length}`;
         $('[data-portrait-link]', hero).href = BASE + '/obra/' + work.slug + '/';
+        const focused = document.activeElement;
         previous.disabled = index === 0; next.disabled = index === works.length - 1;
+        // El botón que se desactiva al llegar a un extremo no deja el foco en el aire: en la última
+        // obra pasa a «Biografía ↓», que es por donde se sigue; en la primera, a «Obra siguiente».
+        if (focused === next && next.disabled) $('a', controls).focus({ preventScroll: true });
+        else if (focused === previous && previous.disabled) next.focus({ preventScroll: true });
         hero.dataset.work = work.slug; captionIndex = index;
       }
       [artCopy, controls].forEach(element => {
