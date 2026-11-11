@@ -1094,7 +1094,7 @@
     button.setAttribute('aria-pressed', String(on));
     button.setAttribute('aria-busy', String(busy));
     button.disabled = busy;
-    button.setAttribute('aria-label', on ? 'Parar la banda sonora' : 'Escuchar la banda sonora');
+    button.setAttribute('aria-label', on ? 'Sonido: parar la banda sonora' : 'Sonido: escuchar la banda sonora');
     button.dataset.state = busy ? 'loading' : on ? 'playing' : 'off';
   }
   async function turnOn() {
