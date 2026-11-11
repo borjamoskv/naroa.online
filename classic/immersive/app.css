@@ -463,14 +463,14 @@ body.page-trayectoria .site-footer{color:#231a07;border-top:1px solid rgba(35,26
 /* 3. /sobre-mi/ · ROSA CHICLE POP */
 html:has(body.page-sobre-mi),body.page-sobre-mi{background:#FF69B4;background:radial-gradient(circle at 28% 22%,#ff85c2 0%,#FF69B4 55%,#e04f97 100%);color:#14080e}
 body.page-sobre-mi .site-nav.is-scrolled{background:rgba(255,105,180,0.88);color:#14080e;border-bottom:1px solid rgba(20,8,14,0.14)}
-body.page-sobre-mi .chapter{background:rgba(255,253,248,0.92)!important;color:#14080e;border:1px solid rgba(20,8,14,0.12)!important;border-radius:42px 20px 38px 24px / 22px 38px 20px 42px;box-shadow:0 22px 54px rgba(120,18,68,0.24)}
+body.page-sobre-mi .chapter{background:#ffeaef!important;color:#14080e;border:1px solid rgba(20,8,14,0.12)!important;border-radius:42px 20px 38px 24px / 22px 38px 20px 42px;box-shadow:0 22px 54px rgba(120,18,68,0.24)}
 body.page-sobre-mi .chapter>.eyebrow{color:#b01e68;font-weight:500}
 body.page-sobre-mi .chapter h2,body.page-sobre-mi .chapter p.lead{color:#14080e}
 body.page-sobre-mi .chapter h2 span{color:#d6247c}
 body.page-sobre-mi .chapter p:not(.eyebrow){color:#2d1421}
 body.page-sobre-mi .chapter .text-link{color:#14080e;border-bottom-color:rgba(20,8,14,0.4)}
 body.page-sobre-mi .chapter .text-link:hover{color:#d6247c}
-body.page-sobre-mi .editorial blockquote{background:rgba(20,8,14,0.9);color:#ffb3d9;border-radius:48px 22px 44px 26px;padding:75px 40px;margin:40px 0;box-shadow:0 22px 55px rgba(20,8,14,0.32)}
+body.page-sobre-mi .editorial blockquote{position:relative;z-index:1;background:#2b081b;color:#ffb3d9;border-radius:48px 22px 44px 26px;padding:75px 40px;margin:40px 0;box-shadow:0 22px 55px rgba(20,8,14,0.32)}
 body.page-sobre-mi .editorial blockquote cite{color:#ffd6eb}
 body.page-sobre-mi .full-figure{border-radius:40px 18px 36px 22px;box-shadow:0 24px 60px rgba(90,10,50,0.32)}
 body.page-sobre-mi .site-footer{color:#14080e;border-top:1px solid rgba(20,8,14,0.18)}
@@ -486,7 +486,7 @@ body.page-sobre-mi .site-nav.is-scrolled{text-shadow:none}
 .portrait-hero .hero-down:focus-visible{opacity:1!important}
 .portrait-travel-controls>a{display:inline-flex;align-items:center;min-height:44px;font-size:13px}
 /* Texto de lectura: 17 px y unas 66 letras por línea (el lead va después: misma especificidad). */
-body.page-sobre-mi .chapter p:not(.eyebrow){font-size:17px;line-height:1.72;max-width:62ch;margin-bottom:20px}
+body.page-sobre-mi .chapter p:not(.eyebrow){font-size:17px;line-height:1.72;max-width:62ch;margin-bottom:20px;text-wrap:pretty}
 body.page-sobre-mi .chapter p.lead{font-size:clamp(19px,1.5vw,21px);line-height:1.6;color:#14080e}
 body.page-sobre-mi .chapter>.eyebrow{font-size:12.5px;letter-spacing:.14em}
 body.page-sobre-mi .chapter h2{text-wrap:balance}
@@ -501,10 +501,13 @@ body.page-sobre-mi .full-figure>a:focus-visible{outline:3px solid #fffdf4;outlin
 /* Nota manuscrita: siempre legible (también sin script o mientras el capítulo entra) y sin mover el texto que la rodea. */
 body.page-sobre-mi .kintsugi-chasm{margin:18px 0;opacity:clamp(.78,calc(0.22 + var(--fracture-gap,0)*0.65 + var(--kintsugi-weld,0)*0.55),1);transform:translate3d(calc((1 - var(--chapter-focus,0))*14px),0,0) scaleY(clamp(.94,calc(0.78 + var(--fracture-gap,0)*0.28 + var(--kintsugi-weld,0)*0.12),1)) rotate(-0.9deg)}
 body.page-sobre-mi .kintsugi-chasm-spark{font-size:11.5px;letter-spacing:.14em}
+/* La fractura se insinúa: el texto no se sale de su margen ni se lee torcido. */
+body.page-sobre-mi .kintsugi-shard--top{transform:translate3d(0,calc(var(--fracture-gap,0)*-6px),0) rotate(calc(var(--fracture-gap,0)*-.35deg))}
+body.page-sobre-mi .kintsugi-shard--bottom{transform:translate3d(0,calc(var(--fracture-gap,0)*6px),0) rotate(calc(var(--fracture-gap,0)*.35deg))}
 /* Figuras: una tarjeta más, con pie legible; el susurro del monóculo aparece también con teclado y en táctil. */
 body.page-sobre-mi .full-figure{margin:40px 0}
-body.page-sobre-mi .full-figure figcaption{color:#fffdf4;background:rgba(20,8,14,.82);font-size:13px;line-height:1.5;padding:10px 16px;border-radius:14px 8px 14px 8px;text-shadow:none;pointer-events:none}
-body.page-sobre-mi [data-monocle-xray] .xray-whisper{bottom:84px;margin:0;border-radius:22px}
+body.page-sobre-mi .full-figure figcaption{left:0;right:0;bottom:0;width:auto;max-width:none;padding:72px clamp(20px,3.2vw,36px) 22px;background:linear-gradient(180deg,rgba(20,8,14,0) 0%,rgba(20,8,14,.6) 55%,rgba(20,8,14,.84) 100%);border-radius:0;color:#fffdf4;font:500 11.5px/1.5 'DM Sans',sans-serif;letter-spacing:.14em;text-transform:uppercase;text-shadow:none;pointer-events:none}
+body.page-sobre-mi [data-monocle-xray] .xray-whisper{inset:auto clamp(20px,3.2vw,36px) 54px;margin:0;padding:0;background:none;border:0;border-radius:0;text-shadow:0 1px 10px rgba(10,3,7,.95),0 0 2px rgba(10,3,7,.9)}
 body.page-sobre-mi [data-monocle-xray]:focus-within .xray-whisper{opacity:1;transform:none}
 @media(hover:none){body.page-sobre-mi [data-monocle-xray] .xray-whisper{opacity:1;transform:none}}
 /* En breve: quién es, en prosa y en datos. */
@@ -535,6 +538,8 @@ html.portrait-on-stage body.page-sobre-mi .site-nav.is-scrolled :is(a,button):fo
 body.page-sobre-mi #contenido{padding-top:clamp(72px,11vh,120px)}
 /* La cabecera dice en qué página se está. */
 .site-nav nav>a[aria-current="page"]{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:6px}
+body.page-sobre-mi .site-nav nav>a,body.page-sobre-mi .site-nav nav>button{white-space:nowrap}
+@media(min-width:761px) and (max-width:860px){body.page-sobre-mi .site-nav,body.page-sobre-mi .site-nav nav{gap:16px}}
 /* Pie: firma, rótulo y botones dejan de ser blancos sobre rosa. */
 body.page-sobre-mi .site-footer .signature,body.page-sobre-mi .site-footer .share-dock-label{color:#14080e}
 body.page-sobre-mi .site-footer .share-btn{color:inherit;background:none;border:0;border-radius:0;box-shadow:none;padding:0 2px;font-size:13px;text-decoration:underline;text-decoration-color:rgba(255,255,255,.5);text-decoration-thickness:1px;text-underline-offset:6px}
@@ -544,7 +549,7 @@ body.page-sobre-mi .site-footer>a:not(.signature){display:inline-flex;align-item
   /* Fuera la columna vacía: el rótulo va encima y el texto ocupa la tarjeta. */
   body.page-sobre-mi .chapter{grid-template-columns:1fr;row-gap:22px;padding:64px clamp(36px,5vw,72px)}
   body.page-sobre-mi .chapter>.eyebrow{padding-top:0}
-  body.page-sobre-mi .chapter h2{font-size:clamp(36px,4.6vw,64px);margin-bottom:26px}
+  body.page-sobre-mi .chapter h2{font-size:clamp(48px,5.2vw,64px);margin-bottom:26px}
 }
 @media(min-width:1100px){
   /* La cita manuscrita pasa a ser de verdad una nota al margen; en «La propia mirada» va reflejada. */
@@ -562,9 +567,16 @@ body.page-sobre-mi .site-footer>a:not(.signature){display:inline-flex;align-item
   body.page-sobre-mi .chapter p.lead{font-size:18px}
   body.page-sobre-mi .editorial blockquote{padding:48px 22px;margin:22px 0;border-radius:28px 14px 26px 16px;font-size:clamp(34px,10.5vw,45px)}
   body.page-sobre-mi .full-figure{margin:22px 0;height:62svh;border-radius:26px 14px 24px 16px}
-  body.page-sobre-mi .full-figure figcaption{font-size:12px}
-  body.page-sobre-mi [data-monocle-xray] .xray-whisper{bottom:72px;padding:12px 16px}
+  body.page-sobre-mi .full-figure figcaption{font-size:10.5px;padding-top:130px}
+  body.page-sobre-mi [data-monocle-xray] .xray-whisper{bottom:50px}
   .portrait-hero .page-hero-copy .eyebrow{font-size:10px!important;letter-spacing:.14em!important}
+}
+@media(hover:none) and (max-width:760px){
+  /* En táctil el susurro no se puede retirar con el dedo: va bajo la imagen, y la obra queda limpia. */
+  body.page-sobre-mi .full-figure{height:auto;min-height:0;display:flex;flex-direction:column;background:#14080e}
+  body.page-sobre-mi .full-figure>a{height:62svh;min-height:min(400px,calc(100svh - 96px));flex:none}
+  body.page-sobre-mi [data-monocle-xray] .xray-whisper{position:static;width:auto;padding:14px 18px 4px;text-shadow:none}
+  body.page-sobre-mi .full-figure figcaption{position:static;padding:6px 18px 16px;background:none}
 }
 @media(prefers-reduced-motion:reduce){
   /* Con movimiento reducido las tarjetas no se parten al hacer scroll. */
@@ -3178,7 +3190,7 @@ body.page-sobre-mi .chapter{box-shadow:0 26px 60px rgba(120,0,62,.34)}
 body.page-sobre-mi .site-footer,body.page-sobre-mi .site-footer .signature,body.page-sobre-mi .site-footer .share-dock-label,body.page-sobre-mi .site-footer>a:not(.signature){color:#fff;text-shadow:0 0 12px rgba(255,255,255,.7),0 1px 0 rgba(110,0,58,.65)}
 body.page-sobre-mi .site-footer{border-top-color:rgba(255,255,255,.45)}
 body.page-sobre-mi .editorial blockquote{color:#ffc4e3;text-shadow:0 0 18px rgba(255,90,180,.6)}
-body.page-sobre-mi .chapter h2 span{color:#f0057f;background:linear-gradient(100deg,#f0057f 0%,#f0057f 40%,#ff8fcc 47%,#fff 50%,#ff8fcc 53%,#f0057f 60%,#f0057f 100%) 100% 0/320% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 10px rgba(255,10,140,.4));padding:0 .08em .12em}
+body.page-sobre-mi .chapter h2 span{color:#f0057f;background:linear-gradient(100deg,#f0057f 0%,#f0057f 45%,#ff4fae 50%,#f0057f 55%,#f0057f 100%) 100% 0/320% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 10px rgba(255,10,140,.4));padding:0 .08em .12em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
 .has-motion body.page-sobre-mi .chapter h2 span{animation:letras-brillo 6.5s ease-in-out infinite}
 @keyframes letras-brillo{0%,52%{background-position:100% 0}86%,100%{background-position:0 0}}
 

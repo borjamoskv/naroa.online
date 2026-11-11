@@ -1233,6 +1233,7 @@ def build(output):
 
     def about_note(source, quote):
         return f'<aside class="kintsugi-chasm hand-margin" data-hand-margin data-kintsugi-chasm><span class="kintsugi-chasm-spark"><span aria-hidden="true">✦ </span>{source}</span>{quote}</aside>'
+        new_tab += ' hreflang="es"' if href.startswith(BLOG) else ""
 
     def about_chapter(key, eyebrow, heading, top, note, bottom, links):
         return (f'<section class="chapter kintsugi-fracture" data-kintsugi-chapter="{key}"><p class="eyebrow">{eyebrow}</p><div class="kintsugi-plate">'
@@ -1264,7 +1265,7 @@ def build(output):
         about_note("Espejos del Alma · 2015", "«Yo solita no puedo mirarme a los ojos, pero en realidad sí: gracias a ti, a todos vosotros, espejos de vuestras almas y la mía, un mismo tesoro»."),
         "<p>«Con Espejos del Alma pretendo evidenciar la esencia común del ser humano. Creo que todos somos lo mismo con distintas apariencias, que formamos parte de una misma inmensa (id)entidad, ese dragón de mil cabezas al que llamamos ‘presente’ y que en efecto es un regalo».</p>",
         [about_link(BLOG + "/2015/05/24/espejos-del-alma-en-el-colegio-de-abogados-de-bilbao/", "Leer «Espejos del Alma», 2015")])
-    about_pull = ('<blockquote>«Me encontré a mí en los demás».<cite>Naroa · <a href="' + BLOG + '/2020/09/27/iconos-pop-muestra-colectiva-de-retratos/" target="_blank" rel="noopener noreferrer">Iconos Pop, 2020<span aria-hidden="true"> ↗</span><span class="sr-only"> (se abre en una pestaña nueva)</span></a></cite></blockquote>')
+    about_pull = ('<blockquote>«Me encontré a mí en los demás».<cite>Naroa · <a href="' + BLOG + '/2020/09/27/iconos-pop-muestra-colectiva-de-retratos/" hreflang="es" target="_blank" rel="noopener noreferrer">Iconos Pop, 2020<span aria-hidden="true"> ↗</span><span class="sr-only"> (se abre en una pestaña nueva)</span></a></cite></blockquote>')
     about_materia = about_chapter(
         "materia", "02 · La materia", "Lo que cuenta<br>cada material.",
         "<p>«Durante la pandemia, mientras creaba la obra “Cantinflowers”, me vi sumida en una ardua lucha entre el acrílico y la cola, la transparencia y la grieta. En lugar de claudicar, comienzo a rascar sobre una base que no me permitía difuminar y ¡premio!, encuentro una textura inédita».</p>",

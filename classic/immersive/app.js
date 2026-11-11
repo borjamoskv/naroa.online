@@ -5066,7 +5066,7 @@
     });
     const images = scenes.map(scene => $('img', scene)), decoded = new Set(), pending = new Map(), failed = new Set();
     const smooth = value => { const t = clamp(value, 0, 1); return t * t * t * (t * (t * 6 - 15) + 10); };
-    let frame = null, geometry = null, current = 0, captionIndex = -1;
+    let frame = null, geometry = null, current = 0, captionIndex = -1, heldFocus = null;
     let interactiveWinkTimer = null, interactiveWinkVal = 0, hasWinkedOnScroll = false;
     function triggerInteractiveWink() {
       const travel = Math.max(0, -portraitTrack.getBoundingClientRect().top);
@@ -5229,9 +5229,16 @@
       // Al pasar deprisa por muchas obras se sueltan las que ya quedaron atrás antes de pedir la
       // pareja nueva: así no se descargan todas las intermedias (la pareja pintada se conserva).
       pruneDistant(base);
+        // Quien navega con teclado no pierde su sitio cuando los controles se ocultan entre dos obras.
+        if (opacity < .2 && element.contains(document.activeElement)) heldFocus = document.activeElement;
       ensureScene(base); if (pair) ensureScene(incoming);
       // Wait for the requested pair while retaining the last painted pair.
       // Scroll remains native even when several works are skipped quickly.
+      if (heldFocus && opacity >= .2) {
+        const target = heldFocus.disabled ? (heldFocus === next ? previous : next) : heldFocus;
+        heldFocus = null;
+        if (document.activeElement === document.body) target.focus({ preventScroll: true });
+      }
       if (!ready(base) || pair && !ready(incoming)) return;
       active.clear(); active.add(base); if (pair) active.add(incoming);
       scenes.forEach((scene, i) => {
@@ -5602,6 +5609,12 @@
       if (document.hidden) { settleDwell(); gazePaused = true; } else { gazePaused = false; focusAt = performance.now(); }
     });
 
+    // La lectura repite el rótulo del capítulo tal como lo lleva la página, en su idioma.
+    chapters.forEach(ch => {
+      const mirror = GAZE_MIRRORS[ch.dataset.kintsugiChapter];
+      const name = $('.eyebrow', ch)?.textContent.replace(/^\s*\d+\s*·\s*/, '').trim();
+      if (mirror && name) mirror[2] = name;
+    });
     function updateReversePortrait() {
       if (!reverseBox) return;
       const entries = Object.entries(kState.dwellChapters).sort((a, b) => b[1] - a[1]);
