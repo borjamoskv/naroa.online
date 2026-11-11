@@ -1,7 +1,32 @@
-# C5-REAL Governance & Agentic Rules
+# naroa.online · Reglas para agentes (C5-REAL)
 
-Importing root workspace AGENTS.md governance.
-See [Workspace AGENTS.md](file:///Users/borjafernandezangulo/10_PROJECTS/.agents/AGENTS.md)
+Este archivo lo leen los agentes de IA al empezar cada sesión. Recoge lo que no se deduce del código: cómo trabajar en el repositorio y las invariantes del portfolio (§1–§9). Al cambiar un comportamiento descrito aquí, se actualiza este archivo en el mismo cambio.
+
+Gobernanza general de la carpeta de proyectos: [Workspace AGENTS.md](file:///Users/borjafernandezangulo/10_PROJECTS/.agents/AGENTS.md). No se carga sola; hay que abrirla. Lo que más pesa aquí: no borrar, mover ni reescribir historial sin autorización explícita; cambios acotados y con el diff revisado; ninguna afirmación de éxito sin una ejecución concreta que la respalde.
+
+---
+
+## Cómo trabajar en este repositorio
+
+### Dos superficies
+- **El museo (portfolio inmersivo):** fuentes en `classic/` (`data/` y `immersive/app.js`, `app.css`, `soundscape.js`, `journey.js`). `tools/build_immersive_site.py` lo genera en `.deploy/`, que es lo que publica Vercel (`vercel.json`). Casi todo este archivo habla de él.
+- **El lab (SPA 3D):** fuentes en `src/`, compilado por Vite en `dist/`. Comparte el catálogo (§1), no el audio (§3).
+
+### Compilar y probar
+- `pnpm run build:site` genera `.deploy/` (tarda varios minutos: optimiza todas las imágenes). Los scripts y hojas de estilo salen con hash en el nombre, así que un cambio en `classic/immersive/` no se ve hasta recompilar.
+- `pnpm run test:site` comprueba las fuentes del catálogo, el sitio generado y la suite JSDOM. Las dos últimas leen `.deploy/`: primero hay que compilar.
+- `pnpm test` añade lint y tipos.
+- El `pre-commit` (lefthook) pasa `detect-secrets`; si no está instalado, el commit se aborta.
+
+### Varias sesiones a la vez (observado el 2026-11-11)
+- Suele haber varias sesiones editando los mismos archivos y recompilando `.deploy/`. Alguna confirma instantáneas «CONJUNTO: …» que arrastran cambios ajenos a medio hacer.
+- Editar con sustituciones acotadas, nunca reescribiendo entero un archivo compartido. Antes de confirmar, mirar `git status` y `git diff` y preparar solo los trozos propios.
+- Para verificar sin pisar a nadie: `python3 tools/build_immersive_site.py --output <carpeta temporal>`. `tools/check_immersive_site.py` acepta el mismo `--output`; `tools/test_immersive_dom.cjs` tiene la salida fija en `.deploy`, así que se ejecuta una copia temporal con la línea `const output = …` cambiada y se borra después.
+- No cambiar de rama en el árbol compartido: mueve también a las demás sesiones.
+
+### Subir es desplegar
+- Cada `git push` a `origin/master` lanza un despliegue de producción en Vercel (observado el 2026-11-11). Compila en remoto con `./deploy.sh --build-only` desde el commit, no desde el árbol de trabajo. Avisar antes de subir.
+- No sondear el dominio público en bucle: activa el control anti-bots de Vercel. El estado se mira con `npx vercel ls` y `npx vercel inspect <url>`.
 
 ---
 
@@ -10,7 +35,7 @@ See [Workspace AGENTS.md](file:///Users/borjafernandezangulo/10_PROJECTS/.agents
 ### 1. Sincronización Atómica 1:1 de Catálogo (`INV_CATALOG_SYNC_1TO1`)
 Toda alta o mutación de obra exige paridad simultánea en 3 capas:
 1. `classic/data/catalogo.json`: Metadatos maestros (`slug`, `title`, `year`, `technique`, `dimensions`, `description`).
-2. `classic/data/journey.json`: Secuencia de cámara (`[s["slug"] for s in scenes] == [p["slug"] for p in projects]`), `hold: 45` en hero inicial y `hold: 25` en el resto, modos `F | Z | V`.
+2. `classic/data/journey.json`: Secuencia de cámara (`[s["slug"] for s in scenes] == [p["slug"] for p in projects]`), `hold: 45` en hero inicial y `hold: 25` en el resto, modos `V | H | Z | E | P | F`, cada uno con su duración en `durations`.
 3. `src/artworks.ts`: Registro TypeScript con `category` restringido a `'rocks' | 'divinos' | 'kintsugi' | 'drawing'`.
 
 **Control (`tools/check_catalog_sources.py`, dentro de `npm run test:site` y al empezar `deploy.sh`):**
@@ -31,6 +56,8 @@ Toda alta o mutación de obra exige paridad simultánea en 3 capas:
 
 ### 4. Transiciones de Ruptura (Glitch) y Bucle Ouroboros
 - Las transiciones terminales emplean aberración cromática RGB (`#ff0055` / `#00f0ff`), jitter horizontal y scanlines CSS, cerrando el bucle hacia el origen (`change(0)`).
+- **Final en `Game Over`:** a los `1,6 s` de llegar, la escena funde a negro con el monigote bailando y, `2,8 s` después, rebobina sola al origen. Sin efectos de movimiento no ocurre.
+- **Huevo `CONTINUE?`:** tres `Enter` seguidos (o tres toques al título) sobre `Game Over` cancelan ese rebobinado y muestran, en la línea de interfaz sobre «INSERT COIN» y nunca encima de la obra, un enlace de texto a `github.com/borjamoskv` con cuenta atrás de 9 a 0; al agotarse, vuelve al origen. Es solo imagen: no rompe el silencio de §5.5. Se crea en `app.js` (`insertCoin`) y no figura en el HTML generado. Sin efectos de movimiento no hay cuenta atrás ni vuelta forzada.
 
 ### 5. Invariante Acústica de la Banda Sonora (`INV_WARMTH_ACOUSTIC_GATE`)
 1. **Una pieza cada mes, sin tarjeta:** hay doce piezas originales, tituladas con el mes en euskera (`Urtarrila`, `Otsaila`, `Martxoa`, `Apirila`, `Maiatza`, `Ekaina`, `Uztaila`, `Abuztua`, `Iraila`, `Urria`, `Azaroa`, `Abendua`). El botón SONIDO enciende y apaga la del mes en curso según el reloj del visitante. No hay tarjeta visual, selector de temas ni efectos sonoros por obra; para escuchar otra pieza al revisar existe `?mes=1` … `?mes=12`.
@@ -56,13 +83,12 @@ Toda alta o mutación de obra exige paridad simultánea en 3 capas:
    - **Fondo Macro Texturizado:** Zoom `2.6x – 3.0x` descentrado hacia el foco matérico ocupando toda la pantalla para exhibir pinceladas y textura real (`drawStoryZoomedDetail`).
    - **Miniatura PiP Completa:** Tarjeta flotante esquinada con sombra profunda mostrando la obra íntegra sin recorte (`drawStoryMiniature`), garantizando paridad detalle + obra completa.
 2. **Share en X/Twitter (`INV_CLEAN_SOCIAL_TITLE`):** El texto de compartición debe emitir exclusivamente el título limpio de la obra (`p.title`, ej. `Game Over`), sin muletillas promocionales ni duplicación de autor.
-
 3. **El retrato de tu visita (`INV_VISIT_PORTRAIT`):** la galería suma cada medio segundo el tiempo que cada obra pasa quieta en pantalla (no el cruce entre dos, ni el retrato del umbral, ni con un diálogo abierto). Vive solo en memoria: no se guarda ni se envía. Tras mirar al menos `3` obras `4 s` cada una, el diálogo de Story ofrece una segunda pieza y, en la última obra, un enlace de texto junto a «Compartir recorrido».
    - **Layout (`1080×1920`, `renderVisitFrame`):** hasta cuatro franjas recortadas a mano, una por obra y tanto más alta cuanto más se miró; cada una es un detalle real (centrado donde estuvo la lupa, si se usó) con la pieza completa prendida al lado, su título y lo que duró la mirada. Mismo margen seguro que la Story de una obra.
    - El título de la imagen habla quien la comparte («El retrato de mi visita»); la interfaz, a quien visita («de tu visita»).
 
 ### 7. Pureza Visual en Umbral Hero (`INV_HERO_THRESHOLD_PURITY`)
-- El retrato inaugural (umbral de estudio, índice `0`) debe mostrarse limpio de superposiciones tipográficas o telemetría flotante (`LA MIRADA`, `UMBRAL DE ESTUDIO`, texto en SVG del monóculo). `.portrait-hero-copy` permanece oculto (`display: none`) para ceder el protagonismo íntegro al retrato.
+- El retrato inaugural (umbral de estudio, índice `0`) debe mostrarse limpio de superposiciones tipográficas o telemetría flotante (`LA MIRADA`, `UMBRAL DE ESTUDIO`, texto en SVG del monóculo). El umbral no lleva ningún bloque de texto (la antigua `.portrait-hero-copy` ya no existe): el protagonismo es íntegro del retrato.
 - **Sin efectos de movimiento el retrato también recibe:** con `prefers-reduced-motion` o «Pausar efectos» el umbral sigue en pantalla, quieto (sin zoom, guiño ni giro del aro), y se disuelve en la primera obra con el scroll. Solo «Solo obra» lo retira.
 - **Tocar el retrato es entrar:** mientras el umbral está en pantalla, el clic o toque sobre la escena cruza a la primera obra; no abre la ficha de fotografías de una obra que aún no se ha visto.
 
