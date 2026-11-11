@@ -5308,9 +5308,16 @@
         hero.dataset.work = work.slug; captionIndex = index;
       }
       [artCopy, controls].forEach(element => {
+        // Quien navega con teclado no pierde su sitio cuando los controles se ocultan entre dos obras.
+        if (opacity < .2 && element.contains(document.activeElement)) heldFocus = document.activeElement;
         element.style.opacity = opacity.toFixed(3); element.style.visibility = opacity > 0 ? 'visible' : 'hidden'; element.inert = opacity < .2;
       });
       artCopy.style.transform = reduced.matches ? '' : `translate3d(0,${((1 - opacity) * 12).toFixed(2)}px,0)`;
+      if (heldFocus && opacity >= .2) {
+        const target = heldFocus.disabled ? (heldFocus === next ? previous : next) : heldFocus;
+        heldFocus = null;
+        if (document.activeElement === document.body) target.focus({ preventScroll: true });
+      }
     }
     function renderExhibition(position, totalDistance) {
       const g = geometry, base = Math.floor(position), fraction = position - base;
@@ -5318,16 +5325,9 @@
       // Al pasar deprisa por muchas obras se sueltan las que ya quedaron atrás antes de pedir la
       // pareja nueva: así no se descargan todas las intermedias (la pareja pintada se conserva).
       pruneDistant(base);
-        // Quien navega con teclado no pierde su sitio cuando los controles se ocultan entre dos obras.
-        if (opacity < .2 && element.contains(document.activeElement)) heldFocus = document.activeElement;
       ensureScene(base); if (pair) ensureScene(incoming);
       // Wait for the requested pair while retaining the last painted pair.
       // Scroll remains native even when several works are skipped quickly.
-      if (heldFocus && opacity >= .2) {
-        const target = heldFocus.disabled ? (heldFocus === next ? previous : next) : heldFocus;
-        heldFocus = null;
-        if (document.activeElement === document.body) target.focus({ preventScroll: true });
-      }
       if (!ready(base) || pair && !ready(incoming)) return;
       active.clear(); active.add(base); if (pair) active.add(incoming);
       scenes.forEach((scene, i) => {
