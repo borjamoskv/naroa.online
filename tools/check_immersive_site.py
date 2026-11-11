@@ -151,6 +151,14 @@ def check(output):
             if path.endswith("/"):
                 dest /= "index.html"
             assert dest.is_file(), (file, "missing target", ref)
+    # Lo que la hoja de estilos pide por url() también tiene que existir: una regla que apunte a un
+    # archivo que no se subió (las fotos de pared de Trayectoria, por ejemplo) deja un 404 que no ve
+    # ningún otro control, porque las páginas solo nombran la hoja.
+    css_file = output / manifest["assets"]["app.css"].lstrip("/")
+    for found in re.finditer(r"""url\(\s*['"]?(/[^/'")][^'")]*)""", css_file.read_text()):
+        path = unquote(urlsplit(found.group(1)).path)
+        assert (output / path.lstrip("/")).is_file(), (css_file.name, "missing CSS target", path)
+        checked_refs.add(path)
     assert (output / "404.html").is_file()
     # Recursos que citan los scripts y las hojas de estilo que cargan las páginas de esta compilación (en cada
     # idioma) y los que esos scripts cargan a su vez: tienen que existir. No se recorre la carpeta entera: en una

@@ -992,7 +992,9 @@
       });
     }
     $('[data-remix-visit]', remixDialog)?.addEventListener('click', () => {
-      if (isGeneratingRemix || storyLoopState.isRecording) return;
+      // No espera a que termine la Story de la obra: en un móvil lento tarda segundos y el toque se perdía.
+      // Esa composición se descarta sola al empezar esta (remixRun).
+      if (storyLoopState.isRecording) return;
       generateVisitStory();
     });
   }
