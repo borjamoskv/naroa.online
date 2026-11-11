@@ -461,8 +461,61 @@ body.page-cuaderno .timeline-entry h3{font-size:clamp(20px,2.2vw,28px);letter-sp
 body.page-cuaderno .timeline-entry p{color:#27375a;font-size:15px}
 body.page-cuaderno .timeline-entry>p{color:#0e1a33;font-size:12px;letter-spacing:.03em}
 body.page-cuaderno .timeline-entry p.timeline-location{color:#2340C8;font-size:14px;letter-spacing:0;margin:16px 0 0;padding-left:16px;border-left:2px solid rgba(35,64,200,.45)}
-/* Notas de prensa: el enlace a la fuente respira bajo la firma y no se pega al de Trayectoria. */
-body.page-cuaderno [data-press-note] .text-link{margin:14px 18px 0 0}
+/* En prensa: lo que la prensa contó va en recortes de papel; lo que solo anunciaron las agendas, en un índice por años como el archivo. */
+body.page-cuaderno .notebook-press .press-kind{margin:0 0 24px;font-size:11px;line-height:1.6;letter-spacing:.11em;text-transform:uppercase;color:rgba(255,253,244,.82)}
+body.page-cuaderno .press-pieces{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:30px 32px;margin:0 0 76px;padding:0;list-style:none}
+body.page-cuaderno .press-piece{display:flex;flex-direction:column;align-items:flex-start;min-width:0;padding:28px 30px 20px;background:#fffef8;color:#0e1a33;border-radius:30px 14px 26px 16px / 16px 26px 14px 30px;box-shadow:0 12px 32px rgba(8,18,44,.12);rotate:-.3deg;scroll-margin-top:112px}
+body.page-cuaderno .press-piece:nth-child(even){rotate:.35deg;border-radius:16px 30px 14px 26px / 26px 14px 30px 16px}
+body.page-cuaderno .press-meta{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 14px;margin:0 0 12px;font-size:11px;line-height:1.6;letter-spacing:.11em;text-transform:uppercase;color:#27375a}
+body.page-cuaderno .press-medium{font-weight:500;letter-spacing:.16em;color:#2340C8}
+body.page-cuaderno .press-piece h3{margin:0 0 14px;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:400;font-size:clamp(25px,2.3vw,32px);line-height:1.12;letter-spacing:-.01em;color:#0e1a33;text-wrap:balance;overflow-wrap:anywhere}
+body.page-cuaderno .press-summary{margin:0 0 12px;font-size:15px;line-height:1.7;color:#27375a}
+body.page-cuaderno .press-byline{margin:0;font-size:13px;line-height:1.55;color:#4a5878}
+body.page-cuaderno .press-links{display:flex;flex-wrap:wrap;align-items:center;gap:0 24px;margin-top:auto;padding-top:8px}
+/* La más reciente abre a lo ancho, como la primera entrada del blog. */
+body.page-cuaderno .press-piece:first-child{grid-column:1/-1}
+body.page-cuaderno .press-piece:first-child>*{max-width:760px}
+/* El enlace a la fuente es texto con el garabato en tinta, no una píldora. */
+body.page-cuaderno .notebook-press .text-link{background:none;padding:0 0 6px;border-radius:0;font-size:13px;color:#0e1a33;transform:none}
+body.page-cuaderno .notebook-press .text-link:hover{background:none;color:#2340C8;transform:none}
+body.page-cuaderno .notebook-press .text-link:after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 8' preserveAspectRatio='none' fill='none'%3E%3Cpath d='M1 4.2 C 18 1.4, 35 6.8, 55 2.8 C 75 0.5, 90 5.2, 109 3.4' stroke='%230e1a33' stroke-width='1.5' stroke-linecap='round' opacity='0.7'/%3E%3C/svg%3E")}
+body.page-cuaderno .notebook-press .text-link:hover:after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 8' preserveAspectRatio='none' fill='none'%3E%3Cpath d='M1 4.2 C 18 1.4, 35 6.8, 55 2.8 C 75 0.5, 90 5.2, 109 3.4' stroke='%232340C8' stroke-width='1.8' stroke-linecap='round' opacity='0.95'/%3E%3C/svg%3E")}
+body.page-cuaderno .press-piece .notebook-encounter{min-height:44px;margin:0}
+/* Índice de agendas: mismo filete, año en Cormorant y fecha en versalitas que el archivo del blog. */
+body.page-cuaderno .press-agenda{border-bottom:1px solid rgba(255,255,255,.24);margin:0 0 10px}
+body.page-cuaderno .press-agenda-note{margin:-10px 0 22px;font-size:14px;line-height:1.6;color:rgba(255,253,244,.82);max-width:620px}
+body.page-cuaderno .press-year{display:grid;grid-template-columns:120px minmax(0,1fr);gap:0 24px;padding:16px 8px 8px;border-top:1px solid rgba(255,255,255,.24)}
+body.page-cuaderno .press-year-number{margin:0;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:300;font-size:clamp(34px,4vw,48px);line-height:1;color:#fffdf4}
+body.page-cuaderno .press-year ol{list-style:none;margin:0;padding:0}
+body.page-cuaderno .press-year li{display:grid;grid-template-columns:60px minmax(0,1fr) auto;gap:0 18px;align-items:baseline;padding:10px 0 12px;border-top:1px dashed rgba(255,255,255,.2);scroll-margin-top:112px}
+body.page-cuaderno .press-year li:first-child{border-top:0}
+body.page-cuaderno .press-year time{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,253,244,.74);white-space:nowrap}
+body.page-cuaderno .press-line{min-width:0}
+body.page-cuaderno .press-year .press-medium{display:inline;margin-right:10px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,253,244,.82)}
+body.page-cuaderno .press-year h3{display:inline;margin:0;font-size:17px;line-height:1.45;font-weight:400;letter-spacing:0;color:#fffdf4;overflow-wrap:anywhere}
+body.page-cuaderno .press-year h3 a.text-link{display:inline;min-height:0;padding:6px 0;font-size:inherit;color:#fffdf4;text-decoration:none}
+body.page-cuaderno .press-year h3 a.text-link:after{content:" ↗";position:static;display:inline;width:auto;height:auto;background:none;transform:none;color:rgba(255,253,244,.82)}
+body.page-cuaderno .press-year h3 a.text-link:hover{color:#dbe7ff;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:5px}
+body.page-cuaderno .press-year .press-line p{margin:4px 0 0;font-size:14px;line-height:1.6;color:rgba(255,253,244,.84);max-width:70ch}
+body.page-cuaderno .press-year .notebook-encounter{display:block;min-height:0;margin:0;padding:0;font-size:11px;line-height:1.6;letter-spacing:.11em;text-transform:uppercase;white-space:nowrap;color:rgba(255,253,244,.82);text-decoration:none}
+body.page-cuaderno .press-year .notebook-encounter:hover{color:#fffdf4;text-decoration:underline;text-underline-offset:5px}
+/* El foco no dibuja un rectángulo: repasa el trazo (enlace a la fuente) o subraya grueso (resto). */
+body.page-cuaderno .notebook-press a:focus-visible{outline:0;text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:6px}
+body.page-cuaderno .press-links .text-link:focus-visible{text-decoration:none;color:#2340C8}
+body.page-cuaderno .press-links .text-link:focus-visible:after{height:10px;background-size:100% 10px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 8' preserveAspectRatio='none' fill='none'%3E%3Cpath d='M1 4.2 C 18 1.4, 35 6.8, 55 2.8 C 75 0.5, 90 5.2, 109 3.4' stroke='%232340C8' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E")}
+@media(max-width:760px){
+  body.page-cuaderno .press-pieces{grid-template-columns:minmax(0,1fr);gap:22px;margin-bottom:56px}
+  body.page-cuaderno .press-piece:first-child{grid-column:auto}
+  body.page-cuaderno .press-piece{padding:22px 20px 14px}
+  body.page-cuaderno .press-year{grid-template-columns:minmax(0,1fr);padding:14px 0 6px}
+  body.page-cuaderno .press-year-number{margin-bottom:6px}
+  /* En el móvil la fecha y el medio van en una línea encima del titular: el texto usa todo el ancho. */
+  body.page-cuaderno .press-year li{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 12px}
+  body.page-cuaderno .press-line{display:contents}
+  body.page-cuaderno .press-year h3{display:block;flex-basis:100%;margin-top:2px}
+  body.page-cuaderno .press-year .press-line p{flex-basis:100%}
+  body.page-cuaderno .press-year .notebook-encounter{padding:8px 0 0}
+}
 @media(max-width:760px){
   body.page-cuaderno .editorial.notebook{padding:36px 5% 30px}
   body.page-cuaderno .notebook-card{padding:20px}

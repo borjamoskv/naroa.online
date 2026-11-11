@@ -11,7 +11,7 @@
       "date_label": "5 de junio de 2026",
       "title": "Bwall Collective inaugura una exposición de ocho artistas locales en Dock Bilbao",
       "byline": "Crónica de Javier Gamboa, en la sección Vida social",
-      "summary": "Crónica de la inauguración de la colectiva de Bwall Collective en Dock Bilbao, abierta todo el mes de junio. Entre las propuestas de la muestra, el diario destaca «el universo lírico y reflexivo de Naroa Gutiérrez Gil».",
+      "summary": "Crónica de la inauguración de la colectiva de Bwall Collective en Dock Bilbao, abierta todo el mes de junio. Al repasar las propuestas de la muestra, nombra también «el universo lírico y reflexivo de Naroa Gutiérrez Gil».",
       "url": "https://www.deia.eus/bizkaia/vida-social/2026/06/05/bwall-collective-inaugura-exposicion-ocho-11159371.html",
       "encounter": "3055",
       "checked": "2026-11-11"
@@ -67,7 +67,7 @@
       "date_label": "2 de diciembre de 2016",
       "title": "Ongi Etorri Abendua! – Planes para todos",
       "byline": "Un sinfín de planes, el blog de Maite Goienetxea",
-      "summary": "Entre los planes del sábado 3 de diciembre de 2016, el blog anuncia la exposición “Sácame los colores” en Tegobi, en el Muelle de Ripa de Bilbao, y reproduce la invitación que le envió la propia Naroa.",
+      "summary": "Entre los planes del sábado 3 de diciembre de 2016, el blog anuncia la exposición “Sácame los colores” en Tegobi, en el Muelle de Ripa de Bilbao, y reproduce las palabras con que la propia Naroa invita a verla.",
       "url": "https://blogs.deia.eus/un-sinfin-de-planes/2016/12/02/ongi-etorri-abendua-planes-para-todos/",
       "encounter": "1356",
       "checked": "2026-11-11"
@@ -81,8 +81,8 @@
       "date_label": "6 de junio de 2016",
       "title": "Agenda",
       "byline": "Agenda cultural del diario",
-      "summary": "La agenda del día recoge “I See Your True Colors” en ViaDeFuga Café, en Bilbao, hasta el 14 de junio de 2016: la última colección de retratos de Naroa, una serie de trabajos coloristas.",
-      "url": "https://www.deia.eus/cultura/agenda/2016/06/06/agenda/507845.html",
+      "summary": "La agenda del día recoge la muestra de ViaDeFuga Café, en Bilbao, hasta el 14 de junio de 2016, con el título “Y see your true colors”: la última colección de retratos de Naroa, una serie de trabajos coloristas.",
+      "url": "https://www.deia.eus/cultura/2016/06/06/agenda-5031497.html",
       "encounter": "",
       "checked": "2026-11-11"
     },
@@ -123,7 +123,7 @@
       "date_label": "Mayo de 2015",
       "title": "Naroa Gutiérrez Gil presenta 'Espejos del alma'",
       "byline": "Agenda cultural del diario",
-      "summary": "La agenda anuncia la muestra en el Colegio de Abogados de Bizkaia, en Bilbao, del 28 de mayo al 24 de julio de 2015, con la misma presentación que un año antes en Portugalete.",
+      "summary": "La agenda anuncia la muestra en el Colegio de Abogados de Bizkaia, en Bilbao, del 28 de mayo al 24 de julio de 2015: pintura acrílica sobre lienzo, tela estampada, madera, papel o metal, con el rostro humano como protagonista.",
       "url": "https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-476343.html",
       "encounter": "414",
       "checked": "2026-11-11"
@@ -202,6 +202,7 @@
     },
     {
       "id": "gara-2010-non-zer",
+      "lang": "eu",
       "medium": "GARA",
       "kind": "agenda",
       "date": "2010-03-26",
