@@ -1487,7 +1487,7 @@ def build(output):
     press = sorted(read_data("prensa")["notes"], key=lambda x: x["date"], reverse=True)
     if press:
         press_years = sorted({x["date"][:4] for x in press})
-        notebook += f'''<section class="notebook-press" id="prensa" aria-labelledby="notebook-press-title"><div class="section-opening"><p class="eyebrow">En prensa · {len(press)} notas, cada una con su fuente</p><h2 id="notebook-press-title">Lo que se ha publicado<br><span>sobre su trabajo.</span></h2><p>Crónicas, reportajes, una entrevista y las agendas culturales que anunciaron sus muestras, de {press_years[0]} a {press_years[-1]}. Cada titular es el del medio, tal como se publicó, y cada enlace abre la nota.</p></div><div class="timeline">'''
+        notebook += f'''<section class="notebook-press" id="prensa" aria-labelledby="notebook-press-title"><div class="section-opening"><p class="eyebrow">En prensa · {len(press)} notas, cada una con su fuente</p><h2 id="notebook-press-title">Lo que se ha publicado<br><span>sobre su trabajo.</span></h2><p>Crónicas, reportajes, noticias, una entrevista y las agendas culturales que anunciaron sus muestras, de {press_years[0]} a {press_years[-1]}. Cada titular es el del medio, tal como se publicó, y cada enlace abre la nota.</p></div><div class="timeline">'''
         for x in press:
             medium = f'<span translate="no">{esc(x["medium"])}</span>'
             read_label = "Leer la copia archivada" if x.get("archived") else f'Leer en {esc(x["medium"])}'

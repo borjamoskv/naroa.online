@@ -151,8 +151,8 @@
    "{=1} albiste, bakoitza bere iturriarekin"
   ],
   [
-   "^Crónicas, reportajes, una entrevista y las agendas culturales que anunciaron sus muestras, de (\\d{4}) a (\\d{4})\\. Cada titular es el del medio, tal como se publicó, y cada enlace abre la nota\\.$",
-   "Kronikak, erreportajeak, elkarrizketa bat eta bere erakusketak iragarri zituzten kultur agendak ({=1}–{=2}). Titular bakoitza hedabidearena da, argitaratu zen bezala, eta esteka bakoitzak albistea irekitzen du."
+   "^Crónicas, reportajes, noticias, una entrevista y las agendas culturales que anunciaron sus muestras, de (\\d{4}) a (\\d{4})\\. Cada titular es el del medio, tal como se publicó, y cada enlace abre la nota\\.$",
+   "Kronikak, erreportajeak, albisteak, elkarrizketa bat eta bere erakusketak iragarri zituzten kultur agendak ({=1}–{=2}). Titular bakoitza hedabidearena da, argitaratu zen bezala, eta esteka bakoitzak albistea irekitzen du."
   ],
   [
    "^Leer la entrada completa: (.+)$",
@@ -1446,6 +1446,19 @@
   "Leer la copia archivada ↗": "Irakurri artxibatutako kopia ↗",
   "Entre las citas del jueves 15 de septiembre de 2011, este digital local recoge la exposición de pintura de Naroa Gutiérrez Gil en el Gaztebulegoa de Barakaldo, abierta hasta el día 30.": "2011ko irailaren 15eko (osteguna) hitzorduen artean, tokiko hedabide digital honek Naroa Gutiérrez Gilen pintura-erakusketa jasotzen du, Barakaldoko Gaztebulegoan, hilaren 30era arte zabalik.",
   "Agenda del día": "Eguneko agenda",
+  "El digital local anuncia las colonias de arte y creatividad de la Fundación Trocóniz Santacoloma, del 24 de junio al 19 de julio de 2024, y presenta a Naroa como una de sus dos facilitadoras: la de artes plásticas, que además se dedica al retrato y coordina la Walking Gallery en Bilbao.": "Tokiko hedabide digitalak Trocóniz Santacoloma Fundazioaren arte eta sormen udalekuak iragartzen ditu, 2024ko ekainaren 24tik uztailaren 19ra, eta Naroa bi bideratzaileetako bat dela dio: arte plastikoena, erretratugintzan ere aritzen dena eta Bilboko Walking Gallery koordinatzen duena.",
+  "La agenda anuncia la colectiva “Akelarre” de Bwall Collective en Sarean, en Bilbao: nueve artistas durante todo marzo de 2020, con la inauguración el día 18. A cada una le dedica unas líneas, también a Naroa.": "Agendak Bwall Collective-ren “Akelarre” erakusketa kolektiboa iragartzen du Sareanen, Bilbon: bederatzi artista 2020ko martxo osoan, inaugurazioa hilaren 18an. Bakoitzari lerro batzuk eskaintzen dizkio, baita Naroari ere.",
+  "El programa de la noche abierta de los barrios altos de Bilbao incluye la exposición “Los Guardianes del Enigma”, de Naroa Gutiérrez, en Igarkizun, en la calle Zabala.": "Bilboko auzo garaietako gau irekiaren egitarauak Naroa Gutiérrezen “Los Guardianes del Enigma” erakusketa jasotzen du, Igarkizunen, Zabala kalean.",
+  "Entre los planes del sábado 3 de diciembre de 2016, el blog anuncia la exposición “Sácame los colores” en Tegobi, en el Muelle de Ripa de Bilbao, y reproduce la invitación que le envió la propia Naroa.": "2016ko abenduaren 3ko (larunbata) planen artean, blogak “Sácame los colores” erakusketa iragartzen du Tegobin, Bilboko Erripako kaian, eta Naroak berak bidalitako gonbidapena jasotzen du.",
+  "La agenda del día recoge “I See Your True Colors” en ViaDeFuga Café, en Bilbao, hasta el 14 de junio de 2016: la última colección de retratos de Naroa, una serie de trabajos coloristas.": "Eguneko agendak “I See Your True Colors” jasotzen du, Bilboko ViaDeFuga Cafén, 2016ko ekainaren 14ra arte: Naroaren azken erretratu-bilduma, kolore biziko lan sorta bat.",
+  "Entre los planes para el puente de octubre de 2015, el blog recomienda tres exposiciones; una de ellas, la de Naroa en el bar Lamiak, en la calle Pelota del Casco Viejo de Bilbao.": "2015eko urriko zubirako planen artean, blogak hiru erakusketa gomendatzen ditu; horietako bat, Naroarena, Lamiak tabernan, Bilboko Alde Zaharreko Pilota kalean.",
+  "La agenda del día recoge “Espejos del alma” en el Colegio de Abogados de Bizkaia, hasta el 24 de julio de 2015, y señala el predominio de la pintura acrílica sobre lienzo, tela estampada, madera, papel o metal.": "Eguneko agendak “Espejos del alma” jasotzen du Bizkaiko Abokatuen Elkargoan, 2015eko uztailaren 24ra arte, eta pintura akrilikoa nagusi dela dio, mihisean, oihal estanpatuan, zurean, paperean edo metalean.",
+  "La agenda del diario, escrita en euskera, incluye entre las exposiciones de Bilbao “Espejos del alma”, de Naroa Gutiérrez Gil, en Hegoak hasta el 31 de marzo de 2010.": "Egunkariaren agendak, euskaraz idatzia, Naroa Gutiérrez Gilen “Espejos del alma” jasotzen du Bilboko erakusketen artean: Hegoaken, 2010eko martxoaren 31ra arte.",
+  "Noticia de Julen Frión": "Julen Friónen albistea",
+  "Agenda cultural": "Kultur agenda",
+  "Noticia con el programa completo": "Albistea, egitarau osoarekin",
+  "Un sinfín de planes, el blog de Maite Goienetxea": "Un sinfín de planes, Maite Goienetxearen bloga",
+  "Agenda en euskera de la sección de Cultura": "Kultura ataleko agenda, euskaraz",
   "La agenda anuncia la muestra en Hegoak, en Bilbao, con fecha del 31 de marzo de 2010, y resume su propósito: mostrar que, bajo apariencias distintas, todas las personas comparten una misma esencia.": "Agendak erakusketa iragartzen du Hegoaken, Bilbon, 2010eko martxoaren 31ko datarekin, eta haren asmoa laburbiltzen du: itxura desberdinen azpian pertsona guztiok funts bera partekatzen dugula erakustea.",
   "Archivo del blog": "Blogaren artxiboa",
   "Y todo<1/><2>lo anterior.</2>": "Eta aurreko<1/><2>guztia.</2>",
