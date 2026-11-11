@@ -1652,6 +1652,9 @@
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     const pan = { x: 0, y: 0, rx: 0, ry: 0, vx: 0, vy: 0, vrx: 0, vry: 0, tx: 0, ty: 0, trx: 0, try: 0, frame: null };
     let cameraRestTimer = null, lastScrollPixels = 0;
+    // Aviso de temporada en la cabecera: acompaña la llegada y el umbral, no el recorrido.
+    const seasonNav = document.querySelector('.season-nav');
+    let seasonHome = null;
     function stepPan() {
       pan.frame = null;
       if (reduced.matches || state.fit || !stage.classList.contains('is-resting')) {
@@ -4418,6 +4421,13 @@
       const pose = journey.read(motion.current);
       const position = pose.position;
       motion.desired = position;
+      if (seasonNav) {
+        // Se ve en la obra por la que se entra; al alejarse se retira y ya solo vuelve arriba del todo.
+        if (seasonHome === null) seasonHome = position;
+        const away = Math.abs(position - seasonHome) > .3;
+        if (away) seasonHome = 0;
+        seasonNav.classList.toggle('is-away', away);
+      }
       if (motion.navigation !== null && Math.abs(position - motion.navigation) < .002) motion.navigation = null;
       if (Math.abs(pose.distance - motion.pose.distance) > .0004) {
         const pixels = motion.current * geometry.unit;

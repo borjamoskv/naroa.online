@@ -122,6 +122,10 @@ def phrasing_only(node):
         return False
     if node.name in OPAQUE:
         return True
+    # data-i18n-unit="1": un elemento de línea que se traduce como frase aparte y no dentro de la que lo rodea
+    # (el plazo de encargos bajo «Encargos» en el menú: cambia con la fecha y el resto de la entrada no).
+    if has_attr(node, "data-i18n-unit"):
+        return False
     return all(phrasing_only(c) for c in node.children)
 
 
