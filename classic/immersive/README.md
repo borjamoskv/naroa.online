@@ -11,7 +11,7 @@ and contact pages.
 - `classic/data/vaivenes.json`: eight Vaivenes entries, including Mario Moreno
   already present in the main catalogue; seven additional entries, 40 in total.
 - `classic/data/exhibitions.json`: 21 documented exhibitions and source links.
-- `classic/data/blog.json`: the artist's notebook excerpts and original links.
+- `classic/data/blog.json`: the artist's notebook excerpts and original links. `posts` holds the six latest entries (hand-reviewed summaries and local posters); `archive` lists every older entry. Refresh it with `npm run sync:blog` (`--check` only reports): reviewed fields are kept, new entries are added. In the browser, `/cuaderno/` only adds entries published after the build; it never rewrites a reviewed card.
 
 Source photographs, dates, descriptions and credits are retained. Entries whose
 available image shows a drawing or a detail keep that qualification. No prices,

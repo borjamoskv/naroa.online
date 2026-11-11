@@ -1301,7 +1301,7 @@ def build(output):
         im = x.get("image") or {}
         local_src = im.get("local")
         img_src = derivative(local_src, 960) if local_src else im.get("src", "")
-        photo_html = f'''<a class="notebook-photo" href="{esc(x['url'])}" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true"><img src="{esc(img_src)}" width="{im.get('width', 1080)}" height="{im.get('height', 1080)}" alt="" loading="lazy" decoding="async"></a>''' if img_src else ""
+        photo_html = f'''<a class="notebook-photo" href="{esc(x['url'])}" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true" style="--poster-ratio:{im.get('width', 1080)}/{im.get('height', 1080)}"><img src="{esc(img_src)}" width="{im.get('width', 1080)}" height="{im.get('height', 1080)}" alt="{esc(im.get('alt') or x['title'])}" loading="lazy" decoding="async"></a>''' if img_src else ""
         notebook += f'''<article class="notebook-card" data-notebook-entry data-post-id="{x['id']}">{photo_html}<div class="notebook-card-body"><p class="eyebrow"><time datetime="{esc(x['date'])}">{esc(x['date_label'])}</time></p><h3><a href="{esc(x['url'])}" target="_blank" rel="noopener noreferrer">{esc(x['title'])} ↗</a></h3><p class="notebook-summary">{esc(x['summary'])}</p><a class="text-link" href="{esc(x['url'])}" target="_blank" rel="noopener noreferrer" aria-label="Leer la entrada completa: {esc(x['title'])}">Leer la entrada completa ↗</a></div></article>'''
     notebook += '</div>'
     if blog_archive:

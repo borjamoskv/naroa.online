@@ -326,16 +326,25 @@ body.page-cuaderno .notebook-card h3{margin:14px 0 18px;overflow-wrap:anywhere}
 body.page-cuaderno .notebook-card h3 a{text-decoration:none}
 body.page-cuaderno .notebook-summary{font-size:15px;line-height:1.75;margin:0 0 24px;color:#143d34}
 body.page-cuaderno .notebook-card .text-link{margin-top:auto;font-size:12px}
-body.page-cuaderno .notebook-photo{position:relative;aspect-ratio:4/5;overflow:visible;background:none;border-radius:0;margin-bottom:24px}
+body.page-cuaderno .notebook-photo{position:relative;aspect-ratio:var(--poster-ratio,4/5);max-height:80vh;overflow:visible;background:none;border-radius:0;margin-bottom:24px}
 body.page-cuaderno .notebook-photo img{position:absolute;inset:0;margin:auto;width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain;border-radius:28px 12px 24px 14px / 14px 26px 12px 28px;box-shadow:0 12px 28px rgba(6,36,30,.18)}
 @media(min-width:761px){
   body.page-cuaderno .notebook-posts{grid-template-columns:repeat(6,minmax(0,1fr));column-gap:32px;align-items:stretch}
   body.page-cuaderno .notebook-card{grid-column:span 3}
-  body.page-cuaderno .notebook-card:first-child{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(28px,4vw,56px);align-items:center;padding:34px}
-  body.page-cuaderno .notebook-card:first-child .notebook-photo{aspect-ratio:1/1;margin-bottom:0}
+  body.page-cuaderno .notebook-card:not(:first-child) .notebook-photo{aspect-ratio:4/5;max-height:none}
+  body.page-cuaderno .notebook-card:first-child{grid-column:1/-1;padding:34px}
+  body.page-cuaderno .notebook-card:first-child:has(.notebook-photo){display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(28px,4vw,56px);align-items:center}
+  body.page-cuaderno .notebook-card:first-child .notebook-photo{margin-bottom:0}
   body.page-cuaderno .notebook-card:first-child .notebook-card-body{flex:none}
   body.page-cuaderno .notebook-card:first-child h3{font-size:clamp(32px,3.8vw,54px);line-height:1.1}
   body.page-cuaderno .notebook-card:first-child .notebook-summary{font-size:16px}
+}
+@media(min-width:761px) and (max-width:1039.98px){
+  /* A dos columnas, la última tarjeta no se queda sola: ocupa la fila entera, en horizontal. */
+  body.page-cuaderno .notebook-card:nth-child(even):last-child{grid-column:1/-1}
+  body.page-cuaderno .notebook-card:nth-child(even):last-child:has(.notebook-photo){display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:32px;align-items:center}
+  body.page-cuaderno .notebook-card:nth-child(even):last-child .notebook-photo{margin-bottom:0}
+  body.page-cuaderno .notebook-card:nth-child(even):last-child .notebook-card-body{flex:none}
 }
 @media(min-width:1040px){
   body.page-cuaderno .notebook-card:nth-child(n+4){grid-column:span 2}

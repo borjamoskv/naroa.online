@@ -5735,7 +5735,10 @@
         const photoLink = externalLink('notebook-photo', url);
         photoLink.tabIndex = -1; photoLink.setAttribute('aria-hidden', 'true');
         const img = document.createElement('img');
-        img.src = `${poster}?w=960`; img.alt = ''; img.loading = 'lazy'; img.decoding = 'async';
+        img.alt = ''; img.loading = 'lazy'; img.decoding = 'async';
+        img.addEventListener('load', () => photoLink.style.setProperty('--poster-ratio', `${img.naturalWidth}/${img.naturalHeight}`));
+        img.addEventListener('error', () => photoLink.remove());
+        img.src = `${poster}?w=960`;
         photoLink.append(img); article.append(photoLink);
       }
       const body = document.createElement('div'); body.className = 'notebook-card-body';

@@ -8,7 +8,7 @@ const manifest = JSON.parse(fs.readFileSync(path.join(output, 'immersive/build-m
 const errors = [];
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-function create(route = '/', reduce = false, viewport = { width: 1024, height: 768 }, audio = null, effects = null, storageDenied = false) {
+function create(route = '/', reduce = false, viewport = { width: 1024, height: 768 }, audio = null, effects = null, storageDenied = false, blogFetch = null) {
   const file = path.join(output, route, 'index.html');
   let time = 0, id = 0;
   const observers = [];
@@ -35,6 +35,7 @@ function create(route = '/', reduce = false, viewport = { width: 1024, height: 7
       }
       w.requestAnimationFrame = callback => { const token = ++id; callbacks.set(token, callback); return token; };
       w.cancelAnimationFrame = token => callbacks.delete(token);
+      if (blogFetch) { w.fetch = blogFetch; Object.defineProperty(w.document, 'hidden', { value: false, configurable: true, writable: true }); }
       w.IntersectionObserver = class {
         constructor(callback) { this.callback = callback; this.targets = new Set(); observers.push(this); }
         observe(target) { this.targets.add(target); }
@@ -943,6 +944,32 @@ async function eyeMatch(ui, base, points) {
       assert.equal(scrollState.backend, 'kintsugi-tectonic-fracture-v8', 'Sobre mí uses V8 tectonic fracture + golden suture scroll backend');
       assert.equal(scrollState.fractureStates.espejo, 'sutured', 'Scrolling past chapter sutures the tectonic fracture with liquid gold');
       assert.ok(scrollState.dwellChapters.espejo >= 12, 'Reverse portrait tracks chapter dwell telemetry');
+  {
+    // Blog sincronizado: una entrada nueva entra la primera; las tarjetas revisadas no se reescriben.
+    const blog = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../classic/data/blog.json'), 'utf8'));
+    const calls = [];
+    const known = blog.posts.map(post => ({ ID: post.id, date: `${post.date}T10:00:00+02:00`, title: post.title, URL: post.url, excerpt: '<p>Extracto automático que no debe sustituir al texto elegido [&hellip;]</p>' }));
+    const fresh = { ID: 999999, date: '2031-01-02T00:30:00+01:00', title: 'Entrada &#8220;nueva&#8221;', URL: 'https://naroagutierrez.wordpress.com/2031/01/02/entrada-nueva/', excerpt: '<p>Texto  nuevo [&hellip;]</p>', featured_image: 'https://example.com/wp-content/uploads/ajena.jpg' };
+    const blogFetch = async url => { calls.push(url); return { ok: true, json: async () => ({ found: blog.total + 1, posts: [...known.slice(0, 5), fresh] }) }; };
+    const synced = create('/cuaderno/', false, undefined, null, null, false, blogFetch); await synced.flush(); await synced.flush();
+    const cards = Array.from(synced.document.querySelectorAll('[data-notebook-entry]'));
+    assert.equal(calls.length, 1, 'The blog is checked once on load');
+    assert.equal(calls[0], blog.api);
+    assert.deepEqual(cards.map(card => Number(card.dataset.postId)), [999999, ...blog.posts.slice(0, 5).map(post => post.id)], 'A new post enters first and the grid keeps six cards');
+    assert.equal(cards[0].querySelector('h3').textContent, 'Entrada “nueva” ↗');
+    assert.equal(cards[0].querySelector('time').getAttribute('datetime'), '2031-01-02');
+    assert.equal(cards[0].querySelector('time').textContent, '2 de enero de 2031', 'The date is the one written in the blog, not shifted to UTC');
+    assert.equal(cards[0].querySelector('.notebook-summary').textContent, 'Texto nuevo…');
+    assert.equal(cards[0].querySelector('img'), null, 'Images from other hosts are never inserted');
+    assert.equal(cards[1].querySelector('.notebook-summary').textContent, blog.posts[0].summary, 'Curated summaries survive the sync');
+    assert.ok(cards[1].querySelector('.notebook-photo img').getAttribute('src').startsWith('/immersive/media/'), 'Curated cards keep their local poster');
+    assert.equal(synced.find('[data-notebook-status]').dataset.state, 'new');
+    assert.equal(synced.find('[data-notebook-status-text]').textContent, `1 entrada nueva · ${blog.total + 1} entradas · la última, del 2 de enero de 2031`);
+    synced.document.dispatchEvent(new synced.w.Event('visibilitychange')); await synced.flush();
+    assert.equal(calls.length, 1, 'Coming back to the tab does not query the blog again right away');
+    synced.dom.window.close();
+  }
+
       assert.ok(page.find('[data-gaze-work]').textContent.includes('Rara Avis'), 'Reverse portrait updates mirror artwork from scroll dwell');
     }
     if (route === '/trayectoria/') { page.click('[data-year="2026"]'); assert.equal(page.document.querySelectorAll('[data-exhibition-year]:not([hidden])').length, 3);
@@ -961,7 +988,15 @@ async function eyeMatch(ui, base, points) {
       assert.equal(page.document.querySelectorAll('[data-exhibition-kind="solo"]:not([hidden])').length, 0);
       page.click('[data-career-kind="all"]');
       assert.equal(page.document.querySelectorAll('[data-exhibition-year]:not([hidden])').length, page.document.querySelectorAll('[data-exhibition-year]').length); }
-    if (route === '/cuaderno/') assert.equal(page.document.querySelectorAll('.notebook-posts article').length, 6);
+    if (route === '/cuaderno/') {
+      const blog = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../classic/data/blog.json'), 'utf8'));
+      assert.equal(page.document.querySelectorAll('.notebook-posts article').length, 6);
+      assert.deepEqual(Array.from(page.document.querySelectorAll('[data-notebook-entry]'), card => Number(card.dataset.postId)), blog.posts.map(post => post.id), 'Blog cards follow blog.json order');
+      assert.equal(page.document.querySelectorAll('.notebook-year li a').length, blog.archive.length, 'The archive links every older post');
+      assert.equal(page.document.querySelectorAll('.notebook-year[open]').length, 1, 'Only the most recent archive year starts open');
+      assert.ok(page.find('[data-notebook-status-text]').textContent.startsWith(`${blog.total} entradas desde `), 'The status line counts the whole blog');
+      assert.equal(page.find('[data-notebook-status]').dataset.state, undefined, 'Without network the status stays as built');
+    }
     if (route === '/retratos-por-encargo-bilbao/') {
       assert.equal(page.document.querySelectorAll('.commission-example').length, 4, 'Commissions landing displays 4 monumental artworks');
       assert.equal(page.document.querySelectorAll('.commission-detail-pip').length, 4, 'Every commission artwork has a macro detail PIP');

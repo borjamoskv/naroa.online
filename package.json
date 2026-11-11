@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "build:spa": "tsc -b && vite build",
     "build:site": "python3 tools/build_immersive_site.py",
+    "sync:blog": "python3 tools/sync_blog.py",
     "build:all": "./deploy.sh --build-only",
     "test:lint": "oxlint --ignore-pattern 'classic/assets/**'",
     "test:types": "tsc -b",
