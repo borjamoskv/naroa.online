@@ -43,6 +43,7 @@ Gobernanza general de la carpeta de proyectos: [Workspace AGENTS.md](file:///Use
 | `/sobre-mi/`, `/trayectoria/` o las tarjetas sociales | §8 |
 | Cualquier texto visible o ruta interna en `app.js` | §9 |
 | `/contacto/`, la hoja de la nota o el humo del cursor | §10 |
+| Las notas de prensa de `/cuaderno/` o `classic/data/prensa.json` | §11 |
 
 ### 1. Sincronización Atómica 1:1 de Catálogo (`INV_CATALOG_SYNC_1TO1`)
 Toda alta o mutación de obra exige paridad simultánea en 3 capas:
@@ -146,3 +147,8 @@ Toda alta o mutación de obra exige paridad simultánea en 3 capas:
 5. **Primera pantalla:** la hoja cabe entera en 1440 × 900 y «Enviárselo por WhatsApp» queda a la vista sin scroll desde 360 × 640 (medido el 2026-11-11 en español, inglés y euskera; en 320 × 568 asoma a medias). Al añadir texto a la hoja o cambiar un titular, volver a medirlo. Hasta 1100 px de ancho en vertical la composición se apila, con el rostro arriba; en apaisado estrecho la obra se arrima a la izquierda para que la hoja no tape el rostro.
 6. **Vías directas:** una frase con un enlace por vía (`.ct-say [data-contact-way]`) y, debajo, las direcciones a la vista (`.ct-address`), que se encienden por parejas. El recorte del espejo (`.ct-mirror`) es la propia imagen de la obra recortada con CSS; su inscripción, «piensa bien y acertarás», se deja en español en todos los idiomas y el pie la explica. `/naroa-gutierrez-gil.vcf` lleva los mismos datos que la página y se escribe en el build.
 7. **Correo:** la página de contacto y los encargos escriben a `encargos@naroagutierrezgil.com` (`contact_mail` en el build); el pie del sitio conserva `naroa@…`.
+
+### 11. Notas de prensa del cuaderno (`INV_PRESS_SOURCED`)
+1. **Solo lo que se pudo leer:** la sección «En prensa» de `/cuaderno/` sale de `classic/data/prensa.json`. Una nota entra en `notes` cuando su página se ha abierto y nombra a Naroa; lo que no responde o no la nombra se anota en `unconfirmed` con el motivo y no se publica. Si el medio ya no existe, se enlaza la copia de Internet Archive (`archived`) y el resumen lo dice.
+2. **Titular literal, resumen propio:** `title` es el titular del medio y no se traduce (`translate="no"`); `summary` y `byline` van en tercera persona y solo cuentan lo que la nota dice. Como mucho, una cita breve entre « » atribuida al medio. No se copian fotos de los medios.
+3. **Fecha y encuentro:** `date_kind` dice si la fecha es la de publicación o la del acto que anuncia una agenda sin fecha propia. `encounter` enlaza la nota con su encuentro de Trayectoria cuando lo hay.

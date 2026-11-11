@@ -1082,9 +1082,22 @@ async function eyeMatch(ui, base, points) {
       const encounters = new Set(JSON.parse(fs.readFileSync(path.resolve(__dirname, '../classic/data/exhibitions.json'), 'utf8')).exhibitions.map(item => String(item.id)));
       const linked = [...blog.posts, ...blog.archive].filter(post => encounters.has(String(post.id)));
       assert.ok(linked.length >= 10, 'Most encounters in Trayectoria come from a blog post');
-      assert.deepEqual(Array.from(page.document.querySelectorAll('.notebook-encounter'), link => link.getAttribute('href')), linked.map(post => `/trayectoria/#encuentro-${post.id}`), 'Posts with an encounter link to it in Trayectoria');
+      assert.deepEqual(Array.from(page.document.querySelectorAll('.notebook-posts .notebook-encounter,.notebook-year .notebook-encounter'), link => link.getAttribute('href')), linked.map(post => `/trayectoria/#encuentro-${post.id}`), 'Posts with an encounter link to it in Trayectoria');
       const careerHtml = fs.readFileSync(path.join(output, 'trayectoria/index.html'), 'utf8');
       linked.forEach(post => assert.ok(careerHtml.includes(`id="encuentro-${post.id}"`), `Trayectoria has an anchor for encounter ${post.id}`));
+      // Prensa: una tarjeta por nota de prensa.json, de la más reciente a la más antigua, con el titular del medio sin traducir y el enlace a su fuente.
+      const press = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../classic/data/prensa.json'), 'utf8')).notes;
+      const pressCards = Array.from(page.document.querySelectorAll('#prensa [data-press-note]'));
+      assert.ok(press.length >= 1 && pressCards.length === press.length, 'Every press note has its card');
+      assert.deepEqual(pressCards.map(card => card.querySelector('time').getAttribute('datetime')), press.map(note => note.date).sort().reverse(), 'Press notes run from newest to oldest');
+      press.forEach(note => {
+        const card = page.document.getElementById(`prensa-${note.id}`);
+        assert.equal(card.querySelector('h3').textContent, note.title, `${note.id} keeps the outlet's headline`);
+        assert.equal(card.querySelector('h3').getAttribute('translate'), 'no', 'Headlines are not translated');
+        assert.ok(/^https:\/\//.test(note.url) && card.querySelector('a.text-link').getAttribute('href') === note.url, `${note.id} links to its source`);
+        assert.equal(card.querySelector('.notebook-encounter')?.getAttribute('href') || null, encounters.has(String(note.encounter)) ? `/trayectoria/#encuentro-${note.encounter}` : null, `${note.id} links to its encounter when there is one`);
+        if (encounters.has(String(note.encounter))) assert.ok(careerHtml.includes(`id="encuentro-${note.encounter}"`), `Trayectoria has an anchor for encounter ${note.encounter}`);
+      });
       // Buscador del archivo: todas las palabras, sin tildes ni mayúsculas; al borrar, todo vuelve a su sitio.
       const search = page.find('[data-notebook-search-input]'), searchCount = page.find('[data-notebook-search-count]');
       const fold = text => text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();

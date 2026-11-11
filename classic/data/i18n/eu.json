@@ -139,6 +139,22 @@
    "Ikusi {1}"
   ],
   [
+   "^Leer la nota de (.+?): (.+)$",
+   "Irakurri albistea ({=1}): {=2}"
+  ],
+  [
+   "^Leer en (.+) ↗$",
+   "Irakurri hemen: {=1} ↗"
+  ],
+  [
+   "^(\\d+) notas, cada una con su fuente$",
+   "{=1} albiste, bakoitza bere iturriarekin"
+  ],
+  [
+   "^Crónicas, reportajes, una entrevista y las agendas culturales que anunciaron sus muestras, de (\\d{4}) a (\\d{4})\\. Cada titular es el del medio, tal como se publicó, y cada enlace abre la nota\\.$",
+   "Kronikak, erreportajeak, elkarrizketa bat eta bere erakusketak iragarri zituzten kultur agendak ({=1}–{=2}). Titular bakoitza hedabidearena da, argitaratu zen bezala, eta esteka bakoitzak albistea irekitzen du."
+  ],
+  [
    "^Leer la entrada completa: (.+)$",
    "Irakurri sarrera osoa: {1}"
   ],
@@ -1416,6 +1432,21 @@
   "Última entrada": "Azken sarrera",
   "Verlo en Trayectoria →": "Ikusi Ibilbidean →",
   "En Trayectoria →": "Ibilbidean →",
+  "En prensa": "Prentsan",
+  "Lo que se ha publicado<1/><2>sobre su trabajo.</2>": "Bere lanari buruz<1/><2>argitaratu dena.</2>",
+  "Crónica de la inauguración de la colectiva de Bwall Collective en Dock Bilbao, abierta todo el mes de junio. Entre las propuestas de la muestra, el diario destaca «el universo lírico y reflexivo de Naroa Gutiérrez Gil».": "Bwall Collective-ren erakusketa kolektiboaren inaugurazioaren kronika, Dock Bilbaon; ekain osoan egon zen zabalik. Erakusketako proposamenen artean, egunkariak «Naroa Gutiérrez Gilen unibertso liriko eta gogoetatsua» nabarmentzen du.",
+  "Crónica de Javier Gamboa, en la sección Vida social": "Javier Gamboaren kronika, Vida social atalean",
+  "La agenda anuncia la muestra en el Colegio de Abogados de Bizkaia, en Bilbao, del 28 de mayo al 24 de julio de 2015, con la misma presentación que un año antes en Portugalete.": "Agendak erakusketa iragartzen du Bizkaiko Abokatuen Elkargoan, Bilbon, 2015eko maiatzaren 28tik uztailaren 24ra, urtebete lehenago Portugaleten erabilitako aurkezpen berarekin.",
+  "Agenda cultural del diario": "Egunkariaren kultur agenda",
+  "La agenda anuncia la muestra en la Casa-Torre de Salazar de Portugalete, del 3 de julio al 31 de agosto de 2014. Presenta a Naroa como una artista bilbaína que parte de la pintura acrílica y experimenta sobre lienzo, tela estampada, madera, papel o metal, con el rostro humano como protagonista.": "Agendak erakusketa iragartzen du Portugaleteko Salazar dorretxean, 2014ko uztailaren 3tik abuztuaren 31ra. Naroa artista bilbotar gisa aurkezten du: pintura akrilikotik abiatu eta mihisean, oihal estanpatuan, zurean, paperean edo metalean esperimentatzen du, giza aurpegia protagonista dela.",
+  "A una semana de la salida del 3 de mayo de 2013, Naroa y la fotógrafa Adirane Azcuenaga cuentan al diario en qué consiste la Walking Gallery de Bilbao, la exposición sin paredes que aquel junio cumplía dos años.": "2013ko maiatzaren 3ko irteera baino astebete lehenago, Naroak eta Adirane Azcuenaga argazkilariak Bilboko Walking Gallery zer den azaldu diote egunkariari: hormarik gabeko erakusketa, ekain hartan bi urte bete zituena.",
+  "Reportaje de Alvaro Hilario, en la sección de Cultura": "Alvaro Hilarioren erreportajea, Kultura atalean",
+  "La web cultural Kubilha la presenta como coordinadora de la Walking Gallery en Bilbao. Naroa habla de sus comienzos, de la pintura acrílica y de las obras que entonces compartían pared en el bar Luz Gas del Casco Viejo. La web ya no existe: el enlace abre la copia que guarda Internet Archive.": "Kubilha kultur webguneak Bilboko Walking Galleryren koordinatzaile gisa aurkezten du. Naroak bere hastapenez, pintura akrilikoaz eta orduan Alde Zaharreko Luz Gas tabernan horma partekatzen zuten lanez hitz egiten du. Webgunea jada ez dago: estekak Internet Archivek gordetzen duen kopia irekitzen du.",
+  "Entrevista de Ion Curiel": "Ion Curielen elkarrizketa",
+  "Leer la copia archivada ↗": "Irakurri artxibatutako kopia ↗",
+  "Entre las citas del jueves 15 de septiembre de 2011, este digital local recoge la exposición de pintura de Naroa Gutiérrez Gil en el Gaztebulegoa de Barakaldo, abierta hasta el día 30.": "2011ko irailaren 15eko (osteguna) hitzorduen artean, tokiko hedabide digital honek Naroa Gutiérrez Gilen pintura-erakusketa jasotzen du, Barakaldoko Gaztebulegoan, hilaren 30era arte zabalik.",
+  "Agenda del día": "Eguneko agenda",
+  "La agenda anuncia la muestra en Hegoak, en Bilbao, con fecha del 31 de marzo de 2010, y resume su propósito: mostrar que, bajo apariencias distintas, todas las personas comparten una misma esencia.": "Agendak erakusketa iragartzen du Hegoaken, Bilbon, 2010eko martxoaren 31ko datarekin, eta haren asmoa laburbiltzen du: itxura desberdinen azpian pertsona guztiok funts bera partekatzen dugula erakustea.",
   "Archivo del blog": "Blogaren artxiboa",
   "Y todo<1/><2>lo anterior.</2>": "Eta aurreko<1/><2>guztia.</2>",
   "62 entradas más, año por año: exposiciones, mercados, paseos de la Walking Gallery y encuentros. Cada título abre la entrada en su WordPress.": "Beste 62 sarrera, urtez urte: erakusketak, azokak, Walking Gallery-ren ibilaldiak eta topaketak. Izenburu bakoitzak sarrera bere WordPressean irekitzen du.",

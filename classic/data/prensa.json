@@ -1,0 +1,136 @@
+{
+  "reviewed": "2026-11-11",
+  "scope": "Apariciones de Naroa Gutiérrez Gil en medios, comprobadas una a una en su fuente. «title» es el titular del medio, literal; «summary» y «byline» solo cuentan lo que la nota dice. «date_kind» distingue la fecha de publicación («published») de la del acto que anuncia una agenda sin fecha propia («event»). Lo que no se pudo abrir no entra: ver «unconfirmed».",
+  "notes": [
+    {
+      "id": "deia-2026-bwall",
+      "medium": "DEIA",
+      "kind": "cronica",
+      "date": "2026-06-05",
+      "date_kind": "published",
+      "date_label": "5 de junio de 2026",
+      "title": "Bwall Collective inaugura una exposición de ocho artistas locales en Dock Bilbao",
+      "byline": "Crónica de Javier Gamboa, en la sección Vida social",
+      "summary": "Crónica de la inauguración de la colectiva de Bwall Collective en Dock Bilbao, abierta todo el mes de junio. Entre las propuestas de la muestra, el diario destaca «el universo lírico y reflexivo de Naroa Gutiérrez Gil».",
+      "url": "https://www.deia.eus/bizkaia/vida-social/2026/06/05/bwall-collective-inaugura-exposicion-ocho-11159371.html",
+      "encounter": "3055",
+      "checked": "2026-11-11"
+    },
+    {
+      "id": "elcorreo-2015-espejos",
+      "medium": "El Correo",
+      "kind": "agenda",
+      "date": "2015-05-28",
+      "date_kind": "event",
+      "date_label": "Mayo de 2015",
+      "title": "Naroa Gutiérrez Gil presenta 'Espejos del alma'",
+      "byline": "Agenda cultural del diario",
+      "summary": "La agenda anuncia la muestra en el Colegio de Abogados de Bizkaia, en Bilbao, del 28 de mayo al 24 de julio de 2015, con la misma presentación que un año antes en Portugalete.",
+      "url": "https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-476343.html",
+      "encounter": "414",
+      "checked": "2026-11-11"
+    },
+    {
+      "id": "elcorreo-2014-espejos",
+      "medium": "El Correo",
+      "kind": "agenda",
+      "date": "2014-07-03",
+      "date_kind": "event",
+      "date_label": "Julio de 2014",
+      "title": "Naroa Gutiérrez Gil presenta 'Espejos del alma'",
+      "byline": "Agenda cultural del diario",
+      "summary": "La agenda anuncia la muestra en la Casa-Torre de Salazar de Portugalete, del 3 de julio al 31 de agosto de 2014. Presenta a Naroa como una artista bilbaína que parte de la pintura acrílica y experimenta sobre lienzo, tela estampada, madera, papel o metal, con el rostro humano como protagonista.",
+      "url": "https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-430614.html",
+      "encounter": "195",
+      "checked": "2026-11-11"
+    },
+    {
+      "id": "gara-2013-walking-gallery",
+      "medium": "GARA",
+      "kind": "reportaje",
+      "date": "2013-04-27",
+      "date_kind": "published",
+      "date_label": "27 de abril de 2013",
+      "title": "Walking gallery: arte al aire libre y en movimiento, arte en evolución",
+      "byline": "Reportaje de Alvaro Hilario, en la sección de Cultura",
+      "summary": "A una semana de la salida del 3 de mayo de 2013, Naroa y la fotógrafa Adirane Azcuenaga cuentan al diario en qué consiste la Walking Gallery de Bilbao, la exposición sin paredes que aquel junio cumplía dos años.",
+      "url": "https://gara.naiz.eus/paperezkoa/20130427/399965/es/Walking-gallery-arte-aire-libre-movimiento-arte-evolucion",
+      "encounter": "",
+      "checked": "2026-11-11"
+    },
+    {
+      "id": "kubilha-2013-walking-artist",
+      "medium": "Kubilha",
+      "kind": "entrevista",
+      "date": "2013-02-13",
+      "date_kind": "published",
+      "date_label": "13 de febrero de 2013",
+      "title": "Naroa Gutiérrez Gil: `the walking artist´",
+      "byline": "Entrevista de Ion Curiel",
+      "summary": "La web cultural Kubilha la presenta como coordinadora de la Walking Gallery en Bilbao. Naroa habla de sus comienzos, de la pintura acrílica y de las obras que entonces compartían pared en el bar Luz Gas del Casco Viejo. La web ya no existe: el enlace abre la copia que guarda Internet Archive.",
+      "url": "https://web.archive.org/web/20130217182414/http://www.kubilha.com:80/naroa-gutierrez-gil-the-walking-artist%C2%B4/",
+      "original": "http://www.kubilha.com/naroa-gutierrez-gil-the-walking-artist%C2%B4/",
+      "archived": true,
+      "encounter": "",
+      "checked": "2026-11-11"
+    },
+    {
+      "id": "barakaldodigital-2011-agenda",
+      "medium": "Barakaldo Digital",
+      "kind": "agenda",
+      "date": "2011-09-15",
+      "date_kind": "published",
+      "date_label": "15 de septiembre de 2011",
+      "title": "Agenda | Recital acústico de Porco",
+      "byline": "Agenda del día",
+      "summary": "Entre las citas del jueves 15 de septiembre de 2011, este digital local recoge la exposición de pintura de Naroa Gutiérrez Gil en el Gaztebulegoa de Barakaldo, abierta hasta el día 30.",
+      "url": "https://www.barakaldodigital.com/2011/09/agenda-recital-acustico-de-porco.html",
+      "encounter": "gaztebulegoa-2011",
+      "checked": "2026-11-11"
+    },
+    {
+      "id": "elcorreo-2010-espejos",
+      "medium": "El Correo",
+      "kind": "agenda",
+      "date": "2010-03-31",
+      "date_kind": "event",
+      "date_label": "Marzo de 2010",
+      "title": "Naroa Gutiérrez Gil presenta la muestra pictórica 'Espejos del alma'",
+      "byline": "Agenda cultural del diario",
+      "summary": "La agenda anuncia la muestra en Hegoak, en Bilbao, con fecha del 31 de marzo de 2010, y resume su propósito: mostrar que, bajo apariencias distintas, todas las personas comparten una misma esencia.",
+      "url": "https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-112114.html",
+      "encounter": "hegoak-2010",
+      "checked": "2026-11-11"
+    }
+  ],
+  "unconfirmed": [
+    {
+      "medium": "DEIA",
+      "date": "2019-06-23",
+      "title": "Un akelarre artístico",
+      "url": "https://m.deia.eus/2019/06/23/bizkaia/un-akelarre-artistico",
+      "why": "Reportaje sobre la escultura colectiva «Akelarre» de Germán de los Ríos, que Naroa enlaza en su blog (entrada del 9 de julio de 2019). No la nombra, y la dirección original ya no responde: solo queda copia en Internet Archive."
+    },
+    {
+      "medium": "Radio Popular · «La Flor de la Canela»",
+      "date": "2015",
+      "title": "",
+      "url": "",
+      "why": "Conversación sobre «Espejos del Alma». Solo consta por un pie de foto del blog (entrada del 24 de mayo de 2015); no hay audio ni página del programa que enlazar."
+    },
+    {
+      "medium": "Ikeder Online",
+      "date": "2015",
+      "title": "Espejos del alma de Naroa Gutiérrez Gil",
+      "url": "http://ikederonline.es/espejos-del-alma-de-naroa-gutierrez-gil/",
+      "why": "El blog la enlaza (entrada del 24 de mayo de 2015), pero la página devuelve 404 y no hay copia archivada: no se pudo leer."
+    },
+    {
+      "medium": "La Ría del Ocio",
+      "date": "2020",
+      "title": "Exposición de Bwall Collective en Sarean",
+      "url": "http://lariadelocio.es/exposicion-de-bwall-collective-en-sarean/",
+      "why": "El blog la enlaza (entrada del 5 de marzo de 2020), pero la página devuelve 404 y no hay copia archivada: no se pudo leer."
+    }
+  ]
+}
