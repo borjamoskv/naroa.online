@@ -12,6 +12,7 @@ escribe una copia traducida bajo `/<idioma>/…`. Los textos viven en
 Lo que no tiene traducción se queda en español y `extract`/`check` lo señalan.
 """
 import argparse
+from urllib.parse import quote as url_quote, unquote as url_unquote
 import hashlib
 import json
 import re
@@ -461,7 +462,7 @@ INJECTED = re.compile(re.escape(MARK_OPEN) + r".*?" + re.escape(MARK_CLOSE), re.
 # Los rastreadores se quedan donde están para que cada versión se indexe en su dirección.
 HEAD_SCRIPT = (
     "<script>(function(){try{var d=document,h=d.documentElement,k='naroa-lang',S=%s,L=h.lang.slice(0,2),c=null;"
-    "d.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[data-lang]');if(a)try{localStorage.setItem(k,a.getAttribute('data-lang'))}catch(_){}} ,true);"
+    "d.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[data-lang]');if(!a)return;try{var t=d.querySelector('#contenido.editorial');if(t&&!a.hash&&scrollY>innerHeight&&t.getBoundingClientRect().top<innerHeight/2)a.hash='contenido'}catch(_){}try{localStorage.setItem(k,a.getAttribute('data-lang'))}catch(_){}} ,true);"
     "try{c=localStorage.getItem(k)}catch(_){}"
     "if(/bot|crawl|spider|slurp|lighthouse|headless|jsdom|preview|facebookexternalhit|whatsapp|telegram|pinterest|embedly/i.test(navigator.userAgent))return;"
     "if(d.referrer&&d.referrer.indexOf(location.origin+'/')===0)return;"
@@ -568,6 +569,29 @@ def data_json(value):
     return json.dumps(value, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
 
 
+MESSAGE_KEYS = {"text", "subject", "body"}
+
+
+def localize_message(href, dictionary):
+    """Mensaje ya escrito de un enlace a WhatsApp o al correo, en el idioma de la página. Solo cambia
+    los que tienen entrada exacta en `strings`; el resto se queda en español sin contar como pendiente."""
+    head, sep, rest = href.partition("?")
+    if not sep:
+        return None
+    query, mark, fragment = rest.partition("#")
+    parts, changed = [], False
+    for part in query.split("&"):
+        key, eq, value = part.partition("=")
+        if eq and key in MESSAGE_KEYS:
+            source = norm(url_unquote(value))
+            translated = dictionary.strings.get(source)
+            if translated and translated != source:
+                dictionary.used.add(source)
+                value, changed = url_quote(translated, safe=""), True
+        parts.append(key + eq + value)
+    return (head + sep + "&".join(parts) + mark + fragment) if changed else None
+
+
 def localize_page(html, route, lang, dictionary, routes, langs, assets):
     root = parse(INJECTED.sub("", html))
     units = units_of(root)
@@ -602,6 +626,8 @@ def localize_page(html, route, lang, dictionary, routes, langs, assets):
                 new = None
             elif el.name == "script" and name == "src":
                 new = assets.get(plain)
+            elif name == "href" and plain.startswith(("https://wa.me/", "mailto:")):
+                new = localize_message(plain, dictionary)
             elif name in ROUTE_ATTRS:
                 new = routes.localize(plain, lang, loose=name == "data-menu-also")
             elif name in DATA_JSON:
@@ -663,7 +689,7 @@ def localize_page(html, route, lang, dictionary, routes, langs, assets):
     note = dictionary.notes.get(route)
     main = find(root, lambda el: el.name == "main")
     if note and main is not None:
-        main.children.append(Node("raw", f'<p class="i18n-note">{escape(note, quote=False)} <a href="{route}" hreflang="{DEFAULT_LANG}">{escape(dictionary.notes.get("link", "Español"), quote=False)}</a></p>', parent=main))
+        main.children.append(Node("raw", f'<p class="i18n-note">{escape(note, quote=False)} <a href="{route}#contenido" hreflang="{DEFAULT_LANG}">{escape(dictionary.notes.get("link", "Español"), quote=False)}</a></p>', parent=main))
     inject(root, route, lang, langs)
     out = []
     serialize(root, out)

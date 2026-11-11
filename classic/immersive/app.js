@@ -5370,6 +5370,7 @@
       // («Game Over», que calla la banda sonora) y se avisa una vez para que la música pueda volver.
       if (!reduced.matches && trackRect.height > 0 && trackRect.bottom <= 1) {
         if (!parked) { parked = true; soundscape?.frame({ mode: 'page', phase: 'scroll', slug: 'sobre-mi' }); }
+        cue.tabIndex = -1; // la flecha «ir a la biografía» ya no hace falta: se está en ella
         anchorUnits = null;
         if (trackRect.bottom > -g.height * 1.5) ensureScene(works.length - 1);
         return;
