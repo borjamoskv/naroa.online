@@ -6,6 +6,7 @@ No network calls, no edits to reviewed data or original photographs.
 import argparse
 import base64
 import hashlib
+import io
 import json
 import re
 import shutil
@@ -213,7 +214,7 @@ def build(output):
     content = {"journey": journey, "projects": projects, "reviewed": catalogue["reviewed"], "labels": LABELS, "avif": AVIF}
     amy = next(p for p in projects if p["slug"] == "amy-rocks")
     icon_viewbox = "131 56 223 223"
-    icon_hash = hashlib.sha256((SOURCE / amy["photos"][0]["original"].lstrip("/")).read_bytes() + icon_viewbox.encode()).hexdigest()[:12]
+    icon_hash = hashlib.sha256((SOURCE / amy["photos"][0]["original"].lstrip("/")).read_bytes() + icon_viewbox.encode() + b"crop128").hexdigest()[:12]
     favicon_path = f"/immersive/favicon-amy-{icon_hash}.svg"
     def width_srcset(src, full_url, quality=86):
         """srcset with true width descriptors for a full-bleed photo (object-fit: cover)."""
@@ -2106,9 +2107,18 @@ def build(output):
         dest.parent.mkdir(parents=True, exist_ok=True)
         if not dest.exists():
             shutil.copy2(SOURCE / src.lstrip("/"), dest)
-    # Reframe the existing thumbnail inside SVG; the reviewed artwork is untouched.
-    icon_image = base64.b64encode((output / amy["thumb"].lstrip("/")).read_bytes()).decode("ascii")
-    icon = f'<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="{icon_viewbox}"><title>Amy Rocks · Naroa</title><image width="480" height="360" href="data:image/webp;base64,{icon_image}"/></svg>'
+    # Reframe the existing thumbnail inside SVG; the reviewed artwork is untouched. Only the
+    # icon_viewbox square is ever visible, so embed just that crop at 128 px (64 px at 2x)
+    # instead of the whole 480 x 360 thumbnail: every page requests this icon.
+    ix, iy, iw, ih = (int(v) for v in icon_viewbox.split())
+    with Image.open(output / amy["thumb"].lstrip("/")) as thumb:
+        k = thumb.width / 480  # icon_viewbox is measured on the thumbnail laid out at 480 x 360
+        assert abs(thumb.height - 360 * k) < 2, "la miniatura de Amy Rocks ya no es 4:3"
+        box = tuple(round(v * k) for v in (ix, iy, ix + iw, iy + ih))
+        crop = thumb.convert("RGB").crop(box).resize((128, 128), Image.Resampling.LANCZOS)
+        buf = io.BytesIO(); crop.save(buf, "WEBP", quality=86, method=6)
+    icon_image = base64.b64encode(buf.getvalue()).decode("ascii")
+    icon = f'<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 128 128"><title>Amy Rocks · Naroa</title><image width="128" height="128" href="data:image/webp;base64,{icon_image}"/></svg>'
     write(output / favicon_path.lstrip("/"), icon)
     write(output / "favicon.svg", icon)
 

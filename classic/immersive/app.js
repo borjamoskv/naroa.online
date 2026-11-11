@@ -1270,7 +1270,8 @@
       }
       const focal = (innerWidth < 760 ? mobileFocals[heroWork.slug] : focals[heroWork.slug]) || '50% 50%';
       const lensSrc = heroWork.cover || heroWork.photos[0].src;
-      heroThresholdEl.style.setProperty('--monocle-preview', `url("${VIEW_RE.test(lensSrc) ? lensSrc.replace(VIEW_RE, '-w640.webp') : lensSrc}")`);
+      // The lens shows the work at its smallest width; AVIF there is ~35% lighter than WebP.
+      heroThresholdEl.style.setProperty('--monocle-preview', `url("${VIEW_RE.test(lensSrc) ? lensSrc.replace(VIEW_RE, `-w640.${avifReady ? 'avif' : 'webp'}`) : lensSrc}")`);
       heroThresholdEl.style.setProperty('--hero-focal', focal);
       const previewEl = $('.hero-monocle-marilyn', heroThresholdEl);
       if (previewEl) {
@@ -2919,6 +2920,7 @@
             render(0, 0, 0);
           } catch {}
         };
+        img.onerror = () => { if (AVIF_RE.test(url)) loadTexture(url.replace(/\.avif$/, '.webp')); };
         img.src = url;
       }
       const previewAttr = container.style.getPropertyValue('--monocle-preview') || '';
