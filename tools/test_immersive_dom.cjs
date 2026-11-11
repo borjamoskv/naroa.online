@@ -33,9 +33,9 @@ function create(route = '/', reduce = false, viewport = { width: 1024, height: 7
         w.setTimeout = audio.setTimeout; w.clearTimeout = audio.clearTimeout;
         Object.defineProperty(w.document, 'hidden', { value: false, configurable: true, writable: true });
       }
+      if (blogFetch) { w.fetch = blogFetch; Object.defineProperty(w.document, 'hidden', { value: false, configurable: true, writable: true }); }
       w.requestAnimationFrame = callback => { const token = ++id; callbacks.set(token, callback); return token; };
       w.cancelAnimationFrame = token => callbacks.delete(token);
-      if (blogFetch) { w.fetch = blogFetch; Object.defineProperty(w.document, 'hidden', { value: false, configurable: true, writable: true }); }
       w.IntersectionObserver = class {
         constructor(callback) { this.callback = callback; this.targets = new Set(); observers.push(this); }
         observe(target) { this.targets.add(target); }
@@ -922,28 +922,6 @@ async function eyeMatch(ui, base, points) {
   assert.equal(deniedMusic.find('[data-sound-status]').hidden, true);
   deniedMusic.click('[data-sound]'); denied.advance(6000); deniedMusic.dom.window.close();
 
-  for (const route of ['/sobre-mi/', '/trayectoria/', '/cuaderno/', '/retratos-por-encargo-bilbao/']) {
-    const page = create(route); await page.flush(); page.click('[data-open-menu]'); await page.flush();
-    assert.equal(page.find('#menu-dialog').open, true);
-    assert.equal(page.find('[data-menu-item][aria-current]').getAttribute('href'), route === '/trayectoria/' ? '/sobre-mi/' : route, 'The menu identifies the current editorial section (Trayectoria belongs to Naroa)');
-    page.click('#menu-dialog [data-close-dialog]');
-    const reveals = Array.from(page.document.querySelectorAll('.motion-reveal'));
-    assert.ok(reveals.length, 'Editorial content participates in viewport reveals');
-    page.observers.forEach(observer => observer.callback(Array.from(observer.targets, target => ({ target, isIntersecting: true }))));
-    assert.ok(reveals.every(el => el.classList.contains('is-revealed')), 'Visible editorial content is revealed');
-    if (route === '/sobre-mi/') {
-      assert.ok(page.find('[data-kintsugi-editorial]'), 'Sobre mí includes Kintsugi editorial scroll container');
-      assert.ok(page.find('.kintsugi-seam-svg'), 'Sobre mí injects SVG golden Kintsugi seam');
-      assert.equal(page.document.querySelectorAll('[data-hand-margin]').length, 4, 'Sobre mí includes 4 first-person handwritten margin notes');
-      assert.equal(page.document.querySelectorAll('.kintsugi-shard--top').length, 4, 'Sobre mí splits chapters into upper tectonic shards');
-      assert.equal(page.document.querySelectorAll('.kintsugi-shard--bottom').length, 4, 'Sobre mí splits chapters into lower tectonic shards');
-      assert.equal(page.document.querySelectorAll('.kintsugi-chasm-crack').length, 4, 'Sobre mí injects liquid gold SVG cracks inside every chasm');
-      assert.ok(page.find('[data-reverse-portrait]'), 'Sobre mí includes Reverse Portrait diagnostic section');
-      assert.ok(page.w.NAROA_ABOUT_SCROLL, 'NAROA_ABOUT_SCROLL API exposed on window');
-      const scrollState = page.w.NAROA_ABOUT_SCROLL.triggerSampleScroll(1400);
-      assert.equal(scrollState.backend, 'kintsugi-tectonic-fracture-v8', 'Sobre mí uses V8 tectonic fracture + golden suture scroll backend');
-      assert.equal(scrollState.fractureStates.espejo, 'sutured', 'Scrolling past chapter sutures the tectonic fracture with liquid gold');
-      assert.ok(scrollState.dwellChapters.espejo >= 12, 'Reverse portrait tracks chapter dwell telemetry');
   {
     // Blog sincronizado: una entrada nueva entra la primera; las tarjetas revisadas no se reescriben.
     const blog = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../classic/data/blog.json'), 'utf8'));
@@ -970,6 +948,28 @@ async function eyeMatch(ui, base, points) {
     synced.dom.window.close();
   }
 
+  for (const route of ['/sobre-mi/', '/trayectoria/', '/cuaderno/', '/retratos-por-encargo-bilbao/']) {
+    const page = create(route); await page.flush(); page.click('[data-open-menu]'); await page.flush();
+    assert.equal(page.find('#menu-dialog').open, true);
+    assert.equal(page.find('[data-menu-item][aria-current]').getAttribute('href'), route === '/trayectoria/' ? '/sobre-mi/' : route, 'The menu identifies the current editorial section (Trayectoria belongs to Naroa)');
+    page.click('#menu-dialog [data-close-dialog]');
+    const reveals = Array.from(page.document.querySelectorAll('.motion-reveal'));
+    assert.ok(reveals.length, 'Editorial content participates in viewport reveals');
+    page.observers.forEach(observer => observer.callback(Array.from(observer.targets, target => ({ target, isIntersecting: true }))));
+    assert.ok(reveals.every(el => el.classList.contains('is-revealed')), 'Visible editorial content is revealed');
+    if (route === '/sobre-mi/') {
+      assert.ok(page.find('[data-kintsugi-editorial]'), 'Sobre mí includes Kintsugi editorial scroll container');
+      assert.ok(page.find('.kintsugi-seam-svg'), 'Sobre mí injects SVG golden Kintsugi seam');
+      assert.equal(page.document.querySelectorAll('[data-hand-margin]').length, 4, 'Sobre mí includes 4 first-person handwritten margin notes');
+      assert.equal(page.document.querySelectorAll('.kintsugi-shard--top').length, 4, 'Sobre mí splits chapters into upper tectonic shards');
+      assert.equal(page.document.querySelectorAll('.kintsugi-shard--bottom').length, 4, 'Sobre mí splits chapters into lower tectonic shards');
+      assert.equal(page.document.querySelectorAll('.kintsugi-chasm-crack').length, 4, 'Sobre mí injects liquid gold SVG cracks inside every chasm');
+      assert.ok(page.find('[data-reverse-portrait]'), 'Sobre mí includes Reverse Portrait diagnostic section');
+      assert.ok(page.w.NAROA_ABOUT_SCROLL, 'NAROA_ABOUT_SCROLL API exposed on window');
+      const scrollState = page.w.NAROA_ABOUT_SCROLL.triggerSampleScroll(1400);
+      assert.equal(scrollState.backend, 'kintsugi-tectonic-fracture-v8', 'Sobre mí uses V8 tectonic fracture + golden suture scroll backend');
+      assert.equal(scrollState.fractureStates.espejo, 'sutured', 'Scrolling past chapter sutures the tectonic fracture with liquid gold');
+      assert.ok(scrollState.dwellChapters.espejo >= 12, 'Reverse portrait tracks chapter dwell telemetry');
       assert.ok(page.find('[data-gaze-work]').textContent.includes('Rara Avis'), 'Reverse portrait updates mirror artwork from scroll dwell');
     }
     if (route === '/trayectoria/') { page.click('[data-year="2026"]'); assert.equal(page.document.querySelectorAll('[data-exhibition-year]:not([hidden])').length, 3);
