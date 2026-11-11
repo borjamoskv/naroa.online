@@ -979,6 +979,10 @@ async function eyeMatch(ui, base, points) {
     assert.ok(reveals.length, 'Editorial content participates in viewport reveals');
     page.observers.forEach(observer => observer.callback(Array.from(observer.targets, target => ({ target, isIntersecting: true }))));
     assert.ok(reveals.every(el => el.classList.contains('is-revealed')), 'Visible editorial content is revealed');
+    const sharedPages = []; page.w.open = url => { sharedPages.push(decodeURIComponent(url)); return null; };
+    page.click('.site-footer [data-share-network="x"]');
+    assert.ok(sharedPages.length === 1 && sharedPages[0].includes('url=https://portfolio.test' + route + '&') && !sharedPages[0].includes('/obra/'), 'An editorial page shares itself, never a stray artwork');
+    assert.ok(sharedPages[0].endsWith('Naroa Gutiérrez Gil'), 'A shared page keeps the artist name in its text');
     if (route === '/sobre-mi/') {
       assert.ok(page.find('[data-kintsugi-editorial]'), 'Sobre mí includes Kintsugi editorial scroll container');
       assert.ok(page.find('.kintsugi-seam-svg'), 'Sobre mí injects SVG golden Kintsugi seam');
@@ -993,6 +997,16 @@ async function eyeMatch(ui, base, points) {
       assert.equal(scrollState.fractureStates.espejo, 'sutured', 'Scrolling past chapter sutures the tectonic fracture with liquid gold');
       assert.ok(scrollState.dwellChapters.espejo >= 12, 'Reverse portrait tracks chapter dwell telemetry');
       assert.ok(page.find('[data-gaze-work]').textContent.includes('Rara Avis'), 'Reverse portrait updates mirror artwork from scroll dwell');
+      assert.ok(page.find('[data-gaze-summary]').textContent.startsWith('«Gracias por brindarme reflejo') && page.find('[data-gaze-detail]').textContent.startsWith('«Esbozar una sonrisa'), 'The reverse portrait never overwrites the words of Naroa');
+      assert.equal(page.find('[data-gaze-reading]').textContent, 'Donde más te has detenido: «La propia mirada».', 'The reading names the chapter the visitor dwelt on');
+      assert.ok(!page.find('[data-gaze-metrics]').hidden && !page.find('[data-gaze-cta]').hidden, 'A measured reading reveals its notes and its commission link');
+      assert.ok(page.find('[data-gaze-element]').textContent.includes('Pastel Conté'), 'The mirror artwork shows its catalogued technique, not an invented one');
+      assert.ok(page.find('.artist-brief h2') && page.find('.artist-brief .artist-facts a[href="/trayectoria/"]'), 'Sobre mí opens by saying in prose and facts who Naroa is');
+      assert.ok(page.find('.artist-closing a[href="/retratos-por-encargo-bilbao/"]') && page.find('.artist-closing a[href^="mailto:"]'), 'Sobre mí closes with a way to commission and to write');
+      const noteSources = Array.from(page.document.querySelectorAll('.kintsugi-chasm-spark'), el => el.textContent);
+      assert.ok(noteSources.length === 4 && noteSources.every(text => /· 20\d\d$/.test(text)), 'Every handwritten note names the blog entry and year it comes from');
+      assert.ok(!page.find('main').textContent.includes('Mandar el arte a paseo'), 'No quotation that the blog does not contain');
+      assert.equal(page.find('.site-nav nav>a[aria-current="page"]').getAttribute('href'), '/sobre-mi/', 'The visible navigation marks the current page');
     }
     if (route === '/trayectoria/') { page.click('[data-year="2026"]'); assert.equal(page.document.querySelectorAll('[data-exhibition-year]:not([hidden])').length, 3);
       assert.equal(page.document.querySelectorAll('[data-timeline-year]:not([hidden])').length, 1, 'Only the year marker with visible entries remains');

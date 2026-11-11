@@ -515,6 +515,8 @@ body.page-sobre-mi .artist-closing .text-link:first-child:hover{background:#b01e
 html.portrait-on-stage body.page-sobre-mi .site-nav.is-scrolled{background:rgba(17,18,15,.9);color:#fffdf4;border-bottom-color:transparent}
 html.portrait-on-stage body.page-sobre-mi .site-nav.is-scrolled :is(a,button):focus-visible{outline-color:#edbca4}
 body.page-sobre-mi #contenido{padding-top:clamp(72px,11vh,120px)}
+/* La cabecera dice en qué página se está. */
+.site-nav nav>a[aria-current="page"]{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:6px}
 /* Pie: firma, rótulo y botones dejan de ser blancos sobre rosa. */
 body.page-sobre-mi .site-footer .signature,body.page-sobre-mi .site-footer .share-dock-label{color:#14080e}
 body.page-sobre-mi .site-footer .share-btn{color:#14080e;background:rgba(255,253,248,.55);border-color:rgba(20,8,14,.35);padding:5px 14px;font-size:12px}
@@ -642,6 +644,24 @@ body.page-sobre-mi .site-footer>a:not(.signature){display:inline-flex;align-item
   .chapter,.commission-example,.commission-configurator{page-break-inside:avoid;break-inside:avoid}
   a[href^="http"]:after{content:" (" attr(href) ")";font-size:9pt;color:#555}
   a[href^="#"]:after,a[href^="javascript:"]:after{content:""}
+  /* /sobre-mi/: el recorrido de obras no se imprime (eran ~95 hojas en blanco); retrato, nombre y texto en continuo. */
+  :root{color-scheme:light}
+  .has-motion .portrait-scroll{height:auto!important}
+  .portrait-hero,.has-motion .portrait-hero{position:relative!important;height:auto!important;min-height:0!important;overflow:visible!important}
+  .portrait-frame,.portrait-plane{position:static!important;width:auto!important;height:auto!important;transform:none!important;visibility:visible!important}
+  .portrait-plane>img{display:block;position:static!important;width:auto!important;height:auto!important;max-width:60%!important;max-height:58vh!important;margin:0 auto;transform:none!important}
+  .portrait-artwork,.portrait-wink,.page-hero-shade,.portrait-work-copy,.portrait-travel-controls,.portrait-hero .page-hero-copy:before,.xray-whisper,.social-share-dock,[data-gaze-metrics],[data-gaze-reading],[data-gaze-cta],.kintsugi-seam-svg,.kintsugi-chasm-crack{display:none!important}
+  .portrait-hero .page-hero-copy{position:static!important;opacity:1!important;transform:none!important;max-width:none!important;margin:12pt 0}
+  .portrait-hero .page-hero-copy>*,.portrait-hero .page-hero-copy h1 span{color:#111!important;-webkit-text-fill-color:#111!important;text-shadow:none!important;transform:none!important;animation:none!important;opacity:1!important}
+  body.page-sobre-mi #contenido{padding-top:0!important}
+  body.page-sobre-mi .chapter,body.page-sobre-mi .kintsugi-shard,body.page-sobre-mi .kintsugi-chasm,body.page-sobre-mi .motion-reveal{transform:none!important;opacity:1!important}
+  body.page-sobre-mi .chapter{border:0!important;padding:10pt 0!important;margin:0!important}
+  body.page-sobre-mi .chapter h2 span{-webkit-text-fill-color:#111!important;text-shadow:none!important;filter:none!important;animation:none!important}
+  body.page-sobre-mi .kintsugi-chasm{border-left:2pt solid #111!important;border-right:0!important;padding:4pt 10pt!important}
+  body.page-sobre-mi .full-figure{height:auto!important;min-height:0!important;margin:10pt 0!important;overflow:visible!important;break-inside:avoid}
+  body.page-sobre-mi .full-figure>a{height:auto!important;overflow:visible!important}
+  body.page-sobre-mi .full-figure img{position:static!important;height:auto!important;max-height:60vh!important;width:auto!important;max-width:100%!important;transform:none!important}
+  body.page-sobre-mi .full-figure figcaption{position:static!important;padding:4pt 0!important}
 }
 
 /* Monigote blanco y oro Kintsugi corriendo por los portales de serie */

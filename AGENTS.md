@@ -51,3 +51,10 @@ Toda alta o mutación de obra exige paridad simultánea en 3 capas:
 
 ### 7. Pureza Visual en Umbral Hero (`INV_HERO_THRESHOLD_PURITY`)
 - El retrato inaugural (umbral de estudio, índice `0`) debe mostrarse limpio de superposiciones tipográficas o telemetría flotante (`LA MIRADA`, `UMBRAL DE ESTUDIO`, texto en SVG del monóculo). `.portrait-hero-copy` permanece oculto (`display: none`) para ceder el protagonismo íntegro al retrato.
+
+### 8. Voz y Citas de «Sobre mí» (`INV_LITERAL_QUOTES`)
+1. **Lo que va entre « » lo dijo Naroa:** en `/sobre-mi/`, en el hero de `/trayectoria/` y en las tarjetas sociales, todo texto entre comillas latinas es cita literal de su blog (`naroagutierrez.wordpress.com`). Lo omitido se marca con `[…]`, no se funden ni se recomponen frases, y cada nota manuscrita (`.kintsugi-chasm-spark`) nombra la entrada y el año de donde sale.
+2. **Lo que no es cita va en tercera persona y sin « »:** la presentación «En breve», el cierre y la lectura del espejo inverso solo usan datos del archivo (catálogo, `classic/data/exhibitions.json`, página de encargos); las cifras se calculan en el build, no se escriben a mano.
+3. **Espejo inverso:** nunca reescribe las dos citas de Naroa. La lectura de la visita (`[data-gaze-reading]`, `[data-gaze-metrics]`) nace oculta y solo aparece tras al menos `8 s` reales con un capítulo en el centro de la pantalla; técnica y soporte de la obra espejo salen del catálogo.
+4. **Compartir:** con una obra en pantalla se comparte esa obra con su título limpio (§6.2); sin obra, la propia página con su título completo; desde la 404, la portada.
+5. **Tarjetas sociales:** al cambiar el texto o la imagen de una tarjeta se sube su `version` en `create_card`; el build retira la versión anterior.

@@ -891,6 +891,8 @@
       }
     }
   }
+  // La navegación visible dice en qué página se está (el menú lo marca aparte, en su diálogo).
+  $$('.site-nav nav>a').forEach(link => { if (link.getAttribute('href') === location.pathname) link.setAttribute('aria-current', 'page'); });
   function refreshMenu() {
     const current = currentMenuLink();
     menuLinks.forEach(link => { if (link === current) link.setAttribute('aria-current', 'location'); else link.removeAttribute('aria-current'); });
