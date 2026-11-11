@@ -488,15 +488,24 @@ body.page-sobre-mi .site-footer{color:#14080e;border-top:1px solid rgba(20,8,14,
 @keyframes stickman-chalk-pulse{0%{filter:drop-shadow(0 0 6px rgba(255,253,244,0.9)) drop-shadow(0 0 15px rgba(247,213,148,0.48)) drop-shadow(0 0 24px rgba(255,253,244,0.32))}100%{filter:drop-shadow(0 0 9px rgba(255,253,244,0.98)) drop-shadow(0 0 20px rgba(247,213,148,0.64)) drop-shadow(0 0 32px rgba(255,253,244,0.46))}}
 .art-stickman[hidden]{display:none!important}
 
-/* Puntero personalizado solo en escenario de galería; en páginas editoriales/formularios mantenemos puntero nativo para máxima conversión */
-.gallery-page, .gallery-page * {
-  cursor: none !important;
+/* El puntero es siempre el pincel de Naroa, en todas las páginas: nunca se oculta.
+   Punta del pelo en la esquina superior izquierda (punto activo 3,3); sobre lo pulsable la punta se carga de rojo. Se genera con tools/build_brush_cursor.py. */
+* {
+  cursor: url("/assets/cursors/naroa-brocha-48.png") 3 3, auto !important;
+  cursor: image-set(url("/assets/cursors/naroa-brocha-48.png") 1x, url("/assets/cursors/naroa-brocha-96.png") 2x) 3 3, auto !important;
 }
-.editorial-page a, .editorial-page button, .editorial-page select, .editorial-page summary, .editorial-page [data-compare-support] {
-  cursor: pointer !important;
+:is(a, button, select, summary, label[for], [role="button"], [data-compare-support], input[type="checkbox"], input[type="radio"], input[type="range"], input[type="submit"], input[type="button"], .art-gallery-trigger, .work-gallery-image),
+:is(a, button, summary, label[for], [role="button"]) * {
+  cursor: url("/assets/cursors/naroa-brocha-pointer-48.png") 3 3, pointer !important;
+  cursor: image-set(url("/assets/cursors/naroa-brocha-pointer-48.png") 1x, url("/assets/cursors/naroa-brocha-pointer-96.png") 2x) 3 3, pointer !important;
 }
-input[type="text"], input[type="email"], input[type="search"], textarea {
+/* Para escribir se conserva el cursor de texto: con el pincel no se ve dónde cae el punto de inserción */
+input[type="text"], input[type="email"], input[type="search"], input[type="tel"], input[type="url"], input[type="number"], input[type="password"], input:not([type]), textarea {
   cursor: text !important;
+}
+button:disabled, button:disabled * {
+  cursor: url("/assets/cursors/naroa-brocha-48.png") 3 3, default !important;
+  cursor: image-set(url("/assets/cursors/naroa-brocha-48.png") 1x, url("/assets/cursors/naroa-brocha-96.png") 2x) 3 3, default !important;
 }
 .commission-trust-pills{display:flex;flex-wrap:wrap;gap:10px 14px;margin-top:24px;padding-top:18px;border-top:1px solid rgba(35,20,12,0.14)}
 .commission-trust-pills span{font-size:12px;font-weight:500;letter-spacing:.02em;color:#fffdf8;background:#23140c;border:1px solid rgba(212,175,55,0.45);padding:7px 15px;border-radius:999px;box-shadow:0 4px 12px rgba(35,20,12,0.16)}
