@@ -26,6 +26,8 @@
   const WAKE_HOLD = 2.5;
   // Umbral de intensidad a partir del cual suena la mano derecha, e intensidad de reposo.
   const MELODY_GATE = 0.35, REST = 0.31;
+  // Nivel general del paisaje: presente pero siempre por debajo del piano (unos 12–16 dB).
+  const NATURE = 1.4;
   const VOLUME_KEY = 'naroa-score-volume';
 
   // ── Partitura ────────────────────────────────────────────────────────────
@@ -171,7 +173,7 @@
     compose({
       // Marzo: viento del sur. Sol mixolidio, ráfagas de corcheas que suben.
       title: 'Martxoa', tonic: 43, sing: 67, scale: 'mixolidia', figure: 'rafaga', swing: 0.06,
-      nature: { wind: 0.14, whistle: 0.035, birds: 3 },
+      nature: { wind: 0.11, whistle: 0.035, birds: 3 },
       A: [
         [0, '0 0 1, 1 1 1, 2 2 1, 3 4 1, 4 7 4'], [6, '0 6 2, 2 8 1, 3 10 1, 4 8 2, 6 6 2'], [3, '0 3 1, 1 4 1, 2 5 1, 3 7 1, 4 10 2, 6 7 2'], [0, '0 9 3, 3 7 1, 4 4 4'],
         [0, '0 0 1, 1 1 1, 2 2 1, 3 4 1, 4 7 2, 6 9 2'], [6, '0 10 2, 2 8 1, 3 6 1, 4 8 4'], [3, '0 7 2, 2 5 2, 4 3 2, 6 5 2'], [4, '0 4 4, 5 1 1, 6 4 2']
@@ -182,7 +184,7 @@
       ]
     }),
     // Abril: la pieza original, en Do mayor (escrita en Fa y transportada).
-    { title: 'Apirila', transpose: -5, swing: 0.08, nature: { rain: 0.07, birds: 5 }, bars: arrange(INTRO, A, B, OUTRO) },
+    { title: 'Apirila', transpose: -5, swing: 0.08, nature: { rain: 0.1, birds: 5 }, bars: arrange(INTRO, A, B, OUTRO) },
     compose({
       // Mayo: todo florece. Fa lidio, olas de arpegio y saltos de sexta.
       title: 'Maiatza', tonic: 41, sing: 65, scale: 'lidia', figure: 'ola', swing: 0.08,
@@ -525,7 +527,7 @@
     turn += (turnGoal - turn) * Math.min(1, dt / 0.45);
     orbit.forEach(body => { body.angle += (body.drift + turn * body.pull) * dt; steer(body, now, 0.12); });
     // El paisaje se abre un poco con el movimiento y calla del todo en el silencio contemplativo.
-    const swell = silent ? 0 : 1 + 0.45 * Math.abs(turn);
+    const swell = silent ? 0 : NATURE * (1 + 0.45 * Math.abs(turn));
     if (natureOut && Math.abs(swell - natureSwell) > 0.01) {
       natureSwell = swell;
       natureOut.gain.setTargetAtTime(swell, now, silent ? 0.25 : 0.6);
@@ -1070,7 +1072,7 @@
   const title = () => (score ? score.title : TITLES[month()]);
   const monthName = () => MONTHS[month()];
   let busy = false, quiet = false;
-  let energy = 0, calm = 0, heading = 1, feltAt = 0;
+  let energy = 0, calm = 0, heading = 1, feltAt = 0, seenAt = 0, seenDistance = 0;
   // Para escuchar otra pieza sin esperar al mes: `?mes=1` … `?mes=12`. No hay selector en la web.
   try {
     const pick = Number(new URLSearchParams(location.search).get('mes'));
@@ -1133,6 +1135,16 @@
   const ease = v => { const t = clamp(v, 0, 1); return t * t * (3 - 2 * t); };
   const strollOf = speed => ease((speed - 0.04) / 0.2) * (1 - ease((speed - 0.45) / 0.75));
   const rushOf = speed => ease((speed - 0.9) / 2.3);
+  // Velocidad real del scroll: la distancia recorrida entre dos avisos, medida con el reloj. Así no depende
+  // de los fotogramas por segundo del dispositivo; `velocity` solo vale si falta la distancia o el reloj no corre.
+  function speedOf(state) {
+    if (typeof state.distance !== 'number') return state.velocity;
+    const now = performance.now(), gap = now - seenAt, travelled = state.distance - seenDistance;
+    seenAt = now; seenDistance = state.distance;
+    if (!(gap > 0)) return state.velocity;
+    // El primer aviso tras una pausa solo fija el punto de partida.
+    return gap > 250 ? 0 : travelled / (gap / 1000);
+  }
   function feel(velocity) {
     if (!score || !score.playing) { energy = calm = 0; return; }
     const speed = Math.abs(velocity);
@@ -1168,7 +1180,7 @@
         quiet = next;
         if (score) score.setSilent(quiet);
       }
-      if (state && typeof state.velocity === 'number' && state.mode !== 'still') feel(quiet ? 0 : state.velocity);
+      if (state && typeof state.velocity === 'number' && state.mode !== 'still') feel(quiet ? 0 : speedOf(state));
     },
     gameOver() {},
     getActiveMelodyInfo() { return { day: monthName(), name: title() }; },

@@ -4966,7 +4966,7 @@
         }
         document.documentElement.style.setProperty('--editorial-velocity-skew', `${editorialSkew.toFixed(3)}deg`);
         // El mismo scroll marca el pulso de la banda sonora, en alturas de pantalla por segundo.
-        soundscape?.frame({ mode: 'page', phase: 'scroll', velocity: (scrollDelta / Math.max(0.5, dt)) * 60 / vh });
+        soundscape?.frame({ mode: 'page', phase: 'scroll', distance: scrollY / vh, velocity: (scrollDelta / Math.max(0.5, dt)) * 60 / vh });
       }
       sections.forEach(section => {
         const r = section.getBoundingClientRect(); if (r.bottom < -120 || r.top > vh + 120) return;
