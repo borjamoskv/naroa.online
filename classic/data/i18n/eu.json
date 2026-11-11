@@ -1807,6 +1807,7 @@
   "El retrato de tu visita": null,
   "Modo Story · El retrato de tu visita": "Story modua · Zure bisitaren erretratua",
   "La Story de una sola obra": "Lan bakar baten Storya",
+  "El retrato de tu visita: ${names}": "Zure bisitaren erretratua: ${names}",
   "${all.length} obras · ${visitClock(total)} de mirada": "${all.length} lan · ${visitClock(total)} begira"
  },
  "js_keep": [

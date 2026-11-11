@@ -88,6 +88,7 @@ Toda alta o mutación de obra exige paridad simultánea en 3 capas:
    - **El título va entero:** hasta tres líneas si la franja da para ello y, si no cabe, la letra encoge (hasta `38 px`) antes de cortar con «…». El rótulo del tiempo lleva una sombra ovalada solo detrás, para leerse sobre un detalle claro sin apagar la franja.
    - **Dónde se centra el detalle:** en la zona de la obra (rejilla de 4×4) donde la lupa estuvo más tiempo, no en el último punto por el que pasó; hacen falta `1,5 s` (`VISIT_MIN_LENS`) para que cuente. Sin lupa, a la altura de los ojos (`0.5, 0.42`).
    - El título de la imagen habla quien la comparte («El retrato de mi visita»); la interfaz, a quien visita («de tu visita»).
+   - **En el diálogo:** la vista previa se describe (`alt`) con los títulos de las obras del paseo, y el tercer botón pasa a decir «La Story de una sola obra»; al volver a la Story de una obra, ambos recuperan su texto.
 
 ### 7. Pureza Visual en Umbral Hero (`INV_HERO_THRESHOLD_PURITY`)
 - El retrato inaugural (umbral de estudio, índice `0`) debe mostrarse limpio de superposiciones tipográficas o telemetría flotante (`LA MIRADA`, `UMBRAL DE ESTUDIO`, texto en SVG del monóculo). El umbral no lleva ningún bloque de texto (la antigua `.portrait-hero-copy` ya no existe): el protagonismo es íntegro del retrato.

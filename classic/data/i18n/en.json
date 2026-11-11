@@ -1780,6 +1780,7 @@
   "El retrato de tu visita": null,
   "Modo Story · El retrato de tu visita": "Story Mode · The portrait of your visit",
   "La Story de una sola obra": "The Story of a single work",
+  "El retrato de tu visita: ${names}": "The portrait of your visit: ${names}",
   "${all.length} obras · ${visitClock(total)} de mirada": "${all.length} works · ${visitClock(total)} of looking"
  },
  "js_keep": [

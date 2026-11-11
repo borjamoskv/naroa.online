@@ -661,7 +661,7 @@
   }
 
   // El diálogo de Story sirve a las dos: la de una obra y la del paseo.
-  let remixHeading = null, remixShuffle = null;
+  let remixHeading = null, remixShuffle = null, remixAlt = null;
   function setRemixMode(mode) {
     const dialog = $('#story-remix-dialog');
     if (!dialog) return;
@@ -677,6 +677,12 @@
     if (shuffle) {
       if (remixShuffle === null) remixShuffle = shuffle.textContent;
       shuffle.textContent = mode === 'visit' ? 'La Story de una sola obra' : remixShuffle;
+    }
+    // La vista previa se describe según lo que enseña: la del paseo nombra sus obras al terminar de componerse.
+    const preview = $('[data-story-remix-img]', dialog);
+    if (preview) {
+      if (remixAlt === null) remixAlt = preview.alt;
+      if (mode !== 'visit') preview.alt = remixAlt;
     }
     dialog.dataset.remixMode = mode;
   }
@@ -713,6 +719,8 @@
       if (!ctx) return null;
       renderVisitFrame(ctx, looked, images, summary);
       await publishStory(canvas, { slug: 'mi-visita' });
+      const preview = $('[data-story-remix-img]', dialog), names = looked.map(entry => entry.work.title).join(', ');
+      if (preview && run === remixRun) preview.alt = `El retrato de tu visita: ${names}`;
       return { dataUrl: currentRemixDataUrl, blob: currentRemixBlob, file: currentRemixFile, works: looked.map(entry => entry.work.slug) };
     } catch (err) {
       console.warn('Error generating visit story:', err);
