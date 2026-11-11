@@ -3877,6 +3877,8 @@
           ? clamp(0.088 + Math.abs(delta) * 0.035, 0.082, 0.125)
           : clamp(0.142 + Math.tanh(Math.abs(delta) * 1.35) * 0.095, 0.142, 0.238);
         const alpha = 1 - Math.pow(1 - baseAlpha, dt);
+        // Velocidad de la cámara en alturas de pantalla por segundo: marca el pulso de la banda sonora.
+        velocity: still ? 0 : motion.velocity * 60,
         const rawStep = delta * alpha;
         const sameDir = motion.velocity !== 0 && Math.sign(delta) === Math.sign(motion.velocity);
         const blendedMag = sameDir && Math.abs(delta) > 0.015
@@ -4867,6 +4869,8 @@
       if (reduced.matches) return;
       const r = kintsugiEditorial.getBoundingClientRect();
       if (!r.width || !r.height) return;
+        // El mismo scroll marca el pulso de la banda sonora, en alturas de pantalla por segundo.
+        soundscape?.frame({ mode: 'page', phase: 'scroll', velocity: (scrollDelta / Math.max(0.5, dt)) * 60 / vh });
       kState.micaX = clamp(((e.clientX - r.left) / r.width) * 100, 0, 100);
       kState.micaY = clamp(((e.clientY - r.top) / r.height) * 100, 0, 100);
       kintsugiEditorial.style.setProperty('--mica-x', `${kState.micaX.toFixed(1)}%`);

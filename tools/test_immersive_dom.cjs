@@ -789,7 +789,7 @@ async function eyeMatch(ui, base, points) {
   assert.equal(score.title, 'Apirila'); assert.equal(score.playing, true);
   assert.ok(score.state.intensity < .35, 'By default the right hand stays silent');
   assert.ok(audio.oscillators.length > 0, 'Starting schedules the first piano notes');
-  assert.ok(ctx.rooms.length === 1 && ctx.delays.length >= 3, 'The piano runs through a room and tape delays');
+  assert.ok(ctx.rooms.length === 1 && ctx.delays.length === 5, 'The piano runs through a room and five tape delays');
   const leftRoom = ctx.rooms[0].buffer.getChannelData(0), rightRoom = ctx.rooms[0].buffer.getChannelData(1);
   assert.ok(leftRoom.some((value, i) => value !== rightRoom[i]), 'The room has distinct stereo reflections');
   assert.equal(typeof music.w.NAROA_SOUND.frame, 'function', 'NAROA_SOUND.frame interface is exposed');
@@ -839,6 +839,73 @@ async function eyeMatch(ui, base, points) {
   reactiveGallery.click('[data-sound]'); galleryAudio.advance(6000); reactiveGallery.dom.window.close();
   const denied = audioBoundary(); denied.denied = true;
   const deniedMusic = create('/', true, { width: 1024, height: 768 }, denied); await deniedMusic.flush();
+  // «Apirila» follows the visitor's scroll: a fast scroll hurries it, a slow stroll settles it, stillness returns it to 96.
+  const paceAudio = audioBoundary(), paced = create('/obra/rockagipsy/', false, { width: 1024, height: 768 }, paceAudio); await paced.flush();
+  const pacedScore = paced.w.NAROA_SCORE, pacedSound = paced.w.NAROA_SOUND;
+  // Each step is 0.9 s of camera frames on the audio clock, then one real turn of the engine's own scheduler.
+  const perform = async (audio, score, seconds, eachFrame = () => {}) => {
+    for (let step = 0; step < seconds / .9; step++) {
+      for (let f = 0; f < 56; f++) { audio.now += 16; eachFrame(); }
+      await wait(70);
+    }
+    return score.state.tempo;
+  };
+  const report = state => () => pacedSound.frame(state);
+  pacedSound.frame({ slug: 'rockagipsy', mode: 'V', velocity: 4 });
+  assert.equal(paceAudio.contexts.length, 0, 'Scrolling with the sound off creates no audio');
+  paced.click('[data-sound]'); await paced.flush();
+  assert.equal(pacedScore.bpm, 96); assert.equal(pacedScore.state.tempo, 96, 'The piece starts at its base tempo');
+  assert.equal(await perform(paceAudio, pacedScore, 2.7), 96, 'Without scrolling the tempo stays at 96');
+  const hurried = await perform(paceAudio, pacedScore, .9, report({ slug: 'rockagipsy', mode: 'V', velocity: 4 }));
+  assert.ok(hurried > 96 && hurried < 110, 'A fast scroll speeds the piece up gradually, never in one jump');
+  const fast = await perform(paceAudio, pacedScore, 4.5, report({ slug: 'rockagipsy', mode: 'V', velocity: -4 }));
+  assert.ok(fast > 110 && fast <= 116, 'A sustained fast scroll, in either direction, reaches at most 116 beats per minute');
+  const slow = await perform(paceAudio, pacedScore, 9, report({ slug: 'rockagipsy', mode: 'V', velocity: .3 }));
+  assert.ok(slow >= 84 && slow < 90, 'A slow, sustained stroll calms the piece down to no less than 84');
+  assert.equal(await perform(paceAudio, pacedScore, 9), 96, 'When the scroll stops the tempo returns to 96 by itself');
+  assert.equal(await perform(paceAudio, pacedScore, 2.7, report({ slug: 'rockagipsy', mode: 'V', velocity: 90 })), 96, 'A jump across the catalogue is not a gesture');
+  assert.equal(await perform(paceAudio, pacedScore, 2.7, report({ slug: 'rockagipsy', mode: 'still', velocity: 4 })), 96, 'Without motion effects the tempo never reacts');
+  await perform(paceAudio, pacedScore, 1.8, report({ slug: 'rockagipsy', mode: 'V', velocity: 4 }));
+  pacedSound.frame({ slug: 'game-over', mode: 'V', velocity: 4 });
+  assert.equal(pacedScore.state.silent, true);
+  await perform(paceAudio, pacedScore, 1.8, report({ slug: 'game-over', mode: 'V', velocity: 4 }));
+  const notesBeforeSilence = paceAudio.oscillators.length;
+  assert.equal(await perform(paceAudio, pacedScore, 7.2, report({ slug: 'game-over', mode: 'V', velocity: 4 })), 96, 'Game Over rests at the base tempo however fast the scroll');
+  assert.equal(paceAudio.oscillators.length, notesBeforeSilence, 'Game Over stays silent while the visitor scrolls');
+  pacedSound.frame({ mode: 'page', velocity: 0 });
+  assert.equal(pacedScore.state.silent, true, 'A speed-only report does not break the silence');
+  pacedSound.frame({ slug: 'rockagipsy', mode: 'V', velocity: 0 });
+  assert.equal(pacedScore.state.silent, false);
+  // The gallery camera reports its own speed: drive real scroll frames by hand to sample the music mid-gesture.
+  const drive = (ui, audio, speed) => {
+    const frames = [], native = ui.w.requestAnimationFrame; let top = ui.w.scrollY, clock = 1e6;
+    ui.w.requestAnimationFrame = callback => frames.push(callback);
+    return {
+      frame() { top += ui.w.innerHeight * speed * .016; clock += 16; ui.w.scrollTo({ top }); frames.splice(0).forEach(callback => callback(clock)); },
+      async release() { ui.w.requestAnimationFrame = native; frames.splice(0).forEach(callback => native(callback)); await ui.flush(); }
+    };
+  };
+  const rush = drive(paced, paceAudio, 3.4);
+  assert.ok(await perform(paceAudio, pacedScore, 2.7, rush.frame) > 100, 'Scrolling fast through the gallery hurries the soundtrack');
+  await rush.release();
+  assert.equal(await perform(paceAudio, pacedScore, 9), 96, 'Once the camera rests the soundtrack is back at 96');
+  paced.click('[data-sound]'); await paced.flush();
+  const restingNotes = paceAudio.oscillators.length;
+  await perform(paceAudio, pacedScore, 1.8, report({ slug: 'rockagipsy', mode: 'V', velocity: 4 }));
+  assert.equal(paceAudio.oscillators.length, restingNotes, 'With the sound off, scrolling schedules nothing');
+  assert.equal(paceAudio.contexts.length, 1); paceAudio.advance(6000); paced.dom.window.close();
+  const strollAudio = audioBoundary(), strolled = create('/sobre-mi/', false, { width: 1024, height: 768 }, strollAudio); await strolled.flush();
+  strolled.click('[data-sound]'); await strolled.flush();
+  const stroll = drive(strolled, strollAudio, .3);
+  assert.ok(await perform(strollAudio, strolled.w.NAROA_SCORE, 5.4, stroll.frame) < 93, 'Strolling slowly down an editorial page calms the soundtrack');
+  await stroll.release();
+  strolled.click('[data-sound]'); strollAudio.advance(6000); strolled.dom.window.close();
+  const calmAudio = audioBoundary(), calm = create('/obra/rockagipsy/', true, { width: 1024, height: 768 }, calmAudio); await calm.flush();
+  calm.click('[data-sound]'); await calm.flush();
+  const calmRush = drive(calm, calmAudio, 3.4);
+  assert.equal(await perform(calmAudio, calm.w.NAROA_SCORE, 2.7, calmRush.frame), 96, 'With reduced motion a fast scroll leaves the tempo untouched');
+  await calmRush.release();
+  calm.click('[data-sound]'); calmAudio.advance(6000); calm.dom.window.close();
   deniedMusic.click('[data-sound]'); await deniedMusic.flush();
   assert.equal(deniedMusic.find('[data-sound]').getAttribute('aria-pressed'), 'false');
   assert.equal(deniedMusic.find('[data-sound]').disabled, false);

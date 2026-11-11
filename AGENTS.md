@@ -27,13 +27,17 @@ Toda alta o mutación de obra exige paridad simultánea en 3 capas:
 ### 5. Invariante Acústica de la Banda Sonora «Apirila» (`INV_WARMTH_ACOUSTIC_GATE`)
 1. **Una sola pieza, sin tarjeta:** el botón SONIDO enciende y apaga «Apirila». No hay tarjeta visual, selector de temas ni efectos sonoros por obra.
 2. **Timbre cálido, húmedo y humano:**
-   - Piano de casa en Do mayor a 96 pulsos por minuto, filtro general a `2000 Hz`, refuerzo de graves y ataque blando.
-   - Sala larga y oscura, eco de cinta, delays cruzados a tempo (corchea con puntillo y negra), phaser lento y deriva de cinta.
+   - Piano de casa en Do mayor a 96 pulsos por minuto en reposo, filtro general a `2000 Hz`, refuerzo de graves y ataque blando.
+   - Sala larga y oscura, eco de cinta, delays cruzados a tempo (corchea con puntillo y negra), un eco en tresillo de negra y otro lejano a blanca con puntillo, phaser lento y deriva de cinta.
    - Microfallos de mano aleatorios: dudas, notas fantasma, teclas vecinas rozadas, corcheas perdidas y tempo que deriva.
    - **Cero ruido blanco:** fieltro, pedal y aire de sala usan ruido pardo filtrado.
 3. **Forma:** entrada, A, A en eco, B (puente con tres trombones que deslizan entre acordes), A de regreso y cierre; después repite sin la entrada.
 4. **Mano derecha en reposo por defecto:** la intensidad inicial es `0.31`, por debajo del umbral `0.35` en el que entra la melodía.
 5. **Silencio en `Game Over`:** la obra `game-over` exige silencio contemplativo absoluto; `NAROA_SOUND.frame` calla la pieza mientras está en pantalla.
+6. **Pulso que sigue al scroll:** `NAROA_SOUND.frame` recibe la velocidad del scroll (`velocity`, en alturas de pantalla por segundo) desde la cámara de la galería y desde las páginas editoriales, y fija la meta del pulso con `NAROA_SCORE.setPace`.
+   - Parado: `96`. Paseo lento y sostenido (≈ 0,2–0,5 alturas/s): se serena hasta `84`. Scroll rápido (≥ 3 alturas/s): aprieta hasta `116`. Solo cuenta la magnitud, no la dirección, promediada en un cuarto de segundo; un salto de golpe (> 40 alturas/s) no es un gesto.
+   - El pulso se acerca a su meta corchea a corchea (como mucho un 3 % entre corcheas) y solo decide la distancia a la nota siguiente: nunca reprograma notas ya lanzadas. Se suma a la deriva humana del tempo, no la sustituye. Los delays no se reafinan: quedan a 96.
+   - Sin noticias del scroll durante `0.6 s` vuelve solo a 96. No reacciona con el sonido apagado, sin efectos de movimiento (`mode: 'still'`, `prefers-reduced-motion`) ni en `Game Over`.
 
 ### 6. Invariante de Story 9:16 Detail Obsession y Share Limpio (`INV_DETAIL_OBSESSION_STORY_GATE`)
 1. **Layout *Detail Obsession* (`1080×1920`):**

@@ -1,9 +1,10 @@
 /* Naroa — «Apirila»: banda sonora original para piano de fieltro.
  * Motor autónomo escrito desde cero: síntesis pura Web Audio, sin muestras ni red.
  * Mano izquierda saltarina en corcheas, melodía pentatónica en Do mayor,
- * trombones en el puente, phaser lento y delays cruzados a tempo.
+ * trombones en el puente, phaser lento, delays cruzados a tempo, un eco en tresillo y otro lejano.
  * Sonido cálido y húmedo: piano de casa algo desafinado, sala larga, eco de cinta y microfallos de mano.
- * API: window.NAROA_SCORE.{start, stop, toggle, setVolume, setIntensity, setSilent, on}
+ * El pulso respira con el scroll del visitante: 96 pulsos por minuto en reposo, entre 84 y 116 en marcha.
+ * API: window.NAROA_SCORE.{start, stop, toggle, setVolume, setIntensity, setSilent, setPace, on}
  */
 (() => {
   'use strict';
@@ -17,6 +18,10 @@
   const EIGHTH = 60 / BPM / 2;
   const LOOKAHEAD = 0.4;
   const TICK_MS = 60;
+  // Margen del pulso alrededor del tempo base: de 84 a 116 pulsos por minuto.
+  const PACE_MIN = 84 / BPM, PACE_MAX = 116 / BPM;
+  // Segundos sin noticias del scroll tras los que el pulso vuelve solo al tempo base.
+  const PACE_HOLD = 0.6;
   const VOLUME_KEY = 'naroa-score-volume';
 
   // ── Partitura ────────────────────────────────────────────────────────────
@@ -81,6 +86,8 @@
   let barIndex = 0, eighth = 0, nextTime = 0, passes = 0, rubatoPhase = 0;
   // Por defecto suena sin mano derecha (intensidad < 0.35): arpegio, delays y trombones.
   let volume = 0.8, intensity = 0.31;
+  // Pulso: multiplicador del tempo base. `pace` es el que suena; `paceGoal`, al que se acerca nota a nota.
+  let pace = 1, paceGoal = 1, paceStamp = 0;
   const listeners = new Set();
   try {
     const saved = parseFloat(localStorage.getItem(VOLUME_KEY));
@@ -92,7 +99,7 @@
   const emit = () => listeners.forEach(fn => { try { fn(snapshot()); } catch {} });
   function snapshot() {
     const bar = FIRST_PASS[barIndex] || FIRST_PASS[0];
-    return { playing, silent, volume, intensity, title: TITLE, section: bar.section, bar: barIndex + 1, bars: FIRST_PASS.length, pass: passes + 1 };
+    return { playing, silent, volume, intensity, tempo: Math.round(BPM * pace * 10) / 10, title: TITLE, section: bar.section, bar: barIndex + 1, bars: FIRST_PASS.length, pass: passes + 1 };
   }
 
   // ── Cadena de audio ──────────────────────────────────────────────────────
@@ -201,6 +208,23 @@
       lfo.frequency.value = hz; depth.gain.value = amount;
       lfo.connect(depth); depth.connect(line.delayTime); lfo.start();
     });
+    // Dos ecos más, cada uno con su bucle: uno en tresillo de negra, cercano y algo más claro, que rellena
+    // los huecos entre corcheas; y uno lejano, a blanca con puntillo, muy oscuro, que devuelve la frase al fondo de la sala.
+    [[EIGHTH * 4 / 3, 0.15, 0.3, 1700, 0.35, 0.21, 0.003, 0.25], [EIGHTH * 6, 0.2, 0.42, 900, -0.3, 0.09, 0.005, 0.6]]
+      .forEach(([seconds, level, feedback, cutoff, pan, hz, amount, toRoom]) => {
+        const line = ctx.createDelay(2), lineSend = ctx.createGain(), lineBack = ctx.createGain();
+        const lineTone = ctx.createBiquadFilter(), lineRoom = ctx.createGain();
+        line.delayTime.value = seconds;
+        lineSend.gain.value = level; lineBack.gain.value = feedback; lineRoom.gain.value = toRoom;
+        lineTone.type = 'lowpass'; lineTone.frequency.value = cutoff; lineTone.Q.value = 0.4;
+        rumble.connect(lineSend); lineSend.connect(lineTone); lineTone.connect(line);
+        line.connect(lineBack); lineBack.connect(lineTone);
+        place(line, pan);
+        line.connect(lineRoom); lineRoom.connect(send);
+        const lfo = ctx.createOscillator(), depth = ctx.createGain();
+        lfo.frequency.value = hz; depth.gain.value = amount;
+        lfo.connect(depth); depth.connect(line.delayTime); lfo.start();
+      });
 
     // Ruido pardo para fieltro, pedal y aire de sala (nunca ruido blanco).
     noise = ctx.createBuffer(1, rate * 2, rate);
@@ -365,7 +389,7 @@
   function scheduleEighth(when) {
     const bar = FIRST_PASS[barIndex];
     // Balanceo ligero: las corcheas a contratiempo llegan un pelo tarde.
-    if (eighth % 2 === 1 && !bar.final) when += EIGHTH * SWING;
+    if (eighth % 2 === 1 && !bar.final) when += EIGHTH / pace * SWING;
     if (eighth === 0 && bar.thin) {
       // Cada pasada del eco calla notas distintas.
       thinMask = new Set(bar.rh.map((_, i) => i).filter(i => i > 0 && Math.random() < 0.3));
@@ -375,7 +399,7 @@
     // Cambio de pedal al empezar el compás: un golpe sordo de madera y fieltro.
     if (eighth === 0 && left != null && Math.random() < 0.65) brush(when - 0.03, rand(0.03, 0.06), 190, 0.16);
     if (eighth === 0) {
-      if (bar.brass) brass(bar.brass, when, EIGHTH * 8, 0.55 + 0.45 * (bar.pos / 7));
+      if (bar.brass) brass(bar.brass, when, EIGHTH * 8 / pace, 0.55 + 0.45 * (bar.pos / 7));
       else lastBrass = null;
     }
     const dropped = eighth % 2 === 1 && !bar.final && Math.random() < 0.03;
@@ -396,10 +420,20 @@
         if (Math.random() < 0.035) strike(midi + (Math.random() < 0.5 ? -2 : 2), hit - rand(0.03, 0.05), vel * 0.2, 0.35);
         strike(midi, hit, vel, clamp(0.8 + length * 0.12, 0.9, 1.7));
         if (bar.bloom && length >= 4 && Math.random() < 0.55) {
-          strike(midi - 12, hit + EIGHTH * 0.5, vel * 0.45, 1.3);
+          strike(midi - 12, hit + EIGHTH / pace * 0.5, vel * 0.45, 1.3);
         }
       });
     }
+  }
+
+  // El pulso se acerca a su meta corchea a corchea, como un intérprete que aprieta o afloja el paso:
+  // nunca salta, y solo decide la distancia a la nota siguiente, sin tocar las ya programadas.
+  function breathePace() {
+    if (silent || ctx.currentTime - paceStamp > PACE_HOLD) paceGoal = 1;
+    const gap = paceGoal - pace;
+    if (Math.abs(gap) < 0.003) { pace = paceGoal; return; }
+    // Aprieta con más decisión de la que afloja; como mucho un 3 % de una corchea a la siguiente.
+    pace += clamp(gap * (paceGoal === 1 ? 0.2 : 0.24), -0.03, 0.03);
   }
 
   function advance() {
@@ -408,7 +442,8 @@
     drift = clamp(drift + rand(-0.005, 0.005), -0.035, 0.035);
     let stretch = 1 + drift + 0.015 * Math.sin(rubatoPhase) + rand(-0.012, 0.012);
     if (bar.breathe && eighth >= 5) stretch *= 1 + (eighth - 4) * 0.07;
-    nextTime += EIGHTH * stretch;
+    breathePace();
+    nextTime += EIGHTH * stretch / pace;
     eighth += 1;
     if (eighth < 8) return;
     eighth = 0;
@@ -442,6 +477,7 @@
       if (ctx.state !== 'running') await ctx.resume();
     } catch { return false; }
     playing = true;
+    pace = paceGoal = 1;
     nextTime = ctx.currentTime + 0.12;
     fade(volume, 1.4);
     clearInterval(timer);
@@ -500,6 +536,13 @@
     setIntensity(value) { intensity = clamp(Number(value) || 0, 0, 1); emit(); },
     // Silencio contemplativo (p. ej. «Game Over»): el pulso sigue, las notas callan.
     setSilent(value) { silent = !!value; emit(); },
+    // Meta del pulso (1 = 96 pulsos por minuto). Hay que renovarla mientras dure el gesto:
+    // sin noticias, el pulso vuelve solo al tempo base. Con el sonido apagado no hace nada.
+    setPace(value) {
+      if (!playing || !ctx) return;
+      paceGoal = silent ? 1 : clamp(Number(value) || 1, PACE_MIN, PACE_MAX);
+      paceStamp = ctx.currentTime;
+    },
     // Toma de audio para la Story en vídeo: suena desde la sección A y se devuelve como MediaStream.
     async capture(seconds = 6) {
       const take = { stream: null, notesScheduled: Math.max(1, Math.floor(seconds / EIGHTH)), stop() {} };
@@ -537,6 +580,7 @@
   const RESUME_KEY = 'naroa-score-on';
   const TITLE = 'Apirila';
   let busy = false, quiet = false;
+  let energy = 0, feltAt = 0;
 
   const remember = on => {
     try { if (on) sessionStorage.setItem(RESUME_KEY, '1'); else sessionStorage.removeItem(RESUME_KEY); } catch {}
@@ -587,14 +631,41 @@
     addEventListener('keydown', resume, true);
   }
 
+  // El pulso sigue al scroll. `velocity` llega en alturas de pantalla por segundo.
+  // Parado: tempo base. Paseo lento y sostenido: la pieza se serena. Scroll rápido: aprieta el paso.
+  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+  const ease = v => { const t = clamp(v, 0, 1); return t * t * (3 - 2 * t); };
+  function paceFor(speed) {
+    const stroll = ease((speed - 0.04) / 0.2) * (1 - ease((speed - 0.45) / 0.75));
+    const rush = ease((speed - 0.9) / 2.3);
+    return 1 - (12 / 96) * stroll + (20 / 96) * rush;
+  }
+  function feel(velocity) {
+    if (!score || !score.playing) { energy = 0; return; }
+    const speed = Math.abs(velocity);
+    // Un salto de golpe (enlace, tecla, índice: más de 40 pantallas por segundo) no es un gesto: no cuenta.
+    if (!(speed <= 40)) return;
+    const now = performance.now(), gap = now - feltAt;
+    feltAt = now;
+    if (gap > 400) energy = 0;
+    // Media móvil de un cuarto de segundo: las muescas sueltas de una rueda de ratón se leen como
+    // la velocidad media del gesto, no como una ráfaga de picos.
+    energy += (Math.min(speed, 6) - energy) * (1 - Math.exp(-clamp(gap, 8, 50) / 260));
+    score.setPace(paceFor(energy));
+  }
+
   window.NAROA_SOUND = Object.freeze({
     score,
-    // La cámara informa de la obra en pantalla: «Game Over» exige silencio contemplativo.
+    // La cámara informa de la obra en pantalla y de la velocidad del scroll.
+    // «Game Over» exige silencio contemplativo; sin movimiento (`still`) el pulso no se inmuta.
     frame(state) {
-      const next = !!state && state.slug === 'game-over';
-      if (next === quiet) return;
-      quiet = next;
-      if (score) score.setSilent(quiet);
+      // Un aviso que solo trae velocidad (páginas sin obra en pantalla) no cambia el silencio.
+      const next = state && typeof state.slug !== 'string' ? quiet : !!state && state.slug === 'game-over';
+      if (next !== quiet) {
+        quiet = next;
+        if (score) score.setSilent(quiet);
+      }
+      if (state && typeof state.velocity === 'number' && state.mode !== 'still') feel(quiet ? 0 : state.velocity);
     },
     gameOver() {},
     getActiveMelodyInfo() { return { day: 'Banda sonora', name: TITLE }; },
