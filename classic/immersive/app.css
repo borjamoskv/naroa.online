@@ -3320,3 +3320,11 @@ body.page-retratos-por-encargo-bilbao .enc-also{display:flex;flex-wrap:wrap;gap:
 .art-lens{position:absolute;z-index:8;left:0;top:0;width:min(30vmin,240px);height:min(30vmin,240px);border-radius:50%;pointer-events:none;background-repeat:no-repeat;box-shadow:0 0 0 1px #fffdf4a6,0 14px 40px #000a;will-change:transform;opacity:1;transition:opacity .2s var(--ease-out)}
 .art-lens[hidden]{display:block;opacity:0}
 .gallery-page.is-lens .art-stage{cursor:crosshair}
+
+/* El plano del retrato de /sobre-mi/ nace con la misma geometría «cover» que measurePortrait() le fija
+   al medir (2201 × 3468, centrado al 50 % · 29 %): el script ya no lo mueve y no hay salto de maquetación. */
+/* Solo en pantalla: al imprimir el marco pasa a altura automática y no puede ser contenedor de tamaño. */
+@media screen{@supports (width:1cqw){
+.portrait-frame{container-type:size}
+.portrait-plane{inset:auto;--portrait-w:max(100cqw,100cqh*2201/3468);--portrait-h:max(100cqh,100cqw*3468/2201);width:var(--portrait-w);height:var(--portrait-h);left:calc((100cqw - var(--portrait-w))*.5);top:calc((100cqh - var(--portrait-h))*.29)}
+}}
