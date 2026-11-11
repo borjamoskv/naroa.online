@@ -52,6 +52,19 @@ Toda alta o mutación de obra exige paridad simultánea en 3 capas:
 ### 7. Pureza Visual en Umbral Hero (`INV_HERO_THRESHOLD_PURITY`)
 - El retrato inaugural (umbral de estudio, índice `0`) debe mostrarse limpio de superposiciones tipográficas o telemetría flotante (`LA MIRADA`, `UMBRAL DE ESTUDIO`, texto en SVG del monóculo). `.portrait-hero-copy` permanece oculto (`display: none`) para ceder el protagonismo íntegro al retrato.
 
+### 7b. La Interfaz Desaparece al Contemplar (`INV_INTERFACE_DISSOLVES`)
+1. **Ampliación de §7:** la pureza del hero se extiende a toda la galería. Con la obra quieta `CALM_MS = 3200` ms, `body.is-contemplating` retira cabecera, título, recorrido, progreso y velo (`opacity`, sin `inert` ni `display`), dejando solo la obra.
+2. **Vuelve con cualquier gesto:** movimiento del puntero (> 6 px), pulsación, rueda, toque, scroll, tecla o foco. Nunca se retira con un diálogo abierto, con foco visible en la interfaz ni en «Solo obra» manual.
+3. **Salida siempre accesible:** `Encargos` y `Contacto` están en la cabecera de la galería y siguen en el DOM mientras está retirada; un gesto la devuelve. Con `prefers-reduced-motion` el cambio es instantáneo.
+
+### 7c. Transición Ligada a la Materia (`INV_MATERIAL_TRANSITION`)
+1. En el desplazamiento genérico (`H`/`V`), el borde con que llega la obra siguiente sale de su materia (`materialEdge` en `app.js`): `collage` → borde rasgado determinista (hash del `slug`); `pizarra` → borrado de tiza con difuminado; `objetos` → sombra proyectada sobre la obra que se va; técnica con `mica`/`brillantina`/`dorad*`/`kintsugi` → destello dorado; `caracterizacion` → pasada de maquillaje (desenfoque que se asienta).
+2. Las transiciones a medida de cada par (ojos, lata, Kintsugi, Game Over…) no se tocan. Todo termina en la obra limpia (`clip-path`, máscara y filtros se reinician cada fotograma).
+
+### 7d. Lupa de Macro (`INV_MACRO_LENS`)
+1. Una lente circular (`.art-lens`, `min(30vmin, 240px)`, ×3,2) muestra el original a resolución completa (`photos[0].original`) bajo el puntero, con la obra entera siempre visible detrás. Se enciende con «Lupa» (en «Más») o manteniendo pulsado 0,45 s sin mover; al soltar tras mantener, o con `Esc`, se cierra. Soltar tras mantener no abre el visor de fotos.
+2. Solo actúa en reposo o exploración (`stage.dataset.transition` = `hold`/`explore`); en transición se oculta. Calcula la posición sobre la imagen real (recorte `cover`/`contain` y `object-position`), no sobre la caja. Mientras está activa (`body.is-lens`) se retiran título, recorrido y flechas.
+
 ### 8. Voz y Citas de «Sobre mí» (`INV_LITERAL_QUOTES`)
 1. **Lo que va entre « » lo dijo Naroa:** en `/sobre-mi/`, en el hero de `/trayectoria/` y en las tarjetas sociales, todo texto entre comillas latinas es cita literal de su blog (`naroagutierrez.wordpress.com`). Lo omitido se marca con `[…]`, no se funden ni se recomponen frases, y cada nota manuscrita (`.kintsugi-chasm-spark`) nombra la entrada y el año de donde sale.
 2. **Lo que no es cita va en tercera persona y sin « »:** la presentación «En breve», el cierre y la lectura del espejo inverso solo usan datos del archivo (catálogo, `classic/data/exhibitions.json`, página de encargos); las cifras se calculan en el build, no se escriben a mano.

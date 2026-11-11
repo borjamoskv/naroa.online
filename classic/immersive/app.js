@@ -2973,6 +2973,45 @@
         if (heroPointer.raf === null) heroPointer.raf = requestAnimationFrame(stepHeroPointer);
       }, { passive: true });
     }
+    // INV_MATERIAL_TRANSITION: el borde con que llega la obra siguiente sale de su propia materia.
+    // Solo actúa en el desplazamiento genérico (H/V); las transiciones a medida de cada par no se tocan.
+    const edgeJag = new Map();
+    function jaggedEdge(slug) {
+      if (!edgeJag.has(slug)) {
+        let h = 2166136261; for (const c of slug) h = Math.imul(h ^ c.charCodeAt(0), 16777619);
+        edgeJag.set(slug, Array.from({ length: 33 }, () => { h = Math.imul(h ^ (h >>> 15), 2246822507) >>> 0; return (h % 1000) / 1000; }));
+      }
+      return edgeJag.get(slug);
+    }
+    function materialOf(work) {
+      const text = `${work?.technique || ''} ${work?.support || ''}`.toLowerCase();
+      if (/mica|brillantina|dorad|kintsugi/.test(text)) return 'mica';
+      return ({ pizarra: 'chalk', caracterizacion: 'smear', objetos: 'object', collage: 'paper' })[work?.category] || '';
+    }
+    function materialEdge(scene, image, work, mode, direction, fraction) {
+      const kind = materialOf(work); if (!kind) return;
+      const k = 1 - smooth(fraction), pulse = Math.sin(fraction * Math.PI);
+      if (k < 0.002) return;
+      const side = mode === 'V' ? 'top' : direction > 0 ? 'left' : 'right';
+      if (kind === 'paper') {
+        const jag = jaggedEdge(work.slug), amp = 7 * k;
+        const pts = jag.map((v, i) => { const t = (i / (jag.length - 1) * 100).toFixed(2), d = (v * amp).toFixed(2); return side === 'top' ? `${t}% ${d}%` : side === 'left' ? `${d}% ${t}%` : `${(100 - v * amp).toFixed(2)}% ${t}%`; });
+        const tail = side === 'top' ? ['100% 100%', '0% 100%'] : side === 'left' ? ['100% 100%', '100% 0%'] : ['0% 100%', '0% 0%'];
+        scene.style.clipPath = `polygon(${[...pts, ...tail].join(',')})`;
+      } else if (kind === 'chalk') {
+        const dir = side === 'top' ? 'to bottom' : side === 'left' ? 'to right' : 'to left';
+        scene.style.maskImage = scene.style.webkitMaskImage = `linear-gradient(${dir},transparent 0,#000 ${(26 * k).toFixed(2)}%)`;
+        image.style.filter = `contrast(${(1 + 0.16 * pulse).toFixed(3)}) brightness(${(1 + 0.08 * pulse).toFixed(3)})`;
+      } else if (kind === 'object') {
+        const o = (16 * pulse).toFixed(1), v = side === 'top' ? `0 -${o}px` : side === 'left' ? `-${o}px 0` : `${o}px 0`;
+        scene.style.filter = `drop-shadow(${v} ${(34 * pulse).toFixed(1)}px rgba(0,0,0,.58))`;
+      } else if (kind === 'mica') {
+        image.style.filter = `brightness(${(1 + 0.32 * pulse).toFixed(3)}) saturate(${(1 + 0.45 * pulse).toFixed(3)})`;
+        scene.style.filter = `drop-shadow(0 0 ${(14 * pulse).toFixed(1)}px rgba(247,213,148,.75))`;
+      } else if (kind === 'smear') {
+        image.style.filter = `blur(${(3.4 * k).toFixed(2)}px) contrast(${(1 + 0.1 * pulse).toFixed(3)})`;
+      }
+    }
     function render() {
       const munsterSlugs = ['lily-munster', 'herman-munster', 'eddie-munster', 'abuelo-munster'];
       const pose = motion.pose, { entry, phase, progress: fraction } = pose;
@@ -3018,7 +3057,7 @@
         scene.style.willChange = transition ? 'opacity,transform' : 'auto'; image.style.willChange = still ? 'auto' : 'transform';
         scene.style.clipPath = 'inset(0)'; scene.style.opacity = '1'; scene.style.transform = 'translate3d(0px,0px,0)';
         scene.style.maskImage = scene.style.webkitMaskImage = 'none';
-        image.style.filter = 'none';
+        image.style.filter = 'none'; scene.style.filter = 'none';
         image.style.transformOrigin = works[index].slug === 'el-hombre-que-susurraba-a-las-estrellas' ? '65.2% 57.4%'
           : works[index].slug === 'i-got-you-babe' ? '38% 46%'
           : works[index].slug === 'jose-manuel-ezquerra' ? '62% 42%'
@@ -3249,6 +3288,7 @@
             }
           } else {
             image.style.transform = `translate3d(${mode === 'H' ? parallax.toFixed(3) : '0'}%,${mode === 'V' ? parallax.toFixed(3) : '0'}%,0) scale(${lens.toFixed(5)})`;
+            if (!outgoing) materialEdge(scene, image, works[index], mode, entry.direction, fraction);
           }
         } else if (mode === 'Z') {
           const close = outgoing ? smooth(fraction / .65) : 1 - smooth((fraction - .35) / .65);
@@ -4576,6 +4616,78 @@
     });
     function quiet(value) { state.quiet = value; if (value) { resetDwell(); render(); } metadata(); (value ? $('[data-restore]', stage) : $('[data-quiet]')).focus(); }
     $('[data-quiet]').addEventListener('click', () => quiet(true)); $('[data-restore]', stage).addEventListener('click', () => quiet(false));
+    // Lupa de macro (INV_MACRO_LENS): una lente sobre el original a resolución completa; la obra
+    // entera sigue a la vista detrás. Pulsar «Lupa» o mantener el dedo/ratón 0,45 s; Esc o soltar la cierra.
+    {
+      const btn = $('[data-lens]', stage);
+      const lens = document.createElement('div');
+      lens.className = 'art-lens'; lens.setAttribute('aria-hidden', 'true'); lens.hidden = true;
+      stage.append(lens);
+      const ZOOM = 3.2;
+      let on = false, held = false, swallow = false, hold = null, px = 0, py = 0, loadedFor = '', original = null;
+      const radius = () => lens.offsetWidth / 2 || 110;
+      function source() { const ph = works[state.index]?.photos?.[0]; return ph?.original || ph?.src || ''; }
+      function paint() {
+        const img = images[state.index], src = source();
+        if (!on || !img || !src || stage.dataset.transition !== 'hold' && stage.dataset.transition !== 'explore') { lens.hidden = true; return; }
+        if (loadedFor !== src) {
+          loadedFor = src; original = new Image();
+          original.onload = paint; original.src = src;
+          lens.style.backgroundImage = `url("${src}")`;
+        }
+        const nw = original?.naturalWidth || img.naturalWidth, nh = original?.naturalHeight || img.naturalHeight;
+        const r = img.getBoundingClientRect(), cs = getComputedStyle(img);
+        if (!nw || !nh || !r.width) { lens.hidden = true; return; }
+        const contain = cs.objectFit === 'contain';
+        const k = contain ? Math.min(r.width / nw, r.height / nh) : Math.max(r.width / nw, r.height / nh);
+        const [ox, oy] = contain ? [50, 50] : cs.objectPosition.split(' ').map(v => parseFloat(v) || 50);
+        const dw = nw * k, dh = nh * k, offX = (r.width - dw) * ox / 100, offY = (r.height - dh) * oy / 100;
+        const nx = (px - r.left - offX) / dw, ny = (py - r.top - offY) / dh;
+        if (nx < 0 || nx > 1 || ny < 0 || ny > 1) { lens.hidden = true; return; }
+        const rad = radius();
+        lens.style.backgroundSize = `${dw * ZOOM}px ${dh * ZOOM}px`;
+        lens.style.backgroundPosition = `${rad - nx * dw * ZOOM}px ${rad - ny * dh * ZOOM}px`;
+        lens.style.transform = `translate3d(${px - rad}px,${py - rad}px,0)`;
+        lens.hidden = false;
+      }
+      function set(value) {
+        on = value; document.body.classList.toggle('is-lens', on);
+        btn?.setAttribute('aria-pressed', String(on)); if (!on) { lens.hidden = true; clearTimeout(hold); }
+        else paint();
+      }
+      btn?.addEventListener('click', () => { held = false; set(!on); });
+      stage.addEventListener('pointermove', e => { px = e.clientX; py = e.clientY; if (on) paint(); }, { passive: true });
+      addEventListener('pointerdown', e => {
+        if (!stage.contains(e.target) || e.target.closest('input,nav,dialog,.art-bottom button,.art-bottom a,.site-nav')) return;
+        px = e.clientX; py = e.clientY; const x0 = px, y0 = py;
+        clearTimeout(hold);
+        hold = setTimeout(() => { if (Math.hypot(px - x0, py - y0) < 8) { held = true; set(true); } }, 450);
+      }, { passive: true, capture: true });
+      ['pointerup', 'pointercancel'].forEach(t => addEventListener(t, () => { clearTimeout(hold); if (on && held) { set(false); swallow = true; setTimeout(() => { swallow = false; }, 60); } held = false; }, { passive: true, capture: true }));
+      addEventListener('click', e => { if (swallow) { e.preventDefault(); e.stopImmediatePropagation(); swallow = false; } }, true);
+      addEventListener('keydown', e => { if (e.key === 'Escape' && on) set(false); }, true);
+      addEventListener('scroll', () => { if (on && stage.dataset.transition !== 'hold' && stage.dataset.transition !== 'explore') lens.hidden = true; else if (on) paint(); }, { passive: true });
+    }
+    // Contemplación (INV_INTERFACE_DISSOLVES): con la obra quieta, la interfaz se retira sola.
+    // Vuelve con cualquier gesto del visitante; nada queda inerte, así que el teclado y el
+    // acercamiento a los bordes la devuelven al instante, y Encargos/Contacto siguen en el DOM.
+    {
+      const CALM_MS = 3200;
+      let calmTimer = null, lastX = -1, lastY = -1;
+      const root = document.body;
+      const busy = () => document.querySelector('dialog[open]') || stage.matches(':has(:focus-visible)') || document.querySelector('.site-nav:has(:focus-visible)');
+      function settle() { calmTimer = null; if (busy() || state.quiet) { arm(); return; } root.classList.add('is-contemplating'); }
+      function arm() { clearTimeout(calmTimer); calmTimer = setTimeout(settle, CALM_MS); }
+      function wake() { if (root.classList.contains('is-contemplating')) root.classList.remove('is-contemplating'); arm(); }
+      addEventListener('pointermove', e => {
+        if (Math.abs(e.clientX - lastX) + Math.abs(e.clientY - lastY) < 6) return;
+        const first = lastX < 0; lastX = e.clientX; lastY = e.clientY;
+        if (!first) wake();
+      }, { passive: true });
+      ['pointerdown', 'wheel', 'touchstart', 'scroll', 'keydown', 'focusin'].forEach(t => addEventListener(t, wake, { passive: true, capture: true }));
+      document.addEventListener('visibilitychange', () => { if (document.hidden) wake(); });
+      arm();
+    }
     document.addEventListener('keydown', e => {
       if (document.querySelector('dialog[open]') || e.target.closest?.('input,textarea,select,[contenteditable=true]')) return;
       if (e.key === 'Escape' && state.quiet) { e.preventDefault(); quiet(false); return; }

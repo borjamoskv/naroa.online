@@ -3251,3 +3251,15 @@ body.page-retratos-por-encargo-bilbao .enc-also{display:flex;flex-wrap:wrap;gap:
   .retrato-pagina .rp-facts{grid-template-columns:minmax(0,1fr)}
   .retrato-pagina .rp-actions{flex-direction:column;gap:14px}
 }
+
+/* INV_INTERFACE_DISSOLVES — con la obra quieta la interfaz desaparece; la obra queda sola. */
+.gallery-page .site-nav,.gallery-page .art-bottom,.gallery-page .art-index,.gallery-page .art-progress{transition:opacity 1.1s var(--ease-out)}
+.gallery-page.is-contemplating .site-nav,.gallery-page.is-contemplating .art-bottom,.gallery-page.is-contemplating .art-index,.gallery-page.is-contemplating .art-progress{opacity:0;pointer-events:none;transition-duration:1.6s}
+.gallery-page.is-lens [data-art-copy],.gallery-page.is-lens .art-index,.gallery-page.is-lens .art-progress,.gallery-page.is-lens .art-arrows,.gallery-page.is-lens .art-story-link,.gallery-page.is-lens .art-shade{opacity:0;pointer-events:none}
+@media(prefers-reduced-motion:reduce){.gallery-page .site-nav,.gallery-page .art-bottom,.gallery-page .art-index,.gallery-page .art-progress,.gallery-page.is-contemplating .art-shade{transition-duration:.01ms!important}}
+@media print{.gallery-page.is-contemplating *{opacity:1}}
+
+/* INV_MACRO_LENS — lente de macro sobre el original; la obra entera queda detrás. */
+.art-lens{position:absolute;z-index:8;left:0;top:0;width:min(30vmin,240px);height:min(30vmin,240px);border-radius:50%;pointer-events:none;background-repeat:no-repeat;box-shadow:0 0 0 1px #fffdf4a6,0 14px 40px #000a;will-change:transform;opacity:1;transition:opacity .2s var(--ease-out)}
+.art-lens[hidden]{display:block;opacity:0}
+.gallery-page.is-lens .art-stage{cursor:crosshair}
