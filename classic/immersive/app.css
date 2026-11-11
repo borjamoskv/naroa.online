@@ -3328,3 +3328,9 @@ body.page-retratos-por-encargo-bilbao .enc-also{display:flex;flex-wrap:wrap;gap:
 .portrait-frame{container-type:size}
 .portrait-plane{inset:auto;--portrait-w:max(100cqw,100cqh*2201/3468);--portrait-h:max(100cqh,100cqw*3468/2201);width:var(--portrait-w);height:var(--portrait-h);left:calc((100cqw - var(--portrait-w))*.5);top:calc((100cqh - var(--portrait-h))*.29)}
 }}
+
+/* Accesibilidad medida (axe-core y recorrido con Tab, baseline 2026-11-11). */
+/* 2.4.7: la nota del configurador anulaba el contorno; con teclado lo recupera, como el resto de controles de la página. */
+body.page-retratos-por-encargo-bilbao .enc-note input:focus-visible{outline:3px solid currentColor;outline-offset:4px}
+/* 1.4.3: los numerales de los filtros del índice quedaban en 3,21:1 a 9 px. */
+dialog.index-dialog .index-filters .filter-num{opacity:.8}

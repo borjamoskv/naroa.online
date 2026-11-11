@@ -3809,9 +3809,12 @@
           const bottomFade = smooth((pose.distance - 0.20) / 0.16);
           artBottom.style.opacity = bottomFade.toFixed(4);
           artBottom.style.pointerEvents = bottomFade > 0.5 ? 'auto' : 'none';
+          // Mientras el pie de obra no se ve, tampoco recibe el foco (WCAG 2.4.7).
+          if (artBottom.inert !== (bottomFade <= 0.5)) artBottom.inert = bottomFade <= 0.5;
         } else {
           artBottom.style.opacity = '';
           artBottom.style.pointerEvents = '';
+          if (artBottom.inert) artBottom.inert = false;
         }
       }
       if (works[base].slug === 'dustin' || works[incoming].slug === 'dustin') {

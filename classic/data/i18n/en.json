@@ -113,6 +113,10 @@
    "View {1}"
   ],
   [
+   "^(\\d\\d) · (.+)$",
+   "{=1} · {2}"
+  ],
+  [
    "^Leer la entrada completa: (.+)$",
    "Read the full post: {1}"
   ],
@@ -629,7 +633,7 @@
   "Retratos, collage y objetos": "Portraits, collage and objects",
   "Naroa Gutiérrez Gil, inicio": "Naroa Gutiérrez Gil, home",
   "Principal": "Main",
-  "Escuchar la banda sonora": "Listen to the soundtrack",
+  "Sonido: escuchar la banda sonora": "Sound: listen to the soundtrack",
   "Banda sonora del mes": "Soundtrack of the month",
   "Naroa Gutiérrez Gil con chistera y monóculo en el umbral del estudio": "Naroa Gutiérrez Gil in top hat and monocle on the threshold of the studio",
   "Guiño de bienvenida de Naroa Gutiérrez Gil": "A welcoming wink from Naroa Gutiérrez Gil",
@@ -1762,8 +1766,8 @@
   "Noviembre": "November",
   "Diciembre": "December",
   "Banda sonora: «${title()}»": "Soundtrack: “${title()}”",
-  "Parar la banda sonora": "Stop the soundtrack",
-  "Escuchar la banda sonora": "Listen to the soundtrack",
+  "Sonido: parar la banda sonora": "Sound: stop the soundtrack",
+  "Sonido: escuchar la banda sonora": "Sound: listen to the soundtrack",
   "Este navegador no puede reproducir la banda sonora.": "This browser cannot play the soundtrack.",
   "El navegador no ha permitido iniciar el sonido. Vuelve a intentarlo.": "The browser did not allow the sound to start. Please try again.",
   "LENTE ÓPTICA ${scale.toFixed(2)}×": "OPTICAL LENS ${scale.toFixed(2)}×",
