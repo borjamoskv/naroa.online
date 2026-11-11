@@ -113,6 +113,22 @@
    "View {1}"
   ],
   [
+   "^Leer la nota de (.+?): (.+)$",
+   "Read the piece in {=1}: {=2}"
+  ],
+  [
+   "^Leer en (.+) ↗$",
+   "Read it in {=1} ↗"
+  ],
+  [
+   "^(\\d+) notas, cada una con su fuente$",
+   "{=1} pieces, each with its source"
+  ],
+  [
+   "^Crónicas, reportajes, una entrevista y las agendas culturales que anunciaron sus muestras, de (\\d{4}) a (\\d{4})\\. Cada titular es el del medio, tal como se publicó, y cada enlace abre la nota\\.$",
+   "Write-ups, features, an interview and the cultural listings that announced her shows, from {=1} to {=2}. Each headline is the outlet’s own, as published, and each link opens the piece."
+  ],
+  [
    "^Leer la entrada completa: (.+)$",
    "Read the full post: {1}"
   ],
@@ -1389,6 +1405,21 @@
   "Última entrada": "Latest post",
   "Verlo en Trayectoria →": "See it on the Career page →",
   "En Trayectoria →": "On the Career page →",
+  "En prensa": "In the press",
+  "Lo que se ha publicado<1/><2>sobre su trabajo.</2>": "What has been published<1/><2>about her work.</2>",
+  "Crónica de la inauguración de la colectiva de Bwall Collective en Dock Bilbao, abierta todo el mes de junio. Entre las propuestas de la muestra, el diario destaca «el universo lírico y reflexivo de Naroa Gutiérrez Gil».": "A write-up of the opening of Bwall Collective’s group show at Dock Bilbao, on view throughout June. Among the works on show, the paper singles out “the lyrical, reflective universe of Naroa Gutiérrez Gil”.",
+  "Crónica de Javier Gamboa, en la sección Vida social": "Write-up by Javier Gamboa, in the Vida social (society) section",
+  "La agenda anuncia la muestra en el Colegio de Abogados de Bizkaia, en Bilbao, del 28 de mayo al 24 de julio de 2015, con la misma presentación que un año antes en Portugalete.": "The listings announce the show at the Bizkaia Bar Association in Bilbao, from 28 May to 24 July 2015, with the same introduction as a year earlier in Portugalete.",
+  "Agenda cultural del diario": "The newspaper’s cultural listings",
+  "La agenda anuncia la muestra en la Casa-Torre de Salazar de Portugalete, del 3 de julio al 31 de agosto de 2014. Presenta a Naroa como una artista bilbaína que parte de la pintura acrílica y experimenta sobre lienzo, tela estampada, madera, papel o metal, con el rostro humano como protagonista.": "The listings announce the show at the Casa-Torre de Salazar in Portugalete, from 3 July to 31 August 2014. They introduce Naroa as a Bilbao artist who starts from acrylic paint and experiments on canvas, printed fabric, wood, paper or metal, with the human face as the protagonist.",
+  "A una semana de la salida del 3 de mayo de 2013, Naroa y la fotógrafa Adirane Azcuenaga cuentan al diario en qué consiste la Walking Gallery de Bilbao, la exposición sin paredes que aquel junio cumplía dos años.": "A week before the walk of 3 May 2013, Naroa and the photographer Adirane Azcuenaga tell the paper what the Walking Gallery in Bilbao is about: the exhibition without walls that turned two that June.",
+  "Reportaje de Alvaro Hilario, en la sección de Cultura": "Feature by Alvaro Hilario, in the Culture section",
+  "La web cultural Kubilha la presenta como coordinadora de la Walking Gallery en Bilbao. Naroa habla de sus comienzos, de la pintura acrílica y de las obras que entonces compartían pared en el bar Luz Gas del Casco Viejo. La web ya no existe: el enlace abre la copia que guarda Internet Archive.": "The culture website Kubilha introduces her as the coordinator of the Walking Gallery in Bilbao. Naroa talks about her beginnings, about acrylic paint and about the works then sharing a wall at the Luz Gas bar in the Casco Viejo. The site no longer exists: the link opens the copy kept by the Internet Archive.",
+  "Entrevista de Ion Curiel": "Interview by Ion Curiel",
+  "Leer la copia archivada ↗": "Read the archived copy ↗",
+  "Entre las citas del jueves 15 de septiembre de 2011, este digital local recoge la exposición de pintura de Naroa Gutiérrez Gil en el Gaztebulegoa de Barakaldo, abierta hasta el día 30.": "Among the events for Thursday 15 September 2011, this local news site lists Naroa Gutiérrez Gil’s painting exhibition at the Gaztebulegoa in Barakaldo, open until the 30th.",
+  "Agenda del día": "The day’s listings",
+  "La agenda anuncia la muestra en Hegoak, en Bilbao, con fecha del 31 de marzo de 2010, y resume su propósito: mostrar que, bajo apariencias distintas, todas las personas comparten una misma esencia.": "The listings announce the show at Hegoak, in Bilbao, dated 31 March 2010, and sum up its aim: to show that, beneath different appearances, all people share one and the same essence.",
   "Archivo del blog": "Blog archive",
   "Y todo<1/><2>lo anterior.</2>": "And everything<1/><2>that came before.</2>",
   "62 entradas más, año por año: exposiciones, mercados, paseos de la Walking Gallery y encuentros. Cada título abre la entrada en su WordPress.": "62 more posts, year by year: exhibitions, markets, Walking Gallery walks and gatherings. Each title opens the post on her WordPress.",

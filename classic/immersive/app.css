@@ -428,6 +428,8 @@ body.page-cuaderno .timeline-entry h3{font-size:clamp(20px,2.2vw,28px);letter-sp
 body.page-cuaderno .timeline-entry p{color:#27375a;font-size:15px}
 body.page-cuaderno .timeline-entry>p{color:#0e1a33;font-size:12px;letter-spacing:.03em}
 body.page-cuaderno .timeline-entry p.timeline-location{color:#2340C8;font-size:14px;letter-spacing:0;margin:16px 0 0;padding-left:16px;border-left:2px solid rgba(35,64,200,.45)}
+/* Notas de prensa: el enlace a la fuente respira bajo la firma y no se pega al de Trayectoria. */
+body.page-cuaderno [data-press-note] .text-link{margin:14px 18px 0 0}
 @media(max-width:760px){
   body.page-cuaderno .editorial.notebook{padding:36px 5% 30px}
   body.page-cuaderno .notebook-card{padding:20px}
