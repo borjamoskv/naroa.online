@@ -3378,3 +3378,26 @@ body.page-retratos-por-encargo-bilbao .enc-also{display:flex;flex-wrap:wrap;gap:
 .art-lens{position:absolute;z-index:8;left:0;top:0;width:min(30vmin,240px);height:min(30vmin,240px);border-radius:50%;pointer-events:none;background-repeat:no-repeat;box-shadow:0 0 0 1px #fffdf4a6,0 14px 40px #000a;will-change:transform;opacity:1;transition:opacity .2s var(--ease-out)}
 .art-lens[hidden]{display:block;opacity:0}
 .gallery-page.is-lens .art-stage{cursor:crosshair}
+
+/* El plano del retrato de /sobre-mi/ nace con la misma geometría «cover» que measurePortrait() le fija
+   al medir (2201 × 3468, centrado al 50 % · 29 %): el script ya no lo mueve y no hay salto de maquetación. */
+/* Solo en pantalla: al imprimir el marco pasa a altura automática y no puede ser contenedor de tamaño. */
+@media screen{@supports (width:1cqw){
+.portrait-frame{container-type:size}
+.portrait-plane{inset:auto;--portrait-w:max(100cqw,100cqh*2201/3468);--portrait-h:max(100cqh,100cqw*3468/2201);width:var(--portrait-w);height:var(--portrait-h);left:calc((100cqw - var(--portrait-w))*.5);top:calc((100cqh - var(--portrait-h))*.29)}
+}}
+
+/* Accesibilidad medida (axe-core y recorrido con Tab, baseline 2026-11-11). */
+/* 2.4.7: la nota del configurador anulaba el contorno; con teclado lo recupera, como el resto de controles de la página. */
+body.page-retratos-por-encargo-bilbao .enc-note input:focus-visible{outline:3px solid currentColor;outline-offset:4px}
+/* 1.4.3: los numerales de los filtros del índice quedaban en 3,21:1 a 9 px. */
+dialog.index-dialog .index-filters .filter-num{opacity:.8}
+
+/* Encargos: fuentes de reserva con la anchura de las web. Mientras llegan DM Sans y Cormorant Garamond,
+   la frase ocupa las mismas líneas y nada salta al cambiar (CLS 0,11–0,68 según el ancho, medido el 2026-11-11).
+   Proporciones medidas contra Arial y Times New Roman; donde no existen, se usa la genérica como hasta ahora.
+   El antetítulo se queda con la genérica: ajustarlo exigía reducirlo al 92 % y apenas movía el salto (≤ 0,03 sin ajuste). */
+@font-face{font-family:"DM Sans Reserva";src:local("Arial"),local("ArialMT");size-adjust:103.5%}
+@font-face{font-family:"Cormorant Reserva";font-style:italic;src:local("Times New Roman Italic"),local("TimesNewRomanPS-ItalicMT");size-adjust:86.5%}
+body.page-retratos-por-encargo-bilbao .enc-sentence{font-family:'DM Sans','DM Sans Reserva',sans-serif}
+body.page-retratos-por-encargo-bilbao .enc-word{font-family:'Cormorant Garamond','Cormorant Reserva',serif}

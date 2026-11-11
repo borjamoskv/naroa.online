@@ -3024,7 +3024,14 @@
       $('[data-art-title]', stage).textContent = p.title; $('[data-art-material]', stage).textContent = p.label;
       $('[data-counter]', stage).textContent = `${String(state.index + 1).padStart(2, '0')} / ${String(works.length).padStart(2, '0')}`;
       $$('[data-select]', stage).forEach(b => { const i = Number(b.dataset.select); b.hidden = i < begin || i >= begin + 5; b.setAttribute('aria-pressed', String(i === state.index)); });
-      $('[data-prev]', stage).disabled = state.index === 0; $('[data-next]', stage).disabled = state.index === works.length - 1;
+      const prevBtn = $('[data-prev]', stage), nextBtn = $('[data-next]', stage);
+      const atStart = state.index === 0, atEnd = state.index === works.length - 1;
+      // Una flecha que se desactiva con el foco puesto lo suelta: antes de desactivarla, el foco pasa a la otra.
+      if (atStart !== atEnd && document.activeElement === (atStart ? prevBtn : nextBtn)) {
+        const other = atStart ? nextBtn : prevBtn;
+        other.disabled = false; other.focus({ preventScroll: true });
+      }
+      prevBtn.disabled = atStart; nextBtn.disabled = atEnd;
       const ouroboros = $('[data-ouroboros]', stage);
       if (ouroboros) ouroboros.hidden = (state.index !== works.length - 1);
       const finaleShare = $('[data-finale-share]', stage);
@@ -3864,14 +3871,22 @@
       }
       const artBottom = $('.art-bottom', stage);
       if (artBottom) {
-        if ((!still || (heroThreshold && !state.fit)) && pose.distance < 0.36) {
+        // Con el foco visible dentro, el pie de obra no se funde: quien vuelve al umbral con teclado no pierde su sitio.
+        const focused = document.activeElement;
+        const holdsFocus = artBottom.contains(focused) && focused.matches(':focus-visible');
+        let faded = false;
+        if ((!still || (heroThreshold && !state.fit)) && pose.distance < 0.36 && !holdsFocus) {
           const bottomFade = smooth((pose.distance - 0.20) / 0.16);
           artBottom.style.opacity = bottomFade.toFixed(4);
           artBottom.style.pointerEvents = bottomFade > 0.5 ? 'auto' : 'none';
+          faded = bottomFade <= 0.5;
         } else {
           artBottom.style.opacity = '';
           artBottom.style.pointerEvents = '';
         }
+        // Mientras no se ven, los controles tampoco reciben el foco (WCAG 2.4.7). Solo los controles: el título
+        // sigue expuesto a los lectores de pantalla, y el `inert` de «Solo obra» sobre el pie entero es de metadata().
+        $$('.art-more-row,.art-controls', artBottom).forEach(el => { if (el.inert !== faded) el.inert = faded; });
       }
       if (works[base].slug === 'dustin' || works[incoming].slug === 'dustin') {
         if (!dustinVisited && (works[state.index].slug === 'dustin' || (transition && works[incoming].slug === 'dustin' && fraction >= 0.45))) {
@@ -4656,6 +4671,9 @@
       scheduleScroll();
     });
     $('[data-open-story]', stage).addEventListener('click', () => openDialog('#story-dialog'));
+    // El fundido del pie de obra sobre el umbral depende de si el foco visible está dentro (render):
+    // en reposo nadie repinta, así que se repinta al entrar o salir el foco.
+    ['focusin', 'focusout'].forEach(type => $('.art-bottom', stage)?.addEventListener(type, () => requestAnimationFrame(render)));
     // Un solo «+» junto al título: la ficha y las acciones de vista esperan plegadas para que
     // sobre la obra solo queden título, contador y flechas. Se pliega solo en cuanto la cámara se mueve.
     const moreMenu = $('.art-view-actions', stage), moreStory = $('[data-open-story]', stage), moreAnchor = $('[data-art-copy]', stage);

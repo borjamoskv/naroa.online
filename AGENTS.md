@@ -57,6 +57,8 @@ Toda alta o mutación de obra exige paridad simultánea en 3 capas:
 
 **Caché:** `immutable` solo para archivos con versión en el nombre (hash de 12 cifras o sufijo `-vN`). `tools/check_immersive_site.py` falla si una regla de `vercel.json` se lo da a cualquier otro.
 
+**Recursos citados:** el build copia toda imagen que citan `app.js` y `app.css` y se detiene si alguna no existe; `tools/check_immersive_site.py` falla si un script o una hoja de estilo publicados citan un recurso ausente.
+
 ### 2. Paridad con Suite JSDOM (`test_immersive_dom.cjs`)
 - Valida la secuencia exacta de modos (`entry.mode`) y que el total de obras coincide con el del manifiesto de la compilación (`immersive/build-manifest.json`): la cifra no va escrita en el test. Actualizar la cadena esperada en `tools/test_immersive_dom.cjs` ante cualquier mutación del recorrido.
 
@@ -104,6 +106,7 @@ Toda alta o mutación de obra exige paridad simultánea en 3 capas:
 ### 7. Pureza Visual en Umbral Hero (`INV_HERO_THRESHOLD_PURITY`)
 - El retrato inaugural (umbral de estudio, índice `0`) debe mostrarse limpio de superposiciones tipográficas o telemetría flotante (`LA MIRADA`, `UMBRAL DE ESTUDIO`, texto en SVG del monóculo). El umbral no lleva ningún bloque de texto (la antigua `.portrait-hero-copy` ya no existe): el protagonismo es íntegro del retrato.
 - **Sin efectos de movimiento el retrato también recibe:** con `prefers-reduced-motion` o «Pausar efectos» el umbral sigue en pantalla, quieto (sin zoom, guiño ni giro del aro), y se disuelve en la primera obra con el scroll. Solo «Solo obra» lo retira.
+- **El pie de obra no recibe el foco mientras el umbral lo funde:** sus controles (`.art-more-row`, `.art-controls`) quedan inertes; el título sigue expuesto a los lectores de pantalla. Si el foco visible ya está dentro (al volver con teclado desde otra obra), el pie no se funde. El `inert` del pie entero es solo de «Solo obra».
 - **Tocar el retrato es entrar:** mientras el umbral está en pantalla, el clic o toque sobre la escena cruza a la primera obra; no abre la ficha de fotografías de una obra que aún no se ha visto.
 
 ### 7b. La Interfaz Desaparece al Contemplar (`INV_INTERFACE_DISSOLVES`)
