@@ -558,7 +558,7 @@ def build(output):
     if walls_src.exists():
         walls_dest = output / "assets" / "walls"
         walls_dest.mkdir(parents=True, exist_ok=True)
-        for wf in walls_src.glob("*.webp"):
+        for wf in walls_src.glob("*.*"):   # AVIF y su reserva en WebP
             shutil.copy2(wf, walls_dest / wf.name)
 
     fonts_src = SOURCE / "assets" / "fonts"
