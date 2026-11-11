@@ -636,15 +636,17 @@ def build(output):
         "x": '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
     }
 
-    def social_share_dock(url="", title="", is_finale=False):
-        cls = "art-finale-share" if is_finale else "social-share-dock"
+    def social_share_dock(url="", title="", is_finale=False, words=False):
+        # «words» es el dock del pie: cada red va como palabra subrayada a mano, sin icono ni caja («.share-words» en app.css).
+        cls = "art-finale-share" if is_finale else "social-share-dock share-words" if words else "social-share-dock"
+        icon = {name: "" if words else svg for name, svg in share_svgs.items()}
         attr = ' data-finale-share hidden' if is_finale else ''
         label = "Compartir recorrido:" if is_finale else "Compartir:"
         data_url = f' data-share-url="{esc(url)}"' if url else ''
         data_title = f' data-share-title="{esc(title)}"' if title else ''
         # Al final del recorrido: la Story con las obras donde más se detuvo la visita (nace oculta; app.js la enseña).
         visit = '<button type="button" class="visit-portrait-link" data-visit-portrait hidden>El retrato de tu visita <span aria-hidden="true">↗</span></button>' if is_finale else ''
-        return f'''<div class="{cls}"{attr} role="group" aria-label="{label}"><span class="share-dock-label">{label}</span><div class="share-dock-buttons"><button type="button" class="share-btn share-btn--instagram" data-share-network="instagram"{data_url}{data_title} aria-label="Compartir en Instagram">{share_svgs["instagram"]}<span>Instagram</span></button><button type="button" class="share-btn share-btn--facebook" data-share-network="facebook"{data_url}{data_title} aria-label="Compartir en Facebook">{share_svgs["facebook"]}<span>Facebook</span></button><button type="button" class="share-btn share-btn--tiktok" data-share-network="tiktok"{data_url}{data_title} aria-label="Compartir en TikTok">{share_svgs["tiktok"]}<span>TikTok</span></button><button type="button" class="share-btn share-btn--x" data-share-network="x"{data_url}{data_title} aria-label="Compartir en X">{share_svgs["x"]}<span>X</span></button></div>{visit}</div>'''
+        return f'''<div class="{cls}"{attr} role="group" aria-label="{label}"><span class="share-dock-label">{label}</span><div class="share-dock-buttons"><button type="button" class="share-btn share-btn--instagram" data-share-network="instagram"{data_url}{data_title} aria-label="Compartir en Instagram">{icon["instagram"]}<span>Instagram</span></button><button type="button" class="share-btn share-btn--facebook" data-share-network="facebook"{data_url}{data_title} aria-label="Compartir en Facebook">{icon["facebook"]}<span>Facebook</span></button><button type="button" class="share-btn share-btn--tiktok" data-share-network="tiktok"{data_url}{data_title} aria-label="Compartir en TikTok">{icon["tiktok"]}<span>TikTok</span></button><button type="button" class="share-btn share-btn--x" data-share-network="x"{data_url}{data_title} aria-label="Compartir en X">{icon["x"]}<span>X</span></button></div>{visit}</div>'''
 
     # Aviso de temporada: las fechas las pone Naroa en classic/data/encargos.json. Sin fecha no sale nada;
     # con fecha pasada tampoco (aquí al compilar y en app.js al abrir la página).
@@ -686,7 +688,7 @@ def build(output):
 <dialog id="kintsugi-dialog" class="kintsugi-dialog" aria-labelledby="kintsugi-heading"><div class="dialog-top"><span id="kintsugi-heading" class="kintsugi-dialog-title">El Rasgado Kintsugi · 2013 ➔ 2021</span><button type="button" data-close-dialog autofocus>Cerrar ×</button></div><div class="kintsugi-dialog-body"><div class="kintsugi-stage" data-kintsugi-stage style="--split:50%"><div class="kintsugi-layer kintsugi-layer--color"><img data-src="/immersive/media/cantinflowers-rostro-4k-f585c8dca309-view.webp" decoding="async" alt="Cantinflowers (Color, 2021) — Acrílico rascado y collage" width="1350" height="1800"><div class="kintsugi-badge kintsugi-badge--color">2021 · Pandemia (Color)</div></div><div class="kintsugi-layer kintsugi-layer--bn"><img data-src="/immersive/media/mario-moreno-hq-01-b0d9bf3e15f7-view.webp" decoding="async" alt="Mario Moreno (Grafito, 2013) — Retrato en B/N" width="1375" height="1800"><div class="kintsugi-badge kintsugi-badge--bn">2013 · Grafito (B/N)</div></div><div class="kintsugi-seam" data-kintsugi-seam><div class="kintsugi-seam-glow"></div><div class="kintsugi-seam-line"></div><button type="button" class="kintsugi-handle" data-kintsugi-handle role="slider" aria-label="Deslizar rasgado Kintsugi" aria-valuenow="50" aria-valuemin="5" aria-valuemax="95"><span class="kintsugi-handle-gold">✦</span><span class="kintsugi-handle-icon">↔</span><span class="kintsugi-handle-text">Rasgar</span></button></div></div><aside class="kintsugi-quote-card"><p>«Comienzo a rascar sobre una base que no me permitía difuminar y ¡premio!, encuentro una textura inédita: puro kintsugi, el problema hecho trampolín».</p><cite>Naroa Gutiérrez Gil · De Mario Moreno (2013) a Cantinflowers (2021)</cite></aside></div></dialog>'''
 
     def footer():
-        return f'''<footer class="site-footer"><a class="signature" href="/">Naroa</a>{social_share_dock()}<a href="mailto:naroa@naroagutierrezgil.com">naroa@naroagutierrezgil.com ↗</a><a href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer">Facebook ↗</a><a href="https://instagram.com/naroa_art/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="/contacto/">¿Hablamos? ↗</a><span>Bilbao · © 2026</span></footer>'''
+        return f'''<footer class="site-footer"><a class="signature" href="/">Naroa</a>{social_share_dock(words=True)}<a href="mailto:naroa@naroagutierrezgil.com">naroa@naroagutierrezgil.com ↗</a><a href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer">Facebook ↗</a><a href="https://instagram.com/naroa_art/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="/contacto/">¿Hablamos? ↗</a><span>Bilbao · © 2026</span></footer>'''
 
     pages = []
 
@@ -1500,17 +1502,51 @@ def build(output):
             notebook += f'''<details class="notebook-year" name="notebook-archive"{' open' if index == 0 else ''}><summary><span class="notebook-year-number">{year}</span><span class="notebook-year-count">{count_label}</span></summary><ol>{rows}</ol></details>'''
         notebook += '</div></section>'
     # Notas de prensa (classic/data/prensa.json): cada una se comprobó en su fuente. El titular es el del medio,
-    # literal y sin traducir; el resumen solo cuenta lo que la nota dice. Misma tarjeta que los comentarios del blog.
+    # literal y sin traducir; el resumen solo cuenta lo que la nota dice (AGENTS.md §11).
     press = sorted(read_data("prensa")["notes"], key=lambda x: x["date"], reverse=True)
     if press:
         press_years = sorted({x["date"][:4] for x in press})
-        notebook += f'''<section class="notebook-press" id="prensa" aria-labelledby="notebook-press-title"><div class="section-opening"><p class="eyebrow">En prensa · {len(press)} notas, cada una con su fuente</p><h2 id="notebook-press-title">Lo que se ha publicado<br><span>sobre su trabajo.</span></h2><p>Crónicas, reportajes, una entrevista y las agendas culturales que anunciaron sus muestras, de {press_years[0]} a {press_years[-1]}. Cada titular es el del medio, tal como se publicó, y cada enlace abre la nota.</p></div><div class="timeline">'''
-        for x in press:
-            medium = f'<span translate="no">{esc(x["medium"])}</span>'
-            read_label = "Leer la copia archivada" if x.get("archived") else f'Leer en {esc(x["medium"])}'
-            encounter = f'<a class="notebook-encounter" href="/trayectoria/#encuentro-{esc(x["encounter"])}">Verlo en Trayectoria →</a>' if x.get("encounter") in encounter_ids else ""
-            notebook += f'''<article class="timeline-entry" id="prensa-{esc(x['id'])}" data-press-note><p><time datetime="{esc(x['date'])}">{esc(x['date_label'])}</time> · {medium}</p><div><h3 lang="es" translate="no">{esc(x['title'])}</h3><p>{esc(x['summary'])}</p><p class="timeline-location">{esc(x['byline'])}</p><a class="text-link" href="{esc(x['url'])}" target="_blank" rel="noopener noreferrer" hreflang="es" aria-label="Leer la nota de {esc(x['medium'])}: {esc(x['title'])}">{read_label} ↗</a>{encounter}</div></article>'''
-        notebook += '</div></section>'
+        notebook += f'''<section class="notebook-press" id="prensa" aria-labelledby="notebook-press-title"><div class="section-opening"><p class="eyebrow">En prensa · {len(press)} notas, cada una con su fuente</p><h2 id="notebook-press-title">Lo que se ha publicado<br><span>sobre su trabajo.</span></h2><p>Lo que contaron de su trabajo diarios, digitales y blogs, y las agendas culturales que anunciaron sus muestras, de {press_years[0]} a {press_years[-1]}. Cada titular es el del medio, en su idioma y tal como se publicó, y cada enlace abre la nota.</p></div>'''
+        # Lo que la prensa contó va en recortes; las agendas, que solo anunciaron una muestra, en un índice por
+        # años como el archivo del blog. El nombre accesible de cada enlace empieza por su texto visible, y cada
+        # titular lleva el idioma en que se publicó.
+        def press_read(x):
+            return "Leer la copia archivada" if x.get("archived") else f'Leer en {x["medium"]}'
+
+        def press_source(x, text):
+            lang = x.get("lang", "es")
+            return f'''<a class="text-link" href="{esc(x['url'])}" target="_blank" rel="noopener noreferrer" hreflang="{lang}" aria-label="{esc(press_read(x))}: {esc(x['title'])}">{text}</a>'''
+
+        def press_encounter(x, label):
+            return f'<a class="notebook-encounter" href="/trayectoria/#encuentro-{esc(x["encounter"])}">{label}</a>' if x.get("encounter") in encounter_ids else ""
+
+        told = [x for x in press if x["kind"] != "agenda"]
+        listed = [x for x in press if x["kind"] == "agenda"]
+        if told:
+            notebook += '<p class="press-kind">Lo que contaron</p><div class="press-pieces">'
+            for x in told:
+                notebook += f'''<article class="press-piece" id="prensa-{esc(x['id'])}" data-press-note data-press-kind="{esc(x['kind'])}"><p class="press-meta"><span class="press-medium" translate="no">{esc(x['medium'])}</span><time datetime="{esc(x['date'])}">{esc(x['date_label'])}</time></p><h3 lang="{x.get('lang', 'es')}" translate="no">{esc(x['title'])}</h3><p class="press-summary">{esc(x['summary'])}</p><p class="press-byline">{esc(x['byline'])}</p><p class="press-links">{press_source(x, esc(press_read(x)) + ' ↗')}{press_encounter(x, "Verlo en Trayectoria →")}</p></article>'''
+            notebook += '</div>'
+        if listed:
+            press_months = "ene feb mar abr may jun jul ago sep oct nov dic".split()
+            by_year = {}
+            for x in listed:
+                by_year.setdefault(x["date"][:4], []).append(x)
+            notebook += '<p class="press-kind">Lo que anunciaron las agendas</p>'
+            if any(x.get("date_kind") == "event" for x in listed):
+                notebook += '<p class="press-agenda-note">Cuando una agenda no tiene fecha propia, va con la de la muestra que anuncia.</p>'
+            notebook += '<div class="press-agenda">'
+            for year, entries in sorted(by_year.items(), reverse=True):
+                rows = ""
+                for x in entries:
+                    month = press_months[int(x["date"][5:7]) - 1]
+                    event = x.get("date_kind") == "event"
+                    # Si la fecha es la de la muestra y no la de la nota, solo se da el mes, y el datetime no promete un día.
+                    when, stamp = (month, x["date"][:7]) if event else (f'{int(x["date"][8:10])} {month}', x["date"])
+                    rows += f'''<li id="prensa-{esc(x['id'])}" data-press-note data-press-kind="agenda"><time datetime="{esc(stamp)}">{when}</time><div class="press-line"><span class="press-medium" translate="no">{esc(x['medium'])}</span><h3 lang="{x.get('lang', 'es')}" translate="no">{press_source(x, esc(x['title']))}</h3><p>{esc(x['summary'])}</p></div>{press_encounter(x, "En Trayectoria →")}</li>'''
+                notebook += f'<div class="press-year"><p class="press-year-number">{year}</p><ol>{rows}</ol></div>'
+            notebook += '</div>'
+        notebook += '</section>'
     notebook += '<section class="notebook-reactions" data-notebook-reactions aria-labelledby="notebook-reactions-title"><div class="section-opening"><p class="eyebrow">Voces en el blog · Comentarios reales de sus lectores</p><h2 id="notebook-reactions-title">Lo que dicen quienes miran<br><span>y lo que responde Naroa.</span></h2><p>«Sempiternas gracias por tus palabras, las beso letra por letra y abrazo tu aprecio, que no tiene precio… Con comentarios así, me siento la biempagá. Mila esker, always : )»</p></div><div class="timeline">'
     real_comments = [
         ("1 de julio de 2016 · V Aniversario Walking Gallery Bilbao", "dæ (con acróstico oculto N-A-R-O-A)", "«…existeN personas que orgAnizan acontecimientos para el gusto y disfRute de los demás… a veces, imagino que les falta el aire, a veces se sientan cOjos… mas ahí siguen al pie del cañón….. Ahora… a disfrutarlo.»", "Respuesta de Naroa (2 de julio de 2016): «Sempiternas gracias por tus palabras, las beso letra por letra y abrazo tu aprecio, que no tiene precio.. Con comentarios así, me siento la biempagá.. Mila esker, always : )»"),
