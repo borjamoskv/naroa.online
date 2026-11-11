@@ -5111,12 +5111,16 @@
     paintCareerWall(true);
   }
 
-  // Trayectoria: fondo parallax. La pared, el año gigante y los cromos siguen al encuentro en pantalla.
+  // Trayectoria: fondo parallax en dos planos. Detrás, la pared, que pasa a WALL_RATE del scroll; delante,
+  // el papel de las tarjetas, que va con el scroll. El año va pintado en la pared y los cromos pegados a
+  // ella: viajan a su mismo paso exacto, no flotan. Con ratón, el plano de la pared cede un poco contra el puntero.
   const careerWall = $('.career-wall');
   const wallLayers = careerWall ? $$('[data-wall-layer]', careerWall) : [];
   const wallYear = careerWall ? $('[data-wall-year]', careerWall) : null;
   const wallCromos = careerWall ? $$('[data-wall-cromo]', careerWall) : [];
-  const cromoDepth = [90, 190, 300];
+  const WALL_RATE = .35;
+  // Al píxel físico: en pantallas densas el medio píxel existe y el paso lento no tiembla.
+  const snapPx = value => { const dpr = window.devicePixelRatio || 1; return Math.round(value * dpr) / dpr; };
   let wallEntry = null, wallTicking = false;
   function paintCareerWall(force = false) {
     wallTicking = false;
@@ -5130,6 +5134,7 @@
       if (gap < bestGap) { bestGap = gap; best = entry; bestBox = box; }
     });
     if (best !== wallEntry || force) {
+      const changed = best !== wallEntry;
       wallEntry = best;
       const wall = best?.dataset.wall || 'pared';
       wallLayers.forEach(layer => {
@@ -5146,18 +5151,37 @@
         cromo.classList.toggle('is-on', !!art);
         if (art) cromo.style.backgroundImage = `url("${art.thumb}")`;
       });
+      // Al cambiar de encuentro, año y cromos saltan a su sitio en el tramo nuevo de pared: entran fundiéndose.
+      if (changed && !reduced.matches) [wallYear, ...wallCromos].forEach(el => el?.animate?.([{ opacity: 0 }, {}], { duration: 700, easing: 'cubic-bezier(.16,1,.3,1)' }));
     }
     if (reduced.matches || !bestBox) return;
     // Avance del encuentro activo por la pantalla: 0 al entrar por abajo, 1 al salir por arriba.
     const travel = Math.max(0, Math.min(1, (innerHeight - bestBox.top) / (innerHeight + bestBox.height)));
-    careerWall.style.setProperty('--wall-shift', `${Math.round(-scrollY * .35)}px`);
-    careerWall.style.setProperty('--year-shift', `${Math.round((.5 - travel) * innerHeight * .28)}px`);
-    wallCromos.forEach((cromo, i) => cromo.style.setProperty('--cromo-shift', `${Math.round((.5 - travel) * cromoDepth[i])}px`));
+    careerWall.style.setProperty('--wall-shift', `${snapPx(-scrollY * WALL_RATE)}px`);
+    // Lo que va en la pared se mueve WALL_RATE px por cada px de scroll, centrado cuando el encuentro lo está.
+    careerWall.style.setProperty('--wall-ride', `${snapPx((.5 - travel) * (innerHeight + bestBox.height) * WALL_RATE)}px`);
   }
   if (careerWall) {
     addEventListener('scroll', () => { if (!wallTicking) { wallTicking = true; requestAnimationFrame(() => paintCareerWall()); } }, { passive: true });
     addEventListener('resize', () => paintCareerWall(), { passive: true });
     paintCareerWall(true);
+    // Profundidad con ratón: la pared se desplaza contra el puntero (±14 px a lo ancho, ±8 a lo alto), con inercia.
+    if (window.matchMedia?.('(hover: hover) and (pointer: fine)').matches) {
+      let px = 0, py = 0, targetX = 0, targetY = 0, pointerFrame = 0;
+      const easePointer = () => {
+        px += (targetX - px) * .12; py += (targetY - py) * .12;
+        careerWall.style.setProperty('--wall-px', `${px.toFixed(2)}px`);
+        careerWall.style.setProperty('--wall-py', `${py.toFixed(2)}px`);
+        pointerFrame = Math.abs(targetX - px) + Math.abs(targetY - py) > .05 ? requestAnimationFrame(easePointer) : 0;
+      };
+      addEventListener('pointermove', event => {
+        if (event.pointerType !== 'mouse' || reduced.matches) return;
+        const box = careerWall.getBoundingClientRect();
+        if (box.bottom < 0 || box.top > innerHeight) return;
+        targetX = (.5 - event.clientX / innerWidth) * 28; targetY = (.5 - event.clientY / innerHeight) * 16;
+        if (!pointerFrame) pointerFrame = requestAnimationFrame(easePointer);
+      }, { passive: true });
+    }
   }
   years.forEach(button => button.addEventListener('click', () => { careerYear = button.dataset.year; filterCareer(); }));
   kinds.forEach(button => button.addEventListener('click', () => { careerKind = button.dataset.careerKind; filterCareer(); }));
