@@ -414,7 +414,7 @@ async function eyeMatch(ui, base, points) {
   assert.equal(ui.find('[data-menu-preview-label]').textContent, 'Blog', 'Numeric shortcut 1-4 previews and focuses the corresponding section');
   assert.equal(ui.find('[data-menu-preview-meta]').textContent, 'Historias de obras, procesos y encuentros');
   assert.equal(ui.find('[data-menu-reel]').hidden, false, 'Blog renders its 4-frame curated filmstrip');
-  assert.equal(ui.find('#menu-dialog').style.getPropertyValue('--menu-glow'), '#2e5090', 'Menu atmosphere glow adapts dynamically to the active section');
+  assert.equal(ui.find('#menu-dialog').style.getPropertyValue('--menu-glow'), '#2d4dd8', 'Menu atmosphere glow adapts dynamically to the active section');
   ui.click('[data-menu-sound-credits]'); await ui.flush();
   assert.equal(ui.find('[data-menu-sound-drawer]').hidden, false, 'Sound credits drawer opens inline inside the menu dialog');
   ui.click('[data-close-sound-drawer]'); await ui.flush();
@@ -906,6 +906,38 @@ async function eyeMatch(ui, base, points) {
     assert.ok(paceAudio.oscillators.length > notesSoFar, MONTH_TITLES[month] + ' schedules its own notes');
   }
   assert.equal(paced.w.NAROA_SOUND.getActiveMelodyInfo().name, 'Abendua', 'The menu names the piece that is playing');
+  // The written music: playable ranges, real cadences in the minor months and a decorated return.
+  for (let month = 0; month < 12; month++) {
+    const sheet = pacedScore.sheet(month), name = MONTH_TITLES[month];
+    const melody = sheet.flatMap(bar => bar.rh.map(note => note[1])), bass = sheet.flatMap(bar => bar.lh.filter(n => n != null));
+    assert.ok(melody.every(Number.isInteger) && bass.every(Number.isInteger), name + ' only writes real keys');
+    assert.ok(Math.min(...melody) >= 60 && Math.max(...melody) <= 84 && Math.min(...bass) >= 31, name + ' stays in a singing range over a bass that is not mud');
+    sheet.forEach(bar => bar.rh.forEach(([at, , length], i) => {
+      assert.ok(at >= 0 && at + length <= 8 && (!bar.rh[i + 1] || bar.rh[i + 1][0] >= at + length), name + ' keeps every note inside its bar and the hand never overlaps itself');
+    }));
+    // Second voice, heard with a fast scroll: under long notes of the bridge and the return, a third or a fourth
+    // below the melody, never rubbing a semitone against the left hand's chord.
+    const voiced = sheet.filter(bar => bar.second);
+    assert.ok(voiced.some(bar => bar.section === 'B') && voiced.some(bar => bar.section === 'A · regreso') && voiced.every(bar => bar.section === 'B' || bar.section === 'A · regreso'), name + ' adds a second voice only to the bridge and the return');
+    voiced.forEach(bar => {
+      const chord = new Set(bar.lh.slice(0, 7).filter(n => n != null).map(n => n % 12));
+      bar.second.forEach((under, i) => {
+        if (under == null) return;
+        const gap = bar.rh[i][1] - under;
+        assert.ok(gap >= 3 && gap <= 5, name + ' sings its second voice a third or a fourth below');
+        const pc = under % 12;
+        assert.ok(chord.has(pc) || ![...chord].some(tone => (pc - tone + 12) % 12 === 1 || (tone - pc + 12) % 12 === 1), name + ' second voice never rubs the chord');
+      });
+    });
+    if (month !== 3) {
+      const count = section => sheet.filter(bar => bar.section === section).reduce((sum, bar) => sum + bar.rh.length, 0);
+      assert.ok(count('A · regreso') > count('A'), name + ' decorates its melody when the theme returns');
+    }
+  }
+  [[0, 'A', 8], [9, 'B', 10], [10, 'G', 6]].forEach(([month, key, leading]) => {
+    const cadence = pacedScore.sheet(month).filter(bar => bar.section === 'A')[7];
+    assert.ok(cadence.lh.some(n => n != null && n % 12 === leading), MONTH_TITLES[month] + ' (' + key + ' minor) closes its phrase on a dominant with a leading tone');
+  });
   pacedScore.setMonth(3);
   assert.equal(pacedScore.state.intensity, .31, 'At rest the right hand sleeps');
   const echoAt = paceAudio.contexts[0].panners[0].positionX.value;
@@ -996,8 +1028,20 @@ async function eyeMatch(ui, base, points) {
     assert.equal(cards[0].querySelector('img'), null, 'Images from other hosts are never inserted');
     assert.equal(cards[1].querySelector('.notebook-summary').textContent, blog.posts[0].summary, 'Curated summaries survive the sync');
     assert.ok(cards[1].querySelector('.notebook-photo img').getAttribute('src').startsWith('/immersive/media/'), 'Curated cards keep their local poster');
+    assert.equal(synced.document.querySelectorAll('[data-notebook-latest]').length, 1);
+    assert.equal(cards[0].querySelector('.eyebrow').firstChild, synced.find('[data-notebook-latest]'), 'The "latest post" label moves to the new first card');
+    const syncedEncounters = new Set(JSON.parse(fs.readFileSync(path.resolve(__dirname, '../classic/data/exhibitions.json'), 'utf8')).exhibitions.map(item => String(item.id)));
     assert.equal(synced.find('[data-notebook-status]').dataset.state, 'new');
     assert.equal(synced.find('[data-notebook-status-text]').textContent, `1 entrada nueva · ${blog.total + 1} entradas · la última, del 2 de enero de 2031`);
+    const displaced = blog.posts[5], displacedYear = synced.find('[data-notebook-years] .notebook-year');
+    assert.equal(synced.document.querySelector(`[data-notebook-entry][data-post-id="${displaced.id}"]`), null);
+    assert.equal(displacedYear.querySelector('.notebook-year-number').textContent, displaced.date.slice(0, 4), 'The post that leaves the grid joins the archive under its year');
+    assert.equal(displacedYear.querySelector('li a').getAttribute('href'), displaced.url);
+    assert.equal(displacedYear.querySelector('li a').textContent, `${displaced.title} ↗`);
+    assert.equal(displacedYear.querySelector('li .notebook-encounter')?.getAttribute('href') || null, syncedEncounters.has(String(displaced.id)) ? `/trayectoria/#encuentro-${displaced.id}` : null, 'In the archive the post keeps its link to Trayectoria');
+    assert.equal(displacedYear.querySelector('li time').getAttribute('datetime'), displaced.date);
+    assert.equal(displacedYear.querySelector('.notebook-year-count').textContent, '1 entrada');
+    assert.equal(synced.document.querySelectorAll('.notebook-year li a:not(.notebook-encounter)').length, blog.archive.length + 1);
     synced.document.dispatchEvent(new synced.w.Event('visibilitychange')); await synced.flush();
     assert.equal(calls.length, 1, 'Coming back to the tab does not query the blog again right away');
     synced.dom.window.close();
@@ -1061,10 +1105,63 @@ async function eyeMatch(ui, base, points) {
       const blog = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../classic/data/blog.json'), 'utf8'));
       assert.equal(page.document.querySelectorAll('.notebook-posts article').length, 6);
       assert.deepEqual(Array.from(page.document.querySelectorAll('[data-notebook-entry]'), card => Number(card.dataset.postId)), blog.posts.map(post => post.id), 'Blog cards follow blog.json order');
-      assert.equal(page.document.querySelectorAll('.notebook-year li a').length, blog.archive.length, 'The archive links every older post');
+      assert.equal(page.document.querySelectorAll('.notebook-year li a:not(.notebook-encounter)').length, blog.archive.length, 'The archive links every older post');
       assert.equal(page.document.querySelectorAll('.notebook-year[open]').length, 1, 'Only the most recent archive year starts open');
       assert.ok(page.find('[data-notebook-status-text]').textContent.startsWith(`${blog.total} entradas desde `), 'The status line counts the whole blog');
       assert.equal(page.find('[data-notebook-status]').dataset.state, undefined, 'Without network the status stays as built');
+      assert.equal(page.find('[data-notebook-latest]').closest('[data-notebook-entry]'), page.find('[data-notebook-entry]'), 'The "latest post" label sits on the first card');
+      // Blog → Trayectoria: cada entrada con encuentro lo enlaza, y el ancla existe en la otra página.
+      const encounters = new Set(JSON.parse(fs.readFileSync(path.resolve(__dirname, '../classic/data/exhibitions.json'), 'utf8')).exhibitions.map(item => String(item.id)));
+      const linked = [...blog.posts, ...blog.archive].filter(post => encounters.has(String(post.id)));
+      assert.ok(linked.length >= 10, 'Most encounters in Trayectoria come from a blog post');
+      assert.deepEqual(Array.from(page.document.querySelectorAll('.notebook-posts .notebook-encounter,.notebook-year .notebook-encounter'), link => link.getAttribute('href')), linked.map(post => `/trayectoria/#encuentro-${post.id}`), 'Posts with an encounter link to it in Trayectoria');
+      const careerHtml = fs.readFileSync(path.join(output, 'trayectoria/index.html'), 'utf8');
+      linked.forEach(post => assert.ok(careerHtml.includes(`id="encuentro-${post.id}"`), `Trayectoria has an anchor for encounter ${post.id}`));
+      // Prensa: una tarjeta por nota de prensa.json, de la más reciente a la más antigua, con el titular del medio sin traducir y el enlace a su fuente.
+      const press = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../classic/data/prensa.json'), 'utf8')).notes;
+      const pressCards = Array.from(page.document.querySelectorAll('#prensa [data-press-note]'));
+      assert.ok(press.length >= 1 && pressCards.length === press.length, 'Every press note has its card');
+      // Primero lo que la prensa contó y después el índice de agendas, cada parte de la más reciente a la más antigua.
+      const newest = notes => [...notes].sort((a, b) => b.date.localeCompare(a.date)).map(note => `prensa-${note.id}`);
+      assert.deepEqual(pressCards.map(card => card.id), [...newest(press.filter(note => note.kind !== 'agenda')), ...newest(press.filter(note => note.kind === 'agenda'))], 'Press pieces first, then the listings, each from newest to oldest');
+      assert.equal(page.document.querySelectorAll('#prensa .press-piece').length, press.filter(note => note.kind !== 'agenda').length, 'What the press wrote goes in clippings');
+      pressCards.forEach(card => { const link = card.querySelector('a.text-link'); assert.ok(link.getAttribute('aria-label').startsWith(card.classList.contains('press-piece') ? link.textContent.replace(/ ↗$/, '') : 'Leer'), `${card.id}: the accessible name starts with what is visible`); });
+      press.forEach(note => {
+        const card = page.document.getElementById(`prensa-${note.id}`);
+        assert.equal(card.querySelector('h3').textContent, note.title, `${note.id} keeps the outlet's headline`);
+        assert.equal(card.querySelector('h3').getAttribute('translate'), 'no', 'Headlines are not translated');
+        assert.equal(card.querySelector('h3').getAttribute('lang'), note.lang || 'es', `${note.id} says which language its headline is in`);
+        if (note.date_kind === 'event') assert.equal(card.querySelector('time').getAttribute('datetime'), note.date.slice(0, 7), `${note.id} gives only the month when the date is the show's`);
+        assert.ok(/^https:\/\//.test(note.url) && card.querySelector('a.text-link').getAttribute('href') === note.url, `${note.id} links to its source`);
+        assert.equal(card.querySelector('.notebook-encounter')?.getAttribute('href') || null, encounters.has(String(note.encounter)) ? `/trayectoria/#encuentro-${note.encounter}` : null, `${note.id} links to its encounter when there is one`);
+        if (encounters.has(String(note.encounter))) assert.ok(careerHtml.includes(`id="encuentro-${note.encounter}"`), `Trayectoria has an anchor for encounter ${note.encounter}`);
+      });
+      // Buscador del archivo: todas las palabras, sin tildes ni mayúsculas; al borrar, todo vuelve a su sitio.
+      const search = page.find('[data-notebook-search-input]'), searchCount = page.find('[data-notebook-search-count]');
+      const fold = text => text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+      const type = value => { search.value = value; search.dispatchEvent(new page.w.Event('input', { bubbles: true })); };
+      const shownItems = () => Array.from(page.document.querySelectorAll('.notebook-year li')).filter(item => !item.hidden && !item.closest('.notebook-year').hidden);
+      assert.equal(page.find('[data-notebook-search]').hidden, false, 'The archive search appears once the script can run it');
+      const expected = blog.archive.filter(post => ['walking', 'gallery', '2016'].every(word => fold(`${post.title} ${post.date}`).includes(word)));
+      assert.ok(expected.length >= 2 && expected.length < blog.archive.length);
+      type('  WALKING gallery 2016 ');
+      assert.deepEqual(shownItems().map(item => item.querySelector('a').getAttribute('href')), expected.map(post => post.url), 'Search keeps only the posts with every word');
+      assert.equal(searchCount.textContent, `${expected.length} de ${blog.archive.length} entradas`);
+      assert.deepEqual(Array.from(page.document.querySelectorAll('.notebook-year:not([hidden])'), year => year.querySelector('.notebook-year-number').textContent), ['2016']);
+      assert.ok(page.find('.notebook-year:not([hidden])').open, 'Years with results open while searching');
+      type('colectiva');
+      assert.ok(page.document.querySelectorAll('.notebook-year[open]:not([hidden])').length > 1, 'Several years can be open during a search');
+      assert.ok(shownItems().every(item => fold(item.textContent).includes('colectiva')));
+      assert.ok(shownItems().some(item => /Colectiva/.test(item.textContent)), 'Search ignores case');
+      type('exposicion');
+      assert.ok(shownItems().some(item => /Exposición/.test(item.textContent)), 'Search ignores accents');
+      type('zzzz');
+      assert.equal(shownItems().length, 0); assert.equal(searchCount.textContent, 'Ninguna entrada con esas palabras');
+      search.dispatchEvent(new page.w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+      assert.equal(search.value, ''); assert.equal(searchCount.textContent, '');
+      assert.equal(shownItems().length, blog.archive.length, 'Clearing the search restores the whole archive');
+      assert.equal(page.document.querySelectorAll('.notebook-year[open]').length, 1, 'and the single open year');
+      assert.equal(page.document.querySelectorAll('.notebook-year[name="notebook-archive"]').length, page.document.querySelectorAll('.notebook-year').length);
     }
     if (route === '/retratos-por-encargo-bilbao/') {
       assert.equal(page.document.querySelectorAll('.commission-example').length, 4, 'Commissions landing displays 4 monumental artworks');
@@ -1379,6 +1476,75 @@ async function eyeMatch(ui, base, points) {
     more.dispatchEvent(new tidy.w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
     assert.equal(tidyStage.classList.contains('is-more-open'), false, 'Escape folds the options');
     tidy.dom.window.close();
+  }
+  {
+    // Contacto (§10): la nota compone el mensaje con el motivo rodeado y lo escrito; de la página no sale nada.
+    const contact = create('/contacto/', false, { width: 1280, height: 800 }); await contact.flush();
+    const note = contact.find('[data-contact-note]'), more = contact.find('#ct-more');
+    const waText = page => decodeURIComponent(page.find('[data-contact-wa]').getAttribute('href').split('?text=')[1]);
+    const mailHref = () => contact.find('[data-contact-mail]').getAttribute('href');
+    const pick = key => { const input = contact.find(`#ct-r-${key}`); input.checked = true; input.dispatchEvent(new contact.w.Event('change', { bubbles: true })); };
+    const shownHints = () => Array.from(contact.document.querySelectorAll('.ct-hint.is-on'), hint => hint.dataset.contactHint);
+    assert.equal(contact.document.querySelector('main form'), null, 'The note is not a form: nothing is posted from the page');
+    assert.equal(contact.document.querySelectorAll('.contact-channel, .contact-shade').length, 0, 'The boxed channels and the veil over the artwork are gone');
+    assert.equal(contact.document.querySelectorAll('input[name="ct-reason"]').length, 4, 'Four reasons to circle');
+    assert.ok(contact.document.querySelectorAll('.ct-reason .ct-loop path[pathLength="1"]').length === 4, 'Each reason carries its own marker loop');
+    assert.equal(note.dataset.reason, 'retrato');
+    assert.equal(waText(contact), 'Hola, Naroa:\nTe escribo por un retrato por encargo.', 'The default message greets and names the first reason');
+    assert.ok(mailHref().startsWith(`mailto:encargos@naroagutierrezgil.com?subject=${encodeURIComponent('Retrato por encargo')}&body=`));
+    assert.deepEqual(shownHints(), ['retrato']);
+    assert.equal(more.placeholder, contact.find('#ct-h-retrato').textContent, 'The blank line suggests what helps to tell');
+    assert.equal(contact.find('#ct-r-retrato').getAttribute('aria-describedby'), 'ct-h-retrato', 'The same tip describes the option to assistive technology');
+    pick('obra');
+    assert.equal(note.dataset.reason, 'obra');
+    assert.ok(note.classList.contains('is-touched'));
+    assert.equal(waText(contact), 'Hola, Naroa:\nTe escribo por una obra tuya que he visto.');
+    assert.equal(more.placeholder, 'Cuál es: con el título basta…');
+    assert.deepEqual(shownHints(), ['obra']);
+    more.value = '  «Game Over», la de la pizarra.\n¿Sigue disponible?  '; more.dispatchEvent(new contact.w.Event('input', { bubbles: true }));
+    assert.equal(waText(contact), 'Hola, Naroa:\nTe escribo por una obra tuya que he visto.\n«Game Over», la de la pizarra.\n¿Sigue disponible?', 'What the visitor writes follows the reason');
+    assert.ok(mailHref().includes(`subject=${encodeURIComponent('Consulta sobre una obra')}&body=${encodeURIComponent('Hola, Naroa:\r\nTe escribo por una obra tuya que he visto.\r\n«Game Over»')}`), 'The mail carries the subject of the reason and CRLF line breaks');
+    pick('otra');
+    assert.equal(waText(contact), 'Hola, Naroa:\n«Game Over», la de la pizarra.\n¿Sigue disponible?', '"Something else" adds no sentence of its own');
+    assert.deepEqual(shownHints(), []);
+    assert.equal(contact.w.NAROA_CONTACT.getMessage(), waText(contact));
+    let copied = null;
+    Object.defineProperty(contact.w.navigator, 'clipboard', { value: { writeText: async text => { copied = text; } }, configurable: true });
+    contact.click('[data-contact-copy]'); await contact.flush();
+    assert.equal(copied, contact.w.NAROA_CONTACT.getMessage(), 'Copy takes the whole message');
+    assert.equal(contact.find('[data-contact-copy] span').textContent, 'Copiado ✓');
+    assert.equal(contact.find('[data-contact-status]').textContent, 'Copiado ✓', 'The copy is announced');
+    contact.click('[data-contact-copy-address]'); await contact.flush();
+    assert.equal(copied, 'encargos@naroagutierrezgil.com', 'The address can be copied without a mail client');
+    assert.ok(note.closest('[data-fluid-quiet]'), 'Cursor smoke stays off the paper');
+    // Las vías directas: una frase con seis enlaces y, debajo, las direcciones a la vista.
+    const words = Array.from(contact.document.querySelectorAll('.ct-say a[data-contact-way]'));
+    assert.deepEqual(words.map(word => word.dataset.contactWay), ['whatsapp', 'correo', 'telefono', 'instagram', 'facebook', 'blog'], 'The sentence names six direct ways');
+    assert.equal(contact.find('.ct-say').textContent, 'También por WhatsApp, por correo, por teléfono, en Instagram, en Facebook o en su blog.');
+    assert.equal(contact.find('.ct-say [data-contact-way="correo"]').getAttribute('href'), 'mailto:encargos@naroagutierrezgil.com');
+    assert.equal(contact.find('.ct-say [data-contact-way="telefono"]').getAttribute('href'), 'tel:+34636060609');
+    assert.ok(Array.from(contact.document.querySelectorAll('.ct-ways a[target="_blank"]')).every(link => link.rel === 'noopener noreferrer'));
+    assert.deepEqual(Array.from(contact.document.querySelectorAll('.ct-address-value'), value => value.textContent), ['+34 636 060 609', 'encargos@naroagutierrezgil.com', '@naroa_art', 'Naroa Artista Plástica', 'naroagutierrez.wordpress.com'], 'Every address can be read without opening anything');
+    words[2].dispatchEvent(new contact.w.Event('pointerenter'));
+    assert.deepEqual(Array.from(contact.document.querySelectorAll('.ct-address.is-lit'), address => address.dataset.contactAddress), ['whatsapp telefono'], 'A word of the sentence lights its address');
+    contact.find('[data-contact-address="correo"]').dispatchEvent(new contact.w.Event('pointerenter'));
+    assert.deepEqual(Array.from(contact.document.querySelectorAll('.ct-say a.is-lit'), word => word.dataset.contactWay), ['correo'], 'And an address lights its word');
+    contact.find('[data-contact-address="correo"]').dispatchEvent(new contact.w.Event('pointerleave'));
+    assert.equal(contact.document.querySelectorAll('.is-lit').length, 0);
+    const card = fs.readFileSync(path.join(output, contact.find('.ct-card').getAttribute('href')), 'utf8');
+    assert.ok(card.startsWith('BEGIN:VCARD\r\n') && card.includes('\r\nFN:Naroa Gutiérrez Gil\r\n') && card.includes('\r\nTEL;TYPE=CELL,VOICE:+34636060609\r\n') && card.includes('\r\nEMAIL;TYPE=INTERNET:encargos@naroagutierrezgil.com\r\n') && card.trimEnd().endsWith('END:VCARD'), 'The contact card carries the same data as the page');
+    assert.equal(contact.find('.ct-mirror-quote').textContent, '«piensa bien y acertarás»');
+    contact.dom.window.close();
+    // En cada idioma el mensaje se compone con los textos de su página, y la inscripción de la obra queda en español.
+    for (const [lang, expected] of [['en', 'Hello, Naroa,\nI’m writing about a commissioned portrait.'], ['eu', 'Kaixo, Naroa:\nEnkarguzko erretratu bati buruz idazten dizut.']]) {
+      const local = create(`/${lang}/contacto/`, false, { width: 1280, height: 800 }); await local.flush();
+      assert.equal(waText(local), expected, `The note writes in ${lang}`);
+      assert.equal(local.find('.ct-mirror-quote').textContent, '«piensa bien y acertarás»');
+      assert.notEqual(local.find('.ct-mirror-meta').textContent, 'Escrito a mano en un espejo de Rara Avis');
+      assert.equal(local.document.querySelectorAll('.ct-say a[data-contact-way]').length, 6, 'The translated sentence keeps its six links');
+      assert.ok(!local.find('.ct-say').textContent.startsWith('También'), 'The sentence is translated');
+      local.dom.window.close();
+    }
   }
   assert.equal(manifest.projects, works.length); assert.deepEqual(errors, []);
   console.log(`PASS: ${works.length} variable camera scores, fixed viewing pauses, full-viewport vertical and horizontal seams, deterministic reverse motion, three deep iris passes, zoom and puzzle chapters; all ${works.length} artwork flows, 3 gallery eye pairs, kinetic titles, native scroll, free inertia, direct links, 3-image loading bound, search/filters, details/photos, quiet mode, reduced motion, Vaivenes, editorial reveals, responsive Naroa-to-Rara Avis pupil/iris alignment, photographic wink, cinematic deep-iris camera with continuous forward velocity across the blend, eased outward turn, reversible reveal, image-load guard, seamless continuation through all ${works.length} works, 8 additional deep eye matches embedded catalogue navigation, opt-in reactive sound fragments, speed and direction response, bounded voices, silence at rest and safe audio lifecycle.`);

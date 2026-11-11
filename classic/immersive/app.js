@@ -401,7 +401,7 @@
     if (previewImg && dataUrl) previewImg.src = dataUrl;
     if (downloadBtn && dataUrl) {
       downloadBtn.href = dataUrl;
-      downloadBtn.download = `naroa-detail-obsession-${heroWork.slug}.jpg`;
+      downloadBtn.download = heroWork.slug === 'mi-visita' ? 'naroa-mi-visita.jpg' : `naroa-detail-obsession-${heroWork.slug}.jpg`;
     }
     return new Promise(resolve => {
       if (!canvas.toBlob) { resolve(); return; }
@@ -430,6 +430,7 @@
     if (spinner) spinner.hidden = false;
     isGeneratingRemix = true;
     const run = ++remixRun;
+    setRemixMode('work');
 
     try {
       // Enfoque DETAIL OBSESSION: Obra protagonista con zoom macro y miniatura completa
@@ -487,6 +488,255 @@
       }
     }
   }
+
+  // --- El retrato de tu visita ---
+  // Cuánto se ha mirado cada obra, medido solo mientras está quieta en pantalla. Vive en memoria:
+  // no se guarda ni se envía, y se pierde al cerrar la pestaña. Con ello se compone una Story con
+  // los recortes reales de las obras donde más se detuvo la visita.
+  const visit = { seconds: Object.create(null), focus: Object.create(null), last: performance.now() };
+  const VISIT_MIN_SECONDS = 4, VISIT_MIN_WORKS = 3, VISIT_MAX_WORKS = 4, VISIT_MIN_LENS = 1.5;
+  function visitTick() {
+    const now = performance.now(), dt = Math.min(1, (now - visit.last) / 1000);
+    visit.last = now;
+    if (document.hidden || document.querySelector('dialog[open]')) return;
+    const scene = $('.art-scene.is-current'), slug = scene?.dataset.work;
+    const phase = scene?.closest('[data-gallery]')?.dataset.transition;
+    // Cuenta la obra quieta o explorada: ni el cruce entre dos ni el retrato del umbral.
+    if (!slug || (phase && phase !== 'hold' && phase !== 'explore' && phase !== 'still')) return;
+    if (slug === projects[0]?.slug && window.scrollY < 40) return;
+    visit.seconds[slug] = (visit.seconds[slug] || 0) + dt;
+    // Con la lupa a la vista, el tiempo se apunta además a la zona de la obra (rejilla de 4×4) que tiene debajo.
+    const spot = visit.focus[slug], lens = $('.art-lens');
+    if (spot && lens && !lens.hidden) {
+      const key = `${Math.min(3, Math.floor(spot.x * 4))}-${Math.min(3, Math.floor(spot.y * 4))}`;
+      const cell = spot.cells[key] || (spot.cells[key] = { t: 0, x: 0, y: 0 });
+      cell.t += dt; cell.x += spot.x * dt; cell.y += spot.y * dt;
+    }
+    if (!visit.ready && visitReady()) { visit.ready = true; visitSync(); }
+  }
+  if (galleryPage) setInterval(visitTick, 500);
+  // La lupa dice dónde se miró dentro de la obra: el recorte de la Story se centra en la zona donde
+  // más tiempo estuvo, no en el último punto por el que pasó al retirarla.
+  function visitFocus(slug, x, y) {
+    if (!slug) return;
+    const spot = visit.focus[slug] || (visit.focus[slug] = { x: 0.5, y: 0.42, cells: Object.create(null) });
+    spot.x = clamp(x, 0, 1); spot.y = clamp(y, 0, 1);
+  }
+  function visitFocusOf(slug) {
+    const spot = visit.focus[slug], cells = Object.values(spot?.cells || {}).sort((a, b) => b.t - a.t);
+    const best = cells[0], used = cells.reduce((sum, cell) => sum + cell.t, 0);
+    // Un solo muestreo puede sumar hasta un segundo: hacen falta al menos dos para que cuente.
+    if (best && best.t >= VISIT_MIN_LENS) return { x: best.x / best.t, y: best.y / best.t };
+    // Sin detenerse en ningún sitio: si aun así la usó un rato, vale el último punto; un roce no cuenta.
+    return used >= VISIT_MIN_LENS ? { x: spot.x, y: spot.y } : { x: 0.5, y: 0.42 };
+  }
+  // Las dos entradas de la galería (en «Más» y junto a «Compartir recorrido») aparecen cuando ya hay retrato.
+  function visitSync() {
+    const ready = visitReady(), finale = $('[data-finale-share]'), atEnd = !!finale && !finale.hidden;
+    document.querySelectorAll('[data-visit-portrait]').forEach(el => { el.hidden = !ready || (atEnd && el.hasAttribute('data-visit-more')); });
+  }
+  function visitLooked() {
+    return Object.entries(visit.seconds)
+      .filter(entry => entry[1] >= VISIT_MIN_SECONDS)
+      .sort((a, b) => b[1] - a[1])
+      .map(([slug, seconds]) => ({ work: projects.find(w => w.slug === slug), seconds }))
+      .filter(entry => entry.work);
+  }
+  const visitReady = () => visitLooked().length >= VISIT_MIN_WORKS;
+  const visitClock = seconds => { const s = Math.round(seconds), m = Math.floor(s / 60); return m ? `${m} min ${String(s % 60).padStart(2, '0')} s` : `${s} s`; };
+
+  // Story 9:16 del paseo (1080×1920): una franja por obra, recortada a mano, y tanto más alta
+  // cuanto más se miró. Cada franja es un detalle real con la pieza completa prendida al lado.
+  // El texto respeta la misma zona segura que la Story de una obra (y=250…1670).
+  function renderVisitFrame(ctx, looked, images, summary) {
+    const W = 1080, H = 1920, margin = 76, paper = '#fffdf4', accent = '#f7d594';
+    const spaced = value => { if ('letterSpacing' in ctx) ctx.letterSpacing = value; };
+    const focusOf = i => visitFocusOf(looked[i].work.slug);
+    ctx.fillStyle = '#0b0b0a';
+    ctx.fillRect(0, 0, W, H);
+    // Fondo: la obra más mirada, muy de cerca y en penumbra.
+    if (images[0]) {
+      drawStoryZoomedDetail(ctx, images[0], 0, 0, W, H, 0, 3.1, focusOf(0).x, focusOf(0).y);
+      ctx.fillStyle = 'rgba(11, 11, 10, 0.8)';
+      ctx.fillRect(0, 0, W, H);
+    }
+    const inked = on => { ctx.shadowColor = on ? 'rgba(0, 0, 0, 0.6)' : 'transparent'; ctx.shadowBlur = on ? 22 : 0; ctx.shadowOffsetY = on ? 2 : 0; };
+    ctx.textBaseline = 'alphabetic';
+    ctx.textAlign = 'left';
+    inked(true);
+    ctx.fillStyle = paper;
+    ctx.font = '500 92px "Caveat", cursive';
+    ctx.fillText('Naroa', margin, 322);
+    const signature = ctx.measureText('Naroa').width;
+    ctx.font = '500 22px "DM Sans", sans-serif';
+    spaced('5px');
+    ctx.fillText('GUTIÉRREZ GIL', margin + signature + 22, 318);
+    spaced('0px');
+    ctx.font = 'italic 300 78px "Cormorant Garamond", serif';
+    ctx.fillText('El retrato de mi visita', margin - 4, 432);
+    inked(false);
+
+    // Reparto del alto: proporcional al tiempo, con un mínimo para que quepa el rótulo.
+    const top = 486, bottom = 1528, gap = 18, x = margin - 34, bandW = W - x * 2;
+    const room = bottom - top - gap * (looked.length - 1), floor = room * 0.17;
+    const total = looked.reduce((sum, entry) => sum + entry.seconds, 0) || 1;
+    let heights = looked.map(entry => entry.seconds / total * room);
+    for (let pass = 0; pass < 4; pass++) {
+      const small = heights.map(h => h <= floor);
+      const free = room - floor * small.filter(Boolean).length;
+      const rest = heights.reduce((sum, h, i) => sum + (small[i] ? 0 : h), 0) || 1;
+      heights = heights.map((h, i) => small[i] ? floor : h / rest * free);
+    }
+    let y = top;
+    looked.forEach((entry, i) => {
+      const h = Math.round(heights[i]), img = images[i], focus = focusOf(i), pad = 34;
+      // La pieza completa va a la derecha de su franja; su ancho decide cuánto queda para el título.
+      const maxH = Math.max(70, Math.min(230, h - 74)), maxW = 200;
+      const nw = img ? img.naturalWidth || img.width || 1 : 1, nh = img ? img.naturalHeight || img.height || 1 : 1;
+      const cardW = img ? Math.round(nw * Math.min(maxW / nw, maxH / nh)) + 28 : 0;
+      const textW = bandW - pad * 2 - (cardW ? cardW + pad : 0) - 16;
+      // El título va entero: hasta tres líneas si la franja da para ello y, si aun así no cabe, encoge la letra.
+      const title = String(entry.work.title || '').split(/\s+/).filter(Boolean).join(' ');
+      let size = Math.round(clamp(h * 0.25, 46, 78)), lines = [];
+      for (;;) {
+        ctx.font = `italic 300 ${size}px "Cormorant Garamond", serif`;
+        lines = wrapStoryText(ctx, title, textW, clamp(Math.floor((h - 72) / (size * 1.02)), 1, 3));
+        if (lines.join(' ') === title || size <= 38) break;
+        size -= 4;
+      }
+      const labelY = y + h - 30 - lines.length * size * 1.02 + size * 0.08 - 10;
+      const label = `${String(i + 1).padStart(2, '0')} · ${visitClock(entry.seconds)}`.toUpperCase();
+      ctx.save();
+      storyCutPath(ctx, x, y, bandW, h, 4.5, 11 + i * 17);
+      ctx.clip();
+      ctx.fillStyle = '#161512';
+      ctx.fillRect(x - 8, y - 8, bandW + 16, h + 16);
+      if (img) drawStoryZoomedDetail(ctx, img, x - 8, y - 8, bandW + 16, h + 16, 0, 1.75, focus.x, focus.y);
+      const veil = ctx.createLinearGradient(0, y + h * 0.3, 0, y + h);
+      veil.addColorStop(0, 'rgba(11, 11, 10, 0)');
+      veil.addColorStop(1, 'rgba(11, 11, 10, 0.82)');
+      ctx.fillStyle = veil;
+      ctx.fillRect(x - 8, y, bandW + 16, h + 8);
+      // El rótulo cae a veces sobre un detalle claro, donde el velo aún no ha oscurecido:
+      // una sombra ovalada solo detrás de él lo deja legible sin apagar la franja.
+      ctx.font = '500 22px "DM Sans", sans-serif';
+      spaced('4px');
+      const labelW = ctx.measureText(label).width, reach = labelW / 2 + 110;
+      spaced('0px');
+      ctx.translate(x + pad + labelW / 2, labelY - 8);
+      ctx.scale(1, 0.34);
+      const shade = ctx.createRadialGradient(0, 0, 0, 0, 0, reach);
+      shade.addColorStop(0, 'rgba(11, 11, 10, 0.74)');
+      shade.addColorStop(0.55, 'rgba(11, 11, 10, 0.5)');
+      shade.addColorStop(1, 'rgba(11, 11, 10, 0)');
+      ctx.fillStyle = shade;
+      ctx.fillRect(-reach, -reach, reach * 2, reach * 2);
+      ctx.restore();
+      if (img) drawStoryMiniature(ctx, img, x + bandW - pad - cardW, y + h - 22, maxW, maxH, i % 2 ? 2.1 : -2.4);
+      // Rótulo: lo que duró la mirada y el título, apoyados en el borde inferior.
+      inked(true);
+      ctx.font = `italic 300 ${size}px "Cormorant Garamond", serif`;
+      let ty = y + h - 30;
+      ctx.fillStyle = paper;
+      lines.slice().reverse().forEach(line => { ctx.fillText(line, x + pad - 3, ty); ty -= size * 1.02; });
+      ctx.fillStyle = accent;
+      ctx.font = '500 22px "DM Sans", sans-serif';
+      spaced('4px');
+      ctx.fillText(label, x + pad, labelY);
+      spaced('0px');
+      inked(false);
+      y += h + gap;
+    });
+
+    inked(true);
+    ctx.fillStyle = accent;
+    ctx.font = '500 22px "DM Sans", sans-serif';
+    spaced('4px');
+    ctx.fillText(summary.toUpperCase(), margin, 1598);
+    spaced('0px');
+    ctx.fillStyle = 'rgba(255, 253, 244, 0.78)';
+    ctx.font = '500 28px "DM Sans", sans-serif';
+    ctx.fillText('naroagutierrezgil.com', margin, 1656);
+    inked(false);
+  }
+
+  // El diálogo de Story sirve a las dos: la de una obra y la del paseo.
+  let remixHeading = null, remixShuffle = null, remixAlt = null;
+  function setRemixMode(mode) {
+    const dialog = $('#story-remix-dialog');
+    if (!dialog) return;
+    const heading = $('#story-remix-heading', dialog), loop = $('[data-remix-video-loop]', dialog), visitBtn = $('[data-remix-visit]', dialog);
+    if (heading) {
+      if (remixHeading === null) remixHeading = heading.textContent;
+      heading.textContent = mode === 'visit' ? 'Modo Story · El retrato de tu visita' : remixHeading;
+    }
+    if (loop) loop.hidden = mode === 'visit';
+    if (visitBtn) visitBtn.hidden = mode === 'visit' || !visitReady();
+    // Desde el retrato del paseo, el tercer botón no baraja nada: vuelve a la Story de una obra, y lo dice.
+    const shuffle = $('[data-remix-shuffle] span', dialog);
+    if (shuffle) {
+      if (remixShuffle === null) remixShuffle = shuffle.textContent;
+      shuffle.textContent = mode === 'visit' ? 'La Story de una sola obra' : remixShuffle;
+    }
+    // La vista previa se describe según lo que enseña: la del paseo nombra sus obras al terminar de componerse.
+    const preview = $('[data-story-remix-img]', dialog);
+    if (preview) {
+      if (remixAlt === null) remixAlt = preview.alt;
+      if (mode !== 'visit') preview.alt = remixAlt;
+    }
+    dialog.dataset.remixMode = mode;
+  }
+
+  async function generateVisitStory() {
+    const dialog = $('#story-remix-dialog');
+    const all = visitLooked();
+    if (!dialog || all.length < VISIT_MIN_WORKS) return null;
+    const looked = all.slice(0, VISIT_MAX_WORKS);
+    const spinner = $('[data-story-remix-spinner]', dialog);
+    if (spinner) spinner.hidden = false;
+    isGeneratingRemix = true;
+    const run = ++remixRun;
+    try {
+      setRemixMode('visit');
+      currentRemixSlug = null;
+      currentRemixImg = null;
+      const total = all.reduce((sum, entry) => sum + entry.seconds, 0);
+      const summary = `${all.length} obras · ${visitClock(total)} de mirada`;
+      const titleEl = $('[data-remix-title]', dialog), metaEl = $('[data-remix-meta]', dialog);
+      if (titleEl) titleEl.textContent = 'El retrato de tu visita';
+      if (metaEl) metaEl.textContent = summary;
+      setRemixStatus('');
+      const [images] = await Promise.all([
+        Promise.all(looked.map(entry => loadImageAsync(entry.work.photos?.[0]?.src || entry.work.cover || entry.work.thumb).catch(() => null))),
+        storyFontsReady()
+      ]);
+      if (run !== remixRun) return null;
+      const canvas = document.createElement('canvas');
+      canvas.width = 1080;
+      canvas.height = 1920;
+      let ctx = null;
+      try { ctx = canvas.getContext('2d'); } catch {}
+      if (!ctx) return null;
+      renderVisitFrame(ctx, looked, images, summary);
+      await publishStory(canvas, { slug: 'mi-visita' });
+      const preview = $('[data-story-remix-img]', dialog), names = looked.map(entry => entry.work.title).join(', ');
+      if (preview && run === remixRun) preview.alt = `El retrato de tu visita: ${names}`;
+      return { dataUrl: currentRemixDataUrl, blob: currentRemixBlob, file: currentRemixFile, works: looked.map(entry => entry.work.slug) };
+    } catch (err) {
+      console.warn('Error generating visit story:', err);
+      return null;
+    } finally {
+      if (run === remixRun) {
+        if (spinner) spinner.hidden = true;
+        isGeneratingRemix = false;
+      }
+    }
+  }
+  document.addEventListener('click', e => {
+    if (!e.target.closest?.('[data-visit-portrait]')) return;
+    openDialog('#story-remix-dialog');
+    generateVisitStory();
+  });
 
   async function recordStoryVideoLoop(preferredSlug = null, durationMs = 6000) {
     if (storyLoopState.isRecording) return null;
@@ -741,6 +991,10 @@
         recordStoryVideoLoop(currentRemixSlug || null, 6000);
       });
     }
+    $('[data-remix-visit]', remixDialog)?.addEventListener('click', () => {
+      if (isGeneratingRemix || storyLoopState.isRecording) return;
+      generateVisitStory();
+    });
   }
   const menu = $('#menu-dialog'), menuLinks = $$('[data-menu-item]', menu), menuImages = $$('[data-menu-image]', menu);
   const menuPicture = $('[data-menu-picture]', menu), menuReel = $('[data-menu-reel]', menu);
@@ -1482,6 +1736,9 @@
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     const pan = { x: 0, y: 0, rx: 0, ry: 0, vx: 0, vy: 0, vrx: 0, vry: 0, tx: 0, ty: 0, trx: 0, try: 0, frame: null };
     let cameraRestTimer = null, lastScrollPixels = 0;
+    // Aviso de temporada en la cabecera: acompaña la llegada y el umbral, no el recorrido.
+    const seasonNav = document.querySelector('.season-nav');
+    let seasonHome = null;
     function stepPan() {
       pan.frame = null;
       if (reduced.matches || state.fit || !stage.classList.contains('is-resting')) {
@@ -1562,61 +1819,158 @@
       Object.entries(attrs).forEach(([key, value]) => node.setAttribute(key, String(value)));
       return node;
     };
+    // Saio Puzzle. El marco y el paño de la fotografía no se mueven: solo salen las 25 piezas reales,
+    // recortadas con el mismo troquel (5 × 5, pestañas alternas) y dentro de su hueco de esquinas redondas.
+    // Medidas sobre la fotografía, en milésimas de su lado.
+    const PUZZLE_TRAYS = { 'saio-puzzle': { left: 104.5, top: 114.3, right: 892.6, bottom: 899.9, corner: 30 } };
+    const PUZZLE_KNOB = [[.18, 0, .40, -.02, .42, .04], [.44, .10, .36, .14, .34, .21], [.32, .30, .42, .34, .50, .34], [.58, .34, .68, .30, .66, .21], [.64, .14, .56, .10, .58, .04], [.60, -.02, .82, 0, 1, 0]];
+    const PUZZLE_OUT = .24, PUZZLE_STAGGER = .22, PUZZLE_RETURN = .52, PUZZLE_THICK = 3.6;
     function puzzleScene(index) {
       if (puzzles.has(index)) return puzzles.get(index);
+      const tray = PUZZLE_TRAYS[works[index].slug] || { left: 0, top: 0, right: 1000, bottom: 1000, corner: 0 };
+      const { left, top, right, bottom, corner: r } = tray, cw = (right - left) / 5, ch = (bottom - top) / 5;
       const svg = svgNode('svg', { viewBox: '-120 -120 1240 1240', 'aria-hidden': 'true', focusable: 'false', class: 'puzzle-camera' });
       const defs = svgNode('defs'), picture = svgNode('image', { id: `puzzle-photo-${index}`, width: 1000, height: 1000, preserveAspectRatio: 'none', href: works[index].cover });
-      defs.append(picture); svg.append(defs);
-      const pieces = [];
-      // Adjacent edges share one curve, traversed in the opposite direction.
-      const edge = (x, y, dx, dy, tab) => {
-        const point = (t, n = 0) => `${(x + dx * t - dy * n).toFixed(3)},${(y + dy * t + dx * n).toFixed(3)}`;
-        return tab ? `L${point(.35)} C${point(.46)} ${point(.31, tab * .16)} ${point(.5, tab * .16)} C${point(.69, tab * .16)} ${point(.54)} ${point(.65)} L${point(1)}` : `L${point(1)}`;
+      defs.append(picture);
+      const shade = (id, x2, y2) => {
+        const gradient = svgNode('linearGradient', { id: `puzzle-${id}-${index}`, x1: 0, y1: 0, x2, y2 });
+        gradient.append(svgNode('stop', { offset: 0, 'stop-color': '#1a120c', 'stop-opacity': .5 }), svgNode('stop', { offset: 1, 'stop-color': '#1a120c', 'stop-opacity': 0 }));
+        defs.append(gradient); return `url(#puzzle-${id}-${index})`;
       };
+      // El hueco de la bandeja: cartón a la vista, con la sombra del borde arriba y a la izquierda.
+      // Solo asoma por el asiento de las piezas que faltan: la máscara suma un asiento por pieza suelta.
+      const open = svgNode('mask', { id: `puzzle-open-${index}`, maskUnits: 'userSpaceOnUse', x: left - 4, y: top - 4, width: right - left + 8, height: bottom - top + 8 });
+      defs.append(open);
+      const well = svgNode('g', { class: 'puzzle-well', mask: `url(#puzzle-open-${index})` }), hollow = { x: left, y: top, width: right - left, height: bottom - top, rx: r };
+      well.append(svgNode('rect', { ...hollow, class: 'puzzle-well-board' }),
+        svgNode('rect', { ...hollow, height: ch * .5, fill: shade('shade-top', 0, 1) }),
+        svgNode('rect', { ...hollow, width: cw * .4, fill: shade('shade-left', 1, 0) }),
+        svgNode('rect', { ...hollow, class: 'puzzle-well-rim' }));
+      const seated = svgNode('g', { class: 'puzzle-seated' }), loose = svgNode('g', { class: 'puzzle-loose' });
+      svg.append(defs, svgNode('use', { href: `#puzzle-photo-${index}`, class: 'puzzle-tray' }), well, seated, loose);
+      const pieces = [], at = (x, y) => `${x.toFixed(2)},${y.toFixed(2)}`;
+      // Los cantos vecinos comparten curva: es simétrica y cada pieza la recorre en sentido contrario.
+      const edge = (x, y, dx, dy, tab) => {
+        const point = (t, n) => at(x + dx * t - dy * n * tab, y + dy * t + dx * n * tab);
+        return PUZZLE_KNOB.map(([a, b, c, d, e, f]) => `C${point(a, b)} ${point(c, d)} ${point(e, f)}`).join('');
+      };
+      const border = [];
+      for (let c = 0; c < 5; c++) border.push(c);
+      for (let q = 1; q < 5; q++) border.push(q * 5 + 4);
+      for (let c = 3; c >= 0; c--) border.push(20 + c);
+      for (let q = 3; q >= 1; q--) border.push(q * 5);
+      // Se vuelve a montar como lo haría cualquiera: primero el borde, en orden, y después el interior.
+      const assembly = border.concat(Array.from({ length: 25 }, (_, n) => n).filter(n => !border.includes(n)));
       for (let row = 0; row < 5; row++) for (let col = 0; col < 5; col++) {
-        const n = row * 5 + col, x = col * 200, y = row * 200;
-        const h = r => r === 0 || r === 5 ? 0 : (r + col) % 2 ? 1 : -1;
-        const v = c => c === 0 || c === 5 ? 0 : (row + c) % 2 ? -1 : 1;
-        const path = `M${x},${y}` + edge(x, y, 200, 0, h(row)) + edge(x + 200, y, 0, 200, v(col + 1)) + edge(x + 200, y + 200, -200, 0, -h(row + 1)) + edge(x, y + 200, 0, -200, -v(col)) + 'Z';
+        const n = row * 5 + col, x0 = left + col * cw, y0 = top + row * ch, x1 = x0 + cw, y1 = y0 + ch;
+        const h = q => q === 0 || q === 5 ? 0 : (q + col) % 2 ? 1 : -1;
+        const v = c => c === 0 || c === 5 ? 0 : (row + c) % 2 ? 1 : -1;
+        const tl = r && !row && !col, tr = r && !row && col === 4, br = r && row === 4 && col === 4, bl = r && row === 4 && !col;
+        const path = (tl ? `M${at(x0, y0 + r)}Q${at(x0, y0)} ${at(x0 + r, y0)}` : `M${at(x0, y0)}`)
+          + (h(row) ? edge(x0, y0, cw, 0, h(row)) : tr ? `L${at(x1 - r, y0)}Q${at(x1, y0)} ${at(x1, y0 + r)}` : `L${at(x1, y0)}`)
+          + (v(col + 1) ? edge(x1, y0, 0, ch, v(col + 1)) : br ? `L${at(x1, y1 - r)}Q${at(x1, y1)} ${at(x1 - r, y1)}` : `L${at(x1, y1)}`)
+          + (h(row + 1) ? edge(x1, y1, -cw, 0, -h(row + 1)) : bl ? `L${at(x0 + r, y1)}Q${at(x0, y1)} ${at(x0, y1 - r)}` : `L${at(x0, y1)}`)
+          + (v(col) ? edge(x0, y1, 0, -ch, -v(col)) : '') + 'Z';
         const clip = svgNode('clipPath', { id: `puzzle-cut-${index}-${n}`, clipPathUnits: 'userSpaceOnUse' });
         clip.append(svgNode('path', { d: path })); defs.append(clip);
         const group = svgNode('g', { 'data-puzzle-piece': n });
-        group.append(svgNode('use', { href: `#puzzle-photo-${index}`, 'clip-path': `url(#puzzle-cut-${index}-${n})` }));
-        const bevel = svgNode('path', { d: path, class: 'puzzle-piece-edge', fill: 'none' });
-        group.append(bevel);
-        svg.append(group);
-        const destination = (n * 7 + 9) % 25;
-        const destCol = destination % 5;
-        const destRow = Math.floor(destination / 5);
-        const relX = (col - 2) * 160;
-        const relY = (row - 2) * 160;
-        const dx = ((destCol - col) * 220 + Math.sin(n * 2.4) * 140 + relX * 1.35) * 1.15;
-        const dy = ((destRow - row) * 220 + Math.cos(n * 1.9) * 120 + relY * 1.35) * 1.15;
-        const turn = (n % 7 - 3) * 28 + Math.sin(n * 2.8) * 18;
-        const arc = Math.sin(n * 1.7) * 240 + Math.cos(n * 2.3) * 110;
-        const radialDist = Math.hypot(col - 2, row - 2) / 2.8284;
-        pieces.push({ group, cx: x + 100, cy: y + 100, dx, dy, turn, arc, radialDist });
+        // Bajo la imagen, el canto del cartón: se ve por abajo cuando la pieza está suelta.
+        const side = svgNode('path', { d: path, class: 'puzzle-piece-side' });
+        group.append(side, svgNode('use', { href: `#puzzle-photo-${index}`, 'clip-path': `url(#puzzle-cut-${index}-${n})` }), svgNode('path', { d: path, class: 'puzzle-piece-edge', fill: 'none' }));
+        seated.append(group);
+        // El trazo solapa los asientos vecinos: entre dos huecos seguidos no queda una rendija de la foto.
+        const seat = svgNode('path', { d: path, fill: '#fff', stroke: '#fff', 'stroke-width': 1.5, display: 'none' });
+        open.append(seat);
+        pieces.push({
+          group, side, seat, n, cx: x0 + cw / 2, cy: y0 + ch / 2, loose: false, x: 0, y: 0,
+          leave: .02 + ((n * 11 + 3) % 25) / 24 * PUZZLE_STAGGER,
+          back: PUZZLE_RETURN + assembly.indexOf(n) / 24 * PUZZLE_STAGGER,
+          turn: ((n * 37) % 11 - 5) * 13 + (n % 2 ? 8 : -8),
+          bend: (n % 2 ? 1 : -1) * (.07 + ((n * 5) % 7) * .012)
+        });
       }
-      const puzzle = { svg, picture, pieces };
+      const puzzle = { svg, picture, pieces, well, seated, loose, table: '', stack: '', size: Math.max(cw, ch), cx: (left + right) / 2, cy: (top + bottom) / 2 };
       $('.art-pan', scenes[index]).append(svg); scenes[index].classList.add('is-puzzle');
       puzzles.set(index, puzzle); return puzzle;
     }
+    // La mesa: dónde cae cada pieza. Se reparte por lo que se ve de la pantalla, así que no se amontonan
+    // ni se salen del encuadre, en horizontal y en vertical, y dejan libre el título.
+    function layPuzzleTable(puzzle) {
+      const vw = geometry.width || innerWidth, vh = geometry.height || innerHeight, key = `${vw}x${vh}`;
+      if (puzzle.table === key) return;
+      puzzle.table = key;
+      const pan = puzzle.svg.parentNode, laidOut = pan.clientWidth > 0 && pan.clientHeight > 0;
+      const panW = laidOut ? pan.clientWidth : vw, panH = laidOut ? pan.clientHeight : vh;
+      const matrix = /matrix\(([^)]+)\)/.exec(getComputedStyle(puzzle.svg).transform || '');
+      const values = matrix ? matrix[1].split(',').map(Number) : [];
+      const zoom = values[0] > 0 ? values[0] : .94, shift = Number.isFinite(values[5]) ? values[5] : -vh * .03;
+      const unit = Math.min(panW, panH) / 1240 * zoom;
+      const centreX = (laidOut ? pan.offsetLeft : 0) + panW / 2, centreY = (laidOut ? pan.offsetTop : 0) + panH / 2 + shift;
+      const narrow = vw < 760, reach = puzzle.size * .62;
+      const x0 = 500 + (vw * .03 - centreX) / unit + reach, x1 = 500 + (vw * .97 - centreX) / unit - reach;
+      const y0 = 500 + (Math.max(58, vh * (narrow ? .13 : .09)) - centreY) / unit + reach, y1 = 500 + (vh * (narrow ? .7 : .9) - centreY) / unit - reach;
+      const width = Math.max(x1 - x0, puzzle.size), height = Math.max(y1 - y0, puzzle.size);
+      let cols = 5, rows = 5, best = 0;
+      for (let c = 3; c <= 9; c++) {
+        const q = Math.ceil(25 / c), room = Math.min(width / c, height / q);
+        if (room > best) { best = room; cols = c; rows = q; }
+      }
+      const titleX = 500 + (vw * .38 - centreX) / unit, titleY = 500 + (vh * .64 - centreY) / unit;
+      const slots = [];
+      for (let q = 0; q < rows; q++) for (let c = 0; c < cols; c++) {
+        const k = q * cols + c, x = x0 + (c + .5) * width / cols, y = y0 + (q + .5) * height / rows;
+        slots.push({ k, x: x + Math.sin(k * 2.4) * width / cols * .14, y: y + Math.cos(k * 1.9) * height / rows * .12,
+          spare: (!narrow && x < titleX && y > titleY ? 1e6 : 0) - Math.hypot(x - puzzle.cx, y - puzzle.cy) });
+      }
+      // Sobran huecos: se quedan vacíos los que caen bajo el título y los del centro, para que se vea la bandeja.
+      const kept = slots.slice().sort((a, b) => b.spare - a.spare).slice(slots.length - 25).sort((a, b) => a.k - b.k);
+      puzzle.pieces.forEach(piece => {
+        const slot = kept[(piece.n * 7 + 9) % 25];
+        piece.x = slot.x - piece.cx; piece.y = slot.y - piece.cy;
+      });
+    }
     function drawPuzzle(index, fraction, still) {
       const puzzle = puzzleScene(index);
-      puzzle.picture.setAttribute('href', works[index].cover);
-      const phase = clamp(fraction / .78, 0, 1);
-      const scatter = still ? 0 : Math.pow(Math.sin(phase * Math.PI), 2);
-      const amount = scatter < 1e-8 ? 0 : scatter;
-      puzzle.svg.dataset.scatter = amount.toFixed(4);
-      puzzle.svg.style.setProperty('--puzzle-lift', amount.toFixed(3));
+      if (puzzle.picture.getAttribute('href') !== works[index].cover) puzzle.picture.setAttribute('href', works[index].cover);
+      // Hasta .78 del paso: salen de una en una, quedan todas sobre la mesa a la mitad y vuelven a su sitio.
+      const phase = still ? 0 : clamp(fraction / .78, 0, 1);
       puzzle.svg.style.visibility = still ? 'hidden' : 'visible';
       scenes[index].classList.toggle('puzzle-still', still);
-      puzzle.pieces.forEach(({ group, cx, cy, dx, dy, turn, arc, radialDist }) => {
-        const pieceExp = 1.35 - 0.57 * (radialDist || 0);
-        const a = amount === 0 ? 0 : Math.pow(amount, pieceExp);
-        const lift = Math.sin(phase * Math.PI * 2) * a;
-        group.setAttribute('transform', `translate(${(dx * a).toFixed(3)} ${(dy * a + arc * lift).toFixed(3)}) rotate(${(turn * a).toFixed(3)} ${cx} ${cy})`);
+      if (phase > 0) layPuzzleTable(puzzle);
+      const fixed = value => (Math.abs(value) < 5e-4 ? 0 : value).toFixed(3);
+      let total = 0, changed = false;
+      puzzle.pieces.forEach(piece => {
+        const out = smooth((phase - piece.leave) / PUZZLE_OUT), home = smooth((phase - piece.back) / PUZZLE_OUT);
+        const away = out - home, air = Math.sin(Math.PI * (home > 0 ? home : out)), isLoose = away > 0;
+        const x = piece.x * away - piece.y * piece.bend * air, y = piece.y * away + piece.x * piece.bend * air;
+        const scale = 1 + .075 * air;
+        total += away;
+        piece.group.setAttribute('transform', `translate(${fixed(x)} ${fixed(y)}) rotate(${fixed(piece.turn * away)} ${piece.cx.toFixed(2)} ${piece.cy.toFixed(2)}) translate(${fixed(piece.cx * (1 - scale))} ${fixed(piece.cy * (1 - scale))}) scale(${scale.toFixed(4)})`);
+        if (isLoose || piece.loose) {
+          // La luz viene siempre de arriba: sombra y canto caen hacia abajo en pantalla, gire lo que gire la pieza.
+          const lift = isLoose ? .3 * away + .7 * air : 0, angle = piece.turn * away * Math.PI / 180;
+          const sin = Math.sin(angle) / scale, cos = Math.cos(angle) / scale, drop = 3 + lift * 24;
+          piece.group.style.setProperty('--piece-lift', lift.toFixed(3));
+          piece.group.style.setProperty('--piece-shadow-x', fixed(drop * sin));
+          piece.group.style.setProperty('--piece-shadow-y', fixed(drop * cos));
+          piece.side.setAttribute('transform', `translate(${fixed(PUZZLE_THICK * sin)} ${fixed(PUZZLE_THICK * cos)})`);
+        }
+        if (isLoose !== piece.loose) {
+          piece.loose = isLoose; piece.group.classList.toggle('is-loose', isLoose); changed = true;
+          if (isLoose) piece.seat.removeAttribute('display'); else piece.seat.setAttribute('display', 'none');
+        }
       });
+      // El montón tiene orden: la última en caer queda encima y la primera en volver sale de arriba.
+      // Depende solo de la posición del scroll, así que subir y bajar dibujan lo mismo.
+      const stack = phase < .51 ? 'leave' : 'back';
+      if (changed || stack !== puzzle.stack) {
+        puzzle.stack = stack;
+        puzzle.seated.append(...puzzle.pieces.filter(piece => !piece.loose).map(piece => piece.group));
+        puzzle.loose.append(...puzzle.pieces.filter(piece => piece.loose).sort((a, b) => stack === 'leave' ? a.leave - b.leave : b.back - a.back).map(piece => piece.group));
+      }
+      const amount = total / puzzle.pieces.length;
+      puzzle.svg.dataset.scatter = amount.toFixed(4);
+      puzzle.svg.style.setProperty('--puzzle-lift', amount.toFixed(3));
       return puzzle;
     }
     const paintedScenes = new Set(scenes.map((_, index) => index));
@@ -2712,11 +3066,19 @@
       $('[data-art-title]', stage).textContent = p.title; $('[data-art-material]', stage).textContent = p.label;
       $('[data-counter]', stage).textContent = `${String(state.index + 1).padStart(2, '0')} / ${String(works.length).padStart(2, '0')}`;
       $$('[data-select]', stage).forEach(b => { const i = Number(b.dataset.select); b.hidden = i < begin || i >= begin + 5; b.setAttribute('aria-pressed', String(i === state.index)); });
-      $('[data-prev]', stage).disabled = state.index === 0; $('[data-next]', stage).disabled = state.index === works.length - 1;
+      const prevBtn = $('[data-prev]', stage), nextBtn = $('[data-next]', stage);
+      const atStart = state.index === 0, atEnd = state.index === works.length - 1;
+      // Una flecha que se desactiva con el foco puesto lo suelta: antes de desactivarla, el foco pasa a la otra.
+      if (atStart !== atEnd && document.activeElement === (atStart ? prevBtn : nextBtn)) {
+        const other = atStart ? nextBtn : prevBtn;
+        other.disabled = false; other.focus({ preventScroll: true });
+      }
+      prevBtn.disabled = atStart; nextBtn.disabled = atEnd;
       const ouroboros = $('[data-ouroboros]', stage);
       if (ouroboros) ouroboros.hidden = (state.index !== works.length - 1);
       const finaleShare = $('[data-finale-share]', stage);
       if (finaleShare) finaleShare.hidden = (state.index !== works.length - 1);
+      visitSync();
       const kintsugiBtn = $('[data-kintsugi-toggle]', stage);
       if (kintsugiBtn) {
         const isKintsugiPair = (p.slug === 'cantinflowers' || p.slug === 'mario-moreno');
@@ -3552,14 +3914,22 @@
       }
       const artBottom = $('.art-bottom', stage);
       if (artBottom) {
-        if ((!still || (heroThreshold && !state.fit)) && pose.distance < 0.36) {
+        // Con el foco visible dentro, el pie de obra no se funde: quien vuelve al umbral con teclado no pierde su sitio.
+        const focused = document.activeElement;
+        const holdsFocus = artBottom.contains(focused) && focused.matches(':focus-visible');
+        let faded = false;
+        if ((!still || (heroThreshold && !state.fit)) && pose.distance < 0.36 && !holdsFocus) {
           const bottomFade = smooth((pose.distance - 0.20) / 0.16);
           artBottom.style.opacity = bottomFade.toFixed(4);
           artBottom.style.pointerEvents = bottomFade > 0.5 ? 'auto' : 'none';
+          faded = bottomFade <= 0.5;
         } else {
           artBottom.style.opacity = '';
           artBottom.style.pointerEvents = '';
         }
+        // Mientras no se ven, los controles tampoco reciben el foco (WCAG 2.4.7). Solo los controles: el título
+        // sigue expuesto a los lectores de pantalla, y el `inert` de «Solo obra» sobre el pie entero es de metadata().
+        $$('.art-more-row,.art-controls', artBottom).forEach(el => { if (el.inert !== faded) el.inert = faded; });
       }
       if (works[base].slug === 'dustin' || works[incoming].slug === 'dustin') {
         if (!dustinVisited && (works[state.index].slug === 'dustin' || (transition && works[incoming].slug === 'dustin' && fraction >= 0.45))) {
@@ -4247,6 +4617,13 @@
       const pose = journey.read(motion.current);
       const position = pose.position;
       motion.desired = position;
+      if (seasonNav) {
+        // Se ve en la obra por la que se entra; al alejarse se retira y ya solo vuelve arriba del todo.
+        if (seasonHome === null) seasonHome = position;
+        const away = Math.abs(position - seasonHome) > .3;
+        if (away) seasonHome = 0;
+        seasonNav.classList.toggle('is-away', away);
+      }
       if (motion.navigation !== null && Math.abs(position - motion.navigation) < .002) motion.navigation = null;
       if (Math.abs(pose.distance - motion.pose.distance) > .0004) {
         const pixels = motion.current * geometry.unit;
@@ -4337,6 +4714,9 @@
       scheduleScroll();
     });
     $('[data-open-story]', stage).addEventListener('click', () => openDialog('#story-dialog'));
+    // El fundido del pie de obra sobre el umbral depende de si el foco visible está dentro (render):
+    // en reposo nadie repinta, así que se repinta al entrar o salir el foco.
+    ['focusin', 'focusout'].forEach(type => $('.art-bottom', stage)?.addEventListener(type, () => requestAnimationFrame(render)));
     // Un solo «+» junto al título: la ficha y las acciones de vista esperan plegadas para que
     // sobre la obra solo queden título, contador y flechas. Se pliega solo en cuanto la cámara se mueve.
     const moreMenu = $('.art-view-actions', stage), moreStory = $('[data-open-story]', stage), moreAnchor = $('[data-art-copy]', stage);
@@ -4683,6 +5063,7 @@
         const dw = nw * k, dh = nh * k, offX = (r.width - dw) * ox / 100, offY = (r.height - dh) * oy / 100;
         const nx = (px - r.left - offX) / dw, ny = (py - r.top - offY) / dh;
         if (nx < 0 || nx > 1 || ny < 0 || ny > 1) { lens.hidden = true; return; }
+        visitFocus(works[state.index]?.slug, nx, ny);
         const rad = radius();
         lens.style.backgroundSize = `${dw * ZOOM}px ${dh * ZOOM}px`;
         lens.style.backgroundPosition = `${rad - nx * dw * ZOOM}px ${rad - ny * dh * ZOOM}px`;
@@ -4799,12 +5180,16 @@
     paintCareerWall(true);
   }
 
-  // Trayectoria: fondo parallax. La pared, el año gigante y los cromos siguen al encuentro en pantalla.
+  // Trayectoria: fondo parallax en dos planos. Detrás, la pared, que pasa a WALL_RATE del scroll; delante,
+  // el papel de las tarjetas, que va con el scroll. El año va pintado en la pared y los cromos pegados a
+  // ella: viajan a su mismo paso exacto, no flotan. Con ratón, el plano de la pared cede un poco contra el puntero.
   const careerWall = $('.career-wall');
   const wallLayers = careerWall ? $$('[data-wall-layer]', careerWall) : [];
   const wallYear = careerWall ? $('[data-wall-year]', careerWall) : null;
   const wallCromos = careerWall ? $$('[data-wall-cromo]', careerWall) : [];
-  const cromoDepth = [90, 190, 300];
+  const WALL_RATE = .35;
+  // Al píxel físico: en pantallas densas el medio píxel existe y el paso lento no tiembla.
+  const snapPx = value => { const dpr = window.devicePixelRatio || 1; return Math.round(value * dpr) / dpr; };
   let wallEntry = null, wallTicking = false;
   function paintCareerWall(force = false) {
     wallTicking = false;
@@ -4818,6 +5203,7 @@
       if (gap < bestGap) { bestGap = gap; best = entry; bestBox = box; }
     });
     if (best !== wallEntry || force) {
+      const changed = best !== wallEntry;
       wallEntry = best;
       const wall = best?.dataset.wall || 'pared';
       wallLayers.forEach(layer => {
@@ -4834,18 +5220,37 @@
         cromo.classList.toggle('is-on', !!art);
         if (art) cromo.style.backgroundImage = `url("${art.thumb}")`;
       });
+      // Al cambiar de encuentro, año y cromos saltan a su sitio en el tramo nuevo de pared: entran fundiéndose.
+      if (changed && !reduced.matches) [wallYear, ...wallCromos].forEach(el => el?.animate?.([{ opacity: 0 }, {}], { duration: 700, easing: 'cubic-bezier(.16,1,.3,1)' }));
     }
     if (reduced.matches || !bestBox) return;
     // Avance del encuentro activo por la pantalla: 0 al entrar por abajo, 1 al salir por arriba.
     const travel = Math.max(0, Math.min(1, (innerHeight - bestBox.top) / (innerHeight + bestBox.height)));
-    careerWall.style.setProperty('--wall-shift', `${Math.round(-scrollY * .35)}px`);
-    careerWall.style.setProperty('--year-shift', `${Math.round((.5 - travel) * innerHeight * .28)}px`);
-    wallCromos.forEach((cromo, i) => cromo.style.setProperty('--cromo-shift', `${Math.round((.5 - travel) * cromoDepth[i])}px`));
+    careerWall.style.setProperty('--wall-shift', `${snapPx(-scrollY * WALL_RATE)}px`);
+    // Lo que va en la pared se mueve WALL_RATE px por cada px de scroll, centrado cuando el encuentro lo está.
+    careerWall.style.setProperty('--wall-ride', `${snapPx((.5 - travel) * (innerHeight + bestBox.height) * WALL_RATE)}px`);
   }
   if (careerWall) {
     addEventListener('scroll', () => { if (!wallTicking) { wallTicking = true; requestAnimationFrame(() => paintCareerWall()); } }, { passive: true });
     addEventListener('resize', () => paintCareerWall(), { passive: true });
     paintCareerWall(true);
+    // Profundidad con ratón: la pared se desplaza contra el puntero (±14 px a lo ancho, ±8 a lo alto), con inercia.
+    if (window.matchMedia?.('(hover: hover) and (pointer: fine)').matches) {
+      let px = 0, py = 0, targetX = 0, targetY = 0, pointerFrame = 0;
+      const easePointer = () => {
+        px += (targetX - px) * .12; py += (targetY - py) * .12;
+        careerWall.style.setProperty('--wall-px', `${px.toFixed(2)}px`);
+        careerWall.style.setProperty('--wall-py', `${py.toFixed(2)}px`);
+        pointerFrame = Math.abs(targetX - px) + Math.abs(targetY - py) > .05 ? requestAnimationFrame(easePointer) : 0;
+      };
+      addEventListener('pointermove', event => {
+        if (event.pointerType !== 'mouse' || reduced.matches) return;
+        const box = careerWall.getBoundingClientRect();
+        if (box.bottom < 0 || box.top > innerHeight) return;
+        targetX = (.5 - event.clientX / innerWidth) * 28; targetY = (.5 - event.clientY / innerHeight) * 16;
+        if (!pointerFrame) pointerFrame = requestAnimationFrame(easePointer);
+      }, { passive: true });
+    }
   }
   years.forEach(button => button.addEventListener('click', () => { careerYear = button.dataset.year; filterCareer(); }));
   kinds.forEach(button => button.addEventListener('click', () => { careerKind = button.dataset.careerKind; filterCareer(); }));
@@ -4894,7 +5299,7 @@
     });
     const images = scenes.map(scene => $('img', scene)), decoded = new Set(), pending = new Map(), failed = new Set();
     const smooth = value => { const t = clamp(value, 0, 1); return t * t * t * (t * (t * 6 - 15) + 10); };
-    let frame = null, geometry = null, current = 0, captionIndex = -1;
+    let frame = null, geometry = null, current = 0, captionIndex = -1, heldFocus = null;
     let interactiveWinkTimer = null, interactiveWinkVal = 0, hasWinkedOnScroll = false;
     function triggerInteractiveWink() {
       const travel = Math.max(0, -portraitTrack.getBoundingClientRect().top);
@@ -5043,13 +5448,25 @@
         $('[data-portrait-title]', hero).textContent = work.title;
         $('[data-portrait-label]', hero).textContent = `${index ? work.label : 'Del rostro al autorretrato'} · ${String(index + 1).padStart(2, '0')} / ${works.length}`;
         $('[data-portrait-link]', hero).href = BASE + '/obra/' + work.slug + '/';
+        const focused = document.activeElement;
         previous.disabled = index === 0; next.disabled = index === works.length - 1;
+        // El botón que se desactiva al llegar a un extremo no deja el foco en el aire: en la última
+        // obra pasa a «Biografía ↓», que es por donde se sigue; en la primera, a «Obra siguiente».
+        if (focused === next && next.disabled) $('a', controls).focus({ preventScroll: true });
+        else if (focused === previous && previous.disabled) next.focus({ preventScroll: true });
         hero.dataset.work = work.slug; captionIndex = index;
       }
       [artCopy, controls].forEach(element => {
+        // Quien navega con teclado no pierde su sitio cuando los controles se ocultan entre dos obras.
+        if (opacity < .2 && element.contains(document.activeElement)) heldFocus = document.activeElement;
         element.style.opacity = opacity.toFixed(3); element.style.visibility = opacity > 0 ? 'visible' : 'hidden'; element.inert = opacity < .2;
       });
       artCopy.style.transform = reduced.matches ? '' : `translate3d(0,${((1 - opacity) * 12).toFixed(2)}px,0)`;
+      if (heldFocus && opacity >= .2) {
+        const target = heldFocus.disabled ? (heldFocus === next ? previous : next) : heldFocus;
+        heldFocus = null;
+        if (document.activeElement === document.body) target.focus({ preventScroll: true });
+      }
     }
     function renderExhibition(position, totalDistance) {
       const g = geometry, base = Math.floor(position), fraction = position - base;
@@ -5102,6 +5519,7 @@
       // («Game Over», que calla la banda sonora) y se avisa una vez para que la música pueda volver.
       if (!reduced.matches && trackRect.height > 0 && trackRect.bottom <= 1) {
         if (!parked) { parked = true; soundscape?.frame({ mode: 'page', phase: 'scroll', slug: 'sobre-mi' }); }
+        cue.tabIndex = -1; // la flecha «ir a la biografía» ya no hace falta: se está en ella
         anchorUnits = null;
         if (trackRect.bottom > -g.height * 1.5) ensureScene(works.length - 1);
         return;
@@ -5417,9 +5835,15 @@
     const GAZE_MIRRORS = {
       mirada: ['amy-rocks', 'Pizarra natural rústica', 'La mirada'],
       materia: ['marilyn-rocks', 'Pizarra natural rústica', 'La materia'],
-      espejo: ['rara-avis', 'Retrato al óleo o grafito', 'La propia mirada'],
+      espejo: ['rara-avis', 'Retrato a pastel o grafito', 'La propia mirada'],
       compartir: ['amor-en-conserva', 'Caja personalizada u objeto', 'Compartir']
     };
+    // La lectura repite el rótulo del capítulo tal como lo lleva la página, en su idioma.
+    chapters.forEach(ch => {
+      const mirror = GAZE_MIRRORS[ch.dataset.kintsugiChapter];
+      const name = $('.eyebrow', ch)?.textContent.replace(/^\s*\d+\s*·\s*/, '').trim();
+      if (mirror && name) mirror[2] = name;
+    });
     let focusKey = null, focusAt = performance.now(), gazePaused = document.hidden, lastGaze = '';
     function settleDwell() {
       const now = performance.now();
@@ -6088,6 +6512,28 @@
       body.append(eyebrow, h3, summary, readLink); article.append(body);
       return article;
     };
+    const shortDate = iso => new Intl.DateTimeFormat({ en: 'en-GB', eu: 'eu' }[LANG] || 'es', { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(`${iso}T12:00:00Z`));
+    const archiveNotebookCard = card => {
+      const years = $('[data-notebook-years]'), link = $('h3 a', card), iso = $('time', card)?.getAttribute('datetime') || '';
+      if (!years || !link || iso.length < 10) return;
+      const yearKey = iso.slice(0, 4), yearOf = group => $('.notebook-year-number', group)?.textContent || '';
+      let group = $$('.notebook-year', years).find(other => yearOf(other) === yearKey);
+      if (!group) {
+        group = document.createElement('details'); group.className = 'notebook-year'; group.setAttribute('name', 'notebook-archive');
+        const summary = document.createElement('summary'), number = document.createElement('span'), count = document.createElement('span');
+        number.className = 'notebook-year-number'; number.textContent = yearKey; count.className = 'notebook-year-count';
+        summary.append(number, count); group.append(summary, document.createElement('ol'));
+        years.insertBefore(group, $$('.notebook-year', years).find(other => yearOf(other) < yearKey) || null);
+      }
+      const list = $('ol', group), item = document.createElement('li'), time = document.createElement('time'), entry = externalLink('', link.href);
+      time.dateTime = iso; time.textContent = shortDate(iso); entry.textContent = link.textContent;
+      item.append(time, entry);
+      const encounter = $('.notebook-encounter', card);
+      if (encounter) item.append(encounter.cloneNode(true));
+      list.insertBefore(item, $$('li', list).find(other => ($('time', other)?.getAttribute('datetime') || '') < iso) || null);
+      const count = $$('li', list).length;
+      $('.notebook-year-count', group).textContent = count === 1 ? '1 entrada' : `${count} entradas`;
+    };
     async function syncNotebook() {
       if (!endpoint || document.hidden || notebookChecking || performance.now() - notebookChecked < NOTEBOOK_RECHECK_MS) return;
       notebookChecking = true;
@@ -6112,7 +6558,13 @@
           return card;
         });
         const next = [...wanted, ...current.filter(card => !wanted.includes(card))].slice(0, NOTEBOOK_VISIBLE);
-        if (next.length !== current.length || next.some((card, index) => card !== current[index])) notebookGrid.replaceChildren(...next);
+        if (next.length !== current.length || next.some((card, index) => card !== current[index])) {
+          const latestMark = $('[data-notebook-latest]', notebookGrid), firstEyebrow = $('.eyebrow', next[0]);
+          notebookGrid.replaceChildren(...next);
+          if (latestMark && firstEyebrow && latestMark.parentNode !== firstEyebrow) firstEyebrow.prepend(latestMark);
+          // La entrada que cede su sitio no desaparece: pasa al archivo, en su año.
+          current.filter(card => !next.includes(card)).forEach(archiveNotebookCard);
+        }
         if (notebookStatus && notebookStatusText) {
           const total = Number(data.found) || 0, latest = longDate(isoDay(posts[0].date));
           const lead = notebookAdded ? (notebookAdded === 1 ? '1 entrada nueva' : `${notebookAdded} entradas nuevas`) : 'Al día con su WordPress';
@@ -6123,6 +6575,44 @@
     }
     syncNotebook();
     document.addEventListener('visibilitychange', () => { if (!document.hidden) syncNotebook(); });
+  }
+  // Buscador del archivo del blog: filtra las entradas antiguas por palabras (todas deben estar),
+  // sin distinguir tildes ni mayúsculas. Mientras se busca, los años con resultados se abren a la vez.
+  const notebookSearch = $('[data-notebook-search]'), notebookYears = $('[data-notebook-years]');
+  const notebookSearchInput = notebookSearch && $('[data-notebook-search-input]', notebookSearch);
+  if (notebookSearchInput && notebookYears) {
+    const notebookSearchCount = $('[data-notebook-search-count]', notebookSearch);
+    const fold = value => String(value || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    let openBeforeSearch = null;
+    const filterNotebook = () => {
+      const words = fold(notebookSearchInput.value).split(/[^\p{L}\p{N}]+/u).filter(Boolean), searching = words.length > 0;
+      const years = $$('.notebook-year', notebookYears);
+      if (searching && !openBeforeSearch) openBeforeSearch = new Map(years.map(year => [year, year.open]));
+      let shown = 0, total = 0;
+      years.forEach(year => {
+        let hits = 0;
+        $$('li', year).forEach(item => {
+          const time = $('time', item);
+          const text = fold(`${time?.textContent || ''} ${time?.getAttribute('datetime') || ''} ${$('a', item)?.textContent || ''}`);
+          const hit = words.every(word => text.includes(word));
+          item.hidden = !hit; total += 1; if (hit) hits += 1;
+        });
+        shown += hits;
+        year.hidden = hits === 0;
+        // El acordeón solo deja un año abierto; al buscar se suelta para enseñar todos los que tienen resultados.
+        if (searching) { year.removeAttribute('name'); year.open = hits > 0; }
+        else { year.setAttribute('name', 'notebook-archive'); year.open = openBeforeSearch?.get(year) ?? year.open; }
+      });
+      if (!searching) openBeforeSearch = null;
+      notebookYears.classList.toggle('is-searching', searching);
+      if (notebookSearchCount) notebookSearchCount.textContent = !searching ? '' : shown ? `${shown} de ${total} entradas` : 'Ninguna entrada con esas palabras';
+    };
+    notebookSearchInput.addEventListener('input', filterNotebook);
+    notebookSearchInput.addEventListener('keydown', event => {
+      if (event.key !== 'Escape' || !notebookSearchInput.value) return;
+      event.preventDefault(); notebookSearchInput.value = ''; filterNotebook();
+    });
+    notebookSearch.hidden = false;
   }
   const detectAttribution = () => {
     let source = 'direct', generative = false;
@@ -6222,7 +6712,7 @@
         swatchSrc: '/images/catalogo/commission-amor-red-rose.webp',
         swatchAlt: 'Rosa carmesí sobre pizarra con mica mineral'
       },
-      'Retrato al óleo o grafito': {
+      'Retrato a pastel o grafito': {
         slug: 'rara-avis',
         title: 'Rara Avis · Pastel, grafito y lápiz',
         tag: 'Pastel Conté y collage sobre papel',
@@ -6287,7 +6777,7 @@
       const waHref = `https://wa.me/34636060609?text=${encodeURIComponent(msg)}`;
       btn.href = waHref;
       if (emailBtn) {
-        emailBtn.href = `mailto:naroa@naroagutierrezgil.com?subject=${encodeURIComponent('Consulta encargo: ' + s)}&body=${encodeURIComponent(msg)}`;
+        emailBtn.href = `mailto:encargos@naroagutierrezgil.com?subject=${encodeURIComponent('Consulta encargo: ' + s)}&body=${encodeURIComponent(msg)}`;
       }
       if (mobileCtaWa) mobileCtaWa.href = waHref;
       if (mobileCtaSummary) {
@@ -6423,6 +6913,126 @@
       getState: () => ({ ...commissionState })
     };
   }
+  // Contacto: la nota. El motivo rodeado y lo que se escriba componen el mensaje que se abre en el WhatsApp o en el
+  // correo de quien visita; desde la página no se envía ni se guarda nada. El saludo, la frase de cada motivo y el
+  // asunto se leen del HTML, que ya llega traducido (§9 y §10 de AGENTS.md).
+  const copyText = async text => {
+    try { await navigator.clipboard.writeText(text); return true; } catch {}
+    // Sin permiso o sin API (http, navegadores antiguos): el portapapeles de siempre.
+    const ghost = document.createElement('textarea');
+    ghost.value = text;
+    ghost.setAttribute('readonly', '');
+    ghost.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+    document.body.append(ghost);
+    ghost.select();
+    let done = false;
+    try { done = document.execCommand('copy'); } catch {}
+    ghost.remove();
+    return done;
+  };
+  const showCopied = (button, status) => {
+    if (button.classList.contains('is-copied')) return;
+    const label = $('span', button) || button, before = label.textContent;
+    label.textContent = 'Copiado ✓';
+    button.classList.add('is-copied');
+    if (status) status.textContent = label.textContent;
+    setTimeout(() => {
+      label.textContent = before;
+      button.classList.remove('is-copied');
+      if (status) status.textContent = '';
+    }, 2200);
+  };
+  const contactNote = $('[data-contact-note]');
+  if (contactNote) {
+    const contactReasons = $$('input[name="ct-reason"]', contactNote), contactHints = $$('[data-contact-hint]', contactNote);
+    const contactMore = $('[data-contact-more]', contactNote), contactStatus = $('[data-contact-status]', contactNote);
+    const contactWa = $('[data-contact-wa]', contactNote), contactMail = $('[data-contact-mail]', contactNote);
+    const contactSheet = contactNote.closest('.ct-note-wrap');
+    const contactHello = ($('[data-contact-hello]', contactNote)?.textContent || '').trim();
+    const waBase = (contactWa?.getAttribute('href') || '').split('?')[0], mailBase = (contactMail?.getAttribute('href') || '').split('?')[0];
+    const reasonNow = () => contactReasons.find(reason => reason.checked) || contactReasons[0];
+    const messageNow = () => [contactHello, reasonNow()?.dataset.say, (contactMore?.value || '').trim()].filter(Boolean).join('\n');
+    const syncNote = () => {
+      const reason = reasonNow(), text = messageNow();
+      if (reason) contactNote.dataset.reason = reason.value;
+      contactHints.forEach(hint => hint.classList.toggle('is-on', hint.dataset.contactHint === reason?.value));
+      // El renglón en blanco sugiere qué ayuda contar según el motivo.
+      const tip = reason && $(`[data-contact-tip="${reason.value}"]`, contactNote);
+      if (contactMore && tip) contactMore.placeholder = tip.textContent;
+      if (contactWa) contactWa.href = `${waBase}?text=${encodeURIComponent(text)}`;
+      if (contactMail) contactMail.href = `${mailBase}?subject=${encodeURIComponent(reason?.dataset.subject || '')}&body=${encodeURIComponent(text.replace(/\n/g, '\r\n'))}`;
+    };
+    // La pluma acompaña cada gesto con un trazo corto.
+    const quill = () => {
+      if (!contactSheet || reduced.matches) return;
+      contactSheet.classList.remove('is-writing');
+      void contactSheet.offsetWidth;
+      contactSheet.classList.add('is-writing');
+    };
+    contactSheet?.addEventListener('animationend', e => { if (e.animationName === 'ct-feather-write') contactSheet.classList.remove('is-writing'); });
+    contactReasons.forEach(reason => reason.addEventListener('change', () => {
+      contactNote.classList.add('is-touched');
+      syncNote();
+      quill();
+    }));
+    contactMore?.addEventListener('input', () => {
+      // La hoja crece con lo escrito, hasta el tope que marca la hoja de estilos.
+      contactMore.style.height = 'auto';
+      contactMore.style.height = `${contactMore.scrollHeight}px`;
+      syncNote();
+    });
+    $('[data-contact-copy]', contactNote)?.addEventListener('click', async e => {
+      const button = e.currentTarget;
+      if (await copyText(messageNow())) showCopied(button, contactStatus);
+    });
+    syncNote();
+    // Profundidad de collage: la obra, la hoja y la pluma se desplazan muy poco con el puntero, cada una a su distancia.
+    const contactStage = contactNote.closest('.ct-stage');
+    if (contactStage && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      let depthFrame = null, depthX = 0, depthY = 0;
+      const paintDepth = () => {
+        depthFrame = null;
+        contactStage.style.setProperty('--ct-px', depthX.toFixed(3));
+        contactStage.style.setProperty('--ct-py', depthY.toFixed(3));
+      };
+      contactStage.addEventListener('pointermove', e => {
+        if (reduced.matches) return;
+        const box = contactStage.getBoundingClientRect();
+        depthX = clamp((e.clientX - box.left) / box.width * 2 - 1, -1, 1);
+        depthY = clamp((e.clientY - box.top) / box.height * 2 - 1, -1, 1);
+        depthFrame ||= requestAnimationFrame(paintDepth);
+      }, { passive: true });
+      contactStage.addEventListener('pointerleave', () => {
+        depthX = depthY = 0;
+        depthFrame ||= requestAnimationFrame(paintDepth);
+      });
+    }
+    window.NAROA_CONTACT = { getMessage: messageNow, getReason: () => reasonNow()?.value };
+  }
+  $$('[data-contact-copy-address]').forEach(button => button.addEventListener('click', async () => {
+    if (await copyText(button.dataset.contactCopyAddress)) { showCopied(button, $('[data-contact-status]')); return; }
+    // Si el navegador no deja copiar, la dirección queda seleccionada para copiarla a mano.
+    const address = $('.ct-address-value', button.closest('.ct-address'));
+    if (!address) return;
+    const range = document.createRange();
+    range.selectNodeContents(address);
+    const selection = getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }));
+  // Vías directas: la palabra de la frase y su dirección se encienden juntas, se mire la una o la otra.
+  const contactWords = $$('[data-contact-way]'), contactAddresses = $$('[data-contact-address]');
+  const lightWays = keys => {
+    contactWords.forEach(word => word.classList.toggle('is-lit', keys.includes(word.dataset.contactWay)));
+    contactAddresses.forEach(address => address.classList.toggle('is-lit', address.dataset.contactAddress.split(' ').some(key => keys.includes(key))));
+  };
+  [...contactWords.map(word => [word, [word.dataset.contactWay]]), ...contactAddresses.map(address => [address, address.dataset.contactAddress.split(' ')])].forEach(([el, keys]) => {
+    el.addEventListener('pointerenter', () => lightWays(keys));
+    el.addEventListener('focusin', () => lightWays(keys));
+    el.addEventListener('pointerleave', () => lightWays([]));
+    el.addEventListener('focusout', () => lightWays([]));
+  });
+
   const faqKnowledge = {
     precios: {
       intent: 'Precios y presupuestos de retratos por encargo',
@@ -6504,7 +7114,7 @@
             message: msg,
             attribution: window.NAROA_ATTRIBUTION,
             whatsapp_url: `https://wa.me/34636060609?text=${encodeURIComponent(msg)}`,
-            email_url: `mailto:naroa@naroagutierrezgil.com?subject=${encodeURIComponent('Consulta encargo: ' + s)}&body=${encodeURIComponent(msg)}`
+            email_url: `mailto:encargos@naroagutierrezgil.com?subject=${encodeURIComponent('Consulta encargo: ' + s)}&body=${encodeURIComponent(msg)}`
           };
         }
         case 'answer_commission_faq': {
@@ -6564,7 +7174,7 @@
       }
     }
   });
-  const reveals = $$('.chapter>div,.chapter>.eyebrow,.section-opening,.editorial blockquote,.timeline-entry,.notebook-posts article,.commission-example,.commission-steps article,.commission-configurator,.commission-faq-item,.closing,.contact-channel,.contact-details');
+  const reveals = $$('.chapter>div,.chapter>.eyebrow,.section-opening,.editorial blockquote,.timeline-entry,.notebook-posts article,.commission-example,.commission-steps article,.commission-configurator,.commission-faq-item,.closing,.ct-ways-head,.ct-address,.ct-coda,.ct-card');
   if ('IntersectionObserver' in window) {
     // Los elementos que entran a la vez aparecen en cascada, no en bloque.
     const observer = new IntersectionObserver(entries => {
@@ -6647,7 +7257,7 @@
     reduced.addEventListener('change', clear);
   });
 
-  const kineticCards = $$('.work-gallery-image,.notebook-posts article,.commission-example,.commission-steps article,.timeline-entry,.contact-channel');
+  const kineticCards = $$('.work-gallery-image,.notebook-posts article,.commission-example,.commission-steps article,.timeline-entry');
   kineticCards.forEach(card => {
     card.setAttribute('data-kinetic-card', '');
     const c = { rx: 0, ry: 0, z: 0, sx: 50, sy: 50, vrx: 0, vry: 0, vz: 0, vsx: 0, vsy: 0, trx: 0, try: 0, tz: 0, tsx: 50, tsy: 50, lastTime: 0, frame: null };
@@ -7341,8 +7951,12 @@
     initWebGL();
 
     let prevX = -1, prevY = -1;
+    // Sobre una superficie de lectura clara (la hoja de contacto) el humo, que se funde en «screen», borraría el texto:
+    // ahí no se emite. Al salir se olvida la posición anterior para no soltar una ráfaga de golpe.
+    const fluidQuiet = e => !!e.target?.closest?.('[data-fluid-quiet]');
     addEventListener('pointermove', e => {
       if (reduced.matches) return;
+      if (fluidQuiet(e)) { prevX = -1; return; }
       const w = innerWidth || 1280;
       const h = innerHeight || 800;
       const x = e.clientX / w;
@@ -7362,7 +7976,7 @@
     }, { passive: true });
 
     addEventListener('pointerdown', e => {
-      if (reduced.matches) return;
+      if (reduced.matches || fluidQuiet(e)) return;
       const w = innerWidth || 1280;
       const h = innerHeight || 800;
       const x = e.clientX / w;

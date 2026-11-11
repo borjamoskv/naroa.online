@@ -110,6 +110,12 @@ fi
 # ── 1. Preflight ─────────────────────────────────────────────
 [ "$MODE" = "build-only" ] || command -v wrangler >/dev/null 2>&1 || fail "wrangler no encontrado. Instala con: npm i -g wrangler"
 
+# ── 1b. Fuentes del catálogo ─────────────────────────────────
+# Antes de compilar nada: catálogo, recorrido, exposiciones, redirecciones y registro de la SPA deben coincidir.
+if [ "$SKIP_BUILD" = "0" ]; then
+  python3 tools/check_catalog_sources.py || fail "Las fuentes del catálogo no coinciden"
+fi
+
 # ── 2. Construir Galería 3D / SPA (dist/) ──────────
 if [ "$SKIP_BUILD" = "0" ] && { [ "$TARGET" = "all" ] || [ "$TARGET" = "lab" ]; }; then
   log "Construyendo SPA (Vite + React + Three.js)..."
@@ -140,10 +146,16 @@ if [ "$SKIP_BUILD" = "0" ] && { [ "$TARGET" = "all" ] || [ "$TARGET" = "lab" ]; 
   Expires: 0
 
 /assets/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/assets/*.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/*.css
   Cache-Control: public, max-age=31536000, immutable
 
 /*.webp
-  Cache-Control: public, max-age=31536000, immutable
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
 EOF
 
   cat > "$BUILD_DIR/_redirects" << 'EOF'

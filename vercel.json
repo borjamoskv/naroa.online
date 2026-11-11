@@ -38,12 +38,30 @@
       "headers": [
         {
           "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/assets/(.*-v\\d+\\.[a-z0-9]+)",
+      "headers": [
+        {
+          "key": "Cache-Control",
           "value": "public, max-age=31536000, immutable"
         }
       ]
     },
     {
       "source": "/immersive/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, stale-while-revalidate=86400"
+        }
+      ]
+    },
+    {
+      "source": "/immersive/(.*-[0-9a-f]{12}[-.][^/]*)",
       "headers": [
         {
           "key": "Cache-Control",
