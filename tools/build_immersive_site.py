@@ -1101,8 +1101,9 @@ def build(output):
             default_schema["size"] = p["dimensions"]
         page(path, title or p["title"], description or p["story"], body, p["photos"][0]["original"], True, schema or default_schema, image_alt=work_alt(p, p["photos"][0]["caption"]))
 
-    def hero(image, eyebrow, heading, lead="", link=None, alt="Obra de Naroa Gutiérrez Gil", position="50% 45%"):
-        return f'''<section class="page-hero" data-parallax><div class="page-hero-image"><img src="{image}" alt="{esc(alt)}" fetchpriority="high" style="object-position:{position}"></div><div class="page-hero-shade"></div><div class="page-hero-copy"><p class="eyebrow">{esc(eyebrow)}</p><h1>{heading}</h1>{f'<p class="hero-lead">{lead}</p>' if lead else ''}{f'<a class="text-link" href="{link[0]}">{link[1]} ↗</a>' if link else ''}</div><a class="hero-down" href="#contenido" aria-label="Seguir leyendo">↓</a></section>'''
+    def hero(image, eyebrow, heading, lead="", link=None, alt="Obra de Naroa Gutiérrez Gil", position="50% 45%", mobile_position=None):
+        # mobile_position: encuadre propio para pantallas verticales, donde el recorte deja ver una franja estrecha.
+        return f'''<section class="page-hero" data-parallax><div class="page-hero-image"><img src="{image}" alt="{esc(alt)}" fetchpriority="high" style="object-position:{position};--hero-pos-m:{mobile_position or position}"></div><div class="page-hero-shade"></div><div class="page-hero-copy"><p class="eyebrow">{esc(eyebrow)}</p><h1>{heading}</h1>{f'<p class="hero-lead">{lead}</p>' if lead else ''}{f'<a class="text-link" href="{link[0]}">{link[1]} ↗</a>' if link else ''}</div><a class="hero-down" href="#contenido" aria-label="Seguir leyendo">↓</a></section>'''
 
     home_schema = {
         "@context": "https://schema.org",
@@ -1346,7 +1347,7 @@ def build(output):
     kind_counts = {k: sum(1 for x in exhibitions if x["type"] == k) for k in kind_labels}
     career_summary = f"{min(years)}–{max(years)} · {len(exhibitions)} encuentros · " + " · ".join(f"{n} {kind_plurals[k][0 if n == 1 else 1]}" for k, n in kind_counts.items() if n)
     kind_buttons = '<button type="button" data-career-kind="all" aria-pressed="true">Todo</button>' + ''.join(f'<button type="button" data-career-kind="{k}" aria-pressed="false">{kind_labels[k]} <small>{n}</small></button>' for k, n in kind_counts.items() if n)
-    career = hero(cantinflowers, "Exposiciones y encuentros", "El arte también<br><span>sale de paseo.</span>", "«Sin muros, sin duros, abierta y flexible. De tú a tú, haciendo piña, haciendo amig@s, apetecible».", alt="Cantinflowers, pintura y collage en torno a Mario Moreno")
+    career = hero(cantinflowers, "Exposiciones y encuentros", "El arte también<br><span>sale de paseo.</span>", "«Sin muros, sin duros, abierta y flexible. De tú a tú, haciendo piña, haciendo amig@s, apetecible».", alt="Cantinflowers, pintura y collage en torno a Mario Moreno", mobile_position="22% 42%")
     career += '<section id="contenido" class="career editorial">' + wall_markup + '<div class="section-opening"><p>«Porque las exposiciones colectivas son como el corro de las patatas o el pilla-pilla de la vida artística: es enseñarnos los nuevos cromos al reunirnos con las amigas; es pegar en la misma pared todas nuestras pegatinas».</p><p class="career-summary">' + esc(career_summary) + '</p></div><div class="year-filters type-filters" role="group" aria-label="Filtrar exposiciones por tipo">' + kind_buttons + '</div><div class="year-filters" role="group" aria-label="Filtrar exposiciones por año"><button type="button" data-year="all" aria-pressed="true">Todos</button>' + ''.join(f'<button type="button" data-year="{y}" aria-pressed="false">{y}</button>' for y in years) + '</div><p class="career-count" role="status" aria-live="polite">' + str(len(exhibitions)) + ' encuentros documentados</p><div class="timeline">'
     
     artwork_lookup = {}
