@@ -170,6 +170,39 @@ html.motion-off .kinetic-title{display:none}
 .share-btn--facebook:hover{background:rgba(24,119,242,0.24);border-color:#1877f2;color:#fff}
 .share-btn--tiktok:hover{background:rgba(0,242,234,0.20);border-color:#00f2ea;color:#fff;box-shadow:0 0 12px rgba(0,242,234,0.35)}
 .share-btn--x:hover{background:rgba(255,255,255,0.20);border-color:#ffffff;color:#fff}
+/* Compartir en el pie: palabras, no botones. Cursiva Cormorant con un trazo de boli debajo; al pasar o al enfocar,
+   un rotulador en el color de la página lo repasa, y el foco de teclado añade una pasada de fluorescente en vez de
+   un rectángulo. Los trazos son máscaras: toman el color de las variables, que cada página cambia a su gusto. */
+.share-words{--share-ink:#fffdf4;--share-live:#edbca4;--share-label:var(--share-live);--share-band:var(--share-live);--share-lit:var(--share-ink);--share-pen-a:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 120 8%22 preserveAspectRatio=%22none%22%3E%3Cpath d=%22M1.5 4.7C17 3.1 33 5.8 52 4.2S92 2.9 118.5 4.6%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%221.4%22 stroke-linecap=%22round%22 vector-effect=%22non-scaling-stroke%22/%3E%3C/svg%3E");--share-pen-b:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 120 8%22 preserveAspectRatio=%22none%22%3E%3Cpath d=%22M1.5 3.8C21 5.5 39 2.8 61 4.3S99 5.7 118.5 3.5%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%221.4%22 stroke-linecap=%22round%22 vector-effect=%22non-scaling-stroke%22/%3E%3C/svg%3E");--share-marker:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 120 11%22 preserveAspectRatio=%22none%22%3E%3Cpath d=%22M3 6.8C24 5.4 48 7.9 72 6.1S105 7.4 117 3.9%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%222.7%22 stroke-linecap=%22round%22 vector-effect=%22non-scaling-stroke%22/%3E%3C/svg%3E");--share-pen-c:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 8%22 preserveAspectRatio=%22none%22%3E%3Cpath d=%22M1.5 4.9C12 3.6 26 3.5 38.5 4.3%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%221.4%22 stroke-linecap=%22round%22 vector-effect=%22non-scaling-stroke%22/%3E%3C/svg%3E");--share-marker-c:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 11%22 preserveAspectRatio=%22none%22%3E%3Cpath d=%22M3 6.9C13 5.6 26 5.9 37 4.4%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%222.7%22 stroke-linecap=%22round%22 vector-effect=%22non-scaling-stroke%22/%3E%3C/svg%3E");--share-swash:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 24%22 preserveAspectRatio=%22none%22%3E%3Cpath d=%22M0 3.6C14 1.6 31 4.4 50 2.6S86 1.2 100 3.4V20.2C83 22.6 66 19.8 48 21.6S14 22.8 0 20.6Z%22/%3E%3C/svg%3E");align-items:baseline;gap:0 14px;margin:0}
+body.page-contacto .share-words,body.page-cuaderno .share-words{--share-live:var(--hero-accent)}
+body.page-retratos-por-encargo-bilbao .share-words{--share-live:#f7d594}
+body.page-trayectoria .share-words{--share-ink:#231a07;--share-live:#231a07;--share-band:#fff}
+body.page-sobre-mi .share-words{--share-ink:#fff;--share-live:#14080e;--share-label:#fff;--share-band:#fff;--share-lit:#14080e}
+body.page-sobre-mi .share-words .share-btn{font-size:clamp(22px,6.6vw,24px)}
+.share-words .share-dock-label{font:500 10.5px/1.5 'DM Sans',sans-serif;letter-spacing:.16em;color:var(--share-label)}
+.share-words .share-dock-buttons{align-items:baseline;gap:0 clamp(16px,1.5vw,21px)}
+.share-words .share-btn{position:relative;isolation:isolate;min-height:44px;padding:0;border:0;border-radius:0;background:none;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;transform:none;font:italic 400 22px/1.1 'Cormorant Garamond',serif;letter-spacing:0;color:var(--share-ink);transition:translate .38s cubic-bezier(.22,1,.36,1),rotate .38s cubic-bezier(.22,1,.36,1),color .3s var(--ease-out)}
+/* La palabra es corta y el dedo no: el área que responde sobresale por los lados sin mover el texto. */
+.share-words .share-btn:after{content:"";position:absolute;inset:0 -10px}
+.share-words .share-btn--x:after{inset:0 -16px}
+.share-words .share-btn>span{position:relative;display:block;padding-bottom:7px}
+.share-words .share-btn>span:before,.share-words .share-btn>span:after{content:"";position:absolute;left:-3px;right:-3px;bottom:0;height:8px;pointer-events:none}
+.share-words .share-btn>span:before{background:currentColor;opacity:.5;-webkit-mask:var(--share-pen-a) center/100% 100% no-repeat;mask:var(--share-pen-a) center/100% 100% no-repeat;transition:opacity .2s var(--ease-out)}
+.share-words .share-btn>span:after{bottom:-2px;height:11px;background:var(--share-live);-webkit-mask:var(--share-marker) center/100% 100% no-repeat;mask:var(--share-marker) center/100% 100% no-repeat;clip-path:inset(0 100% 0 0);transition:clip-path .5s cubic-bezier(.55,.06,.2,1)}
+.share-words .share-btn:nth-child(even)>span:before{-webkit-mask-image:var(--share-pen-b);mask-image:var(--share-pen-b)}
+.share-words .share-btn:nth-child(3)>span:before{scale:-1 1}
+.share-words .share-btn.share-btn--x>span:before,.share-words .share-btn.share-btn--x>span:after{left:-5px;right:-5px}
+.share-words .share-btn.share-btn--x>span:before{-webkit-mask-image:var(--share-pen-c);mask-image:var(--share-pen-c)}
+.share-words .share-btn.share-btn--x>span:after{-webkit-mask-image:var(--share-marker-c);mask-image:var(--share-marker-c)}
+.share-words .share-btn:before{content:"";position:absolute;z-index:-1;left:-8px;right:-8px;top:50%;height:1.18em;margin-top:-.74em;background:var(--share-band);opacity:0;transform:skewX(-13deg) rotate(-1.2deg);-webkit-mask:var(--share-swash) center/100% 100% no-repeat;mask:var(--share-swash) center/100% 100% no-repeat;transition:opacity .2s var(--ease-out);pointer-events:none}
+.share-words .share-btn:is(:focus-visible,:active)>span:before{opacity:0;transition-delay:.3s}
+.share-words .share-btn:is(:focus-visible,:active)>span:after{clip-path:inset(0)}
+@media(hover:hover){.share-words .share-btn:hover{color:var(--share-live);text-shadow:none}.share-words .share-btn:hover>span:before{opacity:0;transition-delay:.3s}.share-words .share-btn:hover>span:after{clip-path:inset(0)}}
+.share-words .share-btn:focus-visible,body.page-sobre-mi .site-footer .share-words .share-btn:focus-visible{outline:0;color:var(--share-lit);text-shadow:none}
+.share-words .share-btn:focus-visible:before{opacity:.36}
+@media(max-width:760px){.share-words{flex:1 1 100%;flex-direction:column;align-items:flex-start;gap:0}.share-words .share-dock-buttons{gap:0 clamp(16px,5.2vw,22px)}}
+@media(prefers-reduced-motion:reduce){.share-words .share-btn,.share-words .share-btn:before,.share-words .share-btn>span:before,.share-words .share-btn>span:after{transition:none}}
+@media(forced-colors:active){.share-words .share-btn>span{text-decoration:underline}.share-words .share-btn:focus-visible{outline:2px solid CanvasText;outline-offset:4px}}
 @keyframes fade-in-share{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 .hero-threshold{position:absolute;inset:0;z-index:2;overflow:hidden;background:#0d0e0b;pointer-events:auto;cursor:pointer;perspective:1200px;--hero-rx:0deg;--hero-ry:0deg;--hero-mx:0;--hero-my:0;--hero-split:0;--hero-letter:0em;--hero-skew:0deg;--spot-x:46%;--spot-y:39.5%}
 .has-motion .hero-threshold{animation:hero-fade-overture .8s cubic-bezier(.16,1,.3,1) backwards}
@@ -596,10 +629,8 @@ body.page-sobre-mi #contenido{padding-top:clamp(72px,11vh,120px)}
 .site-nav nav>a[aria-current="page"]{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:6px}
 body.page-sobre-mi .site-nav nav>a,body.page-sobre-mi .site-nav nav>button{white-space:nowrap}
 @media(min-width:761px) and (max-width:860px){body.page-sobre-mi .site-nav,body.page-sobre-mi .site-nav nav{gap:16px}}
-/* Pie: firma, rótulo y botones dejan de ser blancos sobre rosa. */
+/* Pie: firma y rótulo dejan de ser blancos sobre rosa (compartir va aparte, en «.share-words»). */
 body.page-sobre-mi .site-footer .signature,body.page-sobre-mi .site-footer .share-dock-label{color:#14080e}
-body.page-sobre-mi .site-footer .share-btn{color:inherit;background:none;border:0;border-radius:0;box-shadow:none;padding:0 2px;font-size:13px;text-decoration:underline;text-decoration-color:rgba(255,255,255,.5);text-decoration-thickness:1px;text-underline-offset:6px}
-body.page-sobre-mi .site-footer .share-btn:hover{background:none;border:0;box-shadow:none;transform:none;color:#14080e;text-decoration-color:currentColor;text-shadow:none}
 body.page-sobre-mi .site-footer>a:not(.signature){display:inline-flex;align-items:center;min-height:44px;font-size:13px}
 @media(min-width:761px){
   /* Fuera la columna vacía: el rótulo va encima y el texto ocupa la tarjeta. */
@@ -831,8 +862,6 @@ body.page-retratos-por-encargo-bilbao .commission-dot{background:transparent;bor
 body.page-retratos-por-encargo-bilbao .commission-dot.is-active{color:#fffdf4;font-weight:700;transform:scale(1.15)}
 body.page-retratos-por-encargo-bilbao .site-footer{color:#fffdf4;border-top:1px solid rgba(255,255,255,0.22)}
 body.page-retratos-por-encargo-bilbao .site-footer .signature{color:#fffdf4}
-body.page-retratos-por-encargo-bilbao .site-footer .share-dock-label{color:#fffdf4}
-body.page-retratos-por-encargo-bilbao .site-footer .share-btn{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.26);color:#fffdf4}
 body.page-retratos-por-encargo-bilbao .commission-cutouts-stage{position:absolute;inset:0;pointer-events:none;z-index:8;overflow:hidden;perspective:1200px}
 body.page-retratos-por-encargo-bilbao .commission-cutout-actor{position:absolute;top:0;left:0;height:auto;max-width:none;opacity:0;pointer-events:none;user-select:none;transform-origin:50% 50%;will-change:transform,opacity;filter:drop-shadow(0 var(--cutout-sy,18px) var(--cutout-sb,26px) rgba(18,2,4,0.56))}
 body.page-retratos-por-encargo-bilbao .commission-cutout--button{width:clamp(54px,6.2vw,86px)}
