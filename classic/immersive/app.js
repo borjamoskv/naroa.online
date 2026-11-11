@@ -4325,13 +4325,68 @@
     });
   }
 
-  const years = $$('[data-year]'), events = $$('[data-exhibition-year]');
-  years.forEach(button => button.addEventListener('click', () => {
-    const year = button.dataset.year; let count = 0;
-    events.forEach(entry => { entry.hidden = year !== 'all' && entry.dataset.exhibitionYear !== year; if (!entry.hidden) count++; });
-    years.forEach(b => b.setAttribute('aria-pressed', String(b === button)));
-    $('.career-count').textContent = `${count} ${count === 1 ? 'encuentro documentado' : 'encuentros documentados'}`;
-  }));
+  // Trayectoria: filtros combinables por año y por tipo de encuentro.
+  const years = $$('[data-year]'), kinds = $$('[data-career-kind]'), events = $$('[data-exhibition-year]'), yearMarks = $$('[data-timeline-year]');
+  let careerYear = 'all', careerKind = 'all';
+  function filterCareer() {
+    let count = 0; const shownYears = new Set();
+    events.forEach(entry => {
+      entry.hidden = (careerYear !== 'all' && entry.dataset.exhibitionYear !== careerYear) || (careerKind !== 'all' && entry.dataset.exhibitionKind !== careerKind);
+      if (!entry.hidden) { count++; shownYears.add(entry.dataset.exhibitionYear); }
+    });
+    yearMarks.forEach(mark => { mark.hidden = !shownYears.has(mark.dataset.timelineYear); });
+    years.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.year === careerYear)));
+    kinds.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.careerKind === careerKind)));
+    const counter = $('.career-count');
+    if (counter) counter.textContent = count ? `${count} ${count === 1 ? 'encuentro documentado' : 'encuentros documentados'}` : 'Ningún encuentro con esa combinación';
+    paintCareerWall(true);
+  }
+
+  // Trayectoria: fondo parallax. La pared, el año gigante y los cromos siguen al encuentro en pantalla.
+  const careerWall = $('.career-wall');
+  const wallLayers = careerWall ? $$('[data-wall-layer]', careerWall) : [];
+  const wallYear = careerWall ? $('[data-wall-year]', careerWall) : null;
+  const wallCromos = careerWall ? $$('[data-wall-cromo]', careerWall) : [];
+  const cromoDepth = [90, 190, 300];
+  let wallEntry = null, wallTicking = false;
+  function paintCareerWall(force = false) {
+    wallTicking = false;
+    if (!careerWall) return;
+    const mid = innerHeight * .5;
+    let best = null, bestGap = Infinity, bestBox = null;
+    events.forEach(entry => {
+      if (entry.hidden) return;
+      const box = entry.getBoundingClientRect();
+      const gap = box.top > mid ? box.top - mid : box.bottom < mid ? mid - box.bottom : 0;
+      if (gap < bestGap) { bestGap = gap; best = entry; bestBox = box; }
+    });
+    if (best !== wallEntry || force) {
+      wallEntry = best;
+      const wall = best?.dataset.wall || 'yeso';
+      wallLayers.forEach(layer => layer.classList.toggle('is-on', layer.dataset.wallLayer === wall));
+      if (wallYear) wallYear.textContent = best?.dataset.exhibitionYear || '';
+      let arts = [];
+      try { arts = JSON.parse(best?.dataset.artworks || '[]'); } catch {}
+      wallCromos.forEach((cromo, i) => {
+        const art = arts[i];
+        cromo.classList.toggle('is-on', !!art);
+        if (art) cromo.style.backgroundImage = `url("${art.thumb}")`;
+      });
+    }
+    if (reduced.matches || !bestBox) return;
+    // Avance del encuentro activo por la pantalla: 0 al entrar por abajo, 1 al salir por arriba.
+    const travel = Math.max(0, Math.min(1, (innerHeight - bestBox.top) / (innerHeight + bestBox.height)));
+    careerWall.style.setProperty('--wall-shift', `${Math.round(-scrollY * .35)}px`);
+    careerWall.style.setProperty('--year-shift', `${Math.round((.5 - travel) * innerHeight * .28)}px`);
+    wallCromos.forEach((cromo, i) => cromo.style.setProperty('--cromo-shift', `${Math.round((.5 - travel) * cromoDepth[i])}px`));
+  }
+  if (careerWall) {
+    addEventListener('scroll', () => { if (!wallTicking) { wallTicking = true; requestAnimationFrame(() => paintCareerWall()); } }, { passive: true });
+    addEventListener('resize', () => paintCareerWall(), { passive: true });
+    paintCareerWall(true);
+  }
+  years.forEach(button => button.addEventListener('click', () => { careerYear = button.dataset.year; filterCareer(); }));
+  kinds.forEach(button => button.addEventListener('click', () => { careerKind = button.dataset.careerKind; filterCareer(); }));
   const portraitTrack = $('[data-portrait-scroll]');
   if (portraitTrack) {
     document.documentElement.classList.add('portrait-scroll-native');

@@ -1187,8 +1187,16 @@ def build(output):
 
     exhibitions = read_data("exhibitions")["exhibitions"]
     years = sorted({x["year"] for x in exhibitions}, reverse=True)
+    kind_labels = {"solo": "Individual", "group": "Colectiva", "street": "Arte en la calle", "market": "Mercado de arte"}
+    kind_plurals = {"solo": ("individual", "individuales"), "group": ("colectiva", "colectivas"), "street": ("en la calle", "en la calle"), "market": ("mercado de arte", "mercados de arte")}
+    # Pared de fondo por tipo de encuentro (decisión estética; `wall` en el JSON la sobrescribe).
+    kind_walls = {"solo": "yeso", "group": "ladrillo", "street": "hormigon", "market": "madera"}
+    wall_markup = '<div class="career-wall" aria-hidden="true"><div class="career-wall-stage">' + ''.join('<i data-wall-layer="' + w + '"' + (' class="is-on"' if w == "yeso" else '') + '></i>' for w in ("yeso", "ladrillo", "madera", "hormigon")) + '<b class="career-wall-year" data-wall-year></b>' + '<span class="career-wall-cromo" data-wall-cromo></span>' * 3 + '</div></div>'
+    kind_counts = {k: sum(1 for x in exhibitions if x["type"] == k) for k in kind_labels}
+    career_summary = f"{min(years)}–{max(years)} · {len(exhibitions)} encuentros · " + " · ".join(f"{n} {kind_plurals[k][0 if n == 1 else 1]}" for k, n in kind_counts.items() if n)
+    kind_buttons = '<button type="button" data-career-kind="all" aria-pressed="true">Todo</button>' + ''.join(f'<button type="button" data-career-kind="{k}" aria-pressed="false">{kind_labels[k]} <small>{n}</small></button>' for k, n in kind_counts.items() if n)
     career = hero(cantinflowers, "Exposiciones y encuentros", "El arte también<br><span>sale de paseo.</span>", "«Una galería sin muros, sin duros, abierta y flexible. De tú a tú, haciendo piña, haciendo amig@s, apetecible».", alt="Cantinflowers, pintura y collage en torno a Mario Moreno")
-    career += '<section id="contenido" class="career editorial"><div class="section-opening"><p>«Porque las exposiciones colectivas son como el corro de las patatas o el pilla-pilla de la vida artística: es enseñarnos los nuevos cromos al reunirnos con las amigas; es pegar en la misma pared todas nuestras pegatinas».</p></div><div class="year-filters" role="group" aria-label="Filtrar exposiciones por año"><button type="button" data-year="all" aria-pressed="true">Todos</button>' + ''.join(f'<button type="button" data-year="{y}" aria-pressed="false">{y}</button>' for y in years) + '</div><p class="career-count" role="status" aria-live="polite">' + str(len(exhibitions)) + ' encuentros documentados</p><div class="timeline">'
+    career += '<section id="contenido" class="career editorial">' + wall_markup + '<div class="section-opening"><p>«Porque las exposiciones colectivas son como el corro de las patatas o el pilla-pilla de la vida artística: es enseñarnos los nuevos cromos al reunirnos con las amigas; es pegar en la misma pared todas nuestras pegatinas».</p><p class="career-summary">' + esc(career_summary) + '</p></div><div class="year-filters type-filters" role="group" aria-label="Filtrar exposiciones por tipo">' + kind_buttons + '</div><div class="year-filters" role="group" aria-label="Filtrar exposiciones por año"><button type="button" data-year="all" aria-pressed="true">Todos</button>' + ''.join(f'<button type="button" data-year="{y}" aria-pressed="false">{y}</button>' for y in years) + '</div><p class="career-count" role="status" aria-live="polite">' + str(len(exhibitions)) + ' encuentros documentados</p><div class="timeline">'
     
     artwork_lookup = {}
     for p in catalogue["projects"]:
@@ -1213,7 +1221,11 @@ def build(output):
                 "url": f"/obra/{s}/"
             }
 
+    marked_year = None
     for x in exhibitions:
+        if x["year"] != marked_year:
+            marked_year = x["year"]
+            career += f'<h2 class="timeline-year" data-timeline-year="{marked_year}">{marked_year}</h2>'
         sources = ''.join(f'<a href="{esc(s["url"])}" target="_blank" rel="noopener noreferrer">{esc(s["label"])} ↗</a>' for s in x["sources"])
         art_slugs = x.get("artworks", [])
         arts = [artwork_lookup[s] for s in art_slugs if s in artwork_lookup]
@@ -1227,7 +1239,7 @@ def build(output):
                 f'</a>'
                 for a in arts
             ) + '</div>'
-        career += f'''<article class="timeline-entry" data-exhibition-year="{x['year']}" data-artworks="{art_json}"><p>{esc(x['dateLabel'])}</p><div><h3>{esc(x['title'])}</h3><p class="timeline-location">{esc(x['location'])}</p><p>{esc(x['description'])}</p>{cards_html}<div class="timeline-sources">{sources}</div></div></article>'''
+        career += f'''<article class="timeline-entry" data-exhibition-year="{x['year']}" data-exhibition-kind="{x['type']}" data-wall="{esc(x.get('wall') or kind_walls[x['type']])}" data-artworks="{art_json}"><p>{esc(x['dateLabel'])} <span class="timeline-kind">{kind_labels[x['type']]}</span></p><div><h3>{esc(x['title'])}</h3><p class="timeline-location">{esc(x['location'])}</p><p>{esc(x['description'])}</p>{cards_html}<div class="timeline-sources">{sources}</div></div></article>'''
     career += '</div><aside id="timeline-cursor-cards" class="timeline-cursor-cards" aria-hidden="true"></aside></section>'
     exhibition_events = []
     for ex in exhibitions:

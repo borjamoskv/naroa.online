@@ -873,7 +873,22 @@ async function eyeMatch(ui, base, points) {
       assert.ok(scrollState.dwellChapters.espejo >= 12, 'Reverse portrait tracks chapter dwell telemetry');
       assert.ok(page.find('[data-gaze-work]').textContent.includes('Rara Avis'), 'Reverse portrait updates mirror artwork from scroll dwell');
     }
-    if (route === '/trayectoria/') { page.click('[data-year="2026"]'); assert.equal(page.document.querySelectorAll('[data-exhibition-year]:not([hidden])').length, 3); }
+    if (route === '/trayectoria/') { page.click('[data-year="2026"]'); assert.equal(page.document.querySelectorAll('[data-exhibition-year]:not([hidden])').length, 3);
+      assert.equal(page.document.querySelectorAll('[data-timeline-year]:not([hidden])').length, 1, 'Only the year marker with visible entries remains');
+      assert.equal(page.document.querySelectorAll('[data-exhibition-year]:not([data-wall])').length, 0, 'Every encounter names its background wall');
+      const cromoSlugs = Array.from(page.document.querySelectorAll('.timeline-cromo[data-cromo-slug]'), el => el.dataset.cromoSlug);
+      assert.equal(new Set(cromoSlugs).size, cromoSlugs.length, 'No artwork is repeated across encounters');
+      assert.equal(page.document.querySelectorAll('.career-wall [data-wall-layer].is-on').length, 1, 'Exactly one wall texture is shown at a time');
+      assert.equal(page.find('[data-wall-year]').textContent, '2026', 'The giant background year follows the encounter on screen');
+      assert.equal(page.find('.career-wall').getAttribute('aria-hidden'), 'true', 'The parallax wall is decorative');
+      page.click('[data-career-kind="group"]');
+      assert.equal(page.document.querySelectorAll('[data-exhibition-year]:not([hidden])').length, 2, 'Year and kind filters combine');
+      assert.equal(page.find('[data-career-kind="group"]').getAttribute('aria-pressed'), 'true');
+      page.click('[data-year="all"]');
+      assert.equal(page.document.querySelectorAll('[data-exhibition-kind="group"]:not([hidden])').length, 7, 'Kind filter alone lists every group show');
+      assert.equal(page.document.querySelectorAll('[data-exhibition-kind="solo"]:not([hidden])').length, 0);
+      page.click('[data-career-kind="all"]');
+      assert.equal(page.document.querySelectorAll('[data-exhibition-year]:not([hidden])').length, page.document.querySelectorAll('[data-exhibition-year]').length); }
     if (route === '/cuaderno/') assert.equal(page.document.querySelectorAll('.notebook-posts article').length, 6);
     if (route === '/retratos-por-encargo-bilbao/') {
       assert.equal(page.document.querySelectorAll('.commission-example').length, 4, 'Commissions landing displays 4 monumental artworks');

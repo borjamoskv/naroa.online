@@ -1,5 +1,5 @@
 {
-  "reviewed": "2026-10-25",
+  "reviewed": "2026-11-11",
   "scope": "«Porque las exposiciones colectivas son como el corro de las patatas o el pilla-pilla de la vida artística: es enseñarnos los nuevos cromos al reunirnos con las amigas; es pegar en la misma pared todas nuestras pegatinas».",
   "exhibitions": [
     {
@@ -23,11 +23,7 @@
         }
       ],
       "published": "2026-06-01",
-      "artworks": [
-        "sistashark",
-        "baroque-farrokh",
-        "hugo-box"
-      ]
+      "artworks": []
     },
     {
       "id": "2995",
@@ -70,7 +66,6 @@
       "published": "2026-01-15",
       "artworks": [
         "cantinflowers",
-        "amy-rocks",
         "marilyn-rocks"
       ]
     },
@@ -92,8 +87,9 @@
       ],
       "published": "2025-05-22",
       "artworks": [
-        "enlatadas",
-        "the-golden-couple"
+        "johnny-rocks",
+        "james-rocks",
+        "entre-tantas-flores-de-dia"
       ]
     },
     {
@@ -114,15 +110,14 @@
       ],
       "published": "2025-05-09",
       "artworks": [
-        "the-love-boat",
-        "multi-dimensional-love"
+        "amy-rocks"
       ]
     },
     {
       "id": "2569",
       "title": "Emakumeen arteaN",
       "date": "2022-12-20",
-      "dateLabel": "20 de diciembre de 2022 · inauguración",
+      "dateLabel": "20 de diciembre de 2022 · inauguración · hasta enero de 2023",
       "location": "Harilka elkartea · Bilbao",
       "type": "group",
       "description": "«Porque no sostengo muchas certezas en esta vida, mas no me cabe duda alguna de que envolverme en un gran abrazo entre mujeres arropadas por su arte es algo para no perderme… que me invita también a encontrarme».",
@@ -135,11 +130,7 @@
         }
       ],
       "published": "2022-12-16",
-      "artworks": [
-        "las-rosalias",
-        "lauralore",
-        "leire"
-      ]
+      "artworks": []
     },
     {
       "id": "2458",
@@ -159,9 +150,7 @@
       ],
       "published": "2022-11-06",
       "artworks": [
-        "lady-rebel",
-        "can-dy-queen",
-        "vino-para-quedarse"
+        "abuelo-munster"
       ]
     },
     {
@@ -185,10 +174,7 @@
         }
       ],
       "published": "2022-10-04",
-      "artworks": [
-        "rockagipsy",
-        "amor-en-conserva"
-      ]
+      "artworks": []
     },
     {
       "id": "2359",
@@ -212,7 +198,6 @@
       ],
       "published": "2022-03-22",
       "artworks": [
-        "roisin",
         "pippilotta",
         "rosetta"
       ]
@@ -235,9 +220,7 @@
       ],
       "published": "2020-09-27",
       "artworks": [
-        "johnny-rocks",
-        "james-rocks",
-        "infusion-de-berto"
+        "mr-fahrenheit"
       ]
     },
     {
@@ -258,9 +241,8 @@
       ],
       "published": "2020-09-20",
       "artworks": [
-        "audreys-lightning",
-        "haram",
-        "billy-saw"
+        "roisin",
+        "audreys-lightning"
       ]
     },
     {
@@ -281,7 +263,6 @@
       ],
       "published": "2019-11-25",
       "artworks": [
-        "mr-fahrenheit",
         "out-por-los-pelos",
         "dustin"
       ]
@@ -303,16 +284,13 @@
         }
       ],
       "published": "2018-06-27",
-      "artworks": [
-        "peru-pura-natura",
-        "eneko-el-marino"
-      ]
+      "artworks": []
     },
     {
       "id": "1895",
       "title": "Personas",
       "date": "2017-09-05",
-      "dateLabel": "5 — 24 de septiembre de 2017",
+      "dateLabel": "5 — 24 de septiembre de 2017 · inauguración el 7",
       "location": "Sarean · Bilbao",
       "type": "group",
       "description": "«Sarean es un espacio de encuentro vecinal abierto a todo tipo de expresiones culturales ubicado en la bilbaína Plaza del Corazón de María. Se trata de un ambiente lúdico de carácter experimental y pedagógico que alberga una programación sociocultural diseñada a través de la participación ciudadana».",
@@ -329,11 +307,7 @@
         }
       ],
       "published": "2017-09-05",
-      "artworks": [
-        "aquellos-maravillosos-anos",
-        "aupas",
-        "el-hombre-que-susurraba-a-las-estrellas"
-      ]
+      "artworks": []
     },
     {
       "id": "1457",
@@ -352,11 +326,7 @@
         }
       ],
       "published": "2017-04-02",
-      "artworks": [
-        "custom-jaio",
-        "pablo",
-        "olinga-a-la-naranja"
-      ]
+      "artworks": []
     },
     {
       "id": "1356",
@@ -375,11 +345,7 @@
         }
       ],
       "published": "2016-11-30",
-      "artworks": [
-        "de-color",
-        "el-gran-dakari",
-        "starchild"
-      ]
+      "artworks": []
     },
     {
       "id": "414",
@@ -403,8 +369,7 @@
       ],
       "published": "2015-05-24",
       "artworks": [
-        "la-pensadora",
-        "la-llorona"
+        "denbora-nora-zoaz"
       ]
     },
     {
@@ -424,16 +389,13 @@
         }
       ],
       "published": "2015-05-10",
-      "artworks": [
-        "marian-de-miranda",
-        "euskolander-no-hay-mas-que-uno"
-      ]
+      "artworks": []
     },
     {
       "id": "195",
       "title": "Espejos del Alma · Laberinto de Espejos",
       "date": "2014-07-03",
-      "dateLabel": "3 de julio — 31 de agosto de 2014",
+      "dateLabel": "3 de julio — 31 de agosto de 2014 · inauguración el 17 de julio",
       "location": "Torre Salazar · Portugalete",
       "type": "solo",
       "description": "«El pasado 1 de Julio terminé de montar mi actual exposición de pintura “Espejos del Alma” en la Torre Salazar de Portugalete. El cuerpo, como torre y como mundo… Y el mundo… un laberinto de espejos».",
@@ -450,10 +412,7 @@
         }
       ],
       "published": "2014-07-10",
-      "artworks": [
-        "elene",
-        "beatriz-de-pandora"
-      ]
+      "artworks": []
     },
     {
       "id": "3",
@@ -472,11 +431,7 @@
         }
       ],
       "published": "2013-05-20",
-      "artworks": [
-        "mario-moreno",
-        "papitxulo",
-        "el-reencuentro"
-      ]
+      "artworks": []
     },
     {
       "id": "gaztebulegoa-2011",
@@ -495,11 +450,7 @@
         }
       ],
       "published": null,
-      "artworks": [
-        "boy",
-        "geisha",
-        "lagrimas-de-oro"
-      ]
+      "artworks": []
     },
     {
       "id": "hegoak-2010",
@@ -518,11 +469,7 @@
         }
       ],
       "published": null,
-      "artworks": [
-        "buena-fuente",
-        "carol",
-        "amaya"
-      ]
+      "artworks": []
     }
   ],
   "hero": {
