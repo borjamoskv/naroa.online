@@ -1278,6 +1278,29 @@
         previewEl.style.setProperty('transform-origin', focal);
       }
     }
+    // The wink frame only shows through an eye-sized mask, and only with motion on: it is not
+    // part of the first paint. Fetch it once the portrait has loaded and the page is idle, at
+    // once on the first gesture, never while effects are off.
+    const thresholdWinkImg = heroThresholdEl && $('[data-threshold-wink]', heroThresholdEl);
+    if (thresholdWinkImg?.dataset.src) {
+      let winkLoaded = false, winkQueued = false;
+      const fetchWink = () => {
+        if (winkLoaded || reduced.matches) return;
+        winkLoaded = true;
+        if (thresholdWinkImg.dataset.srcset) thresholdWinkImg.srcset = thresholdWinkImg.dataset.srcset;
+        thresholdWinkImg.src = thresholdWinkImg.dataset.src;
+        thresholdWinkImg.removeAttribute('data-srcset'); thresholdWinkImg.removeAttribute('data-src');
+      };
+      const queueWink = () => {
+        if (winkQueued || winkLoaded || reduced.matches) return;
+        winkQueued = true;
+        if (window.requestIdleCallback) requestIdleCallback(fetchWink, { timeout: 2500 }); else setTimeout(fetchWink, 800);
+      };
+      const portraitImg = $('.hero-threshold-portrait', heroThresholdEl);
+      if (!portraitImg || portraitImg.complete) queueWink(); else portraitImg.addEventListener('load', queueWink, { once: true });
+      ['wheel', 'touchstart', 'keydown'].forEach(type => addEventListener(type, fetchWink, { passive: true, once: true }));
+      reduced.addEventListener('change', e => { if (!e.matches) queueWink(); });
+    }
     const scenes = $$('.art-scene', stage), images = scenes.map(s => $('img', s));
     images.forEach((img, i) => adoptSrcset(img, works[i]?.cover));
     // Scenes cover the stage (.art-pan is inset -10px); measured on the stage so fit mode
