@@ -160,7 +160,8 @@
     if (match) {
       return (catalogue.projects || []).find(p => p.slug === match[1]) || null;
     }
-    return (catalogue.projects || [])[0] || null;
+    // Fuera de la galería y de /obra/<slug>/ no hay obra activa: lo que se comparte es la página.
+    return galleryPage ? (catalogue.projects || [])[0] || null : null;
   }
 
   function loadImageAsync(src, patience = 8000) {
@@ -635,7 +636,8 @@
   async function shareStoryToInstagram() {
     const dialog = $('#story-remix-dialog');
     if (!currentRemixFile && !currentRemixDataUrl) {
-      await generateStoryRemix();
+      // Se regenera la misma obra que ya estaba en curso, no otra al azar.
+      await generateStoryRemix(currentRemixSlug);
     }
     const title = 'Naroa Gutiérrez Gil · Exposición inmersiva Bilbao';
     const text = 'Remix de obras pictóricas de Naroa Gutiérrez Gil · naroagutierrezgil.com';
@@ -681,9 +683,15 @@
     const p = getActiveArtwork();
     const customUrl = btn.dataset.shareUrl;
     const customTitle = btn.dataset.shareTitle;
-    const url = customUrl || (location.origin + (p ? '/obra/' + p.slug + '/' : location.pathname));
-    const rawTitle = customTitle || (p ? p.title : document.title);
-    const title = rawTitle.replace(/\s*·\s*Naroa Gutiérrez Gil.*$/i, '').trim();
+    // Con una obra en pantalla se comparte esa obra (el botón de la ficha nace con la URL de la obra
+    // inicial y no se reescribe al cambiar de escena). Sin obra, la página; y desde la 404, la portada.
+    const lost = document.body.classList.contains('page-404');
+    const shareOrigin = customUrl ? new URL(customUrl, location.href).origin : location.origin;
+    const url = p ? `${shareOrigin}/obra/${p.slug}/` : (customUrl || location.origin + (lost ? '/' : location.pathname));
+    // Una obra se comparte con su título limpio; una página conserva el nombre de la artista
+    // (un «Sobre mí» a secas, publicado por quien visita, se leería como suyo).
+    const rawTitle = p ? p.title : (customTitle || (lost ? 'Naroa Gutiérrez Gil' : $('meta[property="og:title"]')?.content || document.title));
+    const title = (p || customTitle) ? rawTitle.replace(/\s*·\s*Naroa Gutiérrez Gil.*$/i, '').trim() : rawTitle.trim();
     const text = title;
     const encodedUrl = encodeURIComponent(url);
     const encodedText = encodeURIComponent(text);
@@ -694,7 +702,8 @@
       window.open(`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}`, '_blank', 'noopener,noreferrer,width=640,height=560');
     } else if (network === 'instagram') {
       openDialog('#story-remix-dialog');
-      generateStoryRemix(p?.slug || null);
+      // En la página de la artista la Story nace de su autorretrato, no de una obra al azar.
+      generateStoryRemix(p?.slug || ($('[data-eye-portrait]') ? 'rara-avis' : null));
     } else if (network === 'tiktok') {
       if (navigator.share) {
         navigator.share({ title, text, url }).catch(() => {});

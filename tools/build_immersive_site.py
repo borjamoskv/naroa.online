@@ -242,7 +242,7 @@ def build(output):
         except Exception:
             font_micro = font_quote = font_cromo = ImageFont.load_default()
 
-        def create_card(filename, left_img_path, right_img_path, cromo_img_path, micro_tag, micro_quote, cromo_label, seed_phase=0.0, split_mode="split"):
+        def create_card(filename, left_img_path, right_img_path, cromo_img_path, micro_tag, micro_quote, cromo_label, seed_phase=0.0, split_mode="split", version="v2"):
             W, H = 1200, 630
             # 1. Right / Secondary Plane (Focused in Right Half x=460..1200 so subject is 100% visible)
             right_plane = Image.new("RGB", (W, H), "#0b0c0a")
@@ -398,8 +398,14 @@ def build(output):
             card.save(dest_src, quality=95, subsampling=0, optimize=True)
             dest_deploy = target_social_dir / filename
             shutil.copy2(dest_src, dest_deploy)
-            # Also write cache-busted v2 sibling so WhatsApp/Twitter scrapers refresh immediately
-            v2_name = filename.replace(".jpg", "-v2.jpg")
+            # Also write a cache-busted sibling so WhatsApp/Twitter scrapers refresh immediately;
+            # bump `version` whenever a card's picture or text changes.
+            v2_name = filename.replace(".jpg", f"-{version}.jpg")
+            # A superseded sibling must not stay published with the old picture or text.
+            for folder in (social_dir, target_social_dir):
+                for stale in folder.glob(filename.replace(".jpg", "-v*.jpg")):
+                    if stale.name != v2_name:
+                        stale.unlink()
             shutil.copy2(dest_src, social_dir / v2_name)
             shutil.copy2(dest_src, target_social_dir / v2_name)
 
@@ -439,10 +445,12 @@ def build(output):
             source_dir / "images/sobre-mi/naroa-monoculo.jpg",
             source_dir / "images/menu/menu-03-manostijeras.jpg",
             source_dir / "images/catalogo/marilyn-rocks-4k.webp",
-            "LA ARTISTA  ·  NAROA GUTIÉRREZ GIL",
-            "«Transformar el problema en trampolín: puro kintsugi».",
-            "El ReCreo · Bilbao",
-            seed_phase=3.1
+            "NAROA GUTIÉRREZ GIL  ·  RETRATISTA EN BILBAO",
+            # Cita literal (Iconos Pop, 2020): lo que va entre « » en la tarjeta también lo dijo Naroa.
+            "«Me encontré a mí en los demás».",
+            "Marilyn Rocks · DiviNos",
+            seed_phase=3.1,
+            version="v3"
         )
         create_card(
             "naroa-share-card-encargos.jpg",
@@ -874,7 +882,7 @@ def build(output):
         ],
     }
 
-    def page(path, title, description, body, image, gallery=False, schema=None, not_found=False, image_alt=None):
+    def page(path, title, description, body, image, gallery=False, schema=None, not_found=False, image_alt=None, card_alt=None):
         canonical = ORIGIN + path
         im_w, im_h, im_mime = image_info(image)
         im_alt = image_alt or f"{title} · Naroa Gutiérrez Gil"
@@ -883,12 +891,14 @@ def build(output):
             "/obra/": "/images/social/naroa-share-card-home-v2.jpg",
             "/cuaderno/": "/images/social/naroa-share-card-cuaderno-v2.jpg",
             "/trayectoria/": "/images/social/naroa-share-card-trayectoria-v2.jpg",
-            "/sobre-mi/": "/images/social/naroa-share-card-sobre-mi-v2.jpg",
+            "/sobre-mi/": "/images/social/naroa-share-card-sobre-mi-v3.jpg",
             "/retratos-por-encargo-bilbao/": "/images/social/naroa-share-card-encargos-v2.jpg",
             "/series/vaivenes/": "/images/social/naroa-share-card-vaivenes-v2.jpg",
             "/contacto/": "/images/social/naroa-share-card-contacto-v2.jpg",
         }
         og_img_path = og_card_map.get(path, image)
+        # La tarjeta social no es la fotografía de la página: si se describe aparte, ese es su alt.
+        og_alt = card_alt if card_alt and og_img_path != image else im_alt
         og_w, og_h, og_mime = (1200, 630, "image/jpeg") if og_img_path.startswith("/images/social/naroa-share-card") else (im_w, im_h, im_mime)
         structured = dict(schema or {"@context": "https://schema.org", "@type": "WebPage", "name": title, "url": canonical, "description": description})
         structured.setdefault("inLanguage", "es-ES")
@@ -926,7 +936,7 @@ def build(output):
             }
         breadcrumb_tag = f'<script type="application/ld+json" id="seo-breadcrumb">{data_json(breadcrumb)}</script>' if breadcrumb else ''
         slug_class = "page-" + (path.strip("/").replace("/", "-") or "home")
-        html = f'''<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>{esc(title)} · Naroa Gutiérrez Gil</title><meta name="description" content="{esc(description)}"><meta name="robots" content="index, follow, max-image-preview:large"><meta name="theme-color" content="#11120f"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Naroa"><link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/assets/naroa-icon-180-v1.png"><link rel="alternate" type="application/rss+xml" title="Naroa Gutiérrez Gil · Obras y Blog" href="{ORIGIN}/feed.xml"><link rel="mcp" type="application/json" href="{ORIGIN}/.well-known/mcp.json" title="WebMCP Model Context Protocol"><link rel="canonical" href="{canonical}"><meta property="og:site_name" content="Naroa Gutiérrez Gil"><meta property="og:locale" content="es_ES"><meta property="og:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{canonical}"><meta property="og:type" content="{'article' if gallery and path not in ('/', '/obra/', '/series/vaivenes/') else 'website'}"><meta property="og:image" content="{ORIGIN}{og_img_path}"><meta property="og:image:secure_url" content="{ORIGIN}{og_img_path}"><meta property="og:image:width" content="{og_w}"><meta property="og:image:height" content="{og_h}"><meta property="og:image:type" content="{og_mime}"><meta property="og:image:alt" content="{esc(im_alt)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta name="twitter:description" content="{esc(description)}"><meta name="twitter:image" content="{ORIGIN}{og_img_path}"><meta name="twitter:image:alt" content="{esc(im_alt)}"><link rel="icon" href="{favicon_path}" type="image/svg+xml" sizes="any"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="{assets['app.css']}"><script type="application/ld+json" id="page-schema">{data_json(structured)}</script>{breadcrumb_tag}<script type="application/vnd.mcp+json" id="webmcp-schema">{data_json(webmcp_manifest)}</script><script defer src="{catalog_path}"></script><script defer src="{assets['soundscape.js']}"></script><script defer src="{assets['journey.js']}"></script><script defer src="{assets['app.js']}"></script></head><body class="{'gallery-page' if gallery else 'editorial-page'} {slug_class}"><a class="skip-link" href="#main">Ir al contenido</a>{header(gallery)}{body}{'' if gallery else footer()}{dialogs()}</body></html>'''
+        html = f'''<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>{esc(title)} · Naroa Gutiérrez Gil</title><meta name="description" content="{esc(description)}"><meta name="robots" content="index, follow, max-image-preview:large"><meta name="theme-color" content="#11120f"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Naroa"><link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/assets/naroa-icon-180-v1.png"><link rel="alternate" type="application/rss+xml" title="Naroa Gutiérrez Gil · Obras y Blog" href="{ORIGIN}/feed.xml"><link rel="mcp" type="application/json" href="{ORIGIN}/.well-known/mcp.json" title="WebMCP Model Context Protocol"><link rel="canonical" href="{canonical}"><meta property="og:site_name" content="Naroa Gutiérrez Gil"><meta property="og:locale" content="es_ES"><meta property="og:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{canonical}"><meta property="og:type" content="{'article' if gallery and path not in ('/', '/obra/', '/series/vaivenes/') else 'website'}"><meta property="og:image" content="{ORIGIN}{og_img_path}"><meta property="og:image:secure_url" content="{ORIGIN}{og_img_path}"><meta property="og:image:width" content="{og_w}"><meta property="og:image:height" content="{og_h}"><meta property="og:image:type" content="{og_mime}"><meta property="og:image:alt" content="{esc(og_alt)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta name="twitter:description" content="{esc(description)}"><meta name="twitter:image" content="{ORIGIN}{og_img_path}"><meta name="twitter:image:alt" content="{esc(og_alt)}"><link rel="icon" href="{favicon_path}" type="image/svg+xml" sizes="any"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="{assets['app.css']}"><script type="application/ld+json" id="page-schema">{data_json(structured)}</script>{breadcrumb_tag}<script type="application/vnd.mcp+json" id="webmcp-schema">{data_json(webmcp_manifest)}</script><script defer src="{catalog_path}"></script><script defer src="{assets['soundscape.js']}"></script><script defer src="{assets['journey.js']}"></script><script defer src="{assets['app.js']}"></script></head><body class="{'gallery-page' if gallery else 'editorial-page'} {slug_class}"><a class="skip-link" href="#main">Ir al contenido</a>{header(gallery)}{body}{'' if gallery else footer()}{dialogs()}</body></html>'''
         dest = output / ("404.html" if not_found else path.lstrip("/") + "index.html")
         write(dest, html)
         if not not_found:
@@ -1294,7 +1304,8 @@ def build(output):
         "relatedLink": [ORIGIN + "/trayectoria/", ORIGIN + "/retratos-por-encargo-bilbao/"],
         "mainEntity": canonical_artist_entity,
     }
-    page("/sobre-mi/", "Sobre mí · Retratista en Bilbao", about_description, '<main id="main">' + about + '</main>', "/images/sobre-mi/naroa-monoculo.jpg", schema=about_schema, image_alt="Naroa Gutiérrez Gil con chistera y un monóculo ante un ojo")
+    page("/sobre-mi/", "Sobre mí · Retratista en Bilbao", about_description, '<main id="main">' + about + '</main>', "/images/sobre-mi/naroa-monoculo.jpg", schema=about_schema, image_alt="Naroa Gutiérrez Gil con chistera y un monóculo ante un ojo",
+         card_alt="Naroa Gutiérrez Gil con chistera y monóculo; a su lado, una caracterización de rostro pálido y ojos ahumados, y la pizarra Marilyn Rocks. Sobre la imagen, su frase «Me encontré a mí en los demás».")
 
     exhibitions = read_data("exhibitions")["exhibitions"]
     years = sorted({x["year"] for x in exhibitions}, reverse=True)
