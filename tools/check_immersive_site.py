@@ -3,6 +3,7 @@
 import argparse
 import base64
 import json
+import re
 import sys
 import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
@@ -208,9 +209,26 @@ def check(output):
     import geo_observatory
     geo_report = geo_observatory.evaluate_grounding_coverage(catalog_data)
     assert geo_report["grounded_probes"] == geo_report["total_probes"], "GEO Observatory query grounding coverage not 100%"
+    # Caché: `immutable` solo para archivos con versión en el nombre (hash de 12 cifras o sufijo -vN).
+    # Se aplica la última regla de vercel.json que coincide con la ruta, como hace Vercel.
+    hosting = json.loads((REPO / "vercel.json").read_text())
+    cache_rules = [(re.compile(rule["source"]), header["value"]) for rule in hosting["headers"] if not rule.get("has") for header in rule["headers"] if header["key"].lower() == "cache-control"]
+    versioned = re.compile(r"-[0-9a-f]{12}[-.]|-v\d+\.")
+    immutable_files = 0
     for file in output.rglob("*"):
         if file.is_file():
             assert file.stat().st_size < 25 * 1024 * 1024, ("asset exceeds hosting limit", file)
+            url = "/" + file.relative_to(output).as_posix()
+            policy = [value for pattern, value in cache_rules if pattern.fullmatch(url)]
+            if policy and "immutable" in policy[-1]:
+                assert versioned.search(file.name), ("immutable cache on a file without a version in its name", url)
+                immutable_files += 1
+    assert immutable_files > len(expected), "the immutable cache rules no longer reach the hashed assets"
+    # Ninguna redirección pública acaba en una ruta que el sitio no genera.
+    for rule in hosting.get("redirects", []):
+        destination = rule["destination"]
+        if destination.startswith("/") and "$" not in destination:
+            assert (output / destination.strip("/") / "index.html").is_file(), ("redirect to a missing page", rule["source"], destination)
     print(f'PASS: {len(expected)} artworks, {len(manifest["canonical_routes"])} canonical pages, {len(checked_refs)} local references; headings, alt text, JSON-LD and image assets verified.')
 
 

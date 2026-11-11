@@ -401,7 +401,7 @@
     if (previewImg && dataUrl) previewImg.src = dataUrl;
     if (downloadBtn && dataUrl) {
       downloadBtn.href = dataUrl;
-      downloadBtn.download = `naroa-detail-obsession-${heroWork.slug}.jpg`;
+      downloadBtn.download = heroWork.slug === 'mi-visita' ? 'naroa-mi-visita.jpg' : `naroa-detail-obsession-${heroWork.slug}.jpg`;
     }
     return new Promise(resolve => {
       if (!canvas.toBlob) { resolve(); return; }
@@ -430,6 +430,7 @@
     if (spinner) spinner.hidden = false;
     isGeneratingRemix = true;
     const run = ++remixRun;
+    setRemixMode('work');
 
     try {
       // Enfoque DETAIL OBSESSION: Obra protagonista con zoom macro y miniatura completa
@@ -487,6 +488,195 @@
       }
     }
   }
+
+  // --- El retrato de tu visita ---
+  // Cuánto se ha mirado cada obra, medido solo mientras está quieta en pantalla. Vive en memoria:
+  // no se guarda ni se envía, y se pierde al cerrar la pestaña. Con ello se compone una Story con
+  // los recortes reales de las obras donde más se detuvo la visita.
+  const visit = { seconds: Object.create(null), focus: Object.create(null), last: performance.now() };
+  const VISIT_MIN_SECONDS = 4, VISIT_MIN_WORKS = 3, VISIT_MAX_WORKS = 4;
+  function visitTick() {
+    const now = performance.now(), dt = Math.min(1, (now - visit.last) / 1000);
+    visit.last = now;
+    if (document.hidden || document.querySelector('dialog[open]')) return;
+    const scene = $('.art-scene.is-current'), slug = scene?.dataset.work;
+    const phase = scene?.closest('[data-gallery]')?.dataset.transition;
+    // Cuenta la obra quieta o explorada: ni el cruce entre dos ni el retrato del umbral.
+    if (!slug || (phase && phase !== 'hold' && phase !== 'explore' && phase !== 'still')) return;
+    if (slug === projects[0]?.slug && window.scrollY < 40) return;
+    visit.seconds[slug] = (visit.seconds[slug] || 0) + dt;
+  }
+  if (galleryPage) setInterval(visitTick, 500);
+  // La lupa dice dónde se miró dentro de la obra: el recorte de la Story se centra ahí.
+  function visitFocus(slug, x, y) { if (slug) visit.focus[slug] = { x: clamp(x, 0, 1), y: clamp(y, 0, 1) }; }
+  function visitLooked() {
+    return Object.entries(visit.seconds)
+      .filter(entry => entry[1] >= VISIT_MIN_SECONDS)
+      .sort((a, b) => b[1] - a[1])
+      .map(([slug, seconds]) => ({ work: projects.find(w => w.slug === slug), seconds }))
+      .filter(entry => entry.work);
+  }
+  const visitReady = () => visitLooked().length >= VISIT_MIN_WORKS;
+  const visitClock = seconds => { const s = Math.round(seconds), m = Math.floor(s / 60); return m ? `${m} min ${String(s % 60).padStart(2, '0')} s` : `${s} s`; };
+
+  // Story 9:16 del paseo (1080×1920): una franja por obra, recortada a mano, y tanto más alta
+  // cuanto más se miró. Cada franja es un detalle real con la pieza completa prendida al lado.
+  // El texto respeta la misma zona segura que la Story de una obra (y=250…1670).
+  function renderVisitFrame(ctx, looked, images, summary) {
+    const W = 1080, H = 1920, margin = 76, paper = '#fffdf4', accent = '#f7d594';
+    const spaced = value => { if ('letterSpacing' in ctx) ctx.letterSpacing = value; };
+    const focusOf = i => visit.focus[looked[i].work.slug] || { x: 0.5, y: 0.42 };
+    ctx.fillStyle = '#0b0b0a';
+    ctx.fillRect(0, 0, W, H);
+    // Fondo: la obra más mirada, muy de cerca y en penumbra.
+    if (images[0]) {
+      drawStoryZoomedDetail(ctx, images[0], 0, 0, W, H, 0, 3.1, focusOf(0).x, focusOf(0).y);
+      ctx.fillStyle = 'rgba(11, 11, 10, 0.8)';
+      ctx.fillRect(0, 0, W, H);
+    }
+    const inked = on => { ctx.shadowColor = on ? 'rgba(0, 0, 0, 0.6)' : 'transparent'; ctx.shadowBlur = on ? 22 : 0; ctx.shadowOffsetY = on ? 2 : 0; };
+    ctx.textBaseline = 'alphabetic';
+    ctx.textAlign = 'left';
+    inked(true);
+    ctx.fillStyle = paper;
+    ctx.font = '500 92px "Caveat", cursive';
+    ctx.fillText('Naroa', margin, 322);
+    const signature = ctx.measureText('Naroa').width;
+    ctx.font = '500 22px "DM Sans", sans-serif';
+    spaced('5px');
+    ctx.fillText('GUTIÉRREZ GIL', margin + signature + 22, 318);
+    spaced('0px');
+    ctx.font = 'italic 300 78px "Cormorant Garamond", serif';
+    ctx.fillText('El retrato de mi visita', margin - 4, 432);
+    inked(false);
+
+    // Reparto del alto: proporcional al tiempo, con un mínimo para que quepa el rótulo.
+    const top = 486, bottom = 1528, gap = 18, x = margin - 34, bandW = W - x * 2;
+    const room = bottom - top - gap * (looked.length - 1), floor = room * 0.17;
+    const total = looked.reduce((sum, entry) => sum + entry.seconds, 0) || 1;
+    let heights = looked.map(entry => entry.seconds / total * room);
+    for (let pass = 0; pass < 4; pass++) {
+      const small = heights.map(h => h <= floor);
+      const free = room - floor * small.filter(Boolean).length;
+      const rest = heights.reduce((sum, h, i) => sum + (small[i] ? 0 : h), 0) || 1;
+      heights = heights.map((h, i) => small[i] ? floor : h / rest * free);
+    }
+    let y = top;
+    looked.forEach((entry, i) => {
+      const h = Math.round(heights[i]), img = images[i], focus = focusOf(i), pad = 34;
+      ctx.save();
+      storyCutPath(ctx, x, y, bandW, h, 4.5, 11 + i * 17);
+      ctx.clip();
+      ctx.fillStyle = '#161512';
+      ctx.fillRect(x - 8, y - 8, bandW + 16, h + 16);
+      if (img) drawStoryZoomedDetail(ctx, img, x - 8, y - 8, bandW + 16, h + 16, 0, 1.75, focus.x, focus.y);
+      const veil = ctx.createLinearGradient(0, y + h * 0.3, 0, y + h);
+      veil.addColorStop(0, 'rgba(11, 11, 10, 0)');
+      veil.addColorStop(1, 'rgba(11, 11, 10, 0.82)');
+      ctx.fillStyle = veil;
+      ctx.fillRect(x - 8, y, bandW + 16, h + 8);
+      ctx.restore();
+      // La pieza completa, a la derecha de su franja.
+      let miniW = 0;
+      if (img) {
+        const nw = img.naturalWidth || img.width || 1, nh = img.naturalHeight || img.height || 1;
+        const maxH = Math.max(70, Math.min(230, h - 74)), maxW = 200;
+        const cardW = Math.round(nw * Math.min(maxW / nw, maxH / nh)) + 28;
+        drawStoryMiniature(ctx, img, x + bandW - pad - cardW, y + h - 22, maxW, maxH, i % 2 ? 2.1 : -2.4);
+        miniW = cardW + pad;
+      }
+      // Rótulo: lo que duró la mirada y el título, apoyados en el borde inferior.
+      inked(true);
+      const size = Math.round(clamp(h * 0.25, 46, 78)), textW = bandW - pad * 2 - miniW - 16;
+      ctx.font = `italic 300 ${size}px "Cormorant Garamond", serif`;
+      const lines = wrapStoryText(ctx, entry.work.title, textW, h > size * 3.4 ? 2 : 1);
+      let ty = y + h - 30;
+      ctx.fillStyle = paper;
+      lines.slice().reverse().forEach(line => { ctx.fillText(line, x + pad - 3, ty); ty -= size * 1.02; });
+      ctx.fillStyle = accent;
+      ctx.font = '500 22px "DM Sans", sans-serif';
+      spaced('4px');
+      ctx.fillText(`${String(i + 1).padStart(2, '0')} · ${visitClock(entry.seconds)}`.toUpperCase(), x + pad, ty + size * 0.08 - 10);
+      spaced('0px');
+      inked(false);
+      y += h + gap;
+    });
+
+    inked(true);
+    ctx.fillStyle = accent;
+    ctx.font = '500 22px "DM Sans", sans-serif';
+    spaced('4px');
+    ctx.fillText(summary.toUpperCase(), margin, 1598);
+    spaced('0px');
+    ctx.fillStyle = 'rgba(255, 253, 244, 0.78)';
+    ctx.font = '500 28px "DM Sans", sans-serif';
+    ctx.fillText('naroagutierrezgil.com', margin, 1656);
+    inked(false);
+  }
+
+  // El diálogo de Story sirve a las dos: la de una obra y la del paseo.
+  let remixHeading = null;
+  function setRemixMode(mode) {
+    const dialog = $('#story-remix-dialog');
+    if (!dialog) return;
+    const heading = $('#story-remix-heading', dialog), loop = $('[data-remix-video-loop]', dialog), visitBtn = $('[data-remix-visit]', dialog);
+    if (heading) {
+      if (remixHeading === null) remixHeading = heading.textContent;
+      heading.textContent = mode === 'visit' ? 'Modo Story · El retrato de tu visita' : remixHeading;
+    }
+    if (loop) loop.hidden = mode === 'visit';
+    if (visitBtn) visitBtn.hidden = mode === 'visit' || !visitReady();
+    dialog.dataset.remixMode = mode;
+  }
+
+  async function generateVisitStory() {
+    const dialog = $('#story-remix-dialog');
+    const all = visitLooked();
+    if (!dialog || all.length < VISIT_MIN_WORKS) return null;
+    const looked = all.slice(0, VISIT_MAX_WORKS);
+    const spinner = $('[data-story-remix-spinner]', dialog);
+    if (spinner) spinner.hidden = false;
+    isGeneratingRemix = true;
+    const run = ++remixRun;
+    try {
+      setRemixMode('visit');
+      currentRemixSlug = null;
+      currentRemixImg = null;
+      const total = all.reduce((sum, entry) => sum + entry.seconds, 0);
+      const summary = `${all.length} obras · ${visitClock(total)} de mirada`;
+      const titleEl = $('[data-remix-title]', dialog), metaEl = $('[data-remix-meta]', dialog);
+      if (titleEl) titleEl.textContent = 'El retrato de tu visita';
+      if (metaEl) metaEl.textContent = summary;
+      setRemixStatus('');
+      const [images] = await Promise.all([
+        Promise.all(looked.map(entry => loadImageAsync(entry.work.photos?.[0]?.src || entry.work.cover || entry.work.thumb).catch(() => null))),
+        storyFontsReady()
+      ]);
+      if (run !== remixRun) return null;
+      const canvas = document.createElement('canvas');
+      canvas.width = 1080;
+      canvas.height = 1920;
+      let ctx = null;
+      try { ctx = canvas.getContext('2d'); } catch {}
+      if (!ctx) return null;
+      renderVisitFrame(ctx, looked, images, summary);
+      await publishStory(canvas, { slug: 'mi-visita' });
+      return { dataUrl: currentRemixDataUrl, blob: currentRemixBlob, file: currentRemixFile, works: looked.map(entry => entry.work.slug) };
+    } catch (err) {
+      console.warn('Error generating visit story:', err);
+      return null;
+    } finally {
+      if (run === remixRun) {
+        if (spinner) spinner.hidden = true;
+        isGeneratingRemix = false;
+      }
+    }
+  }
+  document.addEventListener('click', e => {
+    if (!e.target.closest?.('[data-visit-portrait]')) return;
+    openDialog('#story-remix-dialog');
+    generateVisitStory();
+  });
 
   async function recordStoryVideoLoop(preferredSlug = null, durationMs = 6000) {
     if (storyLoopState.isRecording) return null;
@@ -741,6 +931,10 @@
         recordStoryVideoLoop(currentRemixSlug || null, 6000);
       });
     }
+    $('[data-remix-visit]', remixDialog)?.addEventListener('click', () => {
+      if (isGeneratingRemix || storyLoopState.isRecording) return;
+      generateVisitStory();
+    });
   }
   const menu = $('#menu-dialog'), menuLinks = $$('[data-menu-item]', menu), menuImages = $$('[data-menu-image]', menu);
   const menuPicture = $('[data-menu-picture]', menu), menuReel = $('[data-menu-reel]', menu);
@@ -2693,6 +2887,8 @@
       if (ouroboros) ouroboros.hidden = (state.index !== works.length - 1);
       const finaleShare = $('[data-finale-share]', stage);
       if (finaleShare) finaleShare.hidden = (state.index !== works.length - 1);
+      const visitLink = $('[data-visit-portrait]', stage);
+      if (visitLink) visitLink.hidden = !visitReady();
       const kintsugiBtn = $('[data-kintsugi-toggle]', stage);
       if (kintsugiBtn) {
         const isKintsugiPair = (p.slug === 'cantinflowers' || p.slug === 'mario-moreno');
@@ -4658,6 +4854,7 @@
         const dw = nw * k, dh = nh * k, offX = (r.width - dw) * ox / 100, offY = (r.height - dh) * oy / 100;
         const nx = (px - r.left - offX) / dw, ny = (py - r.top - offY) / dh;
         if (nx < 0 || nx > 1 || ny < 0 || ny > 1) { lens.hidden = true; return; }
+        visitFocus(works[state.index]?.slug, nx, ny);
         const rad = radius();
         lens.style.backgroundSize = `${dw * ZOOM}px ${dh * ZOOM}px`;
         lens.style.backgroundPosition = `${rad - nx * dw * ZOOM}px ${rad - ny * dh * ZOOM}px`;

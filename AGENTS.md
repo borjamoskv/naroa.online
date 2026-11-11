@@ -13,6 +13,14 @@ Toda alta o mutación de obra exige paridad simultánea en 3 capas:
 2. `classic/data/journey.json`: Secuencia de cámara (`[s["slug"] for s in scenes] == [p["slug"] for p in projects]`), `hold: 45` en hero inicial y `hold: 25` en el resto, modos `F | Z | V`.
 3. `src/artworks.ts`: Registro TypeScript con `category` restringido a `'rocks' | 'divinos' | 'kintsugi' | 'drawing'`.
 
+**Control (`tools/check_catalog_sources.py`, dentro de `npm run test:site` y al empezar `deploy.sh`):**
+- El catálogo público son las obras de `catalogo.json` más las de `classic/data/vaivenes.json` que no estén ya en él; el recorrido debe cubrir exactamente ese conjunto, sin slugs repetidos.
+- Falla también si una redirección de `vercel.json`, un `target` del recorrido o una exposición apunta a una obra inexistente.
+- **Ningún recuento de obras se escribe a mano.** El `index.html` de la SPA usa `%OBRAS_TOTAL%`, que rellena `vite.config.ts` desde los mismos datos.
+- El registro de la SPA arrastra una deuda anotada en el propio control (obras fuera de catálogo, dos sin registrar y un slug repetido): no puede crecer, y al resolver una entrada se borra de la lista.
+
+**Caché:** `immutable` solo para archivos con versión en el nombre (hash de 12 cifras o sufijo `-vN`). `tools/check_immersive_site.py` falla si una regla de `vercel.json` se lo da a cualquier otro.
+
 ### 2. Paridad con Suite JSDOM (`test_immersive_dom.cjs`)
 - Valida la secuencia exacta de modos (`entry.mode`) y el total de obras (85). Actualizar la cadena esperada en `tools/test_immersive_dom.cjs` ante cualquier mutación del recorrido.
 
@@ -49,8 +57,14 @@ Toda alta o mutación de obra exige paridad simultánea en 3 capas:
    - **Miniatura PiP Completa:** Tarjeta flotante esquinada con sombra profunda mostrando la obra íntegra sin recorte (`drawStoryMiniature`), garantizando paridad detalle + obra completa.
 2. **Share en X/Twitter (`INV_CLEAN_SOCIAL_TITLE`):** El texto de compartición debe emitir exclusivamente el título limpio de la obra (`p.title`, ej. `Game Over`), sin muletillas promocionales ni duplicación de autor.
 
+3. **El retrato de tu visita (`INV_VISIT_PORTRAIT`):** la galería suma cada medio segundo el tiempo que cada obra pasa quieta en pantalla (no el cruce entre dos, ni el retrato del umbral, ni con un diálogo abierto). Vive solo en memoria: no se guarda ni se envía. Tras mirar al menos `3` obras `4 s` cada una, el diálogo de Story ofrece una segunda pieza y, en la última obra, un enlace de texto junto a «Compartir recorrido».
+   - **Layout (`1080×1920`, `renderVisitFrame`):** hasta cuatro franjas recortadas a mano, una por obra y tanto más alta cuanto más se miró; cada una es un detalle real (centrado donde estuvo la lupa, si se usó) con la pieza completa prendida al lado, su título y lo que duró la mirada. Mismo margen seguro que la Story de una obra.
+   - El título de la imagen habla quien la comparte («El retrato de mi visita»); la interfaz, a quien visita («de tu visita»).
+
 ### 7. Pureza Visual en Umbral Hero (`INV_HERO_THRESHOLD_PURITY`)
 - El retrato inaugural (umbral de estudio, índice `0`) debe mostrarse limpio de superposiciones tipográficas o telemetría flotante (`LA MIRADA`, `UMBRAL DE ESTUDIO`, texto en SVG del monóculo). `.portrait-hero-copy` permanece oculto (`display: none`) para ceder el protagonismo íntegro al retrato.
+- **Sin efectos de movimiento el retrato también recibe:** con `prefers-reduced-motion` o «Pausar efectos» el umbral sigue en pantalla, quieto (sin zoom, guiño ni giro del aro), y se disuelve en la primera obra con el scroll. Solo «Solo obra» lo retira.
+- **Tocar el retrato es entrar:** mientras el umbral está en pantalla, el clic o toque sobre la escena cruza a la primera obra; no abre la ficha de fotografías de una obra que aún no se ha visto.
 
 ### 7b. La Interfaz Desaparece al Contemplar (`INV_INTERFACE_DISSOLVES`)
 1. **Ampliación de §7:** la pureza del hero se extiende a toda la galería. Con la obra quieta `CALM_MS = 3200` ms, `body.is-contemplating` retira cabecera, título, recorrido, progreso y velo (`opacity`, sin `inert` ni `display`), dejando solo la obra.
@@ -59,8 +73,6 @@ Toda alta o mutación de obra exige paridad simultánea en 3 capas:
 
 ### 7c. Transición Ligada a la Materia (`INV_MATERIAL_TRANSITION`)
 1. En el desplazamiento genérico (`H`/`V`), el borde con que llega la obra siguiente sale de su materia (`materialEdge` en `app.js`): `collage` → borde rasgado determinista (hash del `slug`); `pizarra` → borrado de tiza con difuminado; `objetos` → sombra proyectada sobre la obra que se va; técnica con `mica`/`brillantina`/`dorad*`/`kintsugi` → destello dorado; `caracterizacion` → pasada de maquillaje (desenfoque que se asienta).
-- **Sin efectos de movimiento el retrato también recibe:** con `prefers-reduced-motion` o «Pausar efectos» el umbral sigue en pantalla, quieto (sin zoom, guiño ni giro del aro), y se disuelve en la primera obra con el scroll. Solo «Solo obra» lo retira.
-- **Tocar el retrato es entrar:** mientras el umbral está en pantalla, el clic o toque sobre la escena cruza a la primera obra; no abre la ficha de fotografías de una obra que aún no se ha visto.
 2. Las transiciones a medida de cada par (ojos, lata, Kintsugi, Game Over…) no se tocan. Todo termina en la obra limpia (`clip-path`, máscara y filtros se reinician cada fotograma).
 
 ### 7d. Lupa de Macro (`INV_MACRO_LENS`)

@@ -1567,7 +1567,8 @@
   "¿Sirve una foto de móvil?": "Will a phone photo do?",
   "Sí, aunque esté movida. Si hay varias, mejor: una donde se le vea bien la cara y otra con su gesto de siempre. Naroa las combina en el taller.": "Yes, even a blurry one. If there are several, all the better: one where the face shows clearly and another with that look of theirs. Naroa combines them in the studio.",
   "¿Y si ya no está?": "And if they are no longer here?",
-  "Sirve una foto antigua. El encargo se hace igual, a partir de la imagen que haya.": "An old photo will do. The commission works the same way, from whatever image there is."
+  "Sirve una foto antigua. El encargo se hace igual, a partir de la imagen que haya.": "An old photo will do. The commission works the same way, from whatever image there is.",
+  "El retrato de tu visita": "The portrait of your visit"
  },
  "js": {
   "Pausar efectos": "Pause effects",
@@ -1761,7 +1762,11 @@
   "Este navegador no puede reproducir la banda sonora.": "This browser cannot play the soundtrack.",
   "El navegador no ha permitido iniciar el sonido. Vuelve a intentarlo.": "The browser did not allow the sound to start. Please try again.",
   "LENTE ÓPTICA ${scale.toFixed(2)}×": "OPTICAL LENS ${scale.toFixed(2)}×",
-  "Continue? Quién programó esta web: borjamoskv en GitHub (se abre en otra pestaña)": "Continue? Who coded this site: borjamoskv on GitHub (opens in another tab)"
+  "Continue? Quién programó esta web: borjamoskv en GitHub (se abre en otra pestaña)": "Continue? Who coded this site: borjamoskv on GitHub (opens in another tab)",
+  "El retrato de mi visita": "The portrait of my visit",
+  "El retrato de tu visita": null,
+  "Modo Story · El retrato de tu visita": "Story Mode · The portrait of your visit",
+  "${all.length} obras · ${visitClock(total)} de mirada": "${all.length} works · ${visitClock(total)} of looking"
  },
  "js_keep": [
   "Empty src",
@@ -1808,6 +1813,8 @@
   "Espejos del alma",
   "Espacios públicos y galerías abiertas, Bilbao",
   "Missing camera score: ",
-  "<span>CONTINUE?</span><b data-continue-count aria-hidden=\"true\"></b><i aria-hidden=\"true\">↗</i>"
+  "<span>CONTINUE?</span><b data-continue-count aria-hidden=\"true\"></b><i aria-hidden=\"true\">↗</i>",
+  "Error generating visit story:",
+  "input,nav,dialog,.art-bottom button,.art-bottom a,.site-nav"
  ]
 }

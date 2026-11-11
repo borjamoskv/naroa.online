@@ -1595,7 +1595,8 @@
   "¿Y si ya no está?": "Eta jada ez badago?",
   "Sirve una foto antigua. El encargo se hace igual, a partir de la imagen que haya.": "Argazki zahar batek balio du. Enkargua berdin egiten da, dagoen iruditik abiatuta.",
   "Blog": "Bloga",
-  "Bilbao": "Bilbo"
+  "Bilbao": "Bilbo",
+  "El retrato de tu visita": "Zure bisitaren erretratua"
  },
  "js": {
   "Pausar efectos": null,
@@ -1787,7 +1788,11 @@
   "Caja de madera": null,
   "Rodaja de árbol": null,
   "Un objeto tuyo": null,
-  "Asesoramiento en estudio": null
+  "Asesoramiento en estudio": null,
+  "El retrato de mi visita": "Nire bisitaren erretratua",
+  "El retrato de tu visita": null,
+  "Modo Story · El retrato de tu visita": "Story modua · Zure bisitaren erretratua",
+  "${all.length} obras · ${visitClock(total)} de mirada": "${all.length} lan · ${visitClock(total)} begira"
  },
  "js_keep": [
   " : ''}la última, del ${latest}",
@@ -1836,6 +1841,8 @@
   "¿Cuánto cuesta un retrato personalizado por encargo?",
   "¿Cómo encargar un retrato personalizado a partir de fotografías?",
   "¿Dónde y cómo se entrega la obra?",
-  "¿Qué técnicas y soportes se pueden elegir para el encargo?"
+  "¿Qué técnicas y soportes se pueden elegir para el encargo?",
+  "Error generating visit story:",
+  "input,nav,dialog,.art-bottom button,.art-bottom a,.site-nav"
  ]
 }
