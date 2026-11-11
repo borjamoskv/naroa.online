@@ -53,6 +53,22 @@
  },
  "patterns": [
   [
+   "^Para que llegue en Navidad, encargos hasta el (.+)\\.$",
+   "To arrive in time for Christmas, order by {1}."
+  ],
+  [
+   "^Para Reyes, hasta el (.+)\\.$",
+   "For Three Kings' Day (6 January), by {1}."
+  ],
+  [
+   "^Navidad · encargos hasta el (.+)$",
+   "Christmas · order by {1}"
+  ],
+  [
+   "^Reyes · encargos hasta el (.+)$",
+   "Three Kings' Day · order by {1}"
+  ],
+  [
    "^(.+)<(\\d)/><(\\d)> \\(se abre en una pestaña nueva\\)</\\3>$",
    "{1}<{=2}/><{=3}> (opens in a new tab)</{=3}>"
   ],

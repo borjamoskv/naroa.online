@@ -1,7 +1,7 @@
 {
-  "_nota": "Fechas límite de temporada para encargos, en formato AAAA-MM-DD. Con null el aviso no sale en ninguna página. Con fecha, sale en la página de encargos, en las páginas por tipo de retrato y en llms.txt, y se retira solo al pasar el día.",
+  "_nota": "Fechas límite de temporada para encargos, en formato AAAA-MM-DD. Con null el aviso no sale en ninguna página. Con fecha, sale en la cabecera de la portada y del resto de páginas (una línea, con la página arriba del todo), en la página de encargos, en las páginas por tipo de retrato y en llms.txt, también en inglés y euskera, y se retira solo al pasar el día.",
   "navidad": {
-    "pedidos_hasta": null,
-    "reyes_hasta": null
+    "pedidos_hasta": "2026-11-22",
+    "reyes_hasta": "2026-12-04"
   }
 }

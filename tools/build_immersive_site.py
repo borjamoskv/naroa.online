@@ -625,8 +625,27 @@ def build(output):
         data_title = f' data-share-title="{esc(title)}"' if title else ''
         return f'''<div class="{cls}"{attr} role="group" aria-label="{label}"><span class="share-dock-label">{label}</span><div class="share-dock-buttons"><button type="button" class="share-btn share-btn--instagram" data-share-network="instagram"{data_url}{data_title} aria-label="Compartir en Instagram">{share_svgs["instagram"]}<span>Instagram</span></button><button type="button" class="share-btn share-btn--facebook" data-share-network="facebook"{data_url}{data_title} aria-label="Compartir en Facebook">{share_svgs["facebook"]}<span>Facebook</span></button><button type="button" class="share-btn share-btn--tiktok" data-share-network="tiktok"{data_url}{data_title} aria-label="Compartir en TikTok">{share_svgs["tiktok"]}<span>TikTok</span></button><button type="button" class="share-btn share-btn--x" data-share-network="x"{data_url}{data_title} aria-label="Compartir en X">{share_svgs["x"]}<span>X</span></button></div></div>'''
 
-    def header(gallery=False):
-        return f'''<header class="site-nav"><a class="signature" href="/" aria-label="Naroa Gutiérrez Gil, inicio"><span>Naroa</span><small>GUTIÉRREZ GIL</small></a><nav aria-label="Principal"><a href="/obra/#indice" data-open-index>Obras</a><a class="desktop-link" href="/retratos-por-encargo-bilbao/">Encargos</a><a class="desktop-link" href="/contacto/">Contacto</a>{'<button type="button" data-quiet>Solo obra</button>' if gallery else '<a class="desktop-link" href="/sobre-mi/">La artista</a>'}<button type="button" class="sound-toggle" data-sound aria-label="Escuchar la banda sonora" title="Banda sonora del mes" aria-pressed="false"><svg class="sound-reel-icon" viewBox="0 0 24 16" aria-hidden="true"><rect x="1" y="2" width="22" height="12" rx="2.5"/><circle class="reel-wheel" cx="7.5" cy="8" r="3.2"/><circle cx="7.5" cy="8" r="0.9"/><circle class="reel-wheel" cx="16.5" cy="8" r="3.2"/><circle cx="16.5" cy="8" r="0.9"/><line x1="7.5" y1="4.8" x2="16.5" y2="4.8"/></svg><span>Sonido</span></button><button type="button" data-open-menu aria-haspopup="dialog" aria-controls="menu-dialog" aria-expanded="false">Menú <span aria-hidden="true">+</span></button></nav><span class="sound-status" data-sound-status role="status" hidden></span></header>'''
+    # Aviso de temporada: las fechas las pone Naroa en classic/data/encargos.json. Sin fecha no sale nada;
+    # con fecha pasada tampoco (aquí al compilar y en app.js al abrir la página).
+    season_cfg = read_data("encargos").get("navidad") or {}
+    season_months = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
+    season_today = datetime.now().date()
+    season_lines = []
+    season_nav_lines = []
+    for season_key, season_text, season_short in (("pedidos_hasta", "Para que llegue en Navidad, encargos hasta el {}.", "Navidad · encargos hasta el {}"), ("reyes_hasta", "Para Reyes, hasta el {}.", "Reyes · encargos hasta el {}")):
+        season_iso = season_cfg.get(season_key)
+        if season_iso and datetime.strptime(season_iso, "%Y-%m-%d").date() >= season_today:
+            season_day = datetime.strptime(season_iso, "%Y-%m-%d").date()
+            season_date = f"{season_day.day} de {season_months[season_day.month - 1]}"
+            season_lines.append((season_iso, season_text.format(season_date)))
+            season_nav_lines.append((season_iso, season_short.format(season_date)))
+    season_note = ('<p class="season-note" data-season-note>' + ' '.join(f'<span data-until="{iso}">{esc(text)}</span>' for iso, text in season_lines) + '</p>') if season_lines else ''
+    # En la cabecera va una sola línea, la del plazo que toca: enlaza a la página de encargos y solo
+    # se ve con la página arriba del todo. Las páginas que ya llevan el aviso en el texto no la repiten.
+    season_nav = ('<a class="season-nav" data-season-note href="/retratos-por-encargo-bilbao/">' + ''.join(f'<span data-until="{iso}">{esc(text)}</span>' for iso, text in season_nav_lines) + '</a>') if season_nav_lines else ''
+
+    def header(gallery=False, season=True):
+        return f'''<header class="site-nav"><a class="signature" href="/" aria-label="Naroa Gutiérrez Gil, inicio"><span>Naroa</span><small>GUTIÉRREZ GIL</small></a><nav aria-label="Principal"><a href="/obra/#indice" data-open-index>Obras</a><a class="desktop-link" href="/retratos-por-encargo-bilbao/">Encargos</a><a class="desktop-link" href="/contacto/">Contacto</a>{'<button type="button" data-quiet>Solo obra</button>' if gallery else '<a class="desktop-link" href="/sobre-mi/">La artista</a>'}<button type="button" class="sound-toggle" data-sound aria-label="Escuchar la banda sonora" title="Banda sonora del mes" aria-pressed="false"><svg class="sound-reel-icon" viewBox="0 0 24 16" aria-hidden="true"><rect x="1" y="2" width="22" height="12" rx="2.5"/><circle class="reel-wheel" cx="7.5" cy="8" r="3.2"/><circle cx="7.5" cy="8" r="0.9"/><circle class="reel-wheel" cx="16.5" cy="8" r="3.2"/><circle cx="16.5" cy="8" r="0.9"/><line x1="7.5" y1="4.8" x2="16.5" y2="4.8"/></svg><span>Sonido</span></button><button type="button" data-open-menu aria-haspopup="dialog" aria-controls="menu-dialog" aria-expanded="false">Menú <span aria-hidden="true">+</span></button></nav>{season_nav if season else ''}<span class="sound-status" data-sound-status role="status" hidden></span></header>'''
 
     def dialogs():
         counts = {
@@ -936,7 +955,7 @@ def build(output):
             }
         breadcrumb_tag = f'<script type="application/ld+json" id="seo-breadcrumb">{data_json(breadcrumb)}</script>' if breadcrumb else ''
         slug_class = "page-" + (path.strip("/").replace("/", "-") or "home")
-        html = f'''<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>{esc(title)} · Naroa Gutiérrez Gil</title><meta name="description" content="{esc(description)}"><meta name="robots" content="index, follow, max-image-preview:large">{'<meta name="google-site-verification" content="ED9YrilUJ8fhvdH3FI6e9hpWaV2fK70_UfpwfrufLcc">' if path == "/" else ''}<meta name="theme-color" content="#11120f"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Naroa"><link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/assets/naroa-icon-180-v1.png"><link rel="alternate" type="application/rss+xml" title="Naroa Gutiérrez Gil · Obras y Blog" href="{ORIGIN}/feed.xml"><link rel="mcp" type="application/json" href="{ORIGIN}/.well-known/mcp.json" title="WebMCP Model Context Protocol"><link rel="canonical" href="{canonical}"><meta property="og:site_name" content="Naroa Gutiérrez Gil"><meta property="og:locale" content="es_ES"><meta property="og:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{canonical}"><meta property="og:type" content="{'article' if gallery and path not in ('/', '/obra/', '/series/vaivenes/') else 'website'}"><meta property="og:image" content="{ORIGIN}{og_img_path}"><meta property="og:image:secure_url" content="{ORIGIN}{og_img_path}"><meta property="og:image:width" content="{og_w}"><meta property="og:image:height" content="{og_h}"><meta property="og:image:type" content="{og_mime}"><meta property="og:image:alt" content="{esc(og_alt)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta name="twitter:description" content="{esc(description)}"><meta name="twitter:image" content="{ORIGIN}{og_img_path}"><meta name="twitter:image:alt" content="{esc(og_alt)}"><link rel="icon" href="{favicon_path}" type="image/svg+xml" sizes="any"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="{assets['app.css']}"><script type="application/ld+json" id="page-schema">{data_json(structured)}</script>{breadcrumb_tag}<script type="application/vnd.mcp+json" id="webmcp-schema">{data_json(webmcp_manifest)}</script><script defer src="{catalog_path}"></script><script defer src="{assets['soundscape.js']}"></script><script defer src="{assets['journey.js']}"></script><script defer src="{assets['app.js']}"></script></head><body class="{'gallery-page' if gallery else 'editorial-page'} {slug_class}"><a class="skip-link" href="#main">Ir al contenido</a>{header(gallery)}{body}{'' if gallery else footer()}{dialogs()}</body></html>'''
+        html = f'''<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>{esc(title)} · Naroa Gutiérrez Gil</title><meta name="description" content="{esc(description)}"><meta name="robots" content="index, follow, max-image-preview:large">{'<meta name="google-site-verification" content="ED9YrilUJ8fhvdH3FI6e9hpWaV2fK70_UfpwfrufLcc">' if path == "/" else ''}<meta name="theme-color" content="#11120f"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Naroa"><link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/assets/naroa-icon-180-v1.png"><link rel="alternate" type="application/rss+xml" title="Naroa Gutiérrez Gil · Obras y Blog" href="{ORIGIN}/feed.xml"><link rel="mcp" type="application/json" href="{ORIGIN}/.well-known/mcp.json" title="WebMCP Model Context Protocol"><link rel="canonical" href="{canonical}"><meta property="og:site_name" content="Naroa Gutiérrez Gil"><meta property="og:locale" content="es_ES"><meta property="og:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{canonical}"><meta property="og:type" content="{'article' if gallery and path not in ('/', '/obra/', '/series/vaivenes/') else 'website'}"><meta property="og:image" content="{ORIGIN}{og_img_path}"><meta property="og:image:secure_url" content="{ORIGIN}{og_img_path}"><meta property="og:image:width" content="{og_w}"><meta property="og:image:height" content="{og_h}"><meta property="og:image:type" content="{og_mime}"><meta property="og:image:alt" content="{esc(og_alt)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta name="twitter:description" content="{esc(description)}"><meta name="twitter:image" content="{ORIGIN}{og_img_path}"><meta name="twitter:image:alt" content="{esc(og_alt)}"><link rel="icon" href="{favicon_path}" type="image/svg+xml" sizes="any"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="{assets['app.css']}"><script type="application/ld+json" id="page-schema">{data_json(structured)}</script>{breadcrumb_tag}<script type="application/vnd.mcp+json" id="webmcp-schema">{data_json(webmcp_manifest)}</script><script defer src="{catalog_path}"></script><script defer src="{assets['soundscape.js']}"></script><script defer src="{assets['journey.js']}"></script><script defer src="{assets['app.js']}"></script></head><body class="{'gallery-page' if gallery else 'editorial-page'} {slug_class}"><a class="skip-link" href="#main">Ir al contenido</a>{header(gallery, 'data-season-note' not in body)}{body}{'' if gallery else footer()}{dialogs()}</body></html>'''
         dest = output / ("404.html" if not_found else path.lstrip("/") + "index.html")
         write(dest, html)
         if not not_found:
@@ -1493,19 +1512,6 @@ def build(output):
     }
     page("/cuaderno/", "Blog", "Historias de obras, procesos y encuentros. El blog de la artista Naroa Gutiérrez Gil.", '<main id="main">' + notebook + '</main>', "/images/cuaderno/cuaderno-twister-collage.jpg", schema=blog_schema)
 
-    # Aviso de temporada: las fechas las pone Naroa en classic/data/encargos.json. Sin fecha no sale nada;
-    # con fecha pasada tampoco (aquí al compilar y en app.js al abrir la página).
-    season_cfg = read_data("encargos").get("navidad") or {}
-    season_months = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
-    season_today = datetime.now().date()
-    season_lines = []
-    for season_key, season_text in (("pedidos_hasta", "Para que llegue en Navidad, encargos hasta el {}."), ("reyes_hasta", "Para Reyes, hasta el {}.")):
-        season_iso = season_cfg.get(season_key)
-        if season_iso and datetime.strptime(season_iso, "%Y-%m-%d").date() >= season_today:
-            season_day = datetime.strptime(season_iso, "%Y-%m-%d").date()
-            season_lines.append((season_iso, season_text.format(f"{season_day.day} de {season_months[season_day.month - 1]}")))
-    season_note = ('<p class="season-note" data-season-note>' + ' '.join(f'<span data-until="{iso}">{esc(text)}</span>' for iso, text in season_lines) + '</p>') if season_lines else ''
-
     commission_examples = [
         (jaio, "Madera noble & textil cosido", "Collage textil sobre madera"),
         (amy, "Pizarra natural & mica mineral", "Pizarra natural rústica"),
@@ -1923,6 +1929,18 @@ def build(output):
                 "isRelatedTo": {"@id": ORIGIN + "/retratos-por-encargo-bilbao/#service"},
             },
             "image": [ORIGIN + w["photos"][0]["original"] for w, _ in works],
+            # Las mismas preguntas y respuestas que se leen en la página, sin añadir ninguna. Van como lista
+            # de Question, igual que en la página de encargos: el control del sitio no admite FAQPage.
+            "subjectOf": {
+                "@type": "ItemList",
+                "@id": ORIGIN + path + "#rp-dudas",
+                "name": "Dudas habituales · " + about_name,
+                "numberOfItems": len(questions),
+                "itemListElement": [
+                    {"@type": "ListItem", "position": idx + 1, "item": {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}}}
+                    for idx, (q, a) in enumerate(questions)
+                ],
+            },
         }
         page(path, title, description, body, cover["photos"][0]["original"], schema=schema, image_alt=work_alt(cover))
 

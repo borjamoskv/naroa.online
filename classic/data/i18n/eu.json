@@ -79,6 +79,22 @@
  },
  "patterns": [
   [
+   "^Para que llegue en Navidad, encargos hasta el (.+)\\.$",
+   "Gabonetarako iristeko, enkargua egiteko azken eguna: {1}."
+  ],
+  [
+   "^Para Reyes, hasta el (.+)\\.$",
+   "Erregeetarako, azken eguna: {1}."
+  ],
+  [
+   "^Navidad · encargos hasta el (.+)$",
+   "Gabonak · enkarguen azken eguna: {1}"
+  ],
+  [
+   "^Reyes · encargos hasta el (.+)$",
+   "Erregeak · enkarguen azken eguna: {1}"
+  ],
+  [
    "^(.+)<(\\d)/><(\\d)> \\(se abre en una pestaña nueva\\)</\\3>$",
    "{1}<{=2}/><{=3}> (fitxa berri batean irekitzen da)</{=3}>"
   ],
