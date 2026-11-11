@@ -5990,9 +5990,20 @@
   });
   const reveals = $$('.chapter>div,.chapter>.eyebrow,.section-opening,.editorial blockquote,.timeline-entry,.notebook-posts article,.commission-example,.commission-steps article,.commission-configurator,.commission-faq-item,.closing,.contact-channel,.contact-details');
   if ('IntersectionObserver' in window) {
-    const observer = new IntersectionObserver(entries => entries.forEach(entry => {
-      if (entry.isIntersecting) { entry.target.classList.add('is-revealed'); observer.unobserve(entry.target); }
-    }), { threshold: .08, rootMargin: '0px 0px -24px 0px' });
+    // Los elementos que entran a la vez aparecen en cascada, no en bloque.
+    const observer = new IntersectionObserver(entries => {
+      let order = 0;
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        if (!reduced.matches) {
+          el.style.transitionDelay = `${Math.min(order++, 6) * 70}ms`;
+          el.addEventListener('transitionend', () => { el.style.transitionDelay = ''; }, { once: true });
+        }
+        el.classList.add('is-revealed');
+        observer.unobserve(el);
+      });
+    }, { threshold: .08, rootMargin: '0px 0px -24px 0px' });
     reveals.forEach(el => { el.classList.add('motion-reveal'); observer.observe(el); });
     reduced.addEventListener('change', () => { if (reduced.matches) reveals.forEach(el => el.classList.add('is-revealed')); });
   }
