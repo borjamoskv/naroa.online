@@ -950,6 +950,9 @@ def build(output):
             elif path.startswith("/series/vaivenes/") and path != "/series/vaivenes/":
                 items.append({"@type": "ListItem", "position": 2, "name": "Vaivenes", "item": ORIGIN + "/series/vaivenes/"})
                 items.append({"@type": "ListItem", "position": 3, "name": title.split("·")[0].strip(), "item": canonical})
+            elif path.startswith("/retrato-de-"):
+                items.append({"@type": "ListItem", "position": 2, "name": "Retratos por encargo", "item": ORIGIN + "/retratos-por-encargo-bilbao/"})
+                items.append({"@type": "ListItem", "position": 3, "name": title, "item": canonical})
             else:
                 items.append({"@type": "ListItem", "position": 2, "name": section_name, "item": canonical})
             breadcrumb = {
@@ -1312,7 +1315,7 @@ def build(output):
         '<p>Presupuesto cerrado por escrito antes de empezar, entre 2 y 4 semanas de trabajo y entrega en mano en Bilbao o por envío asegurado.</p>'
         '<div class="chapter-links">' + about_link("/retratos-por-encargo-bilbao/", "Encargar un retrato")
         + about_link("https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20hablar%20sobre%20un%20encargo.", "Escribir por WhatsApp")
-        + '<a class="text-link" href="mailto:naroa@naroagutierrezgil.com?subject=Retrato%20por%20encargo">naroa@naroagutierrezgil.com</a>'
+        + '<a class="text-link" href="mailto:encargos@naroagutierrezgil.com?subject=Retrato%20por%20encargo">encargos@naroagutierrezgil.com</a>'
         + about_link("/obra/#indice", f"Ver las {len(projects)} obras") + about_link("/cuaderno/", "Leer su blog") + '</div></div></section>')
     about += ('<article id="contenido" class="editorial" data-kintsugi-editorial>' + about_brief + about_mirada + about_pull + about_materia + about_lata
               + about_espejo + about_rara + about_compartir + about_reverse + about_closing + '</article>')
@@ -1623,7 +1626,7 @@ def build(output):
         '<input id="cfg-note" type="text" maxlength="180" placeholder="Le flipa Extremoduro, tiene un perro salchicha…" autocomplete="off" data-cfg-note></label>'
         '<div class="enc-actions">'
         f'<a id="cfg-whatsapp-btn" class="enc-btn" href="https://wa.me/34636060609?text={quote(default_cfg_msg)}" target="_blank" rel="noopener noreferrer">Enviárselo por WhatsApp ↗</a>'
-        f'<a id="cfg-email-btn" class="enc-link" href="mailto:naroa@naroagutierrezgil.com?subject={quote("Consulta encargo con Naroa")}&body={quote(default_cfg_msg)}">o por correo ↗</a>'
+        f'<a id="cfg-email-btn" class="enc-link" href="mailto:encargos@naroagutierrezgil.com?subject={quote("Consulta encargo con Naroa")}&body={quote(default_cfg_msg)}">o por correo ↗</a>'
         '<button type="button" id="cfg-copy-btn" class="enc-link" data-cfg-copy><span>Copiar el mensaje</span></button>'
         '</div>'
         f'<p id="cfg-preview" class="enc-state" aria-live="polite">{esc(default_cfg_msg)}</p>'
@@ -1718,7 +1721,7 @@ def build(output):
         f'<p class="enc-lead">Cuéntame qué persona ronda por tu cabeza y qué fotos tienes. Te respondo yo misma desde el estudio de Bilbao.</p>'
         f'<div class="enc-actions">'
         f'<a class="enc-btn" href="https://wa.me/34636060609?text={quote("Aupa Naroa! Me gustaría consultarte una idea para un encargo.")}" target="_blank" rel="noopener noreferrer">Hablar por WhatsApp ↗</a>'
-        f'<a class="enc-link" href="mailto:naroa@naroagutierrezgil.com?subject={quote("Consulta de retrato por encargo con Naroa")}">naroa@naroagutierrezgil.com ↗</a>'
+        f'<a class="enc-link" href="mailto:encargos@naroagutierrezgil.com?subject={quote("Consulta de retrato por encargo con Naroa")}">encargos@naroagutierrezgil.com ↗</a>'
         f'<a class="enc-link" href="/obra/#indice">Ver las {len(projects)} obras ↗</a>'
         f'</div>'
         f'</section>'
@@ -1857,7 +1860,7 @@ def build(output):
             {
                 "@type": "CommunicateAction",
                 "name": "Solicitar presupuesto de retrato por email",
-                "target": "mailto:naroa@naroagutierrezgil.com?subject=Solicitud%20de%20presupuesto%20para%20retrato%20por%20encargo",
+                "target": "mailto:encargos@naroagutierrezgil.com?subject=Solicitud%20de%20presupuesto%20para%20retrato%20por%20encargo",
             },
             {
                 "@type": "CommunicateAction",
@@ -1883,6 +1886,14 @@ def build(output):
             f'<figcaption><span class="rp-work-meta">{esc(meta)}</span><a class="rp-work-title" href="/obra/{w["slug"]}/">{esc(w["title"])} ↗</a><p>{esc(text)}</p></figcaption></figure>'
         )
 
+    def rp_detail(w, caption_start):
+        # Fotografía de detalle o de proceso de la ficha, con su pie literal. Si la ficha ya no tiene esa foto, el build falla.
+        ph = next(ph for ph in w["photos"] if (ph.get("caption") or "").startswith(caption_start))
+        return (
+            f'<figure class="rp-detail"><a href="/obra/{w["slug"]}/"><img src="{ph["src"]}"{cover_dims(ph["src"])} sizes="(max-width:820px) 88vw, 30vw" alt="{esc(work_alt(w, ph["caption"]))}" loading="lazy" decoding="async"></a>'
+            f'<figcaption><a class="rp-work-meta" href="/obra/{w["slug"]}/">{esc(w["title"])}</a><p>{esc(ph["caption"])}</p></figcaption></figure>'
+        )
+
     rp_conditions = [
         ("Precio cerrado", "Por escrito y antes de empezar. La mitad al arrancar y la otra mitad a la entrega."),
         ("2 a 4 semanas", "Lo que tardan en secar capas y barnices. Si hay una fecha señalada, conviene decirlo en el primer mensaje."),
@@ -1893,14 +1904,20 @@ def build(output):
     rp_q_price = ("¿Cuánto cuesta?", "No hay una tarifa fija: depende del soporte y del tamaño. Naroa da una cifra cerrada y por escrito antes de empezar; se paga la mitad al arrancar y la otra mitad a la entrega.")
     rp_q_objects = ("¿Se puede incluir algún objeto o recuerdo?", "Sí. Naroa integra objetos reales en sus piezas: cartas, entradas, botones, telas, chapas, billetes de tren. Se le envían o se llevan al estudio de Bilbao y pasan a formar parte de la obra.")
 
-    def rp_page(path, title, description, kicker, h1, lead, works_heading, works, extra, questions, wa_text, mail_subject, about_name):
+    def rp_page(path, title, description, kicker, h1, lead, works_heading, works, extra, questions, wa_text, mail_subject, about_name, details=()):
         cover = works[0][0]
         works_html = ''.join(rp_work(w, text, eager=(i == 0)) for i, (w, text) in enumerate(works))
         faq = ''.join(f'<details class="commission-faq-item"><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q, a in questions)
+        details_html = (
+            '<section class="rp-section" aria-labelledby="rp-de-cerca"><h2 id="rp-de-cerca" class="rp-h2">Hecho a mano, de cerca</h2>'
+            '<p class="rp-text">Fotografías de detalle y de proceso de estas obras, tal como están en su ficha.</p>'
+            '<div class="rp-details">' + ''.join(rp_detail(w, start) for w, start in details) + '</div></section>'
+        ) if details else ''
         body = (
             '<main id="main" class="retrato-pagina">'
             f'<header class="rp-hero"><p class="rp-kicker">{esc(kicker)}</p><h1 class="rp-title">{esc(h1)}</h1>{season_note}{lead}</header>'
             f'<section class="rp-section" aria-labelledby="rp-obras"><h2 id="rp-obras" class="rp-h2">{esc(works_heading)}</h2><div class="rp-works{" rp-works--solo" if len(works) == 1 else ""}">{works_html}</div>{extra}</section>'
+            f'{details_html}'
             f'<section class="rp-section" aria-labelledby="rp-condiciones"><h2 id="rp-condiciones" class="rp-h2">Cómo se encarga</h2>'
             '<p class="rp-text">Se le escribe a Naroa por WhatsApp o por correo con la foto o las fotos que haya y un par de líneas sobre la persona. Ella propone soporte y tamaño, y da el precio por escrito antes de empezar.</p>'
             f'{rp_conditions_html}</section>'
@@ -1909,7 +1926,7 @@ def build(output):
             '<p class="rp-text">Responde ella misma, desde el estudio de Bilbao.</p>'
             '<p class="rp-actions">'
             f'<a class="rp-link rp-link--lead" href="https://wa.me/34636060609?text={quote(wa_text)}" target="_blank" rel="noopener noreferrer">Por WhatsApp ↗</a>'
-            f'<a class="rp-link" href="mailto:naroa@naroagutierrezgil.com?subject={quote(mail_subject)}">naroa@naroagutierrezgil.com ↗</a>'
+            f'<a class="rp-link" href="mailto:encargos@naroagutierrezgil.com?subject={quote(mail_subject)}">encargos@naroagutierrezgil.com ↗</a>'
             '<a class="rp-link" href="/retratos-por-encargo-bilbao/#configurador">Componer el encargo paso a paso ↗</a>'
             '</p></section>'
             '</main>'
@@ -1979,6 +1996,12 @@ def build(output):
         "Hola Naroa, me gustaría encargar un retrato de pareja o de familia. Tengo fotos para enseñarte.",
         "Retrato de pareja o de familia por encargo",
         "Retrato de pareja y de familia por encargo, hecho a mano desde fotografía",
+        details=[
+            (love_boat, "Detalle del retrato femenino"),
+            (multi_love, "Tapa con rótulo Dymo"),
+            (hermanos, "Detalle de los rostros"),
+            (hermanos, "Detalle del entramado de tartán"),
+        ],
     )
 
     rp_page(
@@ -2026,9 +2049,13 @@ def build(output):
         "Hola Naroa, me gustaría encargar un retrato de mi mascota. Tengo fotos para enseñarte.",
         "Retrato de mascota por encargo",
         "Retrato de mascota por encargo, hecho a mano desde fotografía",
+        details=[
+            (gato_kutxa, "Proceso: fondo e imagen recortada"),
+            (gato_kutxa, "Interior de la caja"),
+        ],
     )
 
-    contact = f'''<main id="main" class="contact-page"><div class="contact-background" data-parallax><img src="{rara['cover']}" alt="Rara Avis, composición de retratos y reflejos" fetchpriority="high"></div><div class="contact-shade"></div><section class="contact-copy"><p class="eyebrow">Naroa Gutiérrez Gil · Bilbao</p><h1 class="hand">¿Hablamos?</h1><p>Una persona. Una historia. Una idea a medio hacer.<br>No hace falta traerlo todo pensado.</p><a class="contact-email" href="mailto:naroa@naroagutierrezgil.com?subject=Retrato%20por%20encargo">naroa@naroagutierrezgil.com ↗</a><div class="contact-channels" aria-label="Vías de contacto diferenciadas"><article class="contact-channel"><span class="eyebrow">Encargos y obra</span><a class="text-link" href="mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20obra%20o%20encargo">Escribir por correo ↗</a><p>Consultas sobre obras del catálogo, formatos y encargos personalizados.</p></article><article class="contact-channel"><span class="eyebrow">Trato directo</span><a class="text-link" href="https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20hablar%20sobre%20un%20encargo." target="_blank" rel="noopener noreferrer">También por WhatsApp ↗</a><p>Conversación ágil para comentar una idea inicial o concertar llamada.</p></article><article class="contact-channel"><span class="eyebrow">Redes y archivo</span><a class="text-link" href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer">Facebook · Naroa Artista Plástica ↗</a><p>Álbumes de proceso, exposiciones y archivo fotográfico de cada serie.</p></article></div><div class="contact-details"><a href="tel:+34636060609">+34 636 060 609</a><a href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer">Facebook ↗</a><a href="https://instagram.com/naroa_art/" target="_blank" rel="noopener noreferrer">@naroa_art ↗</a><a href="https://naroagutierrez.wordpress.com/" target="_blank" rel="noopener noreferrer">Blog en WordPress ↗</a><span>Bilbao · País Vasco</span></div></section></main>'''
+    contact = f'''<main id="main" class="contact-page"><div class="contact-background" data-parallax><img src="{rara['cover']}" alt="Rara Avis, composición de retratos y reflejos" fetchpriority="high"></div><div class="contact-shade"></div><section class="contact-copy"><p class="eyebrow">Naroa Gutiérrez Gil · Bilbao</p><h1 class="hand">¿Hablamos?</h1><p>Una persona. Una historia. Una idea a medio hacer.<br>No hace falta traerlo todo pensado.</p><a class="contact-email" href="mailto:encargos@naroagutierrezgil.com?subject=Retrato%20por%20encargo">encargos@naroagutierrezgil.com ↗</a><div class="contact-channels" aria-label="Vías de contacto diferenciadas"><article class="contact-channel"><span class="eyebrow">Encargos y obra</span><a class="text-link" href="mailto:encargos@naroagutierrezgil.com?subject=Consulta%20sobre%20obra%20o%20encargo">Escribir por correo ↗</a><p>Consultas sobre obras del catálogo, formatos y encargos personalizados.</p></article><article class="contact-channel"><span class="eyebrow">Trato directo</span><a class="text-link" href="https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20hablar%20sobre%20un%20encargo." target="_blank" rel="noopener noreferrer">También por WhatsApp ↗</a><p>Conversación ágil para comentar una idea inicial o concertar llamada.</p></article><article class="contact-channel"><span class="eyebrow">Redes y archivo</span><a class="text-link" href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer">Facebook · Naroa Artista Plástica ↗</a><p>Álbumes de proceso, exposiciones y archivo fotográfico de cada serie.</p></article></div><div class="contact-details"><a href="tel:+34636060609">+34 636 060 609</a><a href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer">Facebook ↗</a><a href="https://instagram.com/naroa_art/" target="_blank" rel="noopener noreferrer">@naroa_art ↗</a><a href="https://naroagutierrez.wordpress.com/" target="_blank" rel="noopener noreferrer">Blog en WordPress ↗</a><span>Bilbao · País Vasco</span></div></section></main>'''
     contact_schema = {
         "@context": "https://schema.org",
         "@type": "ContactPage",
@@ -2381,6 +2408,7 @@ def build(output):
         "  - YouTube: https://www.youtube.com/@naroagutierrezgil\n"
         "- Lenguaje y Práctica Artística: Retratos de autor y obra plástica multidisciplinar (dibujo, óleo, técnicas mixtas, collage textil sobre madera y objetos intervenidos, con exploraciones recientes sobre soportes minerales como la pizarra natural de cantera y mica).\n"
         f"- Servicio Canónico de Encargos: {ORIGIN}/retratos-por-encargo-bilbao/\n"
+        "- Correo de Encargos: encargos@naroagutierrezgil.com\n"
         "- Exposiciones Documentadas: Colegio de Abogados de Bilbao (Espejos del alma), Dock Bilbao, Politena Espacio de Arte, Walking Gallery Bilbao.\n\n"
         "## Respuestas Factuales Inmediatas (Query Fan-Out)\n"
         "- **¿Cuánto cuesta un retrato personalizado?** Presupuesto cerrado previo por escrito según técnica, soporte y formato (dibujo, óleo, collage sobre madera, cajas de recuerdos o pizarra de 20×30 cm a 40×50 cm). Consulta sin compromiso.\n"

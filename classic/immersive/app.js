@@ -6562,7 +6562,7 @@
       const waHref = `https://wa.me/34636060609?text=${encodeURIComponent(msg)}`;
       btn.href = waHref;
       if (emailBtn) {
-        emailBtn.href = `mailto:naroa@naroagutierrezgil.com?subject=${encodeURIComponent('Consulta encargo: ' + s)}&body=${encodeURIComponent(msg)}`;
+        emailBtn.href = `mailto:encargos@naroagutierrezgil.com?subject=${encodeURIComponent('Consulta encargo: ' + s)}&body=${encodeURIComponent(msg)}`;
       }
       if (mobileCtaWa) mobileCtaWa.href = waHref;
       if (mobileCtaSummary) {
@@ -6779,7 +6779,7 @@
             message: msg,
             attribution: window.NAROA_ATTRIBUTION,
             whatsapp_url: `https://wa.me/34636060609?text=${encodeURIComponent(msg)}`,
-            email_url: `mailto:naroa@naroagutierrezgil.com?subject=${encodeURIComponent('Consulta encargo: ' + s)}&body=${encodeURIComponent(msg)}`
+            email_url: `mailto:encargos@naroagutierrezgil.com?subject=${encodeURIComponent('Consulta encargo: ' + s)}&body=${encodeURIComponent(msg)}`
           };
         }
         case 'answer_commission_faq': {

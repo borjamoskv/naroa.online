@@ -3262,6 +3262,11 @@ body.page-cuaderno :is(.notebook-card,.timeline-entry) .text-link:hover{backgrou
 .retrato-pagina .rp-work-title{font:italic 400 clamp(22px,2.1vw,28px)/1.2 'Cormorant Garamond',serif;width:fit-content}
 .retrato-pagina .rp-work figcaption p{font-size:14.5px;line-height:1.7;color:rgba(255,253,244,.78);margin:2px 0 0;max-width:52ch}
 .retrato-pagina .rp-works+.rp-text,.retrato-pagina .rp-works+.rp-quote{margin-top:clamp(34px,4.6vw,60px)}
+.retrato-pagina .rp-details{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:clamp(28px,3.4vw,48px) 3vw;align-items:start;margin-top:clamp(30px,4vw,52px)}
+.retrato-pagina .rp-detail{margin:0}
+.retrato-pagina .rp-detail img{display:block;width:100%;height:auto}
+.retrato-pagina .rp-detail figcaption{display:grid;gap:4px;margin-top:12px}
+.retrato-pagina .rp-detail figcaption p{font-size:13.5px;line-height:1.6;color:rgba(255,253,244,.78);margin:0}
 .retrato-pagina .rp-quote{margin:0;max-width:60ch}
 .retrato-pagina .rp-quote p{font:italic 300 clamp(22px,2.3vw,31px)/1.42 'Cormorant Garamond',serif;margin:0}
 .retrato-pagina .rp-quote footer{font-size:13px;color:rgba(255,253,244,.74);margin-top:16px}
