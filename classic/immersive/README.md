@@ -7,10 +7,16 @@ and contact pages.
 
 ## Source of truth
 
-- `classic/data/catalogo.json`: 33 reviewed projects and their photographs.
-- `classic/data/vaivenes.json`: eight Vaivenes entries, including Mario Moreno
-  already present in the main catalogue; seven additional entries, 40 in total.
-- `classic/data/exhibitions.json`: 21 documented exhibitions and source links.
+- `classic/data/catalogo.json`: the reviewed projects and their photographs.
+- `classic/data/vaivenes.json`: the Vaivenes series. An entry already present in
+  the main catalogue is not counted twice; the public catalogue is the union of
+  both files.
+- `classic/data/exhibitions.json`: the documented exhibitions and source links.
+
+No totals are written by hand here: the build prints the number of artworks and
+records it in `immersive/build-manifest.json`, and `tools/check_catalog_sources.py`
+fails when the sources stop matching. The working rules and invariants live in
+[`AGENTS.md`](../../AGENTS.md).
 - `classic/data/blog.json`: the artist's notebook excerpts and original links. `posts` holds the six latest entries (hand-reviewed summaries and local posters); `archive` lists every older entry. Refresh it with `npm run sync:blog` (`--check` only reports): reviewed fields are kept, new entries are added. In the browser, `/cuaderno/` only adds entries published after the build; it never rewrites a reviewed card.
 
 Source photographs, dates, descriptions and credits are retained. Entries whose
@@ -33,7 +39,7 @@ pages, aliases, sitemap and a 404 page. Optimized derivatives and client assets
 use content-based filenames. Original public image paths remain available.
 
 The exhibition loads the current artwork and its neighbours rather than eagerly
-decoding all 40 photographs. Scroll uses the browser’s native vertical movement and inertia. A sticky
+decoding every photograph. Scroll uses the browser’s native vertical movement and inertia. A sticky
 full-screen stage follows real document scroll position, with no wheel
 prevention, gesture lock, forced settling or separate animation loop.
 Each work has 110svh of native scroll travel, giving transitions more room.
@@ -50,7 +56,7 @@ pupil positions, align both eyes at the same viewport point and dissolve into
 the next portrait before opening its framing. Coordinates account for each
 image’s cover crop and responsive focal position. Photographs are unmodified.
 The artist profile adds a sticky, native portrait sequence and a continuous
-40-work exhibition. The camera
+exhibition of the whole catalogue. The camera
 moves into Naroa’s monocle eye after her brief photographic wink, dissolves into
 the eye of her Rara Avis self-portrait and opens into its full-screen framing.
 Both pupils share a camera axis and a rendered iris diameter throughout the
@@ -69,7 +75,7 @@ retraces the whole sequence. The same Rara Avis element starts the exhibition at
 there is no stage hand-off, page navigation or reset. Eight further eye matches
 join Rara Avis, Marilyn, Amy, Johnny, RockaGipsy, Berto, Buena Fuente, James and
 Elene. The other works use continuous depth dissolves with matching endpoint
-poses. All 40 reviewed works appear exactly once, with the current title, count,
+poses. Every reviewed work appears exactly once, with the current title, count,
 artwork link, native arrow navigation and a direct biography shortcut. The index
 selects a work within the same artist-page scroll. Only the current image and its
 neighbours are retained; an undecoded pair keeps the last painted frame visible.
