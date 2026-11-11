@@ -5689,6 +5689,12 @@
       espejo: ['rara-avis', 'Retrato al óleo o grafito', 'La propia mirada'],
       compartir: ['amor-en-conserva', 'Caja personalizada u objeto', 'Compartir']
     };
+    // La lectura repite el rótulo del capítulo tal como lo lleva la página, en su idioma.
+    chapters.forEach(ch => {
+      const mirror = GAZE_MIRRORS[ch.dataset.kintsugiChapter];
+      const name = $('.eyebrow', ch)?.textContent.replace(/^\s*\d+\s*·\s*/, '').trim();
+      if (mirror && name) mirror[2] = name;
+    });
     let focusKey = null, focusAt = performance.now(), gazePaused = document.hidden, lastGaze = '';
     function settleDwell() {
       const now = performance.now();
@@ -5699,12 +5705,6 @@
       if (document.hidden) { settleDwell(); gazePaused = true; } else { gazePaused = false; focusAt = performance.now(); }
     });
 
-    // La lectura repite el rótulo del capítulo tal como lo lleva la página, en su idioma.
-    chapters.forEach(ch => {
-      const mirror = GAZE_MIRRORS[ch.dataset.kintsugiChapter];
-      const name = $('.eyebrow', ch)?.textContent.replace(/^\s*\d+\s*·\s*/, '').trim();
-      if (mirror && name) mirror[2] = name;
-    });
     function updateReversePortrait() {
       if (!reverseBox) return;
       const entries = Object.entries(kState.dwellChapters).sort((a, b) => b[1] - a[1]);
