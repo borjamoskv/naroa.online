@@ -1628,11 +1628,20 @@ def build(output):
         '</section>'
     )
 
+    def ficha(slug, upto=None):
+        # Texto literal de la ficha del catálogo, sin retocar. `upto` son las últimas palabras del fragmento:
+        # si la ficha sigue, lo omitido se marca con […]; si la ficha cambia y ya no las contiene, el build falla.
+        story = next(p for p in projects if p["slug"] == slug)["story"]
+        if not upto:
+            return story
+        cut = story.index(upto) + len(upto)
+        return story[:cut] + (" […]" if story[cut:].strip() else "")
+
     stories = [
-        ("Reunir dos miradas en el tiempo.", "«Una hija me trajo una foto en blanco y negro de su padre cuando era joven. Él ya no estaba entre nosotros. Ella quería verse junto a él, abrazada. Logré esquivar los reflejos del cristal antiguo de la foto y los retraté juntos por primera vez en décadas. Cuando vio el cuadro terminado en el taller, no hicieron falta palabras: solo un abrazo en silencio y lágrimas de las que curan».", "/obra/el-reencuentro/", "El Reencuentro"),
-        ("Una felicitación colectiva con Don Vito.", "«Si una cuadrilla de amigos te encomienda la misión de realizar una felicitación familiar inolvidable, ¿qué mejor portavoz para verbalizar esta misiva colectiva que Don Vito Corleone? Al fin y al cabo \"La famiglia è la famiglia...\". Zorionak Jon de la Famiglia de corazón. Pop, solemne y gamberro a partes iguales».", "/obra/la-famiglia/", "La Famiglia"),
-        ("Vacaciones en el mar sobre madera.", "«“Mare mía, mecachisenlamar, que no me puedo imaginar algo más espectacular que junto a ti pasar unas vacaciones en el mar”. Retrato colorista doble sobre una tabla de madera maciza de 50×50 cm, con botones marineros, collage de postales veraniegas… y toneladas de amor mediterráneo y atlántico».", "/obra/the-love-boat/", "The Love Boat"),
-        ("Capas articuladas en una lata de conserva.", "«Retrato 3D doble realizado a partir de tres fotografías que parecían no caber en un marco común. Trabajado en varias capas móviles articuladas dentro de una lata de conserva intervenida: al abrirlas, van desplegando una pequeña pero inmensa historia de amor como un acordeón secreto».", "/obra/multi-dimensional-love/", "Multi-dimensional Love"),
+        ("Reunir dos miradas en el tiempo.", ficha("el-reencuentro", "trazarles, de nuevo, juntos."), "/obra/el-reencuentro/", "El Reencuentro"),
+        ("Una felicitación colectiva con Don Vito.", ficha("la-famiglia"), "/obra/la-famiglia/", "La Famiglia"),
+        ("Vacaciones en el mar sobre madera.", ficha("the-love-boat"), "/obra/the-love-boat/", "The Love Boat"),
+        ("Capas articuladas en una lata de conserva.", ficha("multi-dimensional-love", "la del amor de sus protagonistas."), "/obra/multi-dimensional-love/", "Multi-dimensional Love"),
     ]
     stories_html = ''.join(
         f'<li><span class="enc-num" aria-hidden="true">0{idx + 1}</span><div><h3>{esc(title)}</h3><p>{esc(text)}</p><a class="enc-ink-link" href="{href}">Ver la obra: {esc(work)} ↗</a></div></li>'
