@@ -414,7 +414,7 @@ async function eyeMatch(ui, base, points) {
   assert.equal(ui.find('[data-menu-preview-label]').textContent, 'Blog', 'Numeric shortcut 1-4 previews and focuses the corresponding section');
   assert.equal(ui.find('[data-menu-preview-meta]').textContent, 'Historias de obras, procesos y encuentros');
   assert.equal(ui.find('[data-menu-reel]').hidden, false, 'Blog renders its 4-frame curated filmstrip');
-  assert.equal(ui.find('#menu-dialog').style.getPropertyValue('--menu-glow'), '#2e5090', 'Menu atmosphere glow adapts dynamically to the active section');
+  assert.equal(ui.find('#menu-dialog').style.getPropertyValue('--menu-glow'), '#2d4dd8', 'Menu atmosphere glow adapts dynamically to the active section');
   ui.click('[data-menu-sound-credits]'); await ui.flush();
   assert.equal(ui.find('[data-menu-sound-drawer]').hidden, false, 'Sound credits drawer opens inline inside the menu dialog');
   ui.click('[data-close-sound-drawer]'); await ui.flush();
@@ -998,6 +998,14 @@ async function eyeMatch(ui, base, points) {
     assert.ok(cards[1].querySelector('.notebook-photo img').getAttribute('src').startsWith('/immersive/media/'), 'Curated cards keep their local poster');
     assert.equal(synced.find('[data-notebook-status]').dataset.state, 'new');
     assert.equal(synced.find('[data-notebook-status-text]').textContent, `1 entrada nueva · ${blog.total + 1} entradas · la última, del 2 de enero de 2031`);
+    const displaced = blog.posts[5], displacedYear = synced.find('[data-notebook-years] .notebook-year');
+    assert.equal(synced.document.querySelector(`[data-notebook-entry][data-post-id="${displaced.id}"]`), null);
+    assert.equal(displacedYear.querySelector('.notebook-year-number').textContent, displaced.date.slice(0, 4), 'The post that leaves the grid joins the archive under its year');
+    assert.equal(displacedYear.querySelector('li a').getAttribute('href'), displaced.url);
+    assert.equal(displacedYear.querySelector('li a').textContent, `${displaced.title} ↗`);
+    assert.equal(displacedYear.querySelector('li time').getAttribute('datetime'), displaced.date);
+    assert.equal(displacedYear.querySelector('.notebook-year-count').textContent, '1 entrada');
+    assert.equal(synced.document.querySelectorAll('.notebook-year li a').length, blog.archive.length + 1);
     synced.document.dispatchEvent(new synced.w.Event('visibilitychange')); await synced.flush();
     assert.equal(calls.length, 1, 'Coming back to the tab does not query the blog again right away');
     synced.dom.window.close();
@@ -1065,6 +1073,32 @@ async function eyeMatch(ui, base, points) {
       assert.equal(page.document.querySelectorAll('.notebook-year[open]').length, 1, 'Only the most recent archive year starts open');
       assert.ok(page.find('[data-notebook-status-text]').textContent.startsWith(`${blog.total} entradas desde `), 'The status line counts the whole blog');
       assert.equal(page.find('[data-notebook-status]').dataset.state, undefined, 'Without network the status stays as built');
+      // Buscador del archivo: todas las palabras, sin tildes ni mayúsculas; al borrar, todo vuelve a su sitio.
+      const search = page.find('[data-notebook-search-input]'), searchCount = page.find('[data-notebook-search-count]');
+      const fold = text => text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+      const type = value => { search.value = value; search.dispatchEvent(new page.w.Event('input', { bubbles: true })); };
+      const shownItems = () => Array.from(page.document.querySelectorAll('.notebook-year li')).filter(item => !item.hidden && !item.closest('.notebook-year').hidden);
+      assert.equal(page.find('[data-notebook-search]').hidden, false, 'The archive search appears once the script can run it');
+      const expected = blog.archive.filter(post => ['walking', 'gallery', '2016'].every(word => fold(`${post.title} ${post.date}`).includes(word)));
+      assert.ok(expected.length >= 2 && expected.length < blog.archive.length);
+      type('  WALKING gallery 2016 ');
+      assert.deepEqual(shownItems().map(item => item.querySelector('a').getAttribute('href')), expected.map(post => post.url), 'Search keeps only the posts with every word');
+      assert.equal(searchCount.textContent, `${expected.length} de ${blog.archive.length} entradas`);
+      assert.deepEqual(Array.from(page.document.querySelectorAll('.notebook-year:not([hidden])'), year => year.querySelector('.notebook-year-number').textContent), ['2016']);
+      assert.ok(page.find('.notebook-year:not([hidden])').open, 'Years with results open while searching');
+      type('colectiva');
+      assert.ok(page.document.querySelectorAll('.notebook-year[open]:not([hidden])').length > 1, 'Several years can be open during a search');
+      assert.ok(shownItems().every(item => fold(item.textContent).includes('colectiva')));
+      assert.ok(shownItems().some(item => /Colectiva/.test(item.textContent)), 'Search ignores case');
+      type('exposicion');
+      assert.ok(shownItems().some(item => /Exposición/.test(item.textContent)), 'Search ignores accents');
+      type('zzzz');
+      assert.equal(shownItems().length, 0); assert.equal(searchCount.textContent, 'Ninguna entrada con esas palabras');
+      search.dispatchEvent(new page.w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+      assert.equal(search.value, ''); assert.equal(searchCount.textContent, '');
+      assert.equal(shownItems().length, blog.archive.length, 'Clearing the search restores the whole archive');
+      assert.equal(page.document.querySelectorAll('.notebook-year[open]').length, 1, 'and the single open year');
+      assert.equal(page.document.querySelectorAll('.notebook-year[name="notebook-archive"]').length, page.document.querySelectorAll('.notebook-year').length);
     }
     if (route === '/retratos-por-encargo-bilbao/') {
       assert.equal(page.document.querySelectorAll('.commission-example').length, 4, 'Commissions landing displays 4 monumental artworks');
