@@ -165,6 +165,13 @@ def build(output):
     ):
         if (SOURCE / cutout_src.lstrip("/")).is_file():
             originals.add(cutout_src)
+    # Las imágenes que citan el script y la hoja de estilo viajan siempre con el sitio: una ruta escrita
+    # en app.js que no llega a la compilación es un 404 en la galería (pasó con dos recortes de Julio Iglesias).
+    for name in ("app.js", "app.css"):
+        for cited in sorted(set(re.findall(r"""["'(](/images/[A-Za-z0-9_./-]+\.(?:webp|avif|jpe?g|png|svg|gif))""", (SOURCE / "immersive" / name).read_text()))):
+            if not (SOURCE / cited.lstrip("/")).is_file():
+                raise FileNotFoundError(f"classic/immersive/{name} cita una imagen que no existe: {cited}")
+            originals.add(cited)
     series_slugs = {im.get("work_slug", im.get("slug")) for im in series["images"]}
     for p in catalogue["projects"]:
         photographs = [{"src": derivative(im["src"]), "original": im["src"], "caption": im["caption"], "width": im["width"], "height": im["height"]} for im in p["images"]]

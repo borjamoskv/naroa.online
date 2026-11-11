@@ -150,6 +150,13 @@ def check(output):
                 dest /= "index.html"
             assert dest.is_file(), (file, "missing target", ref)
     assert (output / "404.html").is_file()
+    # Recursos que citan los scripts y las hojas de estilo publicados: tienen que existir en la compilación.
+    cited_assets = set()
+    for asset in sorted((output / "immersive").glob("*.js")) + sorted((output / "immersive").glob("*.css")):
+        for cited in re.findall(r"""["'(](/(?:images|immersive|assets|audio)/[A-Za-z0-9_./-]+\.(?:webp|avif|jpe?g|png|svg|gif|ttf|otf|woff2?|cur|mp3|mp4|webm|json|txt))""", asset.read_text()):
+            cited_assets.add(cited)
+            assert (output / cited.lstrip("/")).is_file(), (asset.name, "cites a missing asset", cited)
+    assert cited_assets, "no asset references found in the published scripts and stylesheets"
     icon = ET.parse(output / page.favicon.lstrip("/")).getroot()
     assert icon.find("{http://www.w3.org/2000/svg}title").text == "Amy Rocks · Naroa"
     picture = icon.find("{http://www.w3.org/2000/svg}image").attrib["href"]

@@ -46,6 +46,8 @@ Toda alta o mutación de obra exige paridad simultánea en 3 capas:
 
 **Caché:** `immutable` solo para archivos con versión en el nombre (hash de 12 cifras o sufijo `-vN`). `tools/check_immersive_site.py` falla si una regla de `vercel.json` se lo da a cualquier otro.
 
+**Recursos citados:** el build copia toda imagen que citan `app.js` y `app.css` y se detiene si alguna no existe; `tools/check_immersive_site.py` falla si un script o una hoja de estilo publicados citan un recurso ausente.
+
 ### 2. Paridad con Suite JSDOM (`test_immersive_dom.cjs`)
 - Valida la secuencia exacta de modos (`entry.mode`) y el total de obras (85). Actualizar la cadena esperada en `tools/test_immersive_dom.cjs` ante cualquier mutación del recorrido.
 
