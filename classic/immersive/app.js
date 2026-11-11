@@ -1735,61 +1735,140 @@
       Object.entries(attrs).forEach(([key, value]) => node.setAttribute(key, String(value)));
       return node;
     };
+    // Saio Puzzle. El marco y el paño de la fotografía no se mueven: solo salen las 25 piezas reales,
+    // recortadas con el mismo troquel (5 × 5, pestañas alternas) y dentro de su hueco de esquinas redondas.
+    // Medidas sobre la fotografía, en milésimas de su lado.
+    const PUZZLE_TRAYS = { 'saio-puzzle': { left: 104.5, top: 114.3, right: 892.6, bottom: 899.9, corner: 30 } };
+    const PUZZLE_KNOB = [[.18, 0, .40, -.02, .42, .04], [.44, .10, .36, .14, .34, .21], [.32, .30, .42, .34, .50, .34], [.58, .34, .68, .30, .66, .21], [.64, .14, .56, .10, .58, .04], [.60, -.02, .82, 0, 1, 0]];
+    const PUZZLE_OUT = .24, PUZZLE_STAGGER = .22, PUZZLE_RETURN = .52;
     function puzzleScene(index) {
       if (puzzles.has(index)) return puzzles.get(index);
+      const tray = PUZZLE_TRAYS[works[index].slug] || { left: 0, top: 0, right: 1000, bottom: 1000, corner: 0 };
+      const { left, top, right, bottom, corner: r } = tray, cw = (right - left) / 5, ch = (bottom - top) / 5;
       const svg = svgNode('svg', { viewBox: '-120 -120 1240 1240', 'aria-hidden': 'true', focusable: 'false', class: 'puzzle-camera' });
       const defs = svgNode('defs'), picture = svgNode('image', { id: `puzzle-photo-${index}`, width: 1000, height: 1000, preserveAspectRatio: 'none', href: works[index].cover });
-      defs.append(picture); svg.append(defs);
-      const pieces = [];
-      // Adjacent edges share one curve, traversed in the opposite direction.
-      const edge = (x, y, dx, dy, tab) => {
-        const point = (t, n = 0) => `${(x + dx * t - dy * n).toFixed(3)},${(y + dy * t + dx * n).toFixed(3)}`;
-        return tab ? `L${point(.35)} C${point(.46)} ${point(.31, tab * .16)} ${point(.5, tab * .16)} C${point(.69, tab * .16)} ${point(.54)} ${point(.65)} L${point(1)}` : `L${point(1)}`;
+      defs.append(picture);
+      const shade = (id, x2, y2) => {
+        const gradient = svgNode('linearGradient', { id: `puzzle-${id}-${index}`, x1: 0, y1: 0, x2, y2 });
+        gradient.append(svgNode('stop', { offset: 0, 'stop-color': '#1a120c', 'stop-opacity': .5 }), svgNode('stop', { offset: 1, 'stop-color': '#1a120c', 'stop-opacity': 0 }));
+        defs.append(gradient); return `url(#puzzle-${id}-${index})`;
       };
+      // El hueco de la bandeja: cartón a la vista, con la sombra del borde arriba y a la izquierda.
+      const well = svgNode('g', { class: 'puzzle-well' }), hollow = { x: left, y: top, width: right - left, height: bottom - top, rx: r };
+      well.append(svgNode('rect', { ...hollow, class: 'puzzle-well-board' }),
+        svgNode('rect', { ...hollow, height: ch * .5, fill: shade('shade-top', 0, 1) }),
+        svgNode('rect', { ...hollow, width: cw * .4, fill: shade('shade-left', 1, 0) }),
+        svgNode('rect', { ...hollow, class: 'puzzle-well-rim' }));
+      const seated = svgNode('g', { class: 'puzzle-seated' }), loose = svgNode('g', { class: 'puzzle-loose' });
+      svg.append(defs, svgNode('use', { href: `#puzzle-photo-${index}`, class: 'puzzle-tray' }), well, seated, loose);
+      const pieces = [], at = (x, y) => `${x.toFixed(2)},${y.toFixed(2)}`;
+      // Los cantos vecinos comparten curva: es simétrica y cada pieza la recorre en sentido contrario.
+      const edge = (x, y, dx, dy, tab) => {
+        const point = (t, n) => at(x + dx * t - dy * n * tab, y + dy * t + dx * n * tab);
+        return PUZZLE_KNOB.map(([a, b, c, d, e, f]) => `C${point(a, b)} ${point(c, d)} ${point(e, f)}`).join('');
+      };
+      const border = [];
+      for (let c = 0; c < 5; c++) border.push(c);
+      for (let q = 1; q < 5; q++) border.push(q * 5 + 4);
+      for (let c = 3; c >= 0; c--) border.push(20 + c);
+      for (let q = 3; q >= 1; q--) border.push(q * 5);
+      // Se vuelve a montar como lo haría cualquiera: primero el borde, en orden, y después el interior.
+      const assembly = border.concat(Array.from({ length: 25 }, (_, n) => n).filter(n => !border.includes(n)));
       for (let row = 0; row < 5; row++) for (let col = 0; col < 5; col++) {
-        const n = row * 5 + col, x = col * 200, y = row * 200;
-        const h = r => r === 0 || r === 5 ? 0 : (r + col) % 2 ? 1 : -1;
-        const v = c => c === 0 || c === 5 ? 0 : (row + c) % 2 ? -1 : 1;
-        const path = `M${x},${y}` + edge(x, y, 200, 0, h(row)) + edge(x + 200, y, 0, 200, v(col + 1)) + edge(x + 200, y + 200, -200, 0, -h(row + 1)) + edge(x, y + 200, 0, -200, -v(col)) + 'Z';
+        const n = row * 5 + col, x0 = left + col * cw, y0 = top + row * ch, x1 = x0 + cw, y1 = y0 + ch;
+        const h = q => q === 0 || q === 5 ? 0 : (q + col) % 2 ? 1 : -1;
+        const v = c => c === 0 || c === 5 ? 0 : (row + c) % 2 ? 1 : -1;
+        const tl = r && !row && !col, tr = r && !row && col === 4, br = r && row === 4 && col === 4, bl = r && row === 4 && !col;
+        const path = (tl ? `M${at(x0, y0 + r)}Q${at(x0, y0)} ${at(x0 + r, y0)}` : `M${at(x0, y0)}`)
+          + (h(row) ? edge(x0, y0, cw, 0, h(row)) : tr ? `L${at(x1 - r, y0)}Q${at(x1, y0)} ${at(x1, y0 + r)}` : `L${at(x1, y0)}`)
+          + (v(col + 1) ? edge(x1, y0, 0, ch, v(col + 1)) : br ? `L${at(x1, y1 - r)}Q${at(x1, y1)} ${at(x1 - r, y1)}` : `L${at(x1, y1)}`)
+          + (h(row + 1) ? edge(x1, y1, -cw, 0, -h(row + 1)) : bl ? `L${at(x0 + r, y1)}Q${at(x0, y1)} ${at(x0, y1 - r)}` : `L${at(x0, y1)}`)
+          + (v(col) ? edge(x0, y1, 0, -ch, -v(col)) : '') + 'Z';
         const clip = svgNode('clipPath', { id: `puzzle-cut-${index}-${n}`, clipPathUnits: 'userSpaceOnUse' });
         clip.append(svgNode('path', { d: path })); defs.append(clip);
         const group = svgNode('g', { 'data-puzzle-piece': n });
-        group.append(svgNode('use', { href: `#puzzle-photo-${index}`, 'clip-path': `url(#puzzle-cut-${index}-${n})` }));
-        const bevel = svgNode('path', { d: path, class: 'puzzle-piece-edge', fill: 'none' });
-        group.append(bevel);
-        svg.append(group);
-        const destination = (n * 7 + 9) % 25;
-        const destCol = destination % 5;
-        const destRow = Math.floor(destination / 5);
-        const relX = (col - 2) * 160;
-        const relY = (row - 2) * 160;
-        const dx = ((destCol - col) * 220 + Math.sin(n * 2.4) * 140 + relX * 1.35) * 1.15;
-        const dy = ((destRow - row) * 220 + Math.cos(n * 1.9) * 120 + relY * 1.35) * 1.15;
-        const turn = (n % 7 - 3) * 28 + Math.sin(n * 2.8) * 18;
-        const arc = Math.sin(n * 1.7) * 240 + Math.cos(n * 2.3) * 110;
-        const radialDist = Math.hypot(col - 2, row - 2) / 2.8284;
-        pieces.push({ group, cx: x + 100, cy: y + 100, dx, dy, turn, arc, radialDist });
+        group.append(svgNode('use', { href: `#puzzle-photo-${index}`, 'clip-path': `url(#puzzle-cut-${index}-${n})` }), svgNode('path', { d: path, class: 'puzzle-piece-edge', fill: 'none' }));
+        seated.append(group);
+        pieces.push({
+          group, n, cx: x0 + cw / 2, cy: y0 + ch / 2, loose: false, x: 0, y: 0,
+          leave: .02 + ((n * 11 + 3) % 25) / 24 * PUZZLE_STAGGER,
+          back: PUZZLE_RETURN + assembly.indexOf(n) / 24 * PUZZLE_STAGGER,
+          turn: ((n * 37) % 11 - 5) * 13 + (n % 2 ? 8 : -8),
+          bend: (n % 2 ? 1 : -1) * (.07 + ((n * 5) % 7) * .012)
+        });
       }
-      const puzzle = { svg, picture, pieces };
+      const puzzle = { svg, picture, pieces, well, seated, loose, table: '', stack: '', size: Math.max(cw, ch), cx: (left + right) / 2, cy: (top + bottom) / 2 };
       $('.art-pan', scenes[index]).append(svg); scenes[index].classList.add('is-puzzle');
       puzzles.set(index, puzzle); return puzzle;
     }
+    // La mesa: dónde cae cada pieza. Se reparte por lo que se ve de la pantalla, así que no se amontonan
+    // ni se salen del encuadre, en horizontal y en vertical, y dejan libre el título.
+    function layPuzzleTable(puzzle) {
+      const vw = geometry.width || innerWidth, vh = geometry.height || innerHeight, key = `${vw}x${vh}`;
+      if (puzzle.table === key) return;
+      puzzle.table = key;
+      const pan = puzzle.svg.parentNode, laidOut = pan.clientWidth > 0 && pan.clientHeight > 0;
+      const panW = laidOut ? pan.clientWidth : vw, panH = laidOut ? pan.clientHeight : vh;
+      const matrix = /matrix\(([^)]+)\)/.exec(getComputedStyle(puzzle.svg).transform || '');
+      const values = matrix ? matrix[1].split(',').map(Number) : [];
+      const zoom = values[0] > 0 ? values[0] : .94, shift = Number.isFinite(values[5]) ? values[5] : -vh * .03;
+      const unit = Math.min(panW, panH) / 1240 * zoom;
+      const centreX = (laidOut ? pan.offsetLeft : 0) + panW / 2, centreY = (laidOut ? pan.offsetTop : 0) + panH / 2 + shift;
+      const narrow = vw < 760, reach = puzzle.size * .62;
+      const x0 = 500 + (vw * .03 - centreX) / unit + reach, x1 = 500 + (vw * .97 - centreX) / unit - reach;
+      const y0 = 500 + (Math.max(58, vh * (narrow ? .13 : .09)) - centreY) / unit + reach, y1 = 500 + (vh * (narrow ? .7 : .9) - centreY) / unit - reach;
+      const width = Math.max(x1 - x0, puzzle.size), height = Math.max(y1 - y0, puzzle.size);
+      let cols = 5, rows = 5, best = 0;
+      for (let c = 3; c <= 9; c++) {
+        const q = Math.ceil(25 / c), room = Math.min(width / c, height / q);
+        if (room > best) { best = room; cols = c; rows = q; }
+      }
+      const titleX = 500 + (vw * .38 - centreX) / unit, titleY = 500 + (vh * .64 - centreY) / unit;
+      const slots = [];
+      for (let q = 0; q < rows; q++) for (let c = 0; c < cols; c++) {
+        const k = q * cols + c, x = x0 + (c + .5) * width / cols, y = y0 + (q + .5) * height / rows;
+        slots.push({ k, x: x + Math.sin(k * 2.4) * width / cols * .14, y: y + Math.cos(k * 1.9) * height / rows * .12,
+          spare: (!narrow && x < titleX && y > titleY ? 1e6 : 0) - Math.hypot(x - puzzle.cx, y - puzzle.cy) });
+      }
+      // Sobran huecos: se quedan vacíos los que caen bajo el título y los del centro, para que se vea la bandeja.
+      const kept = slots.slice().sort((a, b) => b.spare - a.spare).slice(slots.length - 25).sort((a, b) => a.k - b.k);
+      puzzle.pieces.forEach(piece => {
+        const slot = kept[(piece.n * 7 + 9) % 25];
+        piece.x = slot.x - piece.cx; piece.y = slot.y - piece.cy;
+      });
+    }
     function drawPuzzle(index, fraction, still) {
       const puzzle = puzzleScene(index);
-      puzzle.picture.setAttribute('href', works[index].cover);
-      const phase = clamp(fraction / .78, 0, 1);
-      const scatter = still ? 0 : Math.pow(Math.sin(phase * Math.PI), 2);
-      const amount = scatter < 1e-8 ? 0 : scatter;
-      puzzle.svg.dataset.scatter = amount.toFixed(4);
-      puzzle.svg.style.setProperty('--puzzle-lift', amount.toFixed(3));
+      if (puzzle.picture.getAttribute('href') !== works[index].cover) puzzle.picture.setAttribute('href', works[index].cover);
+      // Hasta .78 del paso: salen de una en una, quedan todas sobre la mesa a la mitad y vuelven a su sitio.
+      const phase = still ? 0 : clamp(fraction / .78, 0, 1);
       puzzle.svg.style.visibility = still ? 'hidden' : 'visible';
       scenes[index].classList.toggle('puzzle-still', still);
-      puzzle.pieces.forEach(({ group, cx, cy, dx, dy, turn, arc, radialDist }) => {
-        const pieceExp = 1.35 - 0.57 * (radialDist || 0);
-        const a = amount === 0 ? 0 : Math.pow(amount, pieceExp);
-        const lift = Math.sin(phase * Math.PI * 2) * a;
-        group.setAttribute('transform', `translate(${(dx * a).toFixed(3)} ${(dy * a + arc * lift).toFixed(3)}) rotate(${(turn * a).toFixed(3)} ${cx} ${cy})`);
+      if (phase > 0) layPuzzleTable(puzzle);
+      const fixed = value => (Math.abs(value) < 5e-4 ? 0 : value).toFixed(3);
+      let total = 0, changed = false;
+      puzzle.pieces.forEach(piece => {
+        const out = smooth((phase - piece.leave) / PUZZLE_OUT), home = smooth((phase - piece.back) / PUZZLE_OUT);
+        const away = out - home, air = Math.sin(Math.PI * (home > 0 ? home : out)), isLoose = away > 0;
+        const x = piece.x * away - piece.y * piece.bend * air, y = piece.y * away + piece.x * piece.bend * air;
+        const scale = 1 + .075 * air;
+        total += away;
+        piece.group.setAttribute('transform', `translate(${fixed(x)} ${fixed(y)}) rotate(${fixed(piece.turn * away)} ${piece.cx.toFixed(2)} ${piece.cy.toFixed(2)}) translate(${fixed(piece.cx * (1 - scale))} ${fixed(piece.cy * (1 - scale))}) scale(${scale.toFixed(4)})`);
+        piece.group.style.setProperty('--piece-lift', (isLoose ? .3 * away + .7 * air : 0).toFixed(3));
+        if (isLoose !== piece.loose) { piece.loose = isLoose; piece.group.classList.toggle('is-loose', isLoose); changed = true; }
       });
+      // El montón tiene orden: la última en caer queda encima y la primera en volver sale de arriba.
+      // Depende solo de la posición del scroll, así que subir y bajar dibujan lo mismo.
+      const stack = phase < .51 ? 'leave' : 'back';
+      if (changed || stack !== puzzle.stack) {
+        puzzle.stack = stack;
+        puzzle.seated.append(...puzzle.pieces.filter(piece => !piece.loose).map(piece => piece.group));
+        puzzle.loose.append(...puzzle.pieces.filter(piece => piece.loose).sort((a, b) => stack === 'leave' ? a.leave - b.leave : b.back - a.back).map(piece => piece.group));
+      }
+      const amount = total / puzzle.pieces.length;
+      puzzle.svg.dataset.scatter = amount.toFixed(4);
+      puzzle.svg.style.setProperty('--puzzle-lift', amount.toFixed(3));
+      puzzle.well.style.opacity = clamp(amount * 30, 0, 1).toFixed(3);
       return puzzle;
     }
     const paintedScenes = new Set(scenes.map((_, index) => index));
