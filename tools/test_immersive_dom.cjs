@@ -414,7 +414,7 @@ async function eyeMatch(ui, base, points) {
   assert.equal(ui.find('[data-menu-preview-label]').textContent, 'Blog', 'Numeric shortcut 1-4 previews and focuses the corresponding section');
   assert.equal(ui.find('[data-menu-preview-meta]').textContent, 'Historias de obras, procesos y encuentros');
   assert.equal(ui.find('[data-menu-reel]').hidden, false, 'Blog renders its 4-frame curated filmstrip');
-  assert.equal(ui.find('#menu-dialog').style.getPropertyValue('--menu-glow'), '#1b7874', 'Menu atmosphere glow adapts dynamically to the active section');
+  assert.equal(ui.find('#menu-dialog').style.getPropertyValue('--menu-glow'), '#2e5090', 'Menu atmosphere glow adapts dynamically to the active section');
   ui.click('[data-menu-sound-credits]'); await ui.flush();
   assert.equal(ui.find('[data-menu-sound-drawer]').hidden, false, 'Sound credits drawer opens inline inside the menu dialog');
   ui.click('[data-close-sound-drawer]'); await ui.flush();
@@ -843,6 +843,30 @@ async function eyeMatch(ui, base, points) {
   if (gameOverIndex >= 0) {
     reactiveGallery.scroll(gameOverIndex); await reactiveGallery.flush();
     assert.equal(reactiveGallery.w.NAROA_SCORE.state.silent, true, 'Arriving at Game Over silences the soundtrack');
+    // Huevo «CONTINUE?»: tres Enter echan la moneda. Es solo imagen: el silencio sigue intacto.
+    const continueLink = () => reactiveGallery.find('.game-over-continue');
+    reactiveGallery.key('Enter'); reactiveGallery.key('Enter');
+    assert.equal(continueLink(), null, 'Two coins are not enough');
+    reactiveGallery.key('Enter');
+    assert.equal(continueLink().getAttribute('href'), 'https://github.com/borjamoskv', 'The third coin shows CONTINUE?');
+    assert.equal(continueLink().target, '_blank');
+    assert.equal(continueLink().rel, 'noopener noreferrer');
+    assert.equal(continueLink().querySelector('[data-continue-count]').textContent, '9', 'The countdown starts at 9');
+    galleryAudio.advance(1000);
+    assert.equal(continueLink().querySelector('[data-continue-count]').textContent, '8');
+    reactiveGallery.key('Enter');
+    assert.equal(reactiveGallery.document.querySelectorAll('.game-over-continue').length, 1, 'More coins never stack a second link');
+    assert.equal(reactiveGallery.w.NAROA_SCORE.state.silent, true, 'CONTINUE? never breaks the silence of Game Over');
+    reactiveGallery.scroll(robeIndex); await reactiveGallery.flush();
+    assert.equal(continueLink(), null, 'CONTINUE? leaves with the work');
+    reactiveGallery.key('Enter'); reactiveGallery.key('Enter'); reactiveGallery.key('Enter');
+    assert.equal(continueLink(), null, 'Coins only count on Game Over');
+    reactiveGallery.scroll(gameOverIndex); await reactiveGallery.flush();
+    reactiveGallery.find('[data-art-title]').click(); reactiveGallery.find('[data-art-title]').click(); reactiveGallery.find('[data-art-title]').click();
+    assert.ok(continueLink(), 'Three taps on the title work as coins on touch screens');
+    galleryAudio.advance(11000); await reactiveGallery.flush();
+    assert.equal(continueLink(), null, 'When the countdown runs out the link goes and the loop returns to the origin');
+    reactiveGallery.scroll(gameOverIndex); await reactiveGallery.flush();
     reactiveGallery.scroll(robeIndex); await reactiveGallery.flush();
     assert.equal(reactiveGallery.w.NAROA_SCORE.state.silent, false, 'Leaving Game Over restores it');
   }
@@ -1319,6 +1343,33 @@ async function eyeMatch(ui, base, points) {
     assert.ok(Array.from(calmCommissions.document.querySelectorAll('[data-parallax-card]')).every(card => Number(card.style.getPropertyValue('--parallax-x')) === 0), 'Reduced motion carries no parallax layers');
     assert.equal(calmCommissions.w.NAROA_COMMISSION_HORIZONTAL.scrollToProgress(1).activeCardIndex, 4, 'The closing card is reachable by scrolling alone');
     calmCommissions.dom.window.close();
+  }
+  {
+    // Galería limpia: la ficha y las acciones de vista esperan plegadas tras un único «+».
+    const tidy = create('/'); await tidy.flush();
+    const more = tidy.find('[data-more]'), tidyStage = tidy.find('[data-gallery]'), actions = tidy.find('#art-actions');
+    assert.ok(more && actions, 'The gallery mounts one "+" toggle for the artwork options');
+    assert.equal(more.getAttribute('aria-expanded'), 'false', 'The options start folded');
+    assert.equal(more.getAttribute('aria-controls'), 'art-actions');
+    assert.equal(tidyStage.classList.contains('is-more-open'), false);
+    for (const selector of ['[data-open-story]', '[data-effects]', '[data-fit]', '[data-open-photos]', '[data-ouroboros]']) {
+      assert.ok(actions.contains(tidy.find(selector)), `${selector} lives behind the "+"`);
+    }
+    assert.ok(tidy.find('.art-more-row').previousElementSibling.matches('[data-art-copy]'), 'The "+" sits right under the title');
+    tidy.click('[data-more]');
+    assert.equal(more.getAttribute('aria-expanded'), 'true');
+    assert.equal(tidyStage.classList.contains('is-more-open'), true, 'One click unfolds the options');
+    tidy.click('[data-open-story]');
+    assert.equal(tidy.find('#story-dialog').open, true, 'The artwork sheet still opens from the unfolded options');
+    tidy.click('#story-dialog [data-close-dialog]');
+    assert.equal(tidyStage.classList.contains('is-more-open'), true, 'Opening the sheet keeps the options in place for the returning focus');
+    tidy.scroll(3); await tidy.flush();
+    assert.equal(more.getAttribute('aria-expanded'), 'false', 'Moving on folds the options again');
+    assert.equal(tidyStage.classList.contains('is-more-open'), false);
+    tidy.click('[data-more]');
+    more.dispatchEvent(new tidy.w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+    assert.equal(tidyStage.classList.contains('is-more-open'), false, 'Escape folds the options');
+    tidy.dom.window.close();
   }
   assert.equal(manifest.projects, works.length); assert.deepEqual(errors, []);
   console.log(`PASS: ${works.length} variable camera scores, fixed viewing pauses, full-viewport vertical and horizontal seams, deterministic reverse motion, three deep iris passes, zoom and puzzle chapters; all ${works.length} artwork flows, 3 gallery eye pairs, kinetic titles, native scroll, free inertia, direct links, 3-image loading bound, search/filters, details/photos, quiet mode, reduced motion, Vaivenes, editorial reveals, responsive Naroa-to-Rara Avis pupil/iris alignment, photographic wink, cinematic deep-iris camera with continuous forward velocity across the blend, eased outward turn, reversible reveal, image-load guard, seamless continuation through all ${works.length} works, 8 additional deep eye matches embedded catalogue navigation, opt-in reactive sound fragments, speed and direction response, bounded voices, silence at rest and safe audio lifecycle.`);

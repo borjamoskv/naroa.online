@@ -96,6 +96,9 @@
   paintEffects();
   // Enable enhancements only after JavaScript has successfully initialized.
   document.documentElement.classList.add('has-motion');
+  // Versiones por idioma: /en/… comparte este script. BASE es el prefijo de la versión ('' en español)
+  // y LANG su idioma; los enlaces que se construyen aquí lo llevan delante.
+  const BASE = document.documentElement.dataset.base || '', LANG = document.documentElement.lang || 'es';
   const legacy = { '#/destacada': '/obra/', '#/about': '/sobre-mi/', '#/trayectoria': '/trayectoria/', '#/blog': '/cuaderno/', '#/contacto': '/contacto/' };
   if (location.pathname === '/' && legacy[location.hash]) { location.replace(legacy[location.hash]); return; }
   let gallery = null;
@@ -687,7 +690,7 @@
     // inicial y no se reescribe al cambiar de escena). Sin obra, la página; y desde la 404, la portada.
     const lost = document.body.classList.contains('page-404');
     const shareOrigin = customUrl ? new URL(customUrl, location.href).origin : location.origin;
-    const url = p ? `${shareOrigin}/obra/${p.slug}/` : (customUrl || location.origin + (lost ? '/' : location.pathname));
+    const url = p ? `${shareOrigin}${BASE}/obra/${p.slug}/` : (customUrl || location.origin + (lost ? '/' : location.pathname));
     // Una obra se comparte con su título limpio; una página conserva el nombre de la artista
     // (un «Sobre mí» a secas, publicado por quien visita, se leería como suyo).
     const rawTitle = p ? p.title : (customTitle || (lost ? 'Naroa Gutiérrez Gil' : $('meta[property="og:title"]')?.content || document.title));
@@ -745,9 +748,9 @@
   const menuOpenWorkBtn = $('[data-menu-open-work]', menu);
   const menuSoundCreditsBtn = $('[data-menu-sound-credits]', menu), menuSoundDrawer = $('[data-menu-sound-drawer]', menu), menuMelodyToday = $('[data-menu-melody-today]', menu);
   const menuButtons = $$('[data-open-menu]');
-  let menuRequest = 0, menuImageIndex = -1, reelTimer = 0, activeReel = null, activeReelIndex = 0, activeReelLabel = '', activeMenuLink = null, activePreviewHref = '/obra/';
+  let menuRequest = 0, menuImageIndex = -1, reelTimer = 0, activeReel = null, activeReelIndex = 0, activeReelLabel = '', activeMenuLink = null, activePreviewHref = BASE + '/obra/';
   function setPreviewHref(href) {
-    activePreviewHref = href || activeMenuLink?.getAttribute('href') || '/obra/';
+    activePreviewHref = href || activeMenuLink?.getAttribute('href') || BASE + '/obra/';
     if (menuPicture) menuPicture.dataset.previewHref = activePreviewHref;
     if (menuOpenWorkBtn) menuOpenWorkBtn.setAttribute('href', activePreviewHref);
   }
@@ -757,7 +760,7 @@
   function currentMenuLink() {
     const path = location.pathname;
     // Una sección también es la actual en sus rutas hijas (Vaivenes dentro de Obras, Trayectoria dentro de Naroa).
-    return path === '/' ? menuLinks[0] : menuLinks.find(link => path.startsWith(new URL(link.href).pathname) || (link.dataset.menuAlso && path.startsWith(link.dataset.menuAlso)));
+    return path === BASE + '/' ? menuLinks[0] : menuLinks.find(link => path.startsWith(new URL(link.href).pathname) || (link.dataset.menuAlso && path.startsWith(link.dataset.menuAlso)));
   }
   function labelMenu(title, label, quoteText, metaText, href) {
     $('[data-menu-preview-title]', menu).textContent = title;
@@ -852,12 +855,12 @@
   async function previewMenu(link, playSound = false) {
     if (!link || !menu.open) return;
     activeMenuLink = link;
-    const href = link.getAttribute('href') || '/obra/';
+    const href = link.getAttribute('href') || BASE + '/obra/';
     setPreviewHref(href);
     if (link.dataset.previewGlow) {
       menu.style.setProperty('--menu-glow', link.dataset.previewGlow);
     }
-    const isPortrait = href === '/sobre-mi/' || href === '/contacto/';
+    const isPortrait = href.endsWith('/sobre-mi/') || href.endsWith('/contacto/');
     const isWink = link.dataset.previewWink === 'true';
     if (menuPicture) {
       menuPicture.dataset.portraitMode = String(isPortrait);
@@ -1126,7 +1129,7 @@
     cardEl.style.removeProperty('--peel-tape-rot');
     cardEl.style.removeProperty('--peel-tape-lift');
   }
-  const normalized = s => s.toLocaleLowerCase('es').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const normalized = s => s.toLocaleLowerCase(LANG).normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   function filterIndex() {
     const term = normalized(search.value.trim());
     let count = 0;
@@ -1158,7 +1161,7 @@
     search.focus();
   });
   indexItems.forEach(a => {
-    a.href = '/obra/' + encodeURIComponent(a.dataset.work) + '/#fotos';
+    a.href = BASE + '/obra/' + encodeURIComponent(a.dataset.work) + '/#fotos';
     a.addEventListener('pointerenter', () => updateIndexSpotlight(a), { passive: true });
     a.addEventListener('focus', () => updateIndexSpotlight(a), { passive: true });
     a.addEventListener('pointermove', e => {
@@ -2091,6 +2094,55 @@
         }
       }, 1600);
     }
+    // Huevo de Game Over: tres Enter seguidos (o tres toques al título) echan la moneda y aparece
+    // «CONTINUE?» con cuenta atrás de recreativa. Es solo imagen: no toca el sonido, que en esta
+    // obra es silencio. El enlace se crea aquí; no está en el HTML compilado.
+    const CONTINUE_URL = 'https://github.com/borjamoskv';
+    let coinCount = 0, coinAt = -Infinity, continueLink = null, continueTimer = null;
+    function dismissContinue() {
+      coinCount = 0;
+      clearTimeout(continueTimer); continueTimer = null;
+      if (!continueLink) return;
+      continueLink.remove(); continueLink = null;
+      delete stage.dataset.continue;
+    }
+    function insertCoin() {
+      if (continueLink || state.quiet || works[state.index]?.slug !== 'game-over' || stage.classList.contains('is-supersonic-rewind')) return;
+      const now = performance.now();
+      coinCount = now - coinAt < 1600 ? coinCount + 1 : 1;
+      coinAt = now;
+      if (coinCount < 3) return;
+      // La moneda detiene el rebobinado automático: quien la echa decide cuándo vuelve al origen.
+      clearTimeout(bboyTimer); clearTimeout(bboyRewindTimer);
+      if (isBreakdancing) {
+        stage.classList.remove('is-breakdance-stage', 'is-breakdancing');
+        stickman.setAttribute('hidden', '');
+        stickman.classList.remove('is-breakdancing');
+        isBreakdancing = false;
+      }
+      const link = continueLink = document.createElement('a');
+      link.className = 'game-over-continue';
+      link.href = CONTINUE_URL; link.target = '_blank'; link.rel = 'noopener noreferrer';
+      link.setAttribute('aria-label', 'Continue? Quién programó esta web: borjamoskv en GitHub (se abre en otra pestaña)');
+      link.innerHTML = '<span>CONTINUE?</span><b data-continue-count aria-hidden="true"></b><i aria-hidden="true">↗</i>';
+      // Va en la línea de interfaz, encima de «INSERT COIN»: nunca sobre la obra.
+      const copy = $('[data-art-copy]', stage);
+      if (copy) copy.before(link); else stage.append(link);
+      stage.dataset.continue = 'on';
+      // Sin efectos de movimiento no hay cuenta atrás ni vuelta forzada: se queda hasta que el visitante se va.
+      if (reduced.matches) return;
+      let left = 9;
+      const count = link.querySelector('[data-continue-count]');
+      const tick = () => {
+        if (continueLink !== link) return;
+        // Con el puntero o el foco encima, o en «Solo obra», la cuenta espera.
+        if (left < 9 && (state.quiet || link.matches(':hover,:focus-visible'))) { continueTimer = setTimeout(tick, 1000); return; }
+        if (left < 0) { dismissContinue(); change(0); return; }
+        count.textContent = String(left--);
+        continueTimer = setTimeout(tick, 1000);
+      };
+      tick();
+    }
     let lauraVisited = false, lauraTimer = null, isLauraZooming = false, lauraPauseDistance = 0;
     let lauraLastProgress = 0, lauraDirection = 0, lauraVaivenCount = 1;
     function fireLauraLorePause() {
@@ -2680,7 +2732,7 @@
       if (dwell.timer === null && stage.classList.contains('is-resting')) armDwell();
     }
     function saveRoute() {
-      const p = works[state.index], url = '/obra/' + p.slug + '/';
+      const p = works[state.index], url = BASE + '/obra/' + p.slug + '/';
       if (stage.dataset.subset === 'Vaivenes') return;
       history.replaceState({ artwork: p.slug }, '', url);
       document.title = p.title + ' · Naroa Gutiérrez Gil';
@@ -3462,6 +3514,7 @@
       } else {
         gameOverVisited = false;
       }
+      if (continueLink && works[state.index]?.slug !== 'game-over') dismissContinue();
       if (!isDustinToGameOver && works[state.index]?.slug !== 'game-over') {
         stage.classList.remove('is-glitching');
       }
@@ -4124,7 +4177,7 @@
         const prevSkew = parseFloat(stage.style.getPropertyValue('--velocity-skew')) || 0;
         const skew = clamp(prevSkew * 0.65 + instSkew * 0.35, -3.2, 3.2);
         stage.style.setProperty('--velocity-skew', `${(Math.abs(skew) < 0.03 ? 0 : skew).toFixed(2)}deg`);
-        leaveFit(); resetDwell(); resetPan(); travelCamera();
+        leaveFit(); resetDwell(); resetPan(); travelCamera(); closeMore();
         lastScrollPixels = pixels;
       }
       motion.pose = pose;
@@ -4207,6 +4260,35 @@
       scheduleScroll();
     });
     $('[data-open-story]', stage).addEventListener('click', () => openDialog('#story-dialog'));
+    // Un solo «+» junto al título: la ficha y las acciones de vista esperan plegadas para que
+    // sobre la obra solo queden título, contador y flechas. Se pliega solo en cuanto la cámara se mueve.
+    const moreMenu = $('.art-view-actions', stage), moreStory = $('[data-open-story]', stage), moreAnchor = $('[data-art-copy]', stage);
+    let closeMore = () => {};
+    if (moreMenu && moreStory && moreAnchor) {
+      const moreRow = document.createElement('div');
+      const moreToggle = document.createElement('button');
+      moreRow.className = 'art-more-row';
+      moreToggle.type = 'button'; moreToggle.className = 'art-more'; moreToggle.setAttribute('data-more', '');
+      moreToggle.setAttribute('aria-controls', 'art-actions');
+      moreToggle.innerHTML = '<span aria-hidden="true">+</span>';
+      moreMenu.id = 'art-actions';
+      moreMenu.prepend(moreStory);
+      moreRow.append(moreToggle, moreMenu);
+      moreAnchor.after(moreRow);
+      const setMore = open => {
+        stage.classList.toggle('is-more-open', open);
+        moreToggle.setAttribute('aria-expanded', String(open));
+        moreToggle.setAttribute('aria-label', open ? 'Cerrar las opciones de la obra' : 'Más sobre esta obra');
+      };
+      setMore(false);
+      closeMore = () => { if (stage.classList.contains('is-more-open')) setMore(false); };
+      moreToggle.addEventListener('click', () => setMore(!stage.classList.contains('is-more-open')));
+      moreRow.addEventListener('keydown', e => {
+        if (e.key !== 'Escape' || !stage.classList.contains('is-more-open')) return;
+        e.preventDefault(); e.stopPropagation(); setMore(false); moreToggle.focus();
+      });
+      stage.addEventListener('pointerdown', e => { if (!moreRow.contains(e.target)) closeMore(); }, { passive: true });
+    }
 
     // --- El Rasgado Kintsugi: Dual-State Scraper Controller ---
     const kintsugiDialog = $('#kintsugi-dialog');
@@ -4284,7 +4366,7 @@
     }
     document.querySelector('[data-share-link]')?.addEventListener('click', e => {
       const p = works[state.index];
-      const url = location.origin + '/obra/' + p.slug + '/';
+      const url = location.origin + BASE + '/obra/' + p.slug + '/';
       const btn = e.currentTarget;
       if (navigator.clipboard?.writeText) {
         navigator.clipboard.writeText(url).then(() => {
@@ -4481,6 +4563,7 @@
     $('[data-journey-cue]', stage)?.addEventListener('click', () => {
       if (works[state.index]?.slug === 'dustin' || works[state.index]?.slug === 'game-over') change(0);
     });
+    $('[data-art-title]', stage)?.addEventListener('click', insertCoin);
     $('[data-open-photos]', stage).addEventListener('click', event => openWorkGallery(event.currentTarget));
     $('[data-photo-prev]').addEventListener('click', () => photoStep(-1)); $('[data-photo-next]').addEventListener('click', () => photoStep(1));
     photosDialog.addEventListener('keydown', event => {
@@ -4496,6 +4579,8 @@
     document.addEventListener('keydown', e => {
       if (document.querySelector('dialog[open]') || e.target.closest?.('input,textarea,select,[contenteditable=true]')) return;
       if (e.key === 'Escape' && state.quiet) { e.preventDefault(); quiet(false); return; }
+      // Enter sobre un control lo activa; solo cuenta como moneda cuando no hay ninguno enfocado.
+      if (e.key === 'Enter' && !e.repeat && !e.target.closest?.('a,button,summary,[role=button]')) insertCoin();
       if (e.key === 'ArrowRight') {
         e.preventDefault();
         const cur = motion.navigation ?? motion.desired;
@@ -4715,17 +4800,21 @@
       });
       pending.set(index, job); return job;
     }
-    function releaseDistant(base) {
+    function pruneDistant(base) {
       images.forEach((img, i) => {
         if (Math.abs(i - base) > 1 && !active.has(i) && img.hasAttribute('src')) {
           img.removeAttribute('src'); decoded.delete(i); pending.delete(i); failed.delete(i);
         }
       });
+    }
+    function releaseDistant(base) {
+      pruneDistant(base);
       [base - 1, base, base + 1].forEach(i => { ensureScene(i); });
     }
     function measurePortrait() {
       const rect = hero.getBoundingClientRect();
       const width = rect.width || innerWidth, height = rect.height || innerHeight;
+      const resized = !!geometry && geometry.height !== height;
       const cover = (aspect, x, y) => {
         const imageWidth = Math.max(width, height * aspect), imageHeight = imageWidth / aspect;
         return { width: imageWidth, height: imageHeight, left: (width - imageWidth) * x, top: (height - imageHeight) * y };
@@ -4741,6 +4830,12 @@
           : { width: `${box.width}px`, height: `${box.height}px`, left: `${box.left}px`, top: `${box.top}px` });
       });
       plane.classList.toggle('is-measured', !reduced.matches);
+      // Girar el móvil o cambiar el alto de la ventana no cambia de obra: el recorrido se mide en
+      // alturas de pantalla, así que se vuelve a la altura del último frame pintado (el scroll en
+      // píxeles que conserva el navegador ya no corresponde a la misma obra).
+      if (resized && !reduced.matches && anchorUnits > 0 && anchorUnits <= 2.8 + (works.length - 1) * 1.1) {
+        window.scrollTo({ top: portraitTrack.getBoundingClientRect().top + scrollY + anchorUnits * height, behavior: 'auto' });
+      }
       schedulePortrait();
     }
     function pose(element, box, point, zoom, focus, offset = 0) {
@@ -4792,7 +4887,7 @@
       if (captionIndex !== index) {
         $('[data-portrait-title]', hero).textContent = work.title;
         $('[data-portrait-label]', hero).textContent = `${index ? work.label : 'Del rostro al autorretrato'} · ${String(index + 1).padStart(2, '0')} / ${works.length}`;
-        $('[data-portrait-link]', hero).href = '/obra/' + work.slug + '/';
+        $('[data-portrait-link]', hero).href = BASE + '/obra/' + work.slug + '/';
         previous.disabled = index === 0; next.disabled = index === works.length - 1;
         hero.dataset.work = work.slug; captionIndex = index;
       }
@@ -4804,6 +4899,9 @@
     function renderExhibition(position, totalDistance) {
       const g = geometry, base = Math.floor(position), fraction = position - base;
       const incoming = Math.min(base + 1, works.length - 1), pair = fraction > 0 && incoming !== base;
+      // Al pasar deprisa por muchas obras se sueltan las que ya quedaron atrás antes de pedir la
+      // pareja nueva: así no se descargan todas las intermedias (la pareja pintada se conserva).
+      pruneDistant(base);
       ensureScene(base); if (pair) ensureScene(incoming);
       // Wait for the requested pair while retaining the last painted pair.
       // Scroll remains native even when several works are skipped quickly.
@@ -4840,7 +4938,7 @@
       shade.style.opacity = '.75';
       releaseDistant(base);
     }
-    let parked = false;
+    let parked = false, anchorUnits = null;
     function renderPortrait() {
       frame = null;
       const g = geometry; if (!g || document.querySelector('dialog[open]')) return;
@@ -4849,11 +4947,13 @@
       // («Game Over», que calla la banda sonora) y se avisa una vez para que la música pueda volver.
       if (!reduced.matches && trackRect.height > 0 && trackRect.bottom <= 1) {
         if (!parked) { parked = true; soundscape?.frame({ mode: 'page', phase: 'scroll', slug: 'sobre-mi' }); }
+        anchorUnits = null;
         if (trackRect.bottom > -g.height * 1.5) ensureScene(works.length - 1);
         return;
       }
       parked = false;
       const travel = Math.max(0, -trackRect.top);
+      anchorUnits = reduced.matches ? null : travel / g.height;
       const progress = reduced.matches ? 0 : clamp(travel / (g.height * 2.8), 0, 1);
       const position = reduced.matches ? 0 : clamp((travel - g.height * 2.8) / (g.height * 1.1), 0, works.length - 1);
       if (!reduced.matches && travel >= g.height * 2.8) { renderExhibition(position, travel / g.height); return; }
@@ -5193,11 +5293,11 @@
       if (workEl) workEl.textContent = `Obra espejo: ${work.title}`;
       if (metricsEl) metricsEl.hidden = false;
       if (workLinkEl) {
-        workLinkEl.href = `/obra/${work.slug}/`;
+        workLinkEl.href = `${BASE}/obra/${work.slug}/`;
         if (workNameEl) workNameEl.textContent = `Ver ${work.title}`;
       }
       if (ctaEl) {
-        ctaEl.href = `/retratos-por-encargo-bilbao/?soporte=${encodeURIComponent(mirror[1])}`;
+        ctaEl.href = `${BASE}/retratos-por-encargo-bilbao/?soporte=${encodeURIComponent(mirror[1])}`;
         ctaEl.hidden = false;
       }
     }
@@ -5797,7 +5897,7 @@
       } catch { return null; }
     };
     const isoDay = value => String(value || '').slice(0, 10);
-    const longDate = iso => new Intl.DateTimeFormat('es', { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(`${iso}T12:00:00Z`));
+    const longDate = iso => new Intl.DateTimeFormat(LANG === 'es' ? 'es' : 'en-GB', { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(`${iso}T12:00:00Z`));
     const externalLink = (className, url) => {
       const link = document.createElement('a');
       if (className) link.className = className;
@@ -7586,6 +7686,13 @@
     };
   })();
 
-  const isObraIndexRoute = location.pathname.replace(/\/$/, '') === '/obra';
+  // Avisos de temporada (fecha límite de encargos): cada línea se retira sola al pasar su día.
+  document.querySelectorAll('[data-season-note]').forEach((note) => {
+    const lines = [...note.querySelectorAll('[data-until]')];
+    lines.forEach((line) => { if (Date.now() > new Date(line.dataset.until + 'T23:59:59').getTime()) line.hidden = true; });
+    if (lines.every((line) => line.hidden)) note.hidden = true;
+  });
+
+  const isObraIndexRoute = location.pathname.replace(/\/$/, '') === BASE + '/obra';
   if (location.hash === '#indice' || isObraIndexRoute) openDialog('#index-dialog');
 })();

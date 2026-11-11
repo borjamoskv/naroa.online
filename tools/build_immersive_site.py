@@ -605,7 +605,7 @@ def build(output):
             # Cuatro secciones: Vaivenes vive dentro de Obras y Trayectoria dentro de Naroa (último campo: rutas hijas).
             ("/obra/", "Obras", f"{len(projects)} retratos · Un viaje", obras_reel[0]["src"], obras_reel[0]["title"], "Otra manera de mirar.", f"Pizarra, collage, Vaivenes y objetos · {len(projects)} obras", False, obras_reel, "#4a72bd", "/series/"),
             ("/sobre-mi/", "Naroa", "La artista y su trayectoria", menu_portrait, "Naroa Gutiérrez Gil", "Me encontré a mí en los demás.", "Retratista y artista plástica · Bilbao", False, None, "#3f63ab", "/trayectoria/"),
-            ("/cuaderno/", "Blog", "Su WordPress, al día", cuaderno_reel[0]["src"], cuaderno_reel[0]["title"], "Apuntes desde el estudio.", "Historias de obras, procesos y encuentros", False, cuaderno_reel, "#1b7874", ""),
+            ("/cuaderno/", "Blog", "Su WordPress, al día", cuaderno_reel[0]["src"], cuaderno_reel[0]["title"], "Apuntes desde el estudio.", "Historias de obras, procesos y encuentros", False, cuaderno_reel, "#2e5090", ""),
             ("/retratos-por-encargo-bilbao/", "Encargos", "Un retrato con tu historia · Contacto", encargos_reel[0]["src"], encargos_reel[0]["title"], "Cada rostro guarda un mundo.", "Retrato personalizado a medida · Bilbao", True, encargos_reel, "#6b395c", ""),
         ]
         return ''.join(f'''<a href="{href}" style="--item-idx:{i-1}" data-menu-item data-menu-index="{i-1}"{f' data-menu-also="{also}"' if also else ''} data-preview-src="{src}" data-preview-title="{esc(title)}" data-preview-label="{esc(label)}" data-preview-quote="{esc(quote_text)}" data-preview-meta="{esc(meta_text)}" data-preview-glow="{glow}"{' data-preview-wink="true"' if wink else ''}{reel_attr(reel)}><span class="menu-number" aria-hidden="true" title="Atajo de teclado: {i}">{i:02}</span><span class="menu-name">{label}<small data-menu-item-detail>{detail}</small></span><span class="menu-arrow" aria-hidden="true">↗</span></a>''' for i, (href, label, detail, src, title, quote_text, meta_text, wink, reel, glow, also) in enumerate(items, 1))
@@ -936,7 +936,7 @@ def build(output):
             }
         breadcrumb_tag = f'<script type="application/ld+json" id="seo-breadcrumb">{data_json(breadcrumb)}</script>' if breadcrumb else ''
         slug_class = "page-" + (path.strip("/").replace("/", "-") or "home")
-        html = f'''<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>{esc(title)} · Naroa Gutiérrez Gil</title><meta name="description" content="{esc(description)}"><meta name="robots" content="index, follow, max-image-preview:large"><meta name="theme-color" content="#11120f"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Naroa"><link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/assets/naroa-icon-180-v1.png"><link rel="alternate" type="application/rss+xml" title="Naroa Gutiérrez Gil · Obras y Blog" href="{ORIGIN}/feed.xml"><link rel="mcp" type="application/json" href="{ORIGIN}/.well-known/mcp.json" title="WebMCP Model Context Protocol"><link rel="canonical" href="{canonical}"><meta property="og:site_name" content="Naroa Gutiérrez Gil"><meta property="og:locale" content="es_ES"><meta property="og:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{canonical}"><meta property="og:type" content="{'article' if gallery and path not in ('/', '/obra/', '/series/vaivenes/') else 'website'}"><meta property="og:image" content="{ORIGIN}{og_img_path}"><meta property="og:image:secure_url" content="{ORIGIN}{og_img_path}"><meta property="og:image:width" content="{og_w}"><meta property="og:image:height" content="{og_h}"><meta property="og:image:type" content="{og_mime}"><meta property="og:image:alt" content="{esc(og_alt)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta name="twitter:description" content="{esc(description)}"><meta name="twitter:image" content="{ORIGIN}{og_img_path}"><meta name="twitter:image:alt" content="{esc(og_alt)}"><link rel="icon" href="{favicon_path}" type="image/svg+xml" sizes="any"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="{assets['app.css']}"><script type="application/ld+json" id="page-schema">{data_json(structured)}</script>{breadcrumb_tag}<script type="application/vnd.mcp+json" id="webmcp-schema">{data_json(webmcp_manifest)}</script><script defer src="{catalog_path}"></script><script defer src="{assets['soundscape.js']}"></script><script defer src="{assets['journey.js']}"></script><script defer src="{assets['app.js']}"></script></head><body class="{'gallery-page' if gallery else 'editorial-page'} {slug_class}"><a class="skip-link" href="#main">Ir al contenido</a>{header(gallery)}{body}{'' if gallery else footer()}{dialogs()}</body></html>'''
+        html = f'''<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>{esc(title)} · Naroa Gutiérrez Gil</title><meta name="description" content="{esc(description)}"><meta name="robots" content="index, follow, max-image-preview:large">{'<meta name="google-site-verification" content="ED9YrilUJ8fhvdH3FI6e9hpWaV2fK70_UfpwfrufLcc">' if path == "/" else ''}<meta name="theme-color" content="#11120f"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Naroa"><link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/assets/naroa-icon-180-v1.png"><link rel="alternate" type="application/rss+xml" title="Naroa Gutiérrez Gil · Obras y Blog" href="{ORIGIN}/feed.xml"><link rel="mcp" type="application/json" href="{ORIGIN}/.well-known/mcp.json" title="WebMCP Model Context Protocol"><link rel="canonical" href="{canonical}"><meta property="og:site_name" content="Naroa Gutiérrez Gil"><meta property="og:locale" content="es_ES"><meta property="og:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{canonical}"><meta property="og:type" content="{'article' if gallery and path not in ('/', '/obra/', '/series/vaivenes/') else 'website'}"><meta property="og:image" content="{ORIGIN}{og_img_path}"><meta property="og:image:secure_url" content="{ORIGIN}{og_img_path}"><meta property="og:image:width" content="{og_w}"><meta property="og:image:height" content="{og_h}"><meta property="og:image:type" content="{og_mime}"><meta property="og:image:alt" content="{esc(og_alt)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta name="twitter:description" content="{esc(description)}"><meta name="twitter:image" content="{ORIGIN}{og_img_path}"><meta name="twitter:image:alt" content="{esc(og_alt)}"><link rel="icon" href="{favicon_path}" type="image/svg+xml" sizes="any"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="{assets['app.css']}"><script type="application/ld+json" id="page-schema">{data_json(structured)}</script>{breadcrumb_tag}<script type="application/vnd.mcp+json" id="webmcp-schema">{data_json(webmcp_manifest)}</script><script defer src="{catalog_path}"></script><script defer src="{assets['soundscape.js']}"></script><script defer src="{assets['journey.js']}"></script><script defer src="{assets['app.js']}"></script></head><body class="{'gallery-page' if gallery else 'editorial-page'} {slug_class}"><a class="skip-link" href="#main">Ir al contenido</a>{header(gallery)}{body}{'' if gallery else footer()}{dialogs()}</body></html>'''
         dest = output / ("404.html" if not_found else path.lstrip("/") + "index.html")
         write(dest, html)
         if not not_found:
@@ -1493,6 +1493,19 @@ def build(output):
     }
     page("/cuaderno/", "Blog", "Historias de obras, procesos y encuentros. El blog de la artista Naroa Gutiérrez Gil.", '<main id="main">' + notebook + '</main>', "/images/cuaderno/cuaderno-twister-collage.jpg", schema=blog_schema)
 
+    # Aviso de temporada: las fechas las pone Naroa en classic/data/encargos.json. Sin fecha no sale nada;
+    # con fecha pasada tampoco (aquí al compilar y en app.js al abrir la página).
+    season_cfg = read_data("encargos").get("navidad") or {}
+    season_months = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
+    season_today = datetime.now().date()
+    season_lines = []
+    for season_key, season_text in (("pedidos_hasta", "Para que llegue en Navidad, encargos hasta el {}."), ("reyes_hasta", "Para Reyes, hasta el {}.")):
+        season_iso = season_cfg.get(season_key)
+        if season_iso and datetime.strptime(season_iso, "%Y-%m-%d").date() >= season_today:
+            season_day = datetime.strptime(season_iso, "%Y-%m-%d").date()
+            season_lines.append((season_iso, season_text.format(f"{season_day.day} de {season_months[season_day.month - 1]}")))
+    season_note = ('<p class="season-note" data-season-note>' + ' '.join(f'<span data-until="{iso}">{esc(text)}</span>' for iso, text in season_lines) + '</p>') if season_lines else ''
+
     commission_examples = [
         (jaio, "Madera noble & textil cosido", "Collage textil sobre madera"),
         (amy, "Pizarra natural & mica mineral", "Pizarra natural rústica"),
@@ -1588,6 +1601,7 @@ def build(output):
         '<section id="configurador" class="enc-hero" aria-labelledby="enc-title" data-commission-configurator>'
         '<div class="enc-hero-copy">'
         '<h1 id="enc-title" class="enc-kicker">Retrato personalizado pintado a mano <span>· a partir de tu foto, desde Bilbao a toda España</span></h1>'
+        + season_note +
         '<p class="enc-sentence">Naroa, quiero un retrato '
         + cfg_word("motif", "A quién", cfg_motifs) + ' sobre '
         + cfg_word("support", "Materia", cfg_supports) + ', '
@@ -1673,6 +1687,11 @@ def build(output):
         f'<section id="dudas" class="enc-band enc-band--paper enc-faq" aria-labelledby="commission-faq-heading">'
         f'<h2 id="commission-faq-heading" class="enc-h2">Dudas <em>sin tapujos.</em></h2>'
         f'<div class="enc-faq-list">{faq_html}</div>'
+        f'<nav class="enc-also" aria-label="Encargos por tipo de retrato">'
+        f'<a class="enc-ink-link" href="/retrato-de-pareja-y-familia/">Retrato de pareja y de familia ↗</a>'
+        f'<a class="enc-ink-link" href="/retrato-de-un-ser-querido-fallecido/">Retrato en recuerdo de un ser querido ↗</a>'
+        f'<a class="enc-ink-link" href="/retrato-de-mascota/">Retrato de mascota ↗</a>'
+        f'</nav>'
         f'</section>'
         f'<section class="enc-band enc-close" aria-labelledby="enc-close-heading">'
         f'<h2 id="enc-close-heading" class="enc-shout enc-shout--serif">¿A quién te gustaría emocionar?</h2>'
@@ -1828,6 +1847,154 @@ def build(output):
         ],
     }
     page("/retratos-por-encargo-bilbao/", "Retrato personalizado pintado a mano desde tu foto · Retratos por encargo", "Retrato personalizado pintado a mano a partir de tu foto: una persona, una pareja, la familia o tu mascota. Naroa Gutiérrez Gil, retratista en Bilbao, sin IA. Presupuesto cerrado previo y envío asegurado a toda España.", '<main id="main">' + commissions + '</main>', amor["photos"][0]["original"], schema=commissions_schema, image_alt=work_alt(amor))
+
+    # ── Páginas por búsqueda real ─────────────────────────────────────────────────────────────
+    # Una página por lo que la gente escribe en el buscador («retrato de pareja», «retrato de un
+    # familiar fallecido», «retrato de mascota»). Van en tercera persona y solo con datos ya publicados:
+    # la ficha de cada obra en el catálogo y las condiciones de la página de encargos. No se inventan
+    # citas, obras, precios ni testimonios; lo que va en <blockquote> es la ficha literal del catálogo.
+    def find_work(slug):
+        return next(p for p in projects if p["slug"] == slug)
+
+    def rp_work(w, text, eager=False):
+        meta = " · ".join(filter(None, [str(w["year"]) if w.get("year") else None, w.get("technique"), w.get("dimensions")]))
+        return (
+            f'<figure class="rp-work"><a href="/obra/{w["slug"]}/"><img src="{w["cover"]}"{cover_dims(w["cover"])} sizes="(max-width:820px) 88vw, 44vw" alt="{esc(work_alt(w))}" loading="{"eager" if eager else "lazy"}" decoding="async"></a>'
+            f'<figcaption><span class="rp-work-meta">{esc(meta)}</span><a class="rp-work-title" href="/obra/{w["slug"]}/">{esc(w["title"])} ↗</a><p>{esc(text)}</p></figcaption></figure>'
+        )
+
+    rp_conditions = [
+        ("Precio cerrado", "Por escrito y antes de empezar. La mitad al arrancar y la otra mitad a la entrega."),
+        ("2 a 4 semanas", "Lo que tardan en secar capas y barnices. Si hay una fecha señalada, conviene decirlo en el primer mensaje."),
+        ("20 × 30 a 40 × 50 cm", "O a medida del sitio donde vaya a vivir. Firmado, con certificado de autenticidad y listo para colgar."),
+        ("A toda España", "Envío asegurado en caja rígida, con seguimiento hasta la puerta. En Bilbao y Bizkaia, entrega en mano."),
+    ]
+    rp_conditions_html = '<dl class="rp-facts">' + ''.join(f'<div><dt>{esc(dt)}</dt><dd>{esc(dd)}</dd></div>' for dt, dd in rp_conditions) + '</dl>'
+    rp_q_price = ("¿Cuánto cuesta?", "No hay una tarifa fija: depende del soporte y del tamaño. Naroa da una cifra cerrada y por escrito antes de empezar; se paga la mitad al arrancar y la otra mitad a la entrega.")
+    rp_q_objects = ("¿Se puede incluir algún objeto o recuerdo?", "Sí. Naroa integra objetos reales en sus piezas: cartas, entradas, botones, telas, chapas, billetes de tren. Se le envían o se llevan al estudio de Bilbao y pasan a formar parte de la obra.")
+
+    def rp_page(path, title, description, kicker, h1, lead, works_heading, works, extra, questions, wa_text, mail_subject, about_name):
+        cover = works[0][0]
+        works_html = ''.join(rp_work(w, text, eager=(i == 0)) for i, (w, text) in enumerate(works))
+        faq = ''.join(f'<details class="commission-faq-item"><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q, a in questions)
+        body = (
+            '<main id="main" class="retrato-pagina">'
+            f'<header class="rp-hero"><p class="rp-kicker">{esc(kicker)}</p><h1 class="rp-title">{esc(h1)}</h1>{season_note}{lead}</header>'
+            f'<section class="rp-section" aria-labelledby="rp-obras"><h2 id="rp-obras" class="rp-h2">{esc(works_heading)}</h2><div class="rp-works{" rp-works--solo" if len(works) == 1 else ""}">{works_html}</div>{extra}</section>'
+            f'<section class="rp-section" aria-labelledby="rp-condiciones"><h2 id="rp-condiciones" class="rp-h2">Cómo se encarga</h2>'
+            '<p class="rp-text">Se le escribe a Naroa por WhatsApp o por correo con la foto o las fotos que haya y un par de líneas sobre la persona. Ella propone soporte y tamaño, y da el precio por escrito antes de empezar.</p>'
+            f'{rp_conditions_html}</section>'
+            f'<section class="rp-section rp-faq" aria-labelledby="rp-dudas"><h2 id="rp-dudas" class="rp-h2">Dudas habituales</h2>{faq}</section>'
+            '<section class="rp-section rp-close" aria-labelledby="rp-escribir"><h2 id="rp-escribir" class="rp-h2">Escribir a Naroa</h2>'
+            '<p class="rp-text">Responde ella misma, desde el estudio de Bilbao.</p>'
+            '<p class="rp-actions">'
+            f'<a class="rp-link rp-link--lead" href="https://wa.me/34636060609?text={quote(wa_text)}" target="_blank" rel="noopener noreferrer">Por WhatsApp ↗</a>'
+            f'<a class="rp-link" href="mailto:naroa@naroa.eu?subject={quote(mail_subject)}">naroa@naroa.eu ↗</a>'
+            '<a class="rp-link" href="/retratos-por-encargo-bilbao/#configurador">Componer el encargo paso a paso ↗</a>'
+            '</p></section>'
+            '</main>'
+        )
+        schema = {
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "@id": ORIGIN + path + "#webpage",
+            "name": title,
+            "url": ORIGIN + path,
+            "description": description,
+            "isPartOf": {"@id": ORIGIN + "/#website"},
+            "about": {"@id": ORIGIN + "/retratos-por-encargo-bilbao/#service"},
+            "mainEntity": {
+                "@type": "Service",
+                "@id": ORIGIN + path + "#service",
+                "name": about_name,
+                "serviceType": "Retrato por encargo hecho a mano a partir de fotografía",
+                "url": ORIGIN + path,
+                "provider": {"@id": ORIGIN + "/#artist"},
+                "areaServed": {"@type": "Country", "name": "España"},
+                "isRelatedTo": {"@id": ORIGIN + "/retratos-por-encargo-bilbao/#service"},
+            },
+            "image": [ORIGIN + w["photos"][0]["original"] for w, _ in works],
+        }
+        page(path, title, description, body, cover["photos"][0]["original"], schema=schema, image_alt=work_alt(cover))
+
+    love_boat = find_work("the-love-boat")
+    multi_love = find_work("multi-dimensional-love")
+    hermanos = find_work("aquellos-maravillosos-anos")
+    reencuentro = find_work("el-reencuentro")
+    gato_kutxa = find_work("el-gato-que-es-kutxa")
+
+    rp_page(
+        "/retrato-de-pareja-y-familia/",
+        "Retrato de pareja y de familia hecho a mano desde tu foto",
+        "Retrato de pareja o de familia hecho a mano a partir de vuestras fotos, sin IA: pintura, collage y objetos. Presupuesto cerrado antes de empezar y envío asegurado a toda España.",
+        "Naroa Gutiérrez Gil · Retratos por encargo",
+        "Retrato de pareja y de familia, hecho a mano desde vuestras fotos",
+        '<p class="rp-lead"><strong>No hace falta una foto en la que salgáis todos bien.</strong> Naroa trabaja con varias fotografías, también de móvil, y las reúne en una sola pieza original: pintada, cosida o montada a mano, sin IA.</p>',
+        "Cuatro retratos de dos",
+        [
+            (love_boat, "Retrato doble sobre una tabla de madera de 50 × 50 cm: acrílico, rotuladores y collage de papeles, telas y celofán."),
+            (multi_love, "Retrato doble en 3D, hecho a partir de tres fotografías y montado por capas articuladas dentro de una lata de conservas."),
+            (hermanos, "Dos hermanos, a lápices de colores sobre papel A4."),
+            (reencuentro, "Una hija y su padre, juntos en un lienzo de 30 × 40 cm a partir de una foto de él de joven."),
+        ],
+        '<p class="rp-text">Cada obra tiene su ficha con técnica, medidas y fotografías de detalle. Para un retrato en recuerdo de alguien, hay una página aparte: <a class="rp-link" href="/retrato-de-un-ser-querido-fallecido/">retrato en recuerdo de un ser querido ↗</a></p>',
+        [
+            ("¿Sirve una foto de móvil, o varias fotos distintas?", "Sí. Vale una foto de móvil, aunque esté movida, y valen varias: una en la que alguien sale bien de cara y otra con el gesto o la ropa que le define. Naroa las combina en el taller en una sola composición."),
+            rp_q_objects,
+            rp_q_price,
+            ("¿Llega a tiempo para una boda o un aniversario?", "El plazo habitual es de 2 a 4 semanas. Si hay fecha, conviene decirlo en el primer mensaje para que Naroa busque hueco."),
+        ],
+        "Hola Naroa, me gustaría encargar un retrato de pareja o de familia. Tengo fotos para enseñarte.",
+        "Retrato de pareja o de familia por encargo",
+        "Retrato de pareja y de familia por encargo, hecho a mano desde fotografía",
+    )
+
+    rp_page(
+        "/retrato-de-un-ser-querido-fallecido/",
+        "Retrato de un ser querido fallecido, desde una foto antigua",
+        "Retrato pintado a mano en recuerdo de un ser querido. Sirve una foto antigua, pequeña o de móvil. Naroa Gutiérrez Gil, sin IA, con presupuesto cerrado y envío asegurado a toda España.",
+        "Naroa Gutiérrez Gil · Retratos por encargo",
+        "Retrato en recuerdo de un ser querido, a partir de la foto que tengas",
+        '<p class="rp-lead"><strong>Sirve una foto antigua, pequeña o de móvil.</strong> No hace falta que sea buena: basta con que sea suya.</p>'
+        '<p class="rp-text">Naroa Gutiérrez Gil pinta retratos a mano a partir de fotografías. Cuando solo queda una imagen —enmarcada tras un cristal, en blanco y negro, recortada de una foto de grupo— trabaja con esa. Y si hay varias, puede reunir en un mismo retrato a dos personas a partir de fotos distintas.</p>',
+        "Una obra hecha así",
+        [
+            (reencuentro, "Retrato doble en blanco y negro sobre lienzo 3D de 30 × 40 cm: pintura acrílica negra, toques de rotulador blanco y una capa de látex líquido que lo protege."),
+        ],
+        '<blockquote class="rp-quote"><p>Mediante esta obra, una hija y su padre volvieron a encontrarse sobre un fondo blanco. Todo gracias a una foto de joven de él, que me permitió —esquivando los reflejos del cristal que protegía su mirada— trazarles, de nuevo, juntos.</p><footer>De la ficha de <a class="rp-link" href="/obra/el-reencuentro/">El Reencuentro ↗</a></footer></blockquote>',
+        [
+            ("Solo tengo una foto y es mala. ¿Sirve?", "Casi siempre. Una foto de carné, una imagen escaneada o una de móvil con poca luz suelen bastar. Lo mejor es enviarla: Naroa la mira y contesta ella misma."),
+            ("¿Puede aparecer junto a alguien de la familia?", "Sí. En El Reencuentro, una hija y su padre aparecen juntos a partir de una foto de él de joven."),
+            rp_q_objects,
+            ("¿Cuánto tarda y cuánto cuesta?", "El plazo habitual es de 2 a 4 semanas. No hay una tarifa fija: Naroa da una cifra cerrada y por escrito antes de empezar; se paga la mitad al arrancar y la otra mitad a la entrega."),
+        ],
+        "Hola Naroa, me gustaría encargar un retrato en recuerdo de una persona. Te enseño la foto que tengo.",
+        "Retrato en recuerdo de un ser querido",
+        "Retrato en recuerdo de un ser querido, pintado a mano desde una fotografía antigua",
+    )
+
+    rp_page(
+        "/retrato-de-mascota/",
+        "Retrato de mascota hecho a mano desde tu foto: perro o gato",
+        "Retrato de tu perro o tu gato hecho a mano a partir de una foto, sin IA. Naroa Gutiérrez Gil: pieza original, presupuesto cerrado antes de empezar y envío asegurado a toda España.",
+        "Naroa Gutiérrez Gil · Retratos por encargo",
+        "Retrato de tu perro o tu gato, hecho a mano desde una foto",
+        '<p class="rp-lead"><strong>Sirve una foto de móvil.</strong> Naroa Gutiérrez Gil acepta encargos de retratos de mascotas con las mismas condiciones que cualquier otro retrato: una pieza original hecha a mano, sin IA y con el precio cerrado antes de empezar.</p>',
+        "El gato del catálogo",
+        [
+            (gato_kutxa, "Una caja de madera de 4,7 × 8,3 × 8,3 cm: un gato en fotocopia recortada sobre una tapa pintada en rosa y turquesa, con huellas estampadas y el interior preparado para un regalo."),
+        ],
+        '<p class="rp-text">El catálogo público todavía no recoge ningún retrato de mascota hecho por encargo; esta caja es el animal que sí está. Las materias sobre las que trabaja Naroa —madera, tela vaquera cosida, papel, pizarra natural, cajas y latas— se ven en <a class="rp-link" href="/retratos-por-encargo-bilbao/">la página de encargos ↗</a></p>',
+        [
+            ("¿Sirve una foto de móvil?", "Sí, aunque esté movida. Si hay varias, mejor: una donde se le vea bien la cara y otra con su gesto de siempre. Naroa las combina en el taller."),
+            ("¿Y si ya no está?", "Sirve una foto antigua. El encargo se hace igual, a partir de la imagen que haya."),
+            rp_q_objects,
+            rp_q_price,
+        ],
+        "Hola Naroa, me gustaría encargar un retrato de mi mascota. Tengo fotos para enseñarte.",
+        "Retrato de mascota por encargo",
+        "Retrato de mascota por encargo, hecho a mano desde fotografía",
+    )
 
     contact = f'''<main id="main" class="contact-page"><div class="contact-background" data-parallax><img src="{rara['cover']}" alt="Rara Avis, composición de retratos y reflejos" fetchpriority="high"></div><div class="contact-shade"></div><section class="contact-copy"><p class="eyebrow">Naroa Gutiérrez Gil · Bilbao</p><h1 class="hand">¿Hablamos?</h1><p>Una persona. Una historia. Una idea a medio hacer.<br>No hace falta traerlo todo pensado.</p><a class="contact-email" href="mailto:naroa@naroa.eu?subject=Retrato%20por%20encargo">naroa@naroa.eu ↗</a><div class="contact-channels" aria-label="Vías de contacto diferenciadas"><article class="contact-channel"><span class="eyebrow">Encargos y obra</span><a class="text-link" href="mailto:naroa@naroa.eu?subject=Consulta%20sobre%20obra%20o%20encargo">Escribir por correo ↗</a><p>Consultas sobre obras del catálogo, formatos y encargos personalizados.</p></article><article class="contact-channel"><span class="eyebrow">Trato directo</span><a class="text-link" href="https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20hablar%20sobre%20un%20encargo." target="_blank" rel="noopener noreferrer">También por WhatsApp ↗</a><p>Conversación ágil para comentar una idea inicial o concertar llamada.</p></article><article class="contact-channel"><span class="eyebrow">Redes y archivo</span><a class="text-link" href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer">Facebook · Naroa Artista Plástica ↗</a><p>Álbumes de proceso, exposiciones y archivo fotográfico de cada serie.</p></article></div><div class="contact-details"><a href="tel:+34636060609">+34 636 060 609</a><a href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer">Facebook ↗</a><a href="https://instagram.com/naroa_art/" target="_blank" rel="noopener noreferrer">@naroa_art ↗</a><a href="https://naroagutierrez.wordpress.com/" target="_blank" rel="noopener noreferrer">Blog en WordPress ↗</a><span>Bilbao · País Vasco</span></div></section></main>'''
     contact_schema = {
@@ -2187,6 +2354,7 @@ def build(output):
         "- **¿Cuánto cuesta un retrato personalizado?** Presupuesto cerrado previo por escrito según técnica, soporte y formato (dibujo, óleo, collage sobre madera, cajas de recuerdos o pizarra de 20×30 cm a 40×50 cm). Consulta sin compromiso.\n"
         "- **¿Cómo se encarga a partir de fotos?** Se envían 1 o varias fotos de referencia (incluso tomadas con el móvil); Naroa realiza una reinterpretación artística de autor capturando la personalidad y mirada.\n"
         "- **¿Cuáles son los plazos de entrega?** De 2 a 4 semanas según la técnica y el secado de óleos, acrílicos y barnices. Plazos prioritarios disponibles para fechas señaladas con aviso previo.\n"
+        + (f"- **¿Hasta cuándo se puede encargar para Navidad y Reyes?** {' '.join(text for _, text in season_lines)}\n" if season_lines else "") +
         "- **¿Dónde se entrega?** Entrega en mano en Bilbao y Bizkaia, o envío protegido y asegurado a nivel nacional e internacional.\n"
         "- **¿Cómo conservar una obra en técnica mixta o collage?** Fijación y barniz protector satinado. Limpieza en seco con plumero suave o microfibra; evitar humedad directa o productos químicos.\n"
         "- **¿Qué aporta trabajar sobre madera, collage, objetos o pizarra?** Cada soporte (betas de madera, costuras textiles, cajas cotidianas o cantos de piedra) aporta textura, volumen y relato propio en diálogo con la persona retratada.\n"
@@ -2200,7 +2368,10 @@ def build(output):
         f"- [Sobre Mí]({ORIGIN}/sobre-mi/): Biografía, técnica, proceso creativo y proyectos comunitarios (Walking Gallery Bilbao, El ReCreo).\n"
         f"- [Trayectoria]({ORIGIN}/trayectoria/): Archivo cronológico de exposiciones documentadas desde 2010 (DEIA, GARA, Politena, Dock Bilbao).\n"
         f"- [Cuaderno]({ORIGIN}/cuaderno/): Relatos de proceso, vivencias del taller y artículos de prensa.\n"
-        f"- [Contacto]({ORIGIN}/contacto/): Canales directos de consulta para obra y encargos.\n\n"
+        f"- [Contacto]({ORIGIN}/contacto/): Canales directos de consulta para obra y encargos.\n"
+        f"- [Retrato de pareja y de familia]({ORIGIN}/retrato-de-pareja-y-familia/): Retratos dobles y familiares hechos a mano desde fotografías, con obras de ejemplo.\n"
+        f"- [Retrato en recuerdo de un ser querido]({ORIGIN}/retrato-de-un-ser-querido-fallecido/): Retrato pintado a mano a partir de una foto antigua, pequeña o de móvil.\n"
+        f"- [Retrato de mascota]({ORIGIN}/retrato-de-mascota/): Encargos de retratos de perro o gato hechos a mano desde una foto.\n\n"
         "## Recursos Machine-to-Machine y GEO SOTA 2026\n"
         f"- [Catálogo JSON Estructurado]({ORIGIN}/api/catalog.json): Endpoint con especificaciones completas de las {len(projects)} obras y Evidence Graph.\n"
         f"- [Endpoint WebMCP]({ORIGIN}/.well-known/mcp.json): Manifiesto y definición formal de herramientas WebMCP para agentes autónomos.\n"
@@ -2275,6 +2446,10 @@ def build(output):
     write(output / "_redirects", ''.join(f'{src.rstrip("/")} {dest} 301\n' for src, dest in aliases.items()) + '/landing-bilbao /retratos-por-encargo-bilbao/ 301\n')
     write(output / "immersive" / "build-manifest.json", json.dumps({"reviewed": catalogue["reviewed"], "projects": len(projects), "canonical_routes": [p[0] for p in pages], "media_files": len(jobs), "originals": len(originals), "assets": assets}, ensure_ascii=False, indent=2) + '\n')
     print(f'Built {len(projects)} artworks, {len(pages)} canonical routes, {len(jobs)} optimized images → {output}')
+    # Versiones por idioma (/en/…): se traducen a partir de las páginas recién escritas.
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from build_i18n import localize
+    localize(output)
 
 
 if __name__ == "__main__":
