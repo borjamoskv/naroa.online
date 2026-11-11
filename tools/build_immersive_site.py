@@ -680,7 +680,7 @@ def build(output):
         "https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-476343.html",
         "https://gara.naiz.eus/paperezkoa/20130427/399965/es/Walking-gallery-arte-aire-libre-movimiento-arte-evolucion",
         "https://siarte.com/2022-03-25-siarte-exposicion-pintura-collage-arte-naroa-gutierrez.php",
-        "https://www.youtube.com/@naroagutierrezgil",
+        "https://www.youtube.com/@naroarte",
     ]
     bilbao_place = {
         "@type": "Place",
@@ -849,7 +849,7 @@ def build(output):
                                 "Pizarra natural rústica",
                                 "Collage textil sobre madera",
                                 "Caja personalizada u objeto",
-                                "Retrato al óleo o grafito",
+                                "Retrato a pastel o grafito",
                                 "Asesoramiento en estudio",
                             ],
                             "description": "Soporte plástico preferido para el retrato.",
@@ -942,7 +942,7 @@ def build(output):
                 structured["@graph"][0].setdefault("dateModified", catalogue["reviewed"])
         breadcrumb = None
         if not not_found and path != "/":
-            section_name = "Obras" if path.startswith("/obra/") else "Vaivenes" if path.startswith("/series/vaivenes/") else title.split("·")[0].strip()
+            section_name = "Obras" if path.startswith("/obra/") else "Vaivenes" if path.startswith("/series/vaivenes/") else "Retratos por encargo" if path == "/retratos-por-encargo-bilbao/" else title.split("·")[0].strip()
             items = [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": ORIGIN + "/"}]
             if path.startswith("/obra/") and path != "/obra/":
                 items.append({"@type": "ListItem", "position": 2, "name": "Obras", "item": ORIGIN + "/obra/"})
@@ -1524,7 +1524,7 @@ def build(output):
         (jaio, "Madera noble & textil cosido", "Collage textil sobre madera"),
         (amy, "Pizarra natural & mica mineral", "Pizarra natural rústica"),
         (amor, "Lata de conserva 3D", "Caja personalizada u objeto"),
-        (rara, "Papel algodón & grafito", "Retrato al óleo o grafito"),
+        (rara, "Papel, pastel Conté & collage", "Retrato a pastel o grafito"),
     ]
     examples_html = ''.join(
         f'<article class="commission-example" data-parallax-card data-card-index="{idx}" data-work-slug="{ex["slug"]}">'
@@ -1534,7 +1534,7 @@ def build(output):
         f'<img src="{ex["cover"]}" width="{ex["photos"][0]["width"]}" height="{ex["photos"][0]["height"]}" alt="{esc(work_alt(ex))}" loading="eager" decoding="async">'
         f'</a>'
         f'<a class="commission-detail-pip" href="/obra/{ex["slug"]}/" tabindex="-1" aria-hidden="true">'
-        f'<img src="{ex["photos"][1]["src"] if len(ex.get("photos", [])) > 1 else ex["cover"]}" alt="{esc(ex["title"])} · Detalle matérico" loading="lazy" decoding="async">'
+        f'<img src="{ex["photos"][1]["src"] if len(ex.get("photos", [])) > 1 else ex["cover"]}"{cover_dims(ex["photos"][1]["src"] if len(ex.get("photos", [])) > 1 else ex["cover"])} alt="{esc(ex["title"])} · Detalle matérico" loading="lazy" decoding="async">'
         f'</a>'
         f'<div class="commission-example-bar">'
         f'<div class="commission-work-meta">'
@@ -1564,7 +1564,7 @@ def build(output):
         ("¿Cuánto cuesta un retrato pintado a mano y cuándo sé el precio exacto?", "Antes de tocar un pincel. Odio los presupuestos sorpresa tanto como tú. Primero hablamos de tu idea, elegimos soporte (pizarra, madera cosida, lata 3D o papel) y tamaño, y te doy una cifra cerrada y por escrito. Si te encaja, acordamos un 50% para arrancar y el 50% restante a la entrega. Siempre con presupuesto cerrado previo."),
         ("¿Cuáles son los plazos y qué pasa si tengo una fecha señalada?", "El ritmo habitual de taller es de 2 a 4 semanas: las capas de acrílico, las texturas y los barnices de protección UV necesitan su secado orgánico para no cuartear. Si tienes un cumpleaños, una boda o una sorpresa inminente, dímelo en el primer mensaje y buscamos un hueco prioritario de caballete."),
         ("¿Cómo llega la obra a mis manos si no vivo en Bilbao?", "Si estás en Bilbao o en Bizkaia (Casco Viejo, Indautxu, Getxo, margen derecha o izquierda), te lo doy en mano en el estudio o quedamos para dártelo en persona. Si estás fuera, viaja como una reina: en una caja rígida tricapa a medida, protegida contra humedad y golpes, con seguro a todo riesgo y número de seguimiento hasta la puerta de tu casa."),
-        ("¿Qué tamaños y materiales puedo elegir?", "Los formatos habituales son 20 × 30 cm, 30 × 40 cm y 40 × 50 cm, o a medida según el espacio donde vaya a vivir. Trabajo sobre madera, tela vaquera cosida, papel de algodón, cajas y latas intervenidas y pizarra natural, con acrílico, pastel, carbón Conté, rotuladores, pan de oro y costura a mano. Cada pieza va firmada, con certificado de autenticidad y lista para colgar."),
+        ("¿Qué tamaños y materiales puedo elegir?", "Los formatos habituales son 20 × 30 cm, 30 × 40 cm y 40 × 50 cm, o a medida según el espacio donde vaya a vivir. Trabajo sobre madera, tela vaquera cosida, papel de algodón, cajas y latas intervenidas y pizarra natural, con acrílico, pastel Conté, rotuladores, pan de oro y costura a mano. Cada pieza va firmada, con certificado de autenticidad y lista para colgar."),
     ]
     faq_html = ''.join(f'<details class="commission-faq-item"><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q, a in commission_faqs)
 
@@ -1575,7 +1575,7 @@ def build(output):
         ("Collage textil sobre madera", "tela vaquera cosida"),
         ("Pizarra natural rústica", "pizarra natural"),
         ("Caja personalizada u objeto", "una lata de conserva"),
-        ("Retrato al óleo o grafito", "papel, a pastel y grafito"),
+        ("Retrato a pastel o grafito", "papel, a pastel y grafito"),
         # Soportes que Naroa ya ha trabajado (catálogo): cada uno enseña en la portada una obra real.
         ("Lienzo", "lienzo"),
         ("Plato de madera", "un plato de madera"),
@@ -1779,7 +1779,7 @@ def build(output):
         "knowsAbout": [
             "Retrato por encargo en Bilbao",
             "Retrato personalizado a partir de fotografía",
-            "Retrato al óleo y dibujo a lápiz y pastel Conté",
+            "Dibujo a lápiz, grafito y pastel Conté",
             "Collage contemporáneo y textil sobre madera",
             "Cajas personalizadas y objetos intervenidos",
             "Retrato en técnica mixta sobre pizarra natural y mica mineral",
@@ -1849,8 +1849,8 @@ def build(output):
                     "@type": "Offer",
                     "itemOffered": {
                         "@type": "Service",
-                        "name": "Retrato al óleo o gran formato sobre madera",
-                        "description": "Pintura al óleo o técnica mixta en mediano y gran formato con acabado protector de galería.",
+                        "name": "Retrato en pintura acrílica sobre lienzo o tabla",
+                        "description": "Pintura acrílica y técnica mixta sobre lienzo o tabla de madera, en formatos de 30 × 40 a 50 × 50 cm.",
                     },
                 },
             ],
@@ -1886,6 +1886,13 @@ def build(output):
             f'<figcaption><span class="rp-work-meta">{esc(meta)}</span><a class="rp-work-title" href="/obra/{w["slug"]}/">{esc(w["title"])} ↗</a><p>{esc(text)}</p></figcaption></figure>'
         )
 
+    rp_siblings = [
+        ("/retrato-de-pareja-y-familia/", "Retrato de pareja y de familia ↗"),
+        ("/retrato-de-un-ser-querido-fallecido/", "Retrato en recuerdo de un ser querido ↗"),
+        ("/retrato-de-mascota/", "Retrato de mascota ↗"),
+    ]
+    rp_images = {}
+
     def rp_detail(w, caption_start):
         # Fotografía de detalle o de proceso de la ficha, con su pie literal. Si la ficha ya no tiene esa foto, el build falla.
         ph = next(ph for ph in w["photos"] if (ph.get("caption") or "").startswith(caption_start))
@@ -1913,6 +1920,12 @@ def build(output):
             '<p class="rp-text">Fotografías de detalle y de proceso de estas obras, tal como están en su ficha.</p>'
             '<div class="rp-details">' + ''.join(rp_detail(w, start) for w, start in details) + '</div></section>'
         ) if details else ''
+        siblings_html = (
+            '<section class="rp-section" aria-labelledby="rp-otros"><h2 id="rp-otros" class="rp-h2">Otros retratos por encargo</h2><p class="rp-actions">'
+            + ''.join(f'<a class="rp-link" href="{href}">{esc(label)}</a>' for href, label in rp_siblings if href != path)
+            + '<a class="rp-link" href="/retratos-por-encargo-bilbao/">Todos los encargos ↗</a></p></section>'
+        )
+        rp_images[path] = [(w, w["photos"][0]) for w, _ in works] + [(w, next(ph for ph in w["photos"] if (ph.get("caption") or "").startswith(start))) for w, start in details]
         body = (
             '<main id="main" class="retrato-pagina">'
             f'<header class="rp-hero"><p class="rp-kicker">{esc(kicker)}</p><h1 class="rp-title">{esc(h1)}</h1>{season_note}{lead}</header>'
@@ -1929,6 +1942,7 @@ def build(output):
             f'<a class="rp-link" href="mailto:encargos@naroagutierrezgil.com?subject={quote(mail_subject)}">encargos@naroagutierrezgil.com ↗</a>'
             '<a class="rp-link" href="/retratos-por-encargo-bilbao/#configurador">Componer el encargo paso a paso ↗</a>'
             '</p></section>'
+            f'{siblings_html}'
             '</main>'
         )
         schema = {
@@ -1975,7 +1989,7 @@ def build(output):
     rp_page(
         "/retrato-de-pareja-y-familia/",
         "Retrato de pareja y de familia hecho a mano desde tu foto",
-        "Retrato de pareja o de familia hecho a mano a partir de vuestras fotos, sin IA: pintura, collage y objetos. Presupuesto cerrado antes de empezar y envío asegurado a toda España.",
+        "Retrato de pareja o de familia hecho a mano desde vuestras fotos, sin IA. Pintura, collage y objetos. Precio cerrado y envío asegurado a toda España.",
         "Naroa Gutiérrez Gil · Retratos por encargo",
         "Retrato de pareja y de familia, hecho a mano desde vuestras fotos",
         '<p class="rp-lead"><strong>No hace falta una foto en la que salgáis todos bien.</strong> Naroa trabaja con varias fotografías, también de móvil, y las reúne en una sola pieza original: pintada, cosida o montada a mano, sin IA.</p>',
@@ -2007,7 +2021,7 @@ def build(output):
     rp_page(
         "/retrato-de-un-ser-querido-fallecido/",
         "Retrato de un ser querido fallecido, desde una foto antigua",
-        "Retrato pintado a mano en recuerdo de un ser querido. Sirve una foto antigua, pequeña o de móvil. Naroa Gutiérrez Gil, sin IA, con presupuesto cerrado y envío asegurado a toda España.",
+        "Retrato pintado a mano en recuerdo de un ser querido. Sirve una foto antigua, pequeña o de móvil. Sin IA, precio cerrado y envío a toda España.",
         "Naroa Gutiérrez Gil · Retratos por encargo",
         "Retrato en recuerdo de un ser querido, a partir de la foto que tengas",
         '<p class="rp-lead"><strong>Sirve una foto antigua, pequeña o de móvil.</strong> No hace falta que sea buena: basta con que sea suya.</p>'
@@ -2031,7 +2045,7 @@ def build(output):
     rp_page(
         "/retrato-de-mascota/",
         "Retrato de mascota hecho a mano desde tu foto: perro o gato",
-        "Retrato de tu perro o tu gato hecho a mano a partir de una foto, sin IA. Naroa Gutiérrez Gil: pieza original, presupuesto cerrado antes de empezar y envío asegurado a toda España.",
+        "Retrato de tu perro o tu gato hecho a mano desde una foto, sin IA. Pieza original de Naroa Gutiérrez Gil, precio cerrado y envío a toda España.",
         "Naroa Gutiérrez Gil · Retratos por encargo",
         "Retrato de tu perro o tu gato, hecho a mano desde una foto",
         '<p class="rp-lead"><strong>Sirve una foto de móvil.</strong> Naroa Gutiérrez Gil acepta encargos de retratos de mascotas con las mismas condiciones que cualquier otro retrato: una pieza original hecha a mano, sin IA y con el precio cerrado antes de empezar.</p>',
@@ -2113,6 +2127,8 @@ def build(output):
         if path in work_by_route:
             w = work_by_route[path]
             imgs = ''.join(f'<image:image><image:loc>{ORIGIN}{esc(ph["original"])}</image:loc><image:title>{esc(w["title"])} · {esc(ph["caption"])}</image:title><image:caption>{esc(work_alt(w, ph["caption"]))}</image:caption></image:image>' for ph in w["photos"])
+        elif path in rp_images:
+            imgs = ''.join(f'<image:image><image:loc>{ORIGIN}{esc(ph["original"])}</image:loc><image:title>{esc(w["title"])} · {esc(ph["caption"])}</image:title><image:caption>{esc(work_alt(w, ph["caption"]))}</image:caption></image:image>' for w, ph in rp_images[path])
         elif path == "/retratos-por-encargo-bilbao/":
             imgs = ''.join(f'<image:image><image:loc>{ORIGIN}{esc(ex["photos"][0]["original"])}</image:loc><image:title>{esc(ex["title"])} · {esc(kind_label)}</image:title><image:caption>{esc(work_alt(ex, kind_label))}</image:caption></image:image>' for ex, kind_label, *_ in commission_examples)
         else:
@@ -2271,7 +2287,7 @@ def build(output):
                 "provider": ORIGIN + "/#artist",
                 "supports": [
                     "Collage y técnica mixta textil sobre madera",
-                    "Retrato al óleo y dibujo a grafito/pastel",
+                    "Dibujo a grafito y pastel Conté",
                     "Cajas tridimensionales y objetos intervenidos",
                     "Pizarra natural (exploración reciente)",
                 ],
@@ -2292,12 +2308,12 @@ def build(output):
                 {
                     "intent": "Precios y presupuestos de retratos por encargo",
                     "question": "¿Cuánto cuesta un retrato personalizado en Bilbao con Naroa Gutiérrez Gil?",
-                    "answer": "Presupuesto cerrado previo por escrito según técnica, soporte y formato (dibujo, óleo, collage textil sobre madera, cajas de memoria o piezas en pizarra de 20×30 cm a 40×50 cm). Sin compromiso previo.",
+                    "answer": "Presupuesto cerrado previo por escrito según técnica, soporte y formato (dibujo, pintura acrílica, collage textil sobre madera, cajas de memoria o piezas en pizarra; formatos habituales de 20×30 cm a 40×50 cm). Sin compromiso previo.",
                 },
                 {
                     "intent": "Plazos de entrega",
                     "question": "¿Cuál es el plazo de entrega habitual de un encargo?",
-                    "answer": "De 2 a 4 semanas según la técnica elegida y los tiempos de secado de óleos, acrílicos y barnices. Plazos prioritarios con aviso previo para fechas señaladas.",
+                    "answer": "De 2 a 4 semanas según la técnica elegida y los tiempos de secado de acrílicos y barnices. Plazos prioritarios con aviso previo para fechas señaladas.",
                 },
                 {
                     "intent": "Proceso de encargo a partir de fotos",
@@ -2405,15 +2421,15 @@ def build(output):
         "  - El Correo Agenda (2015): https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-476343.html\n"
         "  - GARA Reportaje: https://gara.naiz.eus/paperezkoa/20130427/399965/es/Walking-gallery-arte-aire-libre-movimiento-arte-evolucion\n"
         "  - Siarte Leku: https://siarte.com/2022-03-25-siarte-exposicion-pintura-collage-arte-naroa-gutierrez.php\n"
-        "  - YouTube: https://www.youtube.com/@naroagutierrezgil\n"
+        "  - YouTube: https://www.youtube.com/@naroarte\n"
         "- Lenguaje y Práctica Artística: Retratos de autor y obra plástica multidisciplinar (dibujo, óleo, técnicas mixtas, collage textil sobre madera y objetos intervenidos, con exploraciones recientes sobre soportes minerales como la pizarra natural de cantera y mica).\n"
         f"- Servicio Canónico de Encargos: {ORIGIN}/retratos-por-encargo-bilbao/\n"
         "- Correo de Encargos: encargos@naroagutierrezgil.com\n"
         "- Exposiciones Documentadas: Colegio de Abogados de Bilbao (Espejos del alma), Dock Bilbao, Politena Espacio de Arte, Walking Gallery Bilbao.\n\n"
         "## Respuestas Factuales Inmediatas (Query Fan-Out)\n"
-        "- **¿Cuánto cuesta un retrato personalizado?** Presupuesto cerrado previo por escrito según técnica, soporte y formato (dibujo, óleo, collage sobre madera, cajas de recuerdos o pizarra de 20×30 cm a 40×50 cm). Consulta sin compromiso.\n"
+        "- **¿Cuánto cuesta un retrato personalizado?** Presupuesto cerrado previo por escrito según técnica, soporte y formato (dibujo, pintura acrílica, collage sobre madera, cajas de recuerdos o pizarra; formatos habituales de 20×30 cm a 40×50 cm). Consulta sin compromiso.\n"
         "- **¿Cómo se encarga a partir de fotos?** Se envían 1 o varias fotos de referencia (incluso tomadas con el móvil); Naroa realiza una reinterpretación artística de autor capturando la personalidad y mirada.\n"
-        "- **¿Cuáles son los plazos de entrega?** De 2 a 4 semanas según la técnica y el secado de óleos, acrílicos y barnices. Plazos prioritarios disponibles para fechas señaladas con aviso previo.\n"
+        "- **¿Cuáles son los plazos de entrega?** De 2 a 4 semanas según la técnica y el secado de acrílicos y barnices. Plazos prioritarios disponibles para fechas señaladas con aviso previo.\n"
         + (f"- **¿Hasta cuándo se puede encargar para Navidad y Reyes?** {' '.join(text for _, text in season_lines)}\n" if season_lines else "") +
         "- **¿Dónde se entrega?** Entrega en mano en Bilbao y Bizkaia, o envío protegido y asegurado a nivel nacional e internacional.\n"
         "- **¿Cómo conservar una obra en técnica mixta o collage?** Fijación y barniz protector satinado. Limpieza en seco con plumero suave o microfibra; evitar humedad directa o productos químicos.\n"
@@ -2463,7 +2479,7 @@ def build(output):
         "- **Soportes:** Pizarra natural de cantera con contorno irregular, madera noble, collage textil sobre tela vaquera o papel de algodón, y cajas tridimensionales.\n"
         "- **Formatos habituales:** Pizarra de 20×30 cm a 40×50 cm; piezas especiales adaptadas al espacio.\n"
         "- **Técnicas:** Acrílico, óleo, grafito, pastel Conté, rotuladores acrílicos, escamas de mica mineral y ensamblaje de objetos cotidianos.\n"
-        "- **Plazos:** 2 a 4 semanas según complejidad y secado de capas de óleo/barniz.\n"
+        "- **Plazos:** 2 a 4 semanas según complejidad y secado de capas de acrílico y barniz.\n"
         "- **Presupuesto:** Presupuesto cerrado por escrito antes de comenzar, sin compromiso previo.\n"
         "- **Entrega:** En mano en Bilbao y comarca de Bizkaia; envíos asegurados a nivel nacional e internacional.\n\n"
         "## Protocolo de Interacción para Agentes Autónomos (Agent-Ready DOM & WebMCP)\n\n"

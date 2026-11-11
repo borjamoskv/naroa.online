@@ -5737,7 +5737,7 @@
     const GAZE_MIRRORS = {
       mirada: ['amy-rocks', 'Pizarra natural rústica', 'La mirada'],
       materia: ['marilyn-rocks', 'Pizarra natural rústica', 'La materia'],
-      espejo: ['rara-avis', 'Retrato al óleo o grafito', 'La propia mirada'],
+      espejo: ['rara-avis', 'Retrato a pastel o grafito', 'La propia mirada'],
       compartir: ['amor-en-conserva', 'Caja personalizada u objeto', 'Compartir']
     };
     // La lectura repite el rótulo del capítulo tal como lo lleva la página, en su idioma.
@@ -6548,7 +6548,7 @@
         swatchSrc: '/images/catalogo/commission-amor-red-rose.webp',
         swatchAlt: 'Rosa carmesí sobre pizarra con mica mineral'
       },
-      'Retrato al óleo o grafito': {
+      'Retrato a pastel o grafito': {
         slug: 'rara-avis',
         title: 'Rara Avis · Pastel, grafito y lápiz',
         tag: 'Pastel Conté y collage sobre papel',
