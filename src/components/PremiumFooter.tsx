@@ -3,8 +3,8 @@ export function PremiumFooter() {
     <footer className="premium-footer">
       <div className="premium-footer-left">
         <span>© 2026 NAROA GUTIÉRREZ GIL · BILBAO</span>
-        <a href="mailto:naroa@naroa.eu" className="premium-footer-link">
-          naroa@naroa.eu
+        <a href="mailto:naroa@naroagutierrezgil.com" className="premium-footer-link">
+          naroa@naroagutierrezgil.com
         </a>
         <span style={{ color: 'rgba(255,255,255,0.2)' }}>·</span>
         <a

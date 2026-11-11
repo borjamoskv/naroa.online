@@ -2716,7 +2716,7 @@
         const row = document.createElement('div'), dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = label; dd.textContent = value; row.append(dt, dd); facts.append(row);
       });
       const credit = $('[data-credit]'); credit.textContent = p.credit || ''; credit.hidden = !p.credit;
-      $('[data-art-email]').href = 'mailto:naroa@naroa.eu?subject=' + encodeURIComponent('Consulta sobre ' + p.title);
+      $('[data-art-email]').href = 'mailto:naroa@naroagutierrezgil.com?subject=' + encodeURIComponent('Consulta sobre ' + p.title);
       const waLink = $('[data-art-whatsapp]');
       if (waLink) waLink.href = 'https://wa.me/34636060609?text=' + encodeURIComponent('Hola Naroa, me gustaría consultar sobre la obra ' + p.title);
       const source = $('[data-art-source]'); source.hidden = !p.source;
@@ -6136,7 +6136,7 @@
       const waHref = `https://wa.me/34636060609?text=${encodeURIComponent(msg)}`;
       btn.href = waHref;
       if (emailBtn) {
-        emailBtn.href = `mailto:naroa@naroa.eu?subject=${encodeURIComponent('Consulta encargo: ' + s)}&body=${encodeURIComponent(msg)}`;
+        emailBtn.href = `mailto:naroa@naroagutierrezgil.com?subject=${encodeURIComponent('Consulta encargo: ' + s)}&body=${encodeURIComponent(msg)}`;
       }
       if (mobileCtaWa) mobileCtaWa.href = waHref;
       if (mobileCtaSummary) {
@@ -6353,7 +6353,7 @@
             message: msg,
             attribution: window.NAROA_ATTRIBUTION,
             whatsapp_url: `https://wa.me/34636060609?text=${encodeURIComponent(msg)}`,
-            email_url: `mailto:naroa@naroa.eu?subject=${encodeURIComponent('Consulta encargo: ' + s)}&body=${encodeURIComponent(msg)}`
+            email_url: `mailto:naroa@naroagutierrezgil.com?subject=${encodeURIComponent('Consulta encargo: ' + s)}&body=${encodeURIComponent(msg)}`
           };
         }
         case 'answer_commission_faq': {
@@ -6373,7 +6373,7 @@
             location: 'Bilbao, Bizkaia, España',
             coordinates: { latitude: 43.2630, longitude: -2.9350 },
             contact: {
-              email: 'naroa@naroa.eu',
+              email: 'naroa@naroagutierrezgil.com',
               whatsapp: '+34636060609',
               inquiry_form: 'https://naroagutierrezgil.com/contacto/'
             },

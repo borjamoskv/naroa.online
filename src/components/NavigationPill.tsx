@@ -715,7 +715,7 @@ export function NavigationPill({
                 WHATSAPP ↗
               </a>
               <a
-                href="mailto:naroa@naroa.eu"
+                href="mailto:naroa@naroagutierrezgil.com"
                 onClick={() => sound.playTick()}
                 style={{
                   flex: 1,

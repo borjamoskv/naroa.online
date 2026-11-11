@@ -53,7 +53,7 @@ export function CommissionCalculator({ isOpen, onClose, initialPieceTitle }: Com
 ¿Podemos coordinar la fotografía de referencia y detalles del encargo?`
 
   const whatsappUrl = `https://wa.me/34636060609?text=${encodeURIComponent(summaryText)}`
-  const mailtoUrl = `mailto:naroa@naroa.eu?subject=${encodeURIComponent(
+  const mailtoUrl = `mailto:naroa@naroagutierrezgil.com?subject=${encodeURIComponent(
     `Encargo Bespoke - ${selectedSubject.label}${initialPieceTitle ? ` [Ref: ${initialPieceTitle}]` : ''}`
   )}&body=${encodeURIComponent(summaryText)}`
 
@@ -450,7 +450,7 @@ export function CommissionCalculator({ isOpen, onClose, initialPieceTitle }: Com
                   e.currentTarget.style.color = '#FFFFFF'
                 }}
               >
-                ✉ naroa@naroa.eu ↗
+                ✉ naroa@naroagutierrezgil.com ↗
               </a>
             </div>
           </div>

@@ -181,7 +181,7 @@ def check(output):
     assert (output / "feed.xml").is_file(), "missing feed.xml"
     feed_xml_content = (output / "feed.xml").read_text()
     assert "<dc:creator>Naroa Gutiérrez Gil</dc:creator>" in feed_xml_content, "feed.xml missing dc:creator"
-    assert "naroa@naroa.eu (Naroa Gutiérrez Gil)" in feed_xml_content, "feed.xml missing canonical author"
+    assert "naroa@naroagutierrezgil.com (Naroa Gutiérrez Gil)" in feed_xml_content, "feed.xml missing canonical author"
     assert (output / "manifest.webmanifest").is_file(), "missing manifest.webmanifest"
     webmcp_path = output / ".well-known" / "mcp.json"
     assert webmcp_path.is_file(), "missing .well-known/mcp.json"

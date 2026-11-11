@@ -210,11 +210,11 @@
     var INTENTS = [
       {
         keys: ['precio', 'cuesta', 'coste', 'cuanto', 'tarifa', 'presupuesto', 'valen'],
-        answer: 'Depende del tamaño, la técnica y la complejidad del retrato — cada pieza es única, como la persona retratada. Lo mejor: escríbele a **naroa@naroa.eu** contándole tu idea y te prepara presupuesto sin compromiso. 💛'
+        answer: 'Depende del tamaño, la técnica y la complejidad del retrato — cada pieza es única, como la persona retratada. Lo mejor: escríbele a **naroa@naroagutierrezgil.com** contándole tu idea y te prepara presupuesto sin compromiso. 💛'
       },
       {
         keys: ['encarg', 'retrato', 'quiero', 'pedido', 'comision', 'regalo', 'pintame', 'pintar a'],
-        answer: '¡Qué ilusión! Así funciona:\n1. Escríbele a **naroa@naroa.eu** o DM en Instagram y cuéntale a quién quieres retratar.\n2. Te envía boceto y propuesta (técnica, formato).\n3. Pinta durante semanas y te manda fotos del proceso.\n4. Retrato terminado, con certificado de autenticidad y envío seguro.'
+        answer: '¡Qué ilusión! Así funciona:\n1. Escríbele a **naroa@naroagutierrezgil.com** o DM en Instagram y cuéntale a quién quieres retratar.\n2. Te envía boceto y propuesta (técnica, formato).\n3. Pinta durante semanas y te manda fotos del proceso.\n4. Retrato terminado, con certificado de autenticidad y envío seguro.'
       },
       {
         keys: ['tecnica', 'material', 'pizarra', 'mica', 'acrilico', 'posca', 'oleo', 'como pinta', 'hiperreal'],
@@ -244,11 +244,11 @@
       },
       {
         keys: ['envio', 'enviar', 'envia', 'correo', 'shipping', 'fuera de bilbao', 'espana'],
-        answer: 'Sí, envía a **toda España** con embalaje seguro y certificado de autenticidad. Para encargos fuera, escríbele a **naroa@naroa.eu** y lo habláis. 📦'
+        answer: 'Sí, envía a **toda España** con embalaje seguro y certificado de autenticidad. Para encargos fuera, escríbele a **naroa@naroagutierrezgil.com** y lo habláis. 📦'
       },
       {
         keys: ['contacto', 'email', 'correo', 'instagram', 'hablar', 'llamar', 'telefono'],
-        answer: 'Puedes escribirle a **naroa@naroa.eu** o por Instagram a **@naroa_art**. Su estudio está en Bilbao — y los mejores encargos empiezan con un «oye, tengo una idea». 💌'
+        answer: 'Puedes escribirle a **naroa@naroagutierrezgil.com** o por Instagram a **@naroa_art**. Su estudio está en Bilbao — y los mejores encargos empiezan con un «oye, tengo una idea». 💌'
       },
       {
         keys: ['quien es', 'naroa', 'artista', 'sobre ella', 'sobre ti', 'bilbao'],
@@ -260,7 +260,7 @@
       },
       {
         keys: ['gracias', 'eskerrik', 'agur', 'adios', 'genial'],
-        answer: '¡Eskerrik asko! Si al final te animas con un retrato, ya sabes: **naroa@naroa.eu**. Agur. 🌟'
+        answer: '¡Eskerrik asko! Si al final te animas con un retrato, ya sabes: **naroa@naroagutierrezgil.com**. Agur. 🌟'
       }
     ];
 

@@ -561,7 +561,7 @@ prensa_content = """    <section class="section-header">
       <p class="section-kicker">MATERIAL PARA COMISARIOS & MEDIOS</p>
       <h3 class="lab-callout-title">DESCARGAR DOSSIER CURATORIAL (PDF)</h3>
       <p class="lab-callout-text">Contiene biografía extendida, statement, ficha técnica de obras seleccionadas y fotografías en alta resolución para catálogos y notas de prensa.</p>
-      <a href="mailto:naroa@naroa.eu?subject=Solicitud%20Dossier%20Prensa%20Naroa%20Gutierrez%20Gil" class="btn-primary">
+      <a href="mailto:naroa@naroagutierrezgil.com?subject=Solicitud%20Dossier%20Prensa%20Naroa%20Gutierrez%20Gil" class="btn-primary">
         <span>📥</span>
         <span>SOLICITAR DOSSIER INSTITUCIONAL EN PDF ➔</span>
       </a>
@@ -982,7 +982,7 @@ encargos_content = """    <section class="section-header">
 
           const subject = encodeURIComponent("Encargo de retrato — " + state.soporte);
           const body = encodeURIComponent(text);
-          if (mailBtn) mailBtn.href = "mailto:naroa@naroa.eu?subject=" + subject + "&body=" + body;
+          if (mailBtn) mailBtn.href = "mailto:naroa@naroagutierrezgil.com?subject=" + subject + "&body=" + body;
           if (waBtn) waBtn.href = "https://wa.me/34636060609?text=" + encodeURIComponent(text);
         }
 
@@ -1045,9 +1045,9 @@ contacto_content = """    <section class="section-header">
         <div>
           <span style="font-size: 2rem;">✉</span>
           <h3 style="font-family: var(--font-serif); font-size: 1.25rem; margin: 12px 0 6px;">CORREO ELECTRÓNICO</h3>
-          <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5;">Atención institucional y pedidos:<br><a href="mailto:naroa@naroa.eu" style="color: var(--gold); font-weight: 700;">naroa@naroa.eu</a></p>
+          <p style="color: var(--text-muted); font-size: 0.88rem; line-height: 1.5;">Atención institucional y pedidos:<br><a href="mailto:naroa@naroagutierrezgil.com" style="color: var(--gold); font-weight: 700;">naroa@naroagutierrezgil.com</a></p>
         </div>
-        <button type="button" class="btn-copy" onclick="copyContactText(this, 'naroa@naroa.eu')">📋 COPIAR EMAIL</button>
+        <button type="button" class="btn-copy" onclick="copyContactText(this, 'naroa@naroagutierrezgil.com')">📋 COPIAR EMAIL</button>
       </div>
 
       <div style="background: var(--bg-card); border: 1px solid var(--gold-border); border-radius: 16px; padding: 32px; display: flex; flex-direction: column; justify-content: space-between;">
@@ -1080,7 +1080,7 @@ contacto_content = """    <section class="section-header">
           <span>💬</span>
           <span>ABRIR WHATSAPP OFICIAL ➔</span>
         </a>
-        <a id="btn-contact-mail" href="mailto:naroa@naroa.eu" class="btn-secondary" style="padding: 14px 28px;">
+        <a id="btn-contact-mail" href="mailto:naroa@naroagutierrezgil.com" class="btn-secondary" style="padding: 14px 28px;">
           <span>✉</span>
           <span>ENVIAR CORREO ELECTRÓNICO</span>
         </a>
@@ -1108,7 +1108,7 @@ contacto_content = """    <section class="section-header">
           btn.classList.add('active');
           const msg = btn.getAttribute('data-msg');
           document.getElementById('btn-contact-wa').href = 'https://wa.me/34636060609?text=' + encodeURIComponent(msg);
-          document.getElementById('btn-contact-mail').href = 'mailto:naroa@naroa.eu?subject=' + encodeURIComponent('Consulta desde naroagutierrezgil.com') + '&body=' + encodeURIComponent(msg);
+          document.getElementById('btn-contact-mail').href = 'mailto:naroa@naroagutierrezgil.com?subject=' + encodeURIComponent('Consulta desde naroagutierrezgil.com') + '&body=' + encodeURIComponent(msg);
         });
       });
     </script>"""
