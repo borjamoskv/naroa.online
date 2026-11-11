@@ -4671,6 +4671,9 @@
       scheduleScroll();
     });
     $('[data-open-story]', stage).addEventListener('click', () => openDialog('#story-dialog'));
+    // El fundido del pie de obra sobre el umbral depende de si el foco visible está dentro (render):
+    // en reposo nadie repinta, así que se repinta al entrar o salir el foco.
+    ['focusin', 'focusout'].forEach(type => $('.art-bottom', stage)?.addEventListener(type, () => requestAnimationFrame(render)));
     // Un solo «+» junto al título: la ficha y las acciones de vista esperan plegadas para que
     // sobre la obra solo queden título, contador y flechas. Se pliega solo en cuanto la cámara se mueve.
     const moreMenu = $('.art-view-actions', stage), moreStory = $('[data-open-story]', stage), moreAnchor = $('[data-art-copy]', stage);
