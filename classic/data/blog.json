@@ -1,7 +1,8 @@
 {
   "source": "https://naroagutierrez.wordpress.com/",
   "api": "https://public-api.wordpress.com/rest/v1.1/sites/naroagutierrez.wordpress.com/posts/?number=6&fields=ID,date,modified,title,URL,excerpt,featured_image",
-  "synced": "2026-10-21T14:44:27.534959+00:00",
+  "synced": "2026-11-11T01:02:21.360178+00:00",
+  "total": 68,
   "posts": [
     {
       "id": 3055,
@@ -104,6 +105,380 @@
         "alt": "El ReCreo, Espacio de Creación para recreArte",
         "local": "/images/cuaderno/post-2619.jpg"
       }
+    }
+  ],
+  "archive": [
+    {
+      "id": 2569,
+      "title": "Muestra Colectiva “Emakumeen arteaN”",
+      "url": "https://naroagutierrez.wordpress.com/2022/12/16/muestra-colectiva-emakumeen-artean/",
+      "date": "2022-12-16"
+    },
+    {
+      "id": 2458,
+      "title": "Expo Bwall Collective “GIRLS” en el Dock",
+      "url": "https://naroagutierrez.wordpress.com/2022/11/06/expo-bwall-collective-girls-en-el-dock/",
+      "date": "2022-11-06"
+    },
+    {
+      "id": 2423,
+      "title": "Walking Gallery Bilbao Octubre 2022: por Amor al Arte",
+      "url": "https://naroagutierrez.wordpress.com/2022/10/04/walking-gallery-bilbao-octubre-2022-por-amor-al-arte/",
+      "date": "2022-10-04"
+    },
+    {
+      "id": 2359,
+      "title": "Repóker de Reinas (VAIVENES en Siarte)",
+      "url": "https://naroagutierrez.wordpress.com/2022/03/22/repoker-de-reinas-vaivenes-en-siarte/",
+      "date": "2022-03-22"
+    },
+    {
+      "id": 2331,
+      "title": "Walking Gallery Bilbao Fair Saturday 2021",
+      "url": "https://naroagutierrez.wordpress.com/2021/11/18/walking-gallery-bilbao-fair-saturday-2021/",
+      "date": "2021-11-18"
+    },
+    {
+      "id": 2254,
+      "title": "ICONOS POP, Muestra Colectiva de Retratos",
+      "url": "https://naroagutierrez.wordpress.com/2020/09/27/iconos-pop-muestra-colectiva-de-retratos/",
+      "date": "2020-09-27"
+    },
+    {
+      "id": 2204,
+      "title": "VAIVENES, en el Haika de Sodupe",
+      "url": "https://naroagutierrez.wordpress.com/2020/09/20/vaivenes-en-el-haika-de-sodupe/",
+      "date": "2020-09-20"
+    },
+    {
+      "id": 2146,
+      "title": "Expo “Bwall Collective Akelarre”, el abrazo femenino",
+      "url": "https://naroagutierrez.wordpress.com/2020/03/05/expo-bwall-collective-akelarre-el-abrazo-femenino/",
+      "date": "2020-03-05"
+    },
+    {
+      "id": 2127,
+      "title": "VAIVENES, en el Copper Deli Museo",
+      "url": "https://naroagutierrez.wordpress.com/2019/11/25/vaivenes-en-el-copper-deli-museo/",
+      "date": "2019-11-25"
+    },
+    {
+      "id": 2092,
+      "title": "Akelarre 2019: Arte Efímero Colectivo",
+      "url": "https://naroagutierrez.wordpress.com/2019/07/09/akelarre-2019-arte-efimero-colectivo/",
+      "date": "2019-07-09"
+    },
+    {
+      "id": 2079,
+      "title": "VIII Aniversario Walking Gallery Bilbao",
+      "url": "https://naroagutierrez.wordpress.com/2019/06/15/viii-aniversario-walking-gallery-bilbao/",
+      "date": "2019-06-15"
+    },
+    {
+      "id": 2071,
+      "title": "A las Faldas de Artxanda",
+      "url": "https://naroagutierrez.wordpress.com/2019/03/12/a-las-faldas-de-artxanda/",
+      "date": "2019-03-12"
+    },
+    {
+      "id": 2056,
+      "title": "Exposición Colectiva Multidisciplinar 360°",
+      "url": "https://naroagutierrez.wordpress.com/2018/06/27/exposicion-colectiva-multidisciplinar-360/",
+      "date": "2018-06-27"
+    },
+    {
+      "id": 2046,
+      "title": "Walking Gallery Bilbao Art District 2018",
+      "url": "https://naroagutierrez.wordpress.com/2018/05/23/walking-gallery-bilbao-art-district-2018/",
+      "date": "2018-05-23"
+    },
+    {
+      "id": 2034,
+      "title": "El Gustu es Mío",
+      "url": "https://naroagutierrez.wordpress.com/2018/03/20/el-gustu-es-mio/",
+      "date": "2018-03-20"
+    },
+    {
+      "id": 2025,
+      "title": "Bilboko Walking Gallery Grito de Mujer 2018",
+      "url": "https://naroagutierrez.wordpress.com/2018/03/13/bilboko-walking-gallery-grito-de-mujer-2018/",
+      "date": "2018-03-13"
+    },
+    {
+      "id": 2009,
+      "title": "VI edizioa Gau Irekia – La Noche Abierta VI edición",
+      "url": "https://naroagutierrez.wordpress.com/2017/12/13/vi-edizioa-gau-irekia-la-noche-abierta-vi-edicion/",
+      "date": "2017-12-13"
+    },
+    {
+      "id": 1961,
+      "title": "Muestra Plástica “Los Guardianes del Enigma” en Igarkizun",
+      "url": "https://naroagutierrez.wordpress.com/2017/10/27/muestra-plastica-los-guardianes-del-enigma-en-igarkizun/",
+      "date": "2017-10-27"
+    },
+    {
+      "id": 1895,
+      "title": "Exposición Colectiva “Personas” en Sarean",
+      "url": "https://naroagutierrez.wordpress.com/2017/09/05/exposicion-colectiva-personas-en-sarean/",
+      "date": "2017-09-05"
+    },
+    {
+      "id": 1832,
+      "title": "Exposición Colectiva “Comer con los Ojos”",
+      "url": "https://naroagutierrez.wordpress.com/2017/07/05/exposicion-colectiva-multidisciplinar-comer-con-los-ojos/",
+      "date": "2017-07-05"
+    },
+    {
+      "id": 1741,
+      "title": "VI Aniversario Walking Gallery Bilbao + AfterWalking Show",
+      "url": "https://naroagutierrez.wordpress.com/2017/06/22/vi-aniversario-walking-gallery-bilbao-afterwalking-show/",
+      "date": "2017-06-22"
+    },
+    {
+      "id": 1692,
+      "title": "TxalapArtivismos del Alma",
+      "url": "https://naroagutierrez.wordpress.com/2017/06/12/txalapartivismos-del-alma/",
+      "date": "2017-06-12"
+    },
+    {
+      "id": 1601,
+      "title": "Walking Gallery Bilbao Art District 2017",
+      "url": "https://naroagutierrez.wordpress.com/2017/05/16/walking-gallery-bilbao-art-district-2017/",
+      "date": "2017-05-16"
+    },
+    {
+      "id": 1521,
+      "title": "Exposición Colectiva XVII Aniversario Luz Gas",
+      "url": "https://naroagutierrez.wordpress.com/2017/05/12/exposicion-colectiva-xvii-aniversario-luz-gas/",
+      "date": "2017-05-12"
+    },
+    {
+      "id": 1457,
+      "title": "“Madera, Papel y Tijera” en Ambigú",
+      "url": "https://naroagutierrez.wordpress.com/2017/04/02/madera-papel-y-tijera-en-ambigu/",
+      "date": "2017-04-02"
+    },
+    {
+      "id": 1356,
+      "title": "“Sácame los Colores” en Tegobi",
+      "url": "https://naroagutierrez.wordpress.com/2016/11/30/sacame-los-colores-en-tegobi/",
+      "date": "2016-11-30"
+    },
+    {
+      "id": 1279,
+      "title": "Evento solidario “Hogar = Refugio”",
+      "url": "https://naroagutierrez.wordpress.com/2016/11/06/evento-solidario-hogar-refugio/",
+      "date": "2016-11-06"
+    },
+    {
+      "id": 1255,
+      "title": "Okapi de Kolores",
+      "url": "https://naroagutierrez.wordpress.com/2016/10/13/okapi-de-kolores/",
+      "date": "2016-10-13"
+    },
+    {
+      "id": 1134,
+      "title": "Walking Gallery Bilbao “Puerto en Movimiento”",
+      "url": "https://naroagutierrez.wordpress.com/2016/09/13/walking-gallery-bilbao-puerto-en-movimiento/",
+      "date": "2016-09-13"
+    },
+    {
+      "id": 991,
+      "title": "3 Julio 2016: V Aniversario Walking Gallery Bilbao",
+      "url": "https://naroagutierrez.wordpress.com/2016/06/28/3-julio-2016-v-aniversario-walking-gallery-bilbao/",
+      "date": "2016-06-28"
+    },
+    {
+      "id": 854,
+      "title": "La muestra “I See Your True Colors” florece en Vía de Fuga Café",
+      "url": "https://naroagutierrez.wordpress.com/2016/04/30/la-muestra-i-see-your-true-colors-florece-en-via-de-fuga-cafe/",
+      "date": "2016-04-30"
+    },
+    {
+      "id": 814,
+      "title": "Exposición Colectiva de Mujeres Artistas “WO! WO! WO!”",
+      "url": "https://naroagutierrez.wordpress.com/2016/03/16/exposicion-colectiva-de-mujeres-artistas-wo-wo-wo/",
+      "date": "2016-03-16"
+    },
+    {
+      "id": 741,
+      "title": "Walking Gallery Bilbao CreActiva 2016, hasta “Libu” con amor",
+      "url": "https://naroagutierrez.wordpress.com/2016/02/21/walking-gallery-bilbao-creactiva-2016-hasta-libu-con-amor/",
+      "date": "2016-02-21"
+    },
+    {
+      "id": 642,
+      "title": "Walking Gallery Bilbao “Fair Saturday 2015”",
+      "url": "https://naroagutierrez.wordpress.com/2015/11/25/walking-gallery-bilbao-fair-saturday-2015/",
+      "date": "2015-11-25"
+    },
+    {
+      "id": 558,
+      "title": "“Si fueses pájaro lo entenderías” y yo",
+      "url": "https://naroagutierrez.wordpress.com/2015/11/18/si-fueses-pajaro-lo-entenderias-y-yo/",
+      "date": "2015-11-18"
+    },
+    {
+      "id": 538,
+      "title": "Exposición colectiva y abierta “Gu Gara Garrobi”",
+      "url": "https://naroagutierrez.wordpress.com/2015/10/13/exposicion-colectiva-y-abierta-gu-gara-garrobi/",
+      "date": "2015-10-13"
+    },
+    {
+      "id": 527,
+      "title": "Walking Gallery Bilbao “Iturfest + Nepal”",
+      "url": "https://naroagutierrez.wordpress.com/2015/10/01/walking-gallery-bilbao-iturfest-nepal/",
+      "date": "2015-10-01"
+    },
+    {
+      "id": 513,
+      "title": "Mis pinceladas en el mítico Lamiak, Octubre 2015",
+      "url": "https://naroagutierrez.wordpress.com/2015/09/27/mis-pinceladas-en-el-mitico-lamiak/",
+      "date": "2015-09-27"
+    },
+    {
+      "id": 498,
+      "title": "The Sunday Market especial Decoración II",
+      "url": "https://naroagutierrez.wordpress.com/2015/09/22/the-sunday-market-especial-decoracion-ii/",
+      "date": "2015-09-22"
+    },
+    {
+      "id": 462,
+      "title": "4º Aniversario Walking Gallery Bilbao: summertime!",
+      "url": "https://naroagutierrez.wordpress.com/2015/06/13/4o-aniversario-walking-gallery-bilbao-summertime/",
+      "date": "2015-06-13"
+    },
+    {
+      "id": 414,
+      "title": "“Espejos del Alma” en el Colegio de Abogados de Bilbao",
+      "url": "https://naroagutierrez.wordpress.com/2015/05/24/espejos-del-alma-en-el-colegio-de-abogados-de-bilbao/",
+      "date": "2015-05-24"
+    },
+    {
+      "id": 395,
+      "title": "Walking Gallery Bilbao Art District 2015",
+      "url": "https://naroagutierrez.wordpress.com/2015/05/10/walking-gallery-bilbao-art-district-2015/",
+      "date": "2015-05-10"
+    },
+    {
+      "id": 362,
+      "title": "Bilbao abraza al “V Festival Internacional Grito de Mujer”",
+      "url": "https://naroagutierrez.wordpress.com/2015/02/28/bilbao-abraza-al-v-festival-internacional-grito-de-mujer/",
+      "date": "2015-02-28"
+    },
+    {
+      "id": 338,
+      "title": "“The Art Of Living”, Sábado 10 de Enero de 2015",
+      "url": "https://naroagutierrez.wordpress.com/2015/01/02/the-art-of-living-sabado-10-de-enero-de-2014/",
+      "date": "2015-01-02"
+    },
+    {
+      "id": 304,
+      "title": "23 de Noviembre: Walking Gallery Bilbao, “the pARTy”",
+      "url": "https://naroagutierrez.wordpress.com/2014/11/18/23-de-noviembre-walking-gallery-bilbao-the-party/",
+      "date": "2014-11-18"
+    },
+    {
+      "id": 285,
+      "title": "Domingo 9 de Noviembre: Urban Market Berastegi",
+      "url": "https://naroagutierrez.wordpress.com/2014/11/07/domingo-9-de-noviembre-urban-market-berastegi/",
+      "date": "2014-11-07"
+    },
+    {
+      "id": 253,
+      "title": "III Certamen de Pintura al aire libre “Ismael Fidalgo”",
+      "url": "https://naroagutierrez.wordpress.com/2014/10/13/iii-certamen-de-pintura-al-aire-libre-ismael-fidalgo/",
+      "date": "2014-10-13"
+    },
+    {
+      "id": 219,
+      "title": "“Paisajes Retratados”, exposición colectiva en Arte y Espacio Barakart",
+      "url": "https://naroagutierrez.wordpress.com/2014/08/29/paisajes-retratados-exposicion-colectiva-en-barakart-del-1-al-26-de-septiembre/",
+      "date": "2014-08-29"
+    },
+    {
+      "id": 195,
+      "title": "La muestra “Espejos del Alma” visita la portugaluja Torre Salazar",
+      "url": "https://naroagutierrez.wordpress.com/2014/07/10/la-muestra-espejos-del-alma-visita-la-portugaluja-torre-salazar/",
+      "date": "2014-07-10"
+    },
+    {
+      "id": 165,
+      "title": "3er Aniversario Walking Gallery Bilbao, 7 de Junio 2014",
+      "url": "https://naroagutierrez.wordpress.com/2014/06/05/3er-aniversario-walking-gallery-bilbao-7-de-junio-2014/",
+      "date": "2014-06-05"
+    },
+    {
+      "id": 130,
+      "title": "Grandes Artistas en la muestra FAIM de Madrid",
+      "url": "https://naroagutierrez.wordpress.com/2014/06/04/grandes-artistas-en-la-muestra-faim-de-madrid/",
+      "date": "2014-06-04"
+    },
+    {
+      "id": 119,
+      "title": "Walking Gallery Bilbao Mayo 2014 & CreActive Afterwalking: Sábado 17",
+      "url": "https://naroagutierrez.wordpress.com/2014/05/14/walking-gallery-bilbao-mayo-2014-creactive-afterwalking-sabado-17/",
+      "date": "2014-05-14"
+    },
+    {
+      "id": 110,
+      "title": "Sábado 26 de Abril: “Urban Market Santutxu”, una Feria con mucho Arte",
+      "url": "https://naroagutierrez.wordpress.com/2014/04/24/sabado-24-de-abril-urban-market-santutxu-una-feria-con-mucho-arte/",
+      "date": "2014-04-24"
+    },
+    {
+      "id": 95,
+      "title": "“Asúcar”, pura poesía solidaria",
+      "url": "https://naroagutierrez.wordpress.com/2014/03/26/asucar-pura-poesia-solidaria/",
+      "date": "2014-03-26"
+    },
+    {
+      "id": 87,
+      "title": "Exposición en “The Art Of Living” del Festival ZAWP, Zorrotzaurre",
+      "url": "https://naroagutierrez.wordpress.com/2014/03/19/exposicion-en-the-art-of-living-del-festival-zawp-zorrotzaurre/",
+      "date": "2014-03-19"
+    },
+    {
+      "id": 61,
+      "title": "Miradas al Arte-EsTop-Estudios a tu Aire-STOP-hasta el 31de Marzo-GO!",
+      "url": "https://naroagutierrez.wordpress.com/2014/03/18/miradas-al-arte-estop-estudios-a-tu-aire-stop-hasta-el-31de-marzo-go/",
+      "date": "2014-03-18"
+    },
+    {
+      "id": 52,
+      "title": "Festival “Miradas de Mujeres” en Estudios A Tu Aire",
+      "url": "https://naroagutierrez.wordpress.com/2014/03/04/festival-miradas-de-mujeres-en-estudios-a-tu-aire/",
+      "date": "2014-03-04"
+    },
+    {
+      "id": 39,
+      "title": "“facefood” en Algorta",
+      "url": "https://naroagutierrez.wordpress.com/2014/02/03/facefood-en-algorta/",
+      "date": "2014-02-03"
+    },
+    {
+      "id": 32,
+      "title": "31 de Enero de 2014: el Día de las Dos Expos",
+      "url": "https://naroagutierrez.wordpress.com/2014/01/30/31-de-enero-de-2014-el-dia-de-las-dos-expos/",
+      "date": "2014-01-30"
+    },
+    {
+      "id": 28,
+      "title": "Exposición en Casa de Cultura de Plentzia",
+      "url": "https://naroagutierrez.wordpress.com/2014/01/09/exposicion-en-casa-de-cultura-de-plentzia/",
+      "date": "2014-01-09"
+    },
+    {
+      "id": 3,
+      "title": "La Bolsa y la Vida",
+      "url": "https://naroagutierrez.wordpress.com/2013/05/20/la-bolsa-y-la-vida/",
+      "date": "2013-05-20"
+    },
+    {
+      "id": 10,
+      "title": "Exposiciones anteriores",
+      "url": "https://naroagutierrez.wordpress.com/2013/05/15/exposiciones-anteriores/",
+      "date": "2013-05-15"
     }
   ]
 }

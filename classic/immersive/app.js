@@ -132,6 +132,8 @@
   let currentRemixDataUrl = null;
   let currentRemixSlug = null;
   let isGeneratingRemix = false;
+  let currentRemixImg = null;
+  let remixRun = 0;
   const projects = catalogue.projects || [];
   const storyLoopState = {
     backend: 'canvas-capture-mediastream-v1',
@@ -157,12 +159,12 @@
     return (catalogue.projects || [])[0] || null;
   }
 
-  function loadImageAsync(src) {
+  function loadImageAsync(src, patience = 8000) {
     return new Promise((resolve, reject) => {
       if (!src) return reject(new Error('Empty src'));
       const img = new Image();
       img.crossOrigin = 'anonymous';
-      const timer = setTimeout(() => resolve(null), 120);
+      const timer = setTimeout(() => resolve(null), patience);
       img.onload = () => { clearTimeout(timer); resolve(img); };
       img.onerror = () => { clearTimeout(timer); reject(new Error('Failed to load: ' + src)); };
       img.src = src;
@@ -207,174 +209,186 @@
     ctx.restore();
   }
 
-  function drawStoryMiniature(ctx, img, x, y, w, h, radius = 18) {
-    ctx.save();
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.85)';
-    ctx.shadowBlur = 34;
-    ctx.shadowOffsetY = 16;
-    ctx.fillStyle = '#11120f';
-    drawStoryRoundedRect(ctx, x, y, w, h, radius);
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(255, 253, 244, 0.88)';
-    ctx.lineWidth = 2.0;
-    ctx.stroke();
-    ctx.restore();
-
-    ctx.save();
-    drawStoryRoundedRect(ctx, x + 8, y + 8, w - 16, h - 16, radius - 4);
-    ctx.clip();
-    ctx.fillStyle = '#070705';
-    ctx.fillRect(x + 8, y + 8, w - 16, h - 16);
-
+  // La pieza completa, sin recortar, como una copia en papel sujeta a una esquina: se ajusta
+  // a la proporción de la obra dentro de (maxW × maxH) y se apoya en (x, bottom).
+  function drawStoryMiniature(ctx, img, x, bottom, maxW, maxH, tilt = -2.4) {
     const nw = img.naturalWidth || img.width || 1;
     const nh = img.naturalHeight || img.height || 1;
-    const imgRatio = nw / nh;
-    const innerW = w - 16, innerH = h - 16;
-    const boxRatio = innerW / innerH;
-    let dw, dh, dx, dy;
-    if (imgRatio > boxRatio) {
-      dw = innerW;
-      dh = innerW / imgRatio;
-      dx = x + 8;
-      dy = y + 8 + (innerH - dh) / 2;
-    } else {
-      dh = innerH;
-      dw = innerH * imgRatio;
-      dx = x + 8 + (innerW - dw) / 2;
-      dy = y + 8;
-    }
-    ctx.drawImage(img, 0, 0, nw, nh, dx, dy, dw, dh);
+    const fit = Math.min(maxW / nw, maxH / nh);
+    const w = Math.round(nw * fit), h = Math.round(nh * fit), border = 14;
+    const cardW = w + border * 2, cardH = h + border * 2, y = bottom - cardH;
+    ctx.save();
+    ctx.translate(x + cardW / 2, y + cardH / 2);
+    ctx.rotate(tilt * Math.PI / 180);
+    ctx.translate(-cardW / 2, -cardH / 2);
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.62)';
+    ctx.shadowBlur = 54;
+    ctx.shadowOffsetY = 28;
+    ctx.fillStyle = '#fffdf4';
+    ctx.fillRect(0, 0, cardW, cardH);
+    ctx.shadowColor = 'transparent';
+    ctx.drawImage(img, 0, 0, nw, nh, border, border, w, h);
     ctx.restore();
+    return { x, y, w: cardW, h: cardH };
   }
 
+  function wrapStoryText(ctx, text, maxWidth, maxLines) {
+    const lines = [];
+    let line = '';
+    String(text || '').split(/\s+/).filter(Boolean).forEach(word => {
+      const probe = line ? `${line} ${word}` : word;
+      if (line && ctx.measureText(probe).width > maxWidth) { lines.push(line); line = word; } else line = probe;
+    });
+    if (line) lines.push(line);
+    if (lines.length > maxLines) {
+      lines.length = maxLines;
+      lines[maxLines - 1] = lines[maxLines - 1].replace(/\s*\S+$/, '') + '…';
+    }
+    return lines;
+  }
+
+  // El lienzo usa las tipografías de la web; sin esperarlas, la primera Story saldría en la de reserva.
+  async function storyFontsReady() {
+    if (!document.fonts?.load) return;
+    const wanted = ['500 92px "Caveat"', 'italic 300 118px "Cormorant Garamond"', '400 28px "DM Sans"', '500 28px "DM Sans"'];
+    await Promise.race([
+      Promise.all(wanted.map(font => document.fonts.load(font).catch(() => {}))),
+      new Promise(resolve => setTimeout(resolve, 1500))
+    ]);
+  }
+
+  // Story 9:16 «Detail Obsession» (1080×1920). El macro ocupa todo el lienzo y la pieza completa
+  // flota en una esquina. Todo el texto vive entre y=250 e y=1670: fuera queda el 14 % que
+  // Instagram tapa arriba con su cabecera y abajo con su barra de respuesta.
   function renderStoryFrame(ctx, heroWork, heroImg, panProgress = 0) {
-    // 1. Fondo de galería museo contemporáneo
-    const bg = ctx.createLinearGradient(0, 0, 0, 1920);
-    bg.addColorStop(0, '#0a0b08');
-    bg.addColorStop(0.5, '#12140f');
-    bg.addColorStop(1, '#080806');
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, 1080, 1920);
+    const W = 1080, H = 1920, margin = 76, base = 1664;
+    const paper = '#fffdf4', accent = '#f7d594';
+    const spaced = value => { if ('letterSpacing' in ctx) ctx.letterSpacing = value; };
+    ctx.fillStyle = '#0b0b0a';
+    ctx.fillRect(0, 0, W, H);
 
-    // 2. Halo atmosférico cálido (sutil)
-    const radHalo = ctx.createRadialGradient(540, 780, 40, 540, 780, 850);
-    radHalo.addColorStop(0, 'rgba(212, 175, 55, 0.16)');
-    radHalo.addColorStop(1, 'rgba(212, 175, 55, 0)');
-    ctx.fillStyle = radHalo;
-    ctx.fillRect(0, 0, 1080, 1920);
-
-    // 3. Encabezado minimalista Awwwards
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#d4af37';
-    ctx.font = '700 17px "DM Sans", -apple-system, sans-serif';
-    ctx.fillText('NAROA GUTIÉRREZ GIL', 540, 72);
-
-    ctx.fillStyle = '#b8b2a2';
-    ctx.font = '500 13px "DM Sans", -apple-system, sans-serif';
-    ctx.fillText('DETAIL OBSESSION · TEXTURAS Y MATERIA', 540, 100);
-
-    // 4. Fragmento ampliado (Ocupa casi toda la pantalla para mostrar texturas y pinceladas)
-    const mainX = 48, mainY = 130, mainW = 984, mainH = 1530;
-    ctx.save();
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.7)';
-    ctx.shadowBlur = 40;
-    ctx.shadowOffsetY = 18;
-    ctx.fillStyle = '#141512';
-    drawStoryRoundedRect(ctx, mainX, mainY, mainW, mainH, 28);
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(255, 253, 244, 0.14)';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-    ctx.restore();
-
+    // 1. Macro a sangre: zoom 2,65–2,95 con deriva orbital cuando se graba el loop.
+    const p = clamp(Number(panProgress) || 0, 0, 1);
+    const zoom = p > 0 ? 2.65 + 0.30 * Math.sin(p * Math.PI) : 2.68;
     if (heroImg) {
-      // Zoom macro 2.65x-2.95x con panning orbital hipnótico si panProgress > 0
-      const p = clamp(Number(panProgress) || 0, 0, 1);
-      const zoom = p > 0 ? 2.65 + 0.30 * Math.sin(p * Math.PI) : 2.68;
       const cx = p > 0 ? 0.48 + 0.12 * Math.cos(p * Math.PI * 2) : 0.5;
       const cy = p > 0 ? 0.44 + 0.08 * Math.sin(p * Math.PI * 2) : 0.44;
-      drawStoryZoomedDetail(ctx, heroImg, mainX, mainY, mainW, mainH, 28, zoom, cx, cy);
+      drawStoryZoomedDetail(ctx, heroImg, 0, 0, W, H, 0, zoom, cx, cy);
     }
 
-    // Sombra gradual interior inferior para legibilidad del título
-    const gradBottom = ctx.createLinearGradient(0, mainY + mainH - 320, 0, mainY + mainH);
-    gradBottom.addColorStop(0, 'rgba(10, 11, 8, 0)');
-    gradBottom.addColorStop(0.65, 'rgba(10, 11, 8, 0.72)');
-    gradBottom.addColorStop(1, 'rgba(10, 11, 8, 0.94)');
-    ctx.save();
-    drawStoryRoundedRect(ctx, mainX, mainY, mainW, mainH, 28);
-    ctx.clip();
-    ctx.fillStyle = gradBottom;
-    ctx.fillRect(mainX, mainY + mainH - 320, mainW, 320);
-    ctx.restore();
+    // 2. Dos velos, solo donde hay texto.
+    const veilTop = ctx.createLinearGradient(0, 0, 0, 560);
+    veilTop.addColorStop(0, 'rgba(11, 11, 10, 0.66)');
+    veilTop.addColorStop(1, 'rgba(11, 11, 10, 0)');
+    ctx.fillStyle = veilTop;
+    ctx.fillRect(0, 0, W, 560);
+    const veilBottom = ctx.createLinearGradient(0, 960, 0, H);
+    veilBottom.addColorStop(0, 'rgba(11, 11, 10, 0)');
+    veilBottom.addColorStop(0.5, 'rgba(11, 11, 10, 0.72)');
+    veilBottom.addColorStop(1, 'rgba(11, 11, 10, 0.94)');
+    ctx.fillStyle = veilBottom;
+    ctx.fillRect(0, 960, W, H - 960);
+    // El texto lleva además una sombra corta: hay obras muy claras justo donde cae la firma.
+    const inked = on => { ctx.shadowColor = on ? 'rgba(0, 0, 0, 0.6)' : 'transparent'; ctx.shadowBlur = on ? 22 : 0; ctx.shadowOffsetY = on ? 2 : 0; };
+    inked(true);
 
-    // 5. Miniatura que revela la pieza completa (Picture-in-Picture)
-    const miniW = 290, miniH = 370;
-    const miniX = mainX + 40, miniY = mainY + mainH - miniH - 40;
-    if (heroImg) {
-      drawStoryMiniature(ctx, heroImg, miniX, miniY, miniW, miniH, 18);
-
-      // Badge «PIEZA COMPLETA»
-      const badgeW = 160, badgeH = 32;
-      const badgeX = miniX + (miniW - badgeW) / 2;
-      const badgeY = miniY + miniH - 22;
-      ctx.save();
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
-      ctx.shadowBlur = 12;
-      ctx.fillStyle = '#0d0e0b';
-      drawStoryRoundedRect(ctx, badgeX, badgeY, badgeW, badgeH, 16);
-      ctx.fill();
-      ctx.strokeStyle = '#d4af37';
-      ctx.lineWidth = 1.2;
-      ctx.stroke();
-      ctx.restore();
-
-      ctx.textAlign = 'center';
-      ctx.fillStyle = '#f7d594';
-      ctx.font = '700 11px "DM Sans", -apple-system, sans-serif';
-      ctx.fillText('PIEZA COMPLETA', badgeX + badgeW / 2, badgeY + 20);
-    }
-
-    // 6. Información de la obra al pie del marco
-    const textLeft = miniX + miniW + 36;
+    // 3. Firma, como en la cabecera de la web, y el aumento real del detalle.
+    ctx.textBaseline = 'alphabetic';
     ctx.textAlign = 'left';
-    ctx.fillStyle = '#fffdf4';
-    ctx.font = '700 36px "DM Sans", -apple-system, sans-serif';
-    let title = heroWork.title || 'Obra';
-    if (title.length > 20) title = title.slice(0, 19) + '…';
-    ctx.fillText(title, textLeft, mainY + mainH - 120);
+    ctx.fillStyle = paper;
+    ctx.font = '500 92px "Caveat", cursive';
+    ctx.fillText('Naroa', margin, 322);
+    const signature = ctx.measureText('Naroa').width;
+    ctx.font = '500 22px "DM Sans", sans-serif';
+    spaced('5px');
+    ctx.fillText('GUTIÉRREZ GIL', margin + signature + 22, 318);
+    ctx.textAlign = 'right';
+    ctx.fillText(`DETALLE ×${zoom.toFixed(1).replace('.', ',')}`, W - margin, 318);
+    spaced('0px');
 
-    ctx.fillStyle = '#d4af37';
-    ctx.font = '600 17px "DM Sans", -apple-system, sans-serif';
-    const cat = heroWork.label || heroWork.category || '';
-    ctx.fillText(cat.toUpperCase(), textLeft, mainY + mainH - 85);
+    // 4. La pieza completa, en su esquina.
+    ctx.textAlign = 'left';
+    inked(false);
+    const mini = heroImg ? drawStoryMiniature(ctx, heroImg, margin, base, 396, 430) : { x: margin, y: base - 300, w: 0, h: 300 };
 
-    ctx.fillStyle = '#c5bfaf';
-    ctx.font = '400 15px "DM Sans", -apple-system, sans-serif';
-    let tech = heroWork.support || heroWork.technique || 'Pintura y materia';
-    if (tech.length > 34) tech = tech.slice(0, 32) + '…';
-    ctx.fillText(tech, textLeft, mainY + mainH - 58);
+    // 5. Ficha junto a la miniatura, apoyada en la misma línea.
+    inked(true);
+    const column = mini.w ? mini.x + mini.w + 46 : margin;
+    const columnWidth = W - margin - column;
+    let y = base - 8;
+    ctx.fillStyle = 'rgba(255, 253, 244, 0.78)';
+    ctx.font = '500 28px "DM Sans", sans-serif';
+    ctx.fillText('naroagutierrezgil.com', column, y);
+    y -= 62;
+    ctx.fillStyle = 'rgba(255, 253, 244, 0.7)';
+    ctx.font = '400 28px "DM Sans", sans-serif';
+    const support = wrapStoryText(ctx, heroWork.support || heroWork.technique || '', columnWidth, 2);
+    support.slice().reverse().forEach(line => { ctx.fillText(line, column, y); y -= 38; });
+    if (support.length) y -= 10;
+    ctx.fillStyle = accent;
+    ctx.font = '500 22px "DM Sans", sans-serif';
+    spaced('4px');
+    wrapStoryText(ctx, (heroWork.label || heroWork.category || '').toUpperCase(), columnWidth, 2).reverse().forEach(line => { ctx.fillText(line, column, y); y -= 32; });
+    spaced('0px');
+    if (mini.w) {
+      y -= 22;
+      ctx.fillStyle = 'rgba(255, 253, 244, 0.92)';
+      ctx.font = 'italic 300 40px "Cormorant Garamond", serif';
+      ctx.fillText('← la pieza completa', column, y);
+    }
 
-    // 7. Pie de Story & sticker de enlace
-    ctx.textAlign = 'center';
-    ctx.fillStyle = '#fffdf4';
-    ctx.font = '600 18px "DM Sans", -apple-system, sans-serif';
-    ctx.fillText('@naroa_art   ·   naroagutierrezgil.com', 540, 1720);
+    // 6. Título a todo el ancho, sobre la miniatura.
+    ctx.fillStyle = paper;
+    const title = heroWork.title || 'Obra';
+    let size = 118;
+    ctx.font = `italic 300 ${size}px "Cormorant Garamond", serif`;
+    if (wrapStoryText(ctx, title, W - margin * 2, 9).length > 2) { size = 92; ctx.font = `italic 300 ${size}px "Cormorant Garamond", serif`; }
+    const titleLines = wrapStoryText(ctx, title, W - margin * 2, 3);
+    let titleY = Math.min(mini.y, y - 40) - 72;
+    titleLines.slice().reverse().forEach(line => { ctx.fillText(line, margin - 4, titleY); titleY -= size * 1.02; });
+    inked(false);
+  }
 
-    ctx.fillStyle = 'rgba(255, 253, 244, 0.45)';
-    ctx.font = '400 14px "DM Sans", -apple-system, sans-serif';
-    ctx.fillText('86 obras inmersivas · Retratos sobre pizarra y materia', 540, 1752);
+  // Deja la Story lista en la vista previa, en «Guardar la imagen» y en el archivo que se comparte.
+  function publishStory(canvas, heroWork) {
+    const dialog = $('#story-remix-dialog');
+    const previewImg = dialog && $('[data-story-remix-img]', dialog);
+    const downloadBtn = dialog && $('[data-remix-download]', dialog);
+    let dataUrl = '';
+    try { dataUrl = canvas.toDataURL('image/jpeg', 0.94); } catch {}
+    currentRemixDataUrl = dataUrl;
+    if (previewImg && dataUrl) previewImg.src = dataUrl;
+    if (downloadBtn && dataUrl) {
+      downloadBtn.href = dataUrl;
+      downloadBtn.download = `naroa-detail-obsession-${heroWork.slug}.jpg`;
+    }
+    return new Promise(resolve => {
+      if (!canvas.toBlob) { resolve(); return; }
+      canvas.toBlob(blob => {
+        currentRemixBlob = blob;
+        try {
+          currentRemixFile = new File([blob], `naroa-story-${heroWork.slug}.jpg`, { type: 'image/jpeg' });
+        } catch {
+          currentRemixFile = blob;
+        }
+        resolve();
+      }, 'image/jpeg', 0.94);
+    });
+  }
+
+  function setRemixStatus(text = '') {
+    const status = $('#story-remix-dialog [data-remix-status]');
+    if (status) status.textContent = text;
   }
 
   async function generateStoryRemix(preferredSlug = null) {
     const dialog = $('#story-remix-dialog');
     if (!dialog) return null;
-    const previewImg = $('[data-story-remix-img]', dialog);
     const spinner = $('[data-story-remix-spinner]', dialog);
-    const downloadBtn = $('[data-remix-download]', dialog);
 
     if (spinner) spinner.hidden = false;
     isGeneratingRemix = true;
+    const run = ++remixRun;
 
     try {
       // Enfoque DETAIL OBSESSION: Obra protagonista con zoom macro y miniatura completa
@@ -386,56 +400,50 @@
       }
       if (!heroWork) throw new Error('No projects available');
       currentRemixSlug = heroWork.slug;
+      currentRemixImg = null;
+      const titleEl = $('[data-remix-title]', dialog), metaEl = $('[data-remix-meta]', dialog);
+      if (titleEl) titleEl.textContent = heroWork.title;
+      if (metaEl) metaEl.textContent = [heroWork.label, heroWork.support || heroWork.technique].filter(Boolean).join(' · ');
+      setRemixStatus('');
 
-      const src = heroWork.photos?.[0]?.src || heroWork.cover || heroWork.thumb;
-      const heroImg = await loadImageAsync(src).catch(() => null);
+      const photo = heroWork.photos?.[0];
+      const src = photo?.src || heroWork.cover || heroWork.thumb;
+      const [heroImg] = await Promise.all([loadImageAsync(src).catch(() => null), storyFontsReady()]);
+      if (run !== remixRun) return null;
 
       const canvas = document.createElement('canvas');
       canvas.width = 1080;
       canvas.height = 1920;
       let ctx = null;
       try { ctx = canvas.getContext('2d'); } catch {}
-      if (!ctx) {
-        if (spinner) spinner.hidden = true;
-        isGeneratingRemix = false;
-        return null;
-      }
+      if (!ctx) return null;
 
+      currentRemixImg = heroImg;
       renderStoryFrame(ctx, heroWork, heroImg, 0);
+      await publishStory(canvas, heroWork);
 
-      let dataUrl = '';
-      try { dataUrl = canvas.toDataURL('image/jpeg', 0.94); } catch {}
-      currentRemixDataUrl = dataUrl;
-
-      if (previewImg && dataUrl) previewImg.src = dataUrl;
-      if (downloadBtn && dataUrl) {
-        downloadBtn.href = dataUrl;
-        downloadBtn.download = `naroa-detail-obsession-${heroWork.slug}.jpg`;
+      // Segunda pasada con la fotografía original: a 2,7 aumentos la versión de 1800 px se queda
+      // corta y el detalle saldría blando. Se omite con ahorro de datos o conexiones lentas.
+      const link = navigator.connection;
+      const frugal = !!link && (link.saveData || /(^|-)2g$|^3g$/.test(link.effectiveType || ''));
+      if (photo?.original && !frugal && Math.max(photo.width || 0, photo.height || 0) > 1800) {
+        loadImageAsync(photo.original, 25000).then(sharp => {
+          if (!sharp || run !== remixRun || storyLoopState.isRecording) return null;
+          currentRemixImg = sharp;
+          renderStoryFrame(ctx, heroWork, sharp, 0);
+          return publishStory(canvas, heroWork);
+        }).catch(() => {});
       }
 
-      await new Promise(resolve => {
-        if (canvas.toBlob) {
-          canvas.toBlob(blob => {
-            currentRemixBlob = blob;
-            try {
-              currentRemixFile = new File([blob], `naroa-story-${heroWork.slug}.jpg`, { type: 'image/jpeg' });
-            } catch {
-              currentRemixFile = blob;
-            }
-            resolve();
-          }, 'image/jpeg', 0.94);
-        } else {
-          resolve();
-        }
-      });
-
-      return { dataUrl, blob: currentRemixBlob, file: currentRemixFile };
+      return { dataUrl: currentRemixDataUrl, blob: currentRemixBlob, file: currentRemixFile };
     } catch (err) {
       console.warn('Error generating story detail obsession:', err);
       return null;
     } finally {
-      if (spinner) spinner.hidden = true;
-      isGeneratingRemix = false;
+      if (run === remixRun) {
+        if (spinner) spinner.hidden = true;
+        isGeneratingRemix = false;
+      }
     }
   }
 
@@ -443,6 +451,7 @@
     if (storyLoopState.isRecording) return null;
     const dialog = $('#story-remix-dialog');
     const videoBtn = dialog ? $('[data-remix-video-loop]', dialog) : null;
+    const videoLabel = videoBtn ? $('[data-remix-label]', videoBtn) : null;
     const previewImg = dialog ? $('[data-story-remix-img]', dialog) : null;
     const activeP = getActiveArtwork();
     const targetSlug = preferredSlug || currentRemixSlug || activeP?.slug || null;
@@ -458,12 +467,14 @@
     if (videoBtn) {
       videoBtn.classList.add('is-recording');
       videoBtn.disabled = true;
-      videoBtn.textContent = '⏺ Grabando Loop 6s (Audio + Macro)…';
+      (videoLabel || videoBtn).textContent = 'Grabando el loop…';
+      setRemixStatus('Seis segundos de detalle en movimiento, con música.');
     }
 
     try {
       const src = heroWork.photos?.[0]?.src || heroWork.cover || heroWork.thumb;
-      const heroImg = await loadImageAsync(src).catch(() => null);
+      // Si la Story en pantalla ya tiene su fotografía (quizá la original), el loop usa esa misma.
+      const heroImg = (heroWork.slug === currentRemixSlug && currentRemixImg) || await loadImageAsync(src).catch(() => null);
       const canvas = document.createElement('canvas');
       canvas.width = 1080;
       canvas.height = 1920;
@@ -471,8 +482,10 @@
       try { ctx = canvas.getContext('2d'); } catch {}
 
       const durSec = Math.max(0.5, storyLoopState.durationMs / 1000);
+      // Si el audio no arranca (el navegador lo retiene sin gesto), el loop se graba sin música
+      // en vez de dejar el control bloqueado en «Grabando».
       const audioLoop = window.NAROA_SOUND?.createStoryLoopStream
-        ? await window.NAROA_SOUND.createStoryLoopStream(durSec)
+        ? await Promise.race([window.NAROA_SOUND.createStoryLoopStream(durSec), new Promise(resolve => setTimeout(() => resolve(null), 2500))])
         : null;
 
       if (audioLoop) {
@@ -559,6 +572,7 @@
       a.click();
       a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 15000);
+      setRemixStatus('Loop guardado en tus descargas.');
 
       return { ...storyLoopState, blob: recordedBlob };
     } catch (err) {
@@ -569,8 +583,10 @@
       if (videoBtn) {
         videoBtn.classList.remove('is-recording');
         videoBtn.disabled = false;
-        videoBtn.textContent = '🎵 Grabar Loop 6s (Audio + Macro)';
+        (videoLabel || videoBtn).textContent = 'Grabar un loop de 6 s con música';
       }
+      // La vista previa vuelve a la imagen fija que se comparte.
+      if (previewImg && currentRemixDataUrl && heroWork.slug === currentRemixSlug) previewImg.src = currentRemixDataUrl;
     }
   }
 
@@ -615,7 +631,7 @@
       }, 1500);
     } else {
       window.open('https://www.instagram.com/naroa_art/', '_blank');
-      window.alert('¡Story HD descargada! Súbela a tus Stories de Instagram mencionando a @naroa_art ✨');
+      setRemixStatus('Imagen guardada. Súbela a tus Stories y menciona a @naroa_art.');
     }
   }
 
@@ -660,7 +676,10 @@
     const videoLoopBtn = $('[data-remix-video-loop]', remixDialog);
     if (shuffleBtn) {
       shuffleBtn.addEventListener('click', () => {
-        if (!isGeneratingRemix) generateStoryRemix(null);
+        if (isGeneratingRemix || storyLoopState.isRecording) return;
+        // Otra de verdad: en la galería, «null» volvía a elegir la obra que está en pantalla.
+        const others = projects.filter(w => w.slug !== currentRemixSlug);
+        generateStoryRemix((others[Math.floor(Math.random() * others.length)] || projects[0])?.slug || null);
       });
     }
     if (shareBtn) {
@@ -691,7 +710,8 @@
   }
   function currentMenuLink() {
     const path = location.pathname;
-    return path === '/' ? menuLinks[0] : menuLinks.find(link => path.startsWith(new URL(link.href).pathname));
+    // Una sección también es la actual en sus rutas hijas (Vaivenes dentro de Obras, Trayectoria dentro de Naroa).
+    return path === '/' ? menuLinks[0] : menuLinks.find(link => path.startsWith(new URL(link.href).pathname) || (link.dataset.menuAlso && path.startsWith(link.dataset.menuAlso)));
   }
   function labelMenu(title, label, quoteText, metaText, href) {
     $('[data-menu-preview-title]', menu).textContent = title;
@@ -2074,6 +2094,132 @@
         }
       }, 500);
     }
+    // Miradas por permanencia: el slow-motion de Can-dy Queen, generalizado. Si el scroll lleva
+    // DWELL_MS parado sobre una obra con varias fotos, la escena funde a la siguiente y sigue
+    // rotando. En cuanto la cámara se mueve vuelve la foto principal, así que toda la
+    // coreografía del recorrido trabaja siempre sobre la misma imagen.
+    const DWELL_MS = 2500, DWELL_LEAD_MS = 1500, DWELL_FADE_MS = 900;
+    const dwell = { index: -1, photo: 0, timer: null, token: 0, ghost: null, ghostTimer: null, alt: '' };
+    const dwellTicks = document.createElement('span');
+    dwellTicks.className = 'art-dwell-ticks'; dwellTicks.setAttribute('aria-hidden', 'true'); dwellTicks.hidden = true;
+    $('[data-counter]', stage)?.after(dwellTicks);
+    function dwellPhotos(i) {
+      const p = works[i];
+      // El retrato inaugural queda limpio; el puzzle y Can-dy Queen ya mueven su propia imagen;
+      // Game Over es una pantalla en negro que no debe moverse.
+      if (!p || p.photos.length < 2 || (i === 0 && heroThresholdEl) || p.interaction === 'puzzle' || p.slug === 'can-dy-queen' || p.slug === 'game-over') return null;
+      const first = Math.max(0, p.photos.findIndex(photo => photo.src === p.cover));
+      return p.photos.map((_, k) => p.photos[(first + k) % p.photos.length]);
+    }
+    function dwellBlocked() {
+      return reduced.matches || state.fit || state.quiet || document.hidden || !!document.querySelector('dialog[open]');
+    }
+    function paintDwell() {
+      const list = reduced.matches ? null : dwellPhotos(state.index);
+      dwellTicks.hidden = !list;
+      if (!list) return;
+      if (dwellTicks.childElementCount !== list.length) dwellTicks.replaceChildren(...list.map(() => document.createElement('i')));
+      const shown = dwell.index === state.index ? dwell.photo : 0;
+      Array.from(dwellTicks.children).forEach((tick, k) => tick.classList.toggle('is-on', k === shown));
+    }
+    function dropDwellGhost() {
+      clearTimeout(dwell.ghostTimer); dwell.ghostTimer = null;
+      dwell.ghost?.remove(); dwell.ghost = null;
+    }
+    // La foto saliente se copia a un lienzo que se desvanece sobre la entrante: un fundido real
+    // sin un segundo <img>, para no pasar de tres imágenes cargadas en escena.
+    function dwellGhost(img, fade) {
+      dropDwellGhost();
+      if (!fade || !img.complete || !img.naturalWidth) return null;
+      const canvas = document.createElement('canvas');
+      let context = null;
+      try { context = canvas.getContext('2d'); } catch {}
+      if (!context) return null;
+      canvas.width = img.naturalWidth; canvas.height = img.naturalHeight;
+      try { context.drawImage(img, 0, 0); } catch { return null; }
+      const painted = getComputedStyle(img);
+      canvas.className = 'art-dwell-ghost'; canvas.setAttribute('aria-hidden', 'true');
+      Object.assign(canvas.style, { objectPosition: painted.objectPosition, transform: painted.transform, transformOrigin: painted.transformOrigin, filter: painted.filter, transitionDuration: `${fade}ms` });
+      img.after(canvas);
+      dwell.ghost = canvas;
+      // El lienzo aguanta hasta que la foto entrante está decodificada; solo entonces se va.
+      return () => requestAnimationFrame(() => {
+        if (dwell.ghost !== canvas) return;
+        // Sin un estilo ya calculado a opacidad 1 no habría transición: el lienzo se iría de golpe.
+        void getComputedStyle(canvas).opacity;
+        canvas.style.opacity = '0';
+        dwell.ghostTimer = setTimeout(dropDwellGhost, fade + 80);
+      });
+    }
+    function settleDwell(img, release) {
+      if (release) (img.decode ? img.decode().catch(() => {}) : Promise.resolve()).then(release);
+    }
+    function haltDwell() { clearTimeout(dwell.timer); dwell.timer = null; dwell.token++; }
+    function showDwell(i, step, url) {
+      const img = images[i], list = dwellPhotos(i);
+      if (!img || !list) return;
+      const release = dwellGhost(img, DWELL_FADE_MS);
+      if (dwell.index !== i) { dwell.index = i; dwell.alt = img.alt; }
+      dwell.photo = step;
+      img.src = url;
+      img.alt = step ? `${works[i].title} — ${list[step].caption}` : dwell.alt;
+      img.style.objectPosition = step ? '50% 50%' : '';
+      // Las otras miradas se enseñan con encuadre neutro; la principal recupera su cámara.
+      if (step) { img.style.transformOrigin = '50% 50%'; img.style.transform = 'scale(1.08000)'; } else render();
+      paintDwell();
+      settleDwell(img, release);
+      armDwell(DWELL_MS + DWELL_FADE_MS);
+    }
+    function resetDwell(fade = 320) {
+      haltDwell();
+      if (dwell.index < 0) return;
+      const i = dwell.index, img = images[i], showing = dwell.photo;
+      dwell.index = -1; dwell.photo = 0;
+      if (img) {
+        if (showing && img.hasAttribute('src')) {
+          const release = dwellGhost(img, fade);
+          img.src = coverSrc(works[i].cover, img);
+          settleDwell(img, release);
+        }
+        img.alt = dwell.alt; img.style.objectPosition = '';
+      }
+      paintDwell();
+    }
+    function armDwell(wait = DWELL_MS) {
+      haltDwell();
+      const token = dwell.token, i = state.index;
+      const travelling = motion.pose.phase === 'transition' && motion.pose.progress > 0;
+      if (dwellBlocked() || travelling || !dwellPhotos(i)) return;
+      dwell.timer = setTimeout(() => {
+        dwell.timer = null;
+        if (token !== dwell.token || dwellBlocked()) return;
+        const img = images[i], list = dwellPhotos(i);
+        const busy = isLauraZooming || isBreakdancing || stage.classList.contains('is-ezquerra-dazed') || stage.classList.contains('is-eguzkilore-stage');
+        if (busy || !img?.complete || !img.naturalWidth) { armDwell(); return; }
+        // Solo se pide la foto siguiente, y solo cuando el visitante ya se ha quedado un rato.
+        const step = ((dwell.index === i ? dwell.photo : 0) + 1) % list.length;
+        const url = step
+          ? artSrc(list[step].src, { width: stage.offsetWidth + 20, height: stage.offsetHeight + 20 }, list[step].width / list[step].height)
+          : coverSrc(works[i].cover, img);
+        const loader = new Image();
+        loader.src = url;
+        let loaded = loader.complete && !!loader.naturalWidth;
+        const ready = loaded ? null : (loader.decode ? loader.decode() : new Promise((resolve, reject) => {
+          loader.addEventListener('load', resolve, { once: true }); loader.addEventListener('error', reject, { once: true });
+        })).then(() => { loaded = true; });
+        ready?.catch(() => {});
+        const turn = () => { if (token === dwell.token && !dwellBlocked()) showDwell(i, step, url); };
+        dwell.timer = setTimeout(() => {
+          dwell.timer = null;
+          // Si la foto aún no ha llegado se espera a que llegue; si falla, la obra se queda como está.
+          if (loaded) turn(); else ready.then(turn, () => {});
+        }, DWELL_LEAD_MS);
+      }, Math.max(0, wait - DWELL_LEAD_MS));
+    }
+    $$('dialog').forEach(dialog => dialog.addEventListener('close', () => armDwell()));
+    document.addEventListener('visibilitychange', () => { if (document.hidden) haltDwell(); else armDwell(); });
+    // Sin efectos no hay cambios automáticos: «Pausar efectos» es también la pausa de las miradas.
+    reduced.addEventListener('change', () => { resetDwell(0); paintDwell(); armDwell(); });
     let stickman = stage.querySelector('[data-stickman]');
     if (!stickman) {
       stickman = document.createElement('div');
@@ -2470,6 +2616,8 @@
       }
       scenes.forEach((s, i) => { s.setAttribute('aria-hidden', String(i !== state.index)); s.classList.toggle('is-current', i === state.index); });
       preloadNeighbours();
+      paintDwell();
+      if (dwell.timer === null && stage.classList.contains('is-resting')) armDwell();
     }
     function saveRoute() {
       const p = works[state.index], url = '/obra/' + p.slug + '/';
@@ -2766,7 +2914,7 @@
           : works[index].slug === 'hugo-box' ? '47.8% 42.7%'
           : '50% 50%';
         if (works[index].interaction === 'puzzle' && (!still || puzzles.has(index))) drawPuzzle(index, outgoing && transition ? fraction : 0, still);
-        if (works[index].slug === 'custom-jaio' && !state.fit) {
+        if (works[index].slug === 'custom-jaio' && !state.fit && !(dwell.index === index && dwell.photo)) {
           const step = outgoing && transition ? (fraction < .34 ? 0 : fraction < .67 ? 1 : 2) : 0;
           const nextSrc = coverSrc(works[index].photos[step]?.src || works[index].cover, image);
           if (image.getAttribute('src') !== nextSrc) image.src = nextSrc;
@@ -3748,6 +3896,8 @@
         phase: still ? 'scroll' : transition ? 'transition' : phase === 'explore' ? 'explore' : 'hold',
         axisDirection: mode === 'H' ? entry.direction : 1,
         slug: activeSlug,
+        // Velocidad de la cámara en alturas de pantalla por segundo: marca el pulso de la banda sonora.
+        velocity: still ? 0 : motion.velocity * 60,
         flash: Number(flash.toFixed(4)),
         punch: isMurrayToEzquerra && fraction >= 0.34 && fraction <= 0.46
       });
@@ -3877,8 +4027,6 @@
           ? clamp(0.088 + Math.abs(delta) * 0.035, 0.082, 0.125)
           : clamp(0.142 + Math.tanh(Math.abs(delta) * 1.35) * 0.095, 0.142, 0.238);
         const alpha = 1 - Math.pow(1 - baseAlpha, dt);
-        // Velocidad de la cámara en alturas de pantalla por segundo: marca el pulso de la banda sonora.
-        velocity: still ? 0 : motion.velocity * 60,
         const rawStep = delta * alpha;
         const sameDir = motion.velocity !== 0 && Math.sign(delta) === Math.sign(motion.velocity);
         const blendedMag = sameDir && Math.abs(delta) > 0.015
@@ -3916,7 +4064,7 @@
         const prevSkew = parseFloat(stage.style.getPropertyValue('--velocity-skew')) || 0;
         const skew = clamp(prevSkew * 0.65 + instSkew * 0.35, -3.2, 3.2);
         stage.style.setProperty('--velocity-skew', `${(Math.abs(skew) < 0.03 ? 0 : skew).toFixed(2)}deg`);
-        leaveFit(); resetPan(); travelCamera();
+        leaveFit(); resetDwell(); resetPan(); travelCamera();
         lastScrollPixels = pixels;
       }
       motion.pose = pose;
@@ -3930,7 +4078,7 @@
       ensureImage(Math.ceil(position));
       if (motion.current !== motion.target) {
         motion.frame = requestAnimationFrame(stepMotion);
-      }
+      } else armDwell();
     }
     function scheduleScroll() { syncScroll(); }
     function moveTo(index, smooth = false) {
@@ -3992,7 +4140,7 @@
     $('[data-journey-cue]', stage)?.addEventListener('click', () => {
       if (works[state.index]?.slug === 'dustin' || works[state.index]?.slug === 'game-over') change(0);
     });
-    $('[data-fit]', stage).addEventListener('click', () => { pause(); state.fit = !state.fit; images[state.index].src = state.fit ? works[state.index].photos[0].src : coverSrc(works[state.index].cover, images[state.index]); resetPan(); metadata(); render(); });
+    $('[data-fit]', stage).addEventListener('click', () => { pause(); resetDwell(0); state.fit = !state.fit; images[state.index].src = state.fit ? works[state.index].photos[0].src : coverSrc(works[state.index].cover, images[state.index]); resetPan(); metadata(); render(); });
     $('[data-threshold-enter]', stage)?.addEventListener('click', () => {
       window.NAROA_SOUND?.menuNote?.(0);
       window.scrollTo({ top: Math.ceil(geometry.top + 0.38 * geometry.unit), behavior: reduced.matches ? 'auto' : 'smooth' });
@@ -4117,7 +4265,10 @@
       workGallery.style.setProperty('--gallery-backdrop', `url("${p.cover}")`);
       gallerySerial.textContent = `Obra ${String(state.index + 1).padStart(2, '0')} de ${String(works.length).padStart(2, '0')} · ${p.series || p.category || 'Estudio Bilbao'}`;
       galleryTitle.textContent = p.title;
-      galleryMeta.textContent = `${p.label} · ${p.photos.length} ${p.photos.length === 1 ? 'mirada' : 'miradas'}`;
+      // El título es un cartel: cuanto más corto, más grande; uno largo se reparte en dos líneas.
+      const titleWeight = Math.max(...p.title.split(/\s+/).map(word => word.length), p.title.length / 2.2);
+      workGallery.style.setProperty('--title-scale', clamp(9 / titleWeight, .34, 1).toFixed(3));
+      galleryMeta.textContent =`${p.label} · ${p.photos.length} ${p.photos.length === 1 ? 'mirada' : 'miradas'}`;
       const rawStory = (p.story || '').replace(/^[«“"\s]+|[»”"\s]+$/g, '').trim();
       dissectionStory.textContent = rawStory ? `«${rawStory}»` : '';
       dissectionStory.dataset.expanded = 'false';
@@ -4136,7 +4287,7 @@
         p.technique || null,
         p.support || null,
         p.dimensions || null,
-        p.series ? `Serie ${p.series}` : null,
+        p.series ? (/^serie\b/i.test(p.series) ? p.series : `Serie ${p.series}`) : null,
         p.year ? String(p.year) : null
       ].filter(Boolean);
       dissectionPills.replaceChildren(...pillItems.map(txt => createGalleryElement('span', 'work-dissection-pill', txt)));
@@ -4163,9 +4314,13 @@
         image.width = photo.width; image.height = photo.height;
         image.alt = p.title + ' — ' + photo.caption;
         image.decoding = 'async'; image.loading = index === 0 ? 'eager' : 'lazy';
-        image.src = photo.src || photo.original;
+        // La foto va a todo el ancho de la pantalla: si esta pide más de lo que da la copia
+        // de 1800 px, se usa el original (el mismo archivo que ya carga la lupa).
+        const wide = innerWidth * Math.min(devicePixelRatio || 1, 2) > 2000 && photo.original;
+        const first = (wide ? photo.original : photo.src) || photo.original, second = wide ? photo.src : photo.original;
+        image.src = first;
         image.addEventListener('error', () => {
-          if (photo.original && image.getAttribute('src') !== photo.original) image.src = photo.original;
+          if (second && image.getAttribute('src') !== second) image.src = second;
         }, { once: true });
         const loupe = createGalleryElement('span', 'work-gallery-loupe');
         loupe.dataset.workLoupe = '';
@@ -4272,7 +4427,7 @@
       if (workGallery.open && photoReturnFocus?.isConnected) photoReturnFocus.focus({ preventScroll: true });
       photoReturnFocus = null;
     });
-    function quiet(value) { state.quiet = value; metadata(); (value ? $('[data-restore]', stage) : $('[data-quiet]')).focus(); }
+    function quiet(value) { state.quiet = value; if (value) { resetDwell(); render(); } metadata(); (value ? $('[data-restore]', stage) : $('[data-quiet]')).focus(); }
     $('[data-quiet]').addEventListener('click', () => quiet(true)); $('[data-restore]', stage).addEventListener('click', () => quiet(false));
     document.addEventListener('keydown', e => {
       if (document.querySelector('dialog[open]') || e.target.closest?.('input,textarea,select,[contenteditable=true]')) return;
@@ -4740,6 +4895,8 @@
           needsNextFrame = true;
         }
         document.documentElement.style.setProperty('--editorial-velocity-skew', `${editorialSkew.toFixed(3)}deg`);
+        // El mismo scroll marca el pulso de la banda sonora, en alturas de pantalla por segundo.
+        soundscape?.frame({ mode: 'page', phase: 'scroll', velocity: (scrollDelta / Math.max(0.5, dt)) * 60 / vh });
       }
       sections.forEach(section => {
         const r = section.getBoundingClientRect(); if (r.bottom < -120 || r.top > vh + 120) return;
@@ -4869,8 +5026,6 @@
       if (reduced.matches) return;
       const r = kintsugiEditorial.getBoundingClientRect();
       if (!r.width || !r.height) return;
-        // El mismo scroll marca el pulso de la banda sonora, en alturas de pantalla por segundo.
-        soundscape?.frame({ mode: 'page', phase: 'scroll', velocity: (scrollDelta / Math.max(0.5, dt)) * 60 / vh });
       kState.micaX = clamp(((e.clientX - r.left) / r.width) * 100, 0, 100);
       kState.micaY = clamp(((e.clientY - r.top) / r.height) * 100, 0, 100);
       kintsugiEditorial.style.setProperty('--mica-x', `${kState.micaX.toFixed(1)}%`);
@@ -5132,29 +5287,47 @@
       return 1;
     };
 
+    // El puntero es una meta: el motor se acerca a ella con inercia y la publica en
+    // --pointer-x/--pointer-y, que inclinan la tarjeta enfocada y mueven las capas por profundidad.
     let pointerNormX = 0;
     let pointerNormY = 0;
-    commissionHorizontal.addEventListener('pointermove', e => {
-      if (reduced.matches) return;
+    let pointerTargetX = 0;
+    let pointerTargetY = 0;
+    let lastStepTime = 0;
+    // La portada comparte motor: su figura se inclina con el puntero y se queda atrás al bajar.
+    const encHero = $('.enc-hero');
+    let stageOffset = 0;
+    let speedEase = 0;
+    const depthStages = [commissionHorizontal, encHero].filter(Boolean);
+    const followPointer = e => {
+      if (reduced.matches || e.pointerType === 'touch') return;
       const vw = innerWidth || 1440;
       const vh = innerHeight || 900;
-      pointerNormX = clamp((e.clientX / vw - 0.5) * 2, -1, 1);
-      pointerNormY = clamp((e.clientY / vh - 0.5) * 2, -1, 1);
+      pointerTargetX = clamp((e.clientX / vw - 0.5) * 2, -1, 1);
+      pointerTargetY = clamp((e.clientY / vh - 0.5) * 2, -1, 1);
       if (hState.raf === null) {
         hState.raf = requestAnimationFrame(stepCommissionHorizontal);
       }
-    }, { passive: true });
+    };
+    const releasePointer = () => {
+      pointerTargetX = 0;
+      pointerTargetY = 0;
+      if (hState.raf === null && !reduced.matches) {
+        hState.raf = requestAnimationFrame(stepCommissionHorizontal);
+      }
+    };
+    depthStages.forEach(el => {
+      el.addEventListener('pointermove', followPointer, { passive: true });
+      el.addEventListener('pointerleave', releasePointer, { passive: true });
+    });
 
     function measureCards() {
       if (!track) return;
-      cachedCenters = cards.map(c => {
-        const r = c.getBoundingClientRect();
-        return c.offsetLeft + r.width * 0.5;
-      });
+      // Medidas de maquetación: el giro y el retroceso 3D de la tarjeta no deben falsearlas.
+      cachedCenters = cards.map(c => c.offsetLeft + (c.offsetWidth || 0) * 0.5);
       cachedDims = cards.map(c => {
         const photo = $('.commission-example-photo', c) || c;
-        const pr = photo.getBoundingClientRect();
-        return { w: pr.width, h: pr.height };
+        return { w: photo.offsetWidth || 0, h: photo.offsetHeight || 0 };
       });
     }
 
@@ -5177,20 +5350,53 @@
 
     let currentActiveCardIdx = 0;
 
-    function stepCommissionHorizontal() {
+    function stepCommissionHorizontal(now) {
       hState.raf = null;
+      // dt en frames de 60 Hz: la inercia dura lo mismo a 60 que a 120 Hz.
+      const timed = typeof now === 'number';
+      const dt = timed && lastStepTime > 0 && now >= lastStepTime ? clamp((now - lastStepTime) / 16.6667, 0.5, 2.2) : 1;
+      lastStepTime = timed ? now : 0;
       const dy = hState.targetY - hState.currentY;
-      hState.velocity = dy * 0.16;
+      const stepY = dy * (1 - Math.pow(1 - 0.16, dt));
+      hState.velocity = stepY / dt;
       if (reduced.matches || Math.abs(dy) < 0.25) {
         hState.currentY = hState.targetY;
         hState.velocity = 0;
       } else {
-        hState.currentY += hState.velocity;
+        hState.currentY += stepY;
       }
+      const pointerDx = pointerTargetX - pointerNormX;
+      const pointerDy = pointerTargetY - pointerNormY;
+      const pointerMoving = !reduced.matches && (Math.abs(pointerDx) > 0.002 || Math.abs(pointerDy) > 0.002);
+      if (pointerMoving) {
+        const pointerEase = 1 - Math.pow(1 - 0.12, dt);
+        pointerNormX += pointerDx * pointerEase;
+        pointerNormY += pointerDy * pointerEase;
+      } else {
+        pointerNormX = reduced.matches ? 0 : pointerTargetX;
+        pointerNormY = reduced.matches ? 0 : pointerTargetY;
+      }
+      depthStages.forEach(el => {
+        el.style.setProperty('--pointer-x', pointerNormX.toFixed(4));
+        el.style.setProperty('--pointer-y', pointerNormY.toFixed(4));
+      });
       const vh = innerHeight || 900;
       const vw = innerWidth || 1440;
       const stageHeight = commissionHorizontal.offsetHeight || vh * 4.5;
       const maxScroll = Math.max(1, stageHeight - vh);
+      // --h-enter: 1 cuando la galería asoma por abajo, 0 mientras está fija, -1 al irse por arriba.
+      // --h-speed: 0…1 con la velocidad del recorrido; las tarjetas se retiran un poco al pasar deprisa.
+      // --enc-leave: 0…1 según la portada sale de pantalla.
+      const enter = reduced.matches ? 0 : clamp(-hState.currentY / vh, 0, 1) - clamp((hState.currentY - maxScroll) / vh, 0, 1);
+      commissionHorizontal.style.setProperty('--h-enter', enter.toFixed(4));
+      const speedTarget = reduced.matches ? 0 : clamp(Math.abs(hState.velocity) / 60, 0, 1);
+      speedEase += (speedTarget - speedEase) * (1 - Math.pow(1 - 0.14, dt));
+      if (reduced.matches || (speedTarget === 0 && speedEase < 0.004)) speedEase = 0;
+      commissionHorizontal.style.setProperty('--h-speed', speedEase.toFixed(4));
+      if (encHero) {
+        const leave = reduced.matches ? 0 : clamp((hState.currentY + stageOffset) / Math.max(1, encHero.offsetHeight || vh), 0, 1);
+        encHero.style.setProperty('--enc-leave', leave.toFixed(4));
+      }
       const progress = clamp(hState.currentY / maxScroll, 0, 1);
       hState.progress = Number(progress.toFixed(4));
       const hasRealLayout = cachedCenters.length >= 2 && cachedCenters[1] > cachedCenters[0];
@@ -5377,13 +5583,16 @@
         dot.classList.toggle('is-active', dIdx === activeIdx);
       });
       $('.site-nav')?.classList.toggle('is-scrolled', (scrollY || 0) > 30);
-      if (!reduced.matches && Math.abs(hState.targetY - hState.currentY) >= 0.25) {
+      if (!reduced.matches && (Math.abs(hState.targetY - hState.currentY) >= 0.25 || pointerMoving || speedEase > 0)) {
         hState.raf = requestAnimationFrame(stepCommissionHorizontal);
+      } else {
+        lastStepTime = 0;
       }
     }
 
     function scheduleCommissionHorizontal() {
-      hState.targetY = (scrollY || 0) - stageTop();
+      stageOffset = stageTop();
+      hState.targetY = (scrollY || 0) - stageOffset;
       if (hState.raf === null) {
         hState.raf = requestAnimationFrame(stepCommissionHorizontal);
       }
@@ -5452,6 +5661,9 @@
         if (!Number.isNaN(targetIdx)) jumpToCommissionCard(targetIdx);
       });
     });
+    // El motor arranca sabiendo dónde está la galería: sin esto la portada daría un salto al primer scroll.
+    stageOffset = stageTop();
+    hState.targetY = hState.currentY = (scrollY || 0) - stageOffset;
     stepCommissionHorizontal();
 
     window.NAROA_COMMISSION_HORIZONTAL = {
@@ -5486,12 +5698,18 @@
       })
     };
   }
+  // Blog: la página nace con la última copia revisada (textos y carteles elegidos a mano).
+  // El navegador solo consulta el WordPress para añadir lo que se haya publicado después;
+  // nunca reescribe una tarjeta que ya estaba.
   const notebookSync = $('[data-notebook-sync]'), notebookGrid = $('[data-notebook-posts]');
   if (notebookSync && notebookGrid && typeof fetch === 'function') {
     const endpoint = notebookSync.dataset.notebookSync;
+    const notebookStatus = $('[data-notebook-status]', notebookSync), notebookStatusText = $('[data-notebook-status-text]', notebookSync);
+    const NOTEBOOK_VISIBLE = 6, NOTEBOOK_RECHECK_MS = 10 * 60 * 1000;
+    let notebookChecked = -Infinity, notebookChecking = false, notebookAdded = 0;
     const plain = value => {
       const doc = new DOMParser().parseFromString(String(value || ''), 'text/html');
-      return (doc.body?.textContent || '').trim();
+      return (doc.body?.textContent || '').replace(/\s+/g, ' ').trim();
     };
     const safeUrl = (value, isImage = false) => {
       try {
@@ -5499,56 +5717,72 @@
         return u.protocol === 'https:' && u.hostname === 'naroagutierrez.wordpress.com' && (!isImage || u.pathname.startsWith('/wp-content/uploads/')) ? u.href : null;
       } catch { return null; }
     };
+    const isoDay = value => String(value || '').slice(0, 10);
+    const longDate = iso => new Intl.DateTimeFormat('es', { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(`${iso}T12:00:00Z`));
+    const externalLink = (className, url) => {
+      const link = document.createElement('a');
+      if (className) link.className = className;
+      link.href = url; link.target = '_blank'; link.rel = 'noopener noreferrer';
+      return link;
+    };
+    const buildNotebookCard = post => {
+      const title = plain(post.title), url = safeUrl(post.URL), iso = isoDay(post.date);
+      const article = document.createElement('article');
+      article.className = 'notebook-card is-revealed is-new';
+      article.dataset.notebookEntry = ''; article.dataset.postId = String(post.ID);
+      const poster = safeUrl(post.featured_image, true);
+      if (poster) {
+        const photoLink = externalLink('notebook-photo', url);
+        photoLink.tabIndex = -1; photoLink.setAttribute('aria-hidden', 'true');
+        const img = document.createElement('img');
+        img.src = `${poster}?w=960`; img.alt = ''; img.loading = 'lazy'; img.decoding = 'async';
+        photoLink.append(img); article.append(photoLink);
+      }
+      const body = document.createElement('div'); body.className = 'notebook-card-body';
+      const eyebrow = document.createElement('p'); eyebrow.className = 'eyebrow';
+      const time = document.createElement('time'); time.dateTime = iso; time.textContent = longDate(iso);
+      eyebrow.append(time);
+      const h3 = document.createElement('h3'), titleLink = externalLink('', url);
+      titleLink.textContent = `${title} ↗`; h3.append(titleLink);
+      const summary = document.createElement('p'); summary.className = 'notebook-summary';
+      summary.textContent = plain(post.excerpt).replace(/\s*\[(…|\.\.\.)\]$/, '…');
+      const readLink = externalLink('text-link', url);
+      readLink.textContent = 'Leer la entrada completa ↗'; readLink.setAttribute('aria-label', `Leer la entrada completa: ${title}`);
+      body.append(eyebrow, h3, summary, readLink); article.append(body);
+      return article;
+    };
     async function syncNotebook() {
-      if (!endpoint || document.hidden) return;
+      if (!endpoint || document.hidden || notebookChecking || performance.now() - notebookChecked < NOTEBOOK_RECHECK_MS) return;
+      notebookChecking = true;
       try {
         const res = await fetch(endpoint, { credentials: 'omit' });
         if (!res.ok) return;
         const data = await res.json();
-        const posts = (data?.posts || []).filter(p => safeUrl(p.URL) && p.title && !Number.isNaN(Date.parse(p.date))).slice(0, 6);
-        if (posts.length < 6) return;
-        const existingImages = new Map($$('[data-notebook-entry]', notebookGrid).map(card => {
-          const link = $('h3 a', card)?.getAttribute('href'), img = $('.notebook-photo img', card);
-          return [link, img ? { src: img.getAttribute('src'), width: img.width || 1080, height: img.height || 1080, alt: img.alt } : null];
-        }));
-        const cards = posts.map(post => {
-          const title = plain(post.title), url = safeUrl(post.URL);
-          const localImg = existingImages.get(url);
-          const remoteSrc = safeUrl(post.featured_image, true);
-          const imgSrc = localImg?.src || remoteSrc;
-          const article = document.createElement('article');
-          article.className = 'notebook-card is-revealed';
-          article.dataset.notebookEntry = '';
-          if (imgSrc) {
-            const photoLink = document.createElement('a');
-            photoLink.className = 'notebook-photo'; photoLink.href = url; photoLink.target = '_blank'; photoLink.rel = 'noopener noreferrer';
-            const img = document.createElement('img');
-            img.src = imgSrc; img.alt = localImg?.alt || title; img.loading = 'lazy'; img.decoding = 'async';
-            img.width = localImg?.width || 1080; img.height = localImg?.height || 1080;
-            photoLink.append(img); article.append(photoLink);
-          }
-          const body = document.createElement('div'); body.className = 'notebook-card-body';
-          const eyebrow = document.createElement('p'); eyebrow.className = 'eyebrow';
-          const cat = document.createElement('span'); cat.textContent = 'Del cuaderno de Naroa';
-          const time = document.createElement('time');
-          const iso = String(post.date).slice(0, 10);
-          time.dateTime = iso;
-          time.textContent = new Intl.DateTimeFormat('es', { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(post.date));
-          eyebrow.append(cat, ' · ', time);
-          const h3 = document.createElement('h3'), titleLink = document.createElement('a');
-          titleLink.href = url; titleLink.target = '_blank'; titleLink.rel = 'noopener noreferrer'; titleLink.textContent = `${title} ↗`;
-          h3.append(titleLink);
-          const excerpt = plain(post.excerpt).replace(/\s+/g, ' ');
-          const summary = document.createElement('p');
-          summary.textContent = excerpt.length > 170 ? excerpt.slice(0, 170).replace(/\s+\S*$/, '') + '…' : excerpt;
-          const readLink = document.createElement('a');
-          readLink.className = 'text-link'; readLink.href = url; readLink.target = '_blank'; readLink.rel = 'noopener noreferrer';
-          readLink.textContent = 'Leer en el cuaderno de Naroa ↗';
-          body.append(eyebrow, h3, summary, readLink); article.append(body);
-          return article;
+        const posts = (data?.posts || [])
+          .filter(post => post && post.ID && safeUrl(post.URL) && plain(post.title) && !Number.isNaN(Date.parse(post.date)))
+          .sort((a, b) => Date.parse(b.date) - Date.parse(a.date))
+          .slice(0, NOTEBOOK_VISIBLE);
+        if (!posts.length) return;
+        notebookChecked = performance.now();
+        const current = $$('[data-notebook-entry]', notebookGrid);
+        const known = new Map(current.map(card => [card.dataset.postId, card]));
+        const wanted = posts.map(post => {
+          const card = known.get(String(post.ID));
+          if (!card) { notebookAdded += 1; return buildNotebookCard(post); }
+          // La tarjeta revisada se queda como está; solo se corrige el enlace si la entrada cambió de dirección.
+          const url = safeUrl(post.URL);
+          $$('a[href^="https://naroagutierrez.wordpress.com/"]', card).forEach(link => { if (link.getAttribute('href') !== url) link.href = url; });
+          return card;
         });
-        notebookGrid.replaceChildren(...cards);
-      } catch {}
+        const next = [...wanted, ...current.filter(card => !wanted.includes(card))].slice(0, NOTEBOOK_VISIBLE);
+        if (next.length !== current.length || next.some((card, index) => card !== current[index])) notebookGrid.replaceChildren(...next);
+        if (notebookStatus && notebookStatusText) {
+          const total = Number(data.found) || 0, latest = longDate(isoDay(posts[0].date));
+          const lead = notebookAdded ? (notebookAdded === 1 ? '1 entrada nueva' : `${notebookAdded} entradas nuevas`) : 'Al día con su WordPress';
+          notebookStatus.dataset.state = notebookAdded ? 'new' : 'live';
+          notebookStatusText.textContent = `${lead} · ${total ? `${total} entradas · ` : ''}la última, del ${latest}`;
+        }
+      } catch {} finally { notebookChecking = false; }
     }
     syncNotebook();
     document.addEventListener('visibilitychange', () => { if (!document.hidden) syncNotebook(); });

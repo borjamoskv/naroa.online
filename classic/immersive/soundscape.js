@@ -88,6 +88,8 @@
   let volume = 0.8, intensity = 0.31;
   // Pulso: multiplicador del tempo base. `pace` es el que suena; `paceGoal`, al que se acerca nota a nota.
   let pace = 1, paceGoal = 1, paceStamp = 0;
+  // Envíos de los ecos a tempo [nodo, nivel base]: se recogen al apretar el paso y se abren al serenarse.
+  let echoSends = [], echoWet = 1;
   const listeners = new Set();
   try {
     const saved = parseFloat(localStorage.getItem(VOLUME_KEY));
@@ -189,6 +191,7 @@
     const pingSend = ctx.createGain(), ping = ctx.createDelay(2), pong = ctx.createDelay(2);
     const pingBack = ctx.createGain(), pongBack = ctx.createGain(), loopTone = ctx.createBiquadFilter();
     pingSend.gain.value = 0.34;
+    echoSends = [[pingSend, 0.34]];
     ping.delayTime.value = EIGHTH * 3; pong.delayTime.value = EIGHTH * 2;
     pingBack.gain.value = 0.52; pongBack.gain.value = 0.48;
     loopTone.type = 'lowpass'; loopTone.frequency.value = 1500; loopTone.Q.value = 0.4;
@@ -216,6 +219,7 @@
         const lineTone = ctx.createBiquadFilter(), lineRoom = ctx.createGain();
         line.delayTime.value = seconds;
         lineSend.gain.value = level; lineBack.gain.value = feedback; lineRoom.gain.value = toRoom;
+        echoSends.push([lineSend, level]);
         lineTone.type = 'lowpass'; lineTone.frequency.value = cutoff; lineTone.Q.value = 0.4;
         rumble.connect(lineSend); lineSend.connect(lineTone); lineTone.connect(line);
         line.connect(lineBack); lineBack.connect(lineTone);
@@ -389,12 +393,14 @@
   function scheduleEighth(when) {
     const bar = FIRST_PASS[barIndex];
     // Balanceo ligero: las corcheas a contratiempo llegan un pelo tarde.
-    if (eighth % 2 === 1 && !bar.final) when += EIGHTH / pace * SWING;
+    if (eighth % 2 === 1 && !bar.final) when += EIGHTH / pace * SWING * clamp(1 - 1.6 * (pace - 1), 0.65, 1.2);
     if (eighth === 0 && bar.thin) {
       // Cada pasada del eco calla notas distintas.
       thinMask = new Set(bar.rh.map((_, i) => i).filter(i => i > 0 && Math.random() < 0.3));
     }
-    const hush = bar.soft ? 0.72 : 1;
+    // Con el pulso cambia la mano: al apretar toca con más decisión y más seco; al serenarse, más suave y ligado.
+    const hush = (bar.soft ? 0.72 : 1) * clamp(1 + 0.8 * (pace - 1), 0.88, 1.17);
+    const pedal = 1 / pace;
     const left = bar.lh[eighth];
     // Cambio de pedal al empezar el compás: un golpe sordo de madera y fieltro.
     if (eighth === 0 && left != null && Math.random() < 0.65) brush(when - 0.03, rand(0.03, 0.06), 190, 0.16);
@@ -406,7 +412,7 @@
     if (left != null && !dropped) {
       const roll = bar.final ? eighth * rand(0.03, 0.045) : 0;
       const [at, vel] = human(when + roll, 0.4 * LH_ACCENT[eighth] * hush * rand(0.86, 1.1));
-      strike(left, at, vel, bar.final ? 1.5 : 0.5);
+      strike(left, at, vel, bar.final ? 1.5 : 0.5 * pedal);
     }
     if (intensity >= 0.35) {
       bar.rh.forEach(([at, midi, length], i) => {
@@ -418,7 +424,7 @@
         const [hit, vel] = human(when + lag, arc * hush * rand(0.9, 1.07) * (0.6 + 0.4 * intensity));
         // De vez en cuando un dedo roza la tecla vecina antes de caer en la buena.
         if (Math.random() < 0.035) strike(midi + (Math.random() < 0.5 ? -2 : 2), hit - rand(0.03, 0.05), vel * 0.2, 0.35);
-        strike(midi, hit, vel, clamp(0.8 + length * 0.12, 0.9, 1.7));
+        strike(midi, hit, vel, clamp(0.8 + length * 0.12, 0.9, 1.7) * Math.sqrt(pedal));
         if (bar.bloom && length >= 4 && Math.random() < 0.55) {
           strike(midi - 12, hit + EIGHTH / pace * 0.5, vel * 0.45, 1.3);
         }
@@ -431,9 +437,18 @@
   function breathePace() {
     if (silent || ctx.currentTime - paceStamp > PACE_HOLD) paceGoal = 1;
     const gap = paceGoal - pace;
-    if (Math.abs(gap) < 0.003) { pace = paceGoal; return; }
+    if (Math.abs(gap) < 0.003) { pace = paceGoal; breatheEchoes(); return; }
     // Aprieta con más decisión de la que afloja; como mucho un 3 % de una corchea a la siguiente.
     pace += clamp(gap * (paceGoal === 1 ? 0.2 : 0.24), -0.03, 0.03);
+    breatheEchoes();
+  }
+
+  // Los ecos están medidos a 96: al correr se recogen para no emborronar; al serenarse se abren.
+  function breatheEchoes() {
+    const wet = clamp(1 - 1.7 * (pace - 1), 0.66, 1.2);
+    if (Math.abs(wet - echoWet) < 0.004) return;
+    echoWet = wet;
+    echoSends.forEach(([node, base]) => node.gain.setTargetAtTime(base * wet, nextTime, 0.35));
   }
 
   function advance() {
@@ -479,6 +494,7 @@
     playing = true;
     pace = paceGoal = 1;
     nextTime = ctx.currentTime + 0.12;
+    breatheEchoes();
     fade(volume, 1.4);
     clearInterval(timer);
     timer = setInterval(tick, TICK_MS);
@@ -580,7 +596,7 @@
   const RESUME_KEY = 'naroa-score-on';
   const TITLE = 'Apirila';
   let busy = false, quiet = false;
-  let energy = 0, feltAt = 0;
+  let energy = 0, calm = 0, feltAt = 0;
 
   const remember = on => {
     try { if (on) sessionStorage.setItem(RESUME_KEY, '1'); else sessionStorage.removeItem(RESUME_KEY); } catch {}
@@ -635,23 +651,26 @@
   // Parado: tempo base. Paseo lento y sostenido: la pieza se serena. Scroll rápido: aprieta el paso.
   const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
   const ease = v => { const t = clamp(v, 0, 1); return t * t * (3 - 2 * t); };
-  function paceFor(speed) {
-    const stroll = ease((speed - 0.04) / 0.2) * (1 - ease((speed - 0.45) / 0.75));
-    const rush = ease((speed - 0.9) / 2.3);
-    return 1 - (12 / 96) * stroll + (20 / 96) * rush;
-  }
+  const strollOf = speed => ease((speed - 0.04) / 0.2) * (1 - ease((speed - 0.45) / 0.75));
+  const rushOf = speed => ease((speed - 0.9) / 2.3);
   function feel(velocity) {
-    if (!score || !score.playing) { energy = 0; return; }
+    if (!score || !score.playing) { energy = calm = 0; return; }
     const speed = Math.abs(velocity);
     // Un salto de golpe (enlace, tecla, índice: más de 40 pantallas por segundo) no es un gesto: no cuenta.
     if (!(speed <= 40)) return;
     const now = performance.now(), gap = now - feltAt;
     feltAt = now;
     if (gap > 400) energy = 0;
+    if (gap > 1500) calm = 0;
+    const dt = clamp(gap, 8, 50);
     // Media móvil de un cuarto de segundo: las muescas sueltas de una rueda de ratón se leen como
     // la velocidad media del gesto, no como una ráfaga de picos.
-    energy += (Math.min(speed, 6) - energy) * (1 - Math.exp(-clamp(gap, 8, 50) / 260));
-    score.setPace(paceFor(energy));
+    energy += (Math.min(speed, 6) - energy) * (1 - Math.exp(-dt / 260));
+    // La calma hay que ganársela: solo un paseo lento sostenido cerca de un segundo serena la pieza.
+    // Así la cola de un gesto rápido o una muesca suelta de la rueda no la frenan.
+    const stroll = strollOf(energy);
+    calm += (stroll - calm) * (1 - Math.exp(-dt / (stroll > calm ? 800 : 220)));
+    score.setPace(1 - (12 / 96) * calm + (20 / 96) * rushOf(energy));
   }
 
   window.NAROA_SOUND = Object.freeze({
