@@ -65,14 +65,18 @@
   const effectsKey = 'naroa-effects';
   let effectsPreference = null;
   try { effectsPreference = localStorage.getItem(effectsKey); } catch {}
+  // La preferencia «Activar/Pausar efectos» vale para toda la web: también gobierna la galería de encargos.
+  const effectsPage = galleryPage || !!$('[data-commission-horizontal]');
   const reduced = {
-    get matches() { return galleryPage && effectsPreference === 'on' ? false : galleryPage && effectsPreference === 'off' ? true : systemMotion.matches; },
+    get matches() { return effectsPage && effectsPreference === 'on' ? false : effectsPage && effectsPreference === 'off' ? true : systemMotion.matches; },
     addEventListener(type, listener) { if (type === 'change') motionListeners.add(listener); }
   };
   function paintEffects() {
     const active = !reduced.matches;
-    document.documentElement.classList.toggle('motion-opt-in', galleryPage && active);
+    document.documentElement.classList.toggle('motion-opt-in', effectsPage && active);
     document.documentElement.classList.toggle('motion-off', galleryPage && !active);
+    // Encargos sin efectos: el recorrido horizontal se conserva, en seco (ver .motion-calm en app.css).
+    document.documentElement.classList.toggle('motion-calm', effectsPage && !galleryPage && !active);
     $$('[data-effects]').forEach(button => {
       button.setAttribute('aria-pressed', String(active));
       button.textContent = active ? 'Pausar efectos' : 'Activar efectos';
@@ -186,7 +190,7 @@
     ctx.arcTo(x + w, y, x + w, y + h, radius);
     ctx.arcTo(x + w, y + h, x, y + h, radius);
     ctx.arcTo(x, y + h, x, y, radius);
-    ctx.arcTo(x, y + w, y, radius);
+    ctx.arcTo(x, y, x + w, y, radius);
     ctx.closePath();
   }
 
@@ -209,6 +213,36 @@
     ctx.restore();
   }
 
+  // Silueta recortada a mano, como el papel de un collage: ni rectas ni esquinas de compás.
+  // Es determinista (misma semilla, mismo corte) para que no tiemble entre fotogramas del loop.
+  function storyCutPath(ctx, x, y, w, h, wobble, seed) {
+    let state = seed >>> 0;
+    const rnd = () => { state = (state * 1664525 + 1013904223) >>> 0; return state / 4294967296; };
+    const pts = [];
+    const side = (ax, ay, bx, by) => {
+      const length = Math.hypot(bx - ax, by - ay), steps = Math.max(2, Math.round(length / 70));
+      const nx = -(by - ay) / length, ny = (bx - ax) / length;
+      for (let i = 0; i <= steps; i++) {
+        const t = i / steps, lean = (rnd() - 0.5) * 2 * wobble;
+        pts.push([ax + (bx - ax) * t + nx * lean, ay + (by - ay) * t + ny * lean]);
+      }
+    };
+    const nick = Array.from({ length: 8 }, () => wobble * (1.6 + rnd() * 2.6));
+    side(x + nick[0], y, x + w - nick[1], y);
+    side(x + w, y + nick[2], x + w, y + h - nick[3]);
+    side(x + w - nick[4], y + h, x + nick[5], y + h);
+    side(x, y + h - nick[6], x, y + nick[7]);
+    const mid = (a, b) => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+    const start = mid(pts[pts.length - 1], pts[0]);
+    ctx.beginPath();
+    ctx.moveTo(start[0], start[1]);
+    pts.forEach((point, i) => {
+      const next = mid(point, pts[(i + 1) % pts.length]);
+      ctx.quadraticCurveTo(point[0], point[1], next[0], next[1]);
+    });
+    ctx.closePath();
+  }
+
   // La pieza completa, sin recortar, como una copia en papel sujeta a una esquina: se ajusta
   // a la proporción de la obra dentro de (maxW × maxH) y se apoya en (x, bottom).
   function drawStoryMiniature(ctx, img, x, bottom, maxW, maxH, tilt = -2.4) {
@@ -225,8 +259,11 @@
     ctx.shadowBlur = 54;
     ctx.shadowOffsetY = 28;
     ctx.fillStyle = '#fffdf4';
-    ctx.fillRect(0, 0, cardW, cardH);
+    storyCutPath(ctx, 0, 0, cardW, cardH, 5, 7);
+    ctx.fill();
     ctx.shadowColor = 'transparent';
+    storyCutPath(ctx, border, border, w, h, 3.5, 23);
+    ctx.clip();
     ctx.drawImage(img, 0, 0, nw, nh, border, border, w, h);
     ctx.restore();
     return { x, y, w: cardW, h: cardH };
@@ -841,7 +878,7 @@
       if (info && info.name) {
         menuMelodyToday.textContent = `${info.day || 'Hoy'} · «${info.name}»`;
       } else {
-        menuMelodyToday.textContent = 'Banda sonora · «Apirila»';
+        menuMelodyToday.textContent = 'Banda sonora del mes';
       }
     }
   }
@@ -5405,7 +5442,9 @@
       const maxTx = hasRealLayout && lastCardCenter > vw * 0.5
         ? Math.max(0, lastCardCenter - vw * 0.5)
         : Math.max(0, trackWidth - vw);
-      const tx = reduced.matches ? 0 : -progress * maxTx;
+      // El scroll vertical lleva siempre la pista en horizontal. Con «reducir movimiento» lo hace
+      // en seco (sin inercia, giro, capas ni recortes en vuelo), pero el recorrido es el mismo.
+      const tx = -progress * maxTx;
       hState.translateX = Number(tx.toFixed(2));
       if (track) {
         track.style.setProperty('--hx', `${tx.toFixed(2)}px`);
@@ -5615,7 +5654,7 @@
         : (vw * 0.5 + idx * (maxTx / Math.max(1, cards.length - 1)));
       const targetTx = clamp(cX - vw * 0.5, 0, maxTx);
       const p = maxTx > 0 ? targetTx / maxTx : 0;
-      window.scrollTo({ top: stageTop() + p * maxScroll, behavior: 'smooth' });
+      window.scrollTo({ top: stageTop() + p * maxScroll, behavior: reduced.matches ? 'auto' : 'smooth' });
     }
 
     measureCards();
@@ -5637,12 +5676,12 @@
     });
     addEventListener('scroll', scheduleCommissionHorizontal, { passive: true });
     addEventListener('resize', () => { measureCards(); scheduleCommissionHorizontal(); }, { passive: true });
+    // «Activar/Pausar efectos» cambia de modo sin recargar: se recoloca todo en el mismo punto del recorrido.
+    reduced.addEventListener('change', () => { pointerTargetX = pointerTargetY = 0; measureCards(); scheduleCommissionHorizontal(); });
     addEventListener('keydown', e => {
       if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
       const tag = (e.target?.tagName || '').toLowerCase();
       if (tag === 'input' || tag === 'textarea' || tag === 'select' || e.target?.isContentEditable) return;
-      // Sin movimiento la pista es una tira con scroll nativo: las flechas no deben mover la página.
-      if (reduced.matches) return;
       const vh = innerHeight || 900;
       const stageHeight = commissionHorizontal.offsetHeight || vh * 4.5;
       const stageY = (scrollY || 0) - stageTop();
@@ -5897,6 +5936,12 @@
         swatchSrc: '/images/catalogo/commission-rara-peacock.webp',
         swatchAlt: 'Pluma de pavo real sobre papel de algodón'
       },
+      // Soportes sin recorte propio: enseñan la obra, sin objeto prendido en la esquina.
+      'Lienzo': { slug: 'la-pensadora', title: 'La pensadora · Lienzo 3D', tag: 'Acrílico sobre lienzo con laterales pintados', mobileTag: 'Lienzo' },
+      'Plato de madera': { slug: 'elene', title: 'Elene · Plato de madera', tag: 'Lápices, acrílico, pastel y flores añadidas', mobileTag: 'Plato de madera' },
+      'Caja de madera': { slug: 'hugo-box', title: 'Hugo Box · Caja de madera', tag: 'Fotocopia intervenida y collage', mobileTag: 'Caja de madera' },
+      'Rodaja de árbol': { slug: 'patxi-en-su-pino', title: 'Patxi en su-pino · Rodaja de pino', tag: 'Lápices de colores, pastel y acrílico', mobileTag: 'Rodaja de árbol' },
+      'Un objeto tuyo': { slug: 'i-got-you-babe', title: 'I Got You Babe · Reloj de pared de bambú', tag: 'Pintura y ensamblaje sobre un objeto', mobileTag: 'Un objeto tuyo' },
       'Asesoramiento en estudio': {
         slug: 'el-armigo-atomico',
         title: 'El Armigo Atómico · Asesoramiento con Naroa',
@@ -5917,9 +5962,12 @@
       if (visualImg && foundWork?.cover) setArtSrc(visualImg, artSrc(foundWork.cover, visualImg.getBoundingClientRect(), imgAspect(visualImg)));
       if (visualTitle) visualTitle.textContent = vMeta.title;
       if (visualTag) visualTag.textContent = vMeta.tag;
-      if (swatchCutout && vMeta.swatchSrc) {
-        swatchCutout.src = vMeta.swatchSrc;
-        swatchCutout.alt = vMeta.swatchAlt;
+      if (swatchCutout) {
+        swatchCutout.hidden = !vMeta.swatchSrc;
+        if (vMeta.swatchSrc) {
+          swatchCutout.src = vMeta.swatchSrc;
+          swatchCutout.alt = vMeta.swatchAlt;
+        }
       }
     };
 
@@ -6013,23 +6061,30 @@
       });
     });
 
-    cycleBtns.forEach(word => {
-      word.addEventListener('keydown', e => {
-        if (e.key !== 'Enter' && e.key !== ' ') return;
-        e.preventDefault();
-        word.click();
-      });
-      word.addEventListener('click', () => {
+    // Con tantas opciones hace falta saber por dónde se va y poder volver atrás:
+    // el toque avanza, las flechas van en los dos sentidos y la pista cuenta la posición.
+    const cycleHint = $('.enc-hint', configurator);
+    const turnWord = (word, step) => {
         const field = word.dataset.cfgCycle;
         const select = cycleSelect(field);
         if (!select) return;
-        select.selectedIndex = (select.selectedIndex + 1) % select.options.length;
+        const count = select.options.length;
+        select.selectedIndex = (select.selectedIndex + step + count) % count;
+        if (cycleHint) cycleHint.textContent = `${word.dataset.cycleLabel} · ${select.selectedIndex + 1} de ${count} · toca otra vez para seguir`;
         updateLink();
         word.classList.toggle('is-flipped', false);
         void word.offsetWidth;
         word.classList.toggle('is-flipped', true);
         window.NAROA_SOUND?.atelierMaterial?.(field === 'support' ? select.value : field);
+    };
+    cycleBtns.forEach(word => {
+      word.addEventListener('keydown', e => {
+        const step = e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0;
+        if (!step) return;
+        e.preventDefault();
+        turnWord(word, step);
       });
+      word.addEventListener('click', () => turnWord(word, 1));
     });
 
     if (copyBtn) {

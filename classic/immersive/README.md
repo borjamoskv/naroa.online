@@ -85,8 +85,8 @@ continues to use `dist/`. The Cloudflare and Vercel project identities are kept.
 
 ## Optional soundtrack
 
-The Sonido button starts and stops «Apirila», an original piece for piano, trombones
-and tape delays. `soundscape.js` holds both the engine (`window.NAROA_SCORE`) and its
+The Sonido button starts and stops the piece of the current month: twelve original
+pieces for piano, trombones and tape delays, one per month («Apirila» is April's). `soundscape.js` holds both the engine (`window.NAROA_SCORE`) and its
 site wiring (`window.NAROA_SOUND`). Everything is synthesised with Web Audio: no audio
 file is downloaded and no `AudioContext` exists before the visitor's gesture.
 

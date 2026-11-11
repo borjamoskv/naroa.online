@@ -7,6 +7,8 @@ const output = path.resolve(__dirname, '../.deploy');
 const manifest = JSON.parse(fs.readFileSync(path.join(output, 'immersive/build-manifest.json')));
 const errors = [];
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+// One original piece per month, titled with the Basque name of the month.
+const MONTH_TITLES = ['Urtarrila', 'Otsaila', 'Martxoa', 'Apirila', 'Maiatza', 'Ekaina', 'Uztaila', 'Abuztua', 'Iraila', 'Urria', 'Azaroa', 'Abendua'];
 
 function create(route = '/', reduce = false, viewport = { width: 1024, height: 768 }, audio = null, effects = null, storageDenied = false, blogFetch = null) {
   const file = path.join(output, route, 'index.html');
@@ -126,7 +128,7 @@ function audioBoundary() {
   });
   const node = (extra = {}) => ({ connect() {}, disconnect() {}, start() {}, stop() {}, ...extra });
   audio.Context = class {
-    constructor() { this.state = 'suspended'; this.rooms = []; this.delays = []; this.sampleRate = 24000; this.destination = node(); audio.contexts.push(this); }
+    constructor() { this.state = 'suspended'; this.rooms = []; this.delays = []; this.panners = []; this.sampleRate = 24000; this.destination = node(); audio.contexts.push(this); }
     get currentTime() { return audio.now / 1000; }
     async resume() { if (audio.denied) throw Error('Playback denied'); this.state = 'running'; }
     async suspend() { this.state = 'suspended'; }
@@ -135,6 +137,7 @@ function audioBoundary() {
     createGain() { return node({ gain: parameter(1) }); }
     createBiquadFilter() { return node({ frequency: parameter(350), Q: parameter(1), gain: parameter(0) }); }
     createStereoPanner() { return node({ pan: parameter(0) }); }
+    createPanner() { const panner = node({ positionX: parameter(0), positionY: parameter(0), positionZ: parameter(0) }); this.panners.push(panner); return panner; }
     createWaveShaper() { return node(); }
     createAnalyser() { return node({ fftSize: 2048, frequencyBinCount: 1024 }); }
     createDelay() { const delay = node({ delayTime: parameter(0) }); this.delays.push(delay); return delay; }
@@ -792,7 +795,9 @@ async function eyeMatch(ui, base, points) {
   assert.equal(music.find('[data-sound-status]').hidden, true, 'Playing shows no visual card');
   assert.equal(music.find('[data-sound-card]'), null, 'The analog sound card is gone');
   const score = music.w.NAROA_SCORE;
-  assert.equal(score.title, 'Apirila'); assert.equal(score.playing, true);
+  assert.deepEqual([...score.titles], MONTH_TITLES, 'There are twelve pieces, one per month');
+  assert.equal(score.title, MONTH_TITLES[new Date().getMonth()], 'The piece of the current month plays'); assert.equal(score.playing, true);
+  assert.ok(ctx.panners.length === 6 && ctx.panners.every(panner => panner.panningModel === 'HRTF'), 'Four echoes and two nature sources surround the listener in 3D');
   assert.ok(score.state.intensity < .35, 'By default the right hand stays silent');
   assert.ok(audio.oscillators.length > 0, 'Starting schedules the first piano notes');
   assert.ok(ctx.rooms.length === 1 && ctx.delays.length === 5, 'The piano runs through a room and five tape delays');
@@ -843,7 +848,7 @@ async function eyeMatch(ui, base, points) {
   }
   assert.equal(galleryAudio.requests.length, 0, 'No artwork triggers an audio download');
   reactiveGallery.click('[data-sound]'); galleryAudio.advance(6000); reactiveGallery.dom.window.close();
-  // «Apirila» follows the visitor's scroll: a fast scroll hurries it, a slow stroll settles it, stillness returns it to 96.
+  // The soundtrack follows the visitor's scroll: a fast scroll hurries it, a slow stroll settles it, stillness returns it to 96.
   const paceAudio = audioBoundary(), paced = create('/obra/rockagipsy/', false, { width: 1024, height: 768 }, paceAudio); await paced.flush();
   const pacedScore = paced.w.NAROA_SCORE, pacedSound = paced.w.NAROA_SOUND;
   // Each step is 0.9 s of camera frames on the audio clock, then one real turn of the engine's own scheduler.
@@ -859,14 +864,30 @@ async function eyeMatch(ui, base, points) {
   assert.equal(paceAudio.contexts.length, 0, 'Scrolling with the sound off creates no audio');
   paced.click('[data-sound]'); await paced.flush();
   assert.equal(pacedScore.bpm, 96); assert.equal(pacedScore.state.tempo, 96, 'The piece starts at its base tempo');
+  // Every month has its own complete piece; switching restarts from its opening bars and keeps playing.
+  for (let month = 0; month < 12; month++) {
+    assert.equal(pacedScore.setMonth(month), MONTH_TITLES[month]);
+    const opening = pacedScore.state, notesSoFar = paceAudio.oscillators.length;
+    assert.ok(opening.title === MONTH_TITLES[month] && opening.month === month && opening.bars === 37 && opening.section === 'Entrada', MONTH_TITLES[month] + ' is a complete piece');
+    await perform(paceAudio, pacedScore, .9);
+    assert.ok(paceAudio.oscillators.length > notesSoFar, MONTH_TITLES[month] + ' schedules its own notes');
+  }
+  assert.equal(paced.w.NAROA_SOUND.getActiveMelodyInfo().name, 'Abendua', 'The menu names the piece that is playing');
+  pacedScore.setMonth(3);
+  assert.equal(pacedScore.state.intensity, .31, 'At rest the right hand sleeps');
+  const echoAt = paceAudio.contexts[0].panners[0].positionX.value;
   assert.equal(await perform(paceAudio, pacedScore, 2.7), 96, 'Without scrolling the tempo stays at 96');
   const hurried = await perform(paceAudio, pacedScore, .9, report({ slug: 'rockagipsy', mode: 'V', velocity: 4 }));
   assert.ok(hurried > 96 && hurried < 110, 'A fast scroll speeds the piece up gradually, never in one jump');
   const fast = await perform(paceAudio, pacedScore, 4.5, report({ slug: 'rockagipsy', mode: 'V', velocity: -4 }));
   assert.ok(fast > 110 && fast <= 116, 'A sustained fast scroll, in either direction, reaches at most 116 beats per minute');
+  assert.ok(pacedScore.state.intensity >= .35, 'Movement wakes the melody of the month');
+  assert.notEqual(paceAudio.contexts[0].panners[0].positionX.value, echoAt, 'The echoes turn around the listener with the scroll');
   const slow = await perform(paceAudio, pacedScore, 9, report({ slug: 'rockagipsy', mode: 'V', velocity: .3 }));
   assert.ok(slow >= 84 && slow < 90, 'A slow, sustained stroll calms the piece down to no less than 84');
   assert.equal(await perform(paceAudio, pacedScore, 9), 96, 'When the scroll stops the tempo returns to 96 by itself');
+  await perform(paceAudio, pacedScore, 4.5);
+  assert.equal(pacedScore.state.intensity, .31, 'In stillness the melody retires and only the accompaniment remains');
   assert.equal(await perform(paceAudio, pacedScore, 2.7, report({ slug: 'rockagipsy', mode: 'V', velocity: 90 })), 96, 'A jump across the catalogue is not a gesture');
   assert.equal(await perform(paceAudio, pacedScore, 2.7, report({ slug: 'rockagipsy', mode: 'still', velocity: 4 })), 96, 'Without motion effects the tempo never reacts');
   await perform(paceAudio, pacedScore, 1.8, report({ slug: 'rockagipsy', mode: 'V', velocity: 4 }));
@@ -876,6 +897,7 @@ async function eyeMatch(ui, base, points) {
   const notesBeforeSilence = paceAudio.oscillators.length;
   assert.equal(await perform(paceAudio, pacedScore, 7.2, report({ slug: 'game-over', mode: 'V', velocity: 4 })), 96, 'Game Over rests at the base tempo however fast the scroll');
   assert.equal(paceAudio.oscillators.length, notesBeforeSilence, 'Game Over stays silent while the visitor scrolls');
+  assert.equal(pacedScore.state.intensity, .31, 'Game Over never wakes the melody');
   pacedSound.frame({ mode: 'page', velocity: 0 });
   assert.equal(pacedScore.state.silent, true, 'A speed-only report does not break the silence');
   pacedSound.frame({ slug: 'rockagipsy', mode: 'V', velocity: 0 });
@@ -1036,8 +1058,16 @@ async function eyeMatch(ui, base, points) {
       page.click('[data-cfg-cycle="support"]');
       assert.equal(page.w.NAROA_COMMISSION.getState().selectedSupport, 'Caja personalizada u objeto', 'Tapping the material word advances to the next support');
       assert.equal(page.find('[data-cfg-cycle="support"]').textContent, 'una lata de conserva', 'The tapped word is rewritten inside the sentence');
-      page.click('[data-cfg-cycle="timing"]'); page.click('[data-cfg-cycle="timing"]');
+      assert.ok(page.find('#cfg-motif').options.length >= 9 && page.find('#cfg-support').options.length >= 10 && page.find('#cfg-timing').options.length >= 5, 'Each word of the sentence offers a generous set of options');
+      for (let i = 0; i < page.find('#cfg-timing').options.length; i++) page.click('[data-cfg-cycle="timing"]');
       assert.equal(page.w.NAROA_COMMISSION.getState().selectedTiming, 'Sin prisa (2 a 4 semanas)', 'Tapping past the last option wraps back to the first');
+      page.find('[data-cfg-cycle="timing"]').dispatchEvent(new page.w.KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true, cancelable: true }));
+      assert.equal(page.w.NAROA_COMMISSION.getState().selectedTiming, 'Navidad o Reyes', 'The left arrow walks the options backwards');
+      assert.ok(page.find('.enc-hint').textContent.includes(`${page.find('#cfg-timing').options.length} de ${page.find('#cfg-timing').options.length}`), 'The hint says where you are among the options');
+      page.find('[data-cfg-cycle="timing"]').dispatchEvent(new page.w.KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true }));
+      for (const support of ['Lienzo', 'Plato de madera', 'Caja de madera', 'Rodaja de árbol', 'Un objeto tuyo']) {
+        assert.ok(Array.from(page.find('#cfg-support').options).some(option => option.value === support), `${support} can be chosen as a support`);
+      }
       page.find('[data-cfg-cycle="motif"]').dispatchEvent(new page.w.KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
       assert.equal(page.w.NAROA_COMMISSION.getState().selectedMotif, 'Pareja o familia', 'Sentence words respond to the keyboard');
       assert.ok(page.find('#cfg-preview').textContent.includes('Caja personalizada u objeto') && page.find('#cfg-preview').textContent.includes('Pareja o familia'), 'The WhatsApp draft follows the sentence');
@@ -1116,7 +1146,7 @@ async function eyeMatch(ui, base, points) {
     const loopResult = await armigoPage.w.NAROA_STORY_LOOP.record('el-armigo-atomico', 1200);
     assert.equal(loopResult.backend, 'canvas-capture-mediastream-v1', 'V5 Story Loop uses canvas-capture-mediastream-v1 backend');
     assert.equal(loopResult.lastRecordedSlug, 'el-armigo-atomico', 'V5 Story Loop records target artwork slug');
-    assert.ok(loopResult.framesRendered >= 12 && loopResult.notesScheduled >= 3 && loopResult.melodyName === 'Apirila', 'V5 Story Loop renders orbital macro frames and takes an excerpt of the soundtrack');
+    assert.ok(loopResult.framesRendered >= 12 && loopResult.notesScheduled >= 3 && MONTH_TITLES.includes(loopResult.melodyName), 'V5 Story Loop renders orbital macro frames and takes an excerpt of the soundtrack');
 
     assert.ok(armigoPage.find('[data-journey-cue]').textContent.includes('720°'), 'El Armigo Atómico displays 720° atomic spin cue');
     const armigoScene = armigoPage.find('.art-scene[data-work="el-armigo-atomico"]');
@@ -1263,6 +1293,21 @@ async function eyeMatch(ui, base, points) {
     assert.ok(directShown().includes(stem(works[many].photos[1])), 'A direct link rotates without any scroll');
     direct.dom.window.close();
   }
+  {
+    // Encargos: el scroll vertical lleva la pista en horizontal también con «reducir movimiento».
+    const calmCommissions = create('/retratos-por-encargo-bilbao/', true, { width: 1280, height: 800 });
+    await calmCommissions.flush();
+    const calmTrack = calmCommissions.find('[data-horizontal-track]');
+    assert.equal(calmCommissions.w.NAROA_COMMISSION_HORIZONTAL.scrollToProgress(0).translateX, 0);
+    const calmHalf = calmCommissions.w.NAROA_COMMISSION_HORIZONTAL.scrollToProgress(0.5);
+    assert.ok(calmHalf.translateX < 0, 'Reduced motion still turns vertical scroll into horizontal travel');
+    assert.equal(calmTrack.style.getPropertyValue('--hx'), `${calmHalf.translateX.toFixed(2)}px`, 'The track follows the scroll without inertia');
+    assert.ok(Array.from(calmCommissions.document.querySelectorAll('[data-parallax-card]')).every(card => Number(card.style.getPropertyValue('--parallax-x')) === 0), 'Reduced motion carries no parallax layers');
+    assert.equal(calmCommissions.w.NAROA_COMMISSION_HORIZONTAL.scrollToProgress(1).activeCardIndex, 4, 'The closing card is reachable by scrolling alone');
+    calmCommissions.dom.window.close();
+  }
   assert.equal(manifest.projects, works.length); assert.deepEqual(errors, []);
   console.log(`PASS: ${works.length} variable camera scores, fixed viewing pauses, full-viewport vertical and horizontal seams, deterministic reverse motion, three deep iris passes, zoom and puzzle chapters; all ${works.length} artwork flows, 3 gallery eye pairs, kinetic titles, native scroll, free inertia, direct links, 3-image loading bound, search/filters, details/photos, quiet mode, reduced motion, Vaivenes, editorial reveals, responsive Naroa-to-Rara Avis pupil/iris alignment, photographic wink, cinematic deep-iris camera with continuous forward velocity across the blend, eased outward turn, reversible reveal, image-load guard, seamless continuation through all ${works.length} works, 8 additional deep eye matches embedded catalogue navigation, opt-in reactive sound fragments, speed and direction response, bounded voices, silence at rest and safe audio lifecycle.`);
-})().catch(error => { console.error(error); process.exitCode = 1; });
+// Salida inmediata: las ventanas JSDOM que quedan abiertas tras un fallo mantienen vivo el proceso
+// y un test fallido dejaba ./deploy.sh colgado con el cerrojo de deploy cogido.
+})().catch(error => { console.error(error); process.exit(1); });
