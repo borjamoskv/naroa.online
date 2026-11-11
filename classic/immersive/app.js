@@ -494,7 +494,7 @@
   // no se guarda ni se envía, y se pierde al cerrar la pestaña. Con ello se compone una Story con
   // los recortes reales de las obras donde más se detuvo la visita.
   const visit = { seconds: Object.create(null), focus: Object.create(null), last: performance.now() };
-  const VISIT_MIN_SECONDS = 4, VISIT_MIN_WORKS = 3, VISIT_MAX_WORKS = 4;
+  const VISIT_MIN_SECONDS = 4, VISIT_MIN_WORKS = 3, VISIT_MAX_WORKS = 4, VISIT_MIN_LENS = 1.5;
   function visitTick() {
     const now = performance.now(), dt = Math.min(1, (now - visit.last) / 1000);
     visit.last = now;
@@ -505,10 +505,36 @@
     if (!slug || (phase && phase !== 'hold' && phase !== 'explore' && phase !== 'still')) return;
     if (slug === projects[0]?.slug && window.scrollY < 40) return;
     visit.seconds[slug] = (visit.seconds[slug] || 0) + dt;
+    // Con la lupa a la vista, el tiempo se apunta además a la zona de la obra (rejilla de 4×4) que tiene debajo.
+    const spot = visit.focus[slug], lens = $('.art-lens');
+    if (spot && lens && !lens.hidden) {
+      const key = `${Math.min(3, Math.floor(spot.x * 4))}-${Math.min(3, Math.floor(spot.y * 4))}`;
+      const cell = spot.cells[key] || (spot.cells[key] = { t: 0, x: 0, y: 0 });
+      cell.t += dt; cell.x += spot.x * dt; cell.y += spot.y * dt;
+    }
+    if (!visit.ready && visitReady()) { visit.ready = true; visitSync(); }
   }
   if (galleryPage) setInterval(visitTick, 500);
-  // La lupa dice dónde se miró dentro de la obra: el recorte de la Story se centra ahí.
-  function visitFocus(slug, x, y) { if (slug) visit.focus[slug] = { x: clamp(x, 0, 1), y: clamp(y, 0, 1) }; }
+  // La lupa dice dónde se miró dentro de la obra: el recorte de la Story se centra en la zona donde
+  // más tiempo estuvo, no en el último punto por el que pasó al retirarla.
+  function visitFocus(slug, x, y) {
+    if (!slug) return;
+    const spot = visit.focus[slug] || (visit.focus[slug] = { x: 0.5, y: 0.42, cells: Object.create(null) });
+    spot.x = clamp(x, 0, 1); spot.y = clamp(y, 0, 1);
+  }
+  function visitFocusOf(slug) {
+    const spot = visit.focus[slug], cells = Object.values(spot?.cells || {}).sort((a, b) => b.t - a.t);
+    const best = cells[0], used = cells.reduce((sum, cell) => sum + cell.t, 0);
+    // Un solo muestreo puede sumar hasta un segundo: hacen falta al menos dos para que cuente.
+    if (best && best.t >= VISIT_MIN_LENS) return { x: best.x / best.t, y: best.y / best.t };
+    // Sin detenerse en ningún sitio: si aun así la usó un rato, vale el último punto; un roce no cuenta.
+    return used >= VISIT_MIN_LENS ? { x: spot.x, y: spot.y } : { x: 0.5, y: 0.42 };
+  }
+  // Las dos entradas de la galería (en «Más» y junto a «Compartir recorrido») aparecen cuando ya hay retrato.
+  function visitSync() {
+    const ready = visitReady(), finale = $('[data-finale-share]'), atEnd = !!finale && !finale.hidden;
+    document.querySelectorAll('[data-visit-portrait]').forEach(el => { el.hidden = !ready || (atEnd && el.hasAttribute('data-visit-more')); });
+  }
   function visitLooked() {
     return Object.entries(visit.seconds)
       .filter(entry => entry[1] >= VISIT_MIN_SECONDS)
@@ -525,7 +551,7 @@
   function renderVisitFrame(ctx, looked, images, summary) {
     const W = 1080, H = 1920, margin = 76, paper = '#fffdf4', accent = '#f7d594';
     const spaced = value => { if ('letterSpacing' in ctx) ctx.letterSpacing = value; };
-    const focusOf = i => visit.focus[looked[i].work.slug] || { x: 0.5, y: 0.42 };
+    const focusOf = i => visitFocusOf(looked[i].work.slug);
     ctx.fillStyle = '#0b0b0a';
     ctx.fillRect(0, 0, W, H);
     // Fondo: la obra más mirada, muy de cerca y en penumbra.
@@ -564,6 +590,22 @@
     let y = top;
     looked.forEach((entry, i) => {
       const h = Math.round(heights[i]), img = images[i], focus = focusOf(i), pad = 34;
+      // La pieza completa va a la derecha de su franja; su ancho decide cuánto queda para el título.
+      const maxH = Math.max(70, Math.min(230, h - 74)), maxW = 200;
+      const nw = img ? img.naturalWidth || img.width || 1 : 1, nh = img ? img.naturalHeight || img.height || 1 : 1;
+      const cardW = img ? Math.round(nw * Math.min(maxW / nw, maxH / nh)) + 28 : 0;
+      const textW = bandW - pad * 2 - (cardW ? cardW + pad : 0) - 16;
+      // El título va entero: hasta tres líneas si la franja da para ello y, si aun así no cabe, encoge la letra.
+      const title = String(entry.work.title || '').split(/\s+/).filter(Boolean).join(' ');
+      let size = Math.round(clamp(h * 0.25, 46, 78)), lines = [];
+      for (;;) {
+        ctx.font = `italic 300 ${size}px "Cormorant Garamond", serif`;
+        lines = wrapStoryText(ctx, title, textW, clamp(Math.floor((h - 72) / (size * 1.02)), 1, 3));
+        if (lines.join(' ') === title || size <= 38) break;
+        size -= 4;
+      }
+      const labelY = y + h - 30 - lines.length * size * 1.02 + size * 0.08 - 10;
+      const label = `${String(i + 1).padStart(2, '0')} · ${visitClock(entry.seconds)}`.toUpperCase();
       ctx.save();
       storyCutPath(ctx, x, y, bandW, h, 4.5, 11 + i * 17);
       ctx.clip();
@@ -575,28 +617,32 @@
       veil.addColorStop(1, 'rgba(11, 11, 10, 0.82)');
       ctx.fillStyle = veil;
       ctx.fillRect(x - 8, y, bandW + 16, h + 8);
+      // El rótulo cae a veces sobre un detalle claro, donde el velo aún no ha oscurecido:
+      // una sombra ovalada solo detrás de él lo deja legible sin apagar la franja.
+      ctx.font = '500 22px "DM Sans", sans-serif';
+      spaced('4px');
+      const labelW = ctx.measureText(label).width, reach = labelW / 2 + 110;
+      spaced('0px');
+      ctx.translate(x + pad + labelW / 2, labelY - 8);
+      ctx.scale(1, 0.34);
+      const shade = ctx.createRadialGradient(0, 0, 0, 0, 0, reach);
+      shade.addColorStop(0, 'rgba(11, 11, 10, 0.74)');
+      shade.addColorStop(0.55, 'rgba(11, 11, 10, 0.5)');
+      shade.addColorStop(1, 'rgba(11, 11, 10, 0)');
+      ctx.fillStyle = shade;
+      ctx.fillRect(-reach, -reach, reach * 2, reach * 2);
       ctx.restore();
-      // La pieza completa, a la derecha de su franja.
-      let miniW = 0;
-      if (img) {
-        const nw = img.naturalWidth || img.width || 1, nh = img.naturalHeight || img.height || 1;
-        const maxH = Math.max(70, Math.min(230, h - 74)), maxW = 200;
-        const cardW = Math.round(nw * Math.min(maxW / nw, maxH / nh)) + 28;
-        drawStoryMiniature(ctx, img, x + bandW - pad - cardW, y + h - 22, maxW, maxH, i % 2 ? 2.1 : -2.4);
-        miniW = cardW + pad;
-      }
+      if (img) drawStoryMiniature(ctx, img, x + bandW - pad - cardW, y + h - 22, maxW, maxH, i % 2 ? 2.1 : -2.4);
       // Rótulo: lo que duró la mirada y el título, apoyados en el borde inferior.
       inked(true);
-      const size = Math.round(clamp(h * 0.25, 46, 78)), textW = bandW - pad * 2 - miniW - 16;
       ctx.font = `italic 300 ${size}px "Cormorant Garamond", serif`;
-      const lines = wrapStoryText(ctx, entry.work.title, textW, h > size * 3.4 ? 2 : 1);
       let ty = y + h - 30;
       ctx.fillStyle = paper;
       lines.slice().reverse().forEach(line => { ctx.fillText(line, x + pad - 3, ty); ty -= size * 1.02; });
       ctx.fillStyle = accent;
       ctx.font = '500 22px "DM Sans", sans-serif';
       spaced('4px');
-      ctx.fillText(`${String(i + 1).padStart(2, '0')} · ${visitClock(entry.seconds)}`.toUpperCase(), x + pad, ty + size * 0.08 - 10);
+      ctx.fillText(label, x + pad, labelY);
       spaced('0px');
       inked(false);
       y += h + gap;
@@ -615,7 +661,7 @@
   }
 
   // El diálogo de Story sirve a las dos: la de una obra y la del paseo.
-  let remixHeading = null;
+  let remixHeading = null, remixShuffle = null;
   function setRemixMode(mode) {
     const dialog = $('#story-remix-dialog');
     if (!dialog) return;
@@ -626,6 +672,12 @@
     }
     if (loop) loop.hidden = mode === 'visit';
     if (visitBtn) visitBtn.hidden = mode === 'visit' || !visitReady();
+    // Desde el retrato del paseo, el tercer botón no baraja nada: vuelve a la Story de una obra, y lo dice.
+    const shuffle = $('[data-remix-shuffle] span', dialog);
+    if (shuffle) {
+      if (remixShuffle === null) remixShuffle = shuffle.textContent;
+      shuffle.textContent = mode === 'visit' ? 'La Story de una sola obra' : remixShuffle;
+    }
     dialog.dataset.remixMode = mode;
   }
 
@@ -2969,8 +3021,7 @@
       if (ouroboros) ouroboros.hidden = (state.index !== works.length - 1);
       const finaleShare = $('[data-finale-share]', stage);
       if (finaleShare) finaleShare.hidden = (state.index !== works.length - 1);
-      const visitLink = $('[data-visit-portrait]', stage);
-      if (visitLink) visitLink.hidden = !visitReady();
+      visitSync();
       const kintsugiBtn = $('[data-kintsugi-toggle]', stage);
       if (kintsugiBtn) {
         const isKintsugiPair = (p.slug === 'cantinflowers' || p.slug === 'mario-moreno');
