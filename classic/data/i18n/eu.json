@@ -1671,7 +1671,7 @@
   "El espacio, las fechas, la idea…": "Espazioa, datak, ideia…",
   "Una duda, una propuesta, un saludo…": "Zalantza bat, proposamen bat, agur bat…",
   "Recorrer su trayectoria ↗": "Ezagutu haren ibilbidea ↗",
-  "No se envía nada desde aquí: se abre tu WhatsApp o tu correo con el mensaje ya escrito.": "Hemendik ez da ezer bidaltzen: zure WhatsApp edo posta irekitzen da, mezua idatzita duela.",
+  "No se envía nada desde aquí: se abre tu WhatsApp o tu correo con el mensaje ya escrito, y allí puedes añadir las fotos.": "Hemendik ez da ezer bidaltzen: zure WhatsApp edo posta irekitzen da, mezua idatzita duela, eta han gehi ditzakezu argazkiak.",
   "Pluma de pavo real, recorte de Rara Avis": "Pauma-luma, Rara Avis lanetik ebakia",
   "Sin rodeos": "Itzulingururik gabe",
   "Detalle de Rara Avis: un espejo ovalado con «piensa bien y acertarás» escrito a mano": "Rara Avis lanaren xehetasuna: ispilu obalatu bat, «piensa bien y acertarás» (ondo pentsatu eta asmatuko duzu) eskuz idatzita duena",
@@ -1681,7 +1681,7 @@
   "Historias de obras, procesos y encuentros.": "Lanen, prozesuen eta topaketen istorioak.",
   "También por <1>WhatsApp</1>, por <2>correo</2>, por <3>teléfono</3>, en <4>Instagram</4>, en <5>Facebook</5> o en su <6>blog</6>.": "Baita <1>WhatsAppez</1>, <2>e-postaz</2>, <3>telefonoz</3>, <4>Instagramen</4>, <5>Facebooken</5> edo haren <6>blogean</6> ere.",
   "WhatsApp y teléfono": "WhatsApp eta telefonoa",
-  "Guardar su contacto en el teléfono ↗": "Gorde haren kontaktua telefonoan ↗"
+  "Añadir a tus contactos ↗": "Gehitu zure kontaktuetara ↗"
  },
  "js": {
   "Pausar efectos": null,

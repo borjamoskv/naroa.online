@@ -1533,6 +1533,9 @@ async function eyeMatch(ui, base, points) {
     assert.equal(contact.document.querySelectorAll('.is-lit').length, 0);
     const card = fs.readFileSync(path.join(output, contact.find('.ct-card').getAttribute('href')), 'utf8');
     assert.ok(card.startsWith('BEGIN:VCARD\r\n') && card.includes('\r\nFN:Naroa Gutiérrez Gil\r\n') && card.includes('\r\nTEL;TYPE=CELL,VOICE:+34636060609\r\n') && card.includes('\r\nEMAIL;TYPE=INTERNET:encargos@naroagutierrezgil.com\r\n') && card.trimEnd().endsWith('END:VCARD'), 'The contact card carries the same data as the page');
+    const contactPoint = JSON.parse(contact.find('#page-schema').textContent).mainEntity.contactPoint;
+    assert.equal(contactPoint.email, 'encargos@naroagutierrezgil.com', 'Search engines get the same address the note writes to');
+    assert.equal(contactPoint.telephone, '+34636060609');
     assert.equal(contact.find('.ct-mirror-quote').textContent, '«piensa bien y acertarás»');
     contact.dom.window.close();
     // En cada idioma el mensaje se compone con los textos de su página, y la inscripción de la obra queda en español.

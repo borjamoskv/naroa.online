@@ -6934,10 +6934,14 @@
       syncNote();
       quill();
     }));
-    contactMore?.addEventListener('input', () => {
-      // La hoja crece con lo escrito, hasta el tope que marca la hoja de estilos.
+    // La hoja crece con lo escrito, hasta el tope que marca la hoja de estilos.
+    const fitMore = () => {
+      if (!contactMore) return;
       contactMore.style.height = 'auto';
       contactMore.style.height = `${contactMore.scrollHeight}px`;
+    };
+    contactMore?.addEventListener('input', () => {
+      fitMore();
       syncNote();
     });
     $('[data-contact-copy]', contactNote)?.addEventListener('click', async e => {
@@ -6945,6 +6949,8 @@
       if (await copyText(messageNow())) showCopied(button, contactStatus);
     });
     syncNote();
+    // Al volver atrás o recargar, el navegador repone lo escrito: la hoja se ajusta a ello desde el principio.
+    if (contactMore?.value) fitMore();
     // Profundidad de collage: la obra, la hoja y la pluma se desplazan muy poco con el puntero, cada una a su distancia.
     const contactStage = contactNote.closest('.ct-stage');
     if (contactStage && matchMedia('(hover: hover) and (pointer: fine)').matches) {

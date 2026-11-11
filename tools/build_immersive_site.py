@@ -2261,7 +2261,7 @@ def build(output):
         '<button type="button" data-contact-copy data-contact-js><span>Copiar el mensaje</span></button>'
         '</div>'
         f'<div class="ct-hints">{contact_hints}</div>'
-        '<p class="ct-fine">No se envía nada desde aquí: se abre tu WhatsApp o tu correo con el mensaje ya escrito.</p>'
+        '<p class="ct-fine">No se envía nada desde aquí: se abre tu WhatsApp o tu correo con el mensaje ya escrito, y allí puedes añadir las fotos.</p>'
         '<span class="sr-only" role="status" data-contact-status></span>'
         '</div>'
         '<img class="ct-feather" src="/images/catalogo/commission-rara-peacock.webp" width="229" height="269" alt="Pluma de pavo real, recorte de Rara Avis" decoding="async">'
@@ -2281,7 +2281,7 @@ def build(output):
         '</div>'
         f'<dl class="ct-addresses">{contact_addresses}</dl>'
         '<p class="ct-coda">Responde ella misma, desde el estudio de Bilbao.</p>'
-        f'<a class="ct-card" href="{contact_card}" type="text/vcard">Guardar su contacto en el teléfono ↗</a>'
+        f'<a class="ct-card" href="{contact_card}" type="text/vcard">Añadir a tus contactos ↗</a>'
         '</section>'
         '</main>'
     )
@@ -2292,7 +2292,14 @@ def build(output):
         "name": "Contacto · Naroa Gutiérrez Gil",
         "url": ORIGIN + "/contacto/",
         "description": "Habla con Naroa Gutiérrez Gil sobre una obra o un retrato por encargo. Bilbao. Email, WhatsApp e Instagram.",
-        "mainEntity": canonical_artist_entity,
+        # La vía de esta página (§10.7): el correo de encargos y el mismo teléfono que la ficha .vcf.
+        "mainEntity": {**canonical_artist_entity, "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer service",
+            "email": contact_mail,
+            "telephone": "+34636060609",
+            "areaServed": "ES",
+        }},
     }
     page("/contacto/", "Contacto", "Habla con Naroa Gutiérrez Gil sobre una obra o un retrato por encargo. Bilbao. Email, WhatsApp e Instagram.", contact, rara["photos"][0]["original"], schema=contact_schema)
     page("/404/", "Esta página se ha ido de paseo", "Vuelve a la obra de Naroa Gutiérrez Gil.", '<main id="main" class="not-found"><p class="eyebrow">404</p><h1>Esta página<br>se ha ido de paseo.</h1><a class="text-link" href="/">Volver a la obra ↗</a></main>', amor["photos"][0]["original"], not_found=True)
