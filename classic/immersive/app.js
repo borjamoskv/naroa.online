@@ -5901,7 +5901,7 @@
       } catch { return null; }
     };
     const isoDay = value => String(value || '').slice(0, 10);
-    const longDate = iso => new Intl.DateTimeFormat(LANG === 'es' ? 'es' : 'en-GB', { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(`${iso}T12:00:00Z`));
+    const longDate = iso => new Intl.DateTimeFormat({ en: 'en-GB', eu: 'eu' }[LANG] || 'es', { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(`${iso}T12:00:00Z`));
     const externalLink = (className, url) => {
       const link = document.createElement('a');
       if (className) link.className = className;

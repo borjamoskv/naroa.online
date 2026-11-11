@@ -158,10 +158,10 @@ def check(output):
     sitemap_root = ET.parse(output / "sitemap.xml").getroot()
     ns = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9", "i": "http://www.google.com/schemas/sitemap-image/1.1"}
     sitemap_urls = sitemap_root.findall("s:url", ns)
-    # Cada versión por idioma (/en/…) añade su propia entrada; las canónicas en español son las del manifiesto.
-    lang_urls = [u for u in sitemap_urls if u.findtext("s:loc", default="", namespaces=ns).startswith("https://naroagutierrezgil.com/en/")]
+    # Cada versión por idioma (/en/…, /eu/…) añade su propia entrada; las canónicas en español son las del manifiesto.
+    lang_urls = [u for u in sitemap_urls if u.findtext("s:loc", default="", namespaces=ns).startswith(("https://naroagutierrezgil.com/en/", "https://naroagutierrezgil.com/eu/"))]
     assert len(sitemap_urls) - len(lang_urls) == len(manifest["canonical_routes"])
-    assert len(lang_urls) in (0, len(manifest["canonical_routes"])), "sitemap language entries do not mirror the canonical routes"
+    assert len(lang_urls) % len(manifest["canonical_routes"]) == 0, "sitemap language entries do not mirror the canonical routes"
     for u_el in sitemap_urls:
         for img_el in u_el.findall("i:image", ns):
             assert img_el.findtext("i:title", default="", namespaces=ns).strip(), "sitemap image missing title"

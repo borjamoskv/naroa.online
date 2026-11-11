@@ -24,7 +24,10 @@ SOURCE = REPO / "classic"
 I18N_DIR = SOURCE / "data" / "i18n"
 ORIGIN = "https://naroagutierrezgil.com"
 DEFAULT_LANG = "es"
-LANGS = {"en": {"html": "en", "og": "en_GB", "schema": "en", "name": "English"}}
+LANGS = {
+    "en": {"html": "en", "og": "en_GB", "schema": "en", "name": "English"},
+    "eu": {"html": "eu", "og": "eu_ES", "schema": "eu", "name": "Euskara"},
+}
 OG_DEFAULT = "es_ES"
 
 # ── HTML: fichas ────────────────────────────────────────────────────────────
@@ -268,6 +271,8 @@ LD_URL_FIXED = {"sameAs", "contentUrl", "image", "thumbnailUrl", "acquireLicense
 # Catálogo del navegador: campos que se enseñan. `series` y `category` son claves de filtro y no se tocan.
 CATALOG_FIELDS = ("label", "story", "technique", "support", "dimensions", "materials", "interaction", "credit")
 SCRIPTS = ("app", "journey", "soundscape")
+# Plantillas de fecha por omisión (inglés). `range` sin plantilla deja el tramo a los patrones.
+DATE_DEFAULT = {"dmy": "{d} {month} {y}", "my": "{month} {y}", "dm": "{d} {month}", "short": "{d} {month}", "m": "{month}"}
 MEASURE = re.compile(r"^[\d\s×x.,/()·+–-]*(?:(?:cm|mm|m|kg|g)\b[\d\s×x.,/()·+–-]*)*$")
 
 
@@ -296,16 +301,22 @@ class Dictionary:
         self.strings = {norm(k): v for k, v in data.get("strings", {}).items()}
         self.js = data.get("js", {})
         self.js_keep = set(data.get("js_keep", []))
-        self.patterns = [(re.compile(p), r) for p, r in data.get("patterns", [])]
+        self.notes = data.get("notes", {})
         self.keep = {norm(k) for k in data.get("keep", [])} | {norm(k) for k in keep}
+        titles = "|".join(re.escape(t) for t in sorted(self.keep, key=len, reverse=True)) or "(?!)"
+        self.patterns = [(re.compile(p.replace("{TITLES}", titles)), r) for p, r in data.get("patterns", [])]
         self.months = data.get("months", {})
+        self.decimal = data.get("decimal", ".")
+        # Fechas: cada idioma dice cómo se escriben (ver DATE_DEFAULT) y la regla las recompone.
+        self.dates = {**DATE_DEFAULT, **data.get("dates", {})}
         names = "|".join(sorted(self.months, key=len, reverse=True)) or "(?!)"
         self.date_rules = [
-            (re.compile(rf"(\d{{1,2}}) de ({names}) de (\d{{4}})", re.I), lambda m: f"{m.group(1)} {self.month(m.group(2))} {m.group(3)}"),
-            (re.compile(rf"({names}) de (\d{{4}})", re.I), lambda m: f"{self.month(m.group(1))} {m.group(2)}"),
-            (re.compile(rf"(\d{{1,2}}) de ({names})", re.I), lambda m: f"{m.group(1)} {self.month(m.group(2))}"),
-            (re.compile(rf"(\d{{1,2}}) ({names})\.?", re.I), lambda m: f"{m.group(1)} {self.month(m.group(2))}"),
-            (re.compile(rf"({names})", re.I), lambda m: self.month(m.group(1))),
+            (re.compile(rf"(?P<d1>\d{{1,2}}) — (?P<d>\d{{1,2}}) de (?P<m>{names}) de (?P<y>\d{{4}})", re.I), "range"),
+            (re.compile(rf"(?P<d>\d{{1,2}}) de (?P<m>{names}) de (?P<y>\d{{4}})", re.I), "dmy"),
+            (re.compile(rf"(?P<m>{names}) de (?P<y>\d{{4}})", re.I), "my"),
+            (re.compile(rf"(?P<d>\d{{1,2}}) de (?P<m>{names})", re.I), "dm"),
+            (re.compile(rf"(?P<d>\d{{1,2}}) (?P<m>{names})\.?", re.I), "short"),
+            (re.compile(rf"(?P<m>{names})", re.I), "m"),
         ]
         self.missing = {}
         self.used = set()
@@ -314,6 +325,29 @@ class Dictionary:
     def month(self, name):
         return self.months.get(name.lower(), name)
 
+    def date(self, kind, m):
+        """Escribe una fecha con la plantilla del idioma. Para el euskera calcula además las
+        terminaciones: {ko} tras el año (2015eko, 2014ko), {d_a} el día con su -a (10a, pero 11 y 31)."""
+        template = self.dates.get(kind)
+        if not template:
+            return None
+        g = m.groupdict()
+        month = self.month(g["m"])
+        values = {"month": month, "Month": month[:1].upper() + month[1:], "month_gen": month + "ren"}
+        if g.get("y"):
+            year = int(g["y"])
+            hundreds = year % 100 == 0
+            eko = (year // 100) % 10 != 0 if hundreds else year % 20 in (1, 5, 10, 15)
+            values.update(y=g["y"], ko="eko" if eko else "ko")
+        for name in ("d", "d1"):
+            if g.get(name):
+                values[name] = g[name]
+                values[name + "_a"] = g[name] if int(g[name]) in (11, 31) else g[name] + "a"
+        try:
+            return template.format(**values)
+        except KeyError:
+            return None
+
     def lookup(self, text):
         key = norm(text)
         if key in self.strings:
@@ -321,12 +355,16 @@ class Dictionary:
             return self.strings[key]
         if key in self.keep or not LETTER.search(re.sub(r"<[^>]+>", "", key)):
             return key
+        if re.fullmatch(r"(?:[\w.+-]+@[\w.-]+\.\w+|https?://\S+|@\w+)(?: ↗)?", key):
+            return key  # correos, direcciones y @usuarios no se traducen
         if MEASURE.match(key):
-            return re.sub(r"(\d),(\d)", r"\1.\2", key)
-        for rule, build in self.date_rules:
+            return re.sub(r"(\d),(\d)", rf"\1{self.decimal}\2", key)
+        for rule, kind in self.date_rules:
             m = rule.fullmatch(key)
             if m:
-                return build(m)
+                written = self.date(kind, m)
+                if written is not None:
+                    return written
         for pattern, template in self.patterns:
             m = pattern.fullmatch(key)
             if not m or not all(balanced(g) for g in m.groups() if g):
@@ -428,8 +466,9 @@ HEAD_SCRIPT = (
     "if(c!==L){var l=d.querySelector('link[rel=\"alternate\"][hreflang=\"'+c+'\"]');if(l)location.replace(new URL(l.href).pathname+location.search+location.hash)}"
     "}catch(e){}})();</script>"
 )
-SWITCH_STYLE = "<style>.site-nav nav>a.lang-switch{letter-spacing:.14em;opacity:.72}.site-nav nav>a.lang-switch:hover,.site-nav nav>a.lang-switch:focus-visible{opacity:1}</style>"
-SWITCH_LABEL = {"es": "Versión en español", "en": "English version"}
+SWITCH_STYLE = "<style>.site-nav nav>a.lang-switch{letter-spacing:.14em;opacity:.72}.site-nav nav>a.lang-switch:hover,.site-nav nav>a.lang-switch:focus-visible{opacity:1}.menu-foot a.lang-switch-menu{display:inline-block;padding:.5em 0;color:#fffdf4;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:.3em;letter-spacing:.08em}@media(max-width:760px){.site-nav nav>a.lang-switch{display:none}}.i18n-note{margin:0 auto;padding:2.4rem 1.5rem 3rem;max-width:44rem;text-align:center;font-size:.82rem;line-height:1.5;letter-spacing:.02em;opacity:.78}.i18n-note a{color:inherit;text-decoration:underline;text-underline-offset:.2em;white-space:nowrap}</style>"
+SWITCH_LABEL = {"es": "Versión en español", "en": "English version", "eu": "Euskarazko bertsioa"}
+SWITCH_NAME = {"es": "Español", "en": "English", "eu": "Euskara"}
 
 
 def lang_path(route, lang):
@@ -474,6 +513,15 @@ def inject(root, route, current, langs):
     nav = find(header, lambda el: el.name == "nav") if header is not None else None
     if nav is not None:
         nav.children.append(Node("raw", switch_block(route, current, langs), parent=nav))
+    # En móvil la cabecera no tiene sitio: el cambio de idioma vive también en el pie del menú, con su nombre entero.
+    foot = find(root, lambda el: el.name == "div" and "menu-foot" in (attr_value(el, "class") or "").split())
+    line = find(foot, lambda el: el.name == "span") if foot is not None else None
+    if line is not None:
+        codes = [c for c in [DEFAULT_LANG] + list(langs) if c != current]
+        line.children.append(Node("raw", MARK_OPEN + "".join(
+            f' · <a class="lang-switch-menu" href="{lang_path(route, code)}" hreflang="{code}" lang="{code}" data-lang="{code}" translate="no">{SWITCH_NAME[code]}</a>'
+            for code in codes
+        ) + MARK_CLOSE, parent=line))
 
 
 def translate_json(value, lang, dictionary, routes, where, kind):
@@ -580,6 +628,10 @@ def localize_page(html, route, lang, dictionary, routes, langs, assets):
 
     for node in raw_nodes(root, "script"):
         head = node.raw[: node.raw.index(">") + 1]
+        src = re.search(r'\bsrc="([^"]+)"', head)
+        if src and src.group(1) in assets:
+            node.raw = node.raw.replace(src.group(0), f'src="{assets[src.group(1)]}"', 1)
+            continue
         if "application/ld+json" not in head:
             continue
         body = node.raw[len(head): node.raw.rindex("</")]
@@ -602,6 +654,12 @@ def localize_page(html, route, lang, dictionary, routes, langs, assets):
         start = parent.children.index(unit.nodes[0])
         parent.children[start:start + len(unit.nodes)] = [Node("raw", unit.render(translated), parent=parent)]
 
+    # Las citas de Naroa (« ») son literales en español; donde se traducen, la página lo dice
+    # y enlaza a sus palabras tal como las escribió.
+    note = dictionary.notes.get(route)
+    main = find(root, lambda el: el.name == "main")
+    if note and main is not None:
+        main.children.append(Node("raw", f'<p class="i18n-note">{escape(note, quote=False)} <a href="{route}" hreflang="{DEFAULT_LANG}">{escape(dictionary.notes.get("link", "Español"), quote=False)}</a></p>', parent=main))
     inject(root, route, lang, langs)
     out = []
     serialize(root, out)

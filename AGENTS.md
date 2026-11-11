@@ -58,3 +58,11 @@ Toda alta o mutación de obra exige paridad simultánea en 3 capas:
 3. **Espejo inverso:** nunca reescribe las dos citas de Naroa. La lectura de la visita (`[data-gaze-reading]`, `[data-gaze-metrics]`) nace oculta y solo aparece tras al menos `8 s` reales con un capítulo en el centro de la pantalla; técnica y soporte de la obra espejo salen del catálogo.
 4. **Compartir:** con una obra en pantalla se comparte esa obra con su título limpio (§6.2); sin obra, la propia página con su título completo; desde la 404, la portada.
 5. **Tarjetas sociales:** al cambiar el texto o la imagen de una tarjeta se sube su `version` en `create_card`; el build retira la versión anterior.
+
+### 9. Versiones por idioma (`INV_I18N_LAYER`)
+1. **El español es la fuente.** Las páginas se escriben en español en `build_immersive_site.py`; `tools/build_i18n.py` las traduce ya generadas y escribe una copia por idioma bajo `/en/…` (inglés) y `/eu/…` (euskera), con las mismas rutas y su prefijo. El generador lo llama al final de `build()`.
+2. **Diccionarios:** `classic/data/i18n/en.json` y `eu.json`, con las mismas claves. `strings` va indexado por el texto español tal cual sale en la página (las etiquetas de línea se ven como marcas `<1>…</1>`); `patterns` compone textos repetidos (título + técnica + soporte, fechas, «Ver …»); `js` sustituye literales enteros de `app.js`/`soundscape.js`, con sus `${…}`; `js_keep` lista los que se quedan en español a propósito.
+3. **Texto nuevo o cambiado:** lo que no tiene traducción sale en español en esa versión. `python3 tools/build_i18n.py extract --lang en|eu --output <compilación> --missing <archivo.json>` lista lo pendiente y `check` falla si queda algo.
+4. **No se traducen** los títulos de obra, los nombres de serie (`series` y `category` son además claves de filtro) ni los nombres propios.
+5. **Enlaces en `app.js`:** toda ruta interna construida en el script lleva `BASE` delante (`''` en español, `/en` en inglés, `/eu` en euskera).
+6. **Idioma de la visita:** cada página lleva `hreflang` y enlaces `ES`/`EN`/`EU` en la cabecera (en móvil, en el pie del menú). La primera visita va al idioma del navegador: euskera al euskera; catalán y gallego al español; cualquier otro que no sea español, al inglés; la elección manual se guarda en `localStorage['naroa-lang']`. Los rastreadores no se redirigen.

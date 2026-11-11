@@ -46,26 +46,35 @@
   "Bilbao",
   "Bizkaia"
  ],
+ "notes": {
+  "link": "Read them as she wrote them →",
+  "/sobre-mi/": "Naroa’s own words, shown in quotation marks, are translated from her Spanish.",
+  "/trayectoria/": "Naroa’s own words, shown in quotation marks, are translated from her Spanish."
+ },
  "patterns": [
   [
    "^(.+)<(\\d)/><(\\d)> \\(se abre en una pestaña nueva\\)</\\3>$",
    "{1}<{=2}/><{=3}> (opens in a new tab)</{=3}>"
   ],
   [
+   "^({TITLES}) \\((.+)\\) — (.+?) · (.+), retrato artístico original de Naroa Gutiérrez Gil$",
+   "{=1} ({2}) — {3} · {4}, original portrait artwork by Naroa Gutiérrez Gil"
+  ],
+  [
+   "^({TITLES}) \\((.+)\\) — (.+), retrato artístico original de Naroa Gutiérrez Gil$",
+   "{=1} ({2}) — {3}, original portrait artwork by Naroa Gutiérrez Gil"
+  ],
+  [
+   "^({TITLES}) — (.+?) · (.+), retrato artístico original de Naroa Gutiérrez Gil$",
+   "{=1} — {2} · {3}, original portrait artwork by Naroa Gutiérrez Gil"
+  ],
+  [
+   "^({TITLES}) — (.+), retrato artístico original de Naroa Gutiérrez Gil$",
+   "{=1} — {2}, original portrait artwork by Naroa Gutiérrez Gil"
+  ],
+  [
    "^(.+?) \\((.+)\\) — (.+?) · (.+), retrato artístico original de Naroa Gutiérrez Gil$",
    "{1} ({2}) — {3} · {4}, original portrait artwork by Naroa Gutiérrez Gil"
-  ],
-  [
-   "^(.+?) \\((.+)\\) — (.+), retrato artístico original de Naroa Gutiérrez Gil$",
-   "{1} ({2}) — {3}, original portrait artwork by Naroa Gutiérrez Gil"
-  ],
-  [
-   "^(.+) \\((.+?)\\) — (.+?) · (.+), retrato artístico original de Naroa Gutiérrez Gil$",
-   "{1} ({2}) — {3} · {4}, original portrait artwork by Naroa Gutiérrez Gil"
-  ],
-  [
-   "^(.+) \\((.+?)\\) — (.+), retrato artístico original de Naroa Gutiérrez Gil$",
-   "{1} ({2}) — {3}, original portrait artwork by Naroa Gutiérrez Gil"
   ],
   [
    "^(.+?) — (.+?) · (.+), retrato artístico original de Naroa Gutiérrez Gil$",
@@ -897,12 +906,8 @@
   "Catálogo completo de obras de Naroa Gutiérrez Gil": "Complete catalogue of works by Naroa Gutiérrez Gil",
   "Obra original de catálogo y encargos personalizados basados en esta técnica. Consulta directa con la artista.": "Original catalogue work and custom commissions based on this technique. Enquire directly with the artist.",
   "Año": "Year",
-  "Me Parto": "Me Parto",
-  "de risa) (Obra enmarcada": "de risa) (Framed work",
   "Materiales": "Materials",
   "Proceso creativo de I Got You Babe": "The creative process behind I Got You Babe",
-  "OUT": "OUT",
-  "por los pelos) (OUT (por los pelos)": "por los pelos) (OUT (por los pelos)",
   "Serie Vaivenes": "Vaivenes series",
   "Dibujo, materia y transformación": "Drawing, matter and transformation",
   "Serie Vaivenes de Naroa Gutiérrez Gil: retratos y piezas donde el collage, el dibujo y los materiales reutilizados exploran emociones y contrastes.": "Vaivenes series by Naroa Gutiérrez Gil: portraits and pieces in which collage, drawing and reused materials explore emotions and contrasts.",
@@ -1254,7 +1259,6 @@
   "Documentada en la agenda cultural de El Correo (marzo de 2010).": "Documented in the El Correo cultural listings (March 2010).",
   "Exposiciones y encuentros": "Exhibitions and gatherings",
   "El arte también<1/><2>sale de paseo.</2>": "Art, too,<1/><2>goes out for a walk.</2>",
-  "«Una galería sin muros, sin duros, abierta y flexible. De tú a tú, haciendo piña, haciendo amig@s, apetecible».": "“A gallery without walls, without wallets, open and flexible. One to one, pulling together, making friends, irresistible.”",
   "«Porque las exposiciones colectivas son como el corro de las patatas o el pilla-pilla de la vida artística: es enseñarnos los nuevos cromos al reunirnos con las amigas; es pegar en la misma pared todas nuestras pegatinas».": "“Because group exhibitions are like the ring-a-ring-o’-roses or the game of tag of artistic life: it’s showing each other our new swap cards when we get together with the girls; it’s sticking all our stickers on the same wall.”",
   "22 encuentros": "22 gatherings",
   "11 individuales": "11 solo",
@@ -1473,8 +1477,80 @@
   "Respuesta de Naroa (10 de mayo de 2026): «Muchas gracias, deseo que fuera de tu agrado 🙂»": "Naroa’s reply (10 May 2026): “Thank you very much, I hope it was to your liking 🙂”",
   "Seguir leyendo su blog en WordPress ↗": "Continue reading her blog on WordPress ↗",
   "Publicaciones en Facebook ↗": "Facebook posts ↗",
+  "«Sin muros, sin duros, abierta y flexible. De tú a tú, haciendo piña, haciendo amig@s, apetecible».": "“Without walls, without wallets, open and flexible. One to one, pulling together, making friends, irresistible.”",
+  "Encargos por tipo de retrato": "Commissions by type of portrait",
+  "Retrato de pareja y de familia ↗": "Portrait of a couple or a family ↗",
+  "Retrato en recuerdo de un ser querido ↗": "Portrait in memory of a loved one ↗",
+  "Retrato de mascota ↗": "Pet portrait ↗",
+  "Retrato de pareja o de familia hecho a mano a partir de vuestras fotos, sin IA: pintura, collage y objetos. Presupuesto cerrado antes de empezar y envío asegurado a toda España.": "Portrait of a couple or a family made by hand from your photos, no AI: painting, collage and objects. Fixed quote before starting and insured shipping throughout Spain.",
+  "Retrato de pareja y de familia hecho a mano desde tu foto": "Portrait of a couple or a family made by hand from your photo",
+  "Retrato de pareja y de familia por encargo, hecho a mano desde fotografía": "Commissioned portrait of a couple or a family, made by hand from a photograph",
+  "Retrato por encargo hecho a mano a partir de fotografía": "Commissioned portrait made by hand from a photograph",
+  "Retrato de pareja y de familia, hecho a mano desde vuestras fotos": "Portrait of a couple or a family, made by hand from your photos",
+  "<1>No hace falta una foto en la que salgáis todos bien.</1> Naroa trabaja con varias fotografías, también de móvil, y las reúne en una sola pieza original: pintada, cosida o montada a mano, sin IA.": "<1>You don’t need a photo in which everyone looks good.</1> Naroa works with several photographs, phone snaps included, and brings them together in a single original piece: painted, sewn or assembled by hand, no AI.",
+  "Cuatro retratos de dos": "Four portraits of two",
+  "The Love Boat ↗": "The Love Boat ↗",
+  "Retrato doble sobre una tabla de madera de 50 × 50 cm: acrílico, rotuladores y collage de papeles, telas y celofán.": "Double portrait on a 50 × 50 cm wooden board: acrylic, marker pens and a collage of papers, fabrics and cellophane.",
+  "Multi-dimensional Love ↗": "Multi-dimensional Love ↗",
+  "Retrato doble en 3D, hecho a partir de tres fotografías y montado por capas articuladas dentro de una lata de conservas.": "Double portrait in 3D, made from three photographs and assembled in articulated layers inside a tin.",
+  "Aquellos Maravillosos Años ↗": "Aquellos Maravillosos Años ↗",
+  "Dos hermanos, a lápices de colores sobre papel A4.": "Two siblings, in coloured pencils on A4 paper.",
+  "El Reencuentro ↗": "El Reencuentro ↗",
+  "Una hija y su padre, juntos en un lienzo de 30 × 40 cm a partir de una foto de él de joven.": "A daughter and her father, together on a 30 × 40 cm canvas, from a photo of him as a young man.",
+  "Cada obra tiene su ficha con técnica, medidas y fotografías de detalle. Para un retrato en recuerdo de alguien, hay una página aparte:": "Each work has its own page with technique, dimensions and detail photographs. For a portrait in memory of someone, there is a separate page:",
+  "retrato en recuerdo de un ser querido ↗": "portrait in memory of a loved one ↗",
+  "Cómo se encarga": "How to commission one",
+  "Se le escribe a Naroa por WhatsApp o por correo con la foto o las fotos que haya y un par de líneas sobre la persona. Ella propone soporte y tamaño, y da el precio por escrito antes de empezar.": "Write to Naroa on WhatsApp or by email with whatever photo or photos you have and a couple of lines about the person. She suggests a support and a size, and gives the price in writing before starting.",
+  "Por escrito y antes de empezar. La mitad al arrancar y la otra mitad a la entrega.": "In writing and before starting. Half at the outset and the other half on delivery.",
+  "Lo que tardan en secar capas y barnices. Si hay una fecha señalada, conviene decirlo en el primer mensaje.": "As long as the layers and varnishes take to dry. If there is a special date, it is best to say so in the first message.",
+  "O a medida del sitio donde vaya a vivir. Firmado, con certificado de autenticidad y listo para colgar.": "Or made to measure for the place where it is going to live. Signed, with a certificate of authenticity and ready to hang.",
+  "A toda España": "Throughout Spain",
+  "Envío asegurado en caja rígida, con seguimiento hasta la puerta. En Bilbao y Bizkaia, entrega en mano.": "Insured shipping in a rigid box, tracked to your door. In Bilbao and Bizkaia, delivered by hand.",
+  "Dudas habituales": "Common questions",
+  "¿Sirve una foto de móvil, o varias fotos distintas?": "Will a phone photo do, or several different photos?",
+  "Sí. Vale una foto de móvil, aunque esté movida, y valen varias: una en la que alguien sale bien de cara y otra con el gesto o la ropa que le define. Naroa las combina en el taller en una sola composición.": "Yes. A phone photo will do, even a blurry one, and so will several: one where the face comes out well and another with the gesture or the clothes that define them. Naroa combines them in the studio into a single composition.",
+  "¿Se puede incluir algún objeto o recuerdo?": "Can an object or a keepsake be included?",
+  "Sí. Naroa integra objetos reales en sus piezas: cartas, entradas, botones, telas, chapas, billetes de tren. Se le envían o se llevan al estudio de Bilbao y pasan a formar parte de la obra.": "Yes. Naroa works real objects into her pieces: letters, tickets, buttons, fabrics, bottle tops, train tickets. You send them or bring them to the studio in Bilbao and they become part of the work.",
+  "¿Cuánto cuesta?": "How much does it cost?",
+  "No hay una tarifa fija: depende del soporte y del tamaño. Naroa da una cifra cerrada y por escrito antes de empezar; se paga la mitad al arrancar y la otra mitad a la entrega.": "There is no fixed rate: it depends on the support and the size. Naroa gives a fixed figure in writing before starting; half is paid at the outset and the other half on delivery.",
+  "¿Llega a tiempo para una boda o un aniversario?": "Will it arrive in time for a wedding or an anniversary?",
+  "El plazo habitual es de 2 a 4 semanas. Si hay fecha, conviene decirlo en el primer mensaje para que Naroa busque hueco.": "The usual turnaround is 2 to 4 weeks. If there is a date, it is best to say so in the first message so that Naroa can find a slot.",
+  "Escribir a Naroa": "Write to Naroa",
+  "Responde ella misma, desde el estudio de Bilbao.": "She answers herself, from the studio in Bilbao.",
+  "Por WhatsApp ↗": "On WhatsApp ↗",
+  "Componer el encargo paso a paso ↗": "Build the commission step by step ↗",
+  "Retrato pintado a mano en recuerdo de un ser querido. Sirve una foto antigua, pequeña o de móvil. Naroa Gutiérrez Gil, sin IA, con presupuesto cerrado y envío asegurado a toda España.": "Portrait painted by hand in memory of a loved one. An old, small or phone photo will do. Naroa Gutiérrez Gil, no AI, with a fixed quote and insured shipping throughout Spain.",
+  "Retrato de un ser querido fallecido, desde una foto antigua": "Portrait of a loved one who has died, from an old photo",
+  "Retrato en recuerdo de un ser querido, pintado a mano desde una fotografía antigua": "Portrait in memory of a loved one, painted by hand from an old photograph",
+  "Retrato en recuerdo de un ser querido, a partir de la foto que tengas": "Portrait in memory of a loved one, from whatever photo you have",
+  "<1>Sirve una foto antigua, pequeña o de móvil.</1> No hace falta que sea buena: basta con que sea suya.": "<1>An old, small or phone photo will do.</1> It doesn’t have to be a good one: it only has to be theirs.",
+  "Naroa Gutiérrez Gil pinta retratos a mano a partir de fotografías. Cuando solo queda una imagen —enmarcada tras un cristal, en blanco y negro, recortada de una foto de grupo— trabaja con esa. Y si hay varias, puede reunir en un mismo retrato a dos personas a partir de fotos distintas.": "Naroa Gutiérrez Gil paints portraits by hand from photographs. When only one image remains — framed behind glass, in black and white, cut out of a group photo — she works with that. And if there are several, she can bring two people together in the same portrait from different photos.",
+  "Una obra hecha así": "A work made this way",
+  "Retrato doble en blanco y negro sobre lienzo 3D de 30 × 40 cm: pintura acrílica negra, toques de rotulador blanco y una capa de látex líquido que lo protege.": "Double portrait in black and white on a 30 × 40 cm 3D canvas: black acrylic paint, touches of white marker pen and a coat of liquid latex that protects it.",
+  "Mediante esta obra, una hija y su padre volvieron a encontrarse sobre un fondo blanco. Todo gracias a una foto de joven de él, que me permitió —esquivando los reflejos del cristal que protegía su mirada— trazarles, de nuevo, juntos.": "Through this work, a daughter and her father met again on a white background. All thanks to a photo of him as a young man, which allowed me — dodging the reflections on the glass that protected his gaze — to draw them, once more, together.",
+  "De la ficha de": "From the page of",
   "Mediante esta obra, una hija y su padre volvieron a encontrarse sobre un fondo blanco. Todo gracias a una foto de joven de él, que me permitió —esquivando los reflejos del cristal que protegía su mirada— trazarles, de nuevo, juntos. […]": "Through this work, a daughter and her father met again on a white background. All thanks to a photo of him as a young man, which allowed me — dodging the reflections on the glass that protected his gaze — to draw them, once more, together. […]",
-  "“El amor es el más viejo, a la vez que es el más nuevo y único acontecimiento del mundo”. (Friedrich Rückert). Retrato 3D doble realizado a partir de tres fotografías y trabajado en varias capas articuladas que, al moverlas, cuentan una pequeña pero gran historia: la del amor de sus protagonistas. […]": "“Love is the oldest and, at the same time, the newest and only event in the world.” (Friedrich Rückert). Double 3D portrait made from three photographs and worked in several articulated layers which, when moved, tell a small yet great story: that of the love of its protagonists. […]"
+  "“El amor es el más viejo, a la vez que es el más nuevo y único acontecimiento del mundo”. (Friedrich Rückert). Retrato 3D doble realizado a partir de tres fotografías y trabajado en varias capas articuladas que, al moverlas, cuentan una pequeña pero gran historia: la del amor de sus protagonistas. […]": "“Love is the oldest and, at the same time, the newest and only event in the world.” (Friedrich Rückert). Double 3D portrait made from three photographs and worked in several articulated layers which, when moved, tell a small yet great story: that of the love of its protagonists. […]",
+  "Solo tengo una foto y es mala. ¿Sirve?": "I only have one photo and it’s a bad one. Will it do?",
+  "Casi siempre. Una foto de carné, una imagen escaneada o una de móvil con poca luz suelen bastar. Lo mejor es enviarla: Naroa la mira y contesta ella misma.": "Almost always. A passport photo, a scanned image or a phone photo taken in poor light is usually enough. The best thing is to send it: Naroa looks at it and replies herself.",
+  "¿Puede aparecer junto a alguien de la familia?": "Can they appear alongside someone from the family?",
+  "Sí. En El Reencuentro, una hija y su padre aparecen juntos a partir de una foto de él de joven.": "Yes. In El Reencuentro, a daughter and her father appear together from a photo of him as a young man.",
+  "¿Cuánto tarda y cuánto cuesta?": "How long does it take and how much does it cost?",
+  "El plazo habitual es de 2 a 4 semanas. No hay una tarifa fija: Naroa da una cifra cerrada y por escrito antes de empezar; se paga la mitad al arrancar y la otra mitad a la entrega.": "The usual turnaround is 2 to 4 weeks. There is no fixed rate: Naroa gives a fixed figure in writing before starting; half is paid at the outset and the other half on delivery.",
+  "Retrato de tu perro o tu gato hecho a mano a partir de una foto, sin IA. Naroa Gutiérrez Gil: pieza original, presupuesto cerrado antes de empezar y envío asegurado a toda España.": "Portrait of your dog or your cat made by hand from a photo, no AI. Naroa Gutiérrez Gil: an original piece, a fixed quote before starting and insured shipping throughout Spain.",
+  "Retrato de mascota hecho a mano desde tu foto: perro o gato": "Pet portrait made by hand from your photo: dog or cat",
+  "Retrato de mascota por encargo, hecho a mano desde fotografía": "Commissioned pet portrait, made by hand from a photograph",
+  "Retrato de tu perro o tu gato, hecho a mano desde una foto": "Portrait of your dog or your cat, made by hand from a photo",
+  "<1>Sirve una foto de móvil.</1> Naroa Gutiérrez Gil acepta encargos de retratos de mascotas con las mismas condiciones que cualquier otro retrato: una pieza original hecha a mano, sin IA y con el precio cerrado antes de empezar.": "<1>A phone photo will do.</1> Naroa Gutiérrez Gil takes commissions for pet portraits on the same terms as any other portrait: an original piece made by hand, no AI, with the price fixed before starting.",
+  "El gato del catálogo": "The cat in the catalogue",
+  "El Gato que es Kutxa ↗": "El Gato que es Kutxa ↗",
+  "Una caja de madera de 4,7 × 8,3 × 8,3 cm: un gato en fotocopia recortada sobre una tapa pintada en rosa y turquesa, con huellas estampadas y el interior preparado para un regalo.": "A wooden box measuring 4.7 × 8.3 × 8.3 cm: a cat in cut-out photocopy on a lid painted pink and turquoise, with stamped paw prints and the inside ready to hold a gift.",
+  "El catálogo público todavía no recoge ningún retrato de mascota hecho por encargo; esta caja es el animal que sí está. Las materias sobre las que trabaja Naroa —madera, tela vaquera cosida, papel, pizarra natural, cajas y latas— se ven en": "The public catalogue does not yet include any pet portrait made to commission; this box is the animal that is there. The materials Naroa works on — wood, stitched denim, paper, natural slate, boxes and tins — can be seen on",
+  "la página de encargos ↗": "the commissions page ↗",
+  "¿Sirve una foto de móvil?": "Will a phone photo do?",
+  "Sí, aunque esté movida. Si hay varias, mejor: una donde se le vea bien la cara y otra con su gesto de siempre. Naroa las combina en el taller.": "Yes, even a blurry one. If there are several, all the better: one where the face shows clearly and another with that look of theirs. Naroa combines them in the studio.",
+  "¿Y si ya no está?": "And if they are no longer here?",
+  "Sirve una foto antigua. El encargo se hace igual, a partir de la imagen que haya.": "An old photo will do. The commission works the same way, from whatever image there is."
  },
  "js": {
   "Pausar efectos": "Pause effects",
@@ -1667,7 +1743,8 @@
   "Escuchar la banda sonora": "Listen to the soundtrack",
   "Este navegador no puede reproducir la banda sonora.": "This browser cannot play the soundtrack.",
   "El navegador no ha permitido iniciar el sonido. Vuelve a intentarlo.": "The browser did not allow the sound to start. Please try again.",
-  "LENTE ÓPTICA ${scale.toFixed(2)}×": "OPTICAL LENS ${scale.toFixed(2)}×"
+  "LENTE ÓPTICA ${scale.toFixed(2)}×": "OPTICAL LENS ${scale.toFixed(2)}×",
+  "Continue? Quién programó esta web: borjamoskv en GitHub (se abre en otra pestaña)": "Continue? Who coded this site: borjamoskv on GitHub (opens in another tab)"
  },
  "js_keep": [
   "Empty src",
@@ -1713,6 +1790,7 @@
   "Politena Espacio de Arte, Bilbao",
   "Espejos del alma",
   "Espacios públicos y galerías abiertas, Bilbao",
-  "Missing camera score: "
+  "Missing camera score: ",
+  "<span>CONTINUE?</span><b data-continue-count aria-hidden=\"true\"></b><i aria-hidden=\"true\">↗</i>"
  ]
 }
