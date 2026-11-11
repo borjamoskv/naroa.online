@@ -1,4 +1,4 @@
-export const PORTAL = 'https://naroa.online'
+export const PORTAL = 'https://naroagutierrezgil.com'
 
 export type ArtworkCategory = 'rocks' | 'divinos' | 'kintsugi' | 'drawing'
 

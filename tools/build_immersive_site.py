@@ -1382,7 +1382,7 @@ def build(output):
     commission_faqs = [
         ("¿Y si la foto que tengo es una birria de móvil tomada de noche?", "¡Mejor todavía! Las fotos de carné y los posados de boda suelen tener el alma planchada. Prefiero mil veces una foto borrosa donde la persona se esté partiendo de risa o mirando de reojo que una imagen de estudio sin vida. Si tienes varias fotos distintas (por ejemplo, una donde sale bien de cara y otra con la ropa que le gusta), las fusiono en el taller para componer su mirada real."),
         ("¿Puedo pedir que metas objetos reales dentro del cuadro (botones, cartas, entradas de concierto)?", "¡Es mi especialidad y lo que más me divierte! Mis cuadros comen recuerdos: trozos de partituras, sobres de azúcar, chapas, encajes de la abuela, billetes de tren, pétalos secos o botones de un abrigo viejo. Me lo envías o me lo traes al estudio en Bilbao y lo coso o lo integro dentro de la obra como parte de la piel del cuadro."),
-        ("¿Cuánto vale un retrato por encargo y cuándo sé el precio exacto?", "Antes de tocar un pincel. Odio los presupuestos sorpresa tanto como tú. Primero hablamos de tu idea, elegimos soporte (pizarra, madera cosida, lata 3D o papel) y tamaño, y te doy una cifra cerrada y por escrito. Si te encaja, acordamos un 50% para arrancar y el 50% restante a la entrega. Siempre con presupuesto cerrado previo."),
+        ("¿Cuánto cuesta un retrato pintado a mano y cuándo sé el precio exacto?", "Antes de tocar un pincel. Odio los presupuestos sorpresa tanto como tú. Primero hablamos de tu idea, elegimos soporte (pizarra, madera cosida, lata 3D o papel) y tamaño, y te doy una cifra cerrada y por escrito. Si te encaja, acordamos un 50% para arrancar y el 50% restante a la entrega. Siempre con presupuesto cerrado previo."),
         ("¿Cuáles son los plazos y qué pasa si tengo una fecha señalada?", "El ritmo habitual de taller es de 2 a 4 semanas: las capas de acrílico, las texturas y los barnices de protección UV necesitan su secado orgánico para no cuartear. Si tienes un cumpleaños, una boda o una sorpresa inminente, dímelo en el primer mensaje y buscamos un hueco prioritario de caballete."),
         ("¿Cómo llega la obra a mis manos si no vivo en Bilbao?", "Si estás en Bilbao o en Bizkaia (Casco Viejo, Indautxu, Getxo, margen derecha o izquierda), te lo doy en mano en el estudio o quedamos para dártelo en persona. Si estás fuera, viaja como una reina: en una caja rígida tricapa a medida, protegida contra humedad y golpes, con seguro a todo riesgo y número de seguimiento hasta la puerta de tu casa."),
         ("¿Qué tamaños y materiales puedo elegir?", "Los formatos habituales son 20 × 30 cm, 30 × 40 cm y 40 × 50 cm, o a medida según el espacio donde vaya a vivir. Trabajo sobre madera, tela vaquera cosida, papel de algodón, cajas y latas intervenidas y pizarra natural, con acrílico, pastel, carbón Conté, rotuladores, pan de oro y costura a mano. Cada pieza va firmada, con certificado de autenticidad y lista para colgar."),
@@ -1421,7 +1421,7 @@ def build(output):
     hero_html = (
         '<section id="configurador" class="enc-hero" aria-labelledby="enc-title" data-commission-configurator>'
         '<div class="enc-hero-copy">'
-        '<h1 id="enc-title" class="enc-kicker">Retrato por encargo en Bilbao <span>· retratos personalizados hechos a mano</span></h1>'
+        '<h1 id="enc-title" class="enc-kicker">Retrato personalizado pintado a mano <span>· a partir de tu foto, desde Bilbao a toda España</span></h1>'
         '<p class="enc-sentence">Naroa, quiero un retrato '
         + cfg_word("motif", "A quién", cfg_motifs) + ' sobre '
         + cfg_word("support", "Materia", cfg_supports) + ', '
@@ -1449,13 +1449,13 @@ def build(output):
     )
 
     stories = [
-        ("Reunir dos miradas en el tiempo.", "«Una hija me trajo una foto en blanco y negro de su padre cuando era joven. Él ya no estaba entre nosotros. Ella quería verse junto a él, abrazada. Logré esquivar los reflejos del cristal antiguo de la foto y los retraté juntos por primera vez en décadas. Cuando vio el cuadro terminado en el taller, no hicieron falta palabras: solo un abrazo en silencio y lágrimas de las que curan».", "/obra/13n/", "13N"),
-        ("Una felicitación colectiva con Don Vito.", "«Si una cuadrilla de amigos te encomienda la misión de realizar una felicitación familiar inolvidable, ¿qué mejor portavoz para verbalizar esta misiva colectiva que Don Vito Corleone? Al fin y al cabo \"La famiglia è la famiglia...\". Zorionak Jon de la Famiglia de corazón. Pop, solemne y gamberro a partes iguales».", "/obra/el-armigo-atomico/", "El Armigo Atómico"),
-        ("Vacaciones en el mar sobre madera.", "«“Mare mía, mecachisenlamar, que no me puedo imaginar algo más espectacular que junto a ti pasar unas vacaciones en el mar”. Retrato colorista doble sobre una tabla de madera maciza de 50×50 cm, con botones marineros, collage de postales veraniegas… y toneladas de amor mediterráneo y atlántico».", "/obra/lauralore/", "LauraLore"),
-        ("Capas articuladas en una lata de conserva.", "«Retrato 3D doble realizado a partir de tres fotografías que parecían no caber en un marco común. Trabajado en varias capas móviles articuladas dentro de una lata de conserva intervenida: al abrirlas, van desplegando una pequeña pero inmensa historia de amor como un acordeón secreto».", "/obra/amor-en-conserva/", "Amor en Conserva"),
+        ("Reunir dos miradas en el tiempo.", "«Una hija me trajo una foto en blanco y negro de su padre cuando era joven. Él ya no estaba entre nosotros. Ella quería verse junto a él, abrazada. Logré esquivar los reflejos del cristal antiguo de la foto y los retraté juntos por primera vez en décadas. Cuando vio el cuadro terminado en el taller, no hicieron falta palabras: solo un abrazo en silencio y lágrimas de las que curan».", "/obra/el-reencuentro/", "El Reencuentro"),
+        ("Una felicitación colectiva con Don Vito.", "«Si una cuadrilla de amigos te encomienda la misión de realizar una felicitación familiar inolvidable, ¿qué mejor portavoz para verbalizar esta misiva colectiva que Don Vito Corleone? Al fin y al cabo \"La famiglia è la famiglia...\". Zorionak Jon de la Famiglia de corazón. Pop, solemne y gamberro a partes iguales».", "/obra/la-famiglia/", "La Famiglia"),
+        ("Vacaciones en el mar sobre madera.", "«“Mare mía, mecachisenlamar, que no me puedo imaginar algo más espectacular que junto a ti pasar unas vacaciones en el mar”. Retrato colorista doble sobre una tabla de madera maciza de 50×50 cm, con botones marineros, collage de postales veraniegas… y toneladas de amor mediterráneo y atlántico».", "/obra/the-love-boat/", "The Love Boat"),
+        ("Capas articuladas en una lata de conserva.", "«Retrato 3D doble realizado a partir de tres fotografías que parecían no caber en un marco común. Trabajado en varias capas móviles articuladas dentro de una lata de conserva intervenida: al abrirlas, van desplegando una pequeña pero inmensa historia de amor como un acordeón secreto».", "/obra/multi-dimensional-love/", "Multi-dimensional Love"),
     ]
     stories_html = ''.join(
-        f'<li><span class="enc-num" aria-hidden="true">0{idx + 1}</span><div><h3>{esc(title)}</h3><p>{esc(text)}</p><a class="enc-ink-link" href="{href}">Obra afín: {esc(work)} ↗</a></div></li>'
+        f'<li><span class="enc-num" aria-hidden="true">0{idx + 1}</span><div><h3>{esc(title)}</h3><p>{esc(text)}</p><a class="enc-ink-link" href="{href}">Ver la obra: {esc(work)} ↗</a></div></li>'
         for idx, (title, text, href, work) in enumerate(stories)
     )
     facts = [
@@ -1525,19 +1525,23 @@ def build(output):
         "@context": "https://schema.org",
         "@type": ["Service", "ProfessionalService"],
         "@id": ORIGIN + "/retratos-por-encargo-bilbao/#service",
-        "name": "Retrato por encargo y retratos personalizados en Bilbao y Bizkaia",
+        "name": "Retrato personalizado pintado a mano a partir de tu foto · Retratos por encargo en Bilbao",
         "alternateName": [
             "Retrato por encargo",
             "Retrato por encargo en Bilbao",
             "Retratos por encargo en Bilbao",
             "Retrato personalizado Bilbao",
             "Encargar cuadro personalizado Bilbao",
+            "Retrato personalizado pintado a mano",
+            "Retrato hecho a mano desde foto",
+            "Cuadro pintado a mano de una foto",
+            "Retrato personalizado de pareja, familia o mascota",
         ],
         "serviceType": "Retrato por encargo y retratos artísticos de autor en dibujo, pintura, collage, madera, pizarra y objetos",
         "url": ORIGIN + "/retratos-por-encargo-bilbao/",
         "inLanguage": "es-ES",
         "dateModified": catalogue["reviewed"],
-        "description": "Retrato por encargo en Bilbao y retratos personalizados con Naroa Gutiérrez Gil. Piezas originales hechas a mano a partir de fotografía e historia personal: dibujo, pintura, collage, madera, objetos y pizarra con presupuesto cerrado previo.",
+        "description": "Retrato personalizado pintado a mano a partir de tu foto, por encargo con Naroa Gutiérrez Gil en Bilbao y envío a toda España. Piezas originales hechas a mano, sin IA, a partir de fotografía e historia personal: dibujo, pintura, collage, madera, objetos y pizarra con presupuesto cerrado previo.",
         "image": [ORIGIN + ex["photos"][0]["original"] for ex, *_ in commission_examples],
         "provider": canonical_artist_entity,
         "providerMobility": "dynamic",
@@ -1656,7 +1660,7 @@ def build(output):
             },
         ],
     }
-    page("/retratos-por-encargo-bilbao/", "Retrato por encargo en Bilbao y Retratos personalizados · Precios y proceso", "Retrato por encargo en Bilbao y retratos personalizados con Naroa Gutiérrez Gil. Encarga un retrato hecho a mano a partir de tu historia y fotografía en dibujo, pintura, collage, madera y objetos.", '<main id="main">' + commissions + '</main>', amor["photos"][0]["original"], schema=commissions_schema, image_alt=work_alt(amor))
+    page("/retratos-por-encargo-bilbao/", "Retrato personalizado pintado a mano desde tu foto · Retratos por encargo", "Retrato personalizado pintado a mano a partir de tu foto: una persona, una pareja, la familia o tu mascota. Naroa Gutiérrez Gil, retratista en Bilbao, sin IA. Presupuesto cerrado previo y envío asegurado a toda España.", '<main id="main">' + commissions + '</main>', amor["photos"][0]["original"], schema=commissions_schema, image_alt=work_alt(amor))
 
     contact = f'''<main id="main" class="contact-page"><div class="contact-background" data-parallax><img src="{rara['cover']}" alt="Rara Avis, composición de retratos y reflejos" fetchpriority="high"></div><div class="contact-shade"></div><section class="contact-copy"><p class="eyebrow">Naroa Gutiérrez Gil · Bilbao</p><h1 class="hand">¿Hablamos?</h1><p>Una persona. Una historia. Una idea a medio hacer.<br>No hace falta traerlo todo pensado.</p><a class="contact-email" href="mailto:naroa@naroa.eu?subject=Retrato%20por%20encargo">naroa@naroa.eu ↗</a><div class="contact-channels" aria-label="Vías de contacto diferenciadas"><article class="contact-channel"><span class="eyebrow">Encargos y obra</span><a class="text-link" href="mailto:naroa@naroa.eu?subject=Consulta%20sobre%20obra%20o%20encargo">Escribir por correo ↗</a><p>Consultas sobre obras del catálogo, formatos y encargos personalizados.</p></article><article class="contact-channel"><span class="eyebrow">Trato directo</span><a class="text-link" href="https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20hablar%20sobre%20un%20encargo." target="_blank" rel="noopener noreferrer">También por WhatsApp ↗</a><p>Conversación ágil para comentar una idea inicial o concertar llamada.</p></article><article class="contact-channel"><span class="eyebrow">Redes y archivo</span><a class="text-link" href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer">Facebook · Naroa Artista Plástica ↗</a><p>Álbumes de proceso, exposiciones y archivo fotográfico de cada serie.</p></article></div><div class="contact-details"><a href="tel:+34636060609">+34 636 060 609</a><a href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer">Facebook ↗</a><a href="https://instagram.com/naroa_art/" target="_blank" rel="noopener noreferrer">@naroa_art ↗</a><a href="https://naroagutierrez.wordpress.com/" target="_blank" rel="noopener noreferrer">Cuaderno WordPress ↗</a><span>Bilbao · País Vasco</span></div></section></main>'''
     contact_schema = {

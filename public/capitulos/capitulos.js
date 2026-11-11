@@ -250,7 +250,7 @@
       host.innerHTML =
         '<p style="padding:4rem 2rem;text-align:center;color:rgba(245,239,232,.6);">' +
         'No se pudieron cargar los capítulos. Visita ' +
-        '<a href="https://naroa.online" style="color:#d8a24a;">naroa.online</a>.</p>';
+        '<a href="https://naroagutierrezgil.com" style="color:#d8a24a;">naroagutierrezgil.com</a>.</p>';
       if (window.console && console.error) console.error(err);
     });
 })();
