@@ -1636,11 +1636,23 @@
     const nextWorkBtn = createGalleryElement('button', 'dissection-tool-btn', 'Siguiente →');
     nextWorkBtn.type = 'button';
     nextWorkBtn.dataset.galleryNextWork = '';
+    // En el móvil el muelle solo enseña las flechas; la palabra queda para pantallas anchas.
+    prevWorkBtn.replaceChildren('← ', createGalleryElement('span', 'dock-word', 'Anterior'));
+    prevWorkBtn.setAttribute('aria-label', 'Obra anterior');
+    nextWorkBtn.replaceChildren(createGalleryElement('span', 'dock-word', 'Siguiente'), ' →');
+    nextWorkBtn.setAttribute('aria-label', 'Obra siguiente');
     dissectionTools.append(loupeToggleBtn, xrayToggleBtn, storyOpenBtn, prevWorkBtn, nextWorkBtn);
     dissectionDeck.append(dissectionPills, dissectionTools, dissectionStory);
     galleryIntro.append(gallerySerial, galleryTitle, galleryMeta, dissectionDeck);
     const galleryGrid = createGalleryElement('div', 'work-gallery-grid');
-    workGallery.append(galleryBackdrop, galleryHeader, galleryIntro, galleryGrid,
+    // El final de la sábana no es un pie: es la obra siguiente, a sangre, y se entra tocándola.
+    const onwardPoster = createGalleryElement('button', 'work-gallery-onward');
+    onwardPoster.type = 'button';
+    onwardPoster.dataset.galleryOnward = '';
+    const onwardTitle = createGalleryElement('strong');
+    onwardPoster.append(createGalleryElement('small', '', 'Sigue mirando'), onwardTitle);
+    onwardPoster.addEventListener('click', () => nextWorkBtn.click());
+    workGallery.append(galleryBackdrop, galleryHeader, galleryIntro, galleryGrid, onwardPoster,
       createGalleryElement('p', 'work-gallery-footer', 'Acerca la lupa sobre el lienzo para sentir el trazo · Pulsa cualquier vista para abrirla a pantalla completa'));
     document.body.append(workGallery);
     loupeToggleBtn.addEventListener('click', () => {
@@ -4398,6 +4410,10 @@
         return figure;
       });
       galleryGrid.replaceChildren(...figures);
+      const onward = works[(state.index + 1) % works.length];
+      onwardTitle.textContent = onward.title;
+      onwardPoster.setAttribute('aria-label', `Obra siguiente: ${onward.title}`);
+      onwardPoster.style.setProperty('--onward', `url("${onward.tile || onward.cover}")`);
       openDialog('#work-gallery-dialog');
       workGallery.scrollTop = 0;
     }
@@ -4556,7 +4572,7 @@
     });
     if (best !== wallEntry || force) {
       wallEntry = best;
-      const wall = best?.dataset.wall || 'yeso';
+      const wall = best?.dataset.wall || 'pared';
       wallLayers.forEach(layer => layer.classList.toggle('is-on', layer.dataset.wallLayer === wall));
       if (wallYear) wallYear.textContent = best?.dataset.exhibitionYear || '';
       let arts = [];
@@ -4802,14 +4818,24 @@
         : pair ? .4 + .6 * Math.pow(Math.abs(fraction - .5) * 2, .6) : 1;
       showCaption(Math.round(position), opacity);
       plane.style.visibility = 'hidden'; plane.setAttribute('aria-hidden', 'true');
-      copy.style.opacity = cue.style.opacity = '0'; cue.tabIndex = -1; cue.style.pointerEvents = 'none';
+      copy.style.opacity = cue.style.opacity = '0'; cue.tabIndex = controls.inert ? 0 : -1; cue.style.pointerEvents = 'none';
       shade.style.opacity = '.75';
       releaseDistant(base);
     }
+    let parked = false;
     function renderPortrait() {
       frame = null;
       const g = geometry; if (!g || document.querySelector('dialog[open]')) return;
-      const travel = Math.max(0, -portraitTrack.getBoundingClientRect().top);
+      const trackRect = portraitTrack.getBoundingClientRect();
+      // El recorrido ya salió de pantalla y se lee la biografía: no se sigue pintando la última obra
+      // («Game Over», que calla la banda sonora) y se avisa una vez para que la música pueda volver.
+      if (!reduced.matches && trackRect.height > 0 && trackRect.bottom <= 1) {
+        if (!parked) { parked = true; soundscape?.frame({ mode: 'page', phase: 'scroll', slug: 'sobre-mi' }); }
+        if (trackRect.bottom > -g.height * 1.5) ensureScene(works.length - 1);
+        return;
+      }
+      parked = false;
+      const travel = Math.max(0, -trackRect.top);
       const progress = reduced.matches ? 0 : clamp(travel / (g.height * 2.8), 0, 1);
       const position = reduced.matches ? 0 : clamp((travel - g.height * 2.8) / (g.height * 1.1), 0, works.length - 1);
       if (!reduced.matches && travel >= g.height * 2.8) { renderExhibition(position, travel / g.height); return; }
@@ -4855,7 +4881,7 @@
       const tiltY = mouse.x * 3.5 * parallaxFactor;
       const portraitFrame = $('.portrait-frame', hero);
       if (portraitFrame) portraitFrame.style.transform = reduced.matches ? '' : `rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg)`;
-      cue.style.opacity = visibility.toFixed(3); cue.style.pointerEvents = visibility < .1 ? 'none' : ''; cue.tabIndex = visibility < .1 ? -1 : 0;
+      cue.style.opacity = visibility.toFixed(3); cue.style.pointerEvents = visibility < .1 ? 'none' : ''; cue.tabIndex = visibility < .1 && reveal >= .2 ? -1 : 0;
       showCaption(0, reveal);
       hero.dataset.transition = 'portrait';
       if (reduced.matches) soundscape?.frame({ distance: scrollY / Math.max(1, g.height), depth: 0, mode: 'still', phase: 'scroll', axisDirection: 1, slug: 'rara-avis' });
@@ -4873,7 +4899,7 @@
     }
     previous.addEventListener('click', () => goTo(current - 1)); next.addEventListener('click', () => goTo(current + 1));
     document.addEventListener('keydown', event => {
-      if (reduced.matches || document.querySelector('dialog[open]') || artCopy.inert || event.target.closest?.('input,textarea,select,[contenteditable=true]')) return;
+      if (reduced.matches || parked || document.querySelector('dialog[open]') || artCopy.inert || event.target.closest?.('input,textarea,select,[contenteditable=true]')) return;
       if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { event.preventDefault(); goTo(current + (event.key === 'ArrowRight' ? 1 : -1)); }
     });
     gallery = { pause() {}, has: slug => !reduced.matches && works.some(work => work.slug === slug), select: slug => goTo(works.findIndex(work => work.slug === slug)) };
@@ -5111,61 +5137,52 @@
       }, { passive: true });
     });
 
+    // Espejo inverso: se mide el tiempo real que cada capítulo pasa en el centro de la pantalla (no los
+    // frames de scroll) y solo se enseña una lectura cuando hay una clara. Las dos citas de Naroa del
+    // HTML no se tocan nunca, y la técnica y el soporte de la obra espejo salen del catálogo.
+    const metricsEl = $('[data-gaze-metrics]', kintsugiEditorial);
+    const readingEl = $('[data-gaze-reading]', kintsugiEditorial);
+    const workNameEl = workLinkEl && $('[data-gaze-work-name]', workLinkEl);
+    const GAZE_MIRRORS = {
+      mirada: ['amy-rocks', 'Pizarra natural rústica', 'La mirada'],
+      materia: ['marilyn-rocks', 'Pizarra natural rústica', 'La materia'],
+      espejo: ['rara-avis', 'Retrato al óleo o grafito', 'La propia mirada'],
+      compartir: ['amor-en-conserva', 'Caja personalizada u objeto', 'Compartir']
+    };
+    let focusKey = null, focusAt = performance.now(), gazePaused = document.hidden, lastGaze = '';
+    function settleDwell() {
+      const now = performance.now();
+      if (focusKey && !gazePaused) kState.dwellChapters[focusKey] += Math.min((now - focusAt) / 1000, 90);
+      focusAt = now;
+    }
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) { settleDwell(); gazePaused = true; } else { gazePaused = false; focusAt = performance.now(); }
+    });
+
     function updateReversePortrait() {
       if (!reverseBox) return;
       const entries = Object.entries(kState.dwellChapters).sort((a, b) => b[1] - a[1]);
-      const dominant = entries[0]?.[0] || 'materia';
-      const fast = kState.peakVelocity > 42;
-      const profiles = {
-        mirada: {
-          tempo: fast ? 'Impulso Eléctrico' : 'Mirada Detenida',
-          element: 'Carbón, grafito y reflejos sobre papel',
-          work: 'Amy Rocks',
-          slug: 'amy-rocks',
-          supportParam: 'Collage textil sobre madera',
-          summary: 'Has buscado primero los ojos antes que la historia.',
-          detail: 'Tu forma de recorrer la página se detiene en el gesto y la expresión. Tu retrato pediría trazo directo y contraste vivo.'
-        },
-        materia: {
-          tempo: fast ? 'Exploración Táctil' : 'Pulso Mineral',
-          element: 'Pizarra natural de cantera, óxido y mica',
-          work: 'Marilyn Rocks',
-          slug: 'marilyn-rocks',
-          supportParam: 'Pizarra natural rústica',
-          summary: 'Tu mirada pesa sobre la textura, la cicatriz y la materia.',
-          detail: 'Te atraen los soportes con vida previa: la laja de pizarra, la lata recuperada y el brillo mineral cuando gira la luz.'
-        },
-        espejo: {
-          tempo: fast ? 'Vértigo Interior' : 'Contemplación Íntima',
-          element: 'Pastel seco, pluma y fragmentos de espejo (Kintsugi)',
-          work: 'Rara Avis',
-          slug: 'rara-avis',
-          supportParam: 'Collage textil sobre madera',
-          summary: 'Te has detenido al otro lado del espejo.',
-          detail: 'Tu lectura resuena con las capas ocultas y el autorretrato simbólico: construir identidad uniendo piezas diversas.'
-        },
-        compartir: {
-          tempo: fast ? 'Paso de Calle (Walking)' : 'Encuentro Abierto',
-          element: 'Madera intervenida y caja de memoria compartida',
-          work: 'Amor en Conserva',
-          slug: 'amor-en-conserva',
-          supportParam: 'Caja personalizada u objeto',
-          summary: 'Entiendes el arte como un lugar donde encontrarse.',
-          detail: 'Tu recorrido conecta con la calle y el juego compartido de El ReCreo: un objeto intervenido que guarda una historia común.'
-        }
-      };
-      const chosen = profiles[dominant] || profiles.materia;
-      if (tempoEl) tempoEl.textContent = `Ritmo: ${chosen.tempo}`;
-      if (elementEl) elementEl.textContent = `Materia afín: ${chosen.element}`;
-      if (workEl) workEl.textContent = `Obra espejo: ${chosen.work}`;
-      if (summaryEl) summaryEl.textContent = chosen.summary;
-      if (detailEl) detailEl.textContent = chosen.detail;
+      const total = entries.reduce((sum, entry) => sum + entry[1], 0);
+      // Menos de 8 s de lectura, o sin un capítulo claramente por delante: se quedan las citas.
+      if (total < 8 || entries[0][1] < entries[1][1] * 1.25) return;
+      const dominant = entries[0][0], slow = total >= 45, gaze = `${dominant}:${slow ? 'pausada' : 'vuelo'}`;
+      if (gaze === lastGaze) return;
+      const mirror = GAZE_MIRRORS[dominant];
+      const work = mirror && catalogue.projects.find(p => p.slug === mirror[0]);
+      if (!work) return;
+      lastGaze = gaze;
+      if (readingEl) { readingEl.textContent = `Donde más te has detenido: «${mirror[2]}».`; readingEl.hidden = false; }
+      if (tempoEl) tempoEl.textContent = `Ritmo: ${slow ? 'lectura pausada' : 'lectura al vuelo'}`;
+      if (elementEl) elementEl.textContent = `Materia afín: ${[work.technique, work.support].filter(Boolean).join(' · ')}`;
+      if (workEl) workEl.textContent = `Obra espejo: ${work.title}`;
+      if (metricsEl) metricsEl.hidden = false;
       if (workLinkEl) {
-        workLinkEl.href = `/obra/${chosen.slug}/`;
-        workLinkEl.textContent = `Ver ${chosen.work} ↗`;
+        workLinkEl.href = `/obra/${work.slug}/`;
+        if (workNameEl) workNameEl.textContent = `Ver ${work.title}`;
       }
       if (ctaEl) {
-        ctaEl.href = `/retratos-por-encargo-bilbao/?soporte=${encodeURIComponent(chosen.supportParam)}`;
+        ctaEl.href = `/retratos-por-encargo-bilbao/?soporte=${encodeURIComponent(mirror[1])}`;
+        ctaEl.hidden = false;
       }
     }
 
@@ -5185,13 +5202,18 @@
       }
 
       const rect = kintsugiEditorial.getBoundingClientRect();
+      // Lejos del artículo (las 96 pantallas del recorrido de obras) no hay nada que fracturar ni que medir.
+      if (rect.top > vh * 1.5 || rect.bottom < -vh * 0.5) {
+        kState.currentY = kState.targetY; kState.velocity = 0;
+        settleDwell(); focusKey = null;
+        return;
+      }
       const totalH = Math.max(1, rect.height - vh * 0.5);
       const progressed = clamp((-rect.top + vh * 0.45) / totalH, 0, 1);
       kState.seamProgress = Number(progressed.toFixed(4));
       kintsugiEditorial.style.setProperty('--kintsugi-progress', String(kState.seamProgress));
-      const skew = reduced.matches ? 0 : clamp(kState.velocity * 0.045, -3.5, 3.5);
-      kintsugiEditorial.style.setProperty('--scroll-velocity-skew', `${skew.toFixed(2)}deg`);
 
+      let reading = null;
       chapters.forEach(ch => {
         const cr = ch.getBoundingClientRect();
         const centerDist = 1 - clamp(Math.abs((cr.top + cr.height * 0.5) - vh * 0.5) / (vh * 0.65), 0, 1);
@@ -5210,6 +5232,8 @@
           goldWeld = 1;
           phase = 'sutured';
         }
+        // Con movimiento reducido las tarjetas no se parten: quedan ya suturadas.
+        if (reduced.matches) { gap = 0; goldWeld = 1; phase = 'sutured'; }
         ch.dataset.kintsugiPhase = phase;
         ch.style.setProperty('--chapter-focus', centerDist.toFixed(3));
         ch.style.setProperty('--fracture-gap', gap.toFixed(3));
@@ -5221,10 +5245,10 @@
         if (key) {
           kState.fractureStates[key] = phase;
         }
-        if (centerDist > 0.45 && key && key in kState.dwellChapters) {
-          kState.dwellChapters[key] += 1;
-        }
+        // Se está leyendo el capítulo que cruza el centro de la pantalla.
+        if (key && key in kState.dwellChapters && cr.top <= vh * 0.5 && cr.bottom >= vh * 0.5) reading = key;
       });
+      settleDwell(); focusKey = reading;
 
       updateReversePortrait();
 

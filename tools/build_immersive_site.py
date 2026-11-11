@@ -1152,44 +1152,149 @@ def build(output):
     # Only the artist portrait gets this native, pinned scroll sequence. The
     # decorative eyelid is a feathered photographic animation layer; the
     # original photograph remains untouched and is the no-JS fallback.
+    # El guiño solo se ve a través de su máscara (un 1 % del retrato): se sirve ese recorte y no
+    # otra copia entera de la fotografía. La caja está en píxeles del original de 2201 × 3468.
+    wink_source = SOURCE / "images/sobre-mi/naroa-monoculo-guino.png"
+    wink_box = (1157, 1284, 1520, 1545)
+    wink_name = f"naroa-monoculo-guino-{hashlib.sha256(wink_source.read_bytes() + repr(wink_box).encode()).hexdigest()[:12]}-ojo.webp"
+    if not (media / wink_name).exists():
+        with Image.open(wink_source) as wink_original:
+            assert wink_original.size == (2201, 3468), "El recorte del guiño está medido sobre el retrato de 2201 × 3468"
+            wink_original.convert("RGB").crop(wink_box).save(media / wink_name, "WEBP", quality=92, method=6)
+    portrait_wink_eye = "/immersive/media/" + wink_name
+    wink_x, wink_y, wink_w, wink_h = (v * 1248 / 2201 for v in (wink_box[0], wink_box[1], wink_box[2] - wink_box[0], wink_box[3] - wink_box[1]))
     about = f'''<div class="portrait-scroll" data-portrait-scroll style="--portrait-steps:{len(projects)-1}">
 <section class="page-hero portrait-hero" data-eye-portrait>
 <div class="portrait-frame"><div class="portrait-plane" data-portrait-plane>
-<img src="{portrait}" width="2201" height="3468" alt="Naroa Gutiérrez Gil con chistera y un monóculo ante un ojo" fetchpriority="high">
+<img src="{portrait}" srcset="{portrait_srcset}" sizes="{portrait_sizes}" width="2201" height="3468" alt="Naroa Gutiérrez Gil con chistera y un monóculo ante un ojo" fetchpriority="high">
 <svg class="portrait-wink" viewBox="0 0 1248 1966" aria-hidden="true" focusable="false">
 <defs><radialGradient id="portrait-wink-feather"><stop offset=".66" stop-color="white"/><stop offset="1" stop-color="black"/></radialGradient>
 <radialGradient id="portrait-monocle-caustic" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fffdf4" stop-opacity="0.18"/><stop offset="62%" stop-color="#f7d594" stop-opacity="0.34"/><stop offset="88%" stop-color="#edbca4" stop-opacity="0.52"/><stop offset="100%" stop-color="#d4af37" stop-opacity="0"/></radialGradient>
 <mask id="portrait-wink-mask" maskUnits="userSpaceOnUse" x="664" y="736" width="190" height="132"><ellipse cx="759" cy="802" rx="89" ry="62" fill="url(#portrait-wink-feather)"/></mask></defs>
-<g data-portrait-wink opacity="0" mask="url(#portrait-wink-mask)"><image href="{portrait_wink}" width="1248" height="1966" preserveAspectRatio="none"/></g>
+<g data-portrait-wink opacity="0" mask="url(#portrait-wink-mask)"><image href="{portrait_wink_eye}" x="{wink_x:.2f}" y="{wink_y:.2f}" width="{wink_w:.2f}" height="{wink_h:.2f}" preserveAspectRatio="none"/></g>
 <g class="portrait-monocle-glint" data-portrait-monocle-glint opacity="0"><circle cx="571" cy="766" r="94" fill="url(#portrait-monocle-caustic)"/><circle class="portrait-monocle-bezel" cx="571" cy="766" r="92"/><circle class="portrait-monocle-inner" cx="571" cy="766" r="68"/><path class="portrait-monocle-specular" d="M506,720 A82,82 0 0,1 624,704"/></g></svg></div>
-<div class="portrait-artwork" data-portrait-artwork aria-hidden="true"><img src="{portal_work}" width="4080" height="3072" alt="Rara Avis, autorretrato de Naroa a pastel y collage" decoding="async"></div></div>
+<div class="portrait-artwork" data-portrait-artwork aria-hidden="true"><img src="{rara['cover']}" srcset="{view_srcset(rara['cover'])}, {portal_work} 4080w" sizes="(max-width: 760px) 600px, (max-aspect-ratio: 4080/3072) calc(100vh * 1.328), 100vw" width="4080" height="3072" alt="Rara Avis, autorretrato de Naroa a pastel y collage" decoding="async" fetchpriority="low"></div></div>
 <div class="page-hero-shade"></div>
-<div class="page-hero-copy"><p class="eyebrow">La artista · Bilbao</p><h1>Naroa<br><span>Gutiérrez Gil.</span></h1><p class="hero-lead">Rostros, materia y ganas de jugar.</p></div>
+<div class="page-hero-copy"><p class="eyebrow">Retratista y artista plástica · Bilbao</p><h1>Naroa<br><span>Gutiérrez Gil.</span></h1><p class="hero-lead">Rostros, materia y ganas de jugar.</p></div>
 <div class="portrait-work-copy" data-portrait-work-copy inert><p class="eyebrow" data-portrait-label>Del rostro al autorretrato · 01 / {len(projects)}</p><h2 data-portrait-title>Rara Avis</h2><a class="text-link" data-portrait-link href="/obra/rara-avis/">Explorar la obra ↗</a></div>
-<nav class="portrait-travel-controls" data-portrait-controls aria-label="Continuar por las obras" inert><a href="#contenido">Biografía ↓</a><button type="button" data-portrait-prev aria-label="Obra anterior" disabled>←</button><button type="button" data-portrait-next aria-label="Obra siguiente">→</button></nav>
-<a class="hero-down" href="#contenido" aria-label="Una mirada cómplice · Desplázate para entrar en su ojo" title="Una mirada cómplice · Desplázate para entrar en su ojo">↓</a>
+<nav class="portrait-travel-controls" data-portrait-controls aria-label="Continuar por las obras" inert><a href="#contenido">Biografía<span aria-hidden="true">&nbsp;↓</span></a><button type="button" data-portrait-prev aria-label="Obra anterior" disabled>←</button><button type="button" data-portrait-next aria-label="Obra siguiente">→</button></nav>
+<a class="hero-down" href="#contenido" aria-label="Ir a la biografía" title="Ir a la biografía"><span aria-hidden="true">↓</span></a>
 </section></div>'''
-    about += '''<article id="contenido" class="editorial" data-kintsugi-editorial><section class="chapter kintsugi-fracture" data-kintsugi-chapter="mirada"><p class="eyebrow">La mirada</p><div class="kintsugi-plate"><div class="kintsugi-shard kintsugi-shard--top"><h2>Mirar a los demás.<br><span>Encontrarse en ellos.</span></h2><p class="lead">«“¿Quién es Naroa?” se pregunta mi imagen mientras me mira a los ojos desde el vidrio al rebotar. Sé que me zambullí en esto embebida por los rostros, sin instrucciones, y que me encontré a mí en los demás… Y el resto lo tengo aún por descubrir».</p></div><aside class="kintsugi-chasm hand-margin" data-hand-margin data-kintsugi-chasm aria-label="Confesión en la grieta de Naroa"><span class="kintsugi-chasm-spark" aria-hidden="true">✦ Veta Kintsugi · 01</span>«Yo solita no puedo mirarme a los ojos, pero en realidad sí: gracias a ti, a todos vosotros, espejos de vuestras almas y la mía, un mismo tesoro».</aside><div class="kintsugi-shard kintsugi-shard--bottom"><p>«Con Espejos del Alma pretendo evidenciar la esencia común del ser humano. Creo que todos somos lo mismo con distintas apariencias, que formamos parte de una misma inmensa (id)entidad, ese dragón de mil cabezas al que llamamos ‘presente’ y que en efecto es un regalo».</p></div></div></section><blockquote>«Me encontré a mí en los demás».<cite>Naroa · <a href="https://naroagutierrez.wordpress.com/2020/09/27/iconos-pop-muestra-colectiva-de-retratos/" target="_blank" rel="noopener noreferrer">Iconos Pop, 2020 ↗</a></cite></blockquote><section class="chapter kintsugi-fracture" data-kintsugi-chapter="materia"><p class="eyebrow">01 · La materia</p><div class="kintsugi-plate"><div class="kintsugi-shard kintsugi-shard--top"><h2>Lo que cuenta<br>cada material.</h2><p>«Durante la pandemia, mientras creaba la obra “Cantinflowers”, me vi sumida en una ardua lucha entre el acrílico y la cola, la transparencia y la grieta. En lugar de claudicar, comienzo a rascar sobre una base que no me permitía difuminar y ¡premio!, encuentro una textura inédita».</p></div><aside class="kintsugi-chasm hand-margin" data-hand-margin data-kintsugi-chasm aria-label="Confesión en la grieta de Naroa"><span class="kintsugi-chasm-spark" aria-hidden="true">✦ Veta Kintsugi · 02</span>«Una actitud que es como las flores que rompen el asfalto y brotan de sus fisuras; puro “kintsugi”, el problema hecho trampolín».</aside><div class="kintsugi-shard kintsugi-shard--bottom"><p>«A través de sus figuras, sus códigos cromáticos y la pizarra como material de sus soportes, “DiviNos” representa la vuelta a casa y su tejado que nos guarece. Nuestras oscuridades contienen chispas de luz y nuestra sangre pepitas de oro. Técnicas mixtas (como la pintura acrílica, los lápices de colores y el mineral de mica) conforman estas obras, hilando el abrazo entre la caverna y el cielo».</p><div class="chapter-links"><a class="text-link" href="/series/vaivenes/">Descubrir Vaivenes ↗</a><a class="text-link" href="https://naroagutierrez.wordpress.com/2017/04/02/madera-papel-y-tijera-en-ambigu/" target="_blank" rel="noopener noreferrer">Madera, Papel y Tijera ↗</a></div></div></div></section>'''
-    amor = next(p for p in projects if p["slug"] == "amor-en-conserva")
     jaio = next(p for p in projects if p["slug"] == "custom-jaio")
-    about += f'''<figure class="full-figure" data-parallax data-monocle-xray="lata"><a href="/obra/amor-en-conserva/"><img src="{amor['cover']}" alt="Amor en Conserva, retratos y objetos reunidos en una lata abierta" loading="lazy"><span class="xray-whisper" aria-hidden="true">«El marco de estas escenas lo he realizado con una lata de conservas, usando silicona caliente para conformar una imagen con relieve y profundidad».</span></a><figcaption>Amor en Conserva · <a href="/obra/amor-en-conserva/">Entrar en la obra ↗</a></figcaption></figure><section class="chapter kintsugi-fracture" data-kintsugi-chapter="espejo"><p class="eyebrow">02 · La propia mirada</p><div class="kintsugi-plate"><div class="kintsugi-shard kintsugi-shard--top"><h2>Al otro lado<br>del espejo.</h2><p>«Puestas a sincerarnos, os confesaré que, pese a que llevo años trabajando la disciplina artística del retrato, el añadido de hacerlo “a tiempo real” —es decir, guiada únicamente por el reflejo que recibo mientras reproduzco pictóricamente mi semblante— supuso todo un reto para mí».</p></div><aside class="kintsugi-chasm hand-margin" data-hand-margin data-kintsugi-chasm aria-label="Confesión en la grieta de Naroa"><span class="kintsugi-chasm-spark" aria-hidden="true">✦ Veta Kintsugi · 03</span>«Me di cuenta de que nunca me había autorretratado valiéndome simplemente de un espejo como marco de referencia».</aside><div class="kintsugi-shard kintsugi-shard--bottom"><p>«Se titula “Rara Avis”, mide 50×35 cm y está realizada en técnica mixta superponiendo materiales como cartón, papel de regalo, acetato transparente, cartulina espejo, marcos decorados, cuerda, alambre, esmalte transparente con brillantina dorada, lazo, cinta rotuladora, cinta washitape y una pluma de pavo real. Mi rostro lo he trabajado con pintura pastel tipo Conté sobre papel Canson Mi-Teintes de 160 g/m² y he dibujado un monóculo con rotulador acrílico Uni-Posca sobre el acetato».</p><div class="chapter-links"><a class="text-link" href="/obra/rara-avis/">Descubrir Rara Avis ↗</a><a class="text-link" href="https://naroagutierrez.wordpress.com/2026/05/14/autorretratos-mujeres-a-traves-del-espejo/" target="_blank" rel="noopener noreferrer">Leer cómo nació Rara Avis ↗</a></div></div></div></section><figure class="full-figure" data-parallax data-monocle-xray="espejo"><a href="/obra/rara-avis/"><img src="{rara['cover']}" alt="Rara Avis: autorretrato entre marcos, papeles y reflejos" loading="lazy"><span class="xray-whisper" aria-hidden="true">«Mi rostro lo he trabajado con pintura pastel tipo Conté sobre papel Canson Mi-Teintes y he dibujado un monóculo con rotulador acrílico Uni-Posca sobre el acetato».</span></a><figcaption>Rara Avis · Pastel y collage</figcaption></figure><section class="chapter kintsugi-fracture" data-kintsugi-chapter="compartir"><p class="eyebrow">03 · Compartir</p><div class="kintsugi-plate"><div class="kintsugi-shard kintsugi-shard--top"><h2>Crear también<br>es encontrarse.</h2><p>«Mandar el arte a paseo para que las creaciones abandonen los espacios cerrados (o zulos), respiren aire fresco, vean gente y la gente las pueda ver... Una galería sin muros, sin duros, abierta y flexible. De tú a tú, haciendo piña, haciendo amig@s, apetecible».</p></div><aside class="kintsugi-chasm hand-margin" data-hand-margin data-kintsugi-chasm aria-label="Confesión en la grieta de Naroa"><span class="kintsugi-chasm-spark" aria-hidden="true">✦ Veta Kintsugi · 04</span>«Nacemos con una brújula integrada para irnos dando cuenta de quiénes somos: si te apetece, por ahí es. Si escuchas y atiendes tu propio pálpito, tu gozo no caerá en ningún pozo».</aside><div class="kintsugi-shard kintsugi-shard--bottom"><p>«En el fondo, tú ya sabes todo, escarba en ti y encuentra tu tesoro. La vida a veces se nos hace cuesta arriba, sí. Pero también es verdad que es necesaria cierta abrupta escalada para poder transformar el problema en trampolín. Y es importante no olvidar que siempre podemos volver a elegir, volver a crear(nos) y volver a sonreír».</p><div class="chapter-links"><a class="text-link" href="/trayectoria/">Recorrer su trayectoria ↗</a><a class="text-link" href="https://naroagutierrez.wordpress.com/2022/10/04/walking-gallery-bilbao-octubre-2022-por-amor-al-arte/" target="_blank" rel="noopener noreferrer">Walking Gallery ↗</a><a class="text-link" href="https://naroagutierrez.wordpress.com/2024/01/12/el-recreo-espacio-de-creacion-para-recrearte/" target="_blank" rel="noopener noreferrer">Conocer El ReCreo ↗</a></div></div></div></section><section class="chapter reverse-portrait" data-reverse-portrait aria-labelledby="reverse-portrait-heading"><p class="eyebrow">04 · El Espejo Inverso</p><div><h2 id="reverse-portrait-heading">Mientras leías,<br><span>el cuadro te miraba a ti.</span></h2><p class="lead" data-gaze-summary>«Gracias por brindarme reflejo, gracias por ser mi espejo».</p><p data-gaze-detail>«Esbozar una sonrisa es como lanzar un boomerang en una lluvia de pétalos: te devuelve tanto o más de lo que das».</p><div class="gaze-metrics" data-gaze-metrics><span data-gaze-tempo>Ritmo: Contemplativo</span><span data-gaze-element>Materia afín: Pizarra natural y mica</span><span data-gaze-work>Obra espejo: Rara Avis</span></div><div class="chapter-links"><a class="text-link" data-gaze-cta href="/retratos-por-encargo-bilbao/">Encargar mi retrato con esta semilla ↗</a><a class="text-link" data-gaze-work-link href="/obra/rara-avis/">Ver mi obra espejo ↗</a></div></div></section></article>'''
+    # Todo lo que va entre « » es cita literal del blog de Naroa; lo omitido se marca con […] y cada
+    # nota manuscrita lleva la entrada de la que sale. La presentación y el cierre van en tercera
+    # persona y solo con datos del propio archivo (catálogo, trayectoria y página de encargos).
+    BLOG = "https://naroagutierrez.wordpress.com"
+
+    def about_link(href, label, attrs=""):
+        outside = href.startswith("http")
+        new_tab = ' target="_blank" rel="noopener noreferrer"' if outside else ""
+        note = '<span class="sr-only"> (se abre en una pestaña nueva)</span>' if outside else ""
+        return f'<a class="text-link" href="{href}"{new_tab}{attrs}>{label}<span aria-hidden="true">&nbsp;↗</span>{note}</a>'
+
+    def about_note(source, quote):
+        return f'<aside class="kintsugi-chasm hand-margin" data-hand-margin data-kintsugi-chasm><span class="kintsugi-chasm-spark"><span aria-hidden="true">✦ </span>{source}</span>{quote}</aside>'
+
+    def about_chapter(key, eyebrow, heading, top, note, bottom, links):
+        return (f'<section class="chapter kintsugi-fracture" data-kintsugi-chapter="{key}"><p class="eyebrow">{eyebrow}</p><div class="kintsugi-plate">'
+                f'<div class="kintsugi-shard kintsugi-shard--top"><h2>{heading}</h2>{top}</div>{note}'
+                f'<div class="kintsugi-shard kintsugi-shard--bottom">{bottom}<div class="chapter-links">{"".join(links)}</div></div></div></section>')
+
+    def counted(n, one, many):
+        return f"{n} {one if n == 1 else many}"
+
+    about_events = read_data("exhibitions")["exhibitions"]
+    about_years = [x["year"] for x in about_events]
+    about_kinds = {k: sum(1 for x in about_events if x["type"] == k) for k in ("solo", "group", "market", "street")}
+    assert sum(about_kinds.values()) == len(about_events), "La presentación de /sobre-mi/ enumera todos los tipos de encuentro"
+    amor = next(p for p in projects if p["slug"] == "amor-en-conserva")
+    about_brief = (
+        '<section class="chapter artist-brief" aria-labelledby="artist-brief-heading"><p class="eyebrow">En breve</p><div class="artist-brief-body">'
+        '<div class="artist-brief-text"><h2 id="artist-brief-heading">¿Quién es<br><span>Naroa?</span></h2>'
+        f'<p class="lead">Naroa Gutiérrez Gil es artista plástica y retratista en Bilbao. Trabaja el retrato en dibujo, pintura, collage, objetos intervenidos y pizarra natural; esta web cataloga {len(projects)} de sus obras.</p>'
+        f'<p>Su trayectoria documentada reúne {len(about_events)} encuentros con el público entre {min(about_years)} y {max(about_years)}: {counted(about_kinds["solo"], "exposición individual", "exposiciones individuales")}, {counted(about_kinds["group"], "colectiva", "colectivas")}, {counted(about_kinds["market"], "mercado de arte", "mercados de arte")} y {counted(about_kinds["street"], "paseo", "paseos")} de la Walking Gallery por las calles de Bilbao. Hoy pinta también retratos por encargo a partir de tus fotos.</p>'
+        f'<div class="chapter-links">{about_link("/retratos-por-encargo-bilbao/", "Encargar un retrato")}{about_link("/trayectoria/", "Recorrer su trayectoria")}</div></div>'
+        '<dl class="artist-facts"><div><dt>Oficio</dt><dd>Artista plástica y retratista</dd></div><div><dt>Dónde</dt><dd>Bilbao, Bizkaia</dd></div>'
+        '<div><dt>Materias</dt><dd>Dibujo, pintura, collage, objetos intervenidos y pizarra natural</dd></div>'
+        f'<div><dt>Obra</dt><dd><a href="/obra/#indice">{len(projects)} piezas catalogadas</a> · series DiviNos y Vaivenes</dd></div>'
+        f'<div><dt>Trayectoria</dt><dd><a href="/trayectoria/">{len(about_events)} encuentros documentados, {min(about_years)}–{max(about_years)}</a></dd></div>'
+        '<div><dt>Encargos y contacto</dt><dd><a href="/retratos-por-encargo-bilbao/">Retratos a partir de tus fotos</a> · <a href="mailto:naroa@naroa.eu">naroa@naroa.eu</a></dd></div></dl></div></section>')
+    about_mirada = about_chapter(
+        "mirada", "01 · La mirada", "Mirar a los demás.<br><span>Encontrarse en ellos.</span>",
+        '<p class="lead">«“¿Quién es Naroa?” se pregunta mi imagen mientras me mira a los ojos desde el vidrio al rebotar. Sé que me zambullí en esto embebida por los rostros, sin instrucciones, y que me encontré a mí en los demás… Y el resto lo tengo aún por descubrir».</p>',
+        about_note("Espejos del Alma · 2015", "«Yo solita no puedo mirarme a los ojos, pero en realidad sí: gracias a ti, a todos vosotros, espejos de vuestras almas y la mía, un mismo tesoro»."),
+        "<p>«Con Espejos del Alma pretendo evidenciar la esencia común del ser humano. Creo que todos somos lo mismo con distintas apariencias, que formamos parte de una misma inmensa (id)entidad, ese dragón de mil cabezas al que llamamos ‘presente’ y que en efecto es un regalo».</p>",
+        [about_link(BLOG + "/2015/05/24/espejos-del-alma-en-el-colegio-de-abogados-de-bilbao/", "Leer «Espejos del Alma», 2015")])
+    about_pull = ('<blockquote>«Me encontré a mí en los demás».<cite>Naroa · <a href="' + BLOG + '/2020/09/27/iconos-pop-muestra-colectiva-de-retratos/" target="_blank" rel="noopener noreferrer">Iconos Pop, 2020<span aria-hidden="true"> ↗</span><span class="sr-only"> (se abre en una pestaña nueva)</span></a></cite></blockquote>')
+    about_materia = about_chapter(
+        "materia", "02 · La materia", "Lo que cuenta<br>cada material.",
+        "<p>«Durante la pandemia, mientras creaba la obra “Cantinflowers”, me vi sumida en una ardua lucha entre el acrílico y la cola, la transparencia y la grieta. En lugar de claudicar, comienzo a rascar sobre una base que no me permitía difuminar y ¡premio!, encuentro una textura inédita».</p>",
+        about_note("DiviNos VaiVenes · 2026", "«Una actitud que es como las flores que rompen el asfalto y brotan de sus fisuras; puro “kintsugi”, el problema hecho trampolín»."),
+        "<p>«A través de sus figuras, sus códigos cromáticos y la pizarra como material de sus soportes, “DiviNos” representa la vuelta a casa y su tejado que nos guarece. […] Nuestras oscuridades contienen chispas de luz y nuestra sangre pepitas de oro. […] Técnicas mixtas (como la pintura acrílica, los lápices de colores y el mineral de mica) conforman estas obras, hilando el abrazo entre la caverna y el cielo».</p>",
+        [about_link("/obra/cantinflowers/", "Ver Cantinflowers"), about_link("/obra/marilyn-rocks/", "Ver una pizarra de DiviNos"), about_link("/series/vaivenes/", "Serie Vaivenes"),
+         about_link(BLOG + "/2026/01/15/divinos-vaivenes-muestra-plastica-en-politena-espacio-de-arte/", "Leer «DiviNos VaiVenes», 2026")])
+    about_lata = (f'<figure class="full-figure" data-parallax data-monocle-xray="lata"><a href="/obra/amor-en-conserva/"><img src="{amor["cover"]}" alt="Amor en Conserva, retratos y objetos reunidos en una lata abierta" loading="lazy"></a>'
+                  '<p class="xray-whisper">Impresiones recortadas y montadas por capas dentro de una lata intervenida.</p>'
+                  '<figcaption>Amor en Conserva <span aria-hidden="true">· Entrar en la obra ↗</span></figcaption></figure>')
+    about_espejo = about_chapter(
+        "espejo", "03 · La propia mirada", "Al otro lado<br>del espejo.",
+        "<p>«Puestas a sincerarnos, os confesaré que, pese a que llevo años trabajando la disciplina artística del retrato, el añadido de hacerlo “a tiempo real” —es decir, guiada únicamente por el reflejo que recibo mientras reproduzco pictóricamente mi semblante— supuso todo un reto para mí».</p>",
+        about_note("Mujeres a través del Espejo · 2026", "«Me di cuenta de que nunca me había autorretratado valiéndome simplemente de un espejo como marco de referencia»."),
+        "<p>«Se titula “Rara Avis”, mide 50×35 cm y está realizada en técnica mixta superponiendo materiales como cartón, papel de regalo, acetato transparente, cartulina espejo, marcos decorados, cuerda, alambre, esmalte transparente con brillantina dorada, lazo, cinta rotuladora, cinta washitape y una pluma de pavo real […]. Mi rostro lo he trabajado con pintura pastel tipo Conté […] sobre papel Canson Mi-Teintes de 160 g/m² y he dibujado un monóculo con rotulador acrílico Uni-Posca sobre el acetato».</p>",
+        [about_link("/obra/rara-avis/", "Descubrir Rara Avis"), about_link(BLOG + "/2026/05/14/autorretratos-mujeres-a-traves-del-espejo/", "Leer cómo nació Rara Avis")])
+    about_rara = (f'<figure class="full-figure" data-parallax data-monocle-xray="espejo"><a href="/obra/rara-avis/"><img src="{rara["cover"]}" alt="Rara Avis: autorretrato entre marcos, papeles y reflejos" loading="lazy"></a>'
+                  '<p class="xray-whisper" aria-hidden="true">«[…] he dibujado un monóculo con rotulador acrílico Uni-Posca sobre el acetato».</p>'
+                  '<figcaption>Rara Avis · Pastel y collage <span aria-hidden="true">· Entrar en la obra ↗</span></figcaption></figure>')
+    about_compartir = about_chapter(
+        "compartir", "04 · Compartir", "Crear también<br>es encontrarse.",
+        "<p>«Sí, sé que suena poco corriente que una galería visite a la gente en lugar de viceversa. […] Sin muros, sin duros, abierta y flexible. De tú a tú, haciendo piña, haciendo amig@s, apetecible».</p>",
+        about_note("El ReCreo · 2024", "«Nacemos con una brújula integrada para irnos dando cuenta de quiénes somos: si te apetece, por ahí es. […] Si escuchas y atiendes tu propio pálpito, tu gozo no caerá en ningún pozo»."),
+        "<p>«En el fondo, tú ya sabes todo, escarba en ti y encuentra tu tesoro. […] La vida a veces se nos hace cuesta arriba, sí. Pero también es verdad que es necesaria cierta abrupta escalada para poder transformar el problema en trampolín. Y es importante no olvidar que siempre podemos volver a elegir, volver a crear(nos) y volver a sonreír».</p>",
+        [about_link("/trayectoria/", "Recorrer su trayectoria"), about_link(BLOG + "/2018/05/23/walking-gallery-bilbao-art-district-2018/", "Walking Gallery, 2018"),
+         about_link(BLOG + "/2024/01/12/el-recreo-espacio-de-creacion-para-recrearte/", "Conocer El ReCreo")])
+    # El espejo inverso conserva siempre las dos citas; la lectura de la visita (dónde se detuvo) solo
+    # aparece cuando el script la ha medido de verdad, y por eso nace oculta.
+    about_reverse = (
+        '<section class="chapter reverse-portrait" data-reverse-portrait aria-labelledby="reverse-portrait-heading"><p class="eyebrow">Y ahora tú · El espejo inverso</p><div>'
+        '<h2 id="reverse-portrait-heading">Mientras leías,<br><span>el cuadro te miraba a ti.</span></h2>'
+        '<p class="lead" data-gaze-summary>«Gracias por brindarme reflejo, gracias por ser mi espejo».</p>'
+        '<p data-gaze-detail>«Esbozar una sonrisa es como lanzar un boomerang en una lluvia de pétalos: te devuelve tanto o más de lo que das».</p>'
+        '<p class="gaze-reading" data-gaze-reading hidden></p>'
+        '<ul class="gaze-metrics" data-gaze-metrics role="list" hidden><li data-gaze-tempo></li><li data-gaze-element></li><li data-gaze-work>Obra espejo: Rara Avis</li></ul>'
+        '<div class="chapter-links"><a class="text-link" data-gaze-work-link href="/obra/rara-avis/"><span data-gaze-work-name>Ver Rara Avis</span><span aria-hidden="true">&nbsp;↗</span></a>'
+        + about_link("/retratos-por-encargo-bilbao/", "Encargar un retrato con esta materia", " data-gaze-cta hidden") + '</div></div></section>')
+    about_closing = (
+        '<section class="chapter artist-closing" aria-labelledby="artist-closing-heading"><p class="eyebrow">¿Hablamos?</p><div>'
+        '<h2 id="artist-closing-heading">Un rostro.<br><span>Una historia por contar.</span></h2>'
+        '<p class="lead">Naroa pinta retratos por encargo a partir de tus fotos: una persona, una pareja, la familia o tu mascota.</p>'
+        '<p>Presupuesto cerrado por escrito antes de empezar, entre 2 y 4 semanas de trabajo y entrega en mano en Bilbao o por envío asegurado.</p>'
+        '<div class="chapter-links">' + about_link("/retratos-por-encargo-bilbao/", "Encargar un retrato")
+        + about_link("https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20hablar%20sobre%20un%20encargo.", "Escribir por WhatsApp")
+        + '<a class="text-link" href="mailto:naroa@naroa.eu?subject=Retrato%20por%20encargo">naroa@naroa.eu</a>'
+        + about_link("/obra/#indice", f"Ver las {len(projects)} obras") + about_link("/cuaderno/", "Leer su blog") + '</div></div></section>')
+    about += ('<article id="contenido" class="editorial" data-kintsugi-editorial>' + about_brief + about_mirada + about_pull + about_materia + about_lata
+              + about_espejo + about_rara + about_compartir + about_reverse + about_closing + '</article>')
+    about_description = f"Naroa Gutiérrez Gil, artista plástica y retratista en Bilbao: {len(projects)} obras en pizarra, collage y objetos, muestras documentadas desde {min(about_years)} y retratos por encargo."
     about_schema = {
         "@context": "https://schema.org",
         "@type": "ProfilePage",
         "@id": ORIGIN + "/sobre-mi/#profile",
-        "name": "Sobre mí · Artista plástica y retratista en Bilbao y Bizkaia",
+        "name": "Sobre mí · Retratista en Bilbao · Naroa Gutiérrez Gil",
+        "description": about_description,
         "url": ORIGIN + "/sobre-mi/",
+        "isPartOf": {"@id": ORIGIN + "/#website"},
+        "relatedLink": [ORIGIN + "/trayectoria/", ORIGIN + "/retratos-por-encargo-bilbao/"],
         "mainEntity": canonical_artist_entity,
     }
-    page("/sobre-mi/", "Sobre mí · Artista plástica y retratista en Bilbao", "Rostros, materia y ganas de jugar. La mirada y el proceso creativo de Naroa Gutiérrez Gil, artista plástica y retratista en Bilbao y Bizkaia.", '<main id="main">' + about + '</main>', "/images/sobre-mi/naroa-monoculo.jpg", schema=about_schema)
+    page("/sobre-mi/", "Sobre mí · Retratista en Bilbao", about_description, '<main id="main">' + about + '</main>', "/images/sobre-mi/naroa-monoculo.jpg", schema=about_schema, image_alt="Naroa Gutiérrez Gil con chistera y un monóculo ante un ojo")
 
     exhibitions = read_data("exhibitions")["exhibitions"]
     years = sorted({x["year"] for x in exhibitions}, reverse=True)
     kind_labels = {"solo": "Individual", "group": "Colectiva", "street": "Arte en la calle", "market": "Mercado de arte"}
     kind_plurals = {"solo": ("individual", "individuales"), "group": ("colectiva", "colectivas"), "street": ("en la calle", "en la calle"), "market": ("mercado de arte", "mercados de arte")}
-    # Pared de fondo por tipo de encuentro (decisión estética; `wall` en el JSON la sobrescribe).
-    kind_walls = {"solo": "yeso", "group": "ladrillo", "street": "hormigon", "market": "madera"}
-    wall_markup = '<div class="career-wall" aria-hidden="true"><div class="career-wall-stage">' + ''.join('<i data-wall-layer="' + w + '"' + (' class="is-on"' if w == "yeso" else '') + '></i>' for w in ("yeso", "ladrillo", "madera", "hormigon")) + '<b class="career-wall-year" data-wall-year></b>' + '<span class="career-wall-cromo" data-wall-cromo></span>' * 3 + '</div></div>'
+    # Pared de fondo por tipo de encuentro: pared, muro, callejón o túnel (decisión estética; `wall` en el JSON la sobrescribe).
+    kind_walls = {"solo": "pared", "group": "muro", "street": "callejon", "market": "tunel"}
+    wall_markup = '<div class="career-wall" aria-hidden="true"><div class="career-wall-stage">' + ''.join('<i data-wall-layer="' + w + '"' + (' class="is-on"' if w == "pared" else '') + '></i>' for w in ("pared", "muro", "callejon", "tunel")) + '<b class="career-wall-year" data-wall-year></b>' + '<span class="career-wall-cromo" data-wall-cromo></span>' * 3 + '</div></div>'
     kind_counts = {k: sum(1 for x in exhibitions if x["type"] == k) for k in kind_labels}
     career_summary = f"{min(years)}–{max(years)} · {len(exhibitions)} encuentros · " + " · ".join(f"{n} {kind_plurals[k][0 if n == 1 else 1]}" for k, n in kind_counts.items() if n)
     kind_buttons = '<button type="button" data-career-kind="all" aria-pressed="true">Todo</button>' + ''.join(f'<button type="button" data-career-kind="{k}" aria-pressed="false">{kind_labels[k]} <small>{n}</small></button>' for k, n in kind_counts.items() if n)
