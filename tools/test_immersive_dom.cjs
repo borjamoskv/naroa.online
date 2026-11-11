@@ -1426,6 +1426,75 @@ async function eyeMatch(ui, base, points) {
     assert.equal(tidyStage.classList.contains('is-more-open'), false, 'Escape folds the options');
     tidy.dom.window.close();
   }
+  {
+    // Contacto (§10): la nota compone el mensaje con el motivo rodeado y lo escrito; de la página no sale nada.
+    const contact = create('/contacto/', false, { width: 1280, height: 800 }); await contact.flush();
+    const note = contact.find('[data-contact-note]'), more = contact.find('#ct-more');
+    const waText = page => decodeURIComponent(page.find('[data-contact-wa]').getAttribute('href').split('?text=')[1]);
+    const mailHref = () => contact.find('[data-contact-mail]').getAttribute('href');
+    const pick = key => { const input = contact.find(`#ct-r-${key}`); input.checked = true; input.dispatchEvent(new contact.w.Event('change', { bubbles: true })); };
+    const shownHints = () => Array.from(contact.document.querySelectorAll('.ct-hint.is-on'), hint => hint.dataset.contactHint);
+    assert.equal(contact.document.querySelector('main form'), null, 'The note is not a form: nothing is posted from the page');
+    assert.equal(contact.document.querySelectorAll('.contact-channel, .contact-shade').length, 0, 'The boxed channels and the veil over the artwork are gone');
+    assert.equal(contact.document.querySelectorAll('input[name="ct-reason"]').length, 4, 'Four reasons to circle');
+    assert.ok(contact.document.querySelectorAll('.ct-reason .ct-loop path[pathLength="1"]').length === 4, 'Each reason carries its own marker loop');
+    assert.equal(note.dataset.reason, 'retrato');
+    assert.equal(waText(contact), 'Hola, Naroa:\nTe escribo por un retrato por encargo.', 'The default message greets and names the first reason');
+    assert.ok(mailHref().startsWith(`mailto:encargos@naroagutierrezgil.com?subject=${encodeURIComponent('Retrato por encargo')}&body=`));
+    assert.deepEqual(shownHints(), ['retrato']);
+    assert.equal(more.placeholder, contact.find('#ct-h-retrato').textContent, 'The blank line suggests what helps to tell');
+    assert.equal(contact.find('#ct-r-retrato').getAttribute('aria-describedby'), 'ct-h-retrato', 'The same tip describes the option to assistive technology');
+    pick('obra');
+    assert.equal(note.dataset.reason, 'obra');
+    assert.ok(note.classList.contains('is-touched'));
+    assert.equal(waText(contact), 'Hola, Naroa:\nTe escribo por una obra tuya que he visto.');
+    assert.equal(more.placeholder, 'Cuál es: con el título basta…');
+    assert.deepEqual(shownHints(), ['obra']);
+    more.value = '  «Game Over», la de la pizarra.\n¿Sigue disponible?  '; more.dispatchEvent(new contact.w.Event('input', { bubbles: true }));
+    assert.equal(waText(contact), 'Hola, Naroa:\nTe escribo por una obra tuya que he visto.\n«Game Over», la de la pizarra.\n¿Sigue disponible?', 'What the visitor writes follows the reason');
+    assert.ok(mailHref().includes(`subject=${encodeURIComponent('Consulta sobre una obra')}&body=${encodeURIComponent('Hola, Naroa:\r\nTe escribo por una obra tuya que he visto.\r\n«Game Over»')}`), 'The mail carries the subject of the reason and CRLF line breaks');
+    pick('otra');
+    assert.equal(waText(contact), 'Hola, Naroa:\n«Game Over», la de la pizarra.\n¿Sigue disponible?', '"Something else" adds no sentence of its own');
+    assert.deepEqual(shownHints(), []);
+    assert.equal(contact.w.NAROA_CONTACT.getMessage(), waText(contact));
+    let copied = null;
+    Object.defineProperty(contact.w.navigator, 'clipboard', { value: { writeText: async text => { copied = text; } }, configurable: true });
+    contact.click('[data-contact-copy]'); await contact.flush();
+    assert.equal(copied, contact.w.NAROA_CONTACT.getMessage(), 'Copy takes the whole message');
+    assert.equal(contact.find('[data-contact-copy] span').textContent, 'Copiado ✓');
+    assert.equal(contact.find('[data-contact-status]').textContent, 'Copiado ✓', 'The copy is announced');
+    contact.click('[data-contact-copy-address]'); await contact.flush();
+    assert.equal(copied, 'encargos@naroagutierrezgil.com', 'The address can be copied without a mail client');
+    assert.ok(note.closest('[data-fluid-quiet]'), 'Cursor smoke stays off the paper');
+    // Las vías directas: una frase con seis enlaces y, debajo, las direcciones a la vista.
+    const words = Array.from(contact.document.querySelectorAll('.ct-say a[data-contact-way]'));
+    assert.deepEqual(words.map(word => word.dataset.contactWay), ['whatsapp', 'correo', 'telefono', 'instagram', 'facebook', 'blog'], 'The sentence names six direct ways');
+    assert.equal(contact.find('.ct-say').textContent, 'También por WhatsApp, por correo, por teléfono, en Instagram, en Facebook o en su blog.');
+    assert.equal(contact.find('.ct-say [data-contact-way="correo"]').getAttribute('href'), 'mailto:encargos@naroagutierrezgil.com');
+    assert.equal(contact.find('.ct-say [data-contact-way="telefono"]').getAttribute('href'), 'tel:+34636060609');
+    assert.ok(Array.from(contact.document.querySelectorAll('.ct-ways a[target="_blank"]')).every(link => link.rel === 'noopener noreferrer'));
+    assert.deepEqual(Array.from(contact.document.querySelectorAll('.ct-address-value'), value => value.textContent), ['+34 636 060 609', 'encargos@naroagutierrezgil.com', '@naroa_art', 'Naroa Artista Plástica', 'naroagutierrez.wordpress.com'], 'Every address can be read without opening anything');
+    words[2].dispatchEvent(new contact.w.Event('pointerenter'));
+    assert.deepEqual(Array.from(contact.document.querySelectorAll('.ct-address.is-lit'), address => address.dataset.contactAddress), ['whatsapp telefono'], 'A word of the sentence lights its address');
+    contact.find('[data-contact-address="correo"]').dispatchEvent(new contact.w.Event('pointerenter'));
+    assert.deepEqual(Array.from(contact.document.querySelectorAll('.ct-say a.is-lit'), word => word.dataset.contactWay), ['correo'], 'And an address lights its word');
+    contact.find('[data-contact-address="correo"]').dispatchEvent(new contact.w.Event('pointerleave'));
+    assert.equal(contact.document.querySelectorAll('.is-lit').length, 0);
+    const card = fs.readFileSync(path.join(output, contact.find('.ct-card').getAttribute('href')), 'utf8');
+    assert.ok(card.startsWith('BEGIN:VCARD\r\n') && card.includes('\r\nFN:Naroa Gutiérrez Gil\r\n') && card.includes('\r\nTEL;TYPE=CELL,VOICE:+34636060609\r\n') && card.includes('\r\nEMAIL;TYPE=INTERNET:encargos@naroagutierrezgil.com\r\n') && card.trimEnd().endsWith('END:VCARD'), 'The contact card carries the same data as the page');
+    assert.equal(contact.find('.ct-mirror-quote').textContent, '«piensa bien y acertarás»');
+    contact.dom.window.close();
+    // En cada idioma el mensaje se compone con los textos de su página, y la inscripción de la obra queda en español.
+    for (const [lang, expected] of [['en', 'Hello, Naroa,\nI’m writing about a commissioned portrait.'], ['eu', 'Kaixo, Naroa:\nEnkarguzko erretratu bati buruz idazten dizut.']]) {
+      const local = create(`/${lang}/contacto/`, false, { width: 1280, height: 800 }); await local.flush();
+      assert.equal(waText(local), expected, `The note writes in ${lang}`);
+      assert.equal(local.find('.ct-mirror-quote').textContent, '«piensa bien y acertarás»');
+      assert.notEqual(local.find('.ct-mirror-meta').textContent, 'Escrito a mano en un espejo de Rara Avis');
+      assert.equal(local.document.querySelectorAll('.ct-say a[data-contact-way]').length, 6, 'The translated sentence keeps its six links');
+      assert.ok(!local.find('.ct-say').textContent.startsWith('También'), 'The sentence is translated');
+      local.dom.window.close();
+    }
+  }
   assert.equal(manifest.projects, works.length); assert.deepEqual(errors, []);
   console.log(`PASS: ${works.length} variable camera scores, fixed viewing pauses, full-viewport vertical and horizontal seams, deterministic reverse motion, three deep iris passes, zoom and puzzle chapters; all ${works.length} artwork flows, 3 gallery eye pairs, kinetic titles, native scroll, free inertia, direct links, 3-image loading bound, search/filters, details/photos, quiet mode, reduced motion, Vaivenes, editorial reveals, responsive Naroa-to-Rara Avis pupil/iris alignment, photographic wink, cinematic deep-iris camera with continuous forward velocity across the blend, eased outward turn, reversible reveal, image-load guard, seamless continuation through all ${works.length} works, 8 additional deep eye matches embedded catalogue navigation, opt-in reactive sound fragments, speed and direction response, bounded voices, silence at rest and safe audio lifecycle.`);
 // Salida inmediata: las ventanas JSDOM que quedan abiertas tras un fallo mantienen vivo el proceso

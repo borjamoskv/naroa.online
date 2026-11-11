@@ -2077,7 +2077,166 @@ def build(output):
         ],
     )
 
-    contact = f'''<main id="main" class="contact-page"><div class="contact-background" data-parallax><img src="{rara['cover']}" alt="Rara Avis, composición de retratos y reflejos" fetchpriority="high"></div><div class="contact-shade"></div><section class="contact-copy"><p class="eyebrow">Naroa Gutiérrez Gil · Bilbao</p><h1 class="hand">¿Hablamos?</h1><p>Una persona. Una historia. Una idea a medio hacer.<br>No hace falta traerlo todo pensado.</p><a class="contact-email" href="mailto:encargos@naroagutierrezgil.com?subject=Retrato%20por%20encargo">encargos@naroagutierrezgil.com ↗</a><div class="contact-channels" aria-label="Vías de contacto diferenciadas"><article class="contact-channel"><span class="eyebrow">Encargos y obra</span><a class="text-link" href="mailto:encargos@naroagutierrezgil.com?subject=Consulta%20sobre%20obra%20o%20encargo">Escribir por correo ↗</a><p>Consultas sobre obras del catálogo, formatos y encargos personalizados.</p></article><article class="contact-channel"><span class="eyebrow">Trato directo</span><a class="text-link" href="https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20hablar%20sobre%20un%20encargo." target="_blank" rel="noopener noreferrer">También por WhatsApp ↗</a><p>Conversación ágil para comentar una idea inicial o concertar llamada.</p></article><article class="contact-channel"><span class="eyebrow">Redes y archivo</span><a class="text-link" href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer">Facebook · Naroa Artista Plástica ↗</a><p>Álbumes de proceso, exposiciones y archivo fotográfico de cada serie.</p></article></div><div class="contact-details"><a href="tel:+34636060609">+34 636 060 609</a><a href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer">Facebook ↗</a><a href="https://instagram.com/naroa_art/" target="_blank" rel="noopener noreferrer">@naroa_art ↗</a><a href="https://naroagutierrez.wordpress.com/" target="_blank" rel="noopener noreferrer">Blog en WordPress ↗</a><span>Bilbao · País Vasco</span></div></section></main>'''
+    # ── Contacto: una nota para Naroa ────────────────────────────────────────────────────────────────────────
+    # La obra (Rara Avis) queda entera y sin velo. Lo que dice la página va sobre ella, en neón; lo que escribe quien
+    # visita, en una hoja recortada a mano: rodea el motivo, añade lo que quiera y el mensaje se abre en su WhatsApp o
+    # en su correo. Desde la página no se envía ni se guarda nada. El saludo, la frase de cada motivo (data-say) y el
+    # asunto (data-subject) los lee app.js de este HTML, así que se traducen con la página (§9 y §10 de AGENTS.md).
+    contact_mail = "encargos@naroagutierrezgil.com"
+    contact_wa = "https://wa.me/34636060609"
+    contact_hello = "Hola, Naroa:"
+    contact_reasons = [
+        # clave · lo que se rodea · frase del mensaje · asunto del correo · qué ayuda contar (renglón en blanco) · enlace de apoyo
+        ("retrato", "un retrato", "Te escribo por un retrato por encargo.", "Retrato por encargo",
+         "Quién es, qué fotos tienes, si hay una fecha señalada…", ("/retratos-por-encargo-bilbao/#configurador", "Componer el encargo paso a paso ↗")),
+        ("obra", "una obra", "Te escribo por una obra tuya que he visto.", "Consulta sobre una obra",
+         "Cuál es: con el título basta…", ("/obra/#indice", f"Ver las {len(projects)} obras ↗")),
+        ("exposicion", "una exposición", "Te escribo por una exposición.", "Propuesta de exposición",
+         "El espacio, las fechas, la idea…", ("/trayectoria/", "Recorrer su trayectoria ↗")),
+        ("otra", "otra cosa", "", "Hola, Naroa", "Una duda, una propuesta, un saludo…", None),
+    ]
+
+    def contact_loop(label, seed):
+        # Rotulador alrededor del motivo elegido, como el monóculo de la obra: una vuelta y un poco más,
+        # con un pulso distinto en cada palabra. La caja sigue el largo del texto para que el trazo no se deforme.
+        import math
+        import random
+        rng = random.Random("contacto-" + seed)
+        w, h = round(34 + 11.5 * len(label)), 64
+        cx, cy, rx, ry = w / 2, h / 2, w / 2 - 5, h / 2 - 6
+        start, turn = math.radians(rng.uniform(196, 214)), math.radians(rng.uniform(392, 410))
+        waves = [(rng.uniform(.018, .04), rng.randint(2, 3), rng.uniform(0, math.tau)) for _ in range(2)]
+        drift = rng.uniform(.05, .09)
+        pts = []
+        for i in range(19):
+            t = i / 18
+            a = start + turn * t
+            k = 1 - drift / 2 + drift * t + sum(amp * math.sin(freq * a + phase) for amp, freq, phase in waves)
+            pts.append((cx + rx * k * math.cos(a), cy + ry * k * math.sin(a)))
+        d = f"M{pts[0][0]:.1f} {pts[0][1]:.1f}"
+        for i in range(len(pts) - 1):
+            p0, p1, p2, p3 = pts[max(i - 1, 0)], pts[i], pts[i + 1], pts[min(i + 2, len(pts) - 1)]
+            d += (f"C{p1[0] + (p2[0] - p0[0]) / 6:.1f} {p1[1] + (p2[1] - p0[1]) / 6:.1f} "
+                  f"{p2[0] - (p3[0] - p1[0]) / 6:.1f} {p2[1] - (p3[1] - p1[1]) / 6:.1f} {p2[0]:.1f} {p2[1]:.1f}")
+        return f'<svg class="ct-loop" viewBox="0 0 {w} {h}" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="{d}"/></svg>'
+
+    # Sin JavaScript los enlaces no pueden seguir al motivo rodeado: llevan solo el saludo, que vale para cualquiera.
+    # Con JavaScript, app.js los recompone al cargar y en cada cambio.
+    contact_wa_href = f"{contact_wa}?text={quote(contact_hello)}"
+    contact_mail_href = f"mailto:{contact_mail}?subject={quote(contact_reasons[-1][3])}&body={quote(contact_hello)}"
+    # El plazo de temporada, en su forma corta y solo el que toca, acompaña al motivo «un retrato por encargo».
+    contact_season = ('<p class="ct-season" data-season-note>' + ''.join(f'<span data-until="{iso}">{esc(text)}</span>' for iso, text in season_nav_lines) + '</p>') if season_nav_lines else ''
+    contact_options = ''.join(
+        f'<span class="ct-reason"><input type="radio" name="ct-reason" id="ct-r-{key}" value="{key}"{" checked" if i == 0 else ""} data-say="{esc(say)}" data-subject="{esc(subject)}" aria-describedby="ct-h-{key}">'
+        f'<label for="ct-r-{key}">{esc(label)}{contact_loop(label, key)}</label></span>'
+        for i, (key, label, say, subject, hint, link) in enumerate(contact_reasons)
+    )
+    # Lo que ayuda contar se lee en el renglón en blanco (app.js lo pone de pista al cambiar de motivo) y describe
+    # cada opción a quien usa lector de pantalla; debajo del envío queda, por motivo, el plazo y un enlace de apoyo.
+    contact_tips = ''.join(f'<p id="ct-h-{key}" data-contact-tip="{key}" hidden>{esc(hint)}</p>' for key, label, say, subject, hint, link in contact_reasons)
+    contact_hints = ''.join(
+        f'<div class="ct-hint" data-contact-hint="{key}">'
+        + (contact_season if key == "retrato" else '')
+        + f'<a href="{link[0]}">{esc(link[1])}</a></div>'
+        for key, label, say, subject, hint, link in contact_reasons if link
+    )
+    # Las vías directas se dicen en una frase, como el encargo en su página: cada palabra subrayada es un enlace.
+    # Debajo quedan las direcciones a la vista, para leerlas o copiarlas, y la ficha de contacto para el teléfono.
+    contact_phone, contact_phone_shown = "+34636060609", "+34 636 060 609"
+    contact_outside = ' target="_blank" rel="noopener noreferrer"'
+    contact_links = {
+        "whatsapp": (contact_wa, contact_outside),
+        "correo": (f"mailto:{contact_mail}", ""),
+        "telefono": (f"tel:{contact_phone}", ""),
+        "instagram": ("https://instagram.com/naroa_art/", contact_outside),
+        "facebook": ("https://www.facebook.com/naroa.artista.plastica", contact_outside),
+        "blog": (BLOG + "/", contact_outside),
+    }
+
+    def contact_word(key, text):
+        href, attrs = contact_links[key]
+        return f'<a href="{href}"{attrs} data-contact-way="{key}">{text}</a>'
+
+    contact_sentence = (
+        'También por ' + contact_word("whatsapp", "WhatsApp") + ', por ' + contact_word("correo", "correo")
+        + ', por ' + contact_word("telefono", "teléfono") + ', en ' + contact_word("instagram", "Instagram")
+        + ', en ' + contact_word("facebook", "Facebook") + ' o en su ' + contact_word("blog", "blog") + '.'
+    )
+
+    def contact_address(keys, label, value, note="", literal=False, extra=""):
+        # `literal` deja la dirección tal cual en todos los idiomas. La primera clave es la del enlace.
+        href, attrs = contact_links[keys.split()[0]]
+        keep = ' translate="no"' if literal else ''
+        return (
+            f'<div class="ct-address" data-contact-address="{keys}"><dt>{esc(label)}</dt>'
+            f'<dd class="ct-address-value"><a href="{href}"{attrs}{keep}>{esc(value)}</a></dd>'
+            + (f'<dd class="ct-address-note">{esc(note)}</dd>' if note else '') + extra + '</div>'
+        )
+
+    contact_copy_address = (
+        f'<dd class="ct-address-more" data-contact-js><button type="button" data-contact-copy-address="{contact_mail}"><span>Copiar la dirección</span></button></dd>'
+    )
+    contact_addresses = (
+        contact_address("whatsapp telefono", "WhatsApp y teléfono", contact_phone_shown, "Conversación ágil para comentar una idea inicial o concertar llamada.")
+        + contact_address("correo", "Correo", contact_mail, "Consultas sobre obras del catálogo, formatos y encargos personalizados.", extra=contact_copy_address)
+        + contact_address("instagram", "Instagram", "@naroa_art")
+        + contact_address("facebook", "Facebook", "Naroa Artista Plástica", "Álbumes de proceso, exposiciones y archivo fotográfico de cada serie.", literal=True)
+        + contact_address("blog", "Blog", "naroagutierrez.wordpress.com", "Historias de obras, procesos y encuentros.", literal=True)
+    )
+    # Ficha de contacto (vCard) con los mismos datos de la página, para guardarla en el teléfono de un toque.
+    contact_card = "/naroa-gutierrez-gil.vcf"
+    write(output / contact_card.lstrip("/"), "\r\n".join([
+        "BEGIN:VCARD", "VERSION:3.0", "N:Gutiérrez Gil;Naroa;;;", "FN:Naroa Gutiérrez Gil",
+        "TITLE:" + canonical_artist_entity["jobTitle"], f"TEL;TYPE=CELL,VOICE:{contact_phone}",
+        f"EMAIL;TYPE=INTERNET:{contact_mail}", f"URL:{ORIGIN}/", "ADR;TYPE=WORK:;;;Bilbao;Bizkaia;;España", "END:VCARD", "",
+    ]))
+    # El mismo `sizes` en el fondo y en el recorte del espejo: el navegador elige el mismo archivo y no descarga dos.
+    contact_sizes = "(max-width: 760px) 760px, (max-aspect-ratio: 4080/3072) calc(100vh * 1.45), 110vw"
+    contact = (
+        '<main id="main" class="contact-page">'
+        '<section class="ct-stage" aria-labelledby="ct-title">'
+        f'<div class="contact-background" data-parallax><img src="{rara["cover"]}" sizes="{contact_sizes}"{cover_dims(rara["cover"])} alt="Rara Avis: autorretrato entre marcos, papeles y reflejos" fetchpriority="high"></div>'
+        '<div class="ct-veil" aria-hidden="true"></div>'
+        '<div class="ct-layout">'
+        '<header class="ct-head"><p class="eyebrow">Contacto · Estudio en Bilbao</p>'
+        '<h1 id="ct-title">¿Hablamos?<br><span>De tú a tú.</span></h1>'
+        '</header><p class="ct-lede">Una persona. Una historia. Una idea a medio hacer.<br>No hace falta traerlo todo pensado.</p>'
+        '<div class="ct-note-wrap" data-fluid-quiet>'
+        '<div class="ct-note" data-contact-note data-reason="retrato" role="group" aria-labelledby="ct-hello">'
+        f'<p class="ct-hello" id="ct-hello" data-contact-hello>{esc(contact_hello)}</p>'
+        f'<div class="ct-reasons" role="radiogroup" aria-labelledby="ct-lead"><span class="ct-lead" id="ct-lead">Te escribo por</span>{contact_options}</div>'
+        '<label class="ct-more" for="ct-more" data-contact-js><span class="sr-only">Cuéntale algo más (opcional)</span>'
+        f'<textarea id="ct-more" rows="2" maxlength="600" placeholder="{esc(contact_reasons[0][4])}" autocomplete="off" data-contact-more></textarea></label>{contact_tips}'
+        '<div class="ct-send">'
+        f'<a class="ct-send-lead" href="{contact_wa_href}" target="_blank" rel="noopener noreferrer" data-contact-wa>Enviárselo por WhatsApp ↗</a>'
+        f'<a href="{contact_mail_href}" data-contact-mail>o por correo ↗</a>'
+        '<button type="button" data-contact-copy data-contact-js><span>Copiar el mensaje</span></button>'
+        '</div>'
+        f'<div class="ct-hints">{contact_hints}</div>'
+        '<p class="ct-fine">No se envía nada desde aquí: se abre tu WhatsApp o tu correo con el mensaje ya escrito.</p>'
+        '<span class="sr-only" role="status" data-contact-status></span>'
+        '</div>'
+        '<img class="ct-feather" src="/images/catalogo/commission-rara-peacock.webp" width="229" height="269" alt="Pluma de pavo real, recorte de Rara Avis" decoding="async">'
+        '</div>'
+        '</div>'
+        f'<a class="ct-credit" href="/obra/rara-avis/"><div class="ct-credit-title">{esc(rara["title"])}<span aria-hidden="true"> ↗</span></div><div class="ct-credit-meta">{esc(rara["technique"])}</div></a>'
+        '</section>'
+        '<section class="ct-ways" aria-labelledby="ct-ways-title">'
+        '<div class="ct-ways-top">'
+        f'<div class="ct-ways-head"><p class="eyebrow">Sin rodeos</p><h2 id="ct-ways-title" class="ct-say">{contact_sentence}</h2></div>'
+        # Recorte de la propia obra: el espejo ovalado donde está escrito a mano «piensa bien y acertarás».
+        # La inscripción se deja en español en todos los idiomas; el pie la explica.
+        '<figure class="ct-mirror"><a class="ct-mirror-cut" href="/obra/rara-avis/">'
+        f'<img src="{rara["cover"]}" sizes="{contact_sizes}"{cover_dims(rara["cover"])} alt="Detalle de Rara Avis: un espejo ovalado con «piensa bien y acertarás» escrito a mano" loading="lazy" decoding="async"></a>'
+        '<figcaption><div class="ct-mirror-quote" lang="es" translate="no">«piensa bien y acertarás»</div>'
+        '<div class="ct-mirror-meta">Escrito a mano en un espejo de Rara Avis</div></figcaption></figure>'
+        '</div>'
+        f'<dl class="ct-addresses">{contact_addresses}</dl>'
+        '<p class="ct-coda">Responde ella misma, desde el estudio de Bilbao.</p>'
+        f'<a class="ct-card" href="{contact_card}" type="text/vcard">Guardar su contacto en el teléfono ↗</a>'
+        '</section>'
+        '</main>'
+    )
     contact_schema = {
         "@context": "https://schema.org",
         "@type": "ContactPage",

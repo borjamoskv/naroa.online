@@ -6852,6 +6852,126 @@
       getState: () => ({ ...commissionState })
     };
   }
+  // Contacto: la nota. El motivo rodeado y lo que se escriba componen el mensaje que se abre en el WhatsApp o en el
+  // correo de quien visita; desde la página no se envía ni se guarda nada. El saludo, la frase de cada motivo y el
+  // asunto se leen del HTML, que ya llega traducido (§9 y §10 de AGENTS.md).
+  const copyText = async text => {
+    try { await navigator.clipboard.writeText(text); return true; } catch {}
+    // Sin permiso o sin API (http, navegadores antiguos): el portapapeles de siempre.
+    const ghost = document.createElement('textarea');
+    ghost.value = text;
+    ghost.setAttribute('readonly', '');
+    ghost.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+    document.body.append(ghost);
+    ghost.select();
+    let done = false;
+    try { done = document.execCommand('copy'); } catch {}
+    ghost.remove();
+    return done;
+  };
+  const showCopied = (button, status) => {
+    if (button.classList.contains('is-copied')) return;
+    const label = $('span', button) || button, before = label.textContent;
+    label.textContent = 'Copiado ✓';
+    button.classList.add('is-copied');
+    if (status) status.textContent = label.textContent;
+    setTimeout(() => {
+      label.textContent = before;
+      button.classList.remove('is-copied');
+      if (status) status.textContent = '';
+    }, 2200);
+  };
+  const contactNote = $('[data-contact-note]');
+  if (contactNote) {
+    const contactReasons = $$('input[name="ct-reason"]', contactNote), contactHints = $$('[data-contact-hint]', contactNote);
+    const contactMore = $('[data-contact-more]', contactNote), contactStatus = $('[data-contact-status]', contactNote);
+    const contactWa = $('[data-contact-wa]', contactNote), contactMail = $('[data-contact-mail]', contactNote);
+    const contactSheet = contactNote.closest('.ct-note-wrap');
+    const contactHello = ($('[data-contact-hello]', contactNote)?.textContent || '').trim();
+    const waBase = (contactWa?.getAttribute('href') || '').split('?')[0], mailBase = (contactMail?.getAttribute('href') || '').split('?')[0];
+    const reasonNow = () => contactReasons.find(reason => reason.checked) || contactReasons[0];
+    const messageNow = () => [contactHello, reasonNow()?.dataset.say, (contactMore?.value || '').trim()].filter(Boolean).join('\n');
+    const syncNote = () => {
+      const reason = reasonNow(), text = messageNow();
+      if (reason) contactNote.dataset.reason = reason.value;
+      contactHints.forEach(hint => hint.classList.toggle('is-on', hint.dataset.contactHint === reason?.value));
+      // El renglón en blanco sugiere qué ayuda contar según el motivo.
+      const tip = reason && $(`[data-contact-tip="${reason.value}"]`, contactNote);
+      if (contactMore && tip) contactMore.placeholder = tip.textContent;
+      if (contactWa) contactWa.href = `${waBase}?text=${encodeURIComponent(text)}`;
+      if (contactMail) contactMail.href = `${mailBase}?subject=${encodeURIComponent(reason?.dataset.subject || '')}&body=${encodeURIComponent(text.replace(/\n/g, '\r\n'))}`;
+    };
+    // La pluma acompaña cada gesto con un trazo corto.
+    const quill = () => {
+      if (!contactSheet || reduced.matches) return;
+      contactSheet.classList.remove('is-writing');
+      void contactSheet.offsetWidth;
+      contactSheet.classList.add('is-writing');
+    };
+    contactSheet?.addEventListener('animationend', e => { if (e.animationName === 'ct-feather-write') contactSheet.classList.remove('is-writing'); });
+    contactReasons.forEach(reason => reason.addEventListener('change', () => {
+      contactNote.classList.add('is-touched');
+      syncNote();
+      quill();
+    }));
+    contactMore?.addEventListener('input', () => {
+      // La hoja crece con lo escrito, hasta el tope que marca la hoja de estilos.
+      contactMore.style.height = 'auto';
+      contactMore.style.height = `${contactMore.scrollHeight}px`;
+      syncNote();
+    });
+    $('[data-contact-copy]', contactNote)?.addEventListener('click', async e => {
+      const button = e.currentTarget;
+      if (await copyText(messageNow())) showCopied(button, contactStatus);
+    });
+    syncNote();
+    // Profundidad de collage: la obra, la hoja y la pluma se desplazan muy poco con el puntero, cada una a su distancia.
+    const contactStage = contactNote.closest('.ct-stage');
+    if (contactStage && matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      let depthFrame = null, depthX = 0, depthY = 0;
+      const paintDepth = () => {
+        depthFrame = null;
+        contactStage.style.setProperty('--ct-px', depthX.toFixed(3));
+        contactStage.style.setProperty('--ct-py', depthY.toFixed(3));
+      };
+      contactStage.addEventListener('pointermove', e => {
+        if (reduced.matches) return;
+        const box = contactStage.getBoundingClientRect();
+        depthX = clamp((e.clientX - box.left) / box.width * 2 - 1, -1, 1);
+        depthY = clamp((e.clientY - box.top) / box.height * 2 - 1, -1, 1);
+        depthFrame ||= requestAnimationFrame(paintDepth);
+      }, { passive: true });
+      contactStage.addEventListener('pointerleave', () => {
+        depthX = depthY = 0;
+        depthFrame ||= requestAnimationFrame(paintDepth);
+      });
+    }
+    window.NAROA_CONTACT = { getMessage: messageNow, getReason: () => reasonNow()?.value };
+  }
+  $$('[data-contact-copy-address]').forEach(button => button.addEventListener('click', async () => {
+    if (await copyText(button.dataset.contactCopyAddress)) { showCopied(button, $('[data-contact-status]')); return; }
+    // Si el navegador no deja copiar, la dirección queda seleccionada para copiarla a mano.
+    const address = $('.ct-address-value', button.closest('.ct-address'));
+    if (!address) return;
+    const range = document.createRange();
+    range.selectNodeContents(address);
+    const selection = getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }));
+  // Vías directas: la palabra de la frase y su dirección se encienden juntas, se mire la una o la otra.
+  const contactWords = $$('[data-contact-way]'), contactAddresses = $$('[data-contact-address]');
+  const lightWays = keys => {
+    contactWords.forEach(word => word.classList.toggle('is-lit', keys.includes(word.dataset.contactWay)));
+    contactAddresses.forEach(address => address.classList.toggle('is-lit', address.dataset.contactAddress.split(' ').some(key => keys.includes(key))));
+  };
+  [...contactWords.map(word => [word, [word.dataset.contactWay]]), ...contactAddresses.map(address => [address, address.dataset.contactAddress.split(' ')])].forEach(([el, keys]) => {
+    el.addEventListener('pointerenter', () => lightWays(keys));
+    el.addEventListener('focusin', () => lightWays(keys));
+    el.addEventListener('pointerleave', () => lightWays([]));
+    el.addEventListener('focusout', () => lightWays([]));
+  });
+
   const faqKnowledge = {
     precios: {
       intent: 'Precios y presupuestos de retratos por encargo',
@@ -6993,7 +7113,7 @@
       }
     }
   });
-  const reveals = $$('.chapter>div,.chapter>.eyebrow,.section-opening,.editorial blockquote,.timeline-entry,.notebook-posts article,.commission-example,.commission-steps article,.commission-configurator,.commission-faq-item,.closing,.contact-channel,.contact-details');
+  const reveals = $$('.chapter>div,.chapter>.eyebrow,.section-opening,.editorial blockquote,.timeline-entry,.notebook-posts article,.commission-example,.commission-steps article,.commission-configurator,.commission-faq-item,.closing,.ct-ways-head,.ct-address,.ct-coda,.ct-card');
   if ('IntersectionObserver' in window) {
     // Los elementos que entran a la vez aparecen en cascada, no en bloque.
     const observer = new IntersectionObserver(entries => {
@@ -7076,7 +7196,7 @@
     reduced.addEventListener('change', clear);
   });
 
-  const kineticCards = $$('.work-gallery-image,.notebook-posts article,.commission-example,.commission-steps article,.timeline-entry,.contact-channel');
+  const kineticCards = $$('.work-gallery-image,.notebook-posts article,.commission-example,.commission-steps article,.timeline-entry');
   kineticCards.forEach(card => {
     card.setAttribute('data-kinetic-card', '');
     const c = { rx: 0, ry: 0, z: 0, sx: 50, sy: 50, vrx: 0, vry: 0, vz: 0, vsx: 0, vsy: 0, trx: 0, try: 0, tz: 0, tsx: 50, tsy: 50, lastTime: 0, frame: null };
@@ -7770,8 +7890,12 @@
     initWebGL();
 
     let prevX = -1, prevY = -1;
+    // Sobre una superficie de lectura clara (la hoja de contacto) el humo, que se funde en «screen», borraría el texto:
+    // ahí no se emite. Al salir se olvida la posición anterior para no soltar una ráfaga de golpe.
+    const fluidQuiet = e => !!e.target?.closest?.('[data-fluid-quiet]');
     addEventListener('pointermove', e => {
       if (reduced.matches) return;
+      if (fluidQuiet(e)) { prevX = -1; return; }
       const w = innerWidth || 1280;
       const h = innerHeight || 800;
       const x = e.clientX / w;
@@ -7791,7 +7915,7 @@
     }, { passive: true });
 
     addEventListener('pointerdown', e => {
-      if (reduced.matches) return;
+      if (reduced.matches || fluidQuiet(e)) return;
       const w = innerWidth || 1280;
       const h = innerHeight || 800;
       const x = e.clientX / w;

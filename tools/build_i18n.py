@@ -263,7 +263,7 @@ def set_attr(node, match, value):
 
 # ── Diccionario ─────────────────────────────────────────────────────────────
 # Atributos data-* con frases que el visitante lee (o que el script enseña).
-DATA_TEXT = {"data-story", "data-dimensions", "data-preview-title", "data-preview-label", "data-preview-quote", "data-preview-meta", "data-say", "data-pick-support", "data-work-title", "data-cycle-label", "data-share-title"}
+DATA_TEXT = {"data-story", "data-dimensions", "data-preview-title", "data-preview-label", "data-preview-quote", "data-preview-meta", "data-say", "data-pick-support", "data-work-title", "data-cycle-label", "data-share-title", "data-subject"}
 # Atributos data-* con JSON dentro: se traducen estas claves.
 DATA_JSON = {"data-preview-reel", "data-artworks"}
 JSON_TEXT_KEYS = {"title", "meta", "label", "quote", "caption", "technique", "support", "venue", "kind"}

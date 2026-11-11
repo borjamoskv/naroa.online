@@ -42,6 +42,7 @@ Gobernanza general de la carpeta de proyectos: [Workspace AGENTS.md](file:///Use
 | La interfaz de la galería o la lupa | §7b, §7d |
 | `/sobre-mi/`, `/trayectoria/` o las tarjetas sociales | §8 |
 | Cualquier texto visible o ruta interna en `app.js` | §9 |
+| `/contacto/`, la hoja de la nota o el humo del cursor | §10 |
 
 ### 1. Sincronización Atómica 1:1 de Catálogo (`INV_CATALOG_SYNC_1TO1`)
 Toda alta o mutación de obra exige paridad simultánea en 3 capas:
@@ -133,3 +134,12 @@ Toda alta o mutación de obra exige paridad simultánea en 3 capas:
 4. **No se traducen** los títulos de obra, los nombres de serie (`series` y `category` son además claves de filtro) ni los nombres propios.
 5. **Enlaces en `app.js`:** toda ruta interna construida en el script lleva `BASE` delante (`''` en español, `/en` en inglés, `/eu` en euskera).
 6. **Idioma de la visita:** cada página lleva `hreflang` y enlaces `ES`/`EN`/`EU` en la cabecera (en móvil, en el pie del menú). La primera visita va al idioma del navegador: euskera al euskera; catalán y gallego al español; cualquier otro que no sea español, al inglés; la elección manual se guarda en `localStorage['naroa-lang']`. Los rastreadores no se redirigen.
+
+### 10. La nota de contacto (`INV_CONTACT_NOTE`)
+1. **La obra, sin velo:** en `/contacto/` «Rara Avis» se ve entera. Lo que dice la página va sobre ella con el titular del sistema, en el turquesa del monóculo (`--hero-accent` en `body.page-contacto`); lo que escribe quien visita, en una hoja recortada a mano (`.ct-note`). Sin cajas, píldoras ni rectas: el motivo se rodea con rotulador (`.ct-loop`, un trazo distinto por motivo que dibuja el build), los filetes son trazos y el foco es una pasada de rotulador, no un rectángulo.
+2. **Nada sale de la página:** la nota no es un formulario. El motivo rodeado y lo que se escriba componen un mensaje que se abre en el WhatsApp o en el correo de quien visita, o se copia; desde la página no se envía ni se guarda nada, y así lo dice la letra pequeña. Sin JavaScript los enlaces llevan solo el saludo y el renglón para escribir no sale.
+3. **Los textos del mensaje viven en el HTML:** el saludo (`[data-contact-hello]`), la frase de cada motivo (`data-say`), el asunto del correo (`data-subject`) y la pista del renglón (`[data-contact-tip]`) se leen del HTML ya traducido; `app.js` no lleva literales para componerlo (§9). «Otra cosa» no añade frase propia.
+4. **Humo fuera del papel:** el humo del cursor se funde en «screen» y borraría el texto sobre una superficie clara; no se emite sobre `[data-fluid-quiet]` (la hoja).
+5. **Primera pantalla:** la hoja cabe entera en 1440 × 900 y «Enviárselo por WhatsApp» queda a la vista sin scroll desde 360 × 640 (medido el 2026-11-11 en español, inglés y euskera; en 320 × 568 asoma a medias). Al añadir texto a la hoja o cambiar un titular, volver a medirlo. Hasta 1100 px de ancho en vertical la composición se apila, con el rostro arriba; en apaisado estrecho la obra se arrima a la izquierda para que la hoja no tape el rostro.
+6. **Vías directas:** una frase con un enlace por vía (`.ct-say [data-contact-way]`) y, debajo, las direcciones a la vista (`.ct-address`), que se encienden por parejas. El recorte del espejo (`.ct-mirror`) es la propia imagen de la obra recortada con CSS; su inscripción, «piensa bien y acertarás», se deja en español en todos los idiomas y el pie la explica. `/naroa-gutierrez-gil.vcf` lleva los mismos datos que la página y se escribe en el build.
+7. **Correo:** la página de contacto y los encargos escriben a `encargos@naroagutierrezgil.com` (`contact_mail` en el build); el pie del sitio conserva `naroa@…`.
