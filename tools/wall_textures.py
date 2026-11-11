@@ -8,10 +8,12 @@ Cada tipo de encuentro tiene detrás la fotografía de una pared real:
 - tunel     (mercado de arte)  azulejo blanco alargado, el de los pasillos de metro
 
 Las fotos son texturas sin costura de Poly Haven (polyhaven.com), de dominio público
-(CC0): no exigen firma, pero la procedencia se anota aquí. Los originales (JPG de 2K,
-entre 1 y 3 MB) no viven en el repositorio; se descargan de
+(CC0): no exigen firma, pero la procedencia se anota aquí. De cada una se usan tres
+mapas (JPG de 2K, entre 0,5 y 3 MB) que no viven en el repositorio; se descargan de
 
-    https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/<id>/<id>_diff_2k.jpg
+    https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/<id>/<id>_<mapa>_2k.jpg
+
+con <mapa> = diff (color), nor_gl (normales, con la Y hacia arriba) y ao (oclusión).
 
 Este script las revela y escribe las teselas de `classic/assets/walls/` y las reglas
 `.career-wall-stage>i[data-wall-layer=…]` de `classic/immersive/app.css`, que no se
@@ -20,15 +22,20 @@ retocan a mano.
     python3 tools/wall_textures.py               # reescribe las reglas CSS
     python3 tools/wall_textures.py --fotos DIR   # además rehace las teselas desde los JPG de DIR
 
-El revelado (solo con --fotos; pide numpy y un Pillow con AVIF) hace tres cosas:
-- contraste local, porque el mapa de color de un escaneo viene sin sombras y queda plano;
+El revelado (solo con --fotos; pide numpy y un Pillow con AVIF) hace cuatro cosas:
+- luz: el mapa de color de un escaneo viene sin sombras y queda plano. Se ilumina con su
+  mapa de normales, con la luz arriba a la izquierda como el brillo que la página pone encima, y se
+  oscurecen los huecos con su mapa de oclusión. Las juntas se hunden y el grano se levanta;
+- un poco de contraste local, para rematar el volumen;
 - craquelado: una red de grietas de pintura cuarteada, calculada y fundida en la foto.
-  Es periódica como la tesela, tiene dos o tres tamaños de escama, la grieta lleva su
-  sombra y su filo de luz y cada escama clarea hacia donde le da la luz (arriba a la izquierda);
+  Es periódica como la tesela y tiene de uno a tres tamaños de escama según la pared. La grieta
+  lleva su sombra y, en el labio de abajo a la derecha, un filo de luz; cada escama, abarquillada,
+  clarea hacia su canto de abajo a la derecha, el que mira a la luz;
 - tres archivos por pared: AVIF y WebP de 1280 px, y un AVIF de 2048 px para pantallas
   densas de escritorio. El WebP es la reserva de los navegadores sin AVIF.
 
-`/assets/` se sirve con caché inmutable de un año: si una tesela cambia, sube VERSION.
+Las teselas llevan -vN en el nombre y se sirven con caché inmutable de un año: si una cambia,
+sube VERSION.
 La foto de cada pared solo se pide cuando esa pared aparece (`.is-on` o `data-seen`).
 """
 import argparse, pathlib
@@ -36,9 +43,13 @@ import argparse, pathlib
 REPO = pathlib.Path(__file__).resolve().parent.parent
 CSS = REPO / 'classic' / 'immersive' / 'app.css'
 OUT = REPO / 'classic' / 'assets' / 'walls'
-VERSION = 2
+VERSION = 3
 LADO, LADO_DENSO = 1280, 2048     # píxeles de la tesela normal y de la de pantalla densa
-CLARIDAD = 45                     # contraste local, en % de máscara de enfoque de radio ancho
+CLARIDAD = 25                     # contraste local, en % de máscara de enfoque de radio ancho
+# Luz del revelado: elevación sobre la pared (más baja = más rasante), parte de luz ambiente
+# y cuánto pesa la oclusión. RELIEVE exagera la pendiente del mapa de normales de cada pared.
+LUZ_ELEVACION, LUZ_AMBIENTE, LUZ_OCLUSION = 42, .38, 1.1
+RELIEVE = {'pared': 2.2, 'muro': 1.6, 'callejon': 1.4, 'tunel': 1.3}
 
 # capa → (id en Poly Haven, giro en grados, lado en pantalla, lado en móvil, velo crema 0–1)
 # El lado en pantalla decide la escala del material (con 900 px un ladrillo mide unos 100 px) y cuánto
@@ -126,18 +137,52 @@ def craquelar(im, name):
     out = foto * (1 + sombra[..., None]) * (1 - .62 * oscuro[..., None]) + .2 * luz[..., None]
     return Image.fromarray((np.clip(out, 0, 1) * 255 + .5).astype(np.uint8))
 
-def revelar(name, fotos, lado):
-    from PIL import Image, ImageFilter
+def _mapa(name, fotos, mapa, lado):
+    """Un mapa de la textura, girado como la pared y reducido sin costura (sobre un mosaico 3×3)."""
+    from PIL import Image
     ident, giro, *_ = WALLS[name]
-    im = Image.open(fotos / f'{ident}_diff_2k.jpg').convert('RGB')
+    im = Image.open(fotos / f'{ident}_{mapa}_2k.jpg').convert('RGB')
     if giro:
         im = im.rotate(giro, expand=True)
-    # Sobre un mosaico 3×3: el remuestreo y el contraste local ven a sus vecinos y no dejan costura.
+    if im.width == lado:
+        return im
     big = Image.new('RGB', (im.width * 3, im.height * 3))
     for i in range(3):
         for j in range(3):
             big.paste(im, (i * im.width, j * im.height))
-    big = big.resize((lado * 3, lado * 3), Image.LANCZOS).filter(ImageFilter.UnsharpMask(radius=lado / 70, percent=CLARIDAD, threshold=0))
+    return big.resize((lado * 3, lado * 3), Image.LANCZOS).crop((lado, lado, lado * 2, lado * 2))
+
+def iluminar(name, fotos, lado):
+    """El color, iluminado con su relieve: difusa por el mapa de normales y huecos por la oclusión."""
+    import math
+    import numpy as np
+    from PIL import Image
+    arr = lambda mapa: np.asarray(_mapa(name, fotos, mapa, lado)).astype(np.float32) / 255
+    color, ao = arr('diff'), arr('ao').mean(axis=2)
+    n = arr('nor_gl') * 2 - 1
+    if WALLS[name][1] == 90:     # al girar la foto giran también sus vectores: (x, y) → (−y, x)
+        n = np.stack([-n[..., 1], n[..., 0], n[..., 2]], axis=-1)
+    elif WALLS[name][1]:
+        raise ValueError('solo sé girar las normales 90°')
+    n[..., :2] *= RELIEVE[name]
+    n /= np.linalg.norm(n, axis=2, keepdims=True)
+    el = math.radians(LUZ_ELEVACION); c = math.cos(el) * math.sqrt(.5)
+    luz_dir = np.array([-c, c, math.sin(el)], np.float32)     # de arriba a la izquierda; la Y del mapa va hacia arriba
+    difusa = np.clip(n @ luz_dir, 0, None) / luz_dir[2]        # 1 = superficie plana: la pared no cambia de tono
+    luz = (LUZ_AMBIENTE + (1 - LUZ_AMBIENTE) * difusa) * ao ** LUZ_OCLUSION
+    lineal = np.where(color <= .04045, color / 12.92, ((color + .055) / 1.055) ** 2.4) * luz[..., None]
+    srgb = np.where(lineal <= .0031308, lineal * 12.92, 1.055 * np.clip(lineal, 0, None) ** (1 / 2.4) - .055)
+    return Image.fromarray((np.clip(srgb, 0, 1) * 255 + .5).astype(np.uint8))
+
+def revelar(name, fotos, lado):
+    from PIL import Image, ImageFilter
+    im = iluminar(name, fotos, lado)
+    # El contraste local mira a los vecinos: sobre un mosaico 3×3 para que no deje costura.
+    big = Image.new('RGB', (lado * 3, lado * 3))
+    for i in range(3):
+        for j in range(3):
+            big.paste(im, (i * lado, j * lado))
+    big = big.filter(ImageFilter.UnsharpMask(radius=lado / 70, percent=CLARIDAD, threshold=0))
     return craquelar(big.crop((lado, lado, lado * 2, lado * 2)), name)
 
 def archivos(name):
