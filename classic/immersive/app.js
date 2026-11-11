@@ -6443,6 +6443,26 @@
       body.append(eyebrow, h3, summary, readLink); article.append(body);
       return article;
     };
+    const shortDate = iso => new Intl.DateTimeFormat({ en: 'en-GB', eu: 'eu' }[LANG] || 'es', { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(`${iso}T12:00:00Z`));
+    const archiveNotebookCard = card => {
+      const years = $('[data-notebook-years]'), link = $('h3 a', card), iso = $('time', card)?.getAttribute('datetime') || '';
+      if (!years || !link || iso.length < 10) return;
+      const yearKey = iso.slice(0, 4), yearOf = group => $('.notebook-year-number', group)?.textContent || '';
+      let group = $$('.notebook-year', years).find(other => yearOf(other) === yearKey);
+      if (!group) {
+        group = document.createElement('details'); group.className = 'notebook-year'; group.setAttribute('name', 'notebook-archive');
+        const summary = document.createElement('summary'), number = document.createElement('span'), count = document.createElement('span');
+        number.className = 'notebook-year-number'; number.textContent = yearKey; count.className = 'notebook-year-count';
+        summary.append(number, count); group.append(summary, document.createElement('ol'));
+        years.insertBefore(group, $$('.notebook-year', years).find(other => yearOf(other) < yearKey) || null);
+      }
+      const list = $('ol', group), item = document.createElement('li'), time = document.createElement('time'), entry = externalLink('', link.href);
+      time.dateTime = iso; time.textContent = shortDate(iso); entry.textContent = link.textContent;
+      item.append(time, entry);
+      list.insertBefore(item, $$('li', list).find(other => ($('time', other)?.getAttribute('datetime') || '') < iso) || null);
+      const count = $$('li', list).length;
+      $('.notebook-year-count', group).textContent = count === 1 ? '1 entrada' : `${count} entradas`;
+    };
     async function syncNotebook() {
       if (!endpoint || document.hidden || notebookChecking || performance.now() - notebookChecked < NOTEBOOK_RECHECK_MS) return;
       notebookChecking = true;
@@ -6467,7 +6487,11 @@
           return card;
         });
         const next = [...wanted, ...current.filter(card => !wanted.includes(card))].slice(0, NOTEBOOK_VISIBLE);
-        if (next.length !== current.length || next.some((card, index) => card !== current[index])) notebookGrid.replaceChildren(...next);
+        if (next.length !== current.length || next.some((card, index) => card !== current[index])) {
+          notebookGrid.replaceChildren(...next);
+          // La entrada que cede su sitio no desaparece: pasa al archivo, en su año.
+          current.filter(card => !next.includes(card)).forEach(archiveNotebookCard);
+        }
         if (notebookStatus && notebookStatusText) {
           const total = Number(data.found) || 0, latest = longDate(isoDay(posts[0].date));
           const lead = notebookAdded ? (notebookAdded === 1 ? '1 entrada nueva' : `${notebookAdded} entradas nuevas`) : 'Al día con su WordPress';
@@ -6478,6 +6502,44 @@
     }
     syncNotebook();
     document.addEventListener('visibilitychange', () => { if (!document.hidden) syncNotebook(); });
+  }
+  // Buscador del archivo del blog: filtra las entradas antiguas por palabras (todas deben estar),
+  // sin distinguir tildes ni mayúsculas. Mientras se busca, los años con resultados se abren a la vez.
+  const notebookSearch = $('[data-notebook-search]'), notebookYears = $('[data-notebook-years]');
+  const notebookSearchInput = notebookSearch && $('[data-notebook-search-input]', notebookSearch);
+  if (notebookSearchInput && notebookYears) {
+    const notebookSearchCount = $('[data-notebook-search-count]', notebookSearch);
+    const fold = value => String(value || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    let openBeforeSearch = null;
+    const filterNotebook = () => {
+      const words = fold(notebookSearchInput.value).split(/[^\p{L}\p{N}]+/u).filter(Boolean), searching = words.length > 0;
+      const years = $$('.notebook-year', notebookYears);
+      if (searching && !openBeforeSearch) openBeforeSearch = new Map(years.map(year => [year, year.open]));
+      let shown = 0, total = 0;
+      years.forEach(year => {
+        let hits = 0;
+        $$('li', year).forEach(item => {
+          const time = $('time', item);
+          const text = fold(`${time?.textContent || ''} ${time?.getAttribute('datetime') || ''} ${$('a', item)?.textContent || ''}`);
+          const hit = words.every(word => text.includes(word));
+          item.hidden = !hit; total += 1; if (hit) hits += 1;
+        });
+        shown += hits;
+        year.hidden = hits === 0;
+        // El acordeón solo deja un año abierto; al buscar se suelta para enseñar todos los que tienen resultados.
+        if (searching) { year.removeAttribute('name'); year.open = hits > 0; }
+        else { year.setAttribute('name', 'notebook-archive'); year.open = openBeforeSearch?.get(year) ?? year.open; }
+      });
+      if (!searching) openBeforeSearch = null;
+      notebookYears.classList.toggle('is-searching', searching);
+      if (notebookSearchCount) notebookSearchCount.textContent = !searching ? '' : shown ? `${shown} de ${total} entradas` : 'Ninguna entrada con esas palabras';
+    };
+    notebookSearchInput.addEventListener('input', filterNotebook);
+    notebookSearchInput.addEventListener('keydown', event => {
+      if (event.key !== 'Escape' || !notebookSearchInput.value) return;
+      event.preventDefault(); notebookSearchInput.value = ''; filterNotebook();
+    });
+    notebookSearch.hidden = false;
   }
   const detectAttribution = () => {
     let source = 'direct', generative = false;
