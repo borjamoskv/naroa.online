@@ -492,6 +492,17 @@ body.page-sobre-mi .chapter p.lead{font-size:clamp(19px,1.5vw,21px);line-height:
 body.page-sobre-mi .chapter>.eyebrow{font-size:12.5px;letter-spacing:.14em}
 body.page-sobre-mi .chapter h2{text-wrap:balance}
 body.page-sobre-mi .editorial blockquote cite{font-size:13px}
+/* Tipografía de la página. Titulares en la serif editorial del sitio (Cormorant); el acento, en letra
+   ligada escolar (Playwrite ES: la misma caligrafía del cartel que Naroa sostiene en su retrato); sus
+   citas, en cursiva. La voz del sitio (presentación, cierre, rótulos, enlaces) sigue en DM Sans y
+   Caveat queda para las notas manuscritas. */
+body.page-sobre-mi .chapter h2{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(42px,11vw,58px);letter-spacing:-.02em;line-height:1.02}
+body.page-sobre-mi .chapter h2 span,body.page-sobre-mi .portrait-hero .page-hero-copy h1 span{font-family:'Playwrite ES','Caveat',cursive!important;font-weight:300!important;letter-spacing:0!important}
+body.page-sobre-mi .chapter h2 span{font-size:.5em;line-height:1.75}
+body.page-sobre-mi .portrait-hero .page-hero-copy h1 span{font-size:.56em!important;line-height:1.75!important}
+body.page-sobre-mi .editorial blockquote{font-family:'Playwrite ES','Caveat',cursive;font-weight:300;font-size:clamp(26px,3.4vw,46px);line-height:1.7}
+body.page-sobre-mi .chapter .kintsugi-shard p:not(.eyebrow),body.page-sobre-mi .chapter p[data-gaze-summary],body.page-sobre-mi .chapter p[data-gaze-detail]{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:21px;line-height:1.55}
+body.page-sobre-mi .chapter .kintsugi-shard p.lead,body.page-sobre-mi .chapter p[data-gaze-summary]{font-size:clamp(24px,2vw,28px);line-height:1.38}
 /* Enlaces: el garabato a mano vuelve a verse (oscuro sobre tarjeta clara) y el foco también. */
 body.page-sobre-mi .chapter .text-link{font-size:15px;border-bottom-color:transparent}
 body.page-sobre-mi .chapter .text-link:after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 8' preserveAspectRatio='none' fill='none'%3E%3Cpath d='M1 4.2 C 18 1.4, 35 6.8, 55 2.8 C 75 0.5, 90 5.2, 109 3.4' stroke='%2314080e' stroke-width='1.5' stroke-linecap='round' opacity='0.7'/%3E%3C/svg%3E")}
@@ -522,17 +533,6 @@ body.page-sobre-mi .artist-facts a:hover{color:#b01e68}
 body.page-sobre-mi .chapter p.gaze-reading{font-weight:500;color:#14080e;margin-top:30px}
 body.page-sobre-mi .gaze-metrics{list-style:none;display:block;padding:0;margin:14px 0 26px;max-width:62ch;border-bottom:1px solid rgba(20,8,14,.16)}
 body.page-sobre-mi .gaze-metrics>li{padding:9px 0;border-top:1px solid rgba(20,8,14,.16);font-size:16px;line-height:1.5;color:#2d1421}
-/* Tipografía de la página. Titulares en la serif editorial del sitio (Cormorant); el acento, en letra
-   ligada escolar (Playwrite ES: la misma caligrafía del cartel que Naroa sostiene en su retrato); sus
-   citas, en cursiva. La voz del sitio (presentación, cierre, rótulos, enlaces) sigue en DM Sans y
-   Caveat queda para las notas manuscritas. */
-body.page-sobre-mi .chapter h2{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(42px,11vw,58px);letter-spacing:-.02em;line-height:1.02}
-body.page-sobre-mi .chapter h2 span,body.page-sobre-mi .portrait-hero .page-hero-copy h1 span{font-family:'Playwrite ES','Caveat',cursive!important;font-weight:300!important;letter-spacing:0!important}
-body.page-sobre-mi .chapter h2 span{font-size:.5em;line-height:1.75}
-body.page-sobre-mi .portrait-hero .page-hero-copy h1 span{font-size:.56em!important;line-height:1.75!important}
-body.page-sobre-mi .editorial blockquote{font-family:'Playwrite ES','Caveat',cursive;font-weight:300;font-size:clamp(26px,3.4vw,46px);line-height:1.7}
-body.page-sobre-mi .chapter .kintsugi-shard p:not(.eyebrow),body.page-sobre-mi .chapter p[data-gaze-summary],body.page-sobre-mi .chapter p[data-gaze-detail]{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:21px;line-height:1.55}
-body.page-sobre-mi .chapter .kintsugi-shard p.lead,body.page-sobre-mi .chapter p[data-gaze-summary]{font-size:clamp(24px,2vw,28px);line-height:1.38}
 /* Cierre: el encargo es la línea grande, subrayada a mano, y el resto enlaces de texto. Sin
    botones de plantilla: aquí los controles son tipografía. */
 body.page-sobre-mi .artist-closing .chapter-links:before{content:"";flex-basis:100%;height:0;order:1}
@@ -547,6 +547,8 @@ body.page-sobre-mi .artist-closing .chapter-links>.text-link:first-child:after{h
 .page-hero.portrait-hero{min-height:0}
 html.portrait-on-stage body.page-sobre-mi .site-nav.is-scrolled{background:rgba(17,18,15,.9);color:#fffdf4;border-bottom-color:transparent}
 html.portrait-on-stage body.page-sobre-mi .site-nav.is-scrolled :is(a,button):focus-visible{outline-color:#edbca4}
+/* Sin script la cabecera no puede cambiar de color al llegar al artículo: se queda arriba, sobre el retrato. */
+html:not(.portrait-scroll-native) body.page-sobre-mi .site-nav{position:absolute}
 body.page-sobre-mi #contenido{padding-top:clamp(72px,11vh,120px)}
 /* La cabecera dice en qué página se está. */
 .site-nav nav>a[aria-current="page"]{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:6px}
@@ -592,8 +594,6 @@ body.page-sobre-mi .site-footer>a:not(.signature){display:inline-flex;align-item
   body.page-sobre-mi .full-figure{height:auto;min-height:0;display:flex;flex-direction:column;background:#14080e}
   body.page-sobre-mi .full-figure>a{height:62svh;min-height:min(400px,calc(100svh - 96px));flex:none}
   body.page-sobre-mi [data-monocle-xray] .xray-whisper{position:static;width:auto;padding:14px 18px 4px;text-shadow:none}
-/* Sin script la cabecera no puede cambiar de color al llegar al artículo: se queda arriba, sobre el retrato. */
-html:not(.portrait-scroll-native) body.page-sobre-mi .site-nav{position:absolute}
   body.page-sobre-mi .full-figure figcaption{position:static;padding:6px 18px 16px;background:none}
 }
 @media(prefers-reduced-motion:reduce){
