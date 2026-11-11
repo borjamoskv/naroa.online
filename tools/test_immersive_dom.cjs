@@ -906,6 +906,38 @@ async function eyeMatch(ui, base, points) {
     assert.ok(paceAudio.oscillators.length > notesSoFar, MONTH_TITLES[month] + ' schedules its own notes');
   }
   assert.equal(paced.w.NAROA_SOUND.getActiveMelodyInfo().name, 'Abendua', 'The menu names the piece that is playing');
+  // The written music: playable ranges, real cadences in the minor months and a decorated return.
+  for (let month = 0; month < 12; month++) {
+    const sheet = pacedScore.sheet(month), name = MONTH_TITLES[month];
+    const melody = sheet.flatMap(bar => bar.rh.map(note => note[1])), bass = sheet.flatMap(bar => bar.lh.filter(n => n != null));
+    assert.ok(melody.every(Number.isInteger) && bass.every(Number.isInteger), name + ' only writes real keys');
+    assert.ok(Math.min(...melody) >= 60 && Math.max(...melody) <= 84 && Math.min(...bass) >= 31, name + ' stays in a singing range over a bass that is not mud');
+    sheet.forEach(bar => bar.rh.forEach(([at, , length], i) => {
+      assert.ok(at >= 0 && at + length <= 8 && (!bar.rh[i + 1] || bar.rh[i + 1][0] >= at + length), name + ' keeps every note inside its bar and the hand never overlaps itself');
+    }));
+    // Second voice, heard with a fast scroll: under long notes of the bridge and the return, a third or a fourth
+    // below the melody, never rubbing a semitone against the left hand's chord.
+    const voiced = sheet.filter(bar => bar.second);
+    assert.ok(voiced.some(bar => bar.section === 'B') && voiced.some(bar => bar.section === 'A · regreso') && voiced.every(bar => bar.section === 'B' || bar.section === 'A · regreso'), name + ' adds a second voice only to the bridge and the return');
+    voiced.forEach(bar => {
+      const chord = new Set(bar.lh.slice(0, 7).filter(n => n != null).map(n => n % 12));
+      bar.second.forEach((under, i) => {
+        if (under == null) return;
+        const gap = bar.rh[i][1] - under;
+        assert.ok(gap >= 3 && gap <= 5, name + ' sings its second voice a third or a fourth below');
+        const pc = under % 12;
+        assert.ok(chord.has(pc) || ![...chord].some(tone => (pc - tone + 12) % 12 === 1 || (tone - pc + 12) % 12 === 1), name + ' second voice never rubs the chord');
+      });
+    });
+    if (month !== 3) {
+      const count = section => sheet.filter(bar => bar.section === section).reduce((sum, bar) => sum + bar.rh.length, 0);
+      assert.ok(count('A · regreso') > count('A'), name + ' decorates its melody when the theme returns');
+    }
+  }
+  [[0, 'A', 8], [9, 'B', 10], [10, 'G', 6]].forEach(([month, key, leading]) => {
+    const cadence = pacedScore.sheet(month).filter(bar => bar.section === 'A')[7];
+    assert.ok(cadence.lh.some(n => n != null && n % 12 === leading), MONTH_TITLES[month] + ' (' + key + ' minor) closes its phrase on a dominant with a leading tone');
+  });
   pacedScore.setMonth(3);
   assert.equal(pacedScore.state.intensity, .31, 'At rest the right hand sleeps');
   const echoAt = paceAudio.contexts[0].panners[0].positionX.value;

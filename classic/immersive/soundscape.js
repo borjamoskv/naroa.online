@@ -28,6 +28,8 @@
   const MELODY_GATE = 0.35, REST = 0.31;
   // Nivel general del paisaje: presente pero siempre por debajo del piano (unos 12–16 dB).
   const NATURE = 1.4;
+  // Nivel del piano antes de la cinta; cada pieza lo corrige con su `level` para que los doce meses suenen igual de fuerte.
+  const BUS = 0.72;
   const VOLUME_KEY = 'naroa-score-volume';
 
   // ── Partitura ────────────────────────────────────────────────────────────
@@ -93,61 +95,105 @@
     lluvia: [0, 7, 4, 7, 9, 7, 4, 7], niebla: [0, null, 7, 4, 9, null, 7, 4],
     campana: [0, 9, 7, 9, 4, 9, 7, 9]
   };
-  const arrange = (intro, a, b, outro) => [
+  // Segunda voz de «Apirila» (escrita en Fa mayor): la nota de la escala que queda una tercera por debajo.
+  const F_MAJOR = [0, 2, 4, 5, 7, 9, 11];
+  const thirdBelow = midi => {
+    let found = 0;
+    for (let note = midi - 1; note > midi - 6; note--) if (F_MAJOR.includes(((note - 5) % 12 + 12) % 12) && ++found === 2) return note;
+    return null;
+  };
+  const voice = bars => bars.map(bar => ({ ...bar, second: bar.rh.map(([, midi, length]) => (length >= 2 ? thirdBelow(midi) : null)) }));
+  const arrange = (intro, a, b, outro, back = a) => [
     ...tag(intro, 'Entrada'),
     ...tag(a, 'A'),
     ...tag(a, 'A · eco', { thin: true }),
     ...tag(b, 'B'),
-    ...tag(a, 'A · regreso', { bloom: true }),
+    ...tag(back, 'A · regreso', { bloom: true }),
     ...tag(outro, 'Cierre')
   ];
-  function compose({ title, tonic, sing, scale, figure, accent, swing, nature, A: verse, B: bridge }) {
+  function compose({ title, tonic, sing, scale, figure, accent, swing, nature, level, A: verse, B: bridge }) {
     const steps = SCALES[scale], shape = FIGURES[figure];
-    const pitch = (ref, step) => ref + 12 * Math.floor(step / 7) + steps[((step % 7) + 7) % 7];
+    const wrap = step => ((step % 7) + 7) % 7;
+    // `raised` es el grado que el compás sube medio tono (la sensible de una cadencia en menor).
+    const pitch = (ref, step, raised = null) => ref + 12 * Math.floor(step / 7) + steps[wrap(step)] + (wrap(step) === raised ? 1 : 0);
     // El bajo de cada acorde vive entre La1 y Sol#2.
     const low = degree => (pitch(tonic, degree) > 44 ? degree - 7 : degree);
-    const left = degree => shape.map(offset => (offset == null ? null : pitch(tonic, low(degree) + offset)));
-    const right = text => text.split(',').map(note => {
-      const [at, step, length] = note.trim().split(/\s+/).map(Number);
-      return [at, pitch(sing, step), length];
+    // Armonía de frase: el compás que cierra en dominante lleva séptima y, en menor, sensible (una cadencia
+    // de verdad); el que lo prepara desde el II o el IV también lleva séptima.
+    const colour = (degree, i) => ({
+      seventh: (i === 7 && degree === 4) || (i === 6 && (degree === 1 || degree === 3)),
+      raised: i === 7 && degree === 4 && scale === 'menor' ? wrap(degree + 2) : null
+    });
+    const left = (degree, { seventh = false, raised = null } = {}, next = null) => {
+      const offsets = shape.slice();
+      if (seventh) {
+        const octave = offsets.indexOf(7), fifth = offsets.lastIndexOf(4);
+        if (octave >= 0) offsets[octave] = 6; else if (fifth > 0) offsets[fifth] = 6;
+      }
+      const notes = offsets.map(offset => (offset == null ? null : pitch(tonic, low(degree) + offset, raised)));
+      // El bajo camina: la última corchea se acerca por grado conjunto al bajo del compás siguiente.
+      if (next != null && next !== degree) notes[7] = pitch(tonic, low(next) + (low(next) > low(degree) ? -1 : 1), raised);
+      return notes;
+    };
+    const read = text => text.split(',').map(note => note.trim().split(/\s+/).map(Number));
+    const right = (notes, raised) => notes.map(([at, step, length]) => [at, pitch(sing, step, raised), length]);
+    // En la vuelta la melodía se adorna: una nota de paso rellena cada salto de tercera entre notas seguidas.
+    const adorn = notes => notes.flatMap(([at, step, length], i) => {
+      const next = notes[i + 1];
+      if (next && length >= 2 && next[0] === at + length && Math.abs(next[1] - step) === 2) {
+        return [[at, step, length - 1], [next[0] - 1, (step + next[1]) / 2, 1]];
+      }
+      return [[at, step, length]];
     });
     // Tres trombones: las notas del acorde más cercanas a su tesitura, sin cruzarse.
-    const horns = degree => {
-      const seats = [48, 53, 57], tones = [0, 2, 4].map(third => pitch(tonic, degree + third) % 12);
+    const horns = (degree, raised) => {
+      const chairs = [48, 53, 57], tones = [0, 2, 4].map(third => pitch(tonic, degree + third, raised) % 12);
       let best = null, bestCost = Infinity;
       [[0, 1, 2], [0, 2, 1], [1, 0, 2], [1, 2, 0], [2, 0, 1], [2, 1, 0]].forEach(order => {
         const notes = order.map((tone, voice) => {
-          const near = seats[voice] - ((seats[voice] - tones[tone]) % 12 + 12) % 12;
-          return seats[voice] - near > 6 ? near + 12 : near;
+          const near = chairs[voice] - ((chairs[voice] - tones[tone]) % 12 + 12) % 12;
+          return chairs[voice] - near > 6 ? near + 12 : near;
         });
-        const cost = notes.reduce((sum, note, voice) => sum + Math.abs(note - seats[voice]), 0);
+        const cost = notes.reduce((sum, note, voice) => sum + Math.abs(note - chairs[voice]), 0);
         if (notes[0] < notes[1] && notes[1] < notes[2] && cost < bestCost) { best = notes; bestCost = cost; }
       });
-      return best || seats;
+      return best || chairs;
     };
-    const bar = ([degree, melody], i) => ({ lh: left(degree), rh: right(melody), ...(i === 7 ? { breathe: true } : {}) });
+    const section = (specs, decorate, brassy, voiced) => specs.map(([degree, melody], i) => {
+      const tint = colour(degree, i), notes = decorate ? adorn(read(melody)) : read(melody);
+      // Al final de la frase la figura se queda quieta: el bajo no camina hacia la sección siguiente.
+      const next = i < 7 ? specs[i + 1][0] : null;
+      return {
+        lh: left(degree, tint, next), rh: right(notes, tint.raised),
+        // Segunda voz: una tercera por debajo de cada nota larga, dentro de la escala y de la armonía del compás.
+        ...(voiced ? { second: notes.map(([, step, length]) => (length >= 2 ? pitch(sing, step - 2, tint.raised) : null)) } : {}),
+        ...(brassy ? { brass: horns(degree, tint.raised) } : {}), ...(i === 7 ? { breathe: true } : {})
+      };
+    });
     const home = pitch(sing, 7) <= 79 ? 7 : 0;
     return {
-      title, transpose: 0, swing, accent, nature,
+      title, transpose: 0, swing, accent, nature, level,
       bars: arrange(
         verse.slice(0, 2).map(([degree]) => ({ lh: left(degree), rh: [], soft: true })),
-        verse.map(bar),
-        bridge.map((spec, i) => ({ ...bar(spec, i), brass: horns(spec[0]) })),
+        section(verse, false, false, false),
+        section(bridge, false, true, true),
         [
           { lh: left(0), rh: [[0, pitch(sing, home), 8]], soft: true, breathe: true },
           { lh: [0, 4, 7, 9, 11, 14, null, null].map(offset => (offset == null ? null : pitch(tonic, offset))), rh: [], soft: true, final: true },
           { lh: [null, null, null, null, null, null, null, null], rh: [] }
-        ]
+        ],
+        section(verse, true, false, true)
       )
     };
   }
+  // `level` iguala el volumen de los doce meses (medido renderizando cada pieza sin tiempo real el 2026-11-11).
   // Paisaje de cada mes: capas de ruido pardo filtrado (viento, lluvia, mar, brasas) y, según la estación,
   // pájaros o grillos sintetizados. Los números son niveles; 0 o ausente = sin esa capa.
   const PIECES = [
     compose({
       // Enero: escarcha. La menor, mano izquierda quieta y notas largas.
-      title: 'Urtarrila', tonic: 33, sing: 69, scale: 'menor', figure: 'quieta', swing: 0.03,
-      accent: [1, 0, 0.7, 0, 0.8, 0, 0.66, 0], nature: { wind: 0.125, cold: true, whistle: 0.05 },
+      title: 'Urtarrila', level: 1.27, tonic: 33, sing: 69, scale: 'menor', figure: 'quieta', swing: 0.03,
+      accent: [1, 0, 0.7, 0, 0.8, 0, 0.66, 0.5], nature: { wind: 0.125, cold: true, whistle: 0.05 },
       A: [
         [0, '0 4 3, 4 2 2, 6 1 2'], [5, '0 0 4, 5 2 3'], [2, '0 2 2, 2 4 2, 4 6 4'], [6, '0 8 3, 3 6 1, 4 3 4'],
         [0, '0 4 3, 4 2 2, 6 4 2'], [5, '0 5 2, 2 7 4, 6 5 2'], [3, '0 3 3, 3 5 1, 4 7 2, 6 5 2'], [4, '0 4 4, 5 1 1, 6 -1 2']
@@ -159,7 +205,7 @@
     }),
     compose({
       // Febrero: carnaval bajo la lluvia. Re dórico, bajo en tresillo (3+3+2).
-      title: 'Otsaila', tonic: 38, sing: 62, scale: 'dorica', figure: 'tresillo', swing: 0.04,
+      title: 'Otsaila', level: 0.98, tonic: 38, sing: 62, scale: 'dorica', figure: 'tresillo', swing: 0.04,
       accent: [1, 0.5, 0.62, 0.95, 0.5, 0.62, 0.9, 0.55], nature: { rain: 0.135, wind: 0.05 },
       A: [
         [0, '0 7 3, 3 9 3, 6 11 2'], [3, '0 10 3, 3 8 1, 4 7 2, 6 5 2'], [0, '0 4 3, 3 7 3, 6 9 2'], [3, '0 10 2, 2 9 1, 3 7 3, 6 5 2'],
@@ -172,7 +218,7 @@
     }),
     compose({
       // Marzo: viento del sur. Sol mixolidio, ráfagas de corcheas que suben.
-      title: 'Martxoa', tonic: 43, sing: 67, scale: 'mixolidia', figure: 'rafaga', swing: 0.06,
+      title: 'Martxoa', level: 0.98, tonic: 43, sing: 67, scale: 'mixolidia', figure: 'rafaga', swing: 0.06,
       nature: { wind: 0.11, whistle: 0.035, birds: 3 },
       A: [
         [0, '0 0 1, 1 1 1, 2 2 1, 3 4 1, 4 7 4'], [6, '0 6 2, 2 8 1, 3 10 1, 4 8 2, 6 6 2'], [3, '0 3 1, 1 4 1, 2 5 1, 3 7 1, 4 10 2, 6 7 2'], [0, '0 9 3, 3 7 1, 4 4 4'],
@@ -184,10 +230,10 @@
       ]
     }),
     // Abril: la pieza original, en Do mayor (escrita en Fa y transportada).
-    { title: 'Apirila', transpose: -5, swing: 0.08, nature: { rain: 0.1, birds: 5 }, bars: arrange(INTRO, A, B, OUTRO) },
+    { title: 'Apirila', level: 1.02, transpose: -5, swing: 0.08, nature: { rain: 0.1, birds: 5 }, bars: arrange(INTRO, A, voice(B), OUTRO, voice(A)) },
     compose({
       // Mayo: todo florece. Fa lidio, olas de arpegio y saltos de sexta.
-      title: 'Maiatza', tonic: 41, sing: 65, scale: 'lidia', figure: 'ola', swing: 0.08,
+      title: 'Maiatza', level: 0.97, tonic: 41, sing: 65, scale: 'lidia', figure: 'ola', swing: 0.08,
       nature: { wind: 0.05, birds: 9 },
       A: [
         [0, '0 2 2, 2 7 3, 5 4 1, 6 9 2'], [1, '0 8 3, 3 5 1, 4 10 2, 6 8 2'], [0, '0 9 2, 2 4 2, 4 7 3, 7 4 1'], [5, '0 5 3, 3 7 1, 4 9 4'],
@@ -200,7 +246,7 @@
     }),
     compose({
       // Junio: hogueras de San Juan. Re mayor, danza de notas repetidas.
-      title: 'Ekaina', tonic: 38, sing: 62, scale: 'mayor', figure: 'danza', swing: 0.1,
+      title: 'Ekaina', level: 0.95, tonic: 38, sing: 62, scale: 'mayor', figure: 'danza', swing: 0.1,
       nature: { embers: 0.05, birds: 4 },
       A: [
         [0, '0 7 1, 1 7 1, 2 9 2, 4 11 2, 6 9 2'], [4, '0 8 1, 1 8 1, 2 11 2, 4 8 2, 6 6 2'], [5, '0 7 1, 1 7 1, 2 9 2, 4 12 2, 6 9 2'], [3, '0 10 3, 3 9 1, 4 7 4'],
@@ -213,7 +259,7 @@
     }),
     compose({
       // Julio: siesta junto al mar. Mi mayor, barcarola perezosa que entra a contratiempo.
-      title: 'Uztaila', tonic: 40, sing: 64, scale: 'mayor', figure: 'barca', swing: 0.15,
+      title: 'Uztaila', level: 0.95, tonic: 40, sing: 64, scale: 'mayor', figure: 'barca', swing: 0.15,
       nature: { sea: 0.063, crickets: 0.004 },
       A: [
         [0, '1 4 2, 3 7 3, 6 9 2'], [3, '1 7 2, 3 5 3, 6 7 2'], [0, '1 9 2, 3 11 3, 6 9 2'], [3, '0 7 4, 5 5 1, 6 7 2'],
@@ -226,7 +272,7 @@
     }),
     compose({
       // Agosto: Aste Nagusia. Si bemol mayor, fanfarria que brinca.
-      title: 'Abuztua', tonic: 34, sing: 70, scale: 'mayor', figure: 'brinco', swing: 0.12,
+      title: 'Abuztua', level: 0.96, tonic: 34, sing: 70, scale: 'mayor', figure: 'brinco', swing: 0.12,
       nature: { sea: 0.05, wind: 0.04 },
       A: [
         [0, '0 0 1, 1 0 1, 2 2 1, 3 4 1, 4 7 2, 6 4 2'], [0, '0 2 2, 2 4 1, 3 2 1, 4 0 4'], [3, '0 3 1, 1 3 1, 2 5 1, 3 7 1, 4 7 2, 6 5 2'], [0, '0 4 3, 3 2 1, 4 0 4'],
@@ -239,7 +285,7 @@
     }),
     compose({
       // Septiembre: la vuelta. Fa mayor que empieza en su relativo menor, terceras que caen.
-      title: 'Iraila', tonic: 41, sing: 65, scale: 'mayor', figure: 'saltarina', swing: 0.08,
+      title: 'Iraila', level: 1.01, tonic: 41, sing: 65, scale: 'mayor', figure: 'saltarina', swing: 0.08,
       nature: { wind: 0.07, sea: 0.025, leaves: 0.2 },
       A: [
         [5, '0 9 3, 3 7 1, 4 5 2, 6 7 2'], [3, '0 10 3, 3 8 1, 4 7 2, 6 5 2'], [0, '0 9 2, 2 7 2, 4 4 3, 7 7 1'], [4, '0 8 3, 3 6 1, 4 4 4'],
@@ -252,7 +298,7 @@
     }),
     compose({
       // Octubre: caen las hojas. Si menor, líneas que bajan por grados.
-      title: 'Urria', tonic: 35, sing: 71, scale: 'menor', figure: 'lluvia', swing: 0.06,
+      title: 'Urria', level: 0.94, tonic: 35, sing: 71, scale: 'menor', figure: 'lluvia', swing: 0.06,
       nature: { rain: 0.11, wind: 0.08, leaves: 0.16 },
       A: [
         [0, '0 7 2, 2 6 1, 3 5 1, 4 4 4'], [6, '0 6 2, 2 5 1, 3 4 1, 4 3 4'], [5, '0 5 2, 2 4 1, 3 3 1, 4 2 4'], [4, '0 4 3, 3 1 1, 4 -1 4'],
@@ -265,7 +311,7 @@
     }),
     compose({
       // Noviembre: niebla y sirimiri. Sol menor, vaivén lento y notas vecinas.
-      title: 'Azaroa', tonic: 43, sing: 67, scale: 'menor', figure: 'niebla', swing: 0.05,
+      title: 'Azaroa', level: 1.21, tonic: 43, sing: 67, scale: 'menor', figure: 'niebla', swing: 0.05,
       accent: [1, 0, 0.72, 0.5, 0.85, 0, 0.7, 0.5], nature: { drizzle: 0.115, wind: 0.045 },
       A: [
         [0, '0 4 3, 3 5 1, 4 4 2, 6 2 2'], [3, '0 3 3, 3 4 1, 4 5 4'], [0, '0 4 3, 3 5 1, 4 4 2, 6 7 2'], [4, '0 6 3, 3 5 1, 4 4 4'],
@@ -278,7 +324,7 @@
     }),
     compose({
       // Diciembre: nana junto al fuego. Mi bemol mayor, campanas en terceras.
-      title: 'Abendua', tonic: 39, sing: 63, scale: 'mayor', figure: 'campana', swing: 0.04,
+      title: 'Abendua', level: 1.0, tonic: 39, sing: 63, scale: 'mayor', figure: 'campana', swing: 0.04,
       nature: { embers: 0.05, wind: 0.04, cold: true, whistle: 0.02 },
       A: [
         [0, '0 11 2, 2 9 2, 4 11 2, 6 9 2'], [3, '0 12 2, 2 10 2, 4 7 4'], [0, '0 11 2, 2 9 2, 4 7 2, 6 9 2'], [4, '0 8 3, 3 6 1, 4 4 4'],
@@ -290,6 +336,19 @@
       ]
     })
   ];
+  // La segunda voz no roza el acorde: si su tercera queda a medio tono de una nota de la izquierda, baja a la
+  // nota del acorde más cercana (hasta una cuarta por debajo de la melodía) o calla.
+  PIECES.forEach(entry => entry.bars.forEach(bar => {
+    if (!bar.second) return;
+    const chord = new Set(bar.lh.slice(0, 7).filter(note => note != null).map(note => note % 12));
+    const rubs = note => { const pc = note % 12; return !chord.has(pc) && [...chord].some(tone => (pc - tone + 12) % 12 === 1 || (tone - pc + 12) % 12 === 1); };
+    bar.second = bar.second.map((under, i) => {
+      if (under == null || !rubs(under)) return under;
+      const top = bar.rh[i][1];
+      for (let note = top - 3; note >= top - 5; note--) if (chord.has(note % 12)) return note;
+      return null;
+    });
+  }));
   const TITLES = Object.freeze(PIECES.map(entry => entry.title));
   const INTRO_BARS = INTRO.length;
 
@@ -303,7 +362,9 @@
   // `intensity` es la que suena; `rest`, a la que vuelve; `presence`, a la que la lleva el scroll.
   let volume = 0.8, intensity = REST, rest = REST, presence = REST, wakeStamp = -Infinity;
   // Espacio: fuentes que rodean al oyente y giran con el scroll; paisaje del mes.
-  let orbit = [], orbitAt = 0, turn = 0, turnGoal = 0, seats = null;
+  let orbit = [], orbitAt = 0, turn = 0, turnGoal = 0, seats = [];
+  // Envío a la sala (para la resonancia por simpatía) y si la mano derecha está cantando ahora mismo.
+  let roomSend = null, singing = false;
   let natureOut = null, natureSides = [], natureParts = [], natureSwell = -1, nextBird = 0;
   // Pulso: multiplicador del tempo base. `pace` es el que suena; `paceGoal`, al que se acerca nota a nota.
   let pace = 1, paceGoal = 1, paceStamp = 0;
@@ -331,14 +392,14 @@
     wave = ctx.createPeriodicWave(new Float32Array(partials.length), Float32Array.from(partials));
 
     bus = ctx.createGain();
-    bus.gain.value = 0.72;
-    // El piano queda delante y sin colorear: mano izquierda un poco a la izquierda, derecha a la derecha.
-    const seat = pan => {
+    bus.gain.value = BUS * (piece.level || 1);
+    // El piano queda delante y sin colorear, visto desde la banqueta: los graves a la izquierda y los
+    // agudos a la derecha, en cinco posiciones según el registro de cada nota.
+    seats = [-0.4, -0.2, 0, 0.2, 0.4].map(pan => {
       if (typeof ctx.createStereoPanner !== 'function') return bus;
       const chair = ctx.createStereoPanner(); chair.pan.value = pan;
       chair.connect(bus); return chair;
-    };
-    seats = { left: seat(-0.22), right: seat(0.26) };
+    });
     // Fuente que rodea al oyente, al estilo Portal: HRTF en 3D si el navegador lo ofrece, estéreo simple si no.
     // `drift` es su giro propio (rad/s) y `pull` cuánto la arrastra el scroll.
     orbit = [];
@@ -369,7 +430,7 @@
     const silk = ctx.createBiquadFilter();
     silk.type = 'lowpass'; silk.frequency.value = 2000; silk.Q.value = 0.5;
     const body = ctx.createBiquadFilter();
-    body.type = 'lowshelf'; body.frequency.value = 220; body.gain.value = 3.5;
+    body.type = 'lowshelf'; body.frequency.value = 220; body.gain.value = 2.5;
     const rumble = ctx.createBiquadFilter();
     rumble.type = 'highpass'; rumble.frequency.value = 42; rumble.Q.value = 0.5;
 
@@ -413,9 +474,19 @@
     });
     stage.connect(phased); phased.connect(tape); swirl.start();
 
-    bus.connect(tape); tape.connect(silk); silk.connect(body); body.connect(rumble);
+    // Caja del piano: dos resonancias de madera que dan cuerpo sin abrir los agudos.
+    const board = [[185, 1.3, 1.2], [430, 1.8, 1.6]].map(([frequency, q, gain]) => {
+      const plank = ctx.createBiquadFilter();
+      plank.type = 'peaking'; plank.frequency.value = frequency; plank.Q.value = q; plank.gain.value = gain;
+      return plank;
+    });
+    bus.connect(tape); tape.connect(silk); silk.connect(body); body.connect(board[0]); board[0].connect(board[1]); board[1].connect(rumble);
     rumble.connect(glue);
-    rumble.connect(send); send.connect(room); room.connect(wet); wet.connect(glue);
+    // A la sala no llegan los graves: el bajo se queda seco y la reverberación no emborrona.
+    const roomTone = ctx.createBiquadFilter();
+    roomTone.type = 'highpass'; roomTone.frequency.value = 150; roomTone.Q.value = 0.5;
+    roomSend = send;
+    rumble.connect(send); send.connect(roomTone); roomTone.connect(room); room.connect(wet); wet.connect(glue);
     // Eco de cinta: una repetición blanda que se va oscureciendo y cabecea.
     const echo = ctx.createDelay(1), echoTone = ctx.createBiquadFilter();
     const echoSend = ctx.createGain(), echoBack = ctx.createGain();
@@ -437,7 +508,10 @@
     ping.delayTime.value = EIGHTH * 3; pong.delayTime.value = EIGHTH * 2;
     pingBack.gain.value = 0.52; pongBack.gain.value = 0.48;
     loopTone.type = 'lowpass'; loopTone.frequency.value = 1500; loopTone.Q.value = 0.4;
-    rumble.connect(pingSend); pingSend.connect(loopTone); loopTone.connect(ping);
+    // Los ecos cruzados tampoco repiten los graves.
+    const loopLow = ctx.createBiquadFilter();
+    loopLow.type = 'highpass'; loopLow.frequency.value = 180; loopLow.Q.value = 0.5;
+    rumble.connect(pingSend); pingSend.connect(loopTone); loopTone.connect(loopLow); loopLow.connect(ping);
     ping.connect(pingBack); pingBack.connect(pong);
     pong.connect(pongBack); pongBack.connect(loopTone);
     // Cada repetición ocupa un punto alrededor del oyente y deriva despacio.
@@ -494,7 +568,13 @@
     });
     plant();
 
-    glue.connect(master); master.connect(analyser); analyser.connect(ctx.destination);
+    // Tras el compresor, un poco de ganancia y un techo que solo actúa en los picos.
+    const lift = ctx.createGain(); lift.gain.value = 1.3;
+    const ceiling = ctx.createDynamicsCompressor();
+    ceiling.threshold.value = -4; ceiling.knee.value = 2; ceiling.ratio.value = 16;
+    ceiling.attack.value = 0.003; ceiling.release.value = 0.12;
+    glue.connect(lift); lift.connect(ceiling); ceiling.connect(master);
+    master.connect(analyser); analyser.connect(ctx.destination);
 
     // Deriva de cinta: wow lento y un hilo de flutter, en cents.
     wow = ctx.createGain(); wow.gain.value = 1;
@@ -718,22 +798,27 @@
     src.onended = () => { try { gain.disconnect(); } catch {} };
   }
 
-  function strike(midi, when, velocity, sustain = 1, seat = bus) {
-    const freq = 440 * Math.pow(2, (midi + piece.transpose - 69) / 12);
+  function strike(midi, when, velocity, sustain = 1) {
+    const sounding = midi + piece.transpose;
+    const freq = 440 * Math.pow(2, (sounding - 69) / 12);
     const vel = clamp(velocity, 0.05, 1);
+    // Cada nota suena desde su sitio en el teclado: Do2 a la izquierda, Do6 a la derecha.
+    const seat = seats[clamp(Math.round((sounding - 36) / 12), 0, 4)] || bus;
     const out = ctx.createGain();
     const tone = ctx.createBiquadFilter();
     tone.type = 'lowpass'; tone.Q.value = 0.4;
-    const bright = Math.min(3000, freq * (2.6 + 4.5 * vel) + 450);
+    // El macillo: tocar fuerte abre mucho más el timbre y ataca antes; tocar suave lo deja redondo.
+    const bright = Math.min(3200, freq * (2.1 + 5.6 * vel) + 380);
     const dark = Math.min(1500, freq * 1.5 + 120);
+    const attack = 0.024 - 0.012 * vel;
     tone.frequency.setValueAtTime(bright, when);
     tone.frequency.setTargetAtTime(dark, when + 0.02, 0.24);
 
     const peak = vel * 0.22;
     const tail = sustain * clamp(2.6 - Math.log2(freq / 55) * 0.42, 0.7, 2.8);
     out.gain.setValueAtTime(0, when);
-    out.gain.linearRampToValueAtTime(peak, when + 0.019);
-    out.gain.setTargetAtTime(peak * 0.46, when + 0.019, 0.13);
+    out.gain.linearRampToValueAtTime(peak, when + attack);
+    out.gain.setTargetAtTime(peak * 0.46, when + attack, 0.13);
     out.gain.setTargetAtTime(0, when + 0.3, tail);
     const end = when + 0.3 + tail * 5;
 
@@ -752,6 +837,19 @@
     });
     tone.connect(out); out.connect(seat);
 
+    // Un armónico de ataque algo más alto de lo que tocaría: la cuerda real es rígida y sus parciales
+    // se estiran. Dura medio segundo y da el brillo metálico del principio de la nota.
+    if (vel > 0.25 && freq < 1100) {
+      const ring = ctx.createOscillator(), ringGain = ctx.createGain();
+      ring.frequency.value = freq * 3 * (1 + 0.0011 * Math.pow(freq / 261.6, 0.7));
+      ringGain.gain.setValueAtTime(0, when);
+      ringGain.gain.linearRampToValueAtTime(peak * 0.14 * vel, when + 0.005);
+      ringGain.gain.exponentialRampToValueAtTime(0.0001, when + 0.5);
+      ring.connect(ringGain); ringGain.connect(seat);
+      ring.start(when); ring.stop(when + 0.52);
+      ring.onended = () => { try { ringGain.disconnect(); } catch {} };
+    }
+
     // Golpe de macillo: impulso grave senoidal, sin ruido.
     const thump = ctx.createOscillator(), thumpGain = ctx.createGain();
     thump.frequency.setValueAtTime(150, when);
@@ -769,6 +867,24 @@
       if (oscs[1]) { try { wow.disconnect(oscs[1].detune); } catch {} }
       try { out.disconnect(); } catch {}
     };
+  }
+
+  // Resonancia por simpatía: con el pedal pisado, las cuerdas libres del acorde vibran solas. Dos senos
+  // muy tenues que crecen despacio y van solo a la sala: un halo, no una nota.
+  function halo(bar, when, seconds, level) {
+    const notes = bar.lh.filter(note => note != null);
+    if (notes.length < 2 || !roomSend) return;
+    [notes[0] + 12, Math.max(...notes)].forEach((midi, i) => {
+      const osc = ctx.createOscillator(), amp = ctx.createGain();
+      osc.frequency.value = 440 * Math.pow(2, (midi + piece.transpose - 69) / 12);
+      osc.detune.value = rand(-4, 4);
+      amp.gain.setValueAtTime(0, when);
+      amp.gain.linearRampToValueAtTime(level * (i ? 0.7 : 1), when + seconds * 0.45);
+      amp.gain.linearRampToValueAtTime(0, when + seconds + 0.7);
+      osc.connect(amp); amp.connect(roomSend);
+      osc.start(when); osc.stop(when + seconds + 0.75);
+      osc.onended = () => { try { amp.disconnect(); } catch {} };
+    });
   }
 
   // ── Trombones ────────────────────────────────────────────────────────────
@@ -841,20 +957,30 @@
     // Con el pulso cambia la mano: al apretar toca con más decisión y más seco; al serenarse, más suave y ligado.
     const hush = (bar.soft ? 0.72 : 1) * clamp(1 + 0.8 * (pace - 1), 0.88, 1.17);
     const pedal = 1 / pace;
-    const left = bar.lh[eighth];
+    // En las vueltas impares el eco invierte el dibujo de la izquierda; el bajo y la nota que camina siguen en su sitio.
+    const left = bar.lh[bar.thin && passes % 2 === 1 && eighth > 0 && eighth < 7 ? 7 - eighth : eighth];
+    // Fraseo: la izquierda crece hacia el centro de la frase de ocho compases y se apaga al respirar.
+    const phrase = (0.92 + 0.1 * Math.sin((bar.pos + eighth / 8) / 8 * Math.PI)) * (bar.breathe && eighth >= 4 ? 1 - 0.05 * (eighth - 3) : 1);
+    // La melodía no entra en cualquier corchea: espera a un tiempo fuerte o a la primera nota del compás.
+    // Y al retirarse termina el compás que estaba diciendo.
+    const awake = intensity >= MELODY_GATE;
+    if (awake && !singing && (eighth === 0 || eighth === 4 || (bar.rh[0] && bar.rh[0][0] === eighth))) singing = true;
+    else if (!awake && singing && eighth === 0) singing = false;
     // Cambio de pedal al empezar el compás: un golpe sordo de madera y fieltro.
     if (eighth === 0 && left != null && Math.random() < 0.65) brush(when - 0.03, rand(0.03, 0.06), 190, 0.16);
     if (eighth === 0) {
       if (bar.brass) brass(bar.brass, when, EIGHTH * 8 / pace, 0.55 + 0.45 * (bar.pos / 7));
       else lastBrass = null;
+      if (!bar.final) halo(bar, when, EIGHTH * 8 / pace, 0.011 * hush);
     }
     const dropped = eighth % 2 === 1 && !bar.final && Math.random() < 0.03;
     if (left != null && !dropped) {
       const roll = bar.final ? eighth * rand(0.03, 0.045) : 0;
-      const [at, vel] = human(when + roll, 0.4 * (piece.accent || LH_ACCENT)[eighth] * hush * rand(0.86, 1.1));
-      strike(left, at, vel, bar.final ? 1.5 : 0.5 * pedal, seats.left);
+      // Cuando la derecha canta, la izquierda cede un poco para dejarla oír.
+      const [at, vel] = human(when + roll, 0.4 * (piece.accent || LH_ACCENT)[eighth] * hush * phrase * (singing ? 0.86 : 1) * rand(0.86, 1.1));
+      strike(left, at, vel, bar.final ? 1.5 : 0.5 * pedal);
     }
-    if (intensity >= MELODY_GATE) {
+    if (singing) {
       bar.rh.forEach(([at, midi, length], i) => {
         if (at !== eighth) return;
         if (bar.thin && thinMask.has(i)) return;
@@ -863,10 +989,13 @@
         const arc = 0.68 + 0.14 * Math.sin(bar.pos / 8 * Math.PI) + (at === 0 ? 0.05 : 0);
         const [hit, vel] = human(when + lag, arc * hush * rand(0.9, 1.07) * (0.6 + 0.4 * intensity) * clamp((intensity - 0.33) / 0.3, 0.3, 1));
         // De vez en cuando un dedo roza la tecla vecina antes de caer en la buena.
-        if (Math.random() < 0.035) strike(midi + (Math.random() < 0.5 ? -2 : 2), hit - rand(0.03, 0.05), vel * 0.2, 0.35, seats.right);
-        strike(midi, hit, vel, clamp(0.8 + length * 0.12, 0.9, 1.7) * Math.sqrt(pedal), seats.right);
+        if (Math.random() < 0.035) strike(midi + (Math.random() < 0.5 ? -2 : 2), hit - rand(0.03, 0.05), vel * 0.2, 0.35);
+        strike(midi, hit, vel, clamp(0.8 + length * 0.12, 0.9, 1.7) * Math.sqrt(pedal));
+        // Con el scroll rápido la mano se abre: la segunda voz suena un instante después y más suave.
+        const under = bar.second && bar.second[i];
+        if (under != null && intensity >= 0.75) strike(under, hit + rand(0.008, 0.02), vel * 0.5, clamp(0.8 + length * 0.12, 0.9, 1.7) * Math.sqrt(pedal));
         if (bar.bloom && length >= 4 && Math.random() < 0.55) {
-          strike(midi - 12, hit + EIGHTH / pace * 0.5, vel * 0.45, 1.3, seats.right);
+          strike(midi - 12, hit + EIGHTH / pace * 0.5, vel * 0.45, 1.3);
         }
       });
     }
@@ -938,7 +1067,7 @@
     } catch { return false; }
     playing = true;
     pace = paceGoal = 1;
-    intensity = presence = rest;
+    intensity = presence = rest; singing = false;
     turn = turnGoal = 0; orbitAt = ctx.currentTime;
     nextTime = ctx.currentTime + 0.12;
     breatheEchoes();
@@ -978,6 +1107,12 @@
     // Mes de la pieza que suena (0 = enero … 11 = diciembre) y los doce títulos.
     get month() { return PIECES.indexOf(piece); },
     titles: TITLES,
+    // Partitura de un mes en solo lectura (copia), con las notas ya transportadas a como suenan.
+    sheet(index) {
+      const chosen = PIECES[((Math.round(Number(index)) % 12) + 12) % 12];
+      const t = chosen.transpose;
+      return chosen.bars.map(bar => ({ section: bar.section, lh: bar.lh.map(n => (n == null ? null : n + t)), rh: bar.rh.map(([at, midi, length]) => [at, midi + t, length]), brass: bar.brass ? bar.brass.map(n => n + t) : null, second: bar.second ? bar.second.map(n => (n == null ? null : n + t)) : null }));
+    },
     bpm: BPM,
     start,
     stop() { resumeOnVisible = false; stop(); },
@@ -1016,13 +1151,17 @@
     setMonth(index) {
       const next = PIECES[((Math.round(Number(index)) % 12) + 12) % 12];
       if (!next || next === piece) return piece.title;
-      piece = next; rewind(); lastBrass = null;
-      if (ctx) { plant(); if (playing) nextTime = ctx.currentTime + 0.12; }
+      piece = next; rewind(); lastBrass = null; singing = false;
+      if (ctx) {
+        plant();
+        bus.gain.setTargetAtTime(BUS * (piece.level || 1), ctx.currentTime, 0.2);
+        if (playing) nextTime = ctx.currentTime + 0.12;
+      }
       emit();
       return piece.title;
     },
     // Silencio contemplativo (p. ej. «Game Over»): el pulso sigue, las notas callan.
-    setSilent(value) { silent = !!value; emit(); },
+    setSilent(value) { silent = !!value; if (silent) singing = false; emit(); },
     // Meta del pulso (1 = 96 pulsos por minuto). Hay que renovarla mientras dure el gesto:
     // sin noticias, el pulso vuelve solo al tempo base. Con el sonido apagado no hace nada.
     setPace(value) {
