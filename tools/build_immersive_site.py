@@ -526,6 +526,14 @@ def build(output):
         for cf in cursors_src.glob("*.*"):
             shutil.copy2(cf, cursors_dest / cf.name)
 
+    # Fotos de pared del fondo de Trayectoria (las genera tools/wall_textures.py).
+    walls_src = SOURCE / "assets" / "walls"
+    if walls_src.exists():
+        walls_dest = output / "assets" / "walls"
+        walls_dest.mkdir(parents=True, exist_ok=True)
+        for wf in walls_src.glob("*.webp"):
+            shutil.copy2(wf, walls_dest / wf.name)
+
     fonts_src = SOURCE / "assets" / "fonts"
     if fonts_src.exists():
         fonts_dest = output / "assets" / "fonts"
@@ -1294,7 +1302,9 @@ def build(output):
     kind_plurals = {"solo": ("individual", "individuales"), "group": ("colectiva", "colectivas"), "street": ("en la calle", "en la calle"), "market": ("mercado de arte", "mercados de arte")}
     # Pared de fondo por tipo de encuentro: pared, muro, callejón o túnel (decisión estética; `wall` en el JSON la sobrescribe).
     kind_walls = {"solo": "pared", "group": "muro", "street": "callejon", "market": "tunel"}
-    wall_markup = '<div class="career-wall" aria-hidden="true"><div class="career-wall-stage">' + ''.join('<i data-wall-layer="' + w + '"' + (' class="is-on"' if w == "pared" else '') + '></i>' for w in ("pared", "muro", "callejon", "tunel")) + '<b class="career-wall-year" data-wall-year></b>' + '<span class="career-wall-cromo" data-wall-cromo></span>' * 3 + '</div></div>'
+    # Sale encendida la pared del primer encuentro: su foto es la única que se pide al cargar.
+    first_wall = (exhibitions[0].get("wall") or kind_walls[exhibitions[0]["type"]]) if exhibitions else "pared"
+    wall_markup = '<div class="career-wall" aria-hidden="true"><div class="career-wall-stage">' + ''.join('<i data-wall-layer="' + w + '"' + (' class="is-on"' if w == first_wall else '') + '></i>' for w in ("pared", "muro", "callejon", "tunel")) + '<b class="career-wall-year" data-wall-year></b>' + '<span class="career-wall-cromo" data-wall-cromo></span>' * 3 + '</div></div>'
     kind_counts = {k: sum(1 for x in exhibitions if x["type"] == k) for k in kind_labels}
     career_summary = f"{min(years)}–{max(years)} · {len(exhibitions)} encuentros · " + " · ".join(f"{n} {kind_plurals[k][0 if n == 1 else 1]}" for k, n in kind_counts.items() if n)
     kind_buttons = '<button type="button" data-career-kind="all" aria-pressed="true">Todo</button>' + ''.join(f'<button type="button" data-career-kind="{k}" aria-pressed="false">{kind_labels[k]} <small>{n}</small></button>' for k, n in kind_counts.items() if n)

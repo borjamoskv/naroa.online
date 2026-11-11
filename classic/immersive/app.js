@@ -4573,7 +4573,12 @@
     if (best !== wallEntry || force) {
       wallEntry = best;
       const wall = best?.dataset.wall || 'pared';
-      wallLayers.forEach(layer => layer.classList.toggle('is-on', layer.dataset.wallLayer === wall));
+      wallLayers.forEach(layer => {
+        const on = layer.dataset.wallLayer === wall;
+        layer.classList.toggle('is-on', on);
+        // La foto de una pared se pide al verla por primera vez y ya no se suelta: así puede fundirse al salir.
+        if (on) layer.dataset.seen = '';
+      });
       if (wallYear) wallYear.textContent = best?.dataset.exhibitionYear || '';
       let arts = [];
       try { arts = JSON.parse(best?.dataset.artworks || '[]'); } catch {}
