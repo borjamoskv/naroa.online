@@ -32,6 +32,17 @@ Gobernanza general de la carpeta de proyectos: [Workspace AGENTS.md](file:///Use
 
 ## Invariantes Operativas de Catálogo, Audio y Recorrido Inmersivo (`naroa.online`)
 
+| Si tocas… | Lee antes |
+| --- | --- |
+| Una obra, `catalogo.json`, `journey.json` o `src/artworks.ts` | §1, §2 |
+| `soundscape.js` o cualquier sonido | §3, §5 |
+| Transiciones entre obras, el final del recorrido o `Game Over` | §4, §7c |
+| Story, compartir o el retrato de la visita | §6, §8.4 |
+| El retrato inicial (umbral) | §7 |
+| La interfaz de la galería o la lupa | §7b, §7d |
+| `/sobre-mi/`, `/trayectoria/` o las tarjetas sociales | §8 |
+| Cualquier texto visible o ruta interna en `app.js` | §9 |
+
 ### 1. Sincronización Atómica 1:1 de Catálogo (`INV_CATALOG_SYNC_1TO1`)
 Toda alta o mutación de obra exige paridad simultánea en 3 capas:
 1. `classic/data/catalogo.json`: Metadatos maestros (`slug`, `title`, `year`, `technique`, `dimensions`, `description`).
@@ -49,7 +60,7 @@ Toda alta o mutación de obra exige paridad simultánea en 3 capas:
 **Recursos citados:** el build copia toda imagen que citan `app.js` y `app.css` y se detiene si alguna no existe; `tools/check_immersive_site.py` falla si un script o una hoja de estilo publicados citan un recurso ausente.
 
 ### 2. Paridad con Suite JSDOM (`test_immersive_dom.cjs`)
-- Valida la secuencia exacta de modos (`entry.mode`) y el total de obras (85). Actualizar la cadena esperada en `tools/test_immersive_dom.cjs` ante cualquier mutación del recorrido.
+- Valida la secuencia exacta de modos (`entry.mode`) y que el total de obras coincide con el del manifiesto de la compilación (`immersive/build-manifest.json`): la cifra no va escrita en el test. Actualizar la cadena esperada en `tools/test_immersive_dom.cjs` ante cualquier mutación del recorrido.
 
 ### 3. Arquitectura de Audio y Guardas de Ciclo de Vida
 - El portfolio inmersivo suena con un único motor: `classic/immersive/soundscape.js`. Contiene la banda sonora, doce piezas originales, una por mes (`window.NAROA_SCORE`), y su conexión con la web (`window.NAROA_SOUND.frame`). Es síntesis pura Web Audio: no descarga muestras ni crea `AudioContext` antes de un gesto del visitante.
@@ -85,9 +96,12 @@ Toda alta o mutación de obra exige paridad simultánea en 3 capas:
    - **Fondo Macro Texturizado:** Zoom `2.6x – 3.0x` descentrado hacia el foco matérico ocupando toda la pantalla para exhibir pinceladas y textura real (`drawStoryZoomedDetail`).
    - **Miniatura PiP Completa:** Tarjeta flotante esquinada con sombra profunda mostrando la obra íntegra sin recorte (`drawStoryMiniature`), garantizando paridad detalle + obra completa.
 2. **Share en X/Twitter (`INV_CLEAN_SOCIAL_TITLE`):** El texto de compartición debe emitir exclusivamente el título limpio de la obra (`p.title`, ej. `Game Over`), sin muletillas promocionales ni duplicación de autor.
-3. **El retrato de tu visita (`INV_VISIT_PORTRAIT`):** la galería suma cada medio segundo el tiempo que cada obra pasa quieta en pantalla (no el cruce entre dos, ni el retrato del umbral, ni con un diálogo abierto). Vive solo en memoria: no se guarda ni se envía. Tras mirar al menos `3` obras `4 s` cada una, el diálogo de Story ofrece una segunda pieza y, en la última obra, un enlace de texto junto a «Compartir recorrido».
-   - **Layout (`1080×1920`, `renderVisitFrame`):** hasta cuatro franjas recortadas a mano, una por obra y tanto más alta cuanto más se miró; cada una es un detalle real (centrado donde estuvo la lupa, si se usó) con la pieza completa prendida al lado, su título y lo que duró la mirada. Mismo margen seguro que la Story de una obra.
+3. **El retrato de tu visita (`INV_VISIT_PORTRAIT`):** la galería suma cada medio segundo el tiempo que cada obra pasa quieta en pantalla (no el cruce entre dos, ni el retrato del umbral, ni con un diálogo abierto). Vive solo en memoria: no se guarda ni se envía. Tras mirar al menos `3` obras `4 s` cada una, aparece en tres sitios, siempre como texto: una entrada en «Más», una segunda pieza en el diálogo de Story y, en la última obra, un enlace junto a «Compartir recorrido» (allí la de «Más» se retira para no repetirse).
+   - **Layout (`1080×1920`, `renderVisitFrame`):** hasta cuatro franjas recortadas a mano, una por obra y tanto más alta cuanto más se miró; cada una es un detalle real con la pieza completa prendida al lado, su título y lo que duró la mirada. Mismo margen seguro que la Story de una obra.
+   - **El título va entero:** hasta tres líneas si la franja da para ello y, si no cabe, la letra encoge (hasta `38 px`) antes de cortar con «…». El rótulo del tiempo lleva una sombra ovalada solo detrás, para leerse sobre un detalle claro sin apagar la franja.
+   - **Dónde se centra el detalle:** en la zona de la obra (rejilla de 4×4) donde la lupa estuvo más tiempo, no en el último punto por el que pasó; hacen falta `1,5 s` (`VISIT_MIN_LENS`) para que cuente. Sin lupa, a la altura de los ojos (`0.5, 0.42`).
    - El título de la imagen habla quien la comparte («El retrato de mi visita»); la interfaz, a quien visita («de tu visita»).
+   - **En el diálogo:** la vista previa se describe (`alt`) con los títulos de las obras del paseo, y el tercer botón pasa a decir «La Story de una sola obra»; al volver a la Story de una obra, ambos recuperan su texto.
 
 ### 7. Pureza Visual en Umbral Hero (`INV_HERO_THRESHOLD_PURITY`)
 - El retrato inaugural (umbral de estudio, índice `0`) debe mostrarse limpio de superposiciones tipográficas o telemetría flotante (`LA MIRADA`, `UMBRAL DE ESTUDIO`, texto en SVG del monóculo). El umbral no lleva ningún bloque de texto (la antigua `.portrait-hero-copy` ya no existe): el protagonismo es íntegro del retrato.
@@ -111,7 +125,7 @@ Toda alta o mutación de obra exige paridad simultánea en 3 capas:
 ### 8. Voz y Citas de «Sobre mí» (`INV_LITERAL_QUOTES`)
 1. **Lo que va entre « » lo dijo Naroa:** en `/sobre-mi/`, en el hero de `/trayectoria/` y en las tarjetas sociales, todo texto entre comillas latinas es cita literal de su blog (`naroagutierrez.wordpress.com`). Lo omitido se marca con `[…]`, no se funden ni se recomponen frases, y cada nota manuscrita (`.kintsugi-chasm-spark`) nombra la entrada y el año de donde sale.
 2. **Lo que no es cita va en tercera persona y sin « »:** la presentación «En breve», el cierre y la lectura del espejo inverso solo usan datos del archivo (catálogo, `classic/data/exhibitions.json`, página de encargos); las cifras se calculan en el build, no se escriben a mano.
-3. **Espejo inverso:** nunca reescribe las dos citas de Naroa. La lectura de la visita (`[data-gaze-reading]`, `[data-gaze-metrics]`) nace oculta y solo aparece tras al menos `8 s` reales con un capítulo en el centro de la pantalla; técnica y soporte de la obra espejo salen del catálogo.
+3. **Espejo inverso:** nunca reescribe las dos citas de Naroa. La lectura de la visita (`[data-gaze-reading]`, `[data-gaze-metrics]`) nace oculta y solo aparece tras al menos `8 s` reales con un capítulo en el centro de la pantalla y con uno claramente por delante (al menos 1,25 veces el tiempo del segundo); técnica y soporte de la obra espejo salen del catálogo.
 4. **Compartir:** con una obra en pantalla se comparte esa obra con su título limpio (§6.2); sin obra, la propia página con su título completo; desde la 404, la portada.
 5. **Tarjetas sociales:** al cambiar el texto o la imagen de una tarjeta se sube su `version` en `create_card`; el build retira la versión anterior.
 

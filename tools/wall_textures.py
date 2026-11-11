@@ -33,13 +33,15 @@ LADO = 1280      # píxeles de la tesela
 CALIDAD = 60
 
 # capa → (id en Poly Haven, giro en grados, lado en pantalla, lado en móvil, velo crema 0–1)
-# El lado en pantalla decide la escala del material: con 760 px un ladrillo mide unos 85 px.
+# El lado en pantalla decide la escala del material (con 900 px un ladrillo mide unos 100 px) y cuánto
+# se repite: el muro mide como mucho 1280 px de ancho, así que cuanto más se acerque el lado a eso,
+# menos veces se ve la misma mancha a la vez.
 # El velo acerca la foto al crema de la página para que el texto de encima se lea sin esfuerzo.
 WALLS = {
-    'pared': ('rough_plaster_broken', 0, 900, 560, .2),
-    'muro': ('brick_4', 0, 760, 520, .12),
-    'callejon': ('concrete_wall_003', 0, 900, 560, .0),
-    'tunel': ('long_white_tiles', 90, 720, 500, .0),
+    'pared': ('rough_plaster_broken', 0, 1150, 600, .2),
+    'muro': ('brick_4', 0, 900, 560, .12),
+    'callejon': ('concrete_wall_003', 0, 1150, 600, .0),
+    'tunel': ('long_white_tiles', 90, 820, 520, .0),
 }
 
 def tesela(name, fotos):

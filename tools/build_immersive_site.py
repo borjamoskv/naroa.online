@@ -622,9 +622,9 @@ def build(output):
             return f' data-preview-reel="{esc(json.dumps(seq, ensure_ascii=False, separators=(",", ":")))}"'
         items = [
             # Cuatro secciones: Vaivenes vive dentro de Obras y Trayectoria dentro de Naroa (último campo: rutas hijas).
-            ("/obra/", "Obras", f"{len(projects)} retratos · Un viaje", obras_reel[0]["src"], obras_reel[0]["title"], "Otra manera de mirar.", f"Pizarra, collage, Vaivenes y objetos · {len(projects)} obras", False, obras_reel, "#4a72bd", "/series/"),
-            ("/sobre-mi/", "Naroa", "La artista y su trayectoria", menu_portrait, "Naroa Gutiérrez Gil", "Me encontré a mí en los demás.", "Retratista y artista plástica · Bilbao", False, None, "#3f63ab", "/trayectoria/"),
-            ("/cuaderno/", "Blog", "Su WordPress, al día", cuaderno_reel[0]["src"], cuaderno_reel[0]["title"], "Apuntes desde el estudio.", "Historias de obras, procesos y encuentros", False, cuaderno_reel, "#2e5090", ""),
+            ("/obra/", "Obras", f"{len(projects)} retratos · Un viaje", obras_reel[0]["src"], obras_reel[0]["title"], "Otra manera de mirar.", f"Pizarra, collage, Vaivenes y objetos · {len(projects)} obras", False, obras_reel, "#4063ea", "/series/"),
+            ("/sobre-mi/", "Naroa", "La artista y su trayectoria", menu_portrait, "Naroa Gutiérrez Gil", "Me encontré a mí en los demás.", "Retratista y artista plástica · Bilbao", False, None, "#3555de", "/trayectoria/"),
+            ("/cuaderno/", "Blog", "Su WordPress, al día", cuaderno_reel[0]["src"], cuaderno_reel[0]["title"], "Apuntes desde el estudio.", "Historias de obras, procesos y encuentros", False, cuaderno_reel, "#2d4dd8", ""),
             ("/retratos-por-encargo-bilbao/", "Encargos", "Un retrato con tu historia · Contacto", encargos_reel[0]["src"], encargos_reel[0]["title"], "Cada rostro guarda un mundo.", "Retrato personalizado a medida · Bilbao", True, encargos_reel, "#6b395c", ""),
         ]
         return ''.join(f'''<a href="{href}" style="--item-idx:{i-1}" data-menu-item data-menu-index="{i-1}"{f' data-menu-also="{also}"' if also else ''} data-preview-src="{src}" data-preview-title="{esc(title)}" data-preview-label="{esc(label)}" data-preview-quote="{esc(quote_text)}" data-preview-meta="{esc(meta_text)}" data-preview-glow="{glow}"{' data-preview-wink="true"' if wink else ''}{reel_attr(reel)}><span class="menu-number" aria-hidden="true" title="Atajo de teclado: {i}">{i:02}</span><span class="menu-name">{label}<small data-menu-item-detail>{detail}</small>{season_menu if href == "/retratos-por-encargo-bilbao/" else ""}</span><span class="menu-arrow" aria-hidden="true">↗</span></a>''' for i, (href, label, detail, src, title, quote_text, meta_text, wink, reel, glow, also) in enumerate(items, 1))
@@ -699,7 +699,7 @@ def build(output):
         "https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-476343.html",
         "https://gara.naiz.eus/paperezkoa/20130427/399965/es/Walking-gallery-arte-aire-libre-movimiento-arte-evolucion",
         "https://siarte.com/2022-03-25-siarte-exposicion-pintura-collage-arte-naroa-gutierrez.php",
-        "https://www.youtube.com/@naroagutierrezgil",
+        "https://www.youtube.com/@naroarte",
     ]
     bilbao_place = {
         "@type": "Place",
@@ -868,7 +868,7 @@ def build(output):
                                 "Pizarra natural rústica",
                                 "Collage textil sobre madera",
                                 "Caja personalizada u objeto",
-                                "Retrato al óleo o grafito",
+                                "Retrato a pastel o grafito",
                                 "Asesoramiento en estudio",
                             ],
                             "description": "Soporte plástico preferido para el retrato.",
@@ -961,7 +961,7 @@ def build(output):
                 structured["@graph"][0].setdefault("dateModified", catalogue["reviewed"])
         breadcrumb = None
         if not not_found and path != "/":
-            section_name = "Obras" if path.startswith("/obra/") else "Vaivenes" if path.startswith("/series/vaivenes/") else title.split("·")[0].strip()
+            section_name = "Obras" if path.startswith("/obra/") else "Vaivenes" if path.startswith("/series/vaivenes/") else "Retratos por encargo" if path == "/retratos-por-encargo-bilbao/" else title.split("·")[0].strip()
             items = [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": ORIGIN + "/"}]
             if path.startswith("/obra/") and path != "/obra/":
                 items.append({"@type": "ListItem", "position": 2, "name": "Obras", "item": ORIGIN + "/obra/"})
@@ -1032,7 +1032,7 @@ def build(output):
         threshold_html = ""
         if threshold_page:
             threshold_html = f'''<div class="hero-threshold" data-hero-threshold data-threshold-enter aria-hidden="true"><div class="hero-threshold-plane" data-threshold-plane><img class="hero-threshold-portrait" src="{portrait}" srcset="{portrait_srcset}" sizes="{portrait_sizes}" width="2201" height="3468" alt="Naroa Gutiérrez Gil con chistera y monóculo en el umbral del estudio" fetchpriority="high" decoding="sync"><img class="hero-threshold-wink" data-threshold-wink src="{portrait_wink}" srcset="{portrait_wink_srcset}" sizes="{portrait_sizes}" width="2201" height="3468" alt="Guiño de bienvenida de Naroa Gutiérrez Gil" decoding="async"><div class="hero-monocle-portal" data-monocle-portal><div class="hero-monocle-lens"><div class="hero-monocle-marilyn" data-monocle-marilyn></div><canvas class="hero-monocle-canvas" data-monocle-canvas width="256" height="256" aria-hidden="true"></canvas><div class="hero-monocle-caustics"></div></div><svg class="hero-monocle-ring" viewBox="0 0 220 220" focusable="false" aria-hidden="true"><circle class="hero-monocle-bezel" cx="110" cy="110" r="98"/><circle class="hero-monocle-inner-ring" cx="110" cy="110" r="74"/></svg></div></div><div class="hero-threshold-shade"></div><div class="hero-spotlight" data-hero-spotlight></div><div class="hero-shards" data-hero-shards><span class="hero-shard hero-shard--1" data-shard-depth="1.4"></span><span class="hero-shard hero-shard--2" data-shard-depth="-1.1"></span><span class="hero-shard hero-shard--3" data-shard-depth="1.8"></span><span class="hero-shard hero-shard--4" data-shard-depth="-1.5"></span><span class="hero-shard hero-shard--5" data-shard-depth="0.9"></span><span class="hero-shard hero-shard--6" data-shard-depth="2.1"></span></div></div>'''
-        body = f'''<main id="main" class="art-scroll" style="--steps:{len(selected)-1}"><section class="art-stage" data-gallery data-initial="{initial}" data-subset="{subset}"><div class="art-layers">{stages}</div>{threshold_html}<div class="art-shade" aria-hidden="true"></div><div class="art-stickman" data-stickman aria-hidden="true" hidden><div class="stickman-runner" data-stick-runner><svg viewBox="0 0 110 120" class="stickman-svg" aria-hidden="true"><ellipse data-stick-shadow cx="50" cy="103" rx="18" ry="2.6" fill="rgba(247,213,148,0.28)" /><path data-stick-scarf-gold d="M52,34 Q30,24 10,38" stroke="#f7d594" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.78" /><path data-stick-scarf d="M54,32 Q34,28 16,36" stroke="#fffdf4" stroke-width="2.6" stroke-linecap="round" fill="none" opacity="0.92" /><polyline data-stick-hair points="49,10 54,3 57,10 63,4 62,12" stroke="#fffdf4" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none" /><circle data-stick-head cx="58" cy="20" r="9.5" stroke="#fffdf4" stroke-width="3.2" fill="#070706" /><circle data-stick-eye cx="62" cy="18.5" r="1.8" fill="#fffdf4" /><line data-stick-torso x1="56" y1="29" x2="50" y2="62" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" /><polyline data-stick-arm-l points="55,36 39,48 29,39" stroke="#fffdf4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none" /><polyline data-stick-arm-r points="55,36 69,46 81,34" stroke="#fffdf4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none" /><polyline data-stick-leg-l points="50,62 34,82 22,102" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" fill="none" /><polyline data-stick-leg-r points="50,62 68,80 80,100" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" fill="none" /><line data-stick-dust-1 x1="26" y1="98" x2="6" y2="98" stroke="rgba(255,253,244,0.82)" stroke-width="2.6" stroke-linecap="round" /><line data-stick-dust-2 x1="32" y1="105" x2="12" y2="105" stroke="rgba(255,253,244,0.55)" stroke-width="2.2" stroke-linecap="round" /><circle data-stick-spark cx="18" cy="93" r="2.2" fill="rgba(255,253,244,0.85)" /><circle data-stick-spark-2 cx="10" cy="88" r="1.7" fill="rgba(247,213,148,0.9)" /><circle data-stick-spark-3 cx="24" cy="97" r="1.4" fill="rgba(237,188,164,0.85)" /></svg></div></div><div class="kinetic-title" data-kinetic-title aria-hidden="true"></div><nav class="art-index" aria-label="Recorrido de obras">{nav}</nav><div class="art-bottom"><div><div data-art-copy aria-live="polite"><p class="art-counter"><span data-counter>{initial+1:02d} / {len(selected):02d}</span><small data-journey-cue>Desplázate para recorrer ↕</small></p><h1 data-art-title>{esc(p['title'])}</h1><p class="art-material" data-art-material>{esc(p['label'])}</p></div><button type="button" class="art-story-link" data-open-story>Sobre esta obra <span aria-hidden="true">+</span></button></div><div class="art-controls"><div class="art-view-actions"><button type="button" data-effects aria-pressed="false">Activar efectos</button><button type="button" class="kintsugi-toggle-btn" data-kintsugi-toggle hidden aria-pressed="false">Rasgado Kintsugi ✦</button><button type="button" data-fit aria-pressed="false">Ver imagen completa ↗</button><button type="button" data-lens aria-pressed="false">Lupa</button><button type="button" data-open-photos>Otras miradas ↗</button><button type="button" class="ouroboros-loop-btn" data-ouroboros hidden aria-label="Volver al origen de la exposición">Volver al origen ↺</button>{social_share_dock(is_finale=True)}</div><div class="art-arrows"><button type="button" data-prev aria-label="Obra anterior"{' disabled' if initial==0 else ''}>←</button><button type="button" data-next aria-label="Obra siguiente"{' disabled' if initial==len(selected)-1 else ''}>→</button></div></div></div><button type="button" class="restore-ui" data-restore hidden>Volver a la navegación ↙</button><div class="art-progress" aria-hidden="true"><span></span></div></section></main>
+        body = f'''<main id="main" class="art-scroll" style="--steps:{len(selected)-1}"><section class="art-stage" data-gallery data-initial="{initial}" data-subset="{subset}"><div class="art-layers">{stages}</div>{threshold_html}<div class="art-shade" aria-hidden="true"></div><div class="art-stickman" data-stickman aria-hidden="true" hidden><div class="stickman-runner" data-stick-runner><svg viewBox="0 0 110 120" class="stickman-svg" aria-hidden="true"><ellipse data-stick-shadow cx="50" cy="103" rx="18" ry="2.6" fill="rgba(247,213,148,0.28)" /><path data-stick-scarf-gold d="M52,34 Q30,24 10,38" stroke="#f7d594" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.78" /><path data-stick-scarf d="M54,32 Q34,28 16,36" stroke="#fffdf4" stroke-width="2.6" stroke-linecap="round" fill="none" opacity="0.92" /><polyline data-stick-hair points="49,10 54,3 57,10 63,4 62,12" stroke="#fffdf4" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none" /><circle data-stick-head cx="58" cy="20" r="9.5" stroke="#fffdf4" stroke-width="3.2" fill="#070706" /><circle data-stick-eye cx="62" cy="18.5" r="1.8" fill="#fffdf4" /><line data-stick-torso x1="56" y1="29" x2="50" y2="62" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" /><polyline data-stick-arm-l points="55,36 39,48 29,39" stroke="#fffdf4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none" /><polyline data-stick-arm-r points="55,36 69,46 81,34" stroke="#fffdf4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none" /><polyline data-stick-leg-l points="50,62 34,82 22,102" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" fill="none" /><polyline data-stick-leg-r points="50,62 68,80 80,100" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" fill="none" /><line data-stick-dust-1 x1="26" y1="98" x2="6" y2="98" stroke="rgba(255,253,244,0.82)" stroke-width="2.6" stroke-linecap="round" /><line data-stick-dust-2 x1="32" y1="105" x2="12" y2="105" stroke="rgba(255,253,244,0.55)" stroke-width="2.2" stroke-linecap="round" /><circle data-stick-spark cx="18" cy="93" r="2.2" fill="rgba(255,253,244,0.85)" /><circle data-stick-spark-2 cx="10" cy="88" r="1.7" fill="rgba(247,213,148,0.9)" /><circle data-stick-spark-3 cx="24" cy="97" r="1.4" fill="rgba(237,188,164,0.85)" /></svg></div></div><div class="kinetic-title" data-kinetic-title aria-hidden="true"></div><nav class="art-index" aria-label="Recorrido de obras">{nav}</nav><div class="art-bottom"><div><div data-art-copy aria-live="polite"><p class="art-counter"><span data-counter>{initial+1:02d} / {len(selected):02d}</span><small data-journey-cue>Desplázate para recorrer ↕</small></p><h1 data-art-title>{esc(p['title'])}</h1><p class="art-material" data-art-material>{esc(p['label'])}</p></div><button type="button" class="art-story-link" data-open-story>Sobre esta obra <span aria-hidden="true">+</span></button></div><div class="art-controls"><div class="art-view-actions"><button type="button" data-effects aria-pressed="false">Activar efectos</button><button type="button" class="kintsugi-toggle-btn" data-kintsugi-toggle hidden aria-pressed="false">Rasgado Kintsugi ✦</button><button type="button" data-fit aria-pressed="false">Ver imagen completa ↗</button><button type="button" data-lens aria-pressed="false">Lupa</button><button type="button" data-open-photos>Otras miradas ↗</button><button type="button" data-visit-portrait data-visit-more hidden>El retrato de tu visita <span aria-hidden="true">↗</span></button><button type="button" class="ouroboros-loop-btn" data-ouroboros hidden aria-label="Volver al origen de la exposición">Volver al origen ↺</button>{social_share_dock(is_finale=True)}</div><div class="art-arrows"><button type="button" data-prev aria-label="Obra anterior"{' disabled' if initial==0 else ''}>←</button><button type="button" data-next aria-label="Obra siguiente"{' disabled' if initial==len(selected)-1 else ''}>→</button></div></div></div><button type="button" class="restore-ui" data-restore hidden>Volver a la navegación ↙</button><div class="art-progress" aria-hidden="true"><span></span></div></section></main>
 <dialog id="story-dialog" class="story-dialog" aria-labelledby="story-title"><div class="dialog-top"><span data-story-category>{esc(p['label'])}</span><button type="button" data-close-dialog>Cerrar ×</button></div><div class="story-body"><h2 id="story-title">{esc(p['title'])}</h2><p data-story>{esc(p['story'])}</p><dl data-facts>{facts_html}</dl><p class="art-credit" data-credit>{esc(p['credit'] or '')}</p><div class="story-actions"><a class="text-link" data-art-email href="mailto:naroa@naroagutierrezgil.com?subject={quote('Consulta sobre '+p['title'])}">Consultar por email ↗</a><a class="text-link" data-art-whatsapp href="https://wa.me/34636060609?text={quote('Hola Naroa, me gustaría consultar sobre la obra ' + p['title'])}" target="_blank" rel="noopener noreferrer">Consultar por WhatsApp ↗</a><button type="button" class="text-link" data-share-link>Compartir enlace directo ↗</button>{social_share_dock(url=ORIGIN + '/obra/' + p['slug'] + '/', title=p['title'])}</div><a class="source-link" data-art-video{' hidden' if not p.get('video') else ''} href="{esc(p.get('video') or '')}" target="_blank" rel="noopener noreferrer">Ver proceso en YouTube ↗</a><a class="source-link" data-art-source{' hidden' if not p['source'] else ''} href="{esc(p['source'] or '')}" target="_blank" rel="noopener noreferrer">Ver publicación de la artista ↗</a></div><a class="story-footer" href="/retratos-por-encargo-bilbao/">Tu propio retrato empieza aquí ↗</a></dialog>
 <dialog id="photos-dialog" class="photos-dialog" aria-labelledby="photos-heading"><div class="dialog-top"><span id="photos-heading">{esc(p['title'])}</span><button type="button" data-close-dialog>Cerrar ×</button></div><div class="photo-view"><button type="button" data-photo-prev aria-label="Fotografía anterior">←</button><img data-photo-image data-src="{p['photos'][0]['src']}" alt="{esc(work_alt(p, p['photos'][0]['caption']))}" decoding="async"><button type="button" data-photo-next aria-label="Fotografía siguiente">→</button></div><p data-photo-caption aria-live="polite"></p></dialog>'''
         artwork_photos = []
@@ -1120,8 +1120,9 @@ def build(output):
             default_schema["size"] = p["dimensions"]
         page(path, title or p["title"], description or p["story"], body, p["photos"][0]["original"], True, schema or default_schema, image_alt=work_alt(p, p["photos"][0]["caption"]))
 
-    def hero(image, eyebrow, heading, lead="", link=None, alt="Obra de Naroa Gutiérrez Gil", position="50% 45%"):
-        return f'''<section class="page-hero" data-parallax><div class="page-hero-image"><img src="{image}" alt="{esc(alt)}" fetchpriority="high" style="object-position:{position}"></div><div class="page-hero-shade"></div><div class="page-hero-copy"><p class="eyebrow">{esc(eyebrow)}</p><h1>{heading}</h1>{f'<p class="hero-lead">{lead}</p>' if lead else ''}{f'<a class="text-link" href="{link[0]}">{link[1]} ↗</a>' if link else ''}</div><a class="hero-down" href="#contenido" aria-label="Seguir leyendo">↓</a></section>'''
+    def hero(image, eyebrow, heading, lead="", link=None, alt="Obra de Naroa Gutiérrez Gil", position="50% 45%", mobile_position=None):
+        # mobile_position: encuadre propio para pantallas verticales, donde el recorte deja ver una franja estrecha.
+        return f'''<section class="page-hero" data-parallax><div class="page-hero-image"><img src="{image}" alt="{esc(alt)}" fetchpriority="high" style="object-position:{position};--hero-pos-m:{mobile_position or position}"></div><div class="page-hero-shade"></div><div class="page-hero-copy"><p class="eyebrow">{esc(eyebrow)}</p><h1>{heading}</h1>{f'<p class="hero-lead">{lead}</p>' if lead else ''}{f'<a class="text-link" href="{link[0]}">{link[1]} ↗</a>' if link else ''}</div><a class="hero-down" href="#contenido" aria-label="Seguir leyendo">↓</a></section>'''
 
     home_schema = {
         "@context": "https://schema.org",
@@ -1365,7 +1366,7 @@ def build(output):
     kind_counts = {k: sum(1 for x in exhibitions if x["type"] == k) for k in kind_labels}
     career_summary = f"{min(years)}–{max(years)} · {len(exhibitions)} encuentros · " + " · ".join(f"{n} {kind_plurals[k][0 if n == 1 else 1]}" for k, n in kind_counts.items() if n)
     kind_buttons = '<button type="button" data-career-kind="all" aria-pressed="true">Todo</button>' + ''.join(f'<button type="button" data-career-kind="{k}" aria-pressed="false">{kind_labels[k]} <small>{n}</small></button>' for k, n in kind_counts.items() if n)
-    career = hero(cantinflowers, "Exposiciones y encuentros", "El arte también<br><span>sale de paseo.</span>", "«Sin muros, sin duros, abierta y flexible. De tú a tú, haciendo piña, haciendo amig@s, apetecible».", alt="Cantinflowers, pintura y collage en torno a Mario Moreno")
+    career = hero(cantinflowers, "Exposiciones y encuentros", "El arte también<br><span>sale de paseo.</span>", "«Sin muros, sin duros, abierta y flexible. De tú a tú, haciendo piña, haciendo amig@s, apetecible».", alt="Cantinflowers, pintura y collage en torno a Mario Moreno", mobile_position="22% 42%")
     career += '<section id="contenido" class="career editorial">' + wall_markup + '<div class="section-opening"><p>«Porque las exposiciones colectivas son como el corro de las patatas o el pilla-pilla de la vida artística: es enseñarnos los nuevos cromos al reunirnos con las amigas; es pegar en la misma pared todas nuestras pegatinas».</p><p class="career-summary">' + esc(career_summary) + '</p></div><div class="year-filters type-filters" role="group" aria-label="Filtrar exposiciones por tipo">' + kind_buttons + '</div><div class="year-filters" role="group" aria-label="Filtrar exposiciones por año"><button type="button" data-year="all" aria-pressed="true">Todos</button>' + ''.join(f'<button type="button" data-year="{y}" aria-pressed="false">{y}</button>' for y in years) + '</div><p class="career-count" role="status" aria-live="polite">' + str(len(exhibitions)) + ' encuentros documentados</p><div class="timeline">'
     
     artwork_lookup = {}
@@ -1409,7 +1410,7 @@ def build(output):
                 f'</a>'
                 for a in arts
             ) + '</div>'
-        career += f'''<article class="timeline-entry" data-exhibition-year="{x['year']}" data-exhibition-kind="{x['type']}" data-wall="{esc(x.get('wall') or kind_walls[x['type']])}" data-artworks="{art_json}"><p>{esc(x['dateLabel'])} <span class="timeline-kind">{kind_labels[x['type']]}</span></p><div><h3>{esc(x['title'])}</h3><p class="timeline-location">{esc(x['location'])}</p><p>{esc(x['description'])}</p>{cards_html}<div class="timeline-sources">{sources}</div></div></article>'''
+        career += f'''<article class="timeline-entry" id="encuentro-{esc(str(x['id']))}" data-exhibition-year="{x['year']}" data-exhibition-kind="{x['type']}" data-wall="{esc(x.get('wall') or kind_walls[x['type']])}" data-artworks="{art_json}"><p>{esc(x['dateLabel'])} <span class="timeline-kind">{kind_labels[x['type']]}</span></p><div><h3>{esc(x['title'])}</h3><p class="timeline-location">{esc(x['location'])}</p><p>{esc(x['description'])}</p>{cards_html}<div class="timeline-sources">{sources}</div></div></article>'''
     career += '</div><aside id="timeline-cursor-cards" class="timeline-cursor-cards" aria-hidden="true"></aside></section>'
     exhibition_events = []
     for ex in exhibitions:
@@ -1467,6 +1468,13 @@ def build(output):
     blog_archive = blog_data.get("archive", [])
     blog_total = blog_data.get("total", len(posts) + len(blog_archive))
     blog_first_year = min(x["date"][:4] for x in posts + blog_archive)
+    # Los encuentros de Trayectoria llevan el id de la entrada del blog que los cuenta: la entrada enlaza con el suyo.
+    encounter_ids = {str(e["id"]) for e in read_data("exhibitions")["exhibitions"]}
+
+    def encounter_link(post, label):
+        if str(post["id"]) not in encounter_ids:
+            return ""
+        return f'<a class="notebook-encounter" href="/trayectoria/#encuentro-{post["id"]}">{label}</a>'
     notebook = hero(cuaderno_hero, "El blog de Naroa", "Entre una obra<br><span>y la siguiente.</span>", "«Con las comisuras de par en par agradezco el volver a mi ser y soplo un beso a tu presencia que me alumbró el camino de regreso. Gracias por brindarme reflejo, gracias por ser mi espejo».", alt="Collage coral Twister (Naroa '25): retratos, telas, chapas y juego en el estudio de Naroa Gutiérrez Gil", position="50% 48%")
     notebook += f'''<section class="editorial notebook" id="contenido" data-notebook-sync="{esc(blog_data.get("api", ""))}"><div class="section-opening"><p class="eyebrow">Blog · Sincronizado con su WordPress</p><h2>Lo que ocurre<br>alrededor de una obra.</h2><p>«Siempre andan en busca de la complicidad —aunque sea a través del boli sobre el papel— y usan al observador como hilo conductor de sus tertulias privadas, en las que a menudo se merienda complicidad con sabor a saber reír».</p></div><p class="notebook-status" data-notebook-status><span class="notebook-status-dot" aria-hidden="true"></span><span data-notebook-status-text>{blog_total} entradas desde {blog_first_year} · la última, del {esc(posts[0]["date_label"])}</span></p><div class="notebook-posts" data-notebook-posts>'''
     for x in posts:
@@ -1474,7 +1482,7 @@ def build(output):
         local_src = im.get("local")
         img_src = derivative(local_src, 960) if local_src else im.get("src", "")
         photo_html = f'''<a class="notebook-photo" href="{esc(x['url'])}" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true" style="--poster-ratio:{im.get('width', 1080)}/{im.get('height', 1080)}"><img src="{esc(img_src)}" width="{im.get('width', 1080)}" height="{im.get('height', 1080)}" alt="{esc(im.get('alt') or x['title'])}" loading="lazy" decoding="async"></a>''' if img_src else ""
-        notebook += f'''<article class="notebook-card" data-notebook-entry data-post-id="{x['id']}">{photo_html}<div class="notebook-card-body"><p class="eyebrow"><time datetime="{esc(x['date'])}">{esc(x['date_label'])}</time></p><h3><a href="{esc(x['url'])}" target="_blank" rel="noopener noreferrer">{esc(x['title'])} ↗</a></h3><p class="notebook-summary">{esc(x['summary'])}</p><a class="text-link" href="{esc(x['url'])}" target="_blank" rel="noopener noreferrer" aria-label="Leer la entrada completa: {esc(x['title'])}">Leer la entrada completa ↗</a></div></article>'''
+        notebook += f'''<article class="notebook-card" data-notebook-entry data-post-id="{x['id']}">{photo_html}<div class="notebook-card-body"><p class="eyebrow">{'<span class="notebook-latest" data-notebook-latest>Última entrada</span>' if x is posts[0] else ''}<time datetime="{esc(x['date'])}">{esc(x['date_label'])}</time></p><h3><a href="{esc(x['url'])}" target="_blank" rel="noopener noreferrer">{esc(x['title'])} ↗</a></h3><p class="notebook-summary">{esc(x['summary'])}</p><a class="text-link" href="{esc(x['url'])}" target="_blank" rel="noopener noreferrer" aria-label="Leer la entrada completa: {esc(x['title'])}">Leer la entrada completa ↗</a>{encounter_link(x, "Verlo en Trayectoria →")}</div></article>'''
     notebook += '</div>'
     if blog_archive:
         short_months = "ene feb mar abr may jun jul ago sep oct nov dic".split()
@@ -1482,10 +1490,10 @@ def build(output):
         for x in blog_archive:
             archive_years.setdefault(x["date"][:4], []).append(x)
         year_span = f"{min(archive_years)}–{max(archive_years)}"
-        notebook += f'''<section class="notebook-archive" aria-labelledby="notebook-archive-title"><div class="section-opening"><p class="eyebrow">Archivo del blog · {year_span}</p><h2 id="notebook-archive-title">Y todo<br><span>lo anterior.</span></h2><p>{len(blog_archive)} entradas más, año por año: exposiciones, mercados, paseos de la Walking Gallery y encuentros. Cada título abre la entrada en su WordPress.</p></div><div class="notebook-years">'''
+        notebook += f'''<section class="notebook-archive" aria-labelledby="notebook-archive-title"><div class="section-opening"><p class="eyebrow">Archivo del blog · {year_span}</p><h2 id="notebook-archive-title">Y todo<br><span>lo anterior.</span></h2><p>{len(blog_archive)} entradas más, año por año: exposiciones, mercados, paseos de la Walking Gallery y encuentros. Cada título abre la entrada en su WordPress.</p></div><div class="notebook-search" data-notebook-search hidden><label for="notebook-search-input">Buscar en el archivo</label><input id="notebook-search-input" type="search" autocomplete="off" spellcheck="false" enterkeyhint="search" placeholder="Por ejemplo: Walking Gallery" data-notebook-search-input><p class="notebook-search-count" data-notebook-search-count role="status"></p></div><div class="notebook-years" data-notebook-years>'''
         for index, (year, entries) in enumerate(sorted(archive_years.items(), reverse=True)):
             rows = "".join(
-                f'''<li><time datetime="{esc(x['date'])}">{int(x['date'][8:10])} {short_months[int(x['date'][5:7]) - 1]}</time><a href="{esc(x['url'])}" target="_blank" rel="noopener noreferrer">{esc(x['title'])} ↗</a></li>'''
+                f'''<li><time datetime="{esc(x['date'])}">{int(x['date'][8:10])} {short_months[int(x['date'][5:7]) - 1]}</time><a href="{esc(x['url'])}" target="_blank" rel="noopener noreferrer">{esc(x['title'])} ↗</a>{encounter_link(x, "En Trayectoria →")}</li>'''
                 for x in entries
             )
             count_label = "1 entrada" if len(entries) == 1 else f"{len(entries)} entradas"
@@ -1543,7 +1551,7 @@ def build(output):
         (jaio, "Madera noble & textil cosido", "Collage textil sobre madera"),
         (amy, "Pizarra natural & mica mineral", "Pizarra natural rústica"),
         (amor, "Lata de conserva 3D", "Caja personalizada u objeto"),
-        (rara, "Papel algodón & grafito", "Retrato al óleo o grafito"),
+        (rara, "Papel, pastel Conté & collage", "Retrato a pastel o grafito"),
     ]
     examples_html = ''.join(
         f'<article class="commission-example" data-parallax-card data-card-index="{idx}" data-work-slug="{ex["slug"]}">'
@@ -1553,7 +1561,7 @@ def build(output):
         f'<img src="{ex["cover"]}" width="{ex["photos"][0]["width"]}" height="{ex["photos"][0]["height"]}" alt="{esc(work_alt(ex))}" loading="eager" decoding="async">'
         f'</a>'
         f'<a class="commission-detail-pip" href="/obra/{ex["slug"]}/" tabindex="-1" aria-hidden="true">'
-        f'<img src="{ex["photos"][1]["src"] if len(ex.get("photos", [])) > 1 else ex["cover"]}" alt="{esc(ex["title"])} · Detalle matérico" loading="lazy" decoding="async">'
+        f'<img src="{ex["photos"][1]["src"] if len(ex.get("photos", [])) > 1 else ex["cover"]}"{cover_dims(ex["photos"][1]["src"] if len(ex.get("photos", [])) > 1 else ex["cover"])} alt="{esc(ex["title"])} · Detalle matérico" loading="lazy" decoding="async">'
         f'</a>'
         f'<div class="commission-example-bar">'
         f'<div class="commission-work-meta">'
@@ -1583,7 +1591,7 @@ def build(output):
         ("¿Cuánto cuesta un retrato pintado a mano y cuándo sé el precio exacto?", "Antes de tocar un pincel. Odio los presupuestos sorpresa tanto como tú. Primero hablamos de tu idea, elegimos soporte (pizarra, madera cosida, lata 3D o papel) y tamaño, y te doy una cifra cerrada y por escrito. Si te encaja, acordamos un 50% para arrancar y el 50% restante a la entrega. Siempre con presupuesto cerrado previo."),
         ("¿Cuáles son los plazos y qué pasa si tengo una fecha señalada?", "El ritmo habitual de taller es de 2 a 4 semanas: las capas de acrílico, las texturas y los barnices de protección UV necesitan su secado orgánico para no cuartear. Si tienes un cumpleaños, una boda o una sorpresa inminente, dímelo en el primer mensaje y buscamos un hueco prioritario de caballete."),
         ("¿Cómo llega la obra a mis manos si no vivo en Bilbao?", "Si estás en Bilbao o en Bizkaia (Casco Viejo, Indautxu, Getxo, margen derecha o izquierda), te lo doy en mano en el estudio o quedamos para dártelo en persona. Si estás fuera, viaja como una reina: en una caja rígida tricapa a medida, protegida contra humedad y golpes, con seguro a todo riesgo y número de seguimiento hasta la puerta de tu casa."),
-        ("¿Qué tamaños y materiales puedo elegir?", "Los formatos habituales son 20 × 30 cm, 30 × 40 cm y 40 × 50 cm, o a medida según el espacio donde vaya a vivir. Trabajo sobre madera, tela vaquera cosida, papel de algodón, cajas y latas intervenidas y pizarra natural, con acrílico, pastel, carbón Conté, rotuladores, pan de oro y costura a mano. Cada pieza va firmada, con certificado de autenticidad y lista para colgar."),
+        ("¿Qué tamaños y materiales puedo elegir?", "Los formatos habituales son 20 × 30 cm, 30 × 40 cm y 40 × 50 cm, o a medida según el espacio donde vaya a vivir. Trabajo sobre madera, tela vaquera cosida, papel de algodón, cajas y latas intervenidas y pizarra natural, con acrílico, pastel Conté, rotuladores, pan de oro y costura a mano. Cada pieza va firmada, con certificado de autenticidad y lista para colgar."),
     ]
     faq_html = ''.join(f'<details class="commission-faq-item"><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q, a in commission_faqs)
 
@@ -1594,7 +1602,7 @@ def build(output):
         ("Collage textil sobre madera", "tela vaquera cosida"),
         ("Pizarra natural rústica", "pizarra natural"),
         ("Caja personalizada u objeto", "una lata de conserva"),
-        ("Retrato al óleo o grafito", "papel, a pastel y grafito"),
+        ("Retrato a pastel o grafito", "papel, a pastel y grafito"),
         # Soportes que Naroa ya ha trabajado (catálogo): cada uno enseña en la portada una obra real.
         ("Lienzo", "lienzo"),
         ("Plato de madera", "un plato de madera"),
@@ -1798,7 +1806,7 @@ def build(output):
         "knowsAbout": [
             "Retrato por encargo en Bilbao",
             "Retrato personalizado a partir de fotografía",
-            "Retrato al óleo y dibujo a lápiz y pastel Conté",
+            "Dibujo a lápiz, grafito y pastel Conté",
             "Collage contemporáneo y textil sobre madera",
             "Cajas personalizadas y objetos intervenidos",
             "Retrato en técnica mixta sobre pizarra natural y mica mineral",
@@ -1868,8 +1876,8 @@ def build(output):
                     "@type": "Offer",
                     "itemOffered": {
                         "@type": "Service",
-                        "name": "Retrato al óleo o gran formato sobre madera",
-                        "description": "Pintura al óleo o técnica mixta en mediano y gran formato con acabado protector de galería.",
+                        "name": "Retrato en pintura acrílica sobre lienzo o tabla",
+                        "description": "Pintura acrílica y técnica mixta sobre lienzo o tabla de madera, en formatos de 30 × 40 a 50 × 50 cm.",
                     },
                 },
             ],
@@ -1905,6 +1913,13 @@ def build(output):
             f'<figcaption><span class="rp-work-meta">{esc(meta)}</span><a class="rp-work-title" href="/obra/{w["slug"]}/">{esc(w["title"])} ↗</a><p>{esc(text)}</p></figcaption></figure>'
         )
 
+    rp_siblings = [
+        ("/retrato-de-pareja-y-familia/", "Retrato de pareja y de familia ↗"),
+        ("/retrato-de-un-ser-querido-fallecido/", "Retrato en recuerdo de un ser querido ↗"),
+        ("/retrato-de-mascota/", "Retrato de mascota ↗"),
+    ]
+    rp_images = {}
+
     def rp_detail(w, caption_start):
         # Fotografía de detalle o de proceso de la ficha, con su pie literal. Si la ficha ya no tiene esa foto, el build falla.
         ph = next(ph for ph in w["photos"] if (ph.get("caption") or "").startswith(caption_start))
@@ -1932,6 +1947,12 @@ def build(output):
             '<p class="rp-text">Fotografías de detalle y de proceso de estas obras, tal como están en su ficha.</p>'
             '<div class="rp-details">' + ''.join(rp_detail(w, start) for w, start in details) + '</div></section>'
         ) if details else ''
+        siblings_html = (
+            '<section class="rp-section" aria-labelledby="rp-otros"><h2 id="rp-otros" class="rp-h2">Otros retratos por encargo</h2><p class="rp-actions">'
+            + ''.join(f'<a class="rp-link" href="{href}">{esc(label)}</a>' for href, label in rp_siblings if href != path)
+            + '<a class="rp-link" href="/retratos-por-encargo-bilbao/">Todos los encargos ↗</a></p></section>'
+        )
+        rp_images[path] = [(w, w["photos"][0]) for w, _ in works] + [(w, next(ph for ph in w["photos"] if (ph.get("caption") or "").startswith(start))) for w, start in details]
         body = (
             '<main id="main" class="retrato-pagina">'
             f'<header class="rp-hero"><p class="rp-kicker">{esc(kicker)}</p><h1 class="rp-title">{esc(h1)}</h1>{season_note}{lead}</header>'
@@ -1948,6 +1969,7 @@ def build(output):
             f'<a class="rp-link" href="mailto:encargos@naroagutierrezgil.com?subject={quote(mail_subject)}">encargos@naroagutierrezgil.com ↗</a>'
             '<a class="rp-link" href="/retratos-por-encargo-bilbao/#configurador">Componer el encargo paso a paso ↗</a>'
             '</p></section>'
+            f'{siblings_html}'
             '</main>'
         )
         schema = {
@@ -1994,7 +2016,7 @@ def build(output):
     rp_page(
         "/retrato-de-pareja-y-familia/",
         "Retrato de pareja y de familia hecho a mano desde tu foto",
-        "Retrato de pareja o de familia hecho a mano a partir de vuestras fotos, sin IA: pintura, collage y objetos. Presupuesto cerrado antes de empezar y envío asegurado a toda España.",
+        "Retrato de pareja o de familia hecho a mano desde vuestras fotos, sin IA. Pintura, collage y objetos. Precio cerrado y envío asegurado a toda España.",
         "Naroa Gutiérrez Gil · Retratos por encargo",
         "Retrato de pareja y de familia, hecho a mano desde vuestras fotos",
         '<p class="rp-lead"><strong>No hace falta una foto en la que salgáis todos bien.</strong> Naroa trabaja con varias fotografías, también de móvil, y las reúne en una sola pieza original: pintada, cosida o montada a mano, sin IA.</p>',
@@ -2026,7 +2048,7 @@ def build(output):
     rp_page(
         "/retrato-de-un-ser-querido-fallecido/",
         "Retrato de un ser querido fallecido, desde una foto antigua",
-        "Retrato pintado a mano en recuerdo de un ser querido. Sirve una foto antigua, pequeña o de móvil. Naroa Gutiérrez Gil, sin IA, con presupuesto cerrado y envío asegurado a toda España.",
+        "Retrato pintado a mano en recuerdo de un ser querido. Sirve una foto antigua, pequeña o de móvil. Sin IA, precio cerrado y envío a toda España.",
         "Naroa Gutiérrez Gil · Retratos por encargo",
         "Retrato en recuerdo de un ser querido, a partir de la foto que tengas",
         '<p class="rp-lead"><strong>Sirve una foto antigua, pequeña o de móvil.</strong> No hace falta que sea buena: basta con que sea suya.</p>'
@@ -2050,7 +2072,7 @@ def build(output):
     rp_page(
         "/retrato-de-mascota/",
         "Retrato de mascota hecho a mano desde tu foto: perro o gato",
-        "Retrato de tu perro o tu gato hecho a mano a partir de una foto, sin IA. Naroa Gutiérrez Gil: pieza original, presupuesto cerrado antes de empezar y envío asegurado a toda España.",
+        "Retrato de tu perro o tu gato hecho a mano desde una foto, sin IA. Pieza original de Naroa Gutiérrez Gil, precio cerrado y envío a toda España.",
         "Naroa Gutiérrez Gil · Retratos por encargo",
         "Retrato de tu perro o tu gato, hecho a mano desde una foto",
         '<p class="rp-lead"><strong>Sirve una foto de móvil.</strong> Naroa Gutiérrez Gil acepta encargos de retratos de mascotas con las mismas condiciones que cualquier otro retrato: una pieza original hecha a mano, sin IA y con el precio cerrado antes de empezar.</p>',
@@ -2132,6 +2154,8 @@ def build(output):
         if path in work_by_route:
             w = work_by_route[path]
             imgs = ''.join(f'<image:image><image:loc>{ORIGIN}{esc(ph["original"])}</image:loc><image:title>{esc(w["title"])} · {esc(ph["caption"])}</image:title><image:caption>{esc(work_alt(w, ph["caption"]))}</image:caption></image:image>' for ph in w["photos"])
+        elif path in rp_images:
+            imgs = ''.join(f'<image:image><image:loc>{ORIGIN}{esc(ph["original"])}</image:loc><image:title>{esc(w["title"])} · {esc(ph["caption"])}</image:title><image:caption>{esc(work_alt(w, ph["caption"]))}</image:caption></image:image>' for w, ph in rp_images[path])
         elif path == "/retratos-por-encargo-bilbao/":
             imgs = ''.join(f'<image:image><image:loc>{ORIGIN}{esc(ex["photos"][0]["original"])}</image:loc><image:title>{esc(ex["title"])} · {esc(kind_label)}</image:title><image:caption>{esc(work_alt(ex, kind_label))}</image:caption></image:image>' for ex, kind_label, *_ in commission_examples)
         else:
@@ -2290,7 +2314,7 @@ def build(output):
                 "provider": ORIGIN + "/#artist",
                 "supports": [
                     "Collage y técnica mixta textil sobre madera",
-                    "Retrato al óleo y dibujo a grafito/pastel",
+                    "Dibujo a grafito y pastel Conté",
                     "Cajas tridimensionales y objetos intervenidos",
                     "Pizarra natural (exploración reciente)",
                 ],
@@ -2311,12 +2335,12 @@ def build(output):
                 {
                     "intent": "Precios y presupuestos de retratos por encargo",
                     "question": "¿Cuánto cuesta un retrato personalizado en Bilbao con Naroa Gutiérrez Gil?",
-                    "answer": "Presupuesto cerrado previo por escrito según técnica, soporte y formato (dibujo, óleo, collage textil sobre madera, cajas de memoria o piezas en pizarra de 20×30 cm a 40×50 cm). Sin compromiso previo.",
+                    "answer": "Presupuesto cerrado previo por escrito según técnica, soporte y formato (dibujo, pintura acrílica, collage textil sobre madera, cajas de memoria o piezas en pizarra; formatos habituales de 20×30 cm a 40×50 cm). Sin compromiso previo.",
                 },
                 {
                     "intent": "Plazos de entrega",
                     "question": "¿Cuál es el plazo de entrega habitual de un encargo?",
-                    "answer": "De 2 a 4 semanas según la técnica elegida y los tiempos de secado de óleos, acrílicos y barnices. Plazos prioritarios con aviso previo para fechas señaladas.",
+                    "answer": "De 2 a 4 semanas según la técnica elegida y los tiempos de secado de acrílicos y barnices. Plazos prioritarios con aviso previo para fechas señaladas.",
                 },
                 {
                     "intent": "Proceso de encargo a partir de fotos",
@@ -2424,15 +2448,15 @@ def build(output):
         "  - El Correo Agenda (2015): https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-476343.html\n"
         "  - GARA Reportaje: https://gara.naiz.eus/paperezkoa/20130427/399965/es/Walking-gallery-arte-aire-libre-movimiento-arte-evolucion\n"
         "  - Siarte Leku: https://siarte.com/2022-03-25-siarte-exposicion-pintura-collage-arte-naroa-gutierrez.php\n"
-        "  - YouTube: https://www.youtube.com/@naroagutierrezgil\n"
+        "  - YouTube: https://www.youtube.com/@naroarte\n"
         "- Lenguaje y Práctica Artística: Retratos de autor y obra plástica multidisciplinar (dibujo, óleo, técnicas mixtas, collage textil sobre madera y objetos intervenidos, con exploraciones recientes sobre soportes minerales como la pizarra natural de cantera y mica).\n"
         f"- Servicio Canónico de Encargos: {ORIGIN}/retratos-por-encargo-bilbao/\n"
         "- Correo de Encargos: encargos@naroagutierrezgil.com\n"
         "- Exposiciones Documentadas: Colegio de Abogados de Bilbao (Espejos del alma), Dock Bilbao, Politena Espacio de Arte, Walking Gallery Bilbao.\n\n"
         "## Respuestas Factuales Inmediatas (Query Fan-Out)\n"
-        "- **¿Cuánto cuesta un retrato personalizado?** Presupuesto cerrado previo por escrito según técnica, soporte y formato (dibujo, óleo, collage sobre madera, cajas de recuerdos o pizarra de 20×30 cm a 40×50 cm). Consulta sin compromiso.\n"
+        "- **¿Cuánto cuesta un retrato personalizado?** Presupuesto cerrado previo por escrito según técnica, soporte y formato (dibujo, pintura acrílica, collage sobre madera, cajas de recuerdos o pizarra; formatos habituales de 20×30 cm a 40×50 cm). Consulta sin compromiso.\n"
         "- **¿Cómo se encarga a partir de fotos?** Se envían 1 o varias fotos de referencia (incluso tomadas con el móvil); Naroa realiza una reinterpretación artística de autor capturando la personalidad y mirada.\n"
-        "- **¿Cuáles son los plazos de entrega?** De 2 a 4 semanas según la técnica y el secado de óleos, acrílicos y barnices. Plazos prioritarios disponibles para fechas señaladas con aviso previo.\n"
+        "- **¿Cuáles son los plazos de entrega?** De 2 a 4 semanas según la técnica y el secado de acrílicos y barnices. Plazos prioritarios disponibles para fechas señaladas con aviso previo.\n"
         + (f"- **¿Hasta cuándo se puede encargar para Navidad y Reyes?** {' '.join(text for _, text in season_lines)}\n" if season_lines else "") +
         "- **¿Dónde se entrega?** Entrega en mano en Bilbao y Bizkaia, o envío protegido y asegurado a nivel nacional e internacional.\n"
         "- **¿Cómo conservar una obra en técnica mixta o collage?** Fijación y barniz protector satinado. Limpieza en seco con plumero suave o microfibra; evitar humedad directa o productos químicos.\n"
@@ -2482,7 +2506,7 @@ def build(output):
         "- **Soportes:** Pizarra natural de cantera con contorno irregular, madera noble, collage textil sobre tela vaquera o papel de algodón, y cajas tridimensionales.\n"
         "- **Formatos habituales:** Pizarra de 20×30 cm a 40×50 cm; piezas especiales adaptadas al espacio.\n"
         "- **Técnicas:** Acrílico, óleo, grafito, pastel Conté, rotuladores acrílicos, escamas de mica mineral y ensamblaje de objetos cotidianos.\n"
-        "- **Plazos:** 2 a 4 semanas según complejidad y secado de capas de óleo/barniz.\n"
+        "- **Plazos:** 2 a 4 semanas según complejidad y secado de capas de acrílico y barniz.\n"
         "- **Presupuesto:** Presupuesto cerrado por escrito antes de comenzar, sin compromiso previo.\n"
         "- **Entrega:** En mano en Bilbao y comarca de Bizkaia; envíos asegurados a nivel nacional e internacional.\n\n"
         "## Protocolo de Interacción para Agentes Autónomos (Agent-Ready DOM & WebMCP)\n\n"

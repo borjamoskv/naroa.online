@@ -494,7 +494,7 @@
   // no se guarda ni se envía, y se pierde al cerrar la pestaña. Con ello se compone una Story con
   // los recortes reales de las obras donde más se detuvo la visita.
   const visit = { seconds: Object.create(null), focus: Object.create(null), last: performance.now() };
-  const VISIT_MIN_SECONDS = 4, VISIT_MIN_WORKS = 3, VISIT_MAX_WORKS = 4;
+  const VISIT_MIN_SECONDS = 4, VISIT_MIN_WORKS = 3, VISIT_MAX_WORKS = 4, VISIT_MIN_LENS = 1.5;
   function visitTick() {
     const now = performance.now(), dt = Math.min(1, (now - visit.last) / 1000);
     visit.last = now;
@@ -505,10 +505,36 @@
     if (!slug || (phase && phase !== 'hold' && phase !== 'explore' && phase !== 'still')) return;
     if (slug === projects[0]?.slug && window.scrollY < 40) return;
     visit.seconds[slug] = (visit.seconds[slug] || 0) + dt;
+    // Con la lupa a la vista, el tiempo se apunta además a la zona de la obra (rejilla de 4×4) que tiene debajo.
+    const spot = visit.focus[slug], lens = $('.art-lens');
+    if (spot && lens && !lens.hidden) {
+      const key = `${Math.min(3, Math.floor(spot.x * 4))}-${Math.min(3, Math.floor(spot.y * 4))}`;
+      const cell = spot.cells[key] || (spot.cells[key] = { t: 0, x: 0, y: 0 });
+      cell.t += dt; cell.x += spot.x * dt; cell.y += spot.y * dt;
+    }
+    if (!visit.ready && visitReady()) { visit.ready = true; visitSync(); }
   }
   if (galleryPage) setInterval(visitTick, 500);
-  // La lupa dice dónde se miró dentro de la obra: el recorte de la Story se centra ahí.
-  function visitFocus(slug, x, y) { if (slug) visit.focus[slug] = { x: clamp(x, 0, 1), y: clamp(y, 0, 1) }; }
+  // La lupa dice dónde se miró dentro de la obra: el recorte de la Story se centra en la zona donde
+  // más tiempo estuvo, no en el último punto por el que pasó al retirarla.
+  function visitFocus(slug, x, y) {
+    if (!slug) return;
+    const spot = visit.focus[slug] || (visit.focus[slug] = { x: 0.5, y: 0.42, cells: Object.create(null) });
+    spot.x = clamp(x, 0, 1); spot.y = clamp(y, 0, 1);
+  }
+  function visitFocusOf(slug) {
+    const spot = visit.focus[slug], cells = Object.values(spot?.cells || {}).sort((a, b) => b.t - a.t);
+    const best = cells[0], used = cells.reduce((sum, cell) => sum + cell.t, 0);
+    // Un solo muestreo puede sumar hasta un segundo: hacen falta al menos dos para que cuente.
+    if (best && best.t >= VISIT_MIN_LENS) return { x: best.x / best.t, y: best.y / best.t };
+    // Sin detenerse en ningún sitio: si aun así la usó un rato, vale el último punto; un roce no cuenta.
+    return used >= VISIT_MIN_LENS ? { x: spot.x, y: spot.y } : { x: 0.5, y: 0.42 };
+  }
+  // Las dos entradas de la galería (en «Más» y junto a «Compartir recorrido») aparecen cuando ya hay retrato.
+  function visitSync() {
+    const ready = visitReady(), finale = $('[data-finale-share]'), atEnd = !!finale && !finale.hidden;
+    document.querySelectorAll('[data-visit-portrait]').forEach(el => { el.hidden = !ready || (atEnd && el.hasAttribute('data-visit-more')); });
+  }
   function visitLooked() {
     return Object.entries(visit.seconds)
       .filter(entry => entry[1] >= VISIT_MIN_SECONDS)
@@ -525,7 +551,7 @@
   function renderVisitFrame(ctx, looked, images, summary) {
     const W = 1080, H = 1920, margin = 76, paper = '#fffdf4', accent = '#f7d594';
     const spaced = value => { if ('letterSpacing' in ctx) ctx.letterSpacing = value; };
-    const focusOf = i => visit.focus[looked[i].work.slug] || { x: 0.5, y: 0.42 };
+    const focusOf = i => visitFocusOf(looked[i].work.slug);
     ctx.fillStyle = '#0b0b0a';
     ctx.fillRect(0, 0, W, H);
     // Fondo: la obra más mirada, muy de cerca y en penumbra.
@@ -564,6 +590,22 @@
     let y = top;
     looked.forEach((entry, i) => {
       const h = Math.round(heights[i]), img = images[i], focus = focusOf(i), pad = 34;
+      // La pieza completa va a la derecha de su franja; su ancho decide cuánto queda para el título.
+      const maxH = Math.max(70, Math.min(230, h - 74)), maxW = 200;
+      const nw = img ? img.naturalWidth || img.width || 1 : 1, nh = img ? img.naturalHeight || img.height || 1 : 1;
+      const cardW = img ? Math.round(nw * Math.min(maxW / nw, maxH / nh)) + 28 : 0;
+      const textW = bandW - pad * 2 - (cardW ? cardW + pad : 0) - 16;
+      // El título va entero: hasta tres líneas si la franja da para ello y, si aun así no cabe, encoge la letra.
+      const title = String(entry.work.title || '').split(/\s+/).filter(Boolean).join(' ');
+      let size = Math.round(clamp(h * 0.25, 46, 78)), lines = [];
+      for (;;) {
+        ctx.font = `italic 300 ${size}px "Cormorant Garamond", serif`;
+        lines = wrapStoryText(ctx, title, textW, clamp(Math.floor((h - 72) / (size * 1.02)), 1, 3));
+        if (lines.join(' ') === title || size <= 38) break;
+        size -= 4;
+      }
+      const labelY = y + h - 30 - lines.length * size * 1.02 + size * 0.08 - 10;
+      const label = `${String(i + 1).padStart(2, '0')} · ${visitClock(entry.seconds)}`.toUpperCase();
       ctx.save();
       storyCutPath(ctx, x, y, bandW, h, 4.5, 11 + i * 17);
       ctx.clip();
@@ -575,28 +617,32 @@
       veil.addColorStop(1, 'rgba(11, 11, 10, 0.82)');
       ctx.fillStyle = veil;
       ctx.fillRect(x - 8, y, bandW + 16, h + 8);
+      // El rótulo cae a veces sobre un detalle claro, donde el velo aún no ha oscurecido:
+      // una sombra ovalada solo detrás de él lo deja legible sin apagar la franja.
+      ctx.font = '500 22px "DM Sans", sans-serif';
+      spaced('4px');
+      const labelW = ctx.measureText(label).width, reach = labelW / 2 + 110;
+      spaced('0px');
+      ctx.translate(x + pad + labelW / 2, labelY - 8);
+      ctx.scale(1, 0.34);
+      const shade = ctx.createRadialGradient(0, 0, 0, 0, 0, reach);
+      shade.addColorStop(0, 'rgba(11, 11, 10, 0.74)');
+      shade.addColorStop(0.55, 'rgba(11, 11, 10, 0.5)');
+      shade.addColorStop(1, 'rgba(11, 11, 10, 0)');
+      ctx.fillStyle = shade;
+      ctx.fillRect(-reach, -reach, reach * 2, reach * 2);
       ctx.restore();
-      // La pieza completa, a la derecha de su franja.
-      let miniW = 0;
-      if (img) {
-        const nw = img.naturalWidth || img.width || 1, nh = img.naturalHeight || img.height || 1;
-        const maxH = Math.max(70, Math.min(230, h - 74)), maxW = 200;
-        const cardW = Math.round(nw * Math.min(maxW / nw, maxH / nh)) + 28;
-        drawStoryMiniature(ctx, img, x + bandW - pad - cardW, y + h - 22, maxW, maxH, i % 2 ? 2.1 : -2.4);
-        miniW = cardW + pad;
-      }
+      if (img) drawStoryMiniature(ctx, img, x + bandW - pad - cardW, y + h - 22, maxW, maxH, i % 2 ? 2.1 : -2.4);
       // Rótulo: lo que duró la mirada y el título, apoyados en el borde inferior.
       inked(true);
-      const size = Math.round(clamp(h * 0.25, 46, 78)), textW = bandW - pad * 2 - miniW - 16;
       ctx.font = `italic 300 ${size}px "Cormorant Garamond", serif`;
-      const lines = wrapStoryText(ctx, entry.work.title, textW, h > size * 3.4 ? 2 : 1);
       let ty = y + h - 30;
       ctx.fillStyle = paper;
       lines.slice().reverse().forEach(line => { ctx.fillText(line, x + pad - 3, ty); ty -= size * 1.02; });
       ctx.fillStyle = accent;
       ctx.font = '500 22px "DM Sans", sans-serif';
       spaced('4px');
-      ctx.fillText(`${String(i + 1).padStart(2, '0')} · ${visitClock(entry.seconds)}`.toUpperCase(), x + pad, ty + size * 0.08 - 10);
+      ctx.fillText(label, x + pad, labelY);
       spaced('0px');
       inked(false);
       y += h + gap;
@@ -615,7 +661,7 @@
   }
 
   // El diálogo de Story sirve a las dos: la de una obra y la del paseo.
-  let remixHeading = null;
+  let remixHeading = null, remixShuffle = null, remixAlt = null;
   function setRemixMode(mode) {
     const dialog = $('#story-remix-dialog');
     if (!dialog) return;
@@ -626,6 +672,18 @@
     }
     if (loop) loop.hidden = mode === 'visit';
     if (visitBtn) visitBtn.hidden = mode === 'visit' || !visitReady();
+    // Desde el retrato del paseo, el tercer botón no baraja nada: vuelve a la Story de una obra, y lo dice.
+    const shuffle = $('[data-remix-shuffle] span', dialog);
+    if (shuffle) {
+      if (remixShuffle === null) remixShuffle = shuffle.textContent;
+      shuffle.textContent = mode === 'visit' ? 'La Story de una sola obra' : remixShuffle;
+    }
+    // La vista previa se describe según lo que enseña: la del paseo nombra sus obras al terminar de componerse.
+    const preview = $('[data-story-remix-img]', dialog);
+    if (preview) {
+      if (remixAlt === null) remixAlt = preview.alt;
+      if (mode !== 'visit') preview.alt = remixAlt;
+    }
     dialog.dataset.remixMode = mode;
   }
 
@@ -661,6 +719,8 @@
       if (!ctx) return null;
       renderVisitFrame(ctx, looked, images, summary);
       await publishStory(canvas, { slug: 'mi-visita' });
+      const preview = $('[data-story-remix-img]', dialog), names = looked.map(entry => entry.work.title).join(', ');
+      if (preview && run === remixRun) preview.alt = `El retrato de tu visita: ${names}`;
       return { dataUrl: currentRemixDataUrl, blob: currentRemixBlob, file: currentRemixFile, works: looked.map(entry => entry.work.slug) };
     } catch (err) {
       console.warn('Error generating visit story:', err);
@@ -2976,8 +3036,7 @@
       if (ouroboros) ouroboros.hidden = (state.index !== works.length - 1);
       const finaleShare = $('[data-finale-share]', stage);
       if (finaleShare) finaleShare.hidden = (state.index !== works.length - 1);
-      const visitLink = $('[data-visit-portrait]', stage);
-      if (visitLink) visitLink.hidden = !visitReady();
+      visitSync();
       const kintsugiBtn = $('[data-kintsugi-toggle]', stage);
       if (kintsugiBtn) {
         const isKintsugiPair = (p.slug === 'cantinflowers' || p.slug === 'mario-moreno');
@@ -5075,12 +5134,16 @@
     paintCareerWall(true);
   }
 
-  // Trayectoria: fondo parallax. La pared, el año gigante y los cromos siguen al encuentro en pantalla.
+  // Trayectoria: fondo parallax en dos planos. Detrás, la pared, que pasa a WALL_RATE del scroll; delante,
+  // el papel de las tarjetas, que va con el scroll. El año va pintado en la pared y los cromos pegados a
+  // ella: viajan a su mismo paso exacto, no flotan. Con ratón, el plano de la pared cede un poco contra el puntero.
   const careerWall = $('.career-wall');
   const wallLayers = careerWall ? $$('[data-wall-layer]', careerWall) : [];
   const wallYear = careerWall ? $('[data-wall-year]', careerWall) : null;
   const wallCromos = careerWall ? $$('[data-wall-cromo]', careerWall) : [];
-  const cromoDepth = [90, 190, 300];
+  const WALL_RATE = .35;
+  // Al píxel físico: en pantallas densas el medio píxel existe y el paso lento no tiembla.
+  const snapPx = value => { const dpr = window.devicePixelRatio || 1; return Math.round(value * dpr) / dpr; };
   let wallEntry = null, wallTicking = false;
   function paintCareerWall(force = false) {
     wallTicking = false;
@@ -5094,6 +5157,7 @@
       if (gap < bestGap) { bestGap = gap; best = entry; bestBox = box; }
     });
     if (best !== wallEntry || force) {
+      const changed = best !== wallEntry;
       wallEntry = best;
       const wall = best?.dataset.wall || 'pared';
       wallLayers.forEach(layer => {
@@ -5110,18 +5174,37 @@
         cromo.classList.toggle('is-on', !!art);
         if (art) cromo.style.backgroundImage = `url("${art.thumb}")`;
       });
+      // Al cambiar de encuentro, año y cromos saltan a su sitio en el tramo nuevo de pared: entran fundiéndose.
+      if (changed && !reduced.matches) [wallYear, ...wallCromos].forEach(el => el?.animate?.([{ opacity: 0 }, {}], { duration: 700, easing: 'cubic-bezier(.16,1,.3,1)' }));
     }
     if (reduced.matches || !bestBox) return;
     // Avance del encuentro activo por la pantalla: 0 al entrar por abajo, 1 al salir por arriba.
     const travel = Math.max(0, Math.min(1, (innerHeight - bestBox.top) / (innerHeight + bestBox.height)));
-    careerWall.style.setProperty('--wall-shift', `${Math.round(-scrollY * .35)}px`);
-    careerWall.style.setProperty('--year-shift', `${Math.round((.5 - travel) * innerHeight * .28)}px`);
-    wallCromos.forEach((cromo, i) => cromo.style.setProperty('--cromo-shift', `${Math.round((.5 - travel) * cromoDepth[i])}px`));
+    careerWall.style.setProperty('--wall-shift', `${snapPx(-scrollY * WALL_RATE)}px`);
+    // Lo que va en la pared se mueve WALL_RATE px por cada px de scroll, centrado cuando el encuentro lo está.
+    careerWall.style.setProperty('--wall-ride', `${snapPx((.5 - travel) * (innerHeight + bestBox.height) * WALL_RATE)}px`);
   }
   if (careerWall) {
     addEventListener('scroll', () => { if (!wallTicking) { wallTicking = true; requestAnimationFrame(() => paintCareerWall()); } }, { passive: true });
     addEventListener('resize', () => paintCareerWall(), { passive: true });
     paintCareerWall(true);
+    // Profundidad con ratón: la pared se desplaza contra el puntero (±14 px a lo ancho, ±8 a lo alto), con inercia.
+    if (window.matchMedia?.('(hover: hover) and (pointer: fine)').matches) {
+      let px = 0, py = 0, targetX = 0, targetY = 0, pointerFrame = 0;
+      const easePointer = () => {
+        px += (targetX - px) * .12; py += (targetY - py) * .12;
+        careerWall.style.setProperty('--wall-px', `${px.toFixed(2)}px`);
+        careerWall.style.setProperty('--wall-py', `${py.toFixed(2)}px`);
+        pointerFrame = Math.abs(targetX - px) + Math.abs(targetY - py) > .05 ? requestAnimationFrame(easePointer) : 0;
+      };
+      addEventListener('pointermove', event => {
+        if (event.pointerType !== 'mouse' || reduced.matches) return;
+        const box = careerWall.getBoundingClientRect();
+        if (box.bottom < 0 || box.top > innerHeight) return;
+        targetX = (.5 - event.clientX / innerWidth) * 28; targetY = (.5 - event.clientY / innerHeight) * 16;
+        if (!pointerFrame) pointerFrame = requestAnimationFrame(easePointer);
+      }, { passive: true });
+    }
   }
   years.forEach(button => button.addEventListener('click', () => { careerYear = button.dataset.year; filterCareer(); }));
   kinds.forEach(button => button.addEventListener('click', () => { careerKind = button.dataset.careerKind; filterCareer(); }));
@@ -5319,7 +5402,12 @@
         $('[data-portrait-title]', hero).textContent = work.title;
         $('[data-portrait-label]', hero).textContent = `${index ? work.label : 'Del rostro al autorretrato'} · ${String(index + 1).padStart(2, '0')} / ${works.length}`;
         $('[data-portrait-link]', hero).href = BASE + '/obra/' + work.slug + '/';
+        const focused = document.activeElement;
         previous.disabled = index === 0; next.disabled = index === works.length - 1;
+        // El botón que se desactiva al llegar a un extremo no deja el foco en el aire: en la última
+        // obra pasa a «Biografía ↓», que es por donde se sigue; en la primera, a «Obra siguiente».
+        if (focused === next && next.disabled) $('a', controls).focus({ preventScroll: true });
+        else if (focused === previous && previous.disabled) next.focus({ preventScroll: true });
         hero.dataset.work = work.slug; captionIndex = index;
       }
       [artCopy, controls].forEach(element => {
@@ -5701,9 +5789,15 @@
     const GAZE_MIRRORS = {
       mirada: ['amy-rocks', 'Pizarra natural rústica', 'La mirada'],
       materia: ['marilyn-rocks', 'Pizarra natural rústica', 'La materia'],
-      espejo: ['rara-avis', 'Retrato al óleo o grafito', 'La propia mirada'],
+      espejo: ['rara-avis', 'Retrato a pastel o grafito', 'La propia mirada'],
       compartir: ['amor-en-conserva', 'Caja personalizada u objeto', 'Compartir']
     };
+    // La lectura repite el rótulo del capítulo tal como lo lleva la página, en su idioma.
+    chapters.forEach(ch => {
+      const mirror = GAZE_MIRRORS[ch.dataset.kintsugiChapter];
+      const name = $('.eyebrow', ch)?.textContent.replace(/^\s*\d+\s*·\s*/, '').trim();
+      if (mirror && name) mirror[2] = name;
+    });
     let focusKey = null, focusAt = performance.now(), gazePaused = document.hidden, lastGaze = '';
     function settleDwell() {
       const now = performance.now();
@@ -5714,12 +5808,6 @@
       if (document.hidden) { settleDwell(); gazePaused = true; } else { gazePaused = false; focusAt = performance.now(); }
     });
 
-    // La lectura repite el rótulo del capítulo tal como lo lleva la página, en su idioma.
-    chapters.forEach(ch => {
-      const mirror = GAZE_MIRRORS[ch.dataset.kintsugiChapter];
-      const name = $('.eyebrow', ch)?.textContent.replace(/^\s*\d+\s*·\s*/, '').trim();
-      if (mirror && name) mirror[2] = name;
-    });
     function updateReversePortrait() {
       if (!reverseBox) return;
       const entries = Object.entries(kState.dwellChapters).sort((a, b) => b[1] - a[1]);
@@ -6378,6 +6466,28 @@
       body.append(eyebrow, h3, summary, readLink); article.append(body);
       return article;
     };
+    const shortDate = iso => new Intl.DateTimeFormat({ en: 'en-GB', eu: 'eu' }[LANG] || 'es', { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(`${iso}T12:00:00Z`));
+    const archiveNotebookCard = card => {
+      const years = $('[data-notebook-years]'), link = $('h3 a', card), iso = $('time', card)?.getAttribute('datetime') || '';
+      if (!years || !link || iso.length < 10) return;
+      const yearKey = iso.slice(0, 4), yearOf = group => $('.notebook-year-number', group)?.textContent || '';
+      let group = $$('.notebook-year', years).find(other => yearOf(other) === yearKey);
+      if (!group) {
+        group = document.createElement('details'); group.className = 'notebook-year'; group.setAttribute('name', 'notebook-archive');
+        const summary = document.createElement('summary'), number = document.createElement('span'), count = document.createElement('span');
+        number.className = 'notebook-year-number'; number.textContent = yearKey; count.className = 'notebook-year-count';
+        summary.append(number, count); group.append(summary, document.createElement('ol'));
+        years.insertBefore(group, $$('.notebook-year', years).find(other => yearOf(other) < yearKey) || null);
+      }
+      const list = $('ol', group), item = document.createElement('li'), time = document.createElement('time'), entry = externalLink('', link.href);
+      time.dateTime = iso; time.textContent = shortDate(iso); entry.textContent = link.textContent;
+      item.append(time, entry);
+      const encounter = $('.notebook-encounter', card);
+      if (encounter) item.append(encounter.cloneNode(true));
+      list.insertBefore(item, $$('li', list).find(other => ($('time', other)?.getAttribute('datetime') || '') < iso) || null);
+      const count = $$('li', list).length;
+      $('.notebook-year-count', group).textContent = count === 1 ? '1 entrada' : `${count} entradas`;
+    };
     async function syncNotebook() {
       if (!endpoint || document.hidden || notebookChecking || performance.now() - notebookChecked < NOTEBOOK_RECHECK_MS) return;
       notebookChecking = true;
@@ -6402,7 +6512,13 @@
           return card;
         });
         const next = [...wanted, ...current.filter(card => !wanted.includes(card))].slice(0, NOTEBOOK_VISIBLE);
-        if (next.length !== current.length || next.some((card, index) => card !== current[index])) notebookGrid.replaceChildren(...next);
+        if (next.length !== current.length || next.some((card, index) => card !== current[index])) {
+          const latestMark = $('[data-notebook-latest]', notebookGrid), firstEyebrow = $('.eyebrow', next[0]);
+          notebookGrid.replaceChildren(...next);
+          if (latestMark && firstEyebrow && latestMark.parentNode !== firstEyebrow) firstEyebrow.prepend(latestMark);
+          // La entrada que cede su sitio no desaparece: pasa al archivo, en su año.
+          current.filter(card => !next.includes(card)).forEach(archiveNotebookCard);
+        }
         if (notebookStatus && notebookStatusText) {
           const total = Number(data.found) || 0, latest = longDate(isoDay(posts[0].date));
           const lead = notebookAdded ? (notebookAdded === 1 ? '1 entrada nueva' : `${notebookAdded} entradas nuevas`) : 'Al día con su WordPress';
@@ -6413,6 +6529,44 @@
     }
     syncNotebook();
     document.addEventListener('visibilitychange', () => { if (!document.hidden) syncNotebook(); });
+  }
+  // Buscador del archivo del blog: filtra las entradas antiguas por palabras (todas deben estar),
+  // sin distinguir tildes ni mayúsculas. Mientras se busca, los años con resultados se abren a la vez.
+  const notebookSearch = $('[data-notebook-search]'), notebookYears = $('[data-notebook-years]');
+  const notebookSearchInput = notebookSearch && $('[data-notebook-search-input]', notebookSearch);
+  if (notebookSearchInput && notebookYears) {
+    const notebookSearchCount = $('[data-notebook-search-count]', notebookSearch);
+    const fold = value => String(value || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    let openBeforeSearch = null;
+    const filterNotebook = () => {
+      const words = fold(notebookSearchInput.value).split(/[^\p{L}\p{N}]+/u).filter(Boolean), searching = words.length > 0;
+      const years = $$('.notebook-year', notebookYears);
+      if (searching && !openBeforeSearch) openBeforeSearch = new Map(years.map(year => [year, year.open]));
+      let shown = 0, total = 0;
+      years.forEach(year => {
+        let hits = 0;
+        $$('li', year).forEach(item => {
+          const time = $('time', item);
+          const text = fold(`${time?.textContent || ''} ${time?.getAttribute('datetime') || ''} ${$('a', item)?.textContent || ''}`);
+          const hit = words.every(word => text.includes(word));
+          item.hidden = !hit; total += 1; if (hit) hits += 1;
+        });
+        shown += hits;
+        year.hidden = hits === 0;
+        // El acordeón solo deja un año abierto; al buscar se suelta para enseñar todos los que tienen resultados.
+        if (searching) { year.removeAttribute('name'); year.open = hits > 0; }
+        else { year.setAttribute('name', 'notebook-archive'); year.open = openBeforeSearch?.get(year) ?? year.open; }
+      });
+      if (!searching) openBeforeSearch = null;
+      notebookYears.classList.toggle('is-searching', searching);
+      if (notebookSearchCount) notebookSearchCount.textContent = !searching ? '' : shown ? `${shown} de ${total} entradas` : 'Ninguna entrada con esas palabras';
+    };
+    notebookSearchInput.addEventListener('input', filterNotebook);
+    notebookSearchInput.addEventListener('keydown', event => {
+      if (event.key !== 'Escape' || !notebookSearchInput.value) return;
+      event.preventDefault(); notebookSearchInput.value = ''; filterNotebook();
+    });
+    notebookSearch.hidden = false;
   }
   const detectAttribution = () => {
     let source = 'direct', generative = false;
@@ -6512,7 +6666,7 @@
         swatchSrc: '/images/catalogo/commission-amor-red-rose.webp',
         swatchAlt: 'Rosa carmesí sobre pizarra con mica mineral'
       },
-      'Retrato al óleo o grafito': {
+      'Retrato a pastel o grafito': {
         slug: 'rara-avis',
         title: 'Rara Avis · Pastel, grafito y lápiz',
         tag: 'Pastel Conté y collage sobre papel',
