@@ -575,6 +575,15 @@ async function eyeMatch(ui, base, points) {
   assert.equal(series.find('[data-menu-item][aria-current]').getAttribute('href'), '/obra/', 'Inside the Vaivenes series the menu marks Obras as current');
   series.dom.window.close();
   const reduced = create('/', true); await reduced.flush();
+  assert.equal(reduced.find('[data-hero-threshold]').style.visibility, 'visible', 'Without motion effects the artist portrait still welcomes the visitor');
+  assert.equal(reduced.find('[data-threshold-plane]').style.transform, 'scale(1.0000)', 'The still portrait never zooms');
+  assert.equal(reduced.find('[data-threshold-wink]').style.opacity, '0', 'The still portrait does not wink');
+  reduced.click('.art-gallery-trigger'); await reduced.flush();
+  assert.equal(reduced.find('#work-gallery-dialog').open, false, 'Tapping the welcome portrait enters the gallery instead of opening the sheet of a work not yet seen');
+  assert.equal(reduced.find('[data-hero-threshold]').style.visibility, 'hidden', 'The still portrait gives way to the first work');
+  reduced.click('.art-gallery-trigger'); await reduced.flush();
+  assert.equal(reduced.find('#work-gallery-dialog').open, true, 'Past the portrait the same tap opens the work up close');
+  reduced.click('.work-gallery-header button'); await reduced.flush();
   reduced.click('[data-next]'); await reduced.flush();
   assert.equal(reduced.find('[data-art-title]').textContent, 'Rara Avis');
   assert.equal(reduced.find('[data-scene="1"] img').style.transform, '');

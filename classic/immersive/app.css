@@ -184,6 +184,8 @@ html.motion-opt-in.has-motion .hero-monocle-caustics{animation:hero-glass-shimme
 @keyframes hero-welcome-wink{0%{opacity:0}.6%,1.8%{opacity:1}2.7%,to{opacity:0}}
 @keyframes hero-light-drift{25%{translate:6% 4%}75%{translate:-5% -3%}}
 @keyframes hero-glass-shimmer{to{rotate:1turn}}
+/* Sin efectos de movimiento el retrato sigue recibiendo, pero quieto: ni el aro gira ni la obra late en la lente. */
+html.motion-off .hero-monocle-ring,html.motion-off .hero-monocle-marilyn{animation:none}
 .hero-threshold-plane{position:absolute;inset:0;transform-origin:46% 39.5%;will-change:transform;transform-style:preserve-3d;rotate:x var(--hero-rx,0deg);translate:calc(var(--hero-mx,0)*-14px) calc(var(--hero-my,0)*-10px) 0}
 .hero-threshold-portrait,.hero-threshold-wink{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 38%;transform:rotateY(var(--hero-ry,0deg)) scale(1.02)}
 .hero-threshold-wink{opacity:0;transition:opacity .26s cubic-bezier(.16,1,.3,1);-webkit-mask-image:radial-gradient(ellipse 12.5% 9% at 61% 41%,#000 54%,rgba(0,0,0,.45) 78%,transparent 100%);mask-image:radial-gradient(ellipse 12.5% 9% at 61% 41%,#000 54%,rgba(0,0,0,.45) 78%,transparent 100%)}

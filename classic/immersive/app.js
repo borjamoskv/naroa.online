@@ -3481,10 +3481,22 @@
         const monoclePortal = $('[data-monocle-portal]', heroThreshold);
         const monocleMarilyn = $('[data-monocle-marilyn]', heroThreshold);
         const zoomReadout = $('[data-hero-zoom-readout]', heroThreshold);
-        if (still || pose.distance >= 0.36) {
+        if (state.fit || pose.distance >= 0.36) {
           heroThreshold.style.visibility = 'hidden';
           heroThreshold.style.opacity = '0';
           heroThreshold.style.setProperty('--hero-split', '1');
+        } else if (reduced.matches) {
+          // Sin efectos de movimiento el retrato también recibe: quieto, sin zoom ni guiño,
+          // y se disuelve en la primera obra con el scroll.
+          const veil = smooth(pose.distance / 0.36);
+          heroThreshold.style.visibility = 'visible';
+          heroThreshold.style.opacity = (1 - veil).toFixed(4);
+          heroThreshold.style.setProperty('--hero-split', veil.toFixed(4));
+          for (const [name, value] of [['--hero-mx', '0'], ['--hero-my', '0'], ['--hero-rx', '0deg'], ['--hero-ry', '0deg'], ['--hero-skew', '0deg'], ['--hero-letter', '0em']]) heroThreshold.style.setProperty(name, value);
+          if (thresholdPlane) thresholdPlane.style.transform = 'scale(1.0000)';
+          if (thresholdWink) thresholdWink.style.opacity = '0';
+          if (monoclePortal) monoclePortal.style.opacity = '1';
+          if (monocleMarilyn) monocleMarilyn.style.transform = '';
         } else {
           const tRaw = clamp(pose.distance / 0.36, 0, 1);
           const t = smooth(tRaw);
@@ -3515,7 +3527,7 @@
       }
       const artBottom = $('.art-bottom', stage);
       if (artBottom) {
-        if (!still && pose.distance < 0.36) {
+        if ((!still || (heroThreshold && !state.fit)) && pose.distance < 0.36) {
           const bottomFade = smooth((pose.distance - 0.20) / 0.16);
           artBottom.style.opacity = bottomFade.toFixed(4);
           artBottom.style.pointerEvents = bottomFade > 0.5 ? 'auto' : 'none';
@@ -4568,6 +4580,8 @@
     }
     function photoStep(d) { state.photo = clamp(state.photo + d, 0, works[state.index].photos.length - 1); showPhoto(); }
     galleryTrigger.addEventListener('click', () => {
+      // Sobre el retrato de bienvenida la obra aún no se ha visto: el gesto es entrar, no abrir su ficha.
+      if (heroThresholdEl && !state.fit && motion.pose.distance < 0.36) { $('[data-threshold-enter]', stage)?.click(); return; }
       openWorkGallery(galleryTrigger);
     });
     const progressBar = $('.art-progress', stage);

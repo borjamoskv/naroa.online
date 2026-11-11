@@ -59,6 +59,8 @@ Toda alta o mutación de obra exige paridad simultánea en 3 capas:
 
 ### 7c. Transición Ligada a la Materia (`INV_MATERIAL_TRANSITION`)
 1. En el desplazamiento genérico (`H`/`V`), el borde con que llega la obra siguiente sale de su materia (`materialEdge` en `app.js`): `collage` → borde rasgado determinista (hash del `slug`); `pizarra` → borrado de tiza con difuminado; `objetos` → sombra proyectada sobre la obra que se va; técnica con `mica`/`brillantina`/`dorad*`/`kintsugi` → destello dorado; `caracterizacion` → pasada de maquillaje (desenfoque que se asienta).
+- **Sin efectos de movimiento el retrato también recibe:** con `prefers-reduced-motion` o «Pausar efectos» el umbral sigue en pantalla, quieto (sin zoom, guiño ni giro del aro), y se disuelve en la primera obra con el scroll. Solo «Solo obra» lo retira.
+- **Tocar el retrato es entrar:** mientras el umbral está en pantalla, el clic o toque sobre la escena cruza a la primera obra; no abre la ficha de fotografías de una obra que aún no se ha visto.
 2. Las transiciones a medida de cada par (ojos, lata, Kintsugi, Game Over…) no se tocan. Todo termina en la obra limpia (`clip-path`, máscara y filtros se reinician cada fotograma).
 
 ### 7d. Lupa de Macro (`INV_MACRO_LENS`)
