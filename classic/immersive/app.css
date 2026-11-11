@@ -981,7 +981,7 @@ html.motion-off .naroa-portal-canvas,body.is-quiet .naroa-portal-canvas{display:
   gap: .6em;
   width: max-content;
   min-height: 44px;
-  margin: 0 0 6px;
+  margin: 0 0 6px 17.5px; /* misma sangría que [data-art-copy]: filete de 1,5 px + 16 px */
   font-family: 'Nino Prodigio', monospace;
   font-size: clamp(17px, 1.9vw, 26px);
   line-height: 1;
@@ -1000,6 +1000,7 @@ html.motion-off .naroa-portal-canvas,body.is-quiet .naroa-portal-canvas{display:
 .game-over-continue:hover i, .game-over-continue:focus-visible i { translate: .18em -.18em; }
 .game-over-continue:focus-visible { outline: none; text-decoration: underline dotted .08em; text-underline-offset: .35em; }
 html.motion-off .game-over-continue span { animation: none; }
+@media (max-width: 760px) { .game-over-continue { margin-left: 13.5px; } }
 @keyframes continue-blink { 50% { opacity: .25; } }
 
 /* LauraLore: Marco de profundidad con relieve de cerámica y halo cálido de Eguzkilore */
