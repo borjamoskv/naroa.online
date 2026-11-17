@@ -125,7 +125,7 @@
     // Un móvil o un equipo con poca memoria se queda con las dos primeras hojas, que empiezan por el catálogo.
     const sheets = small || (navigator.deviceMemory || 8) < 4 ? spec.sheets.slice(0, 2) : spec.sheets;
     const [tw, th] = spec.tile, bitmaps = [], pool = [], queue = [], cards = [];
-    const DENSITY = small ? 170 : 360, SPAWN_UNTIL = 2.05, REVEAL_AT = 2.72, LAST = 3.4, STEP = 1 / 120;
+    const DENSITY = small ? 170 : 250, SPAWN_UNTIL = 2.05, REVEAL_AT = 2.72, LAST = 3.4, STEP = 1 / 120;
     const ease = x => x * x * (3 - 2 * x);
     // Velocidad del viaje, en vidas de tarjeta por segundo: arranque, torrente, frenada y recogida (negativa).
     const speed = t => t < 0.5 ? 0.25 + 1.5 * t
@@ -191,7 +191,8 @@
         const cos = Math.cos(turn) * dpr, sin = Math.sin(turn) * dpr;
         // Remolino: cerca del monóculo giran en torno a él y se enderezan al salir; al recogerse vuelven por la misma espiral.
         const bearing = card.angle + card.swirl * (1 - p) ** 2;
-        ctx.globalAlpha = Math.min(1, p / 0.08, (1 - p) / 0.18);
+        // Las lejanas van en penumbra y se encienden al acercarse: da fondo al túnel y evita un muro de imágenes.
+        ctx.globalAlpha = Math.min(1, 0.15 + p / 0.4, (1 - p) / 0.18);
         ctx.setTransform(cos, sin, -sin, cos, (vx + Math.cos(bearing) * away) * dpr, (vy + Math.sin(bearing) * away) * dpr);
         ctx.drawImage(card.tile.sheet, card.tile.x, card.tile.y, tw, th, -w / 2, -h / 2, w, h);
       }
@@ -199,12 +200,12 @@
       // justo donde el monóculo del retrato se enciende después.
       const glow = Math.max(0.55 * (1 - Math.min(1, t / 0.7)), ease(clamp((t - 2.2) / 0.5, 0, 1)));
       if (glow > 0.01) {
-        const x = vx * dpr, y = vy * dpr, radius = lens * dpr * (0.9 + 2.2 * glow);
+        const x = vx * dpr, y = vy * dpr, radius = Math.min(lens * (0.9 + 2.2 * glow), Math.min(W, H) * 0.2) * dpr;
         const halo = ctx.createRadialGradient(x, y, 0, x, y, radius);
         halo.addColorStop(0, accent + 'cc'); halo.addColorStop(0.35, accent + '55'); halo.addColorStop(1, accent + '00');
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.globalCompositeOperation = 'lighter';
-        ctx.globalAlpha = glow;
+        ctx.globalAlpha = glow * 0.75;
         ctx.fillStyle = halo;
         ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
         ctx.strokeStyle = accent; ctx.lineWidth = 1.5 * dpr;
