@@ -17,6 +17,37 @@ from html import escape as esc
 from pathlib import Path
 from urllib.parse import quote
 
+def paper_cut(seed):
+    """Contorno de papel recortado a mano, determinista para cada `seed` (id de la entrada o de la nota).
+
+    Devuelve un `url(...)` para `mask` con viewBox 0..1000 estirado a la caja: los bordes ondulan entre
+    un 0,2 y un 1,4 % hacia dentro y cada esquina lleva su mordisco. Mismo `seed`, mismo papel.
+    """
+    import random
+    rnd = random.Random(int(hashlib.sha256(str(seed).encode()).hexdigest()[:12], 16))
+    bite = [rnd.uniform(6, 22) for _ in range(4)]
+    # Tijera, no sierra: el borde deriva poco a poco y, de vez en cuando, da un tirón corto.
+    walk = [8.0]
+
+    def edge():
+        step = rnd.uniform(-1.6, 1.6) + (rnd.uniform(-5, 5) if rnd.random() < .08 else 0)
+        walk[0] = min(15.0, max(1.5, walk[0] + step))
+        return walk[0]
+    pts = []
+    steps = 64
+    for i in range(steps):  # arriba, de izquierda a derecha
+        pts.append((bite[0] + (1000 - bite[0] - bite[1]) * i / steps, edge()))
+    for i in range(steps):  # derecha, de arriba abajo
+        pts.append((1000 - edge(), bite[1] + (1000 - bite[1] - bite[2]) * i / steps))
+    for i in range(steps):  # abajo, de derecha a izquierda
+        pts.append((1000 - bite[2] - (1000 - bite[2] - bite[3]) * i / steps, 1000 - edge()))
+    for i in range(steps):  # izquierda, de abajo arriba
+        pts.append((edge(), 1000 - bite[3] - (1000 - bite[3] - bite[0]) * i / steps))
+    d = "M" + "L".join(f"{x:.1f} {y:.1f}" for x, y in pts) + "Z"
+    svg = f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" preserveAspectRatio="none"><path d="{d}"/></svg>'
+    return 'url("data:image/svg+xml,' + quote(svg, safe=" /:=.,") + '")'
+
+
 try:
     from PIL import Image, ImageOps, ImageDraw, ImageFont, ImageFilter
 except ImportError:
@@ -1542,13 +1573,13 @@ def build(output):
             return ""
         return f'<a class="notebook-encounter" href="/trayectoria/#encuentro-{post["id"]}">{label}</a>'
     notebook = hero(cuaderno_hero, "El blog de Naroa", "Entre una obra<br><span>y la siguiente.</span>", "«Con las comisuras de par en par agradezco el volver a mi ser y soplo un beso a tu presencia que me alumbró el camino de regreso. Gracias por brindarme reflejo, gracias por ser mi espejo».", alt="Collage coral Twister (Naroa '25): retratos, telas, chapas y juego en el estudio de Naroa Gutiérrez Gil", position="50% 48%")
-    notebook += f'''<section class="editorial notebook" id="contenido" data-notebook-sync="{esc(blog_data.get("api", ""))}"><div class="section-opening"><p class="eyebrow">Blog · Sincronizado con su WordPress</p><h2>Lo que ocurre<br>alrededor de una obra.</h2><p>«Siempre andan en busca de la complicidad —aunque sea a través del boli sobre el papel— y usan al observador como hilo conductor de sus tertulias privadas, en las que a menudo se merienda complicidad con sabor a saber reír».</p></div><p class="notebook-status" data-notebook-status><span class="notebook-status-dot" aria-hidden="true"></span><span data-notebook-status-text>{blog_total} entradas desde {blog_first_year} · la última, del {esc(posts[0]["date_label"])}</span></p><div class="notebook-posts" data-notebook-posts>'''
+    notebook += f'''<section class="editorial notebook" id="contenido" data-notebook-sync="{esc(blog_data.get("api", ""))}"><div class="section-opening"><p class="eyebrow">Blog · Sincronizado con su WordPress</p><h2>Lo que ocurre<br>alrededor de una obra.</h2><p>«Siempre andan en busca de la complicidad —aunque sea a través del boli sobre el papel— y usan al observador como hilo conductor de sus tertulias privadas, en las que a menudo se merienda complicidad con sabor a saber reír».</p></div><p class="notebook-status" data-notebook-status><span class="notebook-status-dot" aria-hidden="true"></span><span data-notebook-status-text>{blog_total} entradas desde {blog_first_year} · la última, del {esc(posts[0]["date_label"])}</span></p><div class="notebook-posts" data-notebook-posts style='--cut:{paper_cut("notebook")}'>'''
     for x in posts:
         im = x.get("image") or {}
         local_src = im.get("local")
         img_src = derivative(local_src, 960) if local_src else im.get("src", "")
         photo_html = f'''<a class="notebook-photo" href="{esc(x['url'])}" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true" style="--poster-ratio:{im.get('width', 1080)}/{im.get('height', 1080)}"><img src="{esc(img_src)}" width="{im.get('width', 1080)}" height="{im.get('height', 1080)}" alt="{esc(im.get('alt') or x['title'])}" loading="lazy" decoding="async"></a>''' if img_src else ""
-        notebook += f'''<article class="notebook-card" data-notebook-entry data-post-id="{x['id']}">{photo_html}<div class="notebook-card-body"><p class="eyebrow">{'<span class="notebook-latest" data-notebook-latest>Última entrada</span>' if x is posts[0] else ''}<time datetime="{esc(x['date'])}">{esc(x['date_label'])}</time></p><h3><a href="{esc(x['url'])}" target="_blank" rel="noopener noreferrer">{esc(x['title'])} ↗</a></h3><p class="notebook-summary">{esc(x['summary'])}</p><a class="text-link" href="{esc(x['url'])}" target="_blank" rel="noopener noreferrer" aria-label="Leer la entrada completa: {esc(x['title'])}">Leer la entrada completa ↗</a>{encounter_link(x, "Verlo en Trayectoria →")}</div></article>'''
+        notebook += f'''<article class="notebook-card" data-notebook-entry data-post-id="{x['id']}" style='--cut:{paper_cut(x["id"])}'>{photo_html}<div class="notebook-card-body"><p class="eyebrow">{'<span class="notebook-latest" data-notebook-latest>Última entrada</span>' if x is posts[0] else ''}<time datetime="{esc(x['date'])}">{esc(x['date_label'])}</time></p><h3><a href="{esc(x['url'])}" target="_blank" rel="noopener noreferrer">{esc(x['title'])}<span class="nb-arrow" aria-hidden="true"> ↗</span></a></h3><p class="notebook-summary">{esc(x['summary'])}</p><a class="text-link" href="{esc(x['url'])}" target="_blank" rel="noopener noreferrer" aria-label="Leer la entrada completa: {esc(x['title'])}">Leer la entrada completa ↗</a>{encounter_link(x, "Verlo en Trayectoria →")}</div></article>'''
     notebook += '</div>'
     if blog_archive:
         short_months = "ene feb mar abr may jun jul ago sep oct nov dic".split()
@@ -1590,7 +1621,7 @@ def build(output):
         if told:
             notebook += '<p class="press-kind">Lo que contaron</p><div class="press-pieces">'
             for x in told:
-                notebook += f'''<article class="press-piece" id="prensa-{esc(x['id'])}" data-press-note data-press-kind="{esc(x['kind'])}"><p class="press-meta"><span class="press-medium" translate="no">{esc(x['medium'])}</span><time datetime="{esc(x['date'])}">{esc(x['date_label'])}</time></p><h3 lang="{x.get('lang', 'es')}" translate="no">{esc(x['title'])}</h3><p class="press-summary">{esc(x['summary'])}</p><p class="press-byline">{esc(x['byline'])}</p><p class="press-links">{press_source(x, esc(press_read(x)) + ' ↗')}{press_encounter(x, "Verlo en Trayectoria →")}</p></article>'''
+                notebook += f'''<article class="press-piece" id="prensa-{esc(x['id'])}" style='--cut:{paper_cut(x["id"])}' data-press-note data-press-kind="{esc(x['kind'])}"><p class="press-meta"><span class="press-medium" translate="no">{esc(x['medium'])}</span><time datetime="{esc(x['date'])}">{esc(x['date_label'])}</time></p><h3 lang="{x.get('lang', 'es')}" translate="no">{esc(x['title'])}</h3><p class="press-summary">{esc(x['summary'])}</p><p class="press-byline">{esc(x['byline'])}</p><p class="press-links">{press_source(x, esc(press_read(x)) + ' ↗')}{press_encounter(x, "Verlo en Trayectoria →")}</p></article>'''
             notebook += '</div>'
         if listed:
             press_months = "ene feb mar abr may jun jul ago sep oct nov dic".split()

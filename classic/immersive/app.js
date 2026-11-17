@@ -6840,7 +6840,9 @@
       const time = document.createElement('time'); time.dateTime = iso; time.textContent = longDate(iso);
       eyebrow.append(time);
       const h3 = document.createElement('h3'), titleLink = externalLink('', url);
-      titleLink.textContent = `${title} ↗`; h3.append(titleLink);
+      titleLink.textContent = title;
+      const arrow = document.createElement('span'); arrow.className = 'nb-arrow'; arrow.setAttribute('aria-hidden', 'true'); arrow.textContent = ' ↗';
+      titleLink.append(arrow); h3.append(titleLink);
       const summary = document.createElement('p'); summary.className = 'notebook-summary';
       summary.textContent = plain(post.excerpt).replace(/\s*\[(…|\.\.\.)\]$/, '…');
       const readLink = externalLink('text-link', url);
