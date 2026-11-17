@@ -1,9 +1,9 @@
-# naroa.online Deployment Protocol
+# naroa.online · Despliegue
 
-1. **Canonical Production Domain**: `https://www.naroa.online`
-   - Primary hosting infrastructure: Vercel project `naroa.online`.
-   - Post-build execution: `npx vercel alias set <deployment_id> www.naroa.online` routed from `live-site/`.
+La referencia es `AGENTS.md`, apartado «Subir es desplegar». Si esta regla y `AGENTS.md` se contradicen, manda `AGENTS.md`.
 
-2. **Cloudflare Dual Deployment**:
-   - If executing deployment via `./deploy.sh`, verify `CLOUDFLARE_API_TOKEN` presence or prompt operator for `npx wrangler login` upon Wrangler authentication decay.
-   - Mandate strict synchronization and compilation between the root landing page and the WebGL 3D gallery at `/sala-3d/`.
+1. **Dominio canónico:** `https://naroagutierrezgil.com` (`ORIGIN` en `tools/build_immersive_site.py`).
+2. **Lo que se publica:** `.deploy/`, que `tools/build_immersive_site.py` genera desde `classic/`. `vercel.json` lo compila con `./deploy.sh --build-only`. `live-site/` ya no interviene en la compilación ni en el despliegue.
+3. **Subir es desplegar:** cada `git push` a `origin/master` lanza un despliegue de producción en Vercel. Avisar antes de subir.
+4. **`./deploy.sh` sin `--build-only` publica desde la máquina:** sube `.deploy/` y `dist/` a Cloudflare Pages con `wrangler` (necesita `CLOUDFLARE_API_TOKEN` o una sesión de `npx wrangler login`) y después publica `.deploy/` en producción de Vercel con `vercel deploy --prebuilt --prod`.
+5. **Estado de un despliegue:** `npx vercel ls` y `npx vercel inspect <url>`. No sondear el dominio público en bucle: activa el control anti-bots de Vercel.
