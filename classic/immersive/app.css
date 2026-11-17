@@ -3746,11 +3746,13 @@ html.motion-opt-in.has-motion .gallery-page.is-contemplating .threshold-ai-note{
 .art-lens{position:absolute;z-index:8;left:0;top:0;width:min(30vmin,240px);height:min(30vmin,240px);border-radius:50%;pointer-events:none;background-repeat:no-repeat;box-shadow:0 0 0 1px #fffdf4a6,0 14px 40px #000a;will-change:transform;opacity:1;transition:opacity .2s var(--ease-out)}
 .art-lens[hidden]{display:block;opacity:0}
 .gallery-page.is-lens .art-stage{cursor:crosshair}
+/* El título lleva la opacidad puesta en línea por la cámara: sin !important no se retiraba con la lupa (§7d.2). */
+.gallery-page.is-lens [data-art-copy]{opacity:0!important}
 /* Leer un retrato (§7d.3): marcas a mano sobre la obra y la nota que se escribe junto a la lente. */
 .art-readings{position:absolute;inset:0;z-index:7;pointer-events:none}
 .art-readings[hidden]{display:none}
 .art-readings i{position:absolute;left:0;top:0;width:22px;height:22px;margin:-11px 0 0 -11px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 22' fill='none' stroke='%23fffdf4' stroke-width='1.5' stroke-linecap='round'%3E%3Cpath d='M12.6 3.2C7.4 2.3 3 6.1 3.2 11.2c.2 4.6 4 8 8.400 7.600 4.300-.4 7.500-4.100 7.100-8.500C18.300 6 15 3 10.800 3.600'/%3E%3C/svg%3E") center/contain no-repeat;filter:drop-shadow(0 1px 2px #000b)}
-.art-reading-note{position:absolute;z-index:9;left:0;top:0;margin:0;max-width:min(52vw,250px);font:400 clamp(22px,2.4vw,28px)/1.02 var(--font-hand);letter-spacing:-.01em;color:#fffdf4;text-shadow:0 1px 2px #000d,0 0 16px #000b;pointer-events:none;opacity:0;transition:opacity .2s var(--ease-out);will-change:transform}
+.art-reading-note{position:absolute;z-index:9;left:0;top:0;margin:0;padding:.3em .7em;max-width:min(60vw,280px);background:radial-gradient(closest-side,#000b,#0007 60%,#0000);font:400 clamp(22px,2.4vw,28px)/1.02 var(--font-hand);letter-spacing:-.01em;color:#fffdf4;text-shadow:0 1px 2px #000d,0 0 16px #000b;pointer-events:none;opacity:0;transition:opacity .2s var(--ease-out);will-change:transform}
 .art-reading-note.is-on{opacity:1}
 
 /* ═══════════════════════════════════════════════════════════════
