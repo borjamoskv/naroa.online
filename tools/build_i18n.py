@@ -774,6 +774,8 @@ def localize_assets(output, lang, dictionary, routes):
             for photo in project.get("photos", []):
                 if photo.get("caption"):
                     photo["caption"] = dictionary.tr(photo["caption"], "catalog", where) or photo["caption"]
+            for reading in project.get("readings", []):
+                reading["text"] = dictionary.tr(reading["text"], "catalog", where) or reading["text"]
         data["labels"] = {k: dictionary.tr(v, "catalog", "catálogo:labels") or v for k, v in data.get("labels", {}).items()}
         data["lang"] = lang
         text = prefix + data_json(data) + ";\n"
@@ -905,6 +907,8 @@ def main():
             for photo in project.get("photos", []):
                 if photo.get("caption"):
                     dictionary.tr(photo["caption"], "catalog", f"catálogo:{project['slug']}")
+            for reading in project.get("readings", []):
+                dictionary.tr(reading["text"], "catalog", f"catálogo:{project['slug']}")
         for label in data.get("labels", {}).values():
             dictionary.tr(label, "catalog", "catálogo:labels")
     for route in routes.pages:

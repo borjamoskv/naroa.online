@@ -129,6 +129,15 @@ def build(output):
         return url
 
     catalogue = read_data("catalogo")
+    # Leer un retrato (§7d.3): anotaciones de la lupa, medidas sobre la primera foto de cada obra.
+    readings = read_data("lecturas")["readings"]
+    unknown_readings = set(readings) - {p["slug"] for p in catalogue["projects"]}
+    if unknown_readings:
+        raise SystemExit(f"lecturas.json nombra obras que no están en el catálogo: {sorted(unknown_readings)}")
+    for slug, notes in readings.items():
+        for n in notes:
+            if not (0 <= n["x"] <= 1 and 0 <= n["y"] <= 1 and n["text"].strip()):
+                raise SystemExit(f"lecturas.json: anotación fuera de la foto o vacía en {slug}: {n}")
     series = read_data("vaivenes")
     sha_by_src = {}
     source_by_src = {}
@@ -188,7 +197,7 @@ def build(output):
     for p in catalogue["projects"]:
         photographs = [{"src": derivative(im["src"]), "original": im["src"], "caption": im["caption"], "width": im["width"], "height": im["height"]} for im in p["images"]]
         cover_index = 2 if p["slug"] == "marilyn-rocks" else 0
-        projects.append({"slug": p["slug"], "title": p["title"], "category": p["category"], "label": LABELS[p["category"]], "story": p["story"], "technique": p["technique"], "support": p["support"], "dimensions": p["dimensions"], "materials": p.get("materials"), "interaction": p.get("interaction"), "year": p["year"], "series": "Vaivenes" if p["slug"] in series_slugs else p["series"], "credit": p["credit"], "source": p["source"], "video": p.get("video"), "kind": p["kind"], "cover": photographs[cover_index]["src"], "thumb": derivative(p["images"][0]["src"], 480, True), "tile": derivative(p["images"][0]["src"], 960, quality=78), "photos": photographs, "stage": "obra"})
+        projects.append({"slug": p["slug"], "title": p["title"], "category": p["category"], "label": LABELS[p["category"]], "story": p["story"], "technique": p["technique"], "support": p["support"], "dimensions": p["dimensions"], "materials": p.get("materials"), "interaction": p.get("interaction"), "year": p["year"], "series": "Vaivenes" if p["slug"] in series_slugs else p["series"], "credit": p["credit"], "source": p["source"], "video": p.get("video"), "kind": p["kind"], "cover": photographs[cover_index]["src"], "thumb": derivative(p["images"][0]["src"], 480, True), "tile": derivative(p["images"][0]["src"], 960, quality=78), "photos": photographs, "stage": "obra", **({"readings": readings[p["slug"]]} if p["slug"] in readings else {})})
     known = {p["slug"] for p in projects}
     for im in series["images"]:
         slug = im.get("work_slug", im.get("slug"))

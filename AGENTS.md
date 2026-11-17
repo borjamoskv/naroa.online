@@ -39,7 +39,7 @@ Gobernanza general de la carpeta de proyectos: [Workspace AGENTS.md](file:///Use
 | Transiciones entre obras, el final del recorrido o `Game Over` | §4, §7c |
 | Story, compartir o el retrato de la visita | §6, §8.4 |
 | El retrato inicial (umbral) | §7 |
-| La interfaz de la galería o la lupa | §7b, §7d |
+| La interfaz de la galería, la lupa o `classic/data/lecturas.json` | §7b, §7d |
 | `/sobre-mi/`, `/trayectoria/` o las tarjetas sociales | §8 |
 | Cualquier texto visible o ruta interna en `app.js` | §9 |
 | `/contacto/`, la hoja de la nota o el humo del cursor | §10 |
@@ -136,6 +136,7 @@ Toda alta o mutación de obra exige paridad simultánea en 3 capas:
 ### 7d. Lupa de Macro (`INV_MACRO_LENS`)
 1. Una lente circular (`.art-lens`, `min(30vmin, 240px)`, ×3,2) muestra a resolución completa el original de la foto que está en escena (la portada o la que puso el pase de fotos; `photos[0]` en «Ver imagen completa») bajo el puntero, y mientras está encendida el pase de fotos se detiene, con la obra entera siempre visible detrás. Se enciende con «Lupa» (en «Más») o manteniendo pulsado 0,45 s sin mover; al soltar tras mantener, o con `Esc`, se cierra. Soltar tras mantener no abre el visor de fotos.
 2. Solo actúa en reposo o exploración (`stage.dataset.transition` = `hold`/`explore`); en transición se oculta. Calcula la posición sobre la imagen real (recorte `cover`/`contain` y `object-position`), no sobre la caja. Mientras está activa (`body.is-lens`) se retiran título, recorrido y flechas.
+3. **Leer un retrato:** con la lupa encendida, las obras que tienen anotaciones en `classic/data/lecturas.json` enseñan unas marcas a mano (`.art-readings`); al pasar la lente sobre una, su nota se escribe al lado, fuera de la lente (`.art-reading-note`; encima si la lupa se sostiene con el dedo). Cada anotación nombra algo que se ve en la foto y que consta en la ficha de `catalogo.json` (un material, el soporte, la firma): no interpreta la obra ni lleva « » (§8). `x` e `y` se miden sobre `photos[0]`, y solo se enseñan con esa foto en escena: si el pase de fotos ya había avanzado, una obra con anotaciones vuelve a la primera al encender la lupa (las demás siguen enseñando la foto que estaba en escena, punto 1); al cambiar la primera foto de una obra, se vuelven a medir. Los textos se traducen como cadenas del catálogo (§9). Una obra sin anotaciones no enseña nada.
 
 ### 8. Voz y Citas de «Sobre mí» (`INV_LITERAL_QUOTES`)
 1. **Lo que va entre « » lo dijo Naroa:** en `/sobre-mi/`, en el hero de `/trayectoria/` y en las tarjetas sociales, todo texto entre comillas latinas es cita literal de su blog (`naroagutierrez.wordpress.com`). Lo omitido se marca con `[…]`, no se funden ni se recomponen frases, y cada nota manuscrita (`.kintsugi-chasm-spark`) nombra la entrada y el año de donde sale.

@@ -1,0 +1,22 @@
+{
+  "note": "Leer un retrato (AGENTS.md §7d.3): anotaciones que aparecen al pasar la lupa. Cada una nombra algo que se ve en la primera foto de la obra y que consta en su ficha de catalogo.json; x e y van de 0 a 1 sobre esa foto. Solo entra lo comprobado mirando la foto.",
+  "readings": {
+    "el-gran-dakari": [
+      {"x": 0.5, "y": 0.5, "text": "aquí se juntan las cuatro cartas de póker"},
+      {"x": 0.1, "y": 0.11, "text": "la carta asoma: rey de picas"},
+      {"x": 0.33, "y": 0.915, "text": "zorionak, a rotulador"}
+    ],
+    "custom-jaio": [
+      {"x": 0.145, "y": 0.72, "text": "botón cosido"},
+      {"x": 0.52, "y": 0.415, "text": "vaquero negro tensado en bastidor"}
+    ],
+    "elene": [
+      {"x": 0.36, "y": 0.2, "text": "flores añadidas"},
+      {"x": 0.5, "y": 0.92, "text": "plato de madera, a la vista"}
+    ],
+    "boy": [
+      {"x": 0.12, "y": 0.33, "text": "mica mineral"},
+      {"x": 0.94, "y": 0.975, "text": "firmado: Naroa ’05"}
+    ]
+  }
+}

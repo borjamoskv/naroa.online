@@ -5096,6 +5096,36 @@
       const lens = document.createElement('div');
       lens.className = 'art-lens'; lens.setAttribute('aria-hidden', 'true'); lens.hidden = true;
       stage.append(lens);
+      // Leer un retrato (§7d.3): con la lupa encendida, unas marcas a mano señalan lo que la ficha
+      // nombra y la foto deja ver; al pasar la lente sobre una, su nota se escribe al lado.
+      const marks = document.createElement('div'), say = document.createElement('p');
+      marks.className = 'art-readings'; marks.setAttribute('aria-hidden', 'true'); marks.hidden = true;
+      say.className = 'art-reading-note'; say.setAttribute('aria-hidden', 'true');
+      stage.append(marks, say);
+      let marksFor = null;
+      function hush() { marks.hidden = true; say.classList.remove('is-on'); }
+      function read(notes, left, top, dw, dh, rad) {
+        if (!notes?.length) { hush(); return; }
+        if (marksFor !== notes) { marksFor = notes; marks.replaceChildren(...notes.map(() => document.createElement('i'))); }
+        let near = null, best = rad * .8;
+        notes.forEach((n, i) => {
+          const x = left + n.x * dw, y = top + n.y * dh, d = Math.hypot(x - px, y - py);
+          marks.children[i].style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0)`;
+          if (d < best) { best = d; near = n; }
+        });
+        marks.hidden = false;
+        if (!near) { say.classList.remove('is-on'); return; }
+        if (say.textContent !== near.text) say.textContent = near.text;
+        // La nota va fuera de la lente: a su derecha si cabe, si no a la izquierda; con el dedo puesto, encima.
+        const w = say.offsetWidth, h = say.offsetHeight, gap = 14;
+        let x = px + rad + gap, y = py - h / 2;
+        if (!held && x + w > innerWidth - 8) x = px - rad - gap - w;
+        // Sin sitio a los lados (móvil) o con el dedo puesto: encima de la lente, o debajo si no cabe.
+        if (held || x < 8) { x = px - w / 2; y = py - rad - gap - h; if (y < 8) y = py + rad + gap; }
+        x = Math.max(8, Math.min(x, innerWidth - w - 8)); y = Math.max(8, Math.min(y, innerHeight - h - 8));
+        say.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0) rotate(-2deg)`;
+        say.classList.add('is-on');
+      }
       const ZOOM = 3.2;
       let on = false, held = false, swallow = false, hold = null, px = 0, py = 0, loadedFor = '', original = null;
       const radius = () => lens.offsetWidth / 2 || 110;
@@ -5106,7 +5136,8 @@
         const ph = list?.[dwell.photo] || (!state.fit && w?.photos?.find(p => p.src === w.cover)) || w?.photos?.[0];
         return ph?.original || ph?.src || '';
       }
-      function paint() {
+      function paint() { if (!aim()) hush(); }
+      function aim() {
         const img = images[state.index], src = source();
         if (!on || !img || !src || (heroThresholdEl && !state.fit && motion.pose.distance < 0.36) || stage.dataset.transition !== 'hold' && stage.dataset.transition !== 'explore') { lens.hidden = true; return; }
         if (loadedFor !== src) {
@@ -5124,19 +5155,26 @@
         const nx = (px - r.left - offX) / dw, ny = (py - r.top - offY) / dh;
         if (nx < 0 || nx > 1 || ny < 0 || ny > 1) { lens.hidden = true; return; }
         // La Story y el retrato de la visita recortan photos[0]: solo cuenta la mirada sobre esa foto.
-        const first = works[state.index]?.photos?.[0];
-        if (src === (first?.original || first?.src)) visitFocus(works[state.index]?.slug, nx, ny);
+        const first = works[state.index]?.photos?.[0], onFirst = src === (first?.original || first?.src);
+        if (onFirst) visitFocus(works[state.index]?.slug, nx, ny);
         const rad = radius();
         lens.style.backgroundSize = `${dw * ZOOM}px ${dh * ZOOM}px`;
         lens.style.backgroundPosition = `${rad - nx * dw * ZOOM}px ${rad - ny * dh * ZOOM}px`;
         lens.style.transform = `translate3d(${px - rad}px,${py - rad}px,0)`;
         lens.hidden = false;
+        // Las anotaciones se midieron sobre photos[0]: con otra foto en escena no se enseñan.
+        read(onFirst ? works[state.index]?.readings : null, r.left + offX, r.top + offY, dw, dh, rad);
+        return true;
       }
       function set(value) {
         on = value; document.body.classList.toggle('is-lens', on);
         // Con la lupa encendida el pase de fotos se detiene: la foto no cambia bajo la lente.
-        btn?.setAttribute('aria-pressed', String(on)); if (!on) { lens.hidden = true; clearTimeout(hold); armDwell(); }
-        else { haltDwell(); paint(); }
+        btn?.setAttribute('aria-pressed', String(on)); if (!on) { lens.hidden = true; hush(); clearTimeout(hold); armDwell(); }
+        else {
+          // Las anotaciones se midieron sobre la primera foto: una obra que las tiene vuelve a ella al encender la lupa.
+          if (works[state.index]?.readings?.length && dwell.index === state.index && dwell.photo) resetDwell();
+          haltDwell(); paint();
+        }
       }
       btn?.addEventListener('click', () => { held = false; set(!on); });
       stage.addEventListener('pointermove', e => { px = e.clientX; py = e.clientY; if (on) paint(); }, { passive: true });
@@ -5149,7 +5187,7 @@
       ['pointerup', 'pointercancel'].forEach(t => addEventListener(t, () => { clearTimeout(hold); if (on && held) { set(false); swallow = true; setTimeout(() => { swallow = false; }, 60); } held = false; }, { passive: true, capture: true }));
       addEventListener('click', e => { if (swallow) { e.preventDefault(); e.stopImmediatePropagation(); swallow = false; } }, true);
       addEventListener('keydown', e => { if (e.key === 'Escape' && on) set(false); }, true);
-      addEventListener('scroll', () => { if (on && stage.dataset.transition !== 'hold' && stage.dataset.transition !== 'explore') lens.hidden = true; else if (on) paint(); }, { passive: true });
+      addEventListener('scroll', () => { if (on && stage.dataset.transition !== 'hold' && stage.dataset.transition !== 'explore') { lens.hidden = true; hush(); } else if (on) paint(); }, { passive: true });
     }
     // Contemplación (INV_INTERFACE_DISSOLVES): con la obra quieta, la interfaz se retira sola.
     // Vuelve con cualquier gesto del visitante; nada queda inerte, así que el teclado y el
