@@ -445,10 +445,15 @@ async function eyeMatch(ui, base, points) {
   assert.equal(ui.find('[data-art-title]').textContent, works[3].title, 'Reversing scroll follows the new position immediately');
   ui.scroll(7.3); ui.w.dispatchEvent(new ui.w.Event('resize')); await ui.flush();
   assert.equal(ui.w.scrollY, ui.distance(7.3), 'A resize with unchanged geometry must not jump back to the last decoded frame');
-  await eyeMatch(ui, 5, [[.583,.459],[.545,.402]]);
+  await eyeMatch(ui, 5, [[.583,.459],[.459,.347]]);
   await eyeMatch(ui, 10, [[.469,.463],[.678,.439]]);
-  await eyeMatch(ui, 33, [[.2985,.4192],[.7633,.8232]]);
+  await eyeMatch(ui, 33, [[.2985,.4192],[.426,.383]]);
   ui.click('[data-select="0"]'); await ui.flush();
+  assert.equal(ui.find('[data-hero-threshold]').style.visibility, 'visible', 'Selecting the first work returns to the welcome portrait');
+  assert.equal(ui.find('.art-gallery-trigger').getAttribute('aria-label'), 'Entrar en la galería', 'Over the portrait the scene button is announced as entering the gallery');
+  ui.click('[data-next]'); await ui.flush();
+  assert.equal(ui.find('[data-hero-threshold]').style.visibility, 'hidden', 'From the welcome portrait «next» enters the first work instead of skipping it');
+  assert.ok(ui.find('.art-gallery-trigger').getAttribute('aria-label').startsWith('Ver '), 'Past the portrait the scene button names the photographs again');
   for (let i = 0; i < works.length; i++) {
     if (i) { ui.click('[data-next]'); await ui.flush(); }
     assert.equal(ui.find('[data-art-title]').textContent, works[i].title);
@@ -469,6 +474,8 @@ async function eyeMatch(ui, base, points) {
   assert.ok(ui.find('[data-remix-shuffle]'), 'Shuffle button exists');
   assert.ok(ui.find('[data-remix-share]'), 'Share button exists');
   assert.ok(ui.find('[data-remix-download]'), 'Download button exists');
+  assert.ok(ui.find('[data-remix-link]')?.dataset.say, 'The Story dialog offers the artwork link for the link sticker, with its own confirmation text');
+  assert.ok(ui.find('[data-remix-detail]') && !ui.find('[data-remix-detail]').hidden, 'The Story of a work lets the visitor pick another detail of the same piece');
   assert.equal(ui.find('[data-remix-title]').textContent, ui.find('[data-art-title]').textContent, 'The story dialog names the artwork it is about');
   assert.ok(ui.find('[data-remix-status]'), 'Story messages are shown inside the dialog, not in alerts');
   assert.equal(ui.document.querySelectorAll('#story-remix-dialog .remix-btn').length, 0, 'Story actions are a typographic list, not pill buttons');
@@ -635,17 +642,17 @@ async function eyeMatch(ui, base, points) {
     }
     await scrollPortrait(.09);
     assert.equal(Number(wink.getAttribute('opacity')), 1, 'First Naroa winks her left eye immediately as scroll begins');
-    assert.ok(readPose(plane, [0.4516, 0.4005], .030).scale < 1.15, 'Portrait stays at full framing during the initial left-eye wink');
+    assert.ok(readPose(plane, [571 / 1248, 766 / 1966], .030).scale < 1.15, 'Portrait stays at full framing during the initial left-eye wink');
     await scrollPortrait(.23);
     assert.notEqual(plane.style.transform, initial, 'The portrait moves into its monocle eye');
     assert.equal(Number(wink.getAttribute('opacity')), 1, 'The existing photographic wink remains in the approach');
-    assert.ok(readPose(plane, [0.4516, 0.4005], .030).scale < 1.15, 'Monocle zoom waits until the left-eye wink completes');
+    assert.ok(readPose(plane, [571 / 1248, 766 / 1966], .030).scale < 1.15, 'Monocle zoom waits until the left-eye wink completes');
     assert.ok(Number(portrait.find('[data-portrait-monocle-glint]').getAttribute('opacity')) > 0.3, 'Optical monocle glint ignites to cue the monocle plunge');
     const closed = wink.getAttribute('opacity');
     let previousIris = 0;
     for (const progress of [.46, .51, .56]) {
       await scrollPortrait(progress);
-      const source = readPose(plane, [0.4516, 0.4005], .030), target = readPose(artwork, [.670, .391], .025);
+      const source = readPose(plane, [571 / 1248, 766 / 1966], .030), target = readPose(artwork, [.683, .417], .025);
       assert.ok(source.scale > 5 && target.scale > 5, 'The camera travels inside both eyes');
       assert.ok(Math.abs(source.x - viewport.width * .5) < .03 && Math.abs(source.y - viewport.height * .46) < .03, 'Naroa pupil stays on the camera axis');
       assert.ok(Math.abs(source.x - target.x) < .03 && Math.abs(source.y - target.y) < .03, 'Both pupils coincide throughout the dissolve, including on mobile');
@@ -660,17 +667,17 @@ async function eyeMatch(ui, base, points) {
       const distances = [];
       for (const delta of [-.001, 0, .001]) {
         await scrollPortrait(progress + delta);
-        distances.push(Math.log(readPose(artwork, [.670, .391], .025).iris));
+        distances.push(Math.log(readPose(artwork, [.683, .417], .025).iris));
       }
       const before = distances[1] - distances[0], after = distances[2] - distances[1];
       assert.ok(before > 0 && after > 0, 'The camera does not stop or reverse at the eye handover');
       assert.ok(Math.abs(before - after) / Math.max(before, after) < .04, 'Camera velocity stays continuous across the eye handover');
     }
     await scrollPortrait(.64);
-    const deepest = readPose(artwork, [.670, .391], .025);
+    const deepest = readPose(artwork, [.683, .417], .025);
     assert.ok(Math.abs(deepest.iris - Math.hypot(viewport.width, viewport.height) * 1.02) < .05, 'The deepest iris framing covers the frame with a 2% margin');
     await scrollPortrait(.65);
-    const turning = readPose(artwork, [.670, .391], .025);
+    const turning = readPose(artwork, [.683, .417], .025);
     assert.ok(turning.iris < deepest.iris && turning.iris > deepest.iris * .995, 'The camera eases gently into its outward movement');
     await scrollPortrait(.51);
     assert.equal(Number(artwork.style.opacity), .5, 'The eye match dissolves through both photographs');
@@ -678,12 +685,14 @@ async function eyeMatch(ui, base, points) {
     const stopped = artwork.style.transform; await wait(50); await portrait.flush();
     assert.equal(artwork.style.transform, stopped, 'The camera stops when native scroll stops');
     await scrollPortrait(.8);
-    const opening = readPose(artwork, [.670, .391], .025);
+    const opening = readPose(artwork, [.683, .417], .025);
     assert.ok(opening.scale > 1 && opening.scale < 8, 'The camera opens out of the artwork eye');
     await scrollPortrait(.96);
-    const final = readPose(artwork, [.670, .391], .025);
+    const final = readPose(artwork, [.683, .417], .025);
     assert.equal(final.scale, 1);
-    assert.ok(Math.abs(final.tx) < .001 && Math.abs(final.ty) < .001, 'The artwork finishes in its original full-screen framing');
+    // El encuadre de reposo (cover, centrado; a .72 en móvil y a .42 en vertical) va en la traslación, no en left/top.
+    const framing = { x: (viewport.width - parseFloat(artwork.style.width)) * (viewport.width <= 760 ? .72 : .5), y: (viewport.height - parseFloat(artwork.style.height)) * .42 };
+    assert.ok(Math.abs(parseFloat(artwork.style.left) + final.tx - framing.x) < .001 && Math.abs(parseFloat(artwork.style.top) + final.ty - framing.y) < .001, 'The artwork finishes in its original full-screen framing');
     assert.equal(artwork.style.opacity, '1'); assert.equal(plane.style.visibility, 'hidden');
     assert.equal(artCopy.style.opacity, '1'); assert.equal(artCopy.inert, false);
     assert.equal(artCopy.querySelector('a').getAttribute('href'), '/obra/rara-avis/');
@@ -713,8 +722,8 @@ async function eyeMatch(ui, base, points) {
     await travel(0);
     assert.deepEqual([artwork.style.transform, artwork.style.opacity], lastPortalFrame, 'The portal and exhibition share exactly the same Rara Avis element and camera pose');
     const checkpoints = [
-      [ .670, .391, .025 ], [ .635, .392, .030 ], [ .512, .424, .018 ],
-      [ .583, .459, .028 ], [ .545, .402, .018 ], [ .469, .463, .020 ],
+      [ .683, .417, .025 ], [ .635, .392, .030 ], [ .512, .424, .018 ],
+      [ .583, .459, .028 ], [ .459, .347, .018 ], [ .469, .463, .020 ],
       [ .678, .439, .025 ], [ .420, .345, .025 ], [ .487, .406, .029 ]
     ];
     for (let i = 0; i < checkpoints.length - 1; i++) {
@@ -806,10 +815,10 @@ async function eyeMatch(ui, base, points) {
   const score = music.w.NAROA_SCORE;
   assert.deepEqual([...score.titles], MONTH_TITLES, 'There are twelve pieces, one per month');
   assert.equal(score.title, MONTH_TITLES[new Date().getMonth()], 'The piece of the current month plays'); assert.equal(score.playing, true);
-  assert.ok(ctx.panners.length === 6 && ctx.panners.every(panner => panner.panningModel === 'HRTF'), 'Four echoes and two nature sources surround the listener in 3D');
-  assert.ok(score.state.intensity < .35, 'By default the right hand stays silent');
-  assert.ok(audio.oscillators.length > 0, 'Starting schedules the first piano notes');
-  assert.ok(ctx.rooms.length === 1 && ctx.delays.length === 5, 'The piano runs through a room and five tape delays');
+  assert.ok(ctx.panners.length === 8 && ctx.panners.every(panner => panner.panningModel === 'HRTF'), 'Four echoes, the arpeggio, the strings and two nature sources surround the listener in 3D');
+  assert.ok(score.state.intensity < .35, 'By default the melody stays silent');
+  assert.ok(audio.oscillators.length > 0, 'Starting schedules the first notes');
+  assert.ok(ctx.rooms.length === 1 && ctx.delays.length === 5, 'The band runs through a room and five tape delays');
   const leftRoom = ctx.rooms[0].buffer.getChannelData(0), rightRoom = ctx.rooms[0].buffer.getChannelData(1);
   assert.ok(leftRoom.some((value, i) => value !== rightRoom[i]), 'The room has distinct stereo reflections');
   assert.equal(typeof music.w.NAROA_SOUND.frame, 'function', 'NAROA_SOUND.frame interface is exposed');
@@ -906,7 +915,7 @@ async function eyeMatch(ui, base, points) {
     assert.ok(paceAudio.oscillators.length > notesSoFar, MONTH_TITLES[month] + ' schedules its own notes');
   }
   assert.equal(paced.w.NAROA_SOUND.getActiveMelodyInfo().name, 'Abendua', 'The menu names the piece that is playing');
-  // The written music: playable ranges, real cadences in the minor months and a decorated return.
+  // The written music: playable ranges, real cadences and a decorated return.
   for (let month = 0; month < 12; month++) {
     const sheet = pacedScore.sheet(month), name = MONTH_TITLES[month];
     const melody = sheet.flatMap(bar => bar.rh.map(note => note[1])), bass = sheet.flatMap(bar => bar.lh.filter(n => n != null));
@@ -934,9 +943,11 @@ async function eyeMatch(ui, base, points) {
       assert.ok(count('A · regreso') > count('A'), name + ' decorates its melody when the theme returns');
     }
   }
-  [[0, 'A', 8], [9, 'B', 10], [10, 'G', 6]].forEach(([month, key, leading]) => {
-    const cadence = pacedScore.sheet(month).filter(bar => bar.section === 'A')[7];
-    assert.ok(cadence.lh.some(n => n != null && n % 12 === leading), MONTH_TITLES[month] + ' (' + key + ' minor) closes its phrase on a dominant with a leading tone');
+  // No month is written in minor any more: the three that were open on a major chord and close on a real dominant.
+  [[0, 'A flat', 0, 7], [9, 'B', 3, 10], [10, 'G', 11, 6]].forEach(([month, key, third, leading]) => {
+    const verse = pacedScore.sheet(month).filter(bar => bar.section === 'A');
+    assert.ok(verse[0].lh.some(n => n != null && n % 12 === third), MONTH_TITLES[month] + ' opens on a major chord (' + key + ' major)');
+    assert.ok(verse[7].lh.some(n => n != null && n % 12 === leading), MONTH_TITLES[month] + ' (' + key + ' major) closes its phrase on a dominant with a leading tone');
   });
   pacedScore.setMonth(3);
   assert.equal(pacedScore.state.intensity, .31, 'At rest the right hand sleeps');
@@ -1214,14 +1225,16 @@ async function eyeMatch(ui, base, points) {
       }
       page.find('[data-cfg-cycle="motif"]').dispatchEvent(new page.w.KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
       assert.equal(page.w.NAROA_COMMISSION.getState().selectedMotif, 'Pareja o familia', 'Sentence words respond to the keyboard');
-      assert.ok(page.find('#cfg-preview').textContent.includes('Caja personalizada u objeto') && page.find('#cfg-preview').textContent.includes('Pareja o familia'), 'The WhatsApp draft follows the sentence');
+      assert.ok(page.find('#cfg-preview').textContent.startsWith(page.find('.enc-sentence').textContent.replace(/\s+/g, ' ').trim()) && page.find('#cfg-preview').textContent.includes('una lata de conserva') && page.find('#cfg-preview').textContent.includes('de mi pareja o mi familia'), 'The WhatsApp draft is the sentence on screen, word for word');
+      assert.ok(!/Costuras Vivas|con plazo|Pareja o familia|Caja personalizada/.test(page.find('#cfg-preview').textContent), 'The draft carries no form labels the visitor never read');
       page.w.NAROA_COMMISSION.setNote('Canción de Robe y entradas del concierto');
       assert.ok(page.find('#cfg-preview').textContent.includes('Canción de Robe y entradas del concierto'), 'Personal story note is interpolated live into the handwritten order preview');
       assert.ok(decodeURIComponent(page.find('#cfg-whatsapp-btn').getAttribute('href')).includes('Canción de Robe'), 'Personal story note is encoded into the WhatsApp CTA URL');
       assert.ok(page.find('[data-atelier-mobile-cta]'), 'Sticky mobile commission CTA bar is mounted in DOM');
       page.click('#cfg-copy-btn');
       await page.flush();
-      assert.ok(page.w.NAROA_COMMISSION.getState().lastCopiedMessage.includes('Aupa Naroa!'), 'Copy button captures the live handwritten draft');
+      assert.ok(page.w.NAROA_COMMISSION.getState().lastCopiedMessage.startsWith('Naroa, quiero un retrato') && page.w.NAROA_COMMISSION.getState().lastCopiedMessage.includes('Canción de Robe y entradas del concierto.'), 'Copy button captures the sentence and the note');
+      assert.equal(new URL(page.find('#cfg-email-btn').href).searchParams.get('subject'), 'Encargo de retrato', 'The email subject comes from the HTML, not from a script literal');
       assert.ok(page.w.NAROA_ATTRIBUTION, 'First-party attribution telemetry exposed on window');
       assert.ok(page.w.WebMCP, 'WebMCP interface exposed on window');
       const catalogResults = await page.w.WebMCP.callTool('search_catalogue', { query: 'pizarra' });
@@ -1533,6 +1546,9 @@ async function eyeMatch(ui, base, points) {
     assert.equal(contact.document.querySelectorAll('.is-lit').length, 0);
     const card = fs.readFileSync(path.join(output, contact.find('.ct-card').getAttribute('href')), 'utf8');
     assert.ok(card.startsWith('BEGIN:VCARD\r\n') && card.includes('\r\nFN:Naroa Gutiérrez Gil\r\n') && card.includes('\r\nTEL;TYPE=CELL,VOICE:+34636060609\r\n') && card.includes('\r\nEMAIL;TYPE=INTERNET:encargos@naroagutierrezgil.com\r\n') && card.trimEnd().endsWith('END:VCARD'), 'The contact card carries the same data as the page');
+    const contactPoint = JSON.parse(contact.find('#page-schema').textContent).mainEntity.contactPoint;
+    assert.equal(contactPoint.email, 'encargos@naroagutierrezgil.com', 'Search engines get the same address the note writes to');
+    assert.equal(contactPoint.telephone, '+34636060609');
     assert.equal(contact.find('.ct-mirror-quote').textContent, '«piensa bien y acertarás»');
     contact.dom.window.close();
     // En cada idioma el mensaje se compone con los textos de su página, y la inscripción de la obra queda en español.

@@ -140,6 +140,15 @@ def build(output):
         return url
 
     catalogue = read_data("catalogo")
+    # Leer un retrato (§7d.3): anotaciones de la lupa, medidas sobre la primera foto de cada obra.
+    readings = read_data("lecturas")["readings"]
+    unknown_readings = set(readings) - {p["slug"] for p in catalogue["projects"]}
+    if unknown_readings:
+        raise SystemExit(f"lecturas.json nombra obras que no están en el catálogo: {sorted(unknown_readings)}")
+    for slug, notes in readings.items():
+        for n in notes:
+            if not (0 <= n["x"] <= 1 and 0 <= n["y"] <= 1 and n["text"].strip()):
+                raise SystemExit(f"lecturas.json: anotación fuera de la foto o vacía en {slug}: {n}")
     series = read_data("vaivenes")
     sha_by_src = {}
     source_by_src = {}
@@ -190,6 +199,8 @@ def build(output):
         "/images/catalogo/commission-amor-red-rose.webp",
         "/images/catalogo/commission-amor-calla.webp",
         "/images/catalogo/commission-rara-peacock.webp",
+        "/images/catalogo/julio-iglesias-bg-patch.webp",
+        "/images/catalogo/julio-iglesias-arm-mic.webp",
     ):
         if (SOURCE / cutout_src.lstrip("/")).is_file():
             originals.add(cutout_src)
@@ -205,7 +216,7 @@ def build(output):
     for p in catalogue["projects"]:
         photographs = [{"src": derivative(im["src"]), "original": im["src"], "caption": im["caption"], "width": im["width"], "height": im["height"]} for im in p["images"]]
         cover_index = 2 if p["slug"] == "marilyn-rocks" else 0
-        projects.append({"slug": p["slug"], "title": p["title"], "category": p["category"], "label": LABELS[p["category"]], "story": p["story"], "technique": p["technique"], "support": p["support"], "dimensions": p["dimensions"], "materials": p.get("materials"), "interaction": p.get("interaction"), "year": p["year"], "series": "Vaivenes" if p["slug"] in series_slugs else p["series"], "credit": p["credit"], "source": p["source"], "video": p.get("video"), "kind": p["kind"], "cover": photographs[cover_index]["src"], "thumb": derivative(p["images"][0]["src"], 480, True), "tile": derivative(p["images"][0]["src"], 960, quality=78), "photos": photographs, "stage": "obra"})
+        projects.append({"slug": p["slug"], "title": p["title"], "category": p["category"], "label": LABELS[p["category"]], "story": p["story"], "technique": p["technique"], "support": p["support"], "dimensions": p["dimensions"], "materials": p.get("materials"), "interaction": p.get("interaction"), "year": p["year"], "series": "Vaivenes" if p["slug"] in series_slugs else p["series"], "credit": p["credit"], "source": p["source"], "video": p.get("video"), "kind": p["kind"], "cover": photographs[cover_index]["src"], "thumb": derivative(p["images"][0]["src"], 480, True), "tile": derivative(p["images"][0]["src"], 960, quality=78), "photos": photographs, "stage": "obra", **({"readings": readings[p["slug"]]} if p["slug"] in readings else {})})
     known = {p["slug"] for p in projects}
     for im in series["images"]:
         slug = im.get("work_slug", im.get("slug"))
@@ -688,7 +699,7 @@ def build(output):
     season_menu = ('<small class="menu-season" data-season-note data-i18n-unit="1">' + ''.join(f'<span data-until="{iso}">{esc(text)}</span>' for iso, text in season_nav_lines) + '</small>') if season_nav_lines else ''
 
     def header(gallery=False, season=True):
-        return f'''<header class="site-nav"><a class="signature" href="/" aria-label="Naroa Gutiérrez Gil, inicio"><span>Naroa</span> <small>GUTIÉRREZ GIL</small></a><nav aria-label="Principal"><a href="/obra/#indice" data-open-index>Obras</a><a class="desktop-link" href="/retratos-por-encargo-bilbao/">Encargos</a><a class="desktop-link" href="/contacto/">Contacto</a>{'<button type="button" data-quiet>Solo obra</button>' if gallery else '<a class="desktop-link" href="/sobre-mi/">La artista</a>'}<button type="button" class="sound-toggle" data-sound aria-label="Sonido: escuchar la banda sonora" title="Banda sonora del mes" aria-pressed="false"><svg class="sound-reel-icon" viewBox="0 0 24 16" aria-hidden="true"><rect x="1" y="2" width="22" height="12" rx="2.5"/><circle class="reel-wheel" cx="7.5" cy="8" r="3.2"/><circle cx="7.5" cy="8" r="0.9"/><circle class="reel-wheel" cx="16.5" cy="8" r="3.2"/><circle cx="16.5" cy="8" r="0.9"/><line x1="7.5" y1="4.8" x2="16.5" y2="4.8"/></svg><span>Sonido</span></button><button type="button" data-open-menu aria-haspopup="dialog" aria-controls="menu-dialog" aria-expanded="false">Menú <span aria-hidden="true">+</span></button></nav>{season_nav if season else ''}<span class="sound-status" data-sound-status role="status" hidden></span></header>'''
+        return f'''<header class="site-nav"><a class="signature" href="/" aria-label="Naroa Gutiérrez Gil, inicio"><span>Naroa</span><small>GUTIÉRREZ GIL</small></a><nav aria-label="Principal"><a href="/obra/#indice" data-open-index>Obras</a><a class="desktop-link" href="/retratos-por-encargo-bilbao/">Encargos</a><a class="desktop-link" href="/contacto/">Contacto</a>{'<button type="button" data-quiet>Solo obra</button>' if gallery else '<a class="desktop-link" href="/sobre-mi/">La artista</a>'}<button type="button" class="sound-toggle" data-sound title="Banda sonora del mes" aria-pressed="false"><svg class="sound-reel-icon" viewBox="0 0 24 16" aria-hidden="true"><rect x="1" y="2" width="22" height="12" rx="2.5"/><circle class="reel-wheel" cx="7.5" cy="8" r="3.2"/><circle cx="7.5" cy="8" r="0.9"/><circle class="reel-wheel" cx="16.5" cy="8" r="3.2"/><circle cx="16.5" cy="8" r="0.9"/><line x1="7.5" y1="4.8" x2="16.5" y2="4.8"/></svg><em class="sound-month" data-sound-month translate="no" aria-hidden="true" hidden></em><span>Sonido</span><svg class="sound-trace" viewBox="0 0 120 10" preserveAspectRatio="none" aria-hidden="true"><path d="M2 6.5C18 4.2 31 7.8 47 5.6S79 3.4 95 6.1 112 5.2 118 4.4" pathLength="1"/></svg></button><button type="button" data-open-menu aria-haspopup="dialog" aria-controls="menu-dialog" aria-expanded="false">Menú <span aria-hidden="true">+</span></button></nav>{season_nav if season else ''}<span class="sound-status" data-sound-status role="status" hidden></span></header>'''
 
     def dialogs():
         counts = {
@@ -702,7 +713,7 @@ def build(output):
         index = ''.join(f'''<a class="index-work" href="/obra/{p['slug']}/" data-work="{p['slug']}" data-index-num="{idx+1:02d}" data-category="{p['category']}" data-series="{esc(p['series'] or '')}" data-cover="{esc(p['cover'])}" data-dimensions="{esc(p.get('dimensions') or '')}" data-photos-count="{len(p.get('photos') or [])}" data-story="{esc((p.get('story') or '')[:140])}" data-search="{esc(' '.join(str(p[k] or '') for k in ['title','technique','support','series','story','materials']))}"><div class="index-work-frame"><img src="{p['thumb']}" srcset="{p['thumb']} 480w, {p['tile']} 960w" sizes="(max-width:1099px) 50vw, (max-width:1699px) 34vw, 25vw" width="280" height="320" alt="{esc(p['title'])}" loading="lazy" decoding="async"><span class="index-work-num" aria-hidden="true">{idx+1:02d}</span><span class="index-work-whisper" aria-hidden="true">«{esc((p.get('story') or p.get('label') or '')[:92]).rstrip()}…»</span></div><span><small>{esc(p['label'])}</small><strong>{esc(p['title'])}</strong><em>{esc(p['support'] or p['technique'] or '')}{f" · {esc(p['dimensions'])}" if p.get('dimensions') else ""}</em></span><span class="stencil-stamp" aria-hidden="true">{esc((p.get('series') or p.get('category') or 'ORIGINAL').upper())}</span><span class="index-work-arrow" aria-hidden="true">↗</span></a>''' for idx, p in enumerate(projects))
         return f'''<dialog id="menu-dialog" class="menu-dialog" aria-labelledby="menu-heading"><div class="dialog-top menu-top"><a class="signature" href="/" aria-label="Naroa Gutiérrez Gil, inicio"><span>Naroa</span> <small>GUTIÉRREZ GIL</small></a><span id="menu-heading">Otra manera de mirar</span><button type="button" data-close-dialog autofocus>Cerrar <span aria-hidden="true">×</span></button></div><div class="menu-layout"><figure class="menu-preview"><div class="menu-preview-picture" data-menu-picture data-preview-href="/obra/" title="Ir a la sección u obra en vista previa"><img data-menu-image alt="Amy Rocks" aria-hidden="true" width="480" height="360"><img data-menu-image alt="Amy Rocks" aria-hidden="true" width="480" height="360"><img class="menu-preview-wink" data-menu-wink data-dialog-src="{menu_portrait_wink}" alt="Guiño de Naroa Gutiérrez Gil" aria-hidden="true" width="480" height="360"><div class="menu-preview-loupe" data-menu-loupe aria-hidden="true"></div><div class="menu-preview-reel" data-menu-reel hidden aria-hidden="true"></div></div><figcaption class="menu-preview-caption"><div class="menu-caption-main"><span data-menu-preview-label>Obras</span><span class="menu-caption-quote" data-menu-quote>Otra manera de mirar.</span><span data-menu-preview-title>Amy Rocks</span></div><div class="menu-caption-sub"><span class="menu-preview-meta" data-menu-preview-meta>Pizarra, collage y objetos · {len(projects)} obras</span><div class="menu-caption-actions"><a class="menu-open-work-pill" href="/obra/" data-menu-open-work title="Entrar en esta vista"><span>Entrar</span><span aria-hidden="true">↗</span></a><button type="button" class="menu-index-pill" data-menu-open-index title="Abrir catálogo completo (atajo: / o I)"><span>Índice</span><span aria-hidden="true">⌕</span><kbd aria-hidden="true">/</kbd></button></div></div><p class="menu-ai-note">El guiño de este retrato está hecho con IA a partir de una fotografía de 2015.</p></figcaption></figure><nav class="menu-pages" aria-label="Todas las páginas">{links()}</nav></div><div class="menu-sound-drawer" data-menu-sound-drawer hidden aria-label="Paisaje sonoro y créditos"><div class="menu-sound-drawer-inner"><div class="menu-sound-col"><span class="menu-sound-eyebrow">BANDA SONORA ORIGINAL</span><strong class="menu-sound-theme" data-menu-melody-today>Banda sonora del mes</strong><p>Doce piezas originales para piano, una por mes, con trombones, ecos y el paisaje de la estación. Suena al pulsar SONIDO y calla ante <em>Game Over</em>.</p></div><div class="menu-sound-col"><span class="menu-sound-eyebrow">CRÉDITOS Y LICENCIAS DE AUDIO</span><p>Composición y síntesis WebAudio originales, sin muestras ni grabaciones de terceros, para el estudio de Naroa Gutiérrez Gil.</p><div class="menu-sound-links"><a href="/immersive/audio/creditos.txt" target="_blank" rel="noopener noreferrer">Ver ficha técnica completa (.txt) ↗</a><button type="button" data-close-sound-drawer>Ocultar ×</button></div></div></div></div><div class="menu-foot"><span>Desde Bilbao, con otra mirada. <em class="menu-kbd-hint" aria-hidden="true">· Teclas [1–6] Secciones · [/] Índice</em></span><a href="mailto:naroa@naroagutierrezgil.com">naroa@naroagutierrezgil.com ↗</a><a href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer">Facebook ↗</a><a href="https://instagram.com/naroa_art/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="/immersive/audio/creditos.txt" data-menu-sound-credits aria-expanded="false">Créditos del sonido ↗</a></div></dialog>
 <dialog id="index-dialog" class="index-dialog" data-obra-view="muro" aria-labelledby="index-heading"><div class="index-backdrop" data-index-backdrop aria-hidden="true"><div class="index-backdrop-image" data-index-backdrop-img style="background-image:url('{projects[0]['cover']}')"></div><div class="index-backdrop-vignette"></div></div><div class="dialog-top"><h2 id="index-heading">La obra <span class="stencil-subtag" aria-hidden="true">✦ GABINETE DE MIRADAS &amp; MATERIA VIVA</span></h2><div class="index-top-actions"><div class="index-mode-switcher" role="group" aria-label="Modo de visualización del gabinete"><button type="button" data-obra-mode="muro" aria-pressed="true">Muro de Taller</button><button type="button" data-obra-mode="mesa" aria-pressed="false">Mesa de Luz</button><button type="button" data-obra-mode="constelacion" aria-pressed="false">Hilo Kintsugi</button></div><a class="index-oracle-btn" href="/series/vaivenes/" title="Ver solo la serie Vaivenes">Serie Vaivenes ↗</a><button type="button" class="index-oracle-btn" data-index-oracle title="Dejar que el azar elija una mirada"><span aria-hidden="true">🎲</span> <span class="oracle-word">Oráculo del </span>azar</button><button type="button" data-close-dialog class="stencil-close-btn">Cerrar ×</button></div></div><div class="index-controls"><label for="art-search"><span class="search-label-stencil">⌕ BUSCAR EN EL ESTUDIO // TRAZO, MATERIA O ROSTRO</span><input type="search" id="art-search" placeholder="Título, pizarra, lata, collage o personaje…" autocomplete="off"></label><div class="index-filters" role="group" aria-label="Filtrar obras"><button type="button" data-filter="all" aria-pressed="true"><span class="spray-dot" aria-hidden="true">●</span> Todas <span class="filter-num" aria-hidden="true">{counts['all']}</span></button><button type="button" data-filter="pizarra" aria-pressed="false"><span class="spray-dot" aria-hidden="true">●</span> Pizarra <span class="filter-num" aria-hidden="true">{counts['pizarra']}</span></button><button type="button" data-filter="collage" aria-pressed="false"><span class="spray-dot" aria-hidden="true">●</span> Collage <span class="filter-num" aria-hidden="true">{counts['collage']}</span></button><button type="button" data-filter="objetos" aria-pressed="false"><span class="spray-dot" aria-hidden="true">●</span> Objetos <span class="filter-num" aria-hidden="true">{counts['objetos']}</span></button><button type="button" data-filter="caracterizacion" aria-pressed="false"><span class="spray-dot" aria-hidden="true">●</span> Caracterización <span class="filter-num" aria-hidden="true">{counts['caracterizacion']}</span></button><button type="button" data-filter="Vaivenes" aria-pressed="false"><span class="spray-dot" aria-hidden="true">●</span> Vaivenes <span class="filter-num" aria-hidden="true">{counts['Vaivenes']}</span></button></div></div><div class="index-status-bar"><p class="index-count" role="status" aria-live="polite">{len(projects)} obras</p><div class="index-spotlight-hud" data-index-spotlight-hud aria-hidden="true"><span class="spotlight-hud-num" data-hud-num>01 / {len(projects):02d}</span><strong class="spotlight-hud-title" data-hud-title>{esc(projects[0]['title'])}</strong><span class="spotlight-hud-meta" data-hud-meta>{esc(projects[0]['label'])}</span><span class="spotlight-hud-quote" data-hud-quote>«{esc((projects[0].get('story') or '')[:110])}…»</span></div></div><div class="index-list">{index}</div><p class="index-empty" hidden>No hay obras que coincidan con esta búsqueda. <button type="button" data-reset-index>Ver todas</button></p></dialog>
-<dialog id="story-remix-dialog" class="story-remix-dialog" aria-labelledby="story-remix-heading"><div class="dialog-top"><span id="story-remix-heading">Modo Story · Detail Obsession</span><button type="button" data-close-dialog autofocus>Cerrar ×</button></div><div class="story-remix-content"><div class="story-remix-preview-frame"><img data-story-remix-img alt="Story Detail Obsession de Naroa Gutiérrez Gil" width="360" height="640"><div class="story-remix-spinner" data-story-remix-spinner hidden><span>Buscando el detalle…</span></div></div><div class="story-remix-side"><p class="story-remix-eyebrow">Para tus Stories · 9:16</p><p class="story-remix-title" data-remix-title></p><p class="story-remix-meta" data-remix-meta></p><div class="story-remix-actions"><button type="button" class="remix-act remix-act--lead" data-remix-share><span>Compartir en Instagram</span><span aria-hidden="true">↗</span></button><a class="remix-act" data-remix-download href="#" download="naroa-detail-obsession.jpg"><span>Guardar la imagen</span><span aria-hidden="true">↓</span></a><button type="button" class="remix-act" data-remix-video-loop><span data-remix-label>Grabar un loop de 6 s con música</span><span aria-hidden="true">●</span></button><button type="button" class="remix-act" data-remix-shuffle><span>Probar con otra obra</span><span aria-hidden="true">↻</span></button><button type="button" class="remix-act" data-remix-visit hidden><span>El retrato de tu visita</span><span aria-hidden="true">◐</span></button></div><p class="story-remix-status" data-remix-status role="status"></p></div></div></dialog>
+<dialog id="story-remix-dialog" class="story-remix-dialog" aria-labelledby="story-remix-heading"><div class="dialog-top"><span id="story-remix-heading">Modo Story · Detail Obsession</span><button type="button" data-close-dialog autofocus>Cerrar ×</button></div><div class="story-remix-content"><div class="story-remix-preview-frame"><img data-story-remix-img alt="Story Detail Obsession de Naroa Gutiérrez Gil" width="360" height="640"><div class="story-remix-spinner" data-story-remix-spinner hidden><span>Buscando el detalle…</span></div></div><div class="story-remix-side"><p class="story-remix-eyebrow">Para tus Stories · 9:16</p><p class="story-remix-title" data-remix-title></p><p class="story-remix-meta" data-remix-meta></p><div class="story-remix-actions"><button type="button" class="remix-act remix-act--lead" data-remix-share><span>Compartir en Instagram</span><span aria-hidden="true">↗</span></button><a class="remix-act" data-remix-download href="#" download="naroa-detail-obsession.jpg"><span>Guardar la imagen</span><span aria-hidden="true">↓</span></a><button type="button" class="remix-act" data-remix-link data-say="Enlace copiado. Pégalo en el sticker de enlace de tu Story."><span>Copiar el enlace para tu Story</span><span aria-hidden="true">∞</span></button><button type="button" class="remix-act" data-remix-video-loop><span data-remix-label>Grabar un loop de 6 s con música</span><span aria-hidden="true">●</span></button><button type="button" class="remix-act" data-remix-detail><span>Otro detalle de esta obra</span><span aria-hidden="true">⊕</span></button><button type="button" class="remix-act" data-remix-shuffle><span>Probar con otra obra</span><span aria-hidden="true">↻</span></button><button type="button" class="remix-act" data-remix-visit hidden><span>El retrato de tu visita</span><span aria-hidden="true">◐</span></button></div><p class="story-remix-status" data-remix-status role="status"></p></div></div></dialog>
 <dialog id="kintsugi-dialog" class="kintsugi-dialog" aria-labelledby="kintsugi-heading"><div class="dialog-top"><span id="kintsugi-heading" class="kintsugi-dialog-title">El Rasgado Kintsugi · 2013 ➔ 2021</span><button type="button" data-close-dialog autofocus>Cerrar ×</button></div><div class="kintsugi-dialog-body"><div class="kintsugi-stage" data-kintsugi-stage style="--split:50%"><div class="kintsugi-layer kintsugi-layer--color"><img data-src="/immersive/media/cantinflowers-rostro-4k-f585c8dca309-view.webp" decoding="async" alt="Cantinflowers (Color, 2021) — Acrílico rascado y collage" width="1350" height="1800"><div class="kintsugi-badge kintsugi-badge--color">2021 · Pandemia (Color)</div></div><div class="kintsugi-layer kintsugi-layer--bn"><img data-src="/immersive/media/mario-moreno-hq-01-b0d9bf3e15f7-view.webp" decoding="async" alt="Mario Moreno (Grafito, 2013) — Retrato en B/N" width="1375" height="1800"><div class="kintsugi-badge kintsugi-badge--bn">2013 · Grafito (B/N)</div></div><div class="kintsugi-seam" data-kintsugi-seam><div class="kintsugi-seam-glow"></div><div class="kintsugi-seam-line"></div><button type="button" class="kintsugi-handle" data-kintsugi-handle role="slider" aria-label="Deslizar rasgado Kintsugi" aria-valuenow="50" aria-valuemin="5" aria-valuemax="95"><span class="kintsugi-handle-gold">✦</span><span class="kintsugi-handle-icon">↔</span><span class="kintsugi-handle-text">Rasgar</span></button></div></div><aside class="kintsugi-quote-card"><p>«Comienzo a rascar sobre una base que no me permitía difuminar y ¡premio!, encuentro una textura inédita: puro kintsugi, el problema hecho trampolín».</p><cite>Naroa Gutiérrez Gil · De Mario Moreno (2013) a Cantinflowers (2021)</cite></aside></div></dialog>'''
 
     def footer():
@@ -964,9 +975,12 @@ def build(output):
             "/contacto/": "/images/social/naroa-share-card-contacto-v2.jpg",
         }
         og_img_path = og_card_map.get(path, image)
+        # X no muestra imágenes de más de 5 MB: esas obras se comparten con su vista de 1800 px.
+        if og_img_path == image and (SOURCE / image.lstrip("/")).stat().st_size > 4_500_000:
+            og_img_path = derivative(image)
         # La tarjeta social no es la fotografía de la página: si se describe aparte, ese es su alt.
         og_alt = card_alt if card_alt and og_img_path != image else im_alt
-        og_w, og_h, og_mime = (1200, 630, "image/jpeg") if og_img_path.startswith("/images/social/naroa-share-card") else (im_w, im_h, im_mime)
+        og_w, og_h, og_mime = (1200, 630, "image/jpeg") if og_img_path.startswith("/images/social/naroa-share-card") else (*RESPONSIVE[og_img_path], "image/webp") if og_img_path in RESPONSIVE else (im_w, im_h, im_mime)
         structured = dict(schema or {"@context": "https://schema.org", "@type": "WebPage", "name": title, "url": canonical, "description": description})
         structured.setdefault("inLanguage", "es-ES")
         structured.setdefault("dateModified", catalogue["reviewed"])
@@ -1056,7 +1070,7 @@ def build(output):
         )
         threshold_html = ""
         if threshold_page:
-            threshold_html = f'''<div class="hero-threshold" data-hero-threshold data-threshold-enter aria-hidden="true"><div class="hero-threshold-plane" data-threshold-plane><img class="hero-threshold-portrait" src="{portrait}" srcset="{portrait_srcset}" sizes="{portrait_sizes}" width="2201" height="3468" alt="Naroa Gutiérrez Gil con chistera y monóculo en el umbral del estudio, en una fotografía de 2015; el guiño que hace está hecho con IA" fetchpriority="high" decoding="sync"><img class="hero-threshold-wink" data-threshold-wink src="{portrait_wink}" srcset="{portrait_wink_srcset}" sizes="{portrait_sizes}" width="2201" height="3468" alt="Guiño de bienvenida de Naroa Gutiérrez Gil" decoding="async"><div class="hero-monocle-portal" data-monocle-portal><div class="hero-monocle-lens"><div class="hero-monocle-marilyn" data-monocle-marilyn></div><canvas class="hero-monocle-canvas" data-monocle-canvas width="256" height="256" aria-hidden="true"></canvas><div class="hero-monocle-caustics"></div></div><svg class="hero-monocle-ring" viewBox="0 0 220 220" focusable="false" aria-hidden="true"><circle class="hero-monocle-bezel" cx="110" cy="110" r="98"/><circle class="hero-monocle-inner-ring" cx="110" cy="110" r="74"/></svg></div></div><div class="hero-threshold-shade"></div><div class="hero-spotlight" data-hero-spotlight></div><div class="hero-shards" data-hero-shards><span class="hero-shard hero-shard--1" data-shard-depth="1.4"></span><span class="hero-shard hero-shard--2" data-shard-depth="-1.1"></span><span class="hero-shard hero-shard--3" data-shard-depth="1.8"></span><span class="hero-shard hero-shard--4" data-shard-depth="-1.5"></span><span class="hero-shard hero-shard--5" data-shard-depth="0.9"></span><span class="hero-shard hero-shard--6" data-shard-depth="2.1"></span></div></div><p class="threshold-ai-note" data-threshold-note aria-hidden="true">El guiño de este retrato está hecho con IA a partir de una fotografía de 2015.</p>'''
+            threshold_html = f'''<div class="hero-threshold" data-hero-threshold data-threshold-enter><div class="hero-threshold-plane" data-threshold-plane><img class="hero-threshold-portrait" src="{portrait}" srcset="{portrait_srcset}" sizes="{portrait_sizes}" width="2201" height="3468" alt="Naroa Gutiérrez Gil con chistera y monóculo en el umbral del estudio" fetchpriority="high" decoding="sync"><img class="hero-threshold-wink" data-threshold-wink src="{portrait_wink}" srcset="{portrait_wink_srcset}" sizes="{portrait_sizes}" width="2201" height="3468" alt="Guiño de bienvenida de Naroa Gutiérrez Gil" aria-hidden="true" decoding="async" fetchpriority="low"><div class="hero-monocle-portal" data-monocle-portal><div class="hero-monocle-lens"><div class="hero-monocle-marilyn" data-monocle-marilyn></div><canvas class="hero-monocle-canvas" data-monocle-canvas width="256" height="256" aria-hidden="true"></canvas><div class="hero-monocle-caustics"></div></div><svg class="hero-monocle-ring" viewBox="0 0 220 220" focusable="false" aria-hidden="true"><circle class="hero-monocle-bezel" cx="110" cy="110" r="98"/><circle class="hero-monocle-inner-ring" cx="110" cy="110" r="74"/></svg></div></div><div class="hero-threshold-shade"></div><div class="hero-spotlight" data-hero-spotlight></div><div class="hero-shards" data-hero-shards><span class="hero-shard hero-shard--1" data-shard-depth="1.4"></span><span class="hero-shard hero-shard--2" data-shard-depth="-1.1"></span><span class="hero-shard hero-shard--3" data-shard-depth="1.8"></span><span class="hero-shard hero-shard--4" data-shard-depth="-1.5"></span><span class="hero-shard hero-shard--5" data-shard-depth="0.9"></span><span class="hero-shard hero-shard--6" data-shard-depth="2.1"></span></div></div>'''
         body = f'''<main id="main" class="art-scroll" style="--steps:{len(selected)-1}"><section class="art-stage" data-gallery data-initial="{initial}" data-subset="{subset}"><div class="art-layers">{stages}</div>{threshold_html}<div class="art-shade" aria-hidden="true"></div><div class="art-stickman" data-stickman aria-hidden="true" hidden><div class="stickman-runner" data-stick-runner><svg viewBox="0 0 110 120" class="stickman-svg" aria-hidden="true"><ellipse data-stick-shadow cx="50" cy="103" rx="18" ry="2.6" fill="rgba(247,213,148,0.28)" /><path data-stick-scarf-gold d="M52,34 Q30,24 10,38" stroke="#f7d594" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.78" /><path data-stick-scarf d="M54,32 Q34,28 16,36" stroke="#fffdf4" stroke-width="2.6" stroke-linecap="round" fill="none" opacity="0.92" /><polyline data-stick-hair points="49,10 54,3 57,10 63,4 62,12" stroke="#fffdf4" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none" /><circle data-stick-head cx="58" cy="20" r="9.5" stroke="#fffdf4" stroke-width="3.2" fill="#070706" /><circle data-stick-eye cx="62" cy="18.5" r="1.8" fill="#fffdf4" /><line data-stick-torso x1="56" y1="29" x2="50" y2="62" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" /><polyline data-stick-arm-l points="55,36 39,48 29,39" stroke="#fffdf4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none" /><polyline data-stick-arm-r points="55,36 69,46 81,34" stroke="#fffdf4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none" /><polyline data-stick-leg-l points="50,62 34,82 22,102" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" fill="none" /><polyline data-stick-leg-r points="50,62 68,80 80,100" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" fill="none" /><line data-stick-dust-1 x1="26" y1="98" x2="6" y2="98" stroke="rgba(255,253,244,0.82)" stroke-width="2.6" stroke-linecap="round" /><line data-stick-dust-2 x1="32" y1="105" x2="12" y2="105" stroke="rgba(255,253,244,0.55)" stroke-width="2.2" stroke-linecap="round" /><circle data-stick-spark cx="18" cy="93" r="2.2" fill="rgba(255,253,244,0.85)" /><circle data-stick-spark-2 cx="10" cy="88" r="1.7" fill="rgba(247,213,148,0.9)" /><circle data-stick-spark-3 cx="24" cy="97" r="1.4" fill="rgba(237,188,164,0.85)" /></svg></div></div><div class="kinetic-title" data-kinetic-title aria-hidden="true"></div><nav class="art-index" aria-label="Recorrido de obras">{nav}</nav><div class="art-bottom"><div><div data-art-copy aria-live="polite"><p class="art-counter"><span data-counter>{initial+1:02d} / {len(selected):02d}</span><small data-journey-cue>Desplázate para recorrer ↕</small></p><h1 data-art-title>{esc(p['title'])}</h1><p class="art-material" data-art-material>{esc(p['label'])}</p></div><button type="button" class="art-story-link" data-open-story>Sobre esta obra <span aria-hidden="true">+</span></button></div><div class="art-controls"><div class="art-view-actions"><button type="button" data-effects aria-pressed="false">Activar efectos</button><button type="button" class="kintsugi-toggle-btn" data-kintsugi-toggle hidden aria-pressed="false">Rasgado Kintsugi ✦</button><button type="button" data-fit aria-pressed="false">Ver imagen completa ↗</button><button type="button" data-lens aria-pressed="false">Lupa</button><button type="button" data-open-photos>Otras miradas ↗</button><button type="button" data-visit-portrait data-visit-more hidden>El retrato de tu visita <span aria-hidden="true">↗</span></button><button type="button" class="ouroboros-loop-btn" data-ouroboros hidden aria-label="Volver al origen de la exposición">Volver al origen ↺</button>{social_share_dock(is_finale=True)}</div><div class="art-arrows"><button type="button" data-prev aria-label="Obra anterior"{' disabled' if initial==0 else ''}>←</button><button type="button" data-next aria-label="Obra siguiente"{' disabled' if initial==len(selected)-1 else ''}>→</button></div></div></div><button type="button" class="restore-ui" data-restore hidden>Volver a la navegación ↙</button><div class="art-progress" aria-hidden="true"><span></span></div></section></main>
 <dialog id="story-dialog" class="story-dialog" aria-labelledby="story-title"><div class="dialog-top"><span data-story-category>{esc(p['label'])}</span><button type="button" data-close-dialog>Cerrar ×</button></div><div class="story-body"><h2 id="story-title">{esc(p['title'])}</h2><p data-story>{esc(p['story'])}</p><dl data-facts>{facts_html}</dl><p class="art-credit" data-credit>{esc(p['credit'] or '')}</p><div class="story-actions"><a class="text-link" data-art-email href="mailto:naroa@naroagutierrezgil.com?subject={quote('Consulta sobre '+p['title'])}">Consultar por email ↗</a><a class="text-link" data-art-whatsapp href="https://wa.me/34636060609?text={quote('Hola Naroa, me gustaría consultar sobre la obra ' + p['title'])}" target="_blank" rel="noopener noreferrer">Consultar por WhatsApp ↗</a><button type="button" class="text-link" data-share-link>Compartir enlace directo ↗</button>{social_share_dock(url=ORIGIN + '/obra/' + p['slug'] + '/', title=p['title'])}</div><a class="source-link" data-art-video{' hidden' if not p.get('video') else ''} href="{esc(p.get('video') or '')}" target="_blank" rel="noopener noreferrer">Ver proceso en YouTube ↗</a><a class="source-link" data-art-source{' hidden' if not p['source'] else ''} href="{esc(p['source'] or '')}" target="_blank" rel="noopener noreferrer">Ver publicación de la artista ↗</a>{credentials_link(p)}</div><a class="story-footer" href="/retratos-por-encargo-bilbao/">Tu propio retrato empieza aquí ↗</a></dialog>
 <dialog id="photos-dialog" class="photos-dialog" aria-labelledby="photos-heading"><div class="dialog-top"><span id="photos-heading">{esc(p['title'])}</span><button type="button" data-close-dialog>Cerrar ×</button></div><div class="photo-view"><button type="button" data-photo-prev aria-label="Fotografía anterior">←</button><img data-photo-image data-src="{p['photos'][0]['src']}" alt="{esc(work_alt(p, p['photos'][0]['caption']))}" decoding="async"><button type="button" data-photo-next aria-label="Fotografía siguiente">→</button></div><p data-photo-caption aria-live="polite"></p></dialog>'''
@@ -1237,7 +1251,7 @@ def build(output):
     gallery("/obra/", 0, title=f"Obra · {len(projects)} retratos, collage y objetos", description=f"Catálogo de {len(projects)} obras de Naroa Gutiérrez Gil, retratista en Bilbao: retratos en pizarra, collage textil sobre madera, dibujo y objetos intervenidos, con técnica, soporte y medidas.", schema=catalogue_schema)
     for i, p in enumerate(projects):
         gallery(f"/obra/{p['slug']}/", i)
-    gallery("/series/vaivenes/", 0, "Vaivenes", "Vaivenes", schema=vaivenes_schema)
+    gallery("/series/vaivenes/", 0, "Vaivenes", "Vaivenes", description=vaivenes_schema["description"], schema=vaivenes_schema)
     rara = next(p for p in projects if p["slug"] == "rara-avis")
     portal_work = derivative(rara["photos"][0]["original"], 4080)
     # Only the artist portrait gets this native, pinned scroll sequence. The
@@ -1280,12 +1294,12 @@ def build(output):
     def about_link(href, label, attrs=""):
         outside = href.startswith("http")
         new_tab = ' target="_blank" rel="noopener noreferrer"' if outside else ""
+        new_tab += ' hreflang="es"' if href.startswith(BLOG) else ""
         note = '<span class="sr-only"> (se abre en una pestaña nueva)</span>' if outside else ""
         return f'<a class="text-link" href="{href}"{new_tab}{attrs}>{label}<span aria-hidden="true">&nbsp;↗</span>{note}</a>'
 
     def about_note(source, quote):
         return f'<aside class="kintsugi-chasm hand-margin" data-hand-margin data-kintsugi-chasm><span class="kintsugi-chasm-spark"><span aria-hidden="true">✦ </span>{source}</span>{quote}</aside>'
-        new_tab += ' hreflang="es"' if href.startswith(BLOG) else ""
 
     def about_chapter(key, eyebrow, heading, top, note, bottom, links):
         return (f'<section class="chapter kintsugi-fracture" data-kintsugi-chapter="{key}"><p class="eyebrow">{eyebrow}</p><div class="kintsugi-plate">'
@@ -1536,7 +1550,8 @@ def build(output):
         # años como el archivo del blog. El nombre accesible de cada enlace empieza por su texto visible, y cada
         # titular lleva el idioma en que se publicó.
         def press_read(x):
-            return "Leer la copia archivada" if x.get("archived") else f'Leer en {x["medium"]}'
+            # «read» da el texto del enlace cuando no abre la nota del medio (el audio de una radio que subió otra cuenta).
+            return x.get("read") or ("Leer la copia archivada" if x.get("archived") else f'Leer en {x["medium"]}')
 
         def press_source(x, text):
             lang = x.get("lang", "es")
@@ -1634,7 +1649,7 @@ def build(output):
         f'<img src="{ex["cover"]}" width="{ex["photos"][0]["width"]}" height="{ex["photos"][0]["height"]}" alt="{esc(work_alt(ex))}" loading="eager" decoding="async">'
         f'</a>'
         f'<a class="commission-detail-pip" href="/obra/{ex["slug"]}/" tabindex="-1" aria-hidden="true">'
-        f'<img src="{ex["photos"][1]["src"] if len(ex.get("photos", [])) > 1 else ex["cover"]}"{cover_dims(ex["photos"][1]["src"] if len(ex.get("photos", [])) > 1 else ex["cover"])} alt="{esc(ex["title"])} · Detalle matérico" loading="lazy" decoding="async">'
+        f'<img src="{ex["photos"][1]["src"] if len(ex.get("photos", [])) > 1 else ex["cover"]}"{cover_dims(ex["photos"][1]["src"] if len(ex.get("photos", [])) > 1 else ex["cover"])} sizes="(max-width: 760px) 100px, 240px" alt="{esc(ex["title"])} · Detalle matérico" loading="lazy" decoding="async">'
         f'</a>'
         f'<div class="commission-example-bar">'
         f'<div class="commission-work-meta">'
@@ -1668,7 +1683,6 @@ def build(output):
     ]
     faq_html = ''.join(f'<details class="commission-faq-item"><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q, a in commission_faqs)
 
-    default_cfg_msg = "Aupa Naroa! Me gustaría consultar un encargo de retrato sobre Tela Vaquera & Costuras Vivas (Collage textil sobre madera) para Retrato individual con plazo Sin prisa (2 a 4 semanas). Tengo una idea y fotos para contarte."
     # La portada es el encargo: una frase gigante con tres palabras que se cambian al tocarlas.
     # Cada <option> lleva en data-say cómo se dice dentro de la frase; app.js las recorre.
     cfg_supports = [
@@ -1703,6 +1717,9 @@ def build(output):
         ("Navidad o Reyes", "para Navidad o Reyes"),
     ]
 
+    # Lo que se envía es la frase tal cual se lee en pantalla; app.js la recompone al tocar una palabra.
+    default_cfg_msg = f"Naroa, quiero un retrato {cfg_motifs[0][1]} sobre {cfg_supports[0][1]}, {cfg_timings[0][1]}."
+
     def cfg_select(field, label, options):
         opts = ''.join(f'<option value="{esc(value)}" data-say="{esc(say)}">{esc(value)}</option>' for value, say in options)
         return f'<select id="cfg-{field}" class="enc-state" aria-label="{esc(label)}" tabindex="-1" aria-hidden="true">{opts}</select>'
@@ -1726,7 +1743,7 @@ def build(output):
         '<input id="cfg-note" type="text" maxlength="180" placeholder="Le flipa Extremoduro, tiene un perro salchicha…" autocomplete="off" data-cfg-note></label>'
         '<div class="enc-actions">'
         f'<a id="cfg-whatsapp-btn" class="enc-btn" href="https://wa.me/34636060609?text={quote(default_cfg_msg)}" target="_blank" rel="noopener noreferrer">Enviárselo por WhatsApp ↗</a>'
-        f'<a id="cfg-email-btn" class="enc-link" href="mailto:encargos@naroagutierrezgil.com?subject={quote("Consulta encargo con Naroa")}&body={quote(default_cfg_msg)}">o por correo ↗</a>'
+        f'<a id="cfg-email-btn" class="enc-link" data-subject="Encargo de retrato" href="mailto:encargos@naroagutierrezgil.com?subject={quote("Encargo de retrato")}&body={quote(default_cfg_msg)}">o por correo ↗</a>'
         '<button type="button" id="cfg-copy-btn" class="enc-link" data-cfg-copy><span>Copiar el mensaje</span></button>'
         '</div>'
         f'<p id="cfg-preview" class="enc-state" aria-live="polite">{esc(default_cfg_msg)}</p>'
@@ -1948,7 +1965,7 @@ def build(output):
                     "itemOffered": {
                         "@type": "Service",
                         "name": "Retrato en pintura acrílica sobre lienzo o tabla",
-                        "description": "Pintura acrílica y técnica mixta sobre lienzo o tabla de madera, en formatos de 30 × 40 a 50 × 50 cm.",
+                        "description": "Pintura acrílica y técnica mixta sobre lienzo o tabla de madera.",
                     },
                 },
             ],
@@ -1967,7 +1984,7 @@ def build(output):
             },
         ],
     }
-    page("/retratos-por-encargo-bilbao/", "Retrato personalizado pintado a mano desde tu foto · Retratos por encargo", "Retrato personalizado pintado a mano a partir de tu foto: una persona, una pareja, la familia o tu mascota. Naroa Gutiérrez Gil, retratista en Bilbao, sin IA. Presupuesto cerrado previo y envío a toda España.", '<main id="main">' + commissions + '</main>', amor["photos"][0]["original"], schema=commissions_schema, image_alt=work_alt(amor))
+    page("/retratos-por-encargo-bilbao/", "Retrato personalizado pintado a mano · Encargos en Bilbao", "Retrato personalizado pintado a mano a partir de tu foto: una persona, una pareja, la familia o tu mascota. Naroa Gutiérrez Gil, retratista en Bilbao, sin IA. Presupuesto cerrado previo y envío a toda España.", '<main id="main">' + commissions + '</main>', amor["photos"][0]["original"], schema=commissions_schema, image_alt=work_alt(amor))
 
     # ── Páginas por búsqueda real ─────────────────────────────────────────────────────────────
     # Una página por lo que la gente escribe en el buscador («retrato de pareja», «retrato de un
@@ -1980,7 +1997,7 @@ def build(output):
     def rp_work(w, text, eager=False):
         meta = " · ".join(filter(None, [str(w["year"]) if w.get("year") else None, w.get("technique"), w.get("dimensions")]))
         return (
-            f'<figure class="rp-work"><a href="/obra/{w["slug"]}/"><img src="{w["cover"]}"{cover_dims(w["cover"])} sizes="(max-width:820px) 88vw, 44vw" alt="{esc(work_alt(w))}" loading="{"eager" if eager else "lazy"}" decoding="async"></a>'
+            f'<figure class="rp-work"><a href="/obra/{w["slug"]}/" tabindex="-1"><img src="{w["cover"]}"{cover_dims(w["cover"])} sizes="(max-width:820px) 88vw, 44vw" alt="{esc(work_alt(w))}" loading="{"eager" if eager else "lazy"}" decoding="async"></a>'
             f'<figcaption><span class="rp-work-meta">{esc(meta)}</span><a class="rp-work-title" href="/obra/{w["slug"]}/">{esc(w["title"])} ↗</a><p>{esc(text)}</p></figcaption></figure>'
         )
 
@@ -1995,7 +2012,7 @@ def build(output):
         # Fotografía de detalle o de proceso de la ficha, con su pie literal. Si la ficha ya no tiene esa foto, el build falla.
         ph = next(ph for ph in w["photos"] if (ph.get("caption") or "").startswith(caption_start))
         return (
-            f'<figure class="rp-detail"><a href="/obra/{w["slug"]}/"><img src="{ph["src"]}"{cover_dims(ph["src"])} sizes="(max-width:820px) 88vw, 30vw" alt="{esc(work_alt(w, ph["caption"]))}" loading="lazy" decoding="async"></a>'
+            f'<figure class="rp-detail"><a href="/obra/{w["slug"]}/" tabindex="-1"><img src="{ph["src"]}"{cover_dims(ph["src"])} sizes="(max-width:820px) 88vw, 30vw" alt="{esc(work_alt(w, ph["caption"]))}" loading="lazy" decoding="async"></a>'
             f'<figcaption><a class="rp-work-meta" href="/obra/{w["slug"]}/">{esc(w["title"])}</a><p>{esc(ph["caption"])}</p></figcaption></figure>'
         )
 
@@ -2009,9 +2026,19 @@ def build(output):
     rp_q_price = ("¿Cuánto cuesta?", "No hay una tarifa fija: depende del soporte y del tamaño. Naroa da una cifra cerrada y por escrito antes de empezar.")
     rp_q_objects = ("¿Se puede incluir algún objeto o recuerdo?", "Sí. Naroa integra objetos reales en sus piezas: cartas, entradas, botones, telas, chapas, billetes de tren. Se le envían o se llevan al estudio de Bilbao y pasan a formar parte de la obra.")
 
-    def rp_page(path, title, description, kicker, h1, lead, works_heading, works, extra, questions, wa_text, mail_subject, about_name, details=()):
+    def rp_page(path, title, description, kicker, h1, lead, works_heading, works, extra, questions, wa_text, mail_subject, about_name, details=(), hero_detail=None):
         cover = works[0][0]
-        works_html = ''.join(rp_work(w, text, eager=(i == 0)) for i, (w, text) in enumerate(works))
+        # La cabecera lleva obra: la única de la página o, si hay varias, un detalle de la primera (`hero_detail`).
+        solo = len(works) == 1
+        hero_work, hero_text = works[0]
+        hero_ph = next(ph for ph in hero_work["photos"] if (ph.get("caption") or "").startswith(hero_detail)) if hero_detail else None
+        hero_src = hero_ph["src"] if hero_ph else hero_work["cover"]
+        hero_meta = " · ".join(filter(None, [str(hero_work["year"]) if hero_work.get("year") else None, hero_work.get("technique"), hero_work.get("dimensions")]))
+        hero_art = (
+            f'<figure class="rp-hero-art"><a href="/obra/{hero_work["slug"]}/" tabindex="-1"><img src="{hero_src}"{cover_dims(hero_src)} sizes="(max-width:980px) 88vw, 42vw" alt="{esc(work_alt(hero_work, hero_ph["caption"]) if hero_ph else work_alt(hero_work))}" loading="eager" fetchpriority="high" decoding="async"></a>'
+            f'<figcaption><span class="rp-work-meta">{esc(hero_meta)}</span><a class="rp-work-title" href="/obra/{hero_work["slug"]}/">{esc(hero_work["title"])} ↗</a><p>{esc(hero_ph["caption"] if hero_ph else hero_text)}</p></figcaption></figure>'
+        )
+        works_html = '' if solo else '<div class="rp-works">' + ''.join(rp_work(w, text) for w, text in works) + '</div>'
         faq = ''.join(f'<details class="commission-faq-item"><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q, a in questions)
         details_html = (
             '<section class="rp-section" aria-labelledby="rp-de-cerca"><h2 id="rp-de-cerca" class="rp-h2">Hecho a mano, de cerca</h2>'
@@ -2023,11 +2050,11 @@ def build(output):
             + ''.join(f'<a class="rp-link" href="{href}">{esc(label)}</a>' for href, label in rp_siblings if href != path)
             + '<a class="rp-link" href="/retratos-por-encargo-bilbao/">Todos los encargos ↗</a></p></section>'
         )
-        rp_images[path] = [(w, w["photos"][0]) for w, _ in works] + [(w, next(ph for ph in w["photos"] if (ph.get("caption") or "").startswith(start))) for w, start in details]
+        rp_images[path] = [(w, w["photos"][0]) for w, _ in works] + ([(hero_work, hero_ph)] if hero_ph else []) + [(w, next(ph for ph in w["photos"] if (ph.get("caption") or "").startswith(start))) for w, start in details]
         body = (
             '<main id="main" class="retrato-pagina">'
-            f'<header class="rp-hero"><p class="rp-kicker">{esc(kicker)}</p><h1 class="rp-title">{esc(h1)}</h1>{season_note}{lead}</header>'
-            f'<section class="rp-section" aria-labelledby="rp-obras"><h2 id="rp-obras" class="rp-h2">{esc(works_heading)}</h2><div class="rp-works{" rp-works--solo" if len(works) == 1 else ""}">{works_html}</div>{extra}</section>'
+            f'<header class="rp-hero"><div class="rp-hero-copy"><p class="rp-kicker">{esc(kicker)}</p><h1 class="rp-title">{esc(h1)}</h1>{season_note}{lead}</div>{hero_art}</header>'
+            f'<section class="rp-section" aria-labelledby="rp-obras"><h2 id="rp-obras" class="rp-h2">{esc(works_heading)}</h2>{works_html}{extra}</section>'
             f'{details_html}'
             f'<section class="rp-section" aria-labelledby="rp-condiciones"><h2 id="rp-condiciones" class="rp-h2">Cómo se encarga</h2>'
             '<p class="rp-text">Se le escribe a Naroa por WhatsApp o por correo con la foto o las fotos que haya y un par de líneas sobre la persona. Ella propone soporte y tamaño, y da el precio por escrito antes de empezar.</p>'
@@ -2108,6 +2135,7 @@ def build(output):
         "Hola Naroa, me gustaría encargar un retrato de pareja o de familia. Tengo fotos para enseñarte.",
         "Retrato de pareja o de familia por encargo",
         "Retrato de pareja y de familia por encargo, hecho a mano desde fotografía",
+        hero_detail="Detalle de los rostros",
         details=[
             (love_boat, "Detalle del retrato femenino"),
             (multi_love, "Tapa con rótulo Dymo"),
@@ -2303,7 +2331,7 @@ def build(output):
         '<button type="button" data-contact-copy data-contact-js><span>Copiar el mensaje</span></button>'
         '</div>'
         f'<div class="ct-hints">{contact_hints}</div>'
-        '<p class="ct-fine">No se envía nada desde aquí: se abre tu WhatsApp o tu correo con el mensaje ya escrito.</p>'
+        '<p class="ct-fine">No se envía nada desde aquí: se abre tu WhatsApp o tu correo con el mensaje ya escrito, y allí puedes añadir las fotos.</p>'
         '<span class="sr-only" role="status" data-contact-status></span>'
         '</div>'
         '<img class="ct-feather" src="/images/catalogo/commission-rara-peacock.webp" width="229" height="269" alt="Pluma de pavo real, recorte de Rara Avis" decoding="async">'
@@ -2323,7 +2351,7 @@ def build(output):
         '</div>'
         f'<dl class="ct-addresses">{contact_addresses}</dl>'
         '<p class="ct-coda">Responde ella misma, desde el estudio de Bilbao.</p>'
-        f'<a class="ct-card" href="{contact_card}" type="text/vcard">Guardar su contacto en el teléfono ↗</a>'
+        f'<a class="ct-card" href="{contact_card}" type="text/vcard">Añadir a tus contactos ↗</a>'
         '</section>'
         '</main>'
     )
@@ -2334,7 +2362,14 @@ def build(output):
         "name": "Contacto · Naroa Gutiérrez Gil",
         "url": ORIGIN + "/contacto/",
         "description": "Habla con Naroa Gutiérrez Gil sobre una obra o un retrato por encargo. Bilbao. Email, WhatsApp e Instagram.",
-        "mainEntity": canonical_artist_entity,
+        # La vía de esta página (§10.7): el correo de encargos y el mismo teléfono que la ficha .vcf.
+        "mainEntity": {**canonical_artist_entity, "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer service",
+            "email": contact_mail,
+            "telephone": "+34636060609",
+            "areaServed": "ES",
+        }},
     }
     page("/contacto/", "Contacto", "Habla con Naroa Gutiérrez Gil sobre una obra o un retrato por encargo. Bilbao. Email, WhatsApp e Instagram.", contact, rara["photos"][0]["original"], schema=contact_schema)
     page("/404/", "Esta página se ha ido de paseo", "Vuelve a la obra de Naroa Gutiérrez Gil.", '<main id="main" class="not-found"><p class="eyebrow">404</p><h1>Esta página<br>se ha ido de paseo.</h1><a class="text-link" href="/">Volver a la obra ↗</a></main>', amor["photos"][0]["original"], not_found=True)
@@ -2753,31 +2788,10 @@ def build(output):
     write(output / "llms-full.txt", llms_full_txt)
     write(REPO / "public" / "llms-full.txt", llms_full_txt)
 
-    headers_content = (
-        "/*\n"
-        "  X-Frame-Options: DENY\n"
-        "  X-Content-Type-Options: nosniff\n"
-        "  Referrer-Policy: strict-origin-when-cross-origin\n"
-        "  Permissions-Policy: camera=(), microphone=(), geolocation=()\n"
-        "  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload\n"
-        "  Cache-Control: public, max-age=0, must-revalidate\n"
-        "/api/*\n"
-        "  Content-Type: application/json; charset=utf-8\n"
-        "  Access-Control-Allow-Origin: *\n"
-        "  Cache-Control: public, max-age=3600, stale-while-revalidate=86400\n"
-        "/.well-known/*\n"
-        "  Content-Type: application/json; charset=utf-8\n"
-        "  Access-Control-Allow-Origin: *\n"
-        "  Cache-Control: public, max-age=3600, stale-while-revalidate=86400\n"
-        "/llms.txt\n"
-        "  Content-Type: text/markdown; charset=utf-8\n"
-        "  Cache-Control: public, max-age=3600, stale-while-revalidate=86400\n"
-        "/llms-full.txt\n"
-        "  Content-Type: text/markdown; charset=utf-8\n"
-        "  Cache-Control: public, max-age=3600, stale-while-revalidate=86400\n"
-        # Solo lo que lleva hash en el nombre: build-manifest.json y audio/creditos.txt no lo llevan.
-        + "".join(f"/immersive/{pattern}\n  Cache-Control: public, max-age=31536000, immutable\n" for pattern in ("media/*", "*.js", "*.css", "*.svg"))
-    )
+    # Vercel sirve el dominio y Cloudflare Pages es una copia (AGENTS.md §14): sus cabeceras salen de vercel.json.
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import hosting_rules
+    headers_content = hosting_rules.pages_headers(hosting_rules.hosting_rules(REPO / "vercel.json"), hosting_rules.public_urls(output))
     write(output / "_headers", headers_content)
     write(output / "_redirects", ''.join(f'{src.rstrip("/")} {dest} 301\n' for src, dest in aliases.items()) + '/landing-bilbao /retratos-por-encargo-bilbao/ 301\n')
     write(output / "immersive" / "build-manifest.json", json.dumps({"reviewed": catalogue["reviewed"], "projects": len(projects), "canonical_routes": [p[0] for p in pages], "media_files": len(jobs), "originals": len(originals), "c2pa": c2pa_files, "assets": assets}, ensure_ascii=False, indent=2) + '\n')

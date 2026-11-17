@@ -3,10 +3,14 @@
 # deploy.sh — NAROA.ONLINE Zero-Friction Deployment Pipeline
 # ═══════════════════════════════════════════════════════════════
 # Orquesta el despliegue multi-superficie de naroa.online:
-#   1. El Museo (Portfolio Canónico Inmersivo) → naroagutierrezgil-com (.deploy/)
-#   2. El Laboratorio (Galería 3D / SPA React) → naroaonline (dist/)
+#   1. El Museo (Portfolio Canónico Inmersivo, .deploy/) → Vercel, que sirve naroagutierrezgil.com,
+#      y su copia en Cloudflare Pages (naroagutierrezgil-com)
+#   2. El Laboratorio (Galería 3D / SPA React, dist/) → Cloudflare Pages (naroaonline)
 #   3. Espejo Shadow Vercel → naroaonline.vercel.app
 #   4. Purga Edge Cloudflare + Ping IndexNow (Bing/Copilot/Perplexity)
+#
+# Los bloqueos de LaLiga caen sobre IP de Cloudflare. Su parte es una copia: si no responde (o falta
+# wrangler) se salta o se avisa, y el despliegue sigue hasta Vercel (AGENTS.md §14).
 #
 # Uso:
 #   ./deploy.sh                # Despliegue completo a producción (con Touch ID)
@@ -42,8 +46,9 @@ for arg in "$@"; do
       echo "  ./deploy.sh --help        Mostrar esta ayuda"
       echo ""
       echo "Superficies de destino:"
-      echo "  • El Museo (Inmersivo):  https://naroagutierrezgil.com (.deploy/)"
-      echo "  • El Lab (3D / Three):   https://naroaonline.pages.dev (dist/)"
+      echo "  • El Museo (Inmersivo):  https://naroagutierrezgil.com (.deploy/, lo sirve Vercel)"
+      echo "  • Copia del Museo:       https://naroagutierrezgil-com.pages.dev (Cloudflare Pages, si responde)"
+      echo "  • El Lab (3D / Three):   https://naroaonline.pages.dev (dist/, solo Cloudflare Pages)"
       echo "  • Shadow Mirror:         https://naroaonline.vercel.app"
       echo "═══════════════════════════════════════════════════════════════"
       echo ""
@@ -89,6 +94,10 @@ NC='\033[0m'
 log()  { echo -e "${CYAN}[DEPLOY]${NC} $1"; }
 ok()   { echo -e "${GREEN}[  OK  ]${NC} $1"; }
 fail() { echo -e "${RED}[FATAL]${NC} $1"; exit 1; }
+warn() { echo -e "${RED}[AVISO]${NC} $1"; }
+# Qué pasó con la copia de Cloudflare Pages; se repite en el resumen final.
+CF_NOTES=""
+cf_note() { CF_NOTES="${CF_NOTES}  • $1"$'\n'; }
 
 # ── 0. Modo Solo Tests ───────────────────────────────────────
 if [ "$MODE" = "test-only" ]; then
@@ -108,7 +117,11 @@ if [ "$MODE" != "build-only" ]; then
 fi
 
 # ── 1. Preflight ─────────────────────────────────────────────
-[ "$MODE" = "build-only" ] || command -v wrangler >/dev/null 2>&1 || fail "wrangler no encontrado. Instala con: npm i -g wrangler"
+# Cloudflare Pages es una copia (el dominio lo sirve Vercel): sin wrangler se salta, no se aborta.
+CF_SKIP=""
+if [ "$MODE" != "build-only" ] && ! command -v wrangler >/dev/null 2>&1; then
+  CF_SKIP="wrangler no encontrado (npm i -g wrangler)"
+fi
 
 # ── 1b. Fuentes del catálogo ─────────────────────────────────
 # Antes de compilar nada: catálogo, recorrido, exposiciones, redirecciones y registro de la SPA deben coincidir.
@@ -304,24 +317,50 @@ fi
 
 DEPLOY_BRANCH=$([ "$MODE" = "preview" ] && echo "preview" || echo "production")
 
-if [ "$TARGET" = "all" ] || [ "$TARGET" = "museum" ]; then
-  [ -d ".deploy" ] || fail "Directorio .deploy no encontrado. Ejecuta sin --quick primero."
-  log "Desplegando EL MUSEO → CF Pages proyecto ${BOLD}naroagutierrezgil-com${NC} (${DEPLOY_BRANCH})..."
-  wrangler pages deploy .deploy --project-name "naroagutierrezgil-com" --branch "$DEPLOY_BRANCH" --commit-dirty=true
-  ok "Deploy EL MUSEO completado → https://naroagutierrezgil.com/"
+# Cloudflare Pages lleva la copia del Museo y el Lab; el dominio lo sirve Vercel (más abajo). Si Cloudflare
+# no responde (p. ej. un bloqueo de LaLiga) o wrangler falla, se avisa y el despliegue sigue hasta Vercel.
+if [ -z "$CF_SKIP" ] && ! curl -sS -o /dev/null --max-time 10 https://api.cloudflare.com/client/v4/ 2>/dev/null; then
+  CF_SKIP="Cloudflare no responde desde esta red (¿bloqueo de LaLiga?)"
+fi
+if [ -n "$CF_SKIP" ] && [ "$TARGET" = "lab" ]; then
+  fail "El Lab solo se publica en Cloudflare Pages y no está disponible: $CF_SKIP"
 fi
 
-if [ "$TARGET" = "all" ] || [ "$TARGET" = "lab" ]; then
-  [ -d "$BUILD_DIR" ] || fail "Directorio $BUILD_DIR no encontrado. Ejecuta sin --quick primero."
-  log "Desplegando EL SÓTANO / LAB → CF Pages proyecto ${BOLD}naroaonline${NC} (${DEPLOY_BRANCH})..."
-  wrangler pages deploy "$BUILD_DIR" --project-name "naroaonline" --branch "$DEPLOY_BRANCH" --commit-dirty=true
-  ok "Deploy EL LAB completado → https://naroaonline.pages.dev/"
+if [ -n "$CF_SKIP" ]; then
+  warn "Cloudflare Pages se salta: $CF_SKIP. El dominio lo sirve Vercel y el despliegue sigue."
+  cf_note "saltado: $CF_SKIP (la copia del Museo y el Lab quedan como estaban)"
+else
+  if [ "$TARGET" = "all" ] || [ "$TARGET" = "museum" ]; then
+    [ -d ".deploy" ] || fail "Directorio .deploy no encontrado. Ejecuta sin --quick primero."
+    log "Actualizando la copia del MUSEO → CF Pages proyecto ${BOLD}naroagutierrezgil-com${NC} (${DEPLOY_BRANCH})..."
+    if wrangler pages deploy .deploy --project-name "naroagutierrezgil-com" --branch "$DEPLOY_BRANCH" --commit-dirty=true; then
+      ok "Copia del MUSEO actualizada → https://naroagutierrezgil-com.pages.dev/"
+      cf_note "copia del Museo actualizada"
+    else
+      warn "wrangler falló con la copia del Museo; el despliegue sigue hasta Vercel."
+      cf_note "la copia del Museo NO se actualizó (wrangler falló)"
+    fi
+  fi
+
+  if [ "$TARGET" = "all" ] || [ "$TARGET" = "lab" ]; then
+    [ -d "$BUILD_DIR" ] || fail "Directorio $BUILD_DIR no encontrado. Ejecuta sin --quick primero."
+    log "Desplegando EL SÓTANO / LAB → CF Pages proyecto ${BOLD}naroaonline${NC} (${DEPLOY_BRANCH})..."
+    if wrangler pages deploy "$BUILD_DIR" --project-name "naroaonline" --branch "$DEPLOY_BRANCH" --commit-dirty=true; then
+      ok "Deploy EL LAB completado → https://naroaonline.pages.dev/"
+      cf_note "Lab actualizado"
+    elif [ "$TARGET" = "lab" ]; then
+      fail "wrangler falló con el Lab"
+    else
+      warn "wrangler falló con el Lab; el despliegue sigue hasta Vercel."
+      cf_note "el Lab NO se actualizó (wrangler falló)"
+    fi
+  fi
 fi
 
 # ── 7. Purga de Caché Global en Cloudflare Edge ──────────────
 if [ -n "${CF_ZONE_ID:-}" ] && [ -n "${CF_AUTH_TOKEN:-}" ]; then
   log "Purgando caché global en Cloudflare Edge (Zone: naroagutierrezgil.com)..."
-  curl -s -X POST "https://api.cloudflare.com/client/v4/zones/${CF_ZONE_ID}/purge_cache" \
+  curl -s --max-time 15 -X POST "https://api.cloudflare.com/client/v4/zones/${CF_ZONE_ID}/purge_cache" \
     -H "Authorization: Bearer ${CF_AUTH_TOKEN}" \
     -H "Content-Type: application/json" \
     -d '{"purge_everything":true}' > /dev/null 2>&1 || true
@@ -329,17 +368,22 @@ if [ -n "${CF_ZONE_ID:-}" ] && [ -n "${CF_AUTH_TOKEN:-}" ]; then
 fi
 
 # ── 8. Despliegue Paralelo a Vercel ──────────────────────────
+VERCEL_STATE="no se intentó (npx no encontrado)"
 if command -v npx >/dev/null 2>&1; then
   # Vercel sirve el dominio real (el DNS apunta ahí): nunca subir un build vacío ni ocultar errores.
   VERCEL_LOG="${TMPDIR:-/tmp}/naroa-vercel-deploy.log"
   log "Publicando en Vercel Producción (log: $VERCEL_LOG)..."
   if ! npx vercel build --prod --yes > "$VERCEL_LOG" 2>&1; then
+    VERCEL_STATE="NO publicado (vercel build falló): el dominio conserva el despliegue anterior"
     echo -e "${RED}[AVISO]${NC} vercel build falló: NO se sube nada, producción conserva el despliegue anterior. Ver $VERCEL_LOG"
   elif [ ! -s ".vercel/output/static/index.html" ]; then
+    VERCEL_STATE="NO publicado (build vacío): el dominio conserva el despliegue anterior"
     echo -e "${RED}[AVISO]${NC} vercel build no generó .vercel/output/static/index.html: NO se sube nada (evita un 404 global). Ver $VERCEL_LOG"
   elif ! npx vercel deploy --prebuilt --prod --yes >> "$VERCEL_LOG" 2>&1; then
+    VERCEL_STATE="NO publicado (vercel deploy falló): el dominio conserva el despliegue anterior"
     echo -e "${RED}[AVISO]${NC} vercel deploy falló (¿cuota?): producción conserva el despliegue anterior. Ver $VERCEL_LOG"
   else
+    VERCEL_STATE="publicado"
     ok "Vercel Producción actualizado"
   fi
 fi
@@ -359,12 +403,13 @@ if [ "$MODE" = "production" ] && [ -f ".deploy/indexnow.json" ]; then
 fi
 
 # ── 10. Finalización ─────────────────────────────────────────
-ok "Despliegue finalizado exitosamente"
+ok "Despliegue finalizado"
 
 echo ""
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════${NC}"
-echo -e "${GREEN}${BOLD}  ✓ NAROA.ONLINE / NAROAGUTIERREZGIL.COM DESPLEGADO C5-REAL${NC}"
-echo -e "${GREEN}${BOLD}  • Cloudflare Pages:  https://naroagutierrezgil.com${NC}"
-echo -e "${GREEN}${BOLD}  • Vercel Mirror:     https://naroaonline.vercel.app (noindex / shadow)${NC}"
-echo -e "${GREEN}${BOLD}═══════════════════════════════════════════════════════════${NC}"
+echo -e "${BOLD}═══════════════════════════════════════════════════════════${NC}"
+echo -e "${BOLD}  NAROA.ONLINE / NAROAGUTIERREZGIL.COM · RESUMEN${NC}"
+echo -e "${BOLD}  • Vercel (sirve https://naroagutierrezgil.com): ${VERCEL_STATE}${NC}"
+echo -e "${BOLD}  • Cloudflare Pages (copia del Museo y Lab):${NC}"
+if [ -n "$CF_NOTES" ]; then printf '%s' "$CF_NOTES"; else echo "  • sin cambios (modo sin subida)"; fi
+echo -e "${BOLD}═══════════════════════════════════════════════════════════${NC}"
 echo ""

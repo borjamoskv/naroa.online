@@ -464,7 +464,7 @@ HEAD_SCRIPT = (
     "<script>(function(){try{var d=document,h=d.documentElement,k='naroa-lang',S=%s,L=h.lang.slice(0,2),c=null;"
     "d.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[data-lang]');if(!a)return;try{var t=d.querySelector('#contenido.editorial');if(t&&!a.hash&&scrollY>innerHeight&&t.getBoundingClientRect().top<innerHeight/2)a.hash='contenido'}catch(_){}try{localStorage.setItem(k,a.getAttribute('data-lang'))}catch(_){}} ,true);"
     "try{c=localStorage.getItem(k)}catch(_){}"
-    "if(/bot|crawl|spider|slurp|lighthouse|headless|jsdom|preview|facebookexternalhit|whatsapp|telegram|pinterest|embedly/i.test(navigator.userAgent))return;"
+    "if(/bot|crawl|spider|slurp|lighthouse|headless|jsdom|preview|inspectiontool|googleother|facebookexternalhit|whatsapp|telegram|pinterest|embedly/i.test(navigator.userAgent))return;"
     "if(d.referrer&&d.referrer.indexOf(location.origin+'/')===0)return;"
     "if(S.indexOf(c)<0){c=null;var n=navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||''];"
     "for(var i=0;i<n.length&&!c;i++){var p=String(n[i]).toLowerCase().split('-')[0];if(S.indexOf(p)>-1)c=p;else if(p==='eu'||p==='ca'||p==='gl')c='es'}c=c||'en'}"
@@ -774,6 +774,8 @@ def localize_assets(output, lang, dictionary, routes):
             for photo in project.get("photos", []):
                 if photo.get("caption"):
                     photo["caption"] = dictionary.tr(photo["caption"], "catalog", where) or photo["caption"]
+            for reading in project.get("readings", []):
+                reading["text"] = dictionary.tr(reading["text"], "catalog", where) or reading["text"]
         data["labels"] = {k: dictionary.tr(v, "catalog", "catálogo:labels") or v for k, v in data.get("labels", {}).items()}
         data["lang"] = lang
         text = prefix + data_json(data) + ";\n"
@@ -905,6 +907,8 @@ def main():
             for photo in project.get("photos", []):
                 if photo.get("caption"):
                     dictionary.tr(photo["caption"], "catalog", f"catálogo:{project['slug']}")
+            for reading in project.get("readings", []):
+                dictionary.tr(reading["text"], "catalog", f"catálogo:{project['slug']}")
         for label in data.get("labels", {}).values():
             dictionary.tr(label, "catalog", "catálogo:labels")
     for route in routes.pages:

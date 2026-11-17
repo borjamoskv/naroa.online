@@ -290,6 +290,11 @@ def check(output):
         destination = rule["destination"]
         if destination.startswith("/") and "$" not in destination:
             assert (output / destination.strip("/") / "index.html").is_file(), ("redirect to a missing page", rule["source"], destination)
+    # Cloudflare Pages es una copia del sitio que sirve Vercel (AGENTS.md §14): su `_headers` y su `_redirects` dan, archivo a archivo, lo mismo que vercel.json.
+    sys.path.insert(0, str(REPO / "tools"))
+    import hosting_rules
+    drift = hosting_rules.compare(output, hosting) + hosting_rules.compare_redirects(output, hosting)
+    assert not drift, ("Cloudflare Pages no daría lo mismo que vercel.json", drift)
     print(f'PASS: {len(expected)} artworks, {len(manifest["canonical_routes"])} canonical pages, {len(checked_refs)} local references; headings, alt text, JSON-LD and image assets verified.')
 
 

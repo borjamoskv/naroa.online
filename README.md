@@ -1,62 +1,67 @@
-# 🌐 Naroa Online (`naroa.online`)
+# naroa.online
 
-> **High-Performance Visual Art & Hyperrealist Portfolio Platform Engineered with React, TypeScript & Vite.**
+Portfolio de la artista Naroa Gutiérrez Gil. El dominio canónico es `https://naroagutierrezgil.com`.
 
-[![CI Pipeline](https://img.shields.io/badge/CI_Workflow-Passing-brightgreen?style=for-the-badge)](https://github.com/borjamoskv/naroa.online/actions)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](./LICENSE)
-![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
-![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
-![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
+Las reglas de trabajo y las invariantes del sitio están en [AGENTS.md](AGENTS.md). Si este archivo y `AGENTS.md` se contradicen, manda `AGENTS.md`.
 
-Modern web platform built on the **React + TypeScript + Vite** stack, engineered to enforce a fast, deterministic, and responsive visual gallery experience.
+## Dos superficies
 
----
+| | El museo | El lab |
+| --- | --- | --- |
+| Qué es | El portfolio inmersivo: la web pública | Una galería 3D experimental (SPA) |
+| Fuentes | `classic/data/` y `classic/immersive/` | `src/` |
+| Se compila con | `tools/build_immersive_site.py` (Python y Pillow) | Vite (React, TypeScript, Three.js) |
+| Salida | `.deploy/` | `dist/` |
 
-## ⚡ Quickstart & Installation
+El museo es un sitio estático: el generador lee el catálogo revisado, escribe una página por ruta, optimiza las imágenes y, al final, `tools/build_i18n.py` crea las copias en inglés (`/en/`) y euskera (`/eu/`). No hay servidor ni llamadas de red durante la compilación.
 
-To execute the project in your local environment:
-
-```bash
-git clone https://github.com/borjamoskv/naroa.online.git
-cd naroa.online
-npm install
-npm run dev
-```
-
-The instance will be exposed at `http://localhost:5173`.
-
----
-
-## 🧬 Architecture & Core Features
+Las dos superficies comparten el catálogo de obras. El control `tools/check_catalog_sources.py` falla si `classic/data/catalogo.json`, `classic/data/journey.json` y `src/artworks.ts` dejan de coincidir.
 
 ```mermaid
-flowchart TD
-    classDef ui fill:#1e293b,stroke:#38bdf8,stroke-width:2px,color:#f8fafc
-    classDef build fill:#064e3b,stroke:#34d399,stroke-width:2px,color:#f8fafc
-
-    A["Hyperrealist Artwork Assets & Metadata"]:::ui --> B["TypeScript Strict Component Tree (React)"]:::ui
-    B --> C["Vite Zero-Latency Bundler & Asset Optimizer"]:::build
-    C --> D["Edge Static Deployment (naroa.online)"]:::build
+flowchart LR
+    datos["classic/data/*.json"] --> gen["tools/build_immersive_site.py"]
+    inm["classic/immersive/ (app.js, app.css, soundscape.js, journey.js)"] --> gen
+    gen --> i18n["tools/build_i18n.py"]
+    i18n --> deploy[".deploy/"]
+    datos --> vite["Vite"]
+    src["src/"] --> vite
+    vite --> dist["dist/"]
 ```
 
-- **Extreme Performance:** Built on Vite for zero-latency development load times and highly optimized production builds.
-- **Type Safety:** Robust runtime-error-free code guaranteed by strict TypeScript checks.
-- **Modular Architecture:** Reusable React components for streamlined maintenance and responsive gallery rendering.
+## Requisitos
 
----
+- Node 22 o posterior y `pnpm` (el repositorio lleva `pnpm-lock.yaml`).
+- Python 3 con Pillow: `python3 -m pip install -r requirements.txt`. `c2pa-python` solo hace falta para firmar las fotos (AGENTS.md §12).
 
-## 🛠️ Available Commands
+## Comandos
 
-- `npm run dev`: Initializes the local development server.
-- `npm run build`: Compiles the project for production deployment.
-- `npm run preview`: Executes a local preview of the production build.
-- `npm run lint`: Triggers the linter (`ESLint`) to enforce code quality metrics.
+```bash
+pnpm install
+```
 
----
+| Comando | Qué hace |
+| --- | --- |
+| `pnpm dev` | Servidor de desarrollo del lab (Vite) |
+| `pnpm run build` | Compila el lab en `dist/` |
+| `pnpm run build:site` | Genera el museo en `.deploy/`. Tarda varios minutos: optimiza todas las imágenes |
+| `pnpm run test:sources` | Comprueba la paridad de las fuentes del catálogo, sin compilar |
+| `pnpm run test:site` | Fuentes del catálogo, sitio generado y suite JSDOM. Lee `.deploy/`: primero hay que compilar |
+| `pnpm run test:lint` | Lint con oxlint |
+| `pnpm test` | Lint, tipos y `test:site` |
+| `./deploy.sh --build-only` | Compila las dos superficies y pasa los controles, sin publicar |
 
-## 🛡️ License & Security
+Los scripts y hojas de estilo del museo salen con un hash en el nombre, así que un cambio en `classic/immersive/` no se ve hasta recompilar.
 
-Released under the **MIT License** (`LICENSE`). For contributions or security disclosures, please follow `CONTRIBUTING.md` and `SECURITY.md`.
+## Despliegue
 
----
-*Maintained by [borjamoskv](https://github.com/borjamoskv).*
+- **Subir es desplegar.** Cada `git push` a `origin/master` lanza un despliegue de producción en Vercel, que compila con `./deploy.sh --build-only` y publica `.deploy/` (`vercel.json`).
+- `./deploy.sh` sin opciones publica desde esta máquina: sube `.deploy/` y `dist/` a Cloudflare Pages con `wrangler` y después publica `.deploy/` en producción de Vercel (`vercel deploy --prebuilt --prod`). `./deploy.sh --help` lista las opciones.
+- El estado de un despliegue se mira con `npx vercel ls` y `npx vercel inspect <url>`, no sondeando el dominio público.
+
+## Carpetas heredadas
+
+`live-site/`, `museum/` y `tools/build_museum_site.py` son versiones anteriores del sitio. No intervienen en la compilación ni en el despliegue actuales.
+
+## Licencia y seguridad
+
+Todos los derechos reservados; las condiciones están en [LICENSE.md](LICENSE.md). Para avisos de seguridad, [SECURITY.md](SECURITY.md).
