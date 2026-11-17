@@ -180,6 +180,10 @@
    "{1} <{=2}>{3}</{=2}>"
   ],
   [
+   "^Obras hechas en plato · (\\d+) obras$",
+   "Platoan egindako lanak · {=1} lan"
+  ],
+  [
    "^(.+?) · (.+)$",
    "{1} · {2}"
   ],
@@ -196,7 +200,7 @@
   "Pizarra": "Arbela",
   "«Técnicas mixtas (como la pintura acrílica, los lápices de colores y el mineral de mica) conforman estas obras, hilando el abrazo entre la caverna y el cielo. “DiviNos” es un laberinto de espejos donde nuestra alma entra en juego».": "«Teknika mistoek (hala nola pintura akrilikoak, koloretako arkatzek eta mika mineralak) osatzen dituzte lan hauek, haitzuloaren eta zeruaren arteko besarkada harilkatuz. “DiviNos” ispilu-labirinto bat da, gure arima jokoan sartzen den lekua».",
   "Técnica mixta con escamas de mica y esmalte con brillantina": "Teknika mistoa, mika-ezkatekin eta purpurinadun esmaltearekin",
-  "Plato de pizarra natural": "Arbel naturalezko platera",
+  "Pizarra natural": "Arbel naturala",
   "Retrato frontal en acrílico, lápices de colores y escamas de mica sobre pizarra natural.": "Aurrez aurreko erretratua, akrilikoz, koloretako arkatzez eta mika-ezkatez arbel naturalaren gainean.",
   "Primer plano del rostro de Marilyn Monroe con detalles dorados y escamas de mica.": "Marilyn Monroeren aurpegiaren lehen planoa, urre-koloreko xehetasunekin eta mika-ezkatekin.",
   "Retrato de Freddie Mercury joven, con la mano en la barbilla y camisa de flores, en grises con trazos de color y recortado por la silueta sobre un fondo de papel blanco arrugado. Lo rodea, a modo de paspartú, una tela blanca bordada, dentro de un marco de madera oscura.": "Freddie Mercury gaztearen erretratua, eskua kokotsean eta lore-alkandorarekin, grisetan kolore-trazuekin eta siluetaren arabera moztua, paper zuri zimurtuzko hondo baten gainean. Inguruan, passepartout gisa, oihal zuri brodatua du, egur ilunezko marko baten barruan.",
@@ -239,7 +243,7 @@
   "Vista completa": "Ikuspegi osoa",
   "Vista oblicua": "Ikuspegi zeiharra",
   "Detalle del soporte": "Euskarriaren xehetasuna",
-  "Fotografía master 4K del retrato de Amy Winehouse sobre plato de pizarra natural.": "4K master argazkia: Amy Winehouseren erretratua, arbel naturalezko plateraren gainean.",
+  "Fotografía master 4K del retrato de Amy Winehouse sobre pizarra natural.": "4K master argazkia: Amy Winehouseren erretratua, arbel naturalaren gainean.",
   "«El retrato de Robe parte de un dibujo a lápices sobre poliéster. Tras escanearlo e imprimirlo a mayor tamaño, la imagen se recorta, retoca y combina con tela floral y una frase en alambre».": "«Roberen erretratua poliester gainean arkatzez egindako marrazki batetik abiatzen da. Eskaneatu eta tamaina handiagoan inprimatu ondoren, irudia ebaki, ukitu eta loredun oihalarekin eta alanbrezko esaldi batekin konbinatzen da».",
   "Ilustración reproducida e intervenida; collage textil y alambre": "Erreproduzitutako eta esku hartutako ilustrazioa; ehunezko collagea eta alanbrea",
   "Papel impreso sobre tela floral": "Paper inprimatua loredun oihalaren gainean",
@@ -607,7 +611,7 @@
   "plato de madera, a la vista": "egurrezko platera, agerian",
   "mica mineral": "mika minerala",
   "firmado: Naroa ‘05": "sinatuta: Naroa ‘05",
-  "Plato de pizarra natural con canto irregular": "Arbel naturalezko platera, ertz irregularrekoa",
+  "Pizarra natural con canto irregular": "Arbel naturala, ertz irregularrekoa",
   "Fotografía master 4K de Lágrimas de Oro con pan de oro de 24k sobre pizarra.": "4K master argazkia: Lágrimas de Oro, 24k-ko urre-orria arbel gainean.",
   "Detalle de los destellos dorados y relieve de la piedra.": "Urre-distiren eta harriaren erliebearen xehetasuna.",
   "Ficha técnica: Retrato doble técnica mixta mediante collage textil y mineral.": "Fitxa teknikoa: Teknika mistoko erretratu bikoitza, ehunezko collagez eta collage mineralez egina.",

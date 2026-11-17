@@ -396,12 +396,20 @@ async function eyeMatch(ui, base, points) {
   assert.equal(ui.find('[data-menu-item][aria-current]').getAttribute('href'), '/obra/');
   assert.equal(ui.document.querySelectorAll('[data-menu-item]').length, 4, 'The menu has four sections: Obras, Naroa, Blog and Encargos');
   assert.deepEqual(Array.from(ui.document.querySelectorAll('[data-menu-item] .menu-name'), el => el.firstChild.textContent), ['Obras', 'Naroa', 'Blog', 'Encargos']);
-  assert.equal(ui.find('[data-menu-preview-title]').textContent, 'Amy Rocks');
+  assert.equal(ui.find('[data-menu-preview-title]').textContent, 'Holy Wood: REtpLATOS & aMOREs');
   assert.equal(ui.find('[data-menu-reel]').hidden, false, 'Obras displays the 4-frame curated filmstrip');
   assert.equal(ui.document.querySelectorAll('[data-menu-reel] [data-reel-index]').length, 4);
+  assert.match(ui.find('[data-menu-preview-meta]').textContent, /^Obras hechas en plato · \d+ obras$/, 'The Obras preview speaks of plate works');
+  const obrasReel = JSON.parse(ui.find('[data-menu-item][href="/obra/"]').dataset.previewReel);
+  const supportBySlug = new Map(works.map(p => [p.slug, p.support || '']));
+  for (const frame of obrasReel) {
+    const support = supportBySlug.get(frame.href.split('/')[2]);
+    assert.match(support, /\bplatos?\b/i, `The Obras menu shows only plate works (${frame.title})`);
+    assert.doesNotMatch(support, /pizarra/i, `Slate pieces are not plates (${frame.title})`);
+  }
   ui.find('[data-menu-reel] [data-reel-index="1"]').click(); await ui.flush();
-  assert.equal(ui.find('[data-menu-preview-title]').textContent, 'Marilyn Rocks', 'Selecting a filmstrip frame updates the main preview');
-  assert.equal(ui.find('[data-menu-open-work]').getAttribute('href'), '/obra/marilyn-rocks/', 'Selecting a filmstrip frame syncs the direct entry link');
+  assert.equal(ui.find('[data-menu-preview-title]').textContent, '13N', 'Selecting a filmstrip frame updates the main preview');
+  assert.equal(ui.find('[data-menu-open-work]').getAttribute('href'), '/obra/13n/', 'Selecting a filmstrip frame syncs the direct entry link');
   assert.equal(ui.find('[data-menu-item][href="/series/vaivenes/"]'), null, 'Vaivenes lives inside Obras, not as its own menu section');
   assert.equal(ui.find('[data-menu-item][href="/trayectoria/"]'), null, 'Trayectoria lives inside Naroa, not as its own menu section');
   assert.ok(ui.find('#index-dialog a[href="/series/vaivenes/"]'), 'The works index still leads to the Vaivenes series');
