@@ -1,11 +1,13 @@
 /* Naroa — banda sonora original: doce piezas, una por mes («Apirila» es la de abril).
  * Suena la del mes en curso. Motor autónomo escrito desde cero: síntesis pura Web Audio, sin muestras ni red.
  * Electrónica cálida y alegre, de sintetizador analógico: arpegio en corcheas, bajo que rebota a la octava,
- * cuerdas de sintetizador, teclado eléctrico para la melodía, trombones en el puente y una caja de ritmos suave.
- * Phaser lento, delays cruzados a tempo, un eco en tresillo y otro lejano; todo bombea un poco con el bombo.
+ * cuerdas de sintetizador, teclado eléctrico (melodía y acordes a contratiempo), trombones en el puente y una
+ * caja de ritmos suave. Phaser lento, delays cruzados a tempo, un eco en tresillo y otro lejano; todo bombea
+ * un poco con el bombo.
  * El pulso respira con el scroll del visitante: 96 pulsos por minuto en reposo, entre 84 y 116 en marcha.
- * La melodía descansa en reposo y despierta cuando el visitante se mueve; con ella se abre el filtro
- * general y el bombo pasa a marcar los cuatro tiempos.
+ * La melodía descansa en reposo y despierta cuando el visitante se mueve; con ella se abre el filtro general,
+ * el bombo pasa a marcar los cuatro tiempos, el charles se abre y una voz espacial dobla las notas largas.
+ * Al pararse, la última frase se queda rebotando en los ecos.
  * Audio espacial: el arpegio, las cuerdas, los ecos y el paisaje del mes (viento, lluvia, mar, brasas)
  * rodean al oyente en 3D (HRTF) y giran con el scroll.
  * API: window.NAROA_SCORE.{start, stop, toggle, setVolume, setIntensity, setSilent, setPace, wake, setTurn, setMonth, on}
@@ -32,7 +34,7 @@
   // Nivel de los instrumentos antes de la cinta; cada pieza lo corrige con su `level` para que los doce meses suenen igual de fuerte.
   const BUS = 0.72;
   // Mezcla: pico de cada instrumento. Teclado, arpegio, bajo y cuerdas pasan por la cinta; la caja de ritmos va aparte.
-  const MIX = { keys: 0.19, arp: 0.23, bass: 0.06, pad: 0.078, kick: 0.33, hat: 0.34, clap: 0.8 };
+  const MIX = { keys: 0.19, arp: 0.29, bass: 0.06, pad: 0.088, kick: 0.33, hat: 0.34, clap: 0.8, lead: 0.07, sweep: 1.2 };
   // Filtro general: entornado en reposo, se abre con el scroll del visitante.
   const FILTER_REST = 4000, FILTER_OPEN = 9500;
   const VOLUME_KEY = 'naroa-score-volume';
@@ -200,7 +202,7 @@
   const PIECES = [
     compose({
       // Enero: escarcha al sol. La bemol mayor, arpegio quieto y notas largas.
-      title: 'Urtarrila', level: 1.05, tonic: 32, sing: 68, scale: 'mayor', figure: 'quieta', swing: 0.03,
+      title: 'Urtarrila', level: 1.03, tonic: 32, sing: 68, scale: 'mayor', figure: 'quieta', swing: 0.03,
       accent: [1, 0, 0.7, 0, 0.8, 0, 0.66, 0.5], nature: { wind: 0.125, cold: true, whistle: 0.05 },
       A: [
         [0, '0 4 3, 4 2 2, 6 1 2'], [5, '0 0 4, 5 2 3'], [2, '0 2 2, 2 4 2, 4 6 4'], [4, '0 8 3, 3 6 1, 4 3 4'],
@@ -213,7 +215,7 @@
     }),
     compose({
       // Febrero: carnaval bajo la lluvia. Re dórico, bajo en tresillo (3+3+2).
-      title: 'Otsaila', level: 0.98, tonic: 38, sing: 62, scale: 'dorica', figure: 'tresillo', swing: 0.04,
+      title: 'Otsaila', level: 0.95, tonic: 38, sing: 62, scale: 'dorica', figure: 'tresillo', swing: 0.04,
       accent: [1, 0.5, 0.62, 0.95, 0.5, 0.62, 0.9, 0.55], nature: { rain: 0.135, wind: 0.05 },
       A: [
         [0, '0 7 3, 3 9 3, 6 11 2'], [3, '0 10 3, 3 8 1, 4 7 2, 6 5 2'], [0, '0 4 3, 3 7 3, 6 9 2'], [3, '0 10 2, 2 9 1, 3 7 3, 6 5 2'],
@@ -226,7 +228,7 @@
     }),
     compose({
       // Marzo: viento del sur. Sol mixolidio, ráfagas de corcheas que suben.
-      title: 'Martxoa', level: 0.96, tonic: 43, sing: 67, scale: 'mixolidia', figure: 'rafaga', swing: 0.06,
+      title: 'Martxoa', level: 1.04, tonic: 43, sing: 67, scale: 'mixolidia', figure: 'rafaga', swing: 0.06,
       nature: { wind: 0.11, whistle: 0.035, birds: 3 },
       A: [
         [0, '0 0 1, 1 1 1, 2 2 1, 3 4 1, 4 7 4'], [6, '0 6 2, 2 8 1, 3 10 1, 4 8 2, 6 6 2'], [3, '0 3 1, 1 4 1, 2 5 1, 3 7 1, 4 10 2, 6 7 2'], [0, '0 9 3, 3 7 1, 4 4 4'],
@@ -238,7 +240,7 @@
       ]
     }),
     // Abril: la pieza original, en Do mayor (escrita en Fa y transportada).
-    { title: 'Apirila', level: 1.09, transpose: -5, swing: 0.08, nature: { rain: 0.1, birds: 5 }, bars: arrange(INTRO, A, voice(B), OUTRO, voice(A)) },
+    { title: 'Apirila', level: 0.92, transpose: -5, swing: 0.08, nature: { rain: 0.1, birds: 5 }, bars: arrange(INTRO, A, voice(B), OUTRO, voice(A)) },
     compose({
       // Mayo: todo florece. Fa lidio, olas de arpegio y saltos de sexta.
       title: 'Maiatza', level: 1.02, tonic: 41, sing: 65, scale: 'lidia', figure: 'ola', swing: 0.08,
@@ -254,7 +256,7 @@
     }),
     compose({
       // Junio: hogueras de San Juan. Re mayor, danza de notas repetidas.
-      title: 'Ekaina', level: 0.98, tonic: 38, sing: 62, scale: 'mayor', figure: 'danza', swing: 0.1,
+      title: 'Ekaina', level: 1.03, tonic: 38, sing: 62, scale: 'mayor', figure: 'danza', swing: 0.1,
       nature: { embers: 0.05, birds: 4 },
       A: [
         [0, '0 7 1, 1 7 1, 2 9 2, 4 11 2, 6 9 2'], [4, '0 8 1, 1 8 1, 2 11 2, 4 8 2, 6 6 2'], [5, '0 7 1, 1 7 1, 2 9 2, 4 12 2, 6 9 2'], [3, '0 10 3, 3 9 1, 4 7 4'],
@@ -267,7 +269,7 @@
     }),
     compose({
       // Julio: siesta junto al mar. Mi mayor, barcarola perezosa que entra a contratiempo.
-      title: 'Uztaila', level: 1.01, tonic: 40, sing: 64, scale: 'mayor', figure: 'barca', swing: 0.15,
+      title: 'Uztaila', level: 0.97, tonic: 40, sing: 64, scale: 'mayor', figure: 'barca', swing: 0.15,
       nature: { sea: 0.063, crickets: 0.004 },
       A: [
         [0, '1 4 2, 3 7 3, 6 9 2'], [3, '1 7 2, 3 5 3, 6 7 2'], [0, '1 9 2, 3 11 3, 6 9 2'], [3, '0 7 4, 5 5 1, 6 7 2'],
@@ -280,7 +282,7 @@
     }),
     compose({
       // Agosto: Aste Nagusia. Si bemol mayor, fanfarria que brinca.
-      title: 'Abuztua', level: 0.98, tonic: 34, sing: 70, scale: 'mayor', figure: 'brinco', swing: 0.12,
+      title: 'Abuztua', level: 0.97, tonic: 34, sing: 70, scale: 'mayor', figure: 'brinco', swing: 0.12,
       nature: { sea: 0.05, wind: 0.04 },
       A: [
         [0, '0 0 1, 1 0 1, 2 2 1, 3 4 1, 4 7 2, 6 4 2'], [0, '0 2 2, 2 4 1, 3 2 1, 4 0 4'], [3, '0 3 1, 1 3 1, 2 5 1, 3 7 1, 4 7 2, 6 5 2'], [0, '0 4 3, 3 2 1, 4 0 4'],
@@ -293,7 +295,7 @@
     }),
     compose({
       // Septiembre: la vuelta. Fa mayor que empieza en su relativo menor, terceras que caen.
-      title: 'Iraila', level: 0.96, tonic: 41, sing: 65, scale: 'mayor', figure: 'saltarina', swing: 0.08,
+      title: 'Iraila', level: 0.99, tonic: 41, sing: 65, scale: 'mayor', figure: 'saltarina', swing: 0.08,
       nature: { wind: 0.07, sea: 0.025, leaves: 0.2 },
       A: [
         [5, '0 9 3, 3 7 1, 4 5 2, 6 7 2'], [3, '0 10 3, 3 8 1, 4 7 2, 6 5 2'], [0, '0 9 2, 2 7 2, 4 4 3, 7 7 1'], [4, '0 8 3, 3 6 1, 4 4 4'],
@@ -306,7 +308,7 @@
     }),
     compose({
       // Octubre: hojas doradas. Si mayor, líneas que bajan por grados.
-      title: 'Urria', level: 0.93, tonic: 35, sing: 71, scale: 'mayor', figure: 'lluvia', swing: 0.06,
+      title: 'Urria', level: 1.01, tonic: 35, sing: 71, scale: 'mayor', figure: 'lluvia', swing: 0.06,
       nature: { rain: 0.11, wind: 0.08, leaves: 0.16 },
       A: [
         [0, '0 7 2, 2 6 1, 3 5 1, 4 4 4'], [4, '0 6 2, 2 5 1, 3 4 1, 4 3 4'], [5, '0 5 2, 2 4 1, 3 3 1, 4 2 4'], [4, '0 4 3, 3 1 1, 4 -1 4'],
@@ -364,6 +366,8 @@
   let ctx = null, bus = null, master = null, analyser = null, wow = null, noise = null, metal = null;
   // Instrumentos: teclado, arpegio y cuerdas (estos dos, en el espacio), caja de ritmos, filtro general y bombeo.
   let keys = null, arp = null, pad = null, drums = null, hatTone = null, clapTone = null, silk = null, pump = null, filterAt = 0;
+  // Voz espacial y realimentación de los ecos cruzados [nodo, valor base].
+  let lead = null, loops = [];
   let timer = null, playing = false, silent = false, resumeOnVisible = false;
   let barIndex = 0, eighth = 0, nextTime = 0, passes = 0, rubatoPhase = 0;
   // Suena la pieza del mes en curso, según el reloj del visitante.
@@ -496,6 +500,10 @@
     const roomTone = ctx.createBiquadFilter();
     roomTone.type = 'highpass'; roomTone.frequency.value = 150; roomTone.Q.value = 0.5;
     pump.connect(send); send.connect(roomTone); roomTone.connect(room); room.connect(wet); wet.connect(glue);
+    // Voz espacial: va al centro y deja más sala que nadie.
+    lead = ctx.createGain();
+    const leadRoom = ctx.createGain(); leadRoom.gain.value = 0.6;
+    lead.connect(bus); lead.connect(leadRoom); leadRoom.connect(send);
     // Eco de cinta: una repetición blanda que se va oscureciendo y cabecea.
     const echo = ctx.createDelay(1), echoTone = ctx.createBiquadFilter();
     const echoSend = ctx.createGain(), echoBack = ctx.createGain();
@@ -517,6 +525,7 @@
     echoSends = [[pingSend, 0.46]];
     ping.delayTime.value = EIGHTH * 3; pong.delayTime.value = EIGHTH * 2;
     pingBack.gain.value = 0.56; pongBack.gain.value = 0.5;
+    loops = [[pingBack, 0.56], [pongBack, 0.5]];
     loopTone.type = 'lowpass'; loopTone.frequency.value = 2600; loopTone.Q.value = 0.4;
     // Los ecos cruzados tampoco repiten los graves.
     const loopLow = ctx.createBiquadFilter();
@@ -609,7 +618,7 @@
     plant();
 
     // Tras el compresor, un poco de ganancia y un techo que solo actúa en los picos.
-    const lift = ctx.createGain(); lift.gain.value = 0.97;
+    const lift = ctx.createGain(); lift.gain.value = 0.85;
     const ceiling = ctx.createDynamicsCompressor();
     ceiling.threshold.value = -4; ceiling.knee.value = 2; ceiling.ratio.value = 16;
     ceiling.attack.value = 0.003; ceiling.release.value = 0.12;
@@ -827,8 +836,9 @@
   const hertz = midi => 440 * Math.pow(2, (midi + piece.transpose - 69) / 12);
 
   // Una lengüeta por nota: un seno modulado en frecuencia por otro a su misma altura (tocar fuerte lo hace
-  // ladrar) y, solo en el ataque, por uno muy agudo que deja el tintineo de la púa.
-  function strike(midi, when, velocity, sustain = 1) {
+  // ladrar) y, solo en el ataque, por uno muy agudo que deja el tintineo de la púa. Con `stab` la nota es un
+  // golpe corto de acorde: se suelta enseguida y no lleva púa.
+  function strike(midi, when, velocity, sustain = 1, stab = false) {
     const freq = hertz(midi);
     const vel = clamp(velocity, 0.05, 1);
     // Cada nota suena desde su sitio en el teclado: Do2 a la izquierda, Do6 a la derecha.
@@ -836,34 +846,74 @@
     const out = ctx.createGain();
     const peak = vel * MIX.keys;
     const tail = sustain * clamp(1.7 - Math.log2(freq / 55) * 0.24, 0.5, 1.6);
+    const release = stab ? 0.09 : 0.3;
     out.gain.setValueAtTime(0, when);
     out.gain.linearRampToValueAtTime(peak, when + 0.005);
     out.gain.setTargetAtTime(peak * 0.5, when + 0.005, 0.16);
-    out.gain.setTargetAtTime(0, when + 0.3, tail);
-    const end = when + 0.3 + tail * 5;
+    out.gain.setTargetAtTime(0, when + release, tail);
+    const end = when + release + tail * 5;
 
     const reed = ctx.createOscillator(), bark = ctx.createOscillator(), barkDepth = ctx.createGain();
-    const tine = ctx.createOscillator(), tineDepth = ctx.createGain();
     const tuning = keyTuning(midi) + rand(-0.6, 0.6);
     reed.frequency.value = freq; bark.frequency.value = freq;
     reed.detune.value = tuning; bark.detune.value = tuning;
     wow.connect(reed.detune);
     barkDepth.gain.setValueAtTime(freq * (0.35 + 1.5 * vel), when);
     barkDepth.gain.setTargetAtTime(freq * 0.18, when + 0.01, 0.1 + 0.25 * vel);
-    // La púa no pasa de 9 kHz, para que no se pliegue.
-    const ratio = Math.min(9, Math.max(3, Math.floor(9000 / freq)));
-    tine.frequency.value = freq * ratio;
-    tineDepth.gain.setValueAtTime(freq * ratio * 0.22 * vel, when);
-    tineDepth.gain.setTargetAtTime(0, when + 0.004, 0.05);
     bark.connect(barkDepth); barkDepth.connect(reed.frequency);
-    tine.connect(tineDepth); tineDepth.connect(reed.frequency);
+    let tineDepth = null;
+    if (!stab) {
+      const tine = ctx.createOscillator();
+      tineDepth = ctx.createGain();
+      // La púa no pasa de 9 kHz, para que no se pliegue.
+      const ratio = Math.min(9, Math.max(3, Math.floor(9000 / freq)));
+      tine.frequency.value = freq * ratio;
+      tineDepth.gain.setValueAtTime(freq * ratio * 0.22 * vel, when);
+      tineDepth.gain.setTargetAtTime(0, when + 0.004, 0.05);
+      tine.connect(tineDepth); tineDepth.connect(reed.frequency);
+      tine.start(when); tine.stop(when + 0.5);
+    }
     reed.connect(out); out.connect(seat);
-    reed.start(when); bark.start(when); tine.start(when);
-    reed.stop(end); bark.stop(end); tine.stop(when + 0.5);
+    reed.start(when); bark.start(when);
+    reed.stop(end); bark.stop(end);
     reed.onended = () => {
       try { wow.disconnect(reed.detune); } catch {}
-      try { out.disconnect(); barkDepth.disconnect(); tineDepth.disconnect(); } catch {}
+      try { out.disconnect(); barkDepth.disconnect(); if (tineDepth) tineDepth.disconnect(); } catch {}
     };
+  }
+  // El acorde del compás en posición cerrada, de Sol3 a Fa#4 (notas tal como suenan).
+  const chordOf = bar => [...new Set(bar.lh.slice(0, 7).filter(note => note != null).map(note => ((note + piece.transpose) % 12 + 12) % 12))]
+    .slice(0, 4).map(pc => 55 + ((pc - 55) % 12 + 12) % 12).sort((a, b) => a - b);
+  // Acordes a contratiempo: el teclado da el acorde en dos golpes cortos por compás, rasgueado de abajo arriba.
+  function comp(bar, when, level) {
+    chordOf(bar).forEach((note, i) => strike(note - piece.transpose, when + i * rand(0.005, 0.011), level * rand(0.9, 1.06), 0.3, true));
+  }
+
+  // ── Voz espacial ─────────────────────────────────────────────────────────
+  // Un seno que se desliza de una nota a la siguiente y vibra al final, como un theremin. Dobla las notas
+  // largas de la melodía cuando el visitante hace scroll con ganas, y deja mucha sala.
+  let lastLead = null;
+  function croon(midi, when, seconds, velocity) {
+    const freq = hertz(midi), osc = ctx.createOscillator(), amp = ctx.createGain();
+    const lip = ctx.createOscillator(), lipDepth = ctx.createGain();
+    // Si la nota anterior acaba de sonar, llega deslizándose desde ella; si no, sube un poco al entrar.
+    const from = lastLead && when - lastLead.until < 0.3 ? lastLead.freq : freq * 0.97;
+    lastLead = { freq, until: when + seconds };
+    osc.frequency.setValueAtTime(from, when);
+    osc.frequency.exponentialRampToValueAtTime(freq, when + 0.09);
+    lip.frequency.value = rand(5, 5.6);
+    lipDepth.gain.setValueAtTime(0, when);
+    lipDepth.gain.setValueAtTime(0, when + Math.min(0.2, seconds * 0.4));
+    lipDepth.gain.linearRampToValueAtTime(16, when + seconds);
+    lip.connect(lipDepth); lipDepth.connect(osc.detune);
+    wow.connect(osc.detune);
+    amp.gain.setValueAtTime(0, when);
+    amp.gain.linearRampToValueAtTime(clamp(velocity, 0.05, 1) * MIX.lead, when + 0.07);
+    amp.gain.setTargetAtTime(0, when + seconds, 0.1);
+    osc.connect(amp); amp.connect(lead);
+    const end = when + seconds + 0.6;
+    osc.start(when); lip.start(when); osc.stop(end); lip.stop(end);
+    osc.onended = () => { try { wow.disconnect(osc.detune); amp.disconnect(); lipDepth.disconnect(); } catch {} };
   }
 
   // ── Arpegio ──────────────────────────────────────────────────────────────
@@ -901,7 +951,7 @@
     const tone = ctx.createBiquadFilter(), amp = ctx.createGain();
     tone.type = 'lowpass'; tone.Q.value = 2.4;
     tone.frequency.setValueAtTime(Math.min(1400, 220 + 900 * vel), when);
-    tone.frequency.setTargetAtTime(freq * 2.2 + 60, when, 0.09);
+    tone.frequency.setTargetAtTime(freq * 3 + 90, when, 0.09);
     const peak = vel * MIX.bass;
     amp.gain.setValueAtTime(0, when);
     amp.gain.linearRampToValueAtTime(peak, when + 0.006);
@@ -936,8 +986,8 @@
   // Cuerdas de sintetizador: el acorde del compás en posición cerrada (de Sol3 a Fa#4), dos sierras
   // desafinadas por nota. Entran despacio y se relevan con el compás siguiente.
   function swell(bar, when, seconds, level) {
-    const tones = [...new Set(bar.lh.slice(0, 7).filter(note => note != null).map(note => ((note + piece.transpose) % 12 + 12) % 12))].slice(0, 4);
-    if (tones.length < 2) return;
+    const notes = chordOf(bar);
+    if (notes.length < 2) return;
     const tone = ctx.createBiquadFilter(), amp = ctx.createGain();
     tone.type = 'lowpass'; tone.frequency.value = 2200; tone.Q.value = 0.5;
     const peak = level * MIX.pad;
@@ -946,12 +996,12 @@
     amp.gain.setValueAtTime(peak, when + seconds);
     amp.gain.linearRampToValueAtTime(0, when + seconds + 0.6);
     const end = when + seconds + 0.65;
-    const oscs = tones.flatMap(pc => [-9, 8].map(cents => [55 + ((pc - 55) % 12 + 12) % 12, cents])).map(([midi, cents]) => {
+    const oscs = notes.flatMap(midi => [-9, 8].map(cents => [midi, cents])).map(([midi, cents]) => {
       const osc = ctx.createOscillator(), part = ctx.createGain();
       osc.type = 'sawtooth'; osc.frequency.value = 440 * Math.pow(2, (midi - 69) / 12);
       osc.detune.value = cents + rand(-2, 2);
       wow.connect(osc.detune);
-      part.gain.value = 1 / (tones.length * 2);
+      part.gain.value = 1 / (notes.length * 2);
       osc.connect(part); part.connect(tone);
       osc.start(when); osc.stop(end);
       return osc;
@@ -964,28 +1014,30 @@
   }
 
   // ── Caja de ritmos ───────────────────────────────────────────────────────
-  // Bombo: un seno que cae de tono. Con él, todo lo que pasa por `pump` cede un instante y vuelve.
+  // Bombo: un seno que cae de tono; empieza alto para que el golpe se oiga también en altavoces pequeños.
+  // Con él, todo lo que pasa por `pump` cede un instante y vuelve.
   function kick(when, level, drive) {
     const osc = ctx.createOscillator(), amp = ctx.createGain();
-    osc.frequency.setValueAtTime(125, when);
-    osc.frequency.exponentialRampToValueAtTime(47, when + 0.1);
+    osc.frequency.setValueAtTime(240, when);
+    osc.frequency.exponentialRampToValueAtTime(50, when + 0.085);
     amp.gain.setValueAtTime(0, when);
     amp.gain.linearRampToValueAtTime(MIX.kick * level, when + 0.004);
     amp.gain.setTargetAtTime(0, when + 0.05, 0.07);
     osc.connect(amp); amp.connect(drums);
     osc.start(when); osc.stop(when + 0.5);
     osc.onended = () => { try { amp.disconnect(); } catch {} };
-    pump.gain.setTargetAtTime(1 - (0.1 + 0.3 * drive) * level, when, 0.006);
+    pump.gain.setTargetAtTime(1 - (0.14 + 0.3 * drive) * level, when, 0.006);
     pump.gain.setTargetAtTime(1, when + 0.04, 0.09);
   }
-  function hat(when, level, open) {
-    const src = ctx.createBufferSource(), amp = ctx.createGain(), ring = open ? 0.35 : 0.09;
+  // Charles: `ring` es lo que tarda en apagarse (0,09 s cerrado; más, abierto).
+  function hat(when, level, ring = 0.09) {
+    const src = ctx.createBufferSource(), amp = ctx.createGain();
     src.buffer = metal;
     amp.gain.setValueAtTime(0, when);
     amp.gain.linearRampToValueAtTime(MIX.hat * level, when + 0.002);
     amp.gain.exponentialRampToValueAtTime(0.0001, when + ring);
     src.connect(amp); amp.connect(hatTone);
-    src.start(when, rand(0, 0.2)); src.stop(when + ring + 0.02);
+    src.start(when, rand(0, 0.1)); src.stop(when + ring + 0.02);
     src.onended = () => { try { amp.disconnect(); } catch {} };
   }
   // Palmada: dos chasquidos muy seguidos y un tercero que deja cola.
@@ -1002,18 +1054,44 @@
     });
   }
   // El compás de la caja: bombo en los tiempos 1 y 3, palmada en el 2 y el 4 y charles a contratiempo. Con el
-  // scroll el bombo marca los cuatro tiempos y todo toca con más decisión. En los compases suaves, solo el
-  // primer bombo y el charles; en el acorde final y en el compás de silencio, nada.
-  function groove(bar, when, drive) {
+  // scroll el bombo marca los cuatro tiempos, el charles a contratiempo se abre y entre corchea y corchea asoma
+  // otro, cerrado. En los compases suaves, solo el primer bombo y el charles; en el acorde final y en el compás
+  // de silencio, nada.
+  function groove(bar, when, drive, step) {
     if (bar.final) return;
     const soft = !!bar.soft, level = soft ? 0.6 : 1;
+    const open = soft ? 0 : clamp((drive - 0.4) / 0.4, 0, 1);
+    if (open > 0) hat(when + step * 0.5, 0.3 * open * rand(0.8, 1.1));
     if (eighth % 2) {
-      hat(when, level * (0.5 + 0.5 * drive) * (eighth % 4 === 3 ? 1 : 0.8) * rand(0.85, 1.05), !soft && drive > 0.5 && eighth === 7 && !!bar.breathe);
+      hat(when, level * (0.5 + 0.5 * drive) * (eighth % 4 === 3 ? 1 : 0.8) * rand(0.85, 1.05), open > 0 && eighth === 7 && bar.breathe ? 0.35 : 0.09 + 0.15 * open);
       return;
     }
     const strong = eighth % 4 === 0;
     if (strong ? !soft || eighth === 0 : !soft && drive > 0.2) kick(when, level * (strong ? 0.8 + 0.2 * drive : 0.5 + 0.5 * drive), drive);
     if (!strong && !soft) clap(when, 0.45 + 0.55 * drive);
+  }
+  // Barrido: un soplo de ruido pardo que sube de tono en la segunda mitad del compás que cierra cada frase.
+  // Sale por el arpegio, así que da la vuelta alrededor del oyente con él.
+  function sweep(when, seconds, level) {
+    const src = ctx.createBufferSource(), band = ctx.createBiquadFilter(), amp = ctx.createGain();
+    src.buffer = noise; src.loop = true;
+    band.type = 'bandpass'; band.Q.value = 2.2;
+    band.frequency.setValueAtTime(320, when);
+    band.frequency.exponentialRampToValueAtTime(2600, when + seconds);
+    amp.gain.setValueAtTime(0, when);
+    amp.gain.linearRampToValueAtTime(MIX.sweep * level, when + seconds * 0.92);
+    amp.gain.linearRampToValueAtTime(0, when + seconds + 0.03);
+    src.connect(band); band.connect(amp); amp.connect(arp);
+    src.start(when, rand(0, 1.5)); src.stop(when + seconds + 0.05);
+    src.onended = () => { try { amp.disconnect(); } catch {} };
+  }
+  // Cuando la melodía se retira, los ecos cruzados se quedan un rato con su última frase: la realimentación
+  // sube durante dos compases y vuelve sola.
+  function linger(when) {
+    loops.forEach(([node, base]) => {
+      node.gain.setTargetAtTime(Math.min(0.78, base * 1.32), when, 0.25);
+      node.gain.setTargetAtTime(base, when + EIGHTH * 16, 1.2);
+    });
   }
 
   // ── Trombones ────────────────────────────────────────────────────────────
@@ -1095,7 +1173,7 @@
     // Y al retirarse termina el compás que estaba diciendo.
     const awake = intensity >= MELODY_GATE;
     if (awake && !singing && (eighth === 0 || eighth === 4 || (bar.rh[0] && bar.rh[0][0] === eighth))) singing = true;
-    else if (!awake && singing && eighth === 0) singing = false;
+    else if (!awake && singing && eighth === 0) { singing = false; linger(when); }
     const root = bar.lh[0];
     if (eighth === 0) {
       // En el puente el acorde lo sostienen los trombones; en el resto, las cuerdas.
@@ -1105,7 +1183,10 @@
         if (root != null && !bar.final) swell(bar, when, step * 8, (bar.soft ? 0.7 : 1) * (0.85 + 0.15 * drive));
       }
     }
-    if (root != null) { groove(bar, when, drive); bassline(bar, root, when, step, drive, hush); }
+    if (root != null) { groove(bar, when, drive, step); bassline(bar, root, when, step, drive, hush); }
+    // Acordes a contratiempo (3 + 3 + 2 con el bajo): en A, en el puente y en la vuelta; «A en eco» los calla.
+    if (root != null && !bar.soft && !bar.final && !bar.thin && (eighth === 3 || eighth === 6)) comp(bar, when, (0.3 + 0.12 * drive) * hush * (singing ? 0.7 : 1));
+    if (bar.breathe && !bar.soft && eighth === 4) sweep(when, step * 4, 0.55 + 0.45 * drive);
     if (bar.final) {
       // El acorde final lo despliega el teclado, nota a nota.
       if (left != null) strike(left, when + eighth * rand(0.03, 0.045), 0.42 * hush * rand(0.9, 1.05), 1.5);
@@ -1125,6 +1206,8 @@
         const arc = 0.68 + 0.14 * Math.sin(bar.pos / 8 * Math.PI) + (at === 0 ? 0.05 : 0);
         const [hit, vel] = human(when + lag, arc * hush * rand(0.9, 1.07) * (0.6 + 0.4 * intensity) * clamp((intensity - 0.33) / 0.3, 0.3, 1));
         strike(midi, hit, vel, clamp(0.8 + length * 0.12, 0.9, 1.7) * Math.sqrt(pedal));
+        // Con el scroll decidido, la voz espacial dobla las notas largas.
+        if (length >= 2 && intensity >= 0.55) croon(midi, hit, length * step * 0.9, vel * clamp((intensity - 0.5) / 0.3, 0.25, 1));
         // Con el scroll rápido la mano se abre: la segunda voz suena un instante después y más suave.
         const under = bar.second && bar.second[i];
         if (under != null && intensity >= 0.75) strike(under, hit + rand(0.008, 0.02), vel * 0.5, clamp(0.8 + length * 0.12, 0.9, 1.7) * Math.sqrt(pedal));
