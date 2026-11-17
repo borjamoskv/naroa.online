@@ -11,6 +11,8 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
 REPO = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from build_immersive_site import without_comments  # noqa: E402
 
 
 class Page(HTMLParser):
@@ -92,6 +94,13 @@ def check(output):
         page = Page()
         page.feed(file.read_text())
         assert page.lang == "es", file
+        # §7 INV_AI_WINK_NOTICE: el guiño está hecho con IA; donde se sirve, el aviso va con él.
+        html = file.read_text()
+        if "naroa-monoculo-guino" in html:
+            assert "El guiño de este retrato está hecho con IA a partir de una fotografía de 2015." in html, (file, "guiño de IA sin aviso")
+            assert 'class="menu-ai-note"' in html, (file, "el menú enseña el guiño sin aviso")
+            assert "data-threshold-wink" not in html or "data-threshold-note" in html, (file, "el umbral guiña sin aviso")
+            assert "data-portrait-wink" not in html or 'class="portrait-ai-note"' in html, (file, "«Sobre mí» guiña sin aviso")
         assert page.headings == 1, (file, page.headings)
         assert len(page.ids) == len(set(page.ids)), (file, "duplicate ID")
         assert page.canonical == "https://naroagutierrezgil.com" + route, file
@@ -158,6 +167,29 @@ def check(output):
         assert (output / path.lstrip("/")).is_file(), (css_file.name, "missing CSS target", path)
         checked_refs.add(path)
     assert (output / "404.html").is_file()
+    # Recursos que citan los scripts y las hojas de estilo que cargan las páginas de esta compilación (en cada
+    # idioma) y los que esos scripts cargan a su vez: tienen que existir. No se recorre la carpeta entera: en una
+    # salida reutilizada quedan scripts con hash de compilaciones anteriores, que citan lo que ya no existe.
+    pending, scanned, cited_assets = set(), set(), set()
+    prefixes = [""] + ["/" + f.stem for f in sorted((REPO / "classic/data/i18n").glob("*.json")) if (output / f.stem / "index.html").is_file()]
+    for prefix in prefixes:
+        for route in manifest["canonical_routes"]:
+            html = output / (prefix + route).lstrip("/") / "index.html"
+            if html.is_file():
+                pending.update(re.findall(r"""(?:src|href)=["'](/immersive/[A-Za-z0-9_.-]+\.(?:js|css))["']""", html.read_text()))
+    assert pending, "no scripts or stylesheets found in the generated pages"
+    while pending:
+        ref = pending.pop()
+        scanned.add(ref)
+        asset = output / ref.lstrip("/")
+        assert asset.is_file(), ("missing script or stylesheet", ref)
+        for cited in re.findall(r"""(?<![A-Za-z0-9_./-])(/(?:images|immersive|assets|audio)/[A-Za-z0-9_./-]+\.(?:webp|avif|jpe?g|png|svg|gif|ttf|otf|woff2?|cur|mp3|mp4|webm|json|txt|js|css))""", without_comments(asset.read_text(), ref.endswith(".css"))):
+            assert (output / cited.lstrip("/")).is_file(), (asset.name, "cites a missing asset", cited)
+            if not cited.endswith((".js", ".css")):
+                cited_assets.add(cited)
+            elif cited.startswith("/immersive/") and cited not in scanned:
+                pending.add(cited)
+    assert cited_assets, "no asset references found in the published scripts and stylesheets"
     icon = ET.parse(output / page.favicon.lstrip("/")).getroot()
     assert icon.find("{http://www.w3.org/2000/svg}title").text == "Amy Rocks · Naroa"
     picture = icon.find("{http://www.w3.org/2000/svg}image").attrib["href"]
@@ -232,6 +264,23 @@ def check(output):
                 assert versioned.search(file.name), ("immutable cache on a file without a version in its name", url)
                 immutable_files += 1
     assert immutable_files > len(expected), "the immutable cache rules no longer reach the hashed assets"
+    # Ráfaga de llegada (§7): las hojas que anuncia el catálogo compilado son, byte a byte, las de classic/images/rafaga/,
+    # el recuento sale de la ficha y solo la portada lleva el script que deja el umbral a la espera.
+    burst_file = REPO / "classic/data/rafaga.json"
+    home = (output / "index.html").read_text()
+    compiled = output / re.search(r'src="/(immersive/catalog-[0-9a-f]+\.js)"', home).group(1)
+    burst = json.loads(compiled.read_text().split("window.NAROA_CATALOG=", 1)[1].rstrip().rstrip(";")).get("burst")
+    if burst_file.is_file():
+        source_burst = json.loads(burst_file.read_text())
+        assert burst and burst["count"] == source_burst["count"] == sum(s["count"] for s in burst["sheets"]), "burst count drifted from classic/data/rafaga.json"
+        assert burst["count"] >= source_burst["reviewed"] > 0, "the burst must carry the reviewed catalogue"
+        for sheet, original in zip(burst["sheets"], source_burst["sheets"], strict=True):
+            assert versioned.search(sheet["src"]), ("burst sheet without a hash in its name", sheet["src"])
+            assert (output / sheet["src"].lstrip("/")).read_bytes() == (REPO / "classic" / original["src"].lstrip("/")).read_bytes(), ("burst sheet differs from its source", sheet["src"])
+        assert home.count("burst-pending") == 2, "the home must arm the arrival burst exactly once"
+        assert "burst-pending" not in (output / "obra" / "index.html").read_text(), "only the home arms the arrival burst"
+    else:
+        assert not burst and "burst-pending" not in home, "burst armed without classic/data/rafaga.json"
     # Credenciales C2PA (§12): si el build firmó, cada foto con firma valida contra la CA publicada
     # y el enlace de «Sobre esta obra» lleva a una de ellas; si no firmó, no hay enlace.
     credential_links = {}

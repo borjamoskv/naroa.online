@@ -47,7 +47,7 @@ export const ARTWORKS: Artwork[] = [
     url: '/assets/hq-amy-BRTriASV.webp',
     title: 'Amy Rocks',
     href: '#obra-amy-rocks',
-    year: '2024',
+    year: '2025',
     medium: 'Acrílico y Posca sobre Pizarra Natural con Mica Mineral',
     description: 'Amy Winehouse en blanco, negro y grises, con acentos rojos y dorados. La forma y el canto de la pizarra participan en el retrato.',
     sizeCategory: 'colossal',
@@ -78,7 +78,7 @@ export const ARTWORKS: Artwork[] = [
     url: '/assets/hq-johnny-5ueL8eU0.webp',
     title: 'Johnny Rocks',
     href: '#obra-johnny-rocks',
-    year: '2024',
+    year: '2025',
     medium: 'Óleo y Grafito Compreso sobre Pizarra',
     description: 'Un retrato de Johnny Depp con contrastes en blanco y negro y detalles dorados y rojizos. Forma parte de DiviNos.',
     sizeCategory: 'large'
@@ -100,16 +100,16 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 6,
-    category: 'divinos',
-    kicker: 'Serie DiviNos',
+    category: 'drawing',
+    kicker: 'Serie Tributos',
     slug: 'baroque-farrokh',
-    aspectRatio: 1.234,
-    url: '/assets/baroque-farrokh-mjg4ClA9.webp',
+    aspectRatio: 1.233,
+    url: '/images/catalogo/baroque-farrokh-fb-14.jpg',
     title: 'Baroque Farrokh',
     href: '#obra-baroque-farrokh',
-    year: '2024',
-    medium: 'Técnica Mixta Barroca Contemporánea',
-    description: 'Farrokh —antes de ser Freddie— posa pensativo sobre un azul de flores, la chaqueta estallando en color y la mano sosteniendo la barbilla. El marco se vuelve altar: cenefa dorada de coronas, recortes y ornamentos como quien adelanta una coronación.',
+    year: '2020',
+    medium: 'Retrato recortado, papel arrugado y tela bordada',
+    description: 'Retrato de Freddie Mercury joven, con la mano en la barbilla y camisa de flores, recortado por la silueta sobre papel blanco arrugado y rodeado de tela blanca bordada, en marco de madera oscura.',
     sizeCategory: 'large'
   },
   {
@@ -156,17 +156,17 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 10,
-    category: 'rocks',
-    kicker: 'Serie DiviNos',
+    category: 'drawing',
+    kicker: 'Retrato',
     slug: 'el-gran-dakari',
-    aspectRatio: 0.749,
-    url: '/assets/el-gran-dakari-C1tAWAhR.webp',
+    aspectRatio: 0.727,
+    url: '/images/catalogo/el-gran-dakari-01.jpg',
     title: 'El Gran Dakari',
     href: '#obra-el-gran-dakari',
-    year: '2024',
-    medium: 'Acrílico sobre Pizarra Natural',
-    description: 'Fuerza animal hiperrealista inmortalizada sobre la dureza del soporte de pizarra. La mirada felina emerge de la roca con veladuras y texturas que aprovechan el relieve geológico de la pieza.',
-    sizeCategory: 'medium'
+    year: '2022',
+    medium: 'Rotuladores, corrector blanco y bolígrafo sobre cuatro cartas de póker',
+    description: 'Retrato del mago Gran Dakari, encarnado por Fito Lasarte, dibujado a rotulador sobre cuatro cartas de póker y presentado en marco tipo caja con profundidad.',
+    sizeCategory: 'small'
   },
   {
     id: 11,
@@ -199,17 +199,17 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 13,
-    category: 'rocks',
-    kicker: 'Serie DiviNos',
+    category: 'drawing',
+    kicker: 'Díptico',
     slug: 'lagrimas-de-oro',
-    aspectRatio: 0.747,
-    url: '/assets/lagrimas-de-oro-DikHc-Tk.webp',
+    aspectRatio: 1.333,
+    url: '/images/catalogo/lagrimas-de-oro-fb-01.jpg',
     title: 'Lágrimas de Oro',
     href: '#obra-lagrimas-de-oro',
-    year: '2023',
-    medium: 'Pan de Oro de 24k y Acrílico',
-    description: 'Detalle expresionista de mirada sobrecogedora con lágrimas de pan de oro genuino y mica mineral. La luz reflectante del oro resbala sobre la textura pétrea y oscura del soporte.',
-    sizeCategory: 'small'
+    year: '2017',
+    medium: 'Técnica mixta sobre papel arrugado',
+    description: 'Díptico de dos paneles de papel arrugado con pares de ojos cerrados en negro; de los del panel izquierdo bajan regueros con partículas brillantes. Montado sobre tela roja en un marco ornamentado.',
+    sizeCategory: 'medium'
   },
   {
     id: 15,
@@ -278,7 +278,7 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
     url: '/assets/dar-la-lata-DxWlKgS-.webp',
     title: 'Dar la Lata',
     href: '#obra-dar-la-lata',
-    year: '2024',
+    year: '2021-2022',
     medium: 'Serie En.lata — Escultura Mixta',
     description: 'Dar la Lata reúne retratos tridimensionales realizados con fotografías y pequeñas latas. Cada recipiente se convierte en soporte, marco y escenario de una composición.',
     sizeCategory: 'medium'
@@ -377,7 +377,7 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
     url: '/assets/the-golden-couple-C9C95N75.webp',
     title: 'The Golden Couple',
     href: '#obra-the-golden-couple',
-    year: '2024',
+    year: '2018',
     medium: 'Retrato Doble — Técnica Mixta, Collage Floral & Marco Vitrina',
     description: 'Retrato doble técnica mixta mediante collage.',
     sizeCategory: 'medium'
@@ -618,7 +618,7 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
     url: '/images/catalogo/buena-fuente-original-01-2048.jpg',
     title: 'Buena Fuente',
     href: '#obra-buena-fuente',
-    year: '2022',
+    year: '2024',
     medium: 'Lápices, rotuladores, acrílico y collage sobre Plato de madera sin tratar',
     description: 'Un retrato colorista de Andreu Buenafuente con tipografía, una cabeza de tenedor y una etiqueta de pintura. El objeto cotidiano entra en la composición.',
     sizeCategory: 'small'
@@ -674,7 +674,7 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
     url: '/images/catalogo/me-parto-de-risa-original-01-2048.jpg',
     title: 'Me Parto (de risa)',
     href: '#obra-me-parto-de-risa',
-    year: '2023',
+    year: '2024',
     medium: 'Lápices de colores, papel rasgado y collage textil sobre Papel sobre salvamanteles textil',
     description: 'Luciano Mellera aparece en una composición que se rasga y recompone. Un envoltorio dorado ocupa la grieta: una referencia expresiva al kintsugi trasladada al collage.',
     sizeCategory: 'medium'
@@ -688,7 +688,7 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
     url: '/images/catalogo/red-red-wine-original-01-2048.jpg',
     title: 'Red Red Wine',
     href: '#obra-red-red-wine',
-    year: '2022',
+    year: '2024',
     medium: 'Vino y lápiz magenta sobre Papel de acuarela de 300 g/m²',
     description: 'Un retrato experimental de Neil Diamond en el que el vino se convierte en material de dibujo. La pieza parte de la relación entre el músico y Red Red Wine.',
     sizeCategory: 'medium'
@@ -716,7 +716,7 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
     url: '/images/catalogo/julio-iglesias-como-un-reloj-suizo-original-01-2048.jpg',
     title: 'Julio Iglesias, como un Reloj Suizo',
     href: '#obra-julio-iglesias-como-un-reloj-suizo',
-    year: '2021',
+    year: '2023',
     medium: 'Fotocollage articulado y ensamblaje sobre Caja de reloj con compartimentos',
     description: 'Un retrato tridimensional de Julio Iglesias que se puede accionar mediante hilos y tiradores. La caja contiene compartimentos y objetos que forman parte del relato.',
     sizeCategory: 'small'
@@ -744,7 +744,7 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
     url: '/images/catalogo/custom-jaio-original-01-2048.jpg',
     title: 'Custom Jaio',
     href: '#obra-custom-jaio',
-    year: '2022',
+    year: '2023',
     medium: 'Acrílico, rotuladores, lápices y botones cosidos sobre Vaquero negro en bastidor',
     description: 'Un retrato sobre tela vaquera negra, preparada e intervenida con pintura y botones. El bastidor conserva su presencia como parte de la obra.',
     sizeCategory: 'large'
@@ -758,7 +758,7 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
     url: '/images/catalogo/13n-original-01-2048.jpg',
     title: '13N',
     href: '#obra-13n',
-    year: '2020',
+    year: '2022',
     medium: 'Lápices, pastel, pan de oro, acrílico y collage sobre Plato de madera con caja personalizada',
     description: 'Un retrato doble sobre madera, acompañado de una caja intervenida. Letras de periódico, pan de oro y otros materiales conviven con el dibujo.',
     sizeCategory: 'small'
@@ -772,7 +772,7 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
     url: '/images/catalogo/patxi-en-su-pino-original-01-2048.jpg',
     title: 'Patxi en su-pino',
     href: '#obra-patxi-en-su-pino',
-    year: '2021',
+    year: '2023',
     medium: 'Lápices de colores, pastel y acrílico sobre Rodaja de pino sin tratar',
     description: 'El retrato sigue las vetas de una rodaja de pino. La corteza conserva el contorno natural del soporte y convierte el juego del título en materia.',
     sizeCategory: 'small'
@@ -786,7 +786,7 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
     url: '/images/catalogo/el-luengo-y-el-mar-original-01-2048.jpg',
     title: 'El Luengo y el Mar',
     href: '#obra-el-luengo-y-el-mar',
-    year: '2021',
+    year: '2023',
     medium: 'Acrílico, rotuladores, grattage y collage con mica sobre Concha de vieira',
     description: 'Un retrato marino sobre una concha. Hebras de mandarina coloreadas evocan algas y coral; la mica plateada recuerda las escamas y el nácar.',
     sizeCategory: 'medium'
@@ -800,7 +800,7 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
     url: '/images/catalogo/el-armigo-atomico-original-01-2048.jpg',
     title: 'El Armigo Atómico',
     href: '#obra-el-armigo-atomico',
-    year: '2021',
+    year: '2022',
     medium: 'Lápices, acrílico, pastel y mica sobre Plato de madera',
     description: 'Un retrato humorístico que une un rostro realista y la figura de la Hormiga Atómica. La intervención continúa en el reverso del plato.',
     sizeCategory: 'small'
@@ -899,7 +899,7 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
     url: '/images/catalogo/la-llorona-frontal.jpg',
     title: 'La Llorona',
     href: '#obra-la-llorona',
-    year: '2023',
+    year: '2020',
     medium: 'Pintura acrílica y collage sobre Lienzo',
     description: 'Retrato de Chavela Vargas en el que un ojo de sal rosa, las lágrimas y las flores revelan parte del simbolismo de la obra. «No sé qué tienen las flores, llorona, las flores del campo santo; que cuando las mueve el viento, llorona, parecen que están llorando».',
     sizeCategory: 'large'
@@ -927,7 +927,7 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
     url: '/images/catalogo/euskolander-original.png',
     title: 'Euskolander no hay más que uno',
     href: '#obra-euskolander-no-hay-mas-que-uno',
-    year: '2023',
+    year: '2019',
     medium: 'Lápiz de color negro, bolígrafo y collage sobre Papel poliéster e impresión en papel de 350 g/m²',
     description: 'Del trazo al recorte: retrato dibujado con lápiz de color negro y bolígrafo sobre poliéster, diluido con alcohol en algunas zonas. Tras escanearlo e imprimirlo, Naroa vuelve a dibujar sus rasgos con lápiz Art & Graphic de Faber-Castell y recorta la silueta.',
     sizeCategory: 'medium'
@@ -997,7 +997,7 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
     url: '/images/catalogo/el-hombre-que-susurraba-a-las-estrellas-01.jpg',
     title: 'El hombre que susurraba a las estrellas',
     href: '#obra-el-hombre-que-susurraba-a-las-estrellas',
-    year: '2023',
+    year: '2022',
     medium: 'Bolígrafo negro y collage sobre Papel poliéster e impresión de 350 g/m²',
     description: 'David Bowie aparece entre estrellas y un rayo de color. El dibujo se transforma mediante el escaneado, la impresión y el recorte; el tejido vaquero y los papeles metalizados añaden diferentes superficies.',
     sizeCategory: 'large'
@@ -1156,7 +1156,7 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
     url: '/images/catalogo/the-love-boat-frontal-2048.jpg',
     title: 'The Love Boat',
     href: '#obra-the-love-boat',
-    year: '2021',
+    year: '2017',
     medium: 'Técnica mixta, acrílico, rotuladores Uni-Posca y collage sobre tabla de madera de 50 × 50 cm barnizada con látex líquido',
     description: '«Mare mía, mecachisenlamar, que no me puedo imaginar algo más espectacular que junto a ti pasar unas vacaciones en el mar». Retrato colorista doble realizado mediante técnica mixta sobre tabla de madera de 50×50 cm barnizada con látex líquido. Materiales utilizados: pintura acrílica (pincel y rotuladores Uni-Posca), papel (de seda, de regalo y de alto gramaje plastificado con mensaje impreso), telas, celofán, aluminio, plástico decorado y toneladas de amor.',
     sizeCategory: 'medium'
@@ -1286,7 +1286,7 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
     url: '/images/catalogo/las-rosalias-01.jpg',
     title: 'Las RosaLías',
     href: '#obra-las-rosalias',
-    year: '2019',
+    year: '2020',
     medium: 'Lápices sobre poliéster, frottage de monedas, rosas glossy, fieltro, papeles Canson, celofán y rotuladores Uni-Posca',
     description: 'Esta obra es una rara avis que destaca entre sus compañeras de técnica mixta enmarcadas. Reúne una enorme variedad de elementos y texturas que se engranan en un collage repleto de significados. Es por ello que “Las RosaLías” se trata de una laboriosa y diferente creación en relación a las de su mismo formato, engarzada con mimo para que todo hable. Conforma un puzzle de mil piezas que encaja a la perfección, como dos almas que se quieren y se funden en un abrazo. Retrato realista/imaginativo de un vínculo realizado mediante técnica mixta, compuesto por ilustraciones trazadas con lápices de colores Art & Graphic de Faber-Castell sobre papel poliéster, posteriormente escaneadas, impresas en papel de alto gramaje (350 gr/m²), recortadas y adheridas al conjunto. En el dibujo de los pies, las tiras de las chanclas están decoradas con frottage de monedas, incluyendo los mensajes “United One” y “Rica Silver”. Tras su impresión, he intervenido la reproducción de esta parte con látex líquido y rotuladores acrílicos sobre las uñas y las etiquetas de las chancletas. Las flores, de cartulina plastificada efecto glossy, las he recortado y pegado al passepartout. El fondo bajo los pies lo he creado con papel de regalo arrugado y la barandilla en la que están apoyados es de cartulina negra con pegatinas de letras de colores. El cielo está formado por celofán transparente con nubes, superpuesto a una cartulina azul celeste. El paisaje es un ensamblaje de piezas de fieltro de distintos tonos y papel Canson rayado para aportarle textura. Los árboles están conformados por hojas artificiales y papel de estraza sobre el fieltro. Los troncos de los árboles, el brillo de la barandilla y el texto “las Rosa Lías” los he realizado con rotuladores acrílicos Uni-Posca. Presentado en marco de 40×50 cm con passepartout.',
     sizeCategory: 'large'
@@ -1344,7 +1344,7 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
     url: '/assets/enlatadas-4k.webp',
     title: 'En.lata.das',
     href: '#obra-enlatadas',
-    year: '2022',
+    year: '2021',
     medium: 'Serie En.lata — Relieve 3D en Lata con Patas de Alambre',
     description: 'Lasaio, lanaro y cuatro gatas enlatadas en una lata con patas. Retrato 3D doble realizado a partir de dos fotografías: una de servidora y otra de Saioa Etxebarria allá por sus tiempos mozos. El marco de la fusión de dichas imágenes lo he realizado con una lata de conservas intervenida de la siguiente manera: Primeramente la he dotado de patas mediante un alambre grueso. Tras ello, he creado el fondo del retrato con un collage de ambas fotos y he rematado los bordes internos de la lata con un trozo de cuerda. El siguiente paso ha sido ir montando partes de ambas fotografías mediante distintas capas, usando una pistola de silicona caliente para conformar una imagen con relieve y profundidad. Por último, he añadido pequeñas flores de papel y gomaeva, así como papel de seda verde a modo de hojas y unos felinos con un mensaje conformado con alambre y papel de acuarela escrito. En la parte posterior he cubierto con esmalte dorado la cola caliente con la que he sujetado los gatos y he firmado con cinta rotuladora Dymo antigua.',
     sizeCategory: 'small'
@@ -1506,5 +1506,20 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
     description: 'Retrato a grafito y carboncillo en blanco y negro, atravesado por la tridimensionalidad táctil de una corbata de seda roja con lunares, solapa vaquera y pañuelo de lienzo.',
     sizeCategory: 'medium',
     dimensions: 'Lienzo: 24 × 18 cm · Marco: 32 × 26 cm'
+  },
+  {
+    id: 106,
+    category: 'drawing',
+    kicker: 'Retrato personalizado',
+    slug: 'into-the-wild',
+    aspectRatio: 0.769,
+    url: '/images/catalogo/into-the-wild-01.jpg',
+    title: 'Into the Wild',
+    href: '#obra-into-the-wild',
+    year: '2017',
+    medium: 'Bolígrafo y lápiz, impresión en A3 y fondo de rotulador sobre papel poliéster',
+    description: 'Retrato personalizado a partir del cartel de la película «Hacia rutas salvajes»: el retratado ocupa el lugar del protagonista, sentado sobre el autobús 142.',
+    sizeCategory: 'medium',
+    dimensions: '50 × 40 cm con marco'
   }
 ]

@@ -210,7 +210,7 @@ async function eyeMatch(ui, base, points) {
   assert.ok(llorona.find('[data-facts]').textContent.includes('sal rosa'));
   llorona.dom.window.close();
   assert.equal(ui.journey.entries.length, manifest.projects);
-  assert.deepEqual(Array.from(ui.w.NAROA_CATALOG.journey.scenes, e => e.mode).join(' '), 'E H V Z V E H Z V Z E V H H V Z H V Z P V H Z V H Z V H Z V H H Z E Z V H Z H Z Z V Z V Z H V Z H Z V Z H Z H H H H H Z H V Z V Z V Z H V H Z H H Z H H Z V H V Z Z V Z F');
+  assert.deepEqual(Array.from(ui.w.NAROA_CATALOG.journey.scenes, e => e.mode).join(' '), 'E H V Z V E H Z V Z E V H H V Z H V Z P V H Z V H Z V H Z V H H Z E Z V H Z H Z Z V Z V Z H V Z H Z V Z H Z H H H H H Z H V Z V Z V Z H Z V H Z H H Z H H Z V H V Z Z V Z F');
   const modes = { E: 'eyes', H: 'horizontal', V: 'vertical', Z: 'zoom', P: 'puzzle' };
   let horizontalDirection = -1, inHorizontal = false;
   for (let index = 0; index < works.length; index++) {
@@ -332,6 +332,11 @@ async function eyeMatch(ui, base, points) {
   ui.scroll(0); await ui.flush();
   assert.equal(ui.find('[data-art-title]').textContent, 'Marilyn Rocks');
   assert.ok(ui.find('[data-hero-threshold]'), 'Home route renders H1+H5 artist threshold overture');
+  // Ráfaga de llegada (§7): el recuento sale de las hojas y, donde no se arma (aquí no corre el script en línea), el umbral recibe como siempre.
+  const burst = ui.w.NAROA_CATALOG.burst;
+  if (burst) assert.equal(burst.count, burst.sheets.reduce((n, sheet) => n + sheet.count, 0), 'The arrival burst counts its own sheets');
+  assert.equal(ui.find('.hero-burst'), null, 'No arrival burst canvas unless the home armed it');
+  assert.equal(/burst-(pending|on)/.test(ui.w.document.documentElement.className), false, 'The threshold is never left waiting for a burst that will not run');
   assert.equal(ui.find('[data-hero-threshold]').style.visibility, 'visible');
   assert.equal(Number(ui.find('[data-hero-threshold]').style.opacity), 1);
   assert.equal(ui.find('[data-threshold-plane]').style.transform, 'scale(1.0000)');

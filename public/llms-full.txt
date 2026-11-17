@@ -33,9 +33,9 @@
 - **¿Se puede visitar el estudio en Bilbao?** Sí, visitas con cita concertada previa para ver obra en directo, valorar soportes y definir el proyecto en persona.
 
 ## Secciones Principales
-- [Inicio e Inmersión](https://naroagutierrezgil.com/): Experiencia inmersiva y catálogo completo de 85 obras.
+- [Inicio e Inmersión](https://naroagutierrezgil.com/): Experiencia inmersiva y catálogo completo de 86 obras.
 - [Retratos por Encargo en Bilbao](https://naroagutierrezgil.com/retratos-por-encargo-bilbao/): Condiciones técnicas, formatos (20×30 cm a 40×50 cm), plazos de 2 a 4 semanas, configurador interactivo y galería de ejemplos reales.
-- [Catálogo Completo](https://naroagutierrezgil.com/obra/): Ficha detallada de las 85 piezas de la colección con fotografías de detalle y relato.
+- [Catálogo Completo](https://naroagutierrezgil.com/obra/): Ficha detallada de las 86 piezas de la colección con fotografías de detalle y relato.
 - [Serie Vaivenes](https://naroagutierrezgil.com/series/vaivenes/): Retratos en técnica mixta, collage textil y objetos de memoria.
 - [Sobre Mí](https://naroagutierrezgil.com/sobre-mi/): Biografía, técnica, proceso creativo y proyectos comunitarios (Walking Gallery Bilbao, El ReCreo).
 - [Trayectoria](https://naroagutierrezgil.com/trayectoria/): Archivo cronológico de exposiciones documentadas desde 2010 (DEIA, GARA, Politena, Dock Bilbao).
@@ -46,14 +46,14 @@
 - [Retrato de mascota](https://naroagutierrezgil.com/retrato-de-mascota/): Encargos de retratos de perro o gato hechos a mano desde una foto.
 
 ## Recursos Machine-to-Machine y GEO SOTA 2026
-- [Catálogo JSON Estructurado](https://naroagutierrezgil.com/api/catalog.json): Endpoint con especificaciones completas de las 85 obras y Evidence Graph.
+- [Catálogo JSON Estructurado](https://naroagutierrezgil.com/api/catalog.json): Endpoint con especificaciones completas de las 86 obras y Evidence Graph.
 - [Endpoint WebMCP](https://naroagutierrezgil.com/.well-known/mcp.json): Manifiesto y definición formal de herramientas WebMCP para agentes autónomos.
 - [Índice Extendido llms-full.txt](https://naroagutierrezgil.com/llms-full.txt): Desglose exhaustivo de todas las piezas, fotos de detalle con hashes SHA-256 y condiciones de encargo.
-- [Sitemap XML](https://naroagutierrezgil.com/sitemap.xml): Índice canónico de 96 rutas y metadatos de imágenes.
+- [Sitemap XML](https://naroagutierrezgil.com/sitemap.xml): Índice canónico de 97 rutas y metadatos de imágenes.
 - [Feed RSS 2.0](https://naroagutierrezgil.com/feed.xml): Sindicación de obras recientes y publicaciones del taller.
 - [Protocolo IndexNow](https://naroagutierrezgil.com/indexnow.json): Sincronización instantánea de indexación para Bing y motores asociados.
 
-## Catálogo Exhaustivo de Obras (85 Piezas Documentadas)
+## Catálogo Exhaustivo de Obras (86 Piezas Documentadas)
 
 ### Marilyn Rocks
 - **URL Canónica:** https://naroagutierrezgil.com/obra/marilyn-rocks/
@@ -85,7 +85,7 @@
 - **Relato:** El retrato de Mary y Mala se construye con varias impresiones recortadas y montadas por capas. Flores, alambre y elementos de un collar acompañan la escena.
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Amor%20en%20Conserva
 
-### Amy Rocks
+### Amy Rocks (2025)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/amy-rocks/
 - **Técnica:** Acrílico, lápices y rotuladores
 - **Soporte:** Pizarra natural
@@ -105,7 +105,7 @@
 - **Relato:** «El retrato de Robe parte de un dibujo a lápices sobre poliéster. Tras escanearlo e imprimirlo a mayor tamaño, la imagen se recorta, retoca y combina con tela floral y una frase en alambre». — Naroa Gutiérrez Gil
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Entre%20Tantas%20Flores%20de%20D%C3%ADa
 
-### Johnny Rocks
+### Johnny Rocks (2025)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/johnny-rocks/
 - **Técnica:** Acrílico, lápices y rotuladores
 - **Soporte:** Pizarra natural
@@ -165,7 +165,7 @@
 - **Relato:** Berto Romero, romero y una bolsita de infusión se encuentran en un mismo retrato. La corteza, los líquenes del fresno y los objetos añadidos prolongan el juego de palabras.
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Infusi%C3%B3n%20de%20Berto
 
-### Buena Fuente
+### Buena Fuente (2024)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/buena-fuente/
 - **Técnica:** Lápices, rotuladores, acrílico y collage
 - **Soporte:** Plato de madera sin tratar
@@ -205,7 +205,7 @@
 - **Relato:** Un gato emerge de una tapa pintada en rosa y turquesa. La imagen recortada se combina con huellas estampadas y un interior preparado para un regalo.
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20El%20Gato%20que%20es%20Kutxa
 
-### Me Parto (de risa)
+### Me Parto (de risa) (2024)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/me-parto-de-risa/
 - **Técnica:** Lápices de colores, papel rasgado y collage textil
 - **Soporte:** Papel sobre salvamanteles textil
@@ -215,7 +215,7 @@
 - **Relato:** Luciano Mellera aparece en una composición que se rasga y recompone. Un envoltorio dorado ocupa la grieta: una referencia expresiva al kintsugi trasladada al collage.
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Me%20Parto%20%28de%20risa%29
 
-### Red Red Wine
+### Red Red Wine (2024)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/red-red-wine/
 - **Técnica:** Vino y lápiz magenta
 - **Soporte:** Papel de acuarela de 300 g/m²
@@ -235,7 +235,7 @@
 - **Relato:** Una reproducción de la obra Carole Lombard se transforma en un nuevo collage. Papeles fluorescentes, celofán naranja y pequeños fragmentos impresos construyen otra escena alrededor del retrato.
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20I%20Remember%20when%20your%20Head%20caught%20Flame
 
-### Julio Iglesias, como un Reloj Suizo
+### Julio Iglesias, como un Reloj Suizo (2023)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/julio-iglesias-como-un-reloj-suizo/
 - **Técnica:** Fotocollage articulado y ensamblaje
 - **Soporte:** Caja de reloj con compartimentos
@@ -255,7 +255,7 @@
 - **Relato:** Un retrato que también se puede construir por piezas. Las juntas del puzzle atraviesan la imagen en blanco y negro y su fondo de color.
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Saio%20Puzzle
 
-### Custom Jaio
+### Custom Jaio (2023)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/custom-jaio/
 - **Técnica:** Acrílico, rotuladores, lápices y botones cosidos
 - **Soporte:** Vaquero negro en bastidor
@@ -265,7 +265,7 @@
 - **Relato:** Un retrato sobre tela vaquera negra, preparada e intervenida con pintura y botones. El bastidor conserva su presencia como parte de la obra.
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Custom%20Jaio
 
-### 13N
+### 13N (2022)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/13n/
 - **Técnica:** Lápices, pastel, pan de oro, acrílico y collage
 - **Soporte:** Plato de madera con caja personalizada
@@ -275,7 +275,7 @@
 - **Relato:** Un retrato doble sobre madera, acompañado de una caja intervenida. Letras de periódico, pan de oro y otros materiales conviven con el dibujo.
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%2013N
 
-### Patxi en su-pino
+### Patxi en su-pino (2023)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/patxi-en-su-pino/
 - **Técnica:** Lápices de colores, pastel y acrílico
 - **Soporte:** Rodaja de pino sin tratar
@@ -285,7 +285,7 @@
 - **Relato:** El retrato sigue las vetas de una rodaja de pino. La corteza conserva el contorno natural del soporte y convierte el juego del título en materia.
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Patxi%20en%20su-pino
 
-### El Luengo y el Mar
+### El Luengo y el Mar (2023)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/el-luengo-y-el-mar/
 - **Técnica:** Acrílico, rotuladores, grattage y collage con mica
 - **Soporte:** Concha de vieira
@@ -295,7 +295,7 @@
 - **Relato:** Un retrato marino sobre una concha. Hebras de mandarina coloreadas evocan algas y coral; la mica plateada recuerda las escamas y el nácar.
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20El%20Luengo%20y%20el%20Mar
 
-### El Armigo Atómico
+### El Armigo Atómico (2022)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/el-armigo-atomico/
 - **Técnica:** Lápices, acrílico, pastel y mica
 - **Soporte:** Plato de madera
@@ -305,7 +305,7 @@
 - **Relato:** Un retrato humorístico que une un rostro realista y la figura de la Hormiga Atómica. La intervención continúa en el reverso del plato.
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20El%20Armigo%20At%C3%B3mico
 
-### Elene
+### Elene (2022)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/elene/
 - **Técnica:** Lápices, acrílico, pastel y flores añadidas
 - **Soporte:** Plato de madera
@@ -315,7 +315,7 @@
 - **Relato:** Un retrato acompañado de rosas de papel y calas de goma EVA. Los elementos florales aportan volumen alrededor de la figura.
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Elene
 
-### Dar la Lata
+### Dar la Lata (2021-2022)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/dar-la-lata/
 - **Técnica:** Fotografías recortadas y ensamblaje
 - **Soporte:** Latas de conservas
@@ -385,7 +385,7 @@
 - **Relato:** Ficha técnica: Caracterización de reptil y fantasía para carnaval.
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Monster%20Dragon
 
-### La Llorona
+### La Llorona (2020)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/la-llorona/
 - **Técnica:** Pintura acrílica y collage
 - **Soporte:** Lienzo
@@ -405,7 +405,7 @@
 - **Relato:** El gran Pablo, admiración total. Retrato en el que el dibujo del rostro convive con el color de la camisa.
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Pablo
 
-### Euskolander no hay más que uno
+### Euskolander no hay más que uno (2019)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/euskolander-no-hay-mas-que-uno/
 - **Técnica:** Lápiz de color negro, bolígrafo y collage
 - **Soporte:** Papel poliéster e impresión en papel de 350 g/m²
@@ -445,7 +445,7 @@
 - **Relato:** El retrato dibujado se combina con fragmentos de cerámica decorada y elementos vegetales. La composición fue realizada como regalo de cumpleaños y juega con la idea del eguzkilore.
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20LauraLore
 
-### Can-dy Queen
+### Can-dy Queen (2022)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/can-dy-queen/
 - **Técnica:** Fotografía por capas y ensamblaje
 - **Soporte:** Lata de conservas intervenida
@@ -485,7 +485,7 @@
 - **Relato:** Érase Saban que estaba sosegado y calmado en el monte tumbado. Desde el horizonte incluso se le avistaba, recostado y relajado, al lado del arbolado, con los ojos cerrados y descalzos los pies. Es ese de allí, ¿lo ves? Aquel repanchingado de los brazos alzados, doblados y apoyados tras su lindo cogote. Tanto disfrute ha provocado que de él brote una liviana brisa con sabor a sábado y su sonrisa sin prisa... ¡Qué bien que se note! El bosque enlatado, la natura en el bote.
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Peru%2C%20pura%20natura
 
-### En.lata.das (2022)
+### En.lata.das (2021)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/enlatadas/
 - **Técnica:** Fotocollage por capas y ensamblaje con patas de alambre
 - **Soporte:** Lata de conservas intervenida con soporte escultórico
@@ -545,7 +545,7 @@
 - **Relato:** Holy Wood: REtpLATOS & aMOREs es una serie emblemática de retratos expresivos realizados directamente sobre platos redondos de madera de pino sin tratar. La artista aprovecha la veta y calidez del soporte para plasmar retratos llenos de luz, humor y afecto, incorporando elementos en relieve como purpurina, flores secas, mariposas, encajes y collages botánicos.
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Holy%20Wood%3A%20REtpLATOS%20%26%20aMOREs
 
-### El hombre que susurraba a las estrellas
+### El hombre que susurraba a las estrellas (2022)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/el-hombre-que-susurraba-a-las-estrellas/
 - **Técnica:** Bolígrafo negro y collage
 - **Soporte:** Papel poliéster e impresión de 350 g/m²
@@ -655,7 +655,7 @@
 - **Relato:** Un rostro contempla el paso del tiempo entre hojas de calendario recortadas como vegetales y turnos de espera. Los tonos cálidos y los distintos barnices acompañan una reflexión sobre el afecto por la vida y la manera de habitar los días.
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Denbora%20Nora%20Zoaz%20Eder%20Galant%20Hori%3F
 
-### La pensadora (2023)
+### La pensadora
 - **URL Canónica:** https://naroagutierrezgil.com/obra/la-pensadora/
 - **Técnica:** Acrílico mate y metálico sobre lienzo 3D con laterales pintados. Barniz mate y satinado.
 - **Soporte:** Lienzo 3D con laterales pintados
@@ -665,24 +665,24 @@
 - **Relato:** «Esta obra, al igual que el renombrado ‘Pensador’ de Rodin, representa de alguna manera el mundo interior y los procesos cognitivos: la mente y el cuerpo conectados e interactuando entre sí mediante pensamientos, emociones y sensaciones». — Naroa Gutiérrez Gil
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20La%20pensadora
 
-### Baroque Farrokh (2024)
+### Baroque Farrokh (2020)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/baroque-farrokh/
-- **Técnica:** Lápiz de color sobre fondo floral, técnica mixta y collage
-- **Soporte:** Lámina sobre fondo floral en marco intervenido
-- **Medidas:** 45 × 36 cm
-- **Materiales:** Lápiz de color sobre fondo floral, técnica mixta y collage
+- **Técnica:** Retrato recortado por la silueta sobre lámina brillante, papel blanco arrugado y tela blanca bordada
+- **Soporte:** Lámina recortada, papel arrugado y tela bordada en marco de madera oscura
+- **Medidas:** Medidas variables
+- **Materiales:** Retrato recortado por la silueta sobre lámina brillante, papel blanco arrugado y tela blanca bordada
 - **Serie:** Tributos
-- **Relato:** Ficha técnica: Técnica mixta barroca contemporánea con cenefa dorada y marco altar intervenido.
+- **Relato:** Retrato de Freddie Mercury joven, con la mano en la barbilla y camisa de flores, en grises con trazos de color y recortado por la silueta sobre un fondo de papel blanco arrugado. Lo rodea, a modo de paspartú, una tela blanca bordada, dentro de un marco de madera oscura.
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Baroque%20Farrokh
 
-### El Gran Dakari (2024)
+### El Gran Dakari (2022)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/el-gran-dakari/
-- **Técnica:** Acrílico y pigmentos minerales
-- **Soporte:** Plato de pizarra natural de cantera
-- **Medidas:** 32 × 24 × 0,8 cm
-- **Materiales:** Acrílico y pigmentos minerales
-- **Serie:** DiviNos
-- **Relato:** Ficha técnica: Acrílico y técnica mixta sobre pizarra natural de cantera con escamas de mica mineral.
+- **Técnica:** Rotuladores permanentes Sharpie y Edding, rotulador acrílico Uni-Posca, corrector blanco Tipp-Ex, bolígrafo Bic rojo y agua de colonia para diluir parte de las tintas
+- **Soporte:** Cuatro cartas de póker en marco tipo caja con profundidad
+- **Medidas:** Medidas variables
+- **Materiales:** Rotuladores permanentes Sharpie y Edding, rotulador acrílico Uni-Posca, corrector blanco Tipp-Ex, bolígrafo Bic rojo y agua de colonia para diluir parte de las tintas
+- **Serie:** Colección general
+- **Relato:** Retrato del Gran Dakari, mago encarnado por el sublime Fito Lasarte, realizado mediante técnica mixta con motivo de su cumpleaños. Trabajado sobre 4 cartas de póker y presentado en marco tipo caja con profundidad. “El arte de la magia debe tener la finalidad de elevar la cuota de felicidad en el mundo, en los demás y en nosotros mismos”. (Juan Tamariz).
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20El%20Gran%20Dakari
 
 ### Geisha (2023)
@@ -695,17 +695,17 @@
 - **Relato:** Ficha técnica: Acrílico, pan de oro y pigmentos sobre pizarra natural.
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Geisha
 
-### Lágrimas de Oro (2023)
+### Lágrimas de Oro
 - **URL Canónica:** https://naroagutierrezgil.com/obra/lagrimas-de-oro/
-- **Técnica:** Pan de oro de 24k, acrílico y mica mineral
-- **Soporte:** Pizarra natural con canto irregular
-- **Medidas:** 28 × 21 × 0,5 cm
-- **Materiales:** Pan de oro de 24k, acrílico y mica mineral
-- **Serie:** DiviNos
-- **Relato:** Ficha técnica: Acrílico, pan de oro y mica mineral sobre pizarra natural.
+- **Técnica:** Técnica mixta: marcas en negro y partículas brillantes sobre papel arrugado
+- **Soporte:** Dos lienzos cubiertos de papel arrugado sobre piezas de tela roja superpuestas, en un marco ornamentado
+- **Medidas:** Medidas variables
+- **Materiales:** Técnica mixta: marcas en negro y partículas brillantes sobre papel arrugado
+- **Serie:** Colección general
+- **Relato:** Díptico de dos paneles blancos de papel arrugado con pares de ojos cerrados marcados en negro; en el izquierdo, de los ojos bajan regueros con partículas brillantes. Los dos paneles van montados sobre piezas de tela roja superpuestas, dentro de un marco ornamentado.
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20L%C3%A1grimas%20de%20Oro
 
-### The Golden Couple (2024)
+### The Golden Couple (2018)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/the-golden-couple/
 - **Técnica:** Retrato doble mediante técnica mixta, lápices de colores y collage
 - **Soporte:** Papel sobre fondo floral y celosía dorada en marco vitrina (shadow box)
@@ -735,7 +735,17 @@
 - **Relato:** «Shine, baby, shine». Retrato en blanco y negro con un toque de color, realizado mediante lápices de colores Art & Graphic de Faber-Castell sobre papel poliéster. Posteriormente escaneado e impreso en papel de 350 gr/m². Sobre el fondo de esta lámina he aplicado pinceladas de esmalte transparente con brillantina dorada y un detalle a rotulador acrílico Uni-Posca. Presentado en marco formato A3 con cristal.
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Izei
 
-### The Love Boat (2021)
+### Into the Wild (2017)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/into-the-wild/
+- **Técnica:** Bolígrafos negro y rojo y lápiz Art & Graphic de Faber-Castell ocre, impresión en A3 sobre papel de 350 gr/m² y fondo de rotulador de tinta azul y alcohol sobre papel poliéster
+- **Soporte:** Papel de 350 gr/m² con passepartout y marco
+- **Medidas:** 50 × 40 cm con marco
+- **Materiales:** Bolígrafos negro y rojo y lápiz Art & Graphic de Faber-Castell ocre, impresión en A3 sobre papel de 350 gr/m² y fondo de rotulador de tinta azul y alcohol sobre papel poliéster
+- **Serie:** Colección general
+- **Relato:** Basándome en el cartel de la película “Hacia Rutas Salvajes”, he fusionado el rostro de Paul -dado que este se trata de su film favorito- con el cuerpo del actor principal de la historia, convirtiéndole así en el protagonista del citado largometraje. Retrato personalizado en blanco y negro con el fondo y detalles en color realizado mediante técnica mixta. Primeramente he realizado la ilustración utilizando bolígrafos -negro y rojo- y lápiz Art & Graphic de Faber-Castell de color ocre. He escaneado el resultado y lo he impreso a mayor formato (tamaño A3) sobre papel de alto gramaje (350 gr/m²). Posteriormente he trabajado el fondo con rotulador de tinta azul y alcohol sobre papel poliéster. Lo he recortado para encajar la silueta y lo he fijado con cinta adhesiva de doble cara a la lámina. Por último, he añadido el passepartout y el marco de 50 x 40 cm, con el que he presentado la pieza.
+- **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Into%20the%20Wild
+
+### The Love Boat (2017)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/the-love-boat/
 - **Técnica:** Técnica mixta, acrílico, rotuladores Uni-Posca y collage sobre tabla
 - **Soporte:** Tabla de madera de 50 × 50 cm barnizada con látex líquido
@@ -875,7 +885,7 @@
 - **Relato:** “There's a starman waiting in the sky / He'd like to come and meet us / But he thinks he'd blow our minds”. —David Bowie. (“Hay un hombre de las estrellas esperando en el cielo / Le gustaría venir y conocernos / Pero cree que volaría nuestras mentes”). Retrato realista en blanco y negro con algo de color de David Robert Jones, más conocido por su nombre artístico David Bowie, nuestro eterno niño de las estrellas (firmamento que he extendido a sus espaldas) realizado mediante técnica mixta: ilustración realizada con bolígrafos Bic sobre papel poliéster. La he escaneado, impreso a mayores dimensiones en papel de alto gramaje, recortado su silueta e integrado en un collage de distintos elementos, tanto en el fondo como en la superficie. Materiales utilizados en la composición: Fondo: bolsas de cartón con motivos holográficos. Superficie: chaqueta con papel plástico holográfico metalizado en dos tonos (dorado y plateado), solapas envueltas en dicho papel, con cuñas para aportar relieve y rotulador permanente. Presentado en marco de 50×70 cm con paspartú intervenido.
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Starchild
 
-### Las RosaLías (2019)
+### Las RosaLías (2020)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/las-rosalias/
 - **Técnica:** Collage y técnica mixta
 - **Soporte:** Papel de alto gramaje y marco con passepartout

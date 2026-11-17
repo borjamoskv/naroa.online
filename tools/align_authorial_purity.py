@@ -70,7 +70,7 @@ VERBATIM_STORIES = {
 
 # Technical cleanup for works that had synthetic third-person fluff
 TECHNICAL_STORIES = {
-    "el-gran-dakari": "Ficha técnica: Acrílico y técnica mixta sobre pizarra natural de cantera con escamas de mica mineral.",
+    "el-gran-dakari": "Retrato del Gran Dakari, mago encarnado por el sublime Fito Lasarte, realizado mediante técnica mixta con motivo de su cumpleaños. Trabajado sobre 4 cartas de póker y presentado en marco tipo caja con profundidad. “El arte de la magia debe tener la finalidad de elevar la cuota de felicidad en el mundo, en los demás y en nosotros mismos”. (Juan Tamariz).",
     "geisha": "Ficha técnica: Acrílico, pan de oro y pigmentos sobre pizarra natural.",
     "lagrimas-de-oro": "Ficha técnica: Acrílico, pan de oro y mica mineral sobre pizarra natural.",
     "the-golden-couple": "Ficha técnica: Retrato doble técnica mixta mediante collage textil y mineral.",

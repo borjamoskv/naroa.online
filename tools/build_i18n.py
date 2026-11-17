@@ -490,7 +490,7 @@ def head_block(route, langs):
 def switch_block(route, current, langs):
     codes = [c for c in [DEFAULT_LANG] + list(langs) if c != current]
     return MARK_OPEN + "".join(
-        f'<a class="lang-switch" href="{lang_path(route, code)}" hreflang="{code}" lang="{code}" data-lang="{code}" aria-label="{SWITCH_LABEL[code]}" title="{SWITCH_LABEL[code]}" translate="no">{code.upper()}</a>'
+        f'<a class="lang-switch" href="{lang_path(route, code)}" hreflang="{code}" lang="{code}" data-lang="{code}" aria-label="{code.upper()} · {SWITCH_LABEL[code]}" title="{SWITCH_LABEL[code]}" translate="no">{code.upper()}</a>'
         for code in codes
     ) + MARK_CLOSE
 

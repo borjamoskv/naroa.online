@@ -1,0 +1,38 @@
+{
+  "tile": [
+    72,
+    90
+  ],
+  "cols": 25,
+  "count": 1600,
+  "reviewed": 254,
+  "sheets": [
+    {
+      "src": "/images/rafaga/rafaga-01.webp",
+      "count": 400,
+      "bytes": 566810
+    },
+    {
+      "src": "/images/rafaga/rafaga-02.webp",
+      "count": 400,
+      "bytes": 592680
+    },
+    {
+      "src": "/images/rafaga/rafaga-03.webp",
+      "count": 400,
+      "bytes": 603464
+    },
+    {
+      "src": "/images/rafaga/rafaga-04.webp",
+      "count": 400,
+      "bytes": 596888
+    }
+  ],
+  "left_out": {
+    "autoria_ajena": 71,
+    "foto_excluida": 40,
+    "privado": 142,
+    "evento_con_publico": 392,
+    "revisar": 169
+  }
+}
