@@ -178,7 +178,8 @@
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.globalCompositeOperation = 'source-over';
       // Por tiempo y no por fotograma: la estela dura lo mismo (unos 50 ms a toda velocidad) a 30 que a 120 fps.
-      ctx.globalAlpha = rush < 0.02 ? 1 : 1 - Math.exp(-gap / (47 * rush));
+      const fade = rush < 0.02 ? 1 : 1 - Math.exp(-gap / (47 * rush));
+      ctx.globalAlpha = fade;
       ctx.fillStyle = '#0d0e0b';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       // Las más lejanas (recién nacidas) primero; las que ya llegan a quien mira, encima.
@@ -205,7 +206,8 @@
         halo.addColorStop(0, accent + 'cc'); halo.addColorStop(0.35, accent + '55'); halo.addColorStop(1, accent + '00');
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.globalCompositeOperation = 'lighter';
-        ctx.globalAlpha = glow * 0.75;
+        // La estela no borra del todo el fotograma anterior: el halo se suma solo en la parte que se borra, o se quemaría en blanco.
+        ctx.globalAlpha = glow * 0.75 * fade;
         ctx.fillStyle = halo;
         ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
         ctx.strokeStyle = accent; ctx.lineWidth = 1.5 * dpr;
@@ -233,8 +235,17 @@
       state = 'done';
       ended = performance.now();
       drop();
-      canvas.classList.add('is-leaving');
-      if (waiting) finish(); else setTimeout(finish, 520);
+      // El retrato se abre desde la lente (iris); donde el navegador no sabe animarlo, el lienzo se funde.
+      const iris = !waiting && window.CSS?.registerProperty && CSS.supports?.('mask-image', 'radial-gradient(#000, #0000)');
+      if (iris) {
+        canvas.style.setProperty('--bx', `${vx}px`);
+        canvas.style.setProperty('--by', `${vy}px`);
+        canvas.style.setProperty('--iris-end', `${Math.ceil(Math.hypot(Math.max(vx, W - vx), Math.max(vy, H - vy)) + Math.min(W, H) * 0.06)}px`);
+      }
+      // Por el iris se ve el retrato ya entero: se salta su fundido de entrada y conserva el acercamiento y el enfoque.
+      if (iris) threshold.classList.add('is-from-burst');
+      canvas.classList.add(iris ? 'is-opening' : 'is-leaving');
+      if (waiting) finish(); else setTimeout(finish, iris ? 900 : 520);
     }
     function finish() {
       cancelAnimationFrame(raf);
