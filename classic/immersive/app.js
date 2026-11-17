@@ -4842,12 +4842,25 @@
         window.scrollBy({ top: e.deltaX, behavior: 'auto' });
       }
     }, { passive: true });
-    let _touchStartY = 0;
+    // Deslizar el dedo de lado pasa de obra como ← y →: hacia la izquierda, la siguiente.
+    // Solo un dedo, un gesto claramente horizontal y corto; el vertical sigue siendo scroll nativo
+    // (la escena lleva touch-action: pan-y). Con la lupa o un diálogo abierto, el dedo es suyo.
+    let swipe = null;
     addEventListener('touchstart', e => {
       interruptNavigation();
-      if (e.touches?.length) _touchStartY = e.touches[0].clientY;
+      swipe = e.touches?.length === 1 ? { x: e.touches[0].clientX, y: e.touches[0].clientY, t: performance.now() } : null;
     }, { passive: true });
-    addEventListener('touchmove', () => {}, { passive: true });
+    addEventListener('touchmove', e => { if (swipe && e.touches?.length !== 1) swipe = null; }, { passive: true });
+    addEventListener('touchend', e => {
+      const from = swipe, end = e.changedTouches?.[0];
+      swipe = null;
+      if (!from || !end || !stage.contains(e.target) || e.target.closest?.('input,textarea,select,[contenteditable=true]')) return;
+      if (document.querySelector('dialog[open]') || document.body.classList.contains('is-lens')) return;
+      const dx = end.clientX - from.x, dy = end.clientY - from.y;
+      if (Math.abs(dx) < 48 || Math.abs(dx) < Math.abs(dy) * 1.6 || performance.now() - from.t > 800) return;
+      $(dx < 0 ? '[data-next]' : '[data-prev]', stage)?.click();
+    }, { passive: true });
+    addEventListener('touchcancel', () => { swipe = null; }, { passive: true });
     $$('[data-select]', stage).forEach(b => b.addEventListener('click', () => change(Number(b.dataset.select))));
     $('[data-prev]', stage).addEventListener('click', () => {
       const cur = motion.navigation ?? motion.desired;
