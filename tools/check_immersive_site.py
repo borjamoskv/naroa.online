@@ -94,6 +94,13 @@ def check(output):
         page = Page()
         page.feed(file.read_text())
         assert page.lang == "es", file
+        # §7 INV_AI_WINK_NOTICE: el guiño está hecho con IA; donde se sirve, el aviso va con él.
+        html = file.read_text()
+        if "naroa-monoculo-guino" in html:
+            assert "El guiño de este retrato está hecho con IA a partir de una fotografía de 2015." in html, (file, "guiño de IA sin aviso")
+            assert 'class="menu-ai-note"' in html, (file, "el menú enseña el guiño sin aviso")
+            assert "data-threshold-wink" not in html or "data-threshold-note" in html, (file, "el umbral guiña sin aviso")
+            assert "data-portrait-wink" not in html or 'class="portrait-ai-note"' in html, (file, "«Sobre mí» guiña sin aviso")
         assert page.headings == 1, (file, page.headings)
         assert len(page.ids) == len(set(page.ids)), (file, "duplicate ID")
         assert page.canonical == "https://naroagutierrezgil.com" + route, file

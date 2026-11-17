@@ -3911,6 +3911,12 @@
         // sigue expuesto a los lectores de pantalla, y el `inert` de «Solo obra» sobre el pie entero es de metadata().
         $$('.art-more-row,.art-controls', artBottom).forEach(el => { if (el.inert !== faded) el.inert = faded; });
       }
+      // Aviso del guiño hecho con IA (§7): se apaga al bajar hacia la primera obra, antes de que asome el pie.
+      const thresholdNote = $('[data-threshold-note]', stage);
+      if (thresholdNote) {
+        const noteFade = heroThreshold && !state.fit && !state.quiet ? 1 - smooth(pose.distance / 0.2) : 0;
+        thresholdNote.style.setProperty('--note-fade', noteFade.toFixed(4));
+      }
       if (works[base].slug === 'dustin' || works[incoming].slug === 'dustin') {
         if (!dustinVisited && (works[state.index].slug === 'dustin' || (transition && works[incoming].slug === 'dustin' && fraction >= 0.45))) {
           dustinVisited = true;
