@@ -14,6 +14,8 @@ Gobernanza general de la carpeta de proyectos: [Workspace AGENTS.md](file:///Use
 
 ### Compilar y probar
 - `pnpm run build:site` genera `.deploy/` (tarda varios minutos: optimiza todas las imágenes). Los scripts y hojas de estilo salen con hash en el nombre, así que un cambio en `classic/immersive/` no se ve hasta recompilar.
+- Al final del build, `tools/minify_assets.mjs` minifica en su sitio los scripts y la hoja de estilo publicados (ya traducidos; el catálogo no) con el oxc y el lightningcss que trae Vite. Sin Node avisa y los deja legibles; `--no-minify` también, para `build_i18n.py extract`, que lee los literales de los scripts publicados.
+- El buscador del índice no lleva `data-search` en el HTML: `app.js` lo compone del catálogo cargado y del texto de cada tarjeta.
 - `pnpm run test:site` comprueba las fuentes del catálogo, el sitio generado y la suite JSDOM. Las dos últimas leen `.deploy/`: primero hay que compilar.
 - `pnpm test` añade lint y tipos.
 - El `pre-commit` (lefthook) pasa `detect-secrets`; si no está instalado, el commit se aborta.

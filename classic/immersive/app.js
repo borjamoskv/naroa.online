@@ -1481,13 +1481,24 @@
     cardEl.style.removeProperty('--peel-tape-lift');
   }
   const normalized = s => s.toLocaleLowerCase(LANG).normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  // Lo que encuentra el buscador del índice sale del catálogo ya cargado (traducido en /en y /eu)
+  // y del texto de la tarjeta: no va escrito en cada tarjeta del HTML, que lo repetía en todas las páginas.
+  const searchCache = new WeakMap();
+  const searchText = item => {
+    if (!searchCache.has(item)) {
+      const p = projects.find(x => x.slug === item.dataset.work) || {};
+      const fields = ['title', 'technique', 'support', 'series', 'story', 'materials', 'dimensions'].map(k => p[k] || '');
+      searchCache.set(item, normalized([item.dataset.search || '', ...fields, item.textContent].join(' ')));
+    }
+    return searchCache.get(item);
+  };
   function filterIndex() {
     const term = normalized(search.value.trim());
     let count = 0;
     let firstVisible = null;
     indexItems.forEach(item => {
       const category = filter === 'all' || item.dataset.category === filter || item.dataset.series === filter;
-      item.hidden = !category || !normalized(item.dataset.search).includes(term);
+      item.hidden = !category || !searchText(item).includes(term);
       if (!item.hidden) {
         if (!firstVisible) firstVisible = item;
         count++;
