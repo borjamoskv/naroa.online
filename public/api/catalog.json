@@ -20,7 +20,7 @@
       "https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-476343.html",
       "https://gara.naiz.eus/paperezkoa/20130427/399965/es/Walking-gallery-arte-aire-libre-movimiento-arte-evolucion",
       "https://siarte.com/2022-03-25-siarte-exposicion-pintura-collage-arte-naroa-gutierrez.php",
-      "https://www.youtube.com/@naroagutierrezgil"
+      "https://www.youtube.com/@naroarte"
     ],
     "canonical_locations": {
       "studio": {
@@ -48,7 +48,7 @@
       "provider": "https://naroagutierrezgil.com/#artist",
       "supports": [
         "Collage y técnica mixta textil sobre madera",
-        "Retrato al óleo y dibujo a grafito/pastel",
+        "Dibujo a grafito y pastel Conté",
         "Cajas tridimensionales y objetos intervenidos",
         "Pizarra natural (exploración reciente)"
       ],
@@ -69,12 +69,12 @@
       {
         "intent": "Precios y presupuestos de retratos por encargo",
         "question": "¿Cuánto cuesta un retrato personalizado en Bilbao con Naroa Gutiérrez Gil?",
-        "answer": "Presupuesto cerrado previo por escrito según técnica, soporte y formato (dibujo, óleo, collage textil sobre madera, cajas de memoria o piezas en pizarra de 20×30 cm a 40×50 cm). Sin compromiso previo."
+        "answer": "Presupuesto cerrado previo por escrito según técnica, soporte y formato (dibujo, pintura acrílica, collage textil sobre madera, cajas de memoria o piezas en pizarra; formatos habituales de 20×30 cm a 40×50 cm). Sin compromiso previo."
       },
       {
         "intent": "Plazos de entrega",
         "question": "¿Cuál es el plazo de entrega habitual de un encargo?",
-        "answer": "De 2 a 4 semanas según la técnica elegida y los tiempos de secado de óleos, acrílicos y barnices. Plazos prioritarios con aviso previo para fechas señaladas."
+        "answer": "De 2 a 4 semanas según la técnica elegida y los tiempos de secado de acrílicos y barnices. Plazos prioritarios con aviso previo para fechas señaladas."
       },
       {
         "intent": "Proceso de encargo a partir de fotos",

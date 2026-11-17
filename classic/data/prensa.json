@@ -59,6 +59,34 @@
       "checked": "2026-11-11"
     },
     {
+      "id": "elcorreo-2017-gizakiak",
+      "medium": "El Correo",
+      "kind": "agenda",
+      "date": "2017-09-07",
+      "date_kind": "event",
+      "date_label": "Septiembre de 2017",
+      "title": "Muestra titulada 'Gizakiak-Personas'",
+      "byline": "Agenda cultural del diario",
+      "summary": "La agenda anuncia la colectiva solidaria “Gizakiak-Personas” en Sarean, en Bilbao, del 7 al 24 de septiembre de 2017, y nombra a Naroa entre sus diecinueve participantes.",
+      "url": "https://agenda.elcorreo.com/evento/gizakiak-personas-573411.html",
+      "encounter": "1895",
+      "checked": "2026-11-11"
+    },
+    {
+      "id": "deia-2017-sinfin-comer",
+      "medium": "DEIA",
+      "kind": "blog",
+      "date": "2017-07-20",
+      "date_kind": "published",
+      "date_label": "20 de julio de 2017",
+      "title": "Planes para todos este finde en Bilbao y alrededores.",
+      "byline": "Un sinfín de planes, el blog de Maite Goienetxea",
+      "summary": "Entre los planes del fin de semana, el blog recoge la exposición “Comer con los Ojos” en Dando La Brasa, de julio a septiembre de 2017, y nombra a Naroa entre quienes ponen la obra plástica.",
+      "url": "https://blogs.deia.eus/un-sinfin-de-planes/2017/07/20/planes-para-todos-este-finde-en-bilbao-y-alrededores/",
+      "encounter": "",
+      "checked": "2026-11-11"
+    },
+    {
       "id": "deia-2016-sinfin-tegobi",
       "medium": "DEIA",
       "kind": "blog",
@@ -83,6 +111,48 @@
       "byline": "Agenda cultural del diario",
       "summary": "La agenda del día recoge la muestra de ViaDeFuga Café, en Bilbao, hasta el 14 de junio de 2016, con el título “Y see your true colors”: la última colección de retratos de Naroa, una serie de trabajos coloristas.",
       "url": "https://www.deia.eus/cultura/2016/06/06/agenda-5031497.html",
+      "encounter": "",
+      "checked": "2026-11-11"
+    },
+    {
+      "id": "elcorreo-2016-true-colors",
+      "medium": "El Correo",
+      "kind": "agenda",
+      "date": "2016-05-05",
+      "date_kind": "event",
+      "date_label": "Mayo de 2016",
+      "title": "Naroa Gutiérrez Gil presenta 'Y see your true colors'",
+      "byline": "Agenda cultural del diario",
+      "summary": "La agenda anuncia la muestra en ViaDeFuga Café, en Bilbao, del 5 de mayo al 14 de junio de 2016: la última colección de retratos de Naroa, una serie de trabajos coloristas.",
+      "url": "https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-y-see-your-true-colors-519981.html",
+      "encounter": "",
+      "checked": "2026-11-11"
+    },
+    {
+      "id": "ilovebilbao-2016-true-colors",
+      "medium": "ilovebilbao.com",
+      "kind": "noticia",
+      "date": "2016-04-25",
+      "date_kind": "published",
+      "date_label": "25 de abril de 2016",
+      "title": "I SEE YOUR TRUE COLORS",
+      "byline": "Agenda de ocio y cultura de Bilbao",
+      "summary": "Anuncia la inauguración del 5 de mayo de 2016 en Vía de Fuga, en la calle Gordóniz, y describe la muestra: retratos coloristas en los que Naroa deja entrar la mancha, el azar y el juego sin saber qué curso seguirá la obra.",
+      "url": "https://ilovebilbao.com/i-see-your-true-colors/",
+      "encounter": "",
+      "checked": "2026-11-11"
+    },
+    {
+      "id": "noiz-2015-gu-gara-garrobi",
+      "medium": "NOIZ Agenda",
+      "kind": "agenda",
+      "date": "2015-10-14",
+      "date_kind": "event",
+      "date_label": "Octubre de 2015",
+      "title": "EXPOSICIÓN COLECTIVA \"GU GARA GARROBI\" TALDE ERAKUSKETA",
+      "byline": "Agenda cultural",
+      "summary": "La agenda anuncia la colectiva abierta que organiza la asociación Garrobi, de Getxo, con inauguración el 14 de octubre de 2015, y nombra a Naroa entre los artistas participantes.",
+      "url": "https://www.noizagenda.com/agenda/22279/exposicin-colectiva-gu-gara-garrobi-talde-erakusketa",
       "encounter": "",
       "checked": "2026-11-11"
     },
@@ -129,6 +199,49 @@
       "checked": "2026-11-11"
     },
     {
+      "id": "radio-popular-2015-flor-canela",
+      "medium": "Radio Popular",
+      "kind": "radio",
+      "date": "2015-05-16",
+      "date_kind": "published",
+      "date_label": "16 de mayo de 2015",
+      "title": "Entrevista en 'La Flor de la Canela'",
+      "byline": "Entrevista de Iñaki Astigarraga en el espacio «La Flor de la Canela»",
+      "summary": "Entrevista de radio para dar a conocer “Espejos del Alma”, la muestra que iba a abrir en el Colegio de Abogados de Bilbao. La emisora no conserva el programa: el enlace abre el audio que subió el propio canal de Naroa.",
+      "url": "https://www.youtube.com/watch?v=bn4tOI5M7sM",
+      "encounter": "414",
+      "checked": "2026-11-11",
+      "read": "Escuchar el audio"
+    },
+    {
+      "id": "noiz-2015-grito-de-mujer",
+      "medium": "NOIZ Agenda",
+      "kind": "agenda",
+      "date": "2015-03-06",
+      "date_kind": "event",
+      "date_label": "Marzo de 2015",
+      "title": "GRITO DE MUJER",
+      "byline": "Agenda cultural",
+      "summary": "La agenda anuncia la colectiva de Estudios A Tu Aire dentro del festival Grito de Mujer, con inauguración el 6 de marzo de 2015, y nombra a Naroa entre las artistas participantes.",
+      "url": "https://www.noizagenda.com/agenda/19497/grito-de-mujer",
+      "encounter": "",
+      "checked": "2026-11-11"
+    },
+    {
+      "id": "barakaldodigital-2014-paisajes",
+      "medium": "Barakaldo Digital",
+      "kind": "noticia",
+      "date": "2014-09-03",
+      "date_kind": "published",
+      "date_label": "3 de septiembre de 2014",
+      "title": "El CIS de los Hermanos acoge una exposición colectiva con fotografía, ilustraciones y pintura",
+      "byline": "Noticia del digital local",
+      "summary": "La sala BarakArt, en Barakaldo, presenta hasta el 26 de septiembre de 2014 “Paisajes retratados”, una colectiva de fotografía, ilustración y pintura con obra de Naroa.",
+      "url": "https://www.barakaldodigital.com/2014/09/el-cis-de-los-hermanos-acoge-una.html",
+      "encounter": "",
+      "checked": "2026-11-11"
+    },
+    {
       "id": "elcorreo-2014-espejos",
       "medium": "El Correo",
       "kind": "agenda",
@@ -140,6 +253,35 @@
       "summary": "La agenda anuncia la muestra en la Casa-Torre de Salazar de Portugalete, del 3 de julio al 31 de agosto de 2014. Presenta a Naroa como una artista bilbaína que parte de la pintura acrílica y experimenta sobre lienzo, tela estampada, madera, papel o metal, con el rostro humano como protagonista.",
       "url": "https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-430614.html",
       "encounter": "195",
+      "checked": "2026-11-11"
+    },
+    {
+      "id": "elcorreo-2014-facefood",
+      "medium": "El Correo",
+      "kind": "agenda",
+      "date": "2014-01-16",
+      "date_kind": "event",
+      "date_label": "Enero de 2014",
+      "title": "Naroa Gutiérrez Gil presenta la exposición de pinturas e ilustraciones 'Facefood'",
+      "byline": "Agenda cultural del diario",
+      "summary": "La agenda anuncia “Facefood” en la Casa de Cultura Goñi Portal de Plentzia, del 16 al 31 de enero de 2014: reproducciones de pinturas e ilustraciones en distintos formatos, con los rostros como protagonistas.",
+      "url": "https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-402297.html",
+      "encounter": "",
+      "checked": "2026-11-11"
+    },
+    {
+      "id": "elcorreo-2013-mucho-arte",
+      "medium": "El Correo",
+      "kind": "reportaje",
+      "date": "2013-05-04",
+      "date_kind": "published",
+      "date_label": "4 de mayo de 2013",
+      "title": "Los bilbaínos tienen mucho arte",
+      "byline": "Reportaje de Koldo Domínguez, en Culturas y Sociedad (págs. 44 y 45 de la edición en papel)",
+      "summary": "Reportaje sobre el nacimiento de Bilbao Art District. La foto principal muestra a Naroa con Temuri Tsitskishvili y Adirane Azkuenaga a la cabeza de la Walking Gallery, junto al Bellas Artes. No hay versión en línea: el enlace abre la foto de las dos páginas que Naroa guarda en su blog.",
+      "url": "https://naroagutierrez.wordpress.com/wp-content/uploads/2017/05/7gperic3b3dicobilbao-art-districtx-2.jpg",
+      "read": "Ver el recorte",
+      "encounter": "",
       "checked": "2026-11-11"
     },
     {
@@ -173,6 +315,64 @@
       "checked": "2026-11-11"
     },
     {
+      "id": "kubilha-2013-tarde-de-radio",
+      "medium": "Kubilha",
+      "kind": "cronica",
+      "date": "2013-02-07",
+      "date_kind": "published",
+      "date_label": "7 de febrero de 2013",
+      "title": "Tarde de radio en un bar",
+      "byline": "Crónica de la sección Miscelánea",
+      "summary": "Crónica del programa en directo Radio Nowhere desde el pub The Dubliners, en la plaza Moyua de Bilbao, que hablaba de la Walking Gallery: Naroa se acercó a contar su experiencia con la fotógrafa Adirane Azkuenaga. La web ya no existe: el enlace abre la copia que guarda Internet Archive.",
+      "url": "https://web.archive.org/web/20130215103222/http://www.kubilha.com:80/tarde-de-radio-en-un-bar/",
+      "original": "http://www.kubilha.com/tarde-de-radio-en-un-bar/",
+      "archived": true,
+      "encounter": "",
+      "checked": "2026-11-11"
+    },
+    {
+      "id": "barakaldodigital-2012-espejos",
+      "medium": "Barakaldo Digital",
+      "kind": "agenda",
+      "date": "2012-03-11",
+      "date_kind": "published",
+      "date_label": "11 de marzo de 2012",
+      "title": "Agenda semanal | Desobediencia, Porco Bravo, Banda de Música y BOS",
+      "byline": "Agenda semanal",
+      "summary": "La agenda de la semana recoge “Espejos del alma”, de Naroa Gutiérrez Gil, en la Casa de Cultura de San Vicente, en Barakaldo, hasta el 31 de marzo de 2012.",
+      "url": "https://www.barakaldodigital.com/2012/03/agenda-semanal-desobediencia-porco.html",
+      "encounter": "",
+      "checked": "2026-11-11"
+    },
+    {
+      "id": "barakaldodigital-2011-programa",
+      "medium": "Barakaldo Digital",
+      "kind": "noticia",
+      "date": "2011-12-29",
+      "date_kind": "published",
+      "date_label": "29 de diciembre de 2011",
+      "title": "El programa de exposiciones municipales repite artistas y muestras en su programación",
+      "byline": "Noticia del digital local",
+      "summary": "Al repasar el programa de las salas municipales de Barakaldo para 2012, anuncia que del 16 al 31 de marzo Naroa mostrará sus pinturas en una exposición titulada “Espejos del alma”.",
+      "url": "https://www.barakaldodigital.com/2011/12/el-programa-de-exposiciones-municipales.html",
+      "encounter": "",
+      "checked": "2026-11-11"
+    },
+    {
+      "id": "deia-2011-museo-cuestas",
+      "medium": "DEIA",
+      "kind": "reportaje",
+      "date": "2011-09-17",
+      "date_kind": "published",
+      "date_label": "17 de septiembre de 2011",
+      "title": "Con el museo a cuestas",
+      "byline": "Reportaje de Ander Egiluz Beramendi, en la sección de Cultura",
+      "summary": "Reportaje sobre la Walking Gallery el día de una salida simultánea en cuatro ciudades. Cuenta que Naroa, que respondió a la llamada de su creador, José Puig, ha planificado la de Bilbao, y recoge sus palabras: «Cuantas más veces voy, más me gusta».",
+      "url": "https://www.deia.eus/cultura/2011/09/17/museo-cuestas-5516144.html",
+      "encounter": "",
+      "checked": "2026-11-11"
+    },
+    {
       "id": "barakaldodigital-2011-agenda",
       "medium": "Barakaldo Digital",
       "kind": "agenda",
@@ -183,6 +383,20 @@
       "byline": "Agenda del día",
       "summary": "Entre las citas del jueves 15 de septiembre de 2011, este digital local recoge la exposición de pintura de Naroa Gutiérrez Gil en el Gaztebulegoa de Barakaldo, abierta hasta el día 30.",
       "url": "https://www.barakaldodigital.com/2011/09/agenda-recital-acustico-de-porco.html",
+      "encounter": "gaztebulegoa-2011",
+      "checked": "2026-11-11"
+    },
+    {
+      "id": "barakaldodigital-2011-gaztebulegoa",
+      "medium": "Barakaldo Digital",
+      "kind": "noticia",
+      "date": "2011-09-09",
+      "date_kind": "published",
+      "date_label": "9 de septiembre de 2011",
+      "title": "Naroa Gutiérrez Gil expone su pintura en Gaztebulegoa desde este sábado 10 de septiembre",
+      "byline": "Noticia del digital local",
+      "summary": "Anuncia que Naroa cuelga su pintura en el centro de información juvenil Gaztebulegoa de Barakaldo desde el 10 de septiembre de 2011, hasta el día 30, con una inauguración a mediodía con aperitivo.",
+      "url": "https://www.barakaldodigital.com/2011/09/naroa-gutierrez-gil-expone-su-pintura.html",
       "encounter": "gaztebulegoa-2011",
       "checked": "2026-11-11"
     },
@@ -265,6 +479,55 @@
       "title": "Bwall Collective",
       "url": "https://www.noizagenda.com/agenda/88040/bwall-collective",
       "why": "Las fichas de «GIRLS» (2022) y de la colectiva de 2026 no la nombran por su nombre (la de 2026 solo cita su cuenta @naroa_art)."
+    },
+    {
+      "medium": "Camisetaimedia · «Buenas noches por venir»",
+      "date": "2021-04-24",
+      "title": "Naroa Gutiérrez Gil, artista plástica | Entrevista en Buenas noches por venir",
+      "url": "https://www.youtube.com/watch?v=QL0wKCEAiRo",
+      "why": "Entrevista real, pero es el programa de una tienda de camisetas de Bilbao, no un medio. Pendiente de decidir."
+    },
+    {
+      "medium": "El Correo",
+      "date": "2007-10-29",
+      "title": "Una caja de sorpresas",
+      "url": "https://www.elcorreo.com/vizcaya/20071029/cultura/caja-sorpresas-20071029.html",
+      "why": "Crónica social de un espectáculo en el Arriaga que cita a una «Naroa Gutiérrez» entre el público, junto a José Ignacio Gutiérrez y Luz María Gil. No dice que sea pintora: sin confirmar."
+    },
+    {
+      "medium": "Clubbingspain.com",
+      "date": "2020 y 2022",
+      "title": "Expo Bwall Collective",
+      "url": "https://web.archive.org/web/20221205053211/https://www.clubbingspain.com/agenda/bilbao/dock/2022/11/12/expo-bwall-collective-427800.html",
+      "why": "Dos fichas de agenda (Akelarre 2020 y GIRLS 2022) que reproducen la nota del colectivo con unas líneas de cada artista; solo quedan en Internet Archive y al volver a abrirlas el archivo respondía 429. No se publican hasta releerlas."
+    },
+    {
+      "medium": "Varias agendas",
+      "date": "2010–2016",
+      "title": "",
+      "url": "",
+      "why": "DEIA, GARA y Barakaldo Digital repiten a diario las mismas agendas (Hegoak 2010, Gaztebulegoa 2011, San Vicente 2012, Colegio de Abogados 2015, ViaDeFuga 2016). Se publica una por muestra y medio."
+    },
+    {
+      "medium": "Planomato · DEIA «En imágenes» · ilovebilbao (Gau Irekia)",
+      "date": "2017 y 2026",
+      "title": "",
+      "url": "",
+      "why": "La nombran, pero repiten muestras que ya tienen nota (Gau Irekia 2017, Bwall en Dock 2026); Planomato es además una guía de ocio."
+    },
+    {
+      "medium": "Medios en euskera y nacionales",
+      "date": "",
+      "title": "",
+      "url": "",
+      "why": "Berria, Argia, Bilbo Hiria, EITB, El País, El Mundo, 20minutos, Europa Press, eldiario.es y otros: sin resultados que la nombren (búsqueda del 2026-11-11). GARA desde 2014 solo está en PDF de pago."
+    },
+    {
+      "medium": "Kubilha",
+      "date": "2013-03-06",
+      "title": "Arte itinerante",
+      "url": "https://web.archive.org/web/20130815055345/http://www.kubilha.com:80/arte-itinerante/",
+      "why": "Según la búsqueda en Internet Archive nombra a Naroa entre los artistas de una Walking Gallery junto a la Ría, pero al releerla el archivo respondía 429. Pendiente de releer."
     }
   ]
 }

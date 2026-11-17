@@ -447,8 +447,13 @@ async function eyeMatch(ui, base, points) {
   assert.equal(ui.w.scrollY, ui.distance(7.3), 'A resize with unchanged geometry must not jump back to the last decoded frame');
   await eyeMatch(ui, 5, [[.583,.459],[.545,.402]]);
   await eyeMatch(ui, 10, [[.469,.463],[.678,.439]]);
-  await eyeMatch(ui, 33, [[.2985,.4192],[.7633,.8232]]);
+  await eyeMatch(ui, 33, [[.2985,.4192],[.426,.383]]);
   ui.click('[data-select="0"]'); await ui.flush();
+  assert.equal(ui.find('[data-hero-threshold]').style.visibility, 'visible', 'Selecting the first work returns to the welcome portrait');
+  assert.equal(ui.find('.art-gallery-trigger').getAttribute('aria-label'), 'Entrar en la galería', 'Over the portrait the scene button is announced as entering the gallery');
+  ui.click('[data-next]'); await ui.flush();
+  assert.equal(ui.find('[data-hero-threshold]').style.visibility, 'hidden', 'From the welcome portrait «next» enters the first work instead of skipping it');
+  assert.ok(ui.find('.art-gallery-trigger').getAttribute('aria-label').startsWith('Ver '), 'Past the portrait the scene button names the photographs again');
   for (let i = 0; i < works.length; i++) {
     if (i) { ui.click('[data-next]'); await ui.flush(); }
     assert.equal(ui.find('[data-art-title]').textContent, works[i].title);
@@ -635,17 +640,17 @@ async function eyeMatch(ui, base, points) {
     }
     await scrollPortrait(.09);
     assert.equal(Number(wink.getAttribute('opacity')), 1, 'First Naroa winks her left eye immediately as scroll begins');
-    assert.ok(readPose(plane, [0.4516, 0.4005], .030).scale < 1.15, 'Portrait stays at full framing during the initial left-eye wink');
+    assert.ok(readPose(plane, [571 / 1248, 766 / 1966], .030).scale < 1.15, 'Portrait stays at full framing during the initial left-eye wink');
     await scrollPortrait(.23);
     assert.notEqual(plane.style.transform, initial, 'The portrait moves into its monocle eye');
     assert.equal(Number(wink.getAttribute('opacity')), 1, 'The existing photographic wink remains in the approach');
-    assert.ok(readPose(plane, [0.4516, 0.4005], .030).scale < 1.15, 'Monocle zoom waits until the left-eye wink completes');
+    assert.ok(readPose(plane, [571 / 1248, 766 / 1966], .030).scale < 1.15, 'Monocle zoom waits until the left-eye wink completes');
     assert.ok(Number(portrait.find('[data-portrait-monocle-glint]').getAttribute('opacity')) > 0.3, 'Optical monocle glint ignites to cue the monocle plunge');
     const closed = wink.getAttribute('opacity');
     let previousIris = 0;
     for (const progress of [.46, .51, .56]) {
       await scrollPortrait(progress);
-      const source = readPose(plane, [0.4516, 0.4005], .030), target = readPose(artwork, [.670, .391], .025);
+      const source = readPose(plane, [571 / 1248, 766 / 1966], .030), target = readPose(artwork, [.683, .417], .025);
       assert.ok(source.scale > 5 && target.scale > 5, 'The camera travels inside both eyes');
       assert.ok(Math.abs(source.x - viewport.width * .5) < .03 && Math.abs(source.y - viewport.height * .46) < .03, 'Naroa pupil stays on the camera axis');
       assert.ok(Math.abs(source.x - target.x) < .03 && Math.abs(source.y - target.y) < .03, 'Both pupils coincide throughout the dissolve, including on mobile');
@@ -660,17 +665,17 @@ async function eyeMatch(ui, base, points) {
       const distances = [];
       for (const delta of [-.001, 0, .001]) {
         await scrollPortrait(progress + delta);
-        distances.push(Math.log(readPose(artwork, [.670, .391], .025).iris));
+        distances.push(Math.log(readPose(artwork, [.683, .417], .025).iris));
       }
       const before = distances[1] - distances[0], after = distances[2] - distances[1];
       assert.ok(before > 0 && after > 0, 'The camera does not stop or reverse at the eye handover');
       assert.ok(Math.abs(before - after) / Math.max(before, after) < .04, 'Camera velocity stays continuous across the eye handover');
     }
     await scrollPortrait(.64);
-    const deepest = readPose(artwork, [.670, .391], .025);
+    const deepest = readPose(artwork, [.683, .417], .025);
     assert.ok(Math.abs(deepest.iris - Math.hypot(viewport.width, viewport.height) * 1.02) < .05, 'The deepest iris framing covers the frame with a 2% margin');
     await scrollPortrait(.65);
-    const turning = readPose(artwork, [.670, .391], .025);
+    const turning = readPose(artwork, [.683, .417], .025);
     assert.ok(turning.iris < deepest.iris && turning.iris > deepest.iris * .995, 'The camera eases gently into its outward movement');
     await scrollPortrait(.51);
     assert.equal(Number(artwork.style.opacity), .5, 'The eye match dissolves through both photographs');
@@ -678,12 +683,14 @@ async function eyeMatch(ui, base, points) {
     const stopped = artwork.style.transform; await wait(50); await portrait.flush();
     assert.equal(artwork.style.transform, stopped, 'The camera stops when native scroll stops');
     await scrollPortrait(.8);
-    const opening = readPose(artwork, [.670, .391], .025);
+    const opening = readPose(artwork, [.683, .417], .025);
     assert.ok(opening.scale > 1 && opening.scale < 8, 'The camera opens out of the artwork eye');
     await scrollPortrait(.96);
-    const final = readPose(artwork, [.670, .391], .025);
+    const final = readPose(artwork, [.683, .417], .025);
     assert.equal(final.scale, 1);
-    assert.ok(Math.abs(final.tx) < .001 && Math.abs(final.ty) < .001, 'The artwork finishes in its original full-screen framing');
+    // El encuadre de reposo (cover, centrado; a .72 en móvil y a .42 en vertical) va en la traslación, no en left/top.
+    const framing = { x: (viewport.width - parseFloat(artwork.style.width)) * (viewport.width <= 760 ? .72 : .5), y: (viewport.height - parseFloat(artwork.style.height)) * .42 };
+    assert.ok(Math.abs(parseFloat(artwork.style.left) + final.tx - framing.x) < .001 && Math.abs(parseFloat(artwork.style.top) + final.ty - framing.y) < .001, 'The artwork finishes in its original full-screen framing');
     assert.equal(artwork.style.opacity, '1'); assert.equal(plane.style.visibility, 'hidden');
     assert.equal(artCopy.style.opacity, '1'); assert.equal(artCopy.inert, false);
     assert.equal(artCopy.querySelector('a').getAttribute('href'), '/obra/rara-avis/');
@@ -713,7 +720,7 @@ async function eyeMatch(ui, base, points) {
     await travel(0);
     assert.deepEqual([artwork.style.transform, artwork.style.opacity], lastPortalFrame, 'The portal and exhibition share exactly the same Rara Avis element and camera pose');
     const checkpoints = [
-      [ .670, .391, .025 ], [ .635, .392, .030 ], [ .512, .424, .018 ],
+      [ .683, .417, .025 ], [ .635, .392, .030 ], [ .512, .424, .018 ],
       [ .583, .459, .028 ], [ .545, .402, .018 ], [ .469, .463, .020 ],
       [ .678, .439, .025 ], [ .420, .345, .025 ], [ .487, .406, .029 ]
     ];

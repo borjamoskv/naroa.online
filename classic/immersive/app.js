@@ -94,6 +94,14 @@
   }));
   systemMotion.addEventListener('change', motionChanged);
   paintEffects();
+  // Lo que ya se vio no vuelve a entrar (§7): con red o móvil lentos el navegador pinta el umbral antes de que llegue este
+  // script, y la llegada de app.css borraba el retrato y lo traía de nuevo desenfocado. Si ya hubo pintura, el umbral se
+  // salta el fundido y el encendido del monóculo (.is-seen); si además el retrato estaba cargado, toda la llegada (.is-arrived).
+  const seenThreshold = $('[data-hero-threshold]');
+  if (seenThreshold && (performance.getEntriesByName?.('first-contentful-paint') || []).length) {
+    const seenPortrait = $('.hero-threshold-portrait', seenThreshold);
+    seenThreshold.classList.add(seenPortrait?.complete && seenPortrait.naturalWidth ? 'is-arrived' : 'is-seen');
+  }
   // Enable enhancements only after JavaScript has successfully initialized.
   document.documentElement.classList.add('has-motion');
   // Versiones por idioma: /en/… comparte este script. BASE es el prefijo de la versión ('' en español)
@@ -121,7 +129,8 @@
 
   // Salpicadura táctil de pan de oro en pointerdown (tactilidad física de pincel)
   document.addEventListener('pointerdown', e => {
-    if (e.pointerType === 'touch') return;
+    // Con «reducir movimiento» la hoja quita la animación (app.css): sin animationend la salpicadura se quedaría fija.
+    if (e.pointerType === 'touch' || systemMotion.matches && !document.documentElement.classList.contains('motion-opt-in')) return;
     const dab = document.createElement('div');
     dab.className = 'naroa-brush-touch';
     dab.style.left = `${e.clientX}px`;
@@ -1503,6 +1512,9 @@
         if (heroIdx > 0) {
           const [heroWork] = works.splice(heroIdx, 1);
           works.unshift(heroWork);
+          // Los números del recorrido llegan del HTML en el orden del catálogo: su nombre («Ver …», ya traducido) sigue a la obra que abren.
+          const selectButtons = $$('[data-select]', stage), selectLabels = selectButtons.map(b => b.getAttribute('aria-label'));
+          selectButtons.forEach((b, i) => { if (i <= heroIdx) b.setAttribute('aria-label', selectLabels[i === 0 ? heroIdx : i - 1]); });
           const artLayers = $('.art-layers', stage);
           const heroSceneEl = stage.querySelector(`.art-scene[data-work="${sessionHeroSlug}"]`);
           if (artLayers && heroSceneEl) {
@@ -1694,7 +1706,15 @@
     };
     const kineticTitle = $('[data-kinetic-title]', stage), caption = $('[data-art-copy]', stage);
     const state = { index: Number(stage.dataset.initial) || 0, fit: false, quiet: false, photo: 0 };
-    const journey = window.NAROA_JOURNEY.create(works, catalogue.journey);
+    // La pista del puzzle la escribe el script (y no app.css) para que la capa de idiomas la traduzca (§9).
+    $('[data-art-material]', stage)?.setAttribute('data-puzzle-hint', 'Desliza para mezclar y volver a encajar');
+    // El héroe de la sesión ocupa el sitio del inicial y hereda su pausa (§1, hold 45): con la de 25 el retrato,
+    // que se disuelve a 0,36, tapaba toda su pausa y el toque de entrada (0,38) lo dejaba a media transición.
+    const opening = catalogue.journey.scenes[0];
+    const score = heroThresholdEl && works[0].slug !== opening.slug
+      ? { ...catalogue.journey, scenes: catalogue.journey.scenes.map(s => s.slug === works[0].slug ? { ...s, hold: opening.hold } : s) }
+      : catalogue.journey;
+    const journey = window.NAROA_JOURNEY.create(works, score);
     const initialDistance = journey.at(state.index);
     const motion = {
       pose: journey.read(initialDistance),
@@ -1964,6 +1984,14 @@
     galleryTrigger.setAttribute('aria-haspopup', 'dialog');
     galleryTrigger.setAttribute('aria-controls', 'work-gallery-dialog');
     $('.art-layers', stage).after(galleryTrigger);
+    // Sobre el retrato de bienvenida el botón de escena entra en la galería: su nombre accesible lo dice.
+    function nameTrigger() {
+      const entering = !!heroThresholdEl && !state.fit && motion.pose.distance < 0.36;
+      const label = entering ? 'Entrar en la galería' : galleryTrigger.dataset.label || '';
+      if (galleryTrigger.getAttribute('aria-label') === label) return;
+      galleryTrigger.setAttribute('aria-label', label);
+      if (entering) galleryTrigger.removeAttribute('aria-haspopup'); else galleryTrigger.setAttribute('aria-haspopup', 'dialog');
+    }
     const workGallery = createGalleryElement('dialog', 'work-gallery-dialog');
     workGallery.id = 'work-gallery-dialog';
     workGallery.dataset.loupeActive = 'true';
@@ -2079,7 +2107,7 @@
       'infusion-de-berto': { x: .469, y: .463, iris: .020 },
       'buena-fuente': { x: .678, y: .439, iris: .025 },
       'la-llorona': { x: .2985, y: .4192, iris: .022 },
-      'pablo': { x: .7633, y: .8232, iris: .032 }
+      'pablo': { x: .426, y: .383, iris: .030 }
     };
     const smooth = value => { const t = clamp(value, 0, 1); return t * t * t * (t * (t * 6 - 15) + 10); };
     function eyeGeometry(index) {
@@ -2097,6 +2125,18 @@
       const ty = -(zoom - 1) * point.height / 2 * (1 - focus) + (geometry.height * .42 + 10 - point.y * zoom) * focus + offset * (1 - focus);
       img.style.transformOrigin = '0px 0px';
       img.style.transform = `translate3d(${tx.toFixed(3)}px,${ty.toFixed(3)}px,0) scale(${zoom.toFixed(5)})`;
+    }
+    // Escala con que una obra entra en su reposo (atStart) o lo deja al acabar la exploración: la que pintan
+    // las ramas de reposo de render(). Las transiciones salen y llegan ahí, así la cámara no salta.
+    // Si cambia una escala de reposo en render(), hay que cambiarla también aquí.
+    function restZoom(index, atStart = false) {
+      const slug = works[index]?.slug, explore = atStart || !journey.entries[index]?.explore ? 0 : 1;
+      if (slug === 'el-hombre-que-susurraba-a-las-estrellas') return 1.25 + explore * .50;
+      if (index === 0) return 1.08 + explore * .40;
+      if (slug === 'entre-tantas-flores-de-dia') return innerWidth < 760 ? 1.35 : 1.04;
+      if (slug === 'roisin') return 1.08 + explore * .16;
+      if (slug === 'hugo-box') return 1.08 + explore * .45;
+      return 1.08;
     }
     let dustinVisited = false, dustinEpilogueTimer = null;
     let puzzleVisited = false, puzzleReassembled = false, clockVisited = false, wineVisited = false, deltoyaVisited = false;
@@ -2222,7 +2262,7 @@
         threadPath.setAttribute('d', `M${tx.toFixed(1)},${ty.toFixed(1)} L995,1490`);
       }
     }
-    let cantinLastProgress = 0, cantinDirection = 0, cantinPuffCount = 1;
+    let cantinLastProgress = null, cantinDirection = 0, cantinPuffCount = 1;
     function ensureCantinflowersSmokeRig(scene) {
       let rig = scene.querySelector('.cantinflowers-smoke-rig');
       if (rig) return rig;
@@ -2437,16 +2477,22 @@
           stickRunner.style.transform = '';
 
           // A los 2.8s (a mitad de las vueltas del breakdance), el scroll vuelve a toda velocidad hacia arriba
-          bboyRewindTimer = setTimeout(() => {
+          // Quien está usando el final («Más» abierto, foco de teclado en el pie o puntero sobre sus botones) no pierde lo
+          // que tocaba: el rebobinado espera. Si entretanto sale de Game Over, no se le arrastra al origen: se apaga el baile.
+          const endDance = () => {
+            stage.classList.remove('is-breakdance-stage', 'is-breakdancing', 'is-supersonic-rewind');
+            stickman.setAttribute('hidden', '');
+            stickman.classList.remove('is-breakdancing');
+            isBreakdancing = false;
+          };
+          const rewind = () => {
+            if (works[state.index]?.slug !== 'game-over') { endDance(); return; }
+            if (stage.classList.contains('is-more-open') || stage.querySelector('.art-view-actions:hover, .art-bottom :focus-visible')) { bboyRewindTimer = setTimeout(rewind, 1000); return; }
             stage.classList.add('is-supersonic-rewind');
             change(0);
-            setTimeout(() => {
-              stage.classList.remove('is-breakdance-stage', 'is-breakdancing', 'is-supersonic-rewind');
-              stickman.setAttribute('hidden', '');
-              stickman.classList.remove('is-breakdancing');
-              isBreakdancing = false;
-            }, 1800);
-          }, 2800);
+            setTimeout(endDance, 1800);
+          };
+          bboyRewindTimer = setTimeout(rewind, 2800);
         }
       }, 1600);
     }
@@ -2500,7 +2546,7 @@
       tick();
     }
     let lauraVisited = false, lauraTimer = null, isLauraZooming = false, lauraPauseDistance = 0;
-    let lauraLastProgress = 0, lauraDirection = 0, lauraVaivenCount = 1;
+    let lauraLastProgress = null, lauraDirection = 0, lauraVaivenCount = 1;
     function fireLauraLorePause() {
       const isTestEnv = typeof window !== 'undefined' && (window.location.hostname === 'portfolio.test' || reduced.matches);
       if (isBreakdancing) return;
@@ -2573,14 +2619,14 @@
     $('[data-counter]', stage)?.after(dwellTicks);
     function dwellPhotos(i) {
       const p = works[i];
-      // El retrato inaugural queda limpio; el puzzle y Can-dy Queen ya mueven su propia imagen;
+      // El retrato inaugural queda limpio; el puzzle, Can-dy Queen y el brazo de Julio Iglesias ya mueven su propia imagen;
       // Game Over es una pantalla en negro que no debe moverse.
-      if (!p || p.photos.length < 2 || (i === 0 && heroThresholdEl) || p.interaction === 'puzzle' || p.slug === 'can-dy-queen' || p.slug === 'game-over') return null;
+      if (!p || p.photos.length < 2 || (i === 0 && heroThresholdEl) || p.interaction === 'puzzle' || p.slug === 'can-dy-queen' || p.slug === 'julio-iglesias-como-un-reloj-suizo' || p.slug === 'game-over') return null;
       const first = Math.max(0, p.photos.findIndex(photo => photo.src === p.cover));
       return p.photos.map((_, k) => p.photos[(first + k) % p.photos.length]);
     }
     function dwellBlocked() {
-      return reduced.matches || state.fit || state.quiet || document.hidden || !!document.querySelector('dialog[open]');
+      return reduced.matches || state.fit || state.quiet || document.hidden || !!document.querySelector('dialog[open]') || document.body.classList.contains('is-lens');
     }
     function paintDwell() {
       const list = reduced.matches ? null : dwellPhotos(state.index);
@@ -2997,7 +3043,7 @@
       const q = Math.floor(ratio * 4) / 4;
       if (q > 0 && q !== lastQuartile && ratio >= q) {
         lastQuartile = q;
-        if (typeof navigator !== 'undefined' && navigator.vibrate) {
+        if (typeof navigator !== 'undefined' && navigator.vibrate && (!navigator.userActivation || navigator.userActivation.hasBeenActive)) {
           try { navigator.vibrate(q >= 1 ? [20, 40, 30] : [15]); } catch {}
         }
       }
@@ -3010,7 +3056,10 @@
       if (!img.getAttribute('src')) img.src = coverSrc(works[i].cover, img);
       if (img.complete && img.naturalWidth) return Promise.resolve();
       if (pendingImages.has(i)) return pendingImages.get(i);
+      const asked = img.getAttribute('src');
       const ready = (img.decode ? img.decode() : new Promise(resolve => { img.addEventListener('load', resolve, { once: true }); img.addEventListener('error', resolve, { once: true }); })).catch(() => {
+        // Si la fuente cambió mientras se decodificaba (vista completa, otra mirada…), no es un fallo de la imagen.
+        if (img.getAttribute('src') !== asked) return;
         if (avifFallback(img)) return;
         if (Math.abs(i - state.index) > 1 && Math.abs(i - motion.desired) > 1) return;
         if (img.src !== new URL(works[i].photos[0].original, location.origin).href) img.src = works[i].photos[0].original;
@@ -3063,7 +3112,8 @@
       $('[data-restore]', stage).hidden = !state.quiet;
       const fit = $('[data-fit]', stage); fit.setAttribute('aria-pressed', String(state.fit)); fit.textContent = state.fit ? 'Volver a la inmersión ↙' : 'Ver imagen completa ↗';
       $('[data-open-photos]', stage).textContent = `Ver ${p.photos.length} ${p.photos.length === 1 ? 'fotografía' : 'fotografías'} ↗`;
-      galleryTrigger.setAttribute('aria-label', p.photos.length === 1 ? `Ver la fotografía de ${p.title}` : `Ver las ${p.photos.length} fotografías de ${p.title}`);
+      galleryTrigger.dataset.label = p.photos.length === 1 ? `Ver la fotografía de ${p.title}` : `Ver las ${p.photos.length} fotografías de ${p.title}`;
+      nameTrigger();
       galleryTrigger.dataset.work = p.slug;
       $$('.site-nav,.art-index,.art-bottom').forEach(el => { el.inert = state.quiet; });
       $('#story-title').textContent = p.title; $('[data-story-category]').textContent = p.label; $('[data-story]').textContent = p.story;
@@ -3388,7 +3438,7 @@
       paintedScenes.clear();
       let depth = 0, diameter = 0, focus = 0;
       if (eyeMatch) {
-        const from = eyeGeometry(base).iris * 1.08, to = eyeGeometry(incoming).iris * 1.08;
+        const from = eyeGeometry(base).iris * restZoom(base), to = eyeGeometry(incoming).iris * restZoom(incoming, true);
         const deep = Math.hypot(geometry.width, geometry.height) * 1.02;
         const approach = smooth(fraction / .64), reveal = smooth((fraction - .64) / .36);
         diameter = Math.exp(fraction <= .64 ? Math.log(from) + Math.log(deep / from) * approach : Math.log(deep) + Math.log(to / deep) * reveal);
@@ -3420,6 +3470,7 @@
           : works[index].slug === 'jose-manuel-ezquerra' ? '62% 42%'
           : works[index].slug === 'roisin' ? '61.1% 58.6%'
           : works[index].slug === 'hugo-box' ? '47.8% 42.7%'
+          : works[index].slug === 'entre-tantas-flores-de-dia' ? '50% 0%'
           : '50% 50%';
         if (works[index].interaction === 'puzzle' && (!still || puzzles.has(index))) drawPuzzle(index, outgoing && transition ? fraction : 0, still);
         if (works[index].slug === 'custom-jaio' && !state.fit && !(dwell.index === index && dwell.photo)) {
@@ -3480,7 +3531,7 @@
             image.style.transform = `translate3d(0,${(-smooth(pose.explore) * 3).toFixed(3)}%,0) scale(1.08000)`;
           }
         } else if (mode === 'E') {
-          eyePose(index, diameter, focus, outgoing && entry.explore ? -(geometry.height + 20) * .03 : 0);
+          eyePose(index, diameter, focus, outgoing && entry.explore && index !== 0 ? -(geometry.height + 20) * .03 : 0);
           if (!outgoing) scene.style.opacity = smooth((fraction - .42) / .16).toFixed(4);
         } else if (isRockaToHugo) {
           if (outgoing) {
@@ -3580,7 +3631,7 @@
           scene.style.transform = `translate3d(${x.toFixed(3)}px,${y.toFixed(3)}px,0)`;
           // Subtle interior parallax (max 2%) and lens scale between 1.08 and 1.12.
           const parallax = displacement * 2;
-          const lens = 1.08 + .04 * (outgoing ? progress : 1 - progress);
+          const lens = restZoom(index, !outgoing) + .04 * (outgoing ? progress : 1 - progress);
           if (works[index].slug === 'entre-tantas-flores-de-dia') {
             const naturalWidth = image.naturalWidth || 2457, naturalHeight = image.naturalHeight || 3072;
             const isMobile = innerWidth < 760;
@@ -3661,7 +3712,7 @@
             if (outgoing) {
               const flare = smooth(fraction);
               const rot = (flare * 12.0).toFixed(2);
-              const prismScale = (1.08 + flare * 2.10).toFixed(5);
+              const prismScale = (1.25 + flare * 1.93).toFixed(5);
               image.style.transformOrigin = '65.2% 57.4%';
               image.style.transform = `scale(${prismScale}) rotate(${rot}deg)`;
               scene.style.opacity = fraction >= 0.68 ? smooth((1 - fraction) / 0.32).toFixed(4) : '1';
@@ -3710,7 +3761,8 @@
               image.style.filter = fraction < 0.65 ? `drop-shadow(0 0 40px rgba(255, 0, 50, ${redFlare.toFixed(3)})) contrast(1.15)` : 'none';
             }
           } else {
-            image.style.transform = `scale(${Math.exp(Math.log(1.08) + Math.log(maxScale / 1.08) * close).toFixed(5)})`;
+            const rest = restZoom(index, !outgoing);
+            image.style.transform = `scale(${Math.exp(Math.log(rest) + Math.log(maxScale / rest) * close).toFixed(5)})`;
             if (!outgoing) scene.style.opacity = smooth((fraction - .40) / .20).toFixed(4);
             if (outgoing && isHugoToJames) {
               scene.style.opacity = fraction >= 0.50 ? smooth((0.75 - fraction) / 0.25).toFixed(4) : '1';
@@ -3786,15 +3838,16 @@
           const dragProgress = still ? 0 : transition
             ? (outgoing ? clamp(0.28 + fraction * 0.72, 0, 1) : clamp(fraction * 0.75, 0, 1))
             : clamp(0.16 + localHold * 0.68, 0, 1);
-          const deltaCantin = dragProgress - cantinLastProgress;
-          if (Math.abs(deltaCantin) > 0.018) {
+          if (cantinLastProgress === null) cantinLastProgress = pose.distance;
+          const deltaCantin = still ? 0 : pose.distance - cantinLastProgress;
+          if (Math.abs(deltaCantin) > 0.006) {
             const nextDir = deltaCantin > 0 ? 1 : -1;
             if (cantinDirection !== 0 && nextDir !== cantinDirection) {
               cantinPuffCount = Math.min(8, cantinPuffCount + 1);
               soundscape?.puff?.(0.75);
             }
             cantinDirection = nextDir;
-            cantinLastProgress = dragProgress;
+            cantinLastProgress = pose.distance;
           }
           if (dragProgress >= 0.22 && dragProgress <= 0.55) {
             soundscape?.puff?.(dragProgress);
@@ -3805,8 +3858,9 @@
           const holdSpan = Math.max(0.01, entry.transitionStart - entry.start);
           const localHold = clamp((pose.distance - entry.start) / holdSpan, 0, 1);
           const lauraProgress = still ? 0 : transition
-            ? (outgoing ? clamp(0.28 + fraction * 0.72, 0, 1) : clamp(fraction * 0.75, 0, 1))
+            ? (outgoing ? clamp(0.84 + fraction * 0.16, 0, 1) : clamp(fraction * 0.16, 0, 1))
             : clamp(0.16 + localHold * 0.68, 0, 1);
+          if (lauraLastProgress === null) lauraLastProgress = lauraProgress;
           const deltaLaura = lauraProgress - lauraLastProgress;
           if (Math.abs(deltaLaura) > 0.018) {
             const nextDir = deltaLaura > 0 ? 1 : -1;
@@ -3838,7 +3892,10 @@
         const monoclePortal = $('[data-monocle-portal]', heroThreshold);
         const monocleMarilyn = $('[data-monocle-marilyn]', heroThreshold);
         const zoomReadout = $('[data-hero-zoom-readout]', heroThreshold);
-        if (state.fit || pose.distance >= 0.36) {
+        nameTrigger();
+        // Pasado el retrato, sus animaciones infinitas se detienen (app.css).
+        heroThreshold.classList.toggle('is-passed', state.fit || pose.distance >= 0.36);
+        if (state.fit || state.quiet || pose.distance >= 0.36) {
           heroThreshold.style.visibility = 'hidden';
           heroThreshold.style.opacity = '0';
           heroThreshold.style.setProperty('--hero-split', '1');
@@ -3884,13 +3941,16 @@
       }
       const artBottom = $('.art-bottom', stage);
       if (artBottom) {
-        if ((!still || (heroThreshold && !state.fit)) && pose.distance < 0.36) {
+        if (heroThreshold && !state.fit && pose.distance < 0.36) {
           const bottomFade = smooth((pose.distance - 0.20) / 0.16);
           artBottom.style.opacity = bottomFade.toFixed(4);
           artBottom.style.pointerEvents = bottomFade > 0.5 ? 'auto' : 'none';
+          // Retirada por el retrato: si el foco de teclado entra, vuelven los controles, no el título (app.css).
+          artBottom.classList.toggle('is-veiled', bottomFade < 0.5);
         } else {
           artBottom.style.opacity = '';
           artBottom.style.pointerEvents = '';
+          artBottom.classList.remove('is-veiled');
         }
       }
       if (works[base].slug === 'dustin' || works[incoming].slug === 'dustin') {
@@ -3980,7 +4040,7 @@
         lauraVisited = false;
         lauraVaivenCount = 1;
         lauraDirection = 0;
-        lauraLastProgress = 0;
+        lauraLastProgress = null;
         stage.style.removeProperty('--laura-vaiven-zoom');
         stage.style.removeProperty('--laura-vaiven-bright');
         const lauraPanReset = stage.querySelector('.art-scene[data-work="lauralore"] .art-pan');
@@ -4662,6 +4722,7 @@
       change(Math.floor(cur) === Math.ceil(cur) ? Math.round(cur) - 1 : Math.floor(cur));
     });
     $('[data-next]', stage).addEventListener('click', () => {
+      if (heroThresholdEl && !state.fit && motion.pose.distance < 0.28) { $('[data-threshold-enter]', stage)?.click(); return; }
       const cur = motion.navigation ?? motion.desired;
       change(Math.floor(cur) + 1);
     });
@@ -4921,7 +4982,6 @@
       galleryGrid.replaceChildren(...figures);
       const onward = works[(state.index + 1) % works.length];
       onwardTitle.textContent = onward.title;
-      onwardPoster.setAttribute('aria-label', `Obra siguiente: ${onward.title}`);
       onwardPoster.style.setProperty('--onward', `url("${onward.tile || onward.cover}")`);
       openDialog('#work-gallery-dialog');
       workGallery.scrollTop = 0;
@@ -4992,7 +5052,7 @@
       if (workGallery.open && photoReturnFocus?.isConnected) photoReturnFocus.focus({ preventScroll: true });
       photoReturnFocus = null;
     });
-    function quiet(value) { state.quiet = value; if (value) { resetDwell(); render(); } metadata(); (value ? $('[data-restore]', stage) : $('[data-quiet]')).focus(); }
+    function quiet(value) { state.quiet = value; if (value) resetDwell(); render(); metadata(); (value ? $('[data-restore]', stage) : $('[data-quiet]')).focus(); }
     $('[data-quiet]').addEventListener('click', () => quiet(true)); $('[data-restore]', stage).addEventListener('click', () => quiet(false));
     // Lupa de macro (INV_MACRO_LENS): una lente sobre el original a resolución completa; la obra
     // entera sigue a la vista detrás. Pulsar «Lupa» o mantener el dedo/ratón 0,45 s; Esc o soltar la cierra.
@@ -5004,10 +5064,16 @@
       const ZOOM = 3.2;
       let on = false, held = false, swallow = false, hold = null, px = 0, py = 0, loadedFor = '', original = null;
       const radius = () => lens.offsetWidth / 2 || 110;
-      function source() { const ph = works[state.index]?.photos?.[0]; return ph?.original || ph?.src || ''; }
+      // La lente enseña el original de la foto que está en escena: la principal o la que puso el pase de fotos;
+      // en «Ver imagen completa», la primera.
+      function source() {
+        const w = works[state.index], list = !state.fit && dwell.index === state.index && dwell.photo ? dwellPhotos(state.index) : null;
+        const ph = list?.[dwell.photo] || (!state.fit && w?.photos?.find(p => p.src === w.cover)) || w?.photos?.[0];
+        return ph?.original || ph?.src || '';
+      }
       function paint() {
         const img = images[state.index], src = source();
-        if (!on || !img || !src || stage.dataset.transition !== 'hold' && stage.dataset.transition !== 'explore') { lens.hidden = true; return; }
+        if (!on || !img || !src || (heroThresholdEl && !state.fit && motion.pose.distance < 0.36) || stage.dataset.transition !== 'hold' && stage.dataset.transition !== 'explore') { lens.hidden = true; return; }
         if (loadedFor !== src) {
           loadedFor = src; original = new Image();
           original.onload = paint; original.src = src;
@@ -5022,7 +5088,9 @@
         const dw = nw * k, dh = nh * k, offX = (r.width - dw) * ox / 100, offY = (r.height - dh) * oy / 100;
         const nx = (px - r.left - offX) / dw, ny = (py - r.top - offY) / dh;
         if (nx < 0 || nx > 1 || ny < 0 || ny > 1) { lens.hidden = true; return; }
-        visitFocus(works[state.index]?.slug, nx, ny);
+        // La Story y el retrato de la visita recortan photos[0]: solo cuenta la mirada sobre esa foto.
+        const first = works[state.index]?.photos?.[0];
+        if (src === (first?.original || first?.src)) visitFocus(works[state.index]?.slug, nx, ny);
         const rad = radius();
         lens.style.backgroundSize = `${dw * ZOOM}px ${dh * ZOOM}px`;
         lens.style.backgroundPosition = `${rad - nx * dw * ZOOM}px ${rad - ny * dh * ZOOM}px`;
@@ -5031,8 +5099,9 @@
       }
       function set(value) {
         on = value; document.body.classList.toggle('is-lens', on);
-        btn?.setAttribute('aria-pressed', String(on)); if (!on) { lens.hidden = true; clearTimeout(hold); }
-        else paint();
+        // Con la lupa encendida el pase de fotos se detiene: la foto no cambia bajo la lente.
+        btn?.setAttribute('aria-pressed', String(on)); if (!on) { lens.hidden = true; clearTimeout(hold); armDwell(); }
+        else { haltDwell(); paint(); }
       }
       btn?.addEventListener('click', () => { held = false; set(!on); });
       stage.addEventListener('pointermove', e => { px = e.clientX; py = e.clientY; if (on) paint(); }, { passive: true });
@@ -5040,7 +5109,7 @@
         if (!stage.contains(e.target) || e.target.closest('input,nav,dialog,.art-bottom button,.art-bottom a,.site-nav')) return;
         px = e.clientX; py = e.clientY; const x0 = px, y0 = py;
         clearTimeout(hold);
-        hold = setTimeout(() => { if (Math.hypot(px - x0, py - y0) < 8) { held = true; set(true); } }, 450);
+        hold = setTimeout(() => { if (Math.hypot(px - x0, py - y0) < 8 && !(heroThresholdEl && !state.fit && motion.pose.distance < 0.36)) { held = true; set(true); } }, 450);
       }, { passive: true, capture: true });
       ['pointerup', 'pointercancel'].forEach(t => addEventListener(t, () => { clearTimeout(hold); if (on && held) { set(false); swallow = true; setTimeout(() => { swallow = false; }, 60); } held = false; }, { passive: true, capture: true }));
       addEventListener('click', e => { if (swallow) { e.preventDefault(); e.stopImmediatePropagation(); swallow = false; } }, true);
@@ -5054,7 +5123,7 @@
       const CALM_MS = 3200;
       let calmTimer = null, lastX = -1, lastY = -1;
       const root = document.body;
-      const busy = () => document.querySelector('dialog[open]') || stage.matches(':has(:focus-visible)') || document.querySelector('.site-nav:has(:focus-visible)');
+      const busy = () => document.querySelector('dialog[open]') || stage.dataset.continue || stage.matches(':has(:focus-visible)') || document.querySelector('.site-nav:has(:focus-visible)');
       function settle() { calmTimer = null; if (busy() || state.quiet) { arm(); return; } root.classList.add('is-contemplating'); }
       function arm() { clearTimeout(calmTimer); calmTimer = setTimeout(settle, CALM_MS); }
       function wake() { if (root.classList.contains('is-contemplating')) root.classList.remove('is-contemplating'); arm(); }
@@ -5068,12 +5137,14 @@
       arm();
     }
     document.addEventListener('keydown', e => {
-      if (document.querySelector('dialog[open]') || e.target.closest?.('input,textarea,select,[contenteditable=true]')) return;
+      if (e.altKey || e.ctrlKey || e.metaKey || document.querySelector('dialog[open]') || e.target.closest?.('input,textarea,select,[contenteditable=true]')) return;
       if (e.key === 'Escape' && state.quiet) { e.preventDefault(); quiet(false); return; }
       // Enter sobre un control lo activa; solo cuenta como moneda cuando no hay ninguno enfocado.
       if (e.key === 'Enter' && !e.repeat && !e.target.closest?.('a,button,summary,[role=button]')) insertCoin();
       if (e.key === 'ArrowRight') {
         e.preventDefault();
+        // Desde el retrato, «siguiente» es la primera obra, que aún no se ha visto: mismo gesto que tocarlo.
+        if (heroThresholdEl && !state.fit && !state.quiet && motion.pose.distance < 0.36) { if (!e.repeat) $('[data-threshold-enter]', stage)?.click(); return; }
         const cur = motion.navigation ?? motion.desired;
         change(Math.floor(cur) + 1);
       }
@@ -5223,9 +5294,9 @@
     const artwork = $('[data-portrait-artwork]', hero), artCopy = $('[data-portrait-work-copy]', hero);
     const controls = $('[data-portrait-controls]', hero), previous = $('[data-portrait-prev]', hero), next = $('[data-portrait-next]', hero);
     const cue = $('.hero-down', hero), wink = $('[data-portrait-wink]', hero), monocleGlint = $('[data-portrait-monocle-glint]', hero);
-    const eye = { x: 0.4516, y: 0.4005, iris: .030 };
+    const eye = { x: 571 / 1248, y: 766 / 1966, iris: .030 };
     const eyes = {
-      'rara-avis': { x: .670, y: .391, iris: .025 },
+      'rara-avis': { x: .683, y: .417, iris: .025 },
       'marilyn-rocks': { x: .635, y: .392, iris: .030 },
       'amy-rocks': { x: .512, y: .424, iris: .018 },
       'johnny-rocks': { x: .583, y: .459, iris: .028 },
@@ -5312,7 +5383,7 @@
             img.addEventListener('load', resolve, { once: true }); img.addEventListener('error', resolve, { once: true });
           });
           if (img.getAttribute('src') === source && img.complete && img.naturalWidth) decoded.add(index);
-        } catch { if (img.getAttribute('src') === source) failed.add(index); }
+        } catch { if (!avifFallback(img) && img.getAttribute('src') === source) failed.add(index); }
       }).finally(() => {
         if (pending.get(index) === job) pending.delete(index);
         schedulePortrait();
@@ -5346,7 +5417,7 @@
       [[plane, geometry.portrait], ...scenes.map((scene, i) => [scene, boxes[i]])].forEach(([element, box]) => {
         Object.assign(element.style, reduced.matches
           ? { width: '', height: '', left: '', top: '' }
-          : { width: `${box.width}px`, height: `${box.height}px`, left: `${box.left}px`, top: `${box.top}px` });
+          : { width: `${box.width}px`, height: `${box.height}px`, left: '0px', top: '0px' });
       });
       plane.classList.toggle('is-measured', !reduced.matches);
       // Girar el móvil o cambiar el alto de la ventana no cambia de obra: el recorrido se mide en
@@ -5359,8 +5430,8 @@
     }
     function pose(element, box, point, zoom, focus, offset = 0) {
       const g = geometry, x = box.left + point.x * box.width, y = box.top + point.y * box.height;
-      const tx = x + (g.width * .5 - x) * focus - box.left - zoom * point.x * box.width;
-      const ty = y + (g.height * .46 - y) * focus - box.top - zoom * point.y * box.height + offset;
+      const tx = x + (g.width * .5 - x) * focus - zoom * point.x * box.width;
+      const ty = y + (g.height * .46 - y) * focus - zoom * point.y * box.height + offset;
       element.style.transform = reduced.matches ? '' : `translate3d(${tx.toFixed(3)}px,${ty.toFixed(3)}px,0) scale(${zoom.toFixed(5)})`;
     }
     function eyePass(from, target, fromBox, targetBox, fromEye, targetEye, progress) {
@@ -5549,7 +5620,7 @@
     }
     previous.addEventListener('click', () => goTo(current - 1)); next.addEventListener('click', () => goTo(current + 1));
     document.addEventListener('keydown', event => {
-      if (reduced.matches || parked || document.querySelector('dialog[open]') || artCopy.inert || event.target.closest?.('input,textarea,select,[contenteditable=true]')) return;
+      if (event.altKey || event.ctrlKey || event.metaKey || reduced.matches || parked || document.querySelector('dialog[open]') || artCopy.inert || event.target.closest?.('input,textarea,select,[contenteditable=true]')) return;
       if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') { event.preventDefault(); goTo(current + (event.key === 'ArrowRight' ? 1 : -1)); }
     });
     gallery = { pause() {}, has: slug => !reduced.matches && works.some(work => work.slug === slug), select: slug => goTo(works.findIndex(work => work.slug === slug)) };
@@ -6703,7 +6774,13 @@
       });
       const vMeta = supportVisualMap[supportVal] || supportVisualMap['Collage textil sobre madera'];
       const foundWork = projects.find(p => p.slug === vMeta.slug) || projects[0];
-      if (visualImg && foundWork?.cover) setArtSrc(visualImg, artSrc(foundWork.cover, visualImg.getBoundingClientRect(), imgAspect(visualImg)));
+      // La foto solo cambia con la obra; la primera vez se adopta la que ya eligió el srcset del HTML.
+      if (visualImg && foundWork?.cover && visualImg.dataset.shown !== foundWork.slug) {
+        const ph = foundWork.photos?.find(p => p.src === foundWork.cover);
+        if (!visualImg.dataset.shown && visualImg.getAttribute('src') === foundWork.cover) adoptSrcset(visualImg, foundWork.cover);
+        else setArtSrc(visualImg, artSrc(foundWork.cover, visualImg.getBoundingClientRect(), ph ? ph.width / ph.height : imgAspect(visualImg)));
+        visualImg.dataset.shown = foundWork.slug;
+      }
       if (visualTitle) visualTitle.textContent = vMeta.title;
       if (visualTag) visualTag.textContent = vMeta.tag;
       if (swatchCutout) {
@@ -6800,7 +6877,7 @@
               : `Materia elegida: ${supportEl.value}`;
           }
           window.NAROA_SOUND?.atelierMaterial?.(supportEl.value);
-          configurator.scrollIntoView?.({ behavior: 'smooth', block: 'center' });
+          configurator.scrollIntoView?.({ behavior: reduced.matches ? 'auto' : 'smooth', block: 'center' });
         }
       });
     });
@@ -6835,9 +6912,8 @@
       copyBtn.addEventListener('click', async () => {
         const msg = previewEl?.textContent || '';
         commissionState.lastCopiedMessage = msg;
-        try {
-          await navigator.clipboard?.writeText?.(msg);
-        } catch {}
+        if (!(await copyText(msg))) return;
+        if (copyBtn.classList.contains('is-copied')) return;
         const span = $('span', copyBtn) || copyBtn;
         const prevText = span.textContent;
         span.textContent = 'Copiado ✓';

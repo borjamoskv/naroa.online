@@ -1071,7 +1071,7 @@
     turn = turnGoal = 0; orbitAt = ctx.currentTime;
     nextTime = ctx.currentTime + 0.12;
     breatheEchoes();
-    fade(volume, 1.4);
+    fade(silent ? 0 : volume, 1.4);
     clearInterval(timer);
     timer = setInterval(tick, TICK_MS);
     tick();
@@ -1130,7 +1130,7 @@
     setVolume(value) {
       volume = clamp(Number(value) || 0, 0, 1);
       try { localStorage.setItem(VOLUME_KEY, String(volume)); } catch {}
-      if (playing && ctx) fade(volume, 0.15);
+      if (playing && ctx && !silent) fade(volume, 0.15);
       emit();
     },
     // 0 = solo mano izquierda; 1 = pieza completa.
@@ -1160,8 +1160,8 @@
       emit();
       return piece.title;
     },
-    // Silencio contemplativo (p. ej. «Game Over»): el pulso sigue, las notas callan.
-    setSilent(value) { silent = !!value; if (silent) singing = false; emit(); },
+    // Silencio contemplativo (p. ej. «Game Over»): el pulso sigue, las notas callan y la salida se funde a cero.
+    setSilent(value) { const next = !!value; if (next !== silent && playing && ctx) fade(next ? 0 : volume, next ? 0.6 : 1.4); silent = next; if (silent) singing = false; emit(); },
     // Meta del pulso (1 = 96 pulsos por minuto). Hay que renovarla mientras dure el gesto:
     // sin noticias, el pulso vuelve solo al tempo base. Con el sonido apagado no hace nada.
     setPace(value) {
@@ -1218,6 +1218,9 @@
     if (score && pick >= 1 && pick <= 12) score.setMonth(pick - 1);
   } catch {}
   button.title = `Banda sonora: «${title()}»`;
+  // El nombre de la pieza del mes en la cabecera: cuenta que la galería suena y que cambia cada mes.
+  const monthTag = button.querySelector('[data-sound-month]');
+  if (monthTag) { monthTag.textContent = title(); monthTag.hidden = false; }
 
   const remember = on => {
     try { if (on) sessionStorage.setItem(RESUME_KEY, '1'); else sessionStorage.removeItem(RESUME_KEY); } catch {}
@@ -1233,7 +1236,6 @@
     button.setAttribute('aria-pressed', String(on));
     button.setAttribute('aria-busy', String(busy));
     button.disabled = busy;
-    button.setAttribute('aria-label', on ? 'Parar la banda sonora' : 'Escuchar la banda sonora');
     button.dataset.state = busy ? 'loading' : on ? 'playing' : 'off';
   }
   async function turnOn() {
@@ -1259,12 +1261,14 @@
   try { wasOn = !!score && sessionStorage.getItem(RESUME_KEY) === '1'; } catch {}
   if (wasOn) {
     const resume = event => {
-      removeEventListener('pointerdown', resume, true);
+      // Un dedo que se apoya, un arrastre o una tecla como Mayús o Esc no dan permiso para sonar: se espera al siguiente gesto.
+      if (navigator.userActivation && !navigator.userActivation.isActive) return;
+      removeEventListener('pointerup', resume, true);
       removeEventListener('keydown', resume, true);
       if (event.target instanceof Element && event.target.closest('[data-sound]')) return;
       turnOn();
     };
-    addEventListener('pointerdown', resume, true);
+    addEventListener('pointerup', resume, true);
     addEventListener('keydown', resume, true);
   }
 
