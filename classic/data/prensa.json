@@ -1,5 +1,5 @@
 {
-  "reviewed": "2026-11-11",
+  "reviewed": "2026-11-17",
   "scope": "Apariciones de Naroa Gutiérrez Gil en medios, comprobadas una a una en su fuente. «title» es el titular del medio, literal; «summary» y «byline» solo cuentan lo que la nota dice. «date_kind» distingue la fecha de publicación («published») de la del acto que anuncia una agenda sin fecha propia («event»). Lo que no se pudo abrir no entra: ver «unconfirmed».",
   "notes": [
     {
@@ -299,6 +299,22 @@
       "checked": "2026-11-11"
     },
     {
+      "id": "kubilha-2013-arte-itinerante",
+      "medium": "Kubilha",
+      "kind": "cronica",
+      "date": "2013-03-06",
+      "date_kind": "published",
+      "date_label": "6 de marzo de 2013",
+      "title": "Arte itinerante",
+      "byline": "Crónica de la redacción, en la sección Exposiciones",
+      "summary": "Crónica de un paseo de la Walking Gallery junto a la Ría de Bilbao, del bar Luz Gas del Casco Viejo al Zubizuri, con paradas en el teatro Arriaga, el Arenal y el Ayuntamiento. Nombra a Naroa entre los artistas que acudieron. La web ya no existe: el enlace abre la copia que guarda Internet Archive.",
+      "url": "https://web.archive.org/web/20130815055345/http://www.kubilha.com:80/arte-itinerante/",
+      "original": "http://www.kubilha.com/arte-itinerante/",
+      "archived": true,
+      "encounter": "",
+      "checked": "2026-11-17"
+    },
+    {
       "id": "kubilha-2013-walking-artist",
       "medium": "Kubilha",
       "kind": "entrevista",
@@ -523,11 +539,25 @@
       "why": "Berria, Argia, Bilbo Hiria, EITB, El País, El Mundo, 20minutos, Europa Press, eldiario.es y otros: sin resultados que la nombren (búsqueda del 2026-11-11). GARA desde 2014 solo está en PDF de pago."
     },
     {
-      "medium": "Kubilha",
-      "date": "2013-03-06",
-      "title": "Arte itinerante",
-      "url": "https://web.archive.org/web/20130815055345/http://www.kubilha.com:80/arte-itinerante/",
-      "why": "Según la búsqueda en Internet Archive nombra a Naroa entre los artistas de una Walking Gallery junto a la Ría, pero al releerla el archivo respondía 429. Pendiente de releer."
+      "medium": "DEIA",
+      "date": "2015-03-19",
+      "title": "Una buena colección de pelirrojos",
+      "url": "https://www.deia.eus/bizkaia/2015/03/19/buena-coleccion-pelirrojos-5144018.html",
+      "why": "Crónica social de la inauguración de «Ginger’s Project Euskadi», del fotógrafo Alejandro Martínez Valverde. Cita a una «Naroa Gutiérrez» entre los asistentes, sin decir que sea la artista ni hablar de su obra. Descartado (hemeroteca de DEIA, 2026-11-17)."
+    },
+    {
+      "medium": "DEIA · hemeroteca",
+      "date": "2013–2025",
+      "title": "",
+      "url": "https://www.deia.eus/buscador?text=%22Naroa+Guti%C3%A9rrez%22",
+      "why": "Su buscador da 20 resultados con el nombre (2026-11-17): los ya publicados, las agendas diarias repetidas de 2015 y 2016 y la crónica descartada de 2015. Las piezas sobre Bwall Collective (2019, 2024) y sobre el Fin de Semana de las Artes de 2013 no la nombran."
+    },
+    {
+      "medium": "El Correo · hemeroteca",
+      "date": "",
+      "title": "",
+      "url": "https://www.elcorreo.com/hemeroteca/",
+      "why": "El buscador de la hemeroteca queda tras un muro de cookies (aceptar o pagar) y no se consultó (2026-11-17). Por buscadores externos solo salen sus tres fichas de agenda, ya publicadas. EITB no tiene buscador propio: remite a Google, y los buscadores externos no dan nada con su nombre."
     }
   ]
 }
