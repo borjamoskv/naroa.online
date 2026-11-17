@@ -299,20 +299,6 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
     sizeCategory: 'small'
   },
   {
-    id: 20,
-    category: 'divinos',
-    kicker: 'Serie DiviNos',
-    slug: 'tedas-queen',
-    aspectRatio: 0.75,
-    url: '/assets/tedas-queen-GT9W8egT.webp',
-    title: 'Tedás Queen',
-    href: '#obra-tedas-queen',
-    year: '2024',
-    medium: 'Serie Divinos — Mixta Pop',
-    description: 'Sátira y devoción pop en un lienzo de color saturado.',
-    sizeCategory: 'medium'
-  },
-  {
     id: 21,
     category: 'kintsugi',
     kicker: 'Serie En.lata',
@@ -352,20 +338,6 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
     year: '2023',
     medium: 'Caja de Madera & Óleo',
     description: 'El confinamiento expresivo en una caja tridimensional.',
-    sizeCategory: 'small'
-  },
-  {
-    id: 24,
-    category: 'drawing',
-    kicker: 'Retrato por encargo',
-    slug: 'soy-un-amor-y-tengo-alas',
-    aspectRatio: 0.75,
-    url: '/assets/soy-un-amor-y-tengo-alas-ItTo7aOd.webp',
-    title: 'Soy un Amor y tengo Alas',
-    href: '#obra-soy-un-amor-y-tengo-alas',
-    year: '2023',
-    medium: 'Acrílico & Plumas de Oro',
-    description: 'Expresión de vuelo y dulzura en formato mediano.',
     sizeCategory: 'small'
   },
   {

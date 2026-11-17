@@ -2425,7 +2425,9 @@ def build(output):
     for src in originals:
         dest = output / src.lstrip("/")
         dest.parent.mkdir(parents=True, exist_ok=True)
-        if not dest.exists():
+        # Se vuelve a copiar si la fuente cambió después (p. ej. al quitarle el GPS):
+        # una salida reutilizada no puede seguir publicando la versión anterior.
+        if not dest.exists() or (SOURCE / src.lstrip("/")).stat().st_mtime > dest.stat().st_mtime:
             shutil.copy2(SOURCE / src.lstrip("/"), dest)
     # Firma, en su sitio, cada foto de obra publicada salvo las miniaturas (§12).
     c2pa_files = 0
