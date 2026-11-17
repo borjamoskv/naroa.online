@@ -395,9 +395,9 @@ html:has(dialog[open]){overflow:hidden}
 .menu-caption-main [data-menu-preview-title]{font-size:13px;letter-spacing:-.015em;color:#fffdf4;font-weight:500;text-align:right}
 .menu-caption-sub{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:6px;border-top:1px solid rgba(255,253,244,.16)}
 .menu-preview-meta{font-size:10px;color:#d6e2ff;letter-spacing:.02em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-/* El retrato de «Naroa» guiña al pasar el puntero: el aviso de IA (§7) solo acompaña a esa vista previa. */
+/* El retrato de «Naroa» guiña al pasar el puntero: el aviso de IA (§7) solo acompaña a esa vista previa (app.js lo
+   muestra con su rótulo). */
 .menu-ai-note{margin:0;font-size:10px;line-height:1.4;letter-spacing:.02em;color:#d6e2ffa8}
-.menu-preview-picture:not([data-portrait-mode="true"])~.menu-preview-caption .menu-ai-note{display:none}
 dialog.menu-dialog .menu-ai-note{order:4}
 .menu-caption-actions{display:inline-flex;align-items:center;gap:6px;flex-shrink:0}
 .menu-open-work-pill,.menu-index-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border:1px solid rgba(255,253,244,.28);border-radius:14px;background:rgba(255,253,244,.08);color:#fffdf4;font-size:9px;letter-spacing:.04em;cursor:pointer;flex-shrink:0;min-height:24px;transition:all .2s var(--ease-out)}

@@ -1206,6 +1206,7 @@
   const menu = $('#menu-dialog'), menuLinks = $$('[data-menu-item]', menu), menuImages = $$('[data-menu-image]', menu);
   const menuPicture = $('[data-menu-picture]', menu), menuReel = $('[data-menu-reel]', menu);
   const menuQuote = $('[data-menu-quote]', menu), menuMeta = $('[data-menu-preview-meta]', menu), menuLoupe = $('[data-menu-loupe]', menu);
+  const menuAiNote = $('.menu-ai-note', menu);
   const menuOpenWorkBtn = $('[data-menu-open-work]', menu);
   const menuSoundCreditsBtn = $('[data-menu-sound-credits]', menu), menuSoundDrawer = $('[data-menu-sound-drawer]', menu), menuMelodyToday = $('[data-menu-melody-today]', menu);
   const menuButtons = $$('[data-open-menu]');
@@ -1228,7 +1229,13 @@
     $('[data-menu-preview-label]', menu).textContent = label;
     if (menuQuote && quoteText) menuQuote.textContent = quoteText;
     if (menuMeta && metaText) menuMeta.textContent = metaText;
-    if (href) setPreviewHref(href);
+    if (href) {
+      setPreviewHref(href);
+      const portrait = href.endsWith('/sobre-mi/') || href.endsWith('/contacto/');
+      if (menuPicture) menuPicture.dataset.portraitMode = String(portrait);
+      // El aviso de IA del guiño (§7) llega con el retrato y su rótulo, no antes: con red lenta asomaba junto a «Obras».
+      if (menuAiNote) menuAiNote.hidden = !portrait;
+    }
   }
   async function showMenuFrame(source, title, label, quoteText, metaText, href) {
     if (!source || !menu.open) return;
@@ -1321,12 +1328,9 @@
     if (link.dataset.previewGlow) {
       menu.style.setProperty('--menu-glow', link.dataset.previewGlow);
     }
-    const isPortrait = href.endsWith('/sobre-mi/') || href.endsWith('/contacto/');
     const isWink = link.dataset.previewWink === 'true';
-    if (menuPicture) {
-      menuPicture.dataset.portraitMode = String(isPortrait);
-      menuPicture.classList.toggle('is-winking', isWink);
-    }
+    // El modo retrato (y con él el guiño y su aviso de IA) llega con la imagen, en labelMenu: nunca sobre la obra anterior.
+    if (menuPicture) menuPicture.classList.toggle('is-winking', isWink);
     if (playSound) {
       window.NAROA_SOUND?.menuNote?.(Number(link.dataset.menuIndex) || 0);
       if (isWink) window.NAROA_SOUND?.portraitWink?.();
