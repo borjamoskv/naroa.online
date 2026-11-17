@@ -232,6 +232,27 @@ def check(output):
                 assert versioned.search(file.name), ("immutable cache on a file without a version in its name", url)
                 immutable_files += 1
     assert immutable_files > len(expected), "the immutable cache rules no longer reach the hashed assets"
+    # Credenciales C2PA (§12): si el build firmó, cada foto con firma valida contra la CA publicada
+    # y el enlace de «Sobre esta obra» lleva a una de ellas; si no firmó, no hay enlace.
+    credential_links = {}
+    for route in manifest["canonical_routes"]:
+        if route.startswith("/obra/"):
+            for target in re.findall(r'data-art-credentials href="https://contentcredentials\.org/verify\?source=([^"]+)"', (output / route.lstrip("/") / "index.html").read_text()):
+                credential_links[route] = unquote(target)
+    if manifest.get("c2pa"):
+        from c2pa_sign import MIME, has_credentials, validate
+        signed = [f for folder in ("images", "immersive/media") for f in (output / folder).rglob("*") if f.suffix.lower() in MIME and has_credentials(f)]
+        assert len(signed) == manifest["c2pa"], ("signed photos differ from the build count", len(signed), manifest["c2pa"])
+        for file in signed:
+            state, failures, _ = validate(file)
+            assert state == "Trusted" and not failures, ("C2PA credential does not validate against classic/data/c2pa-ca.pem", file, state, failures)
+        assert {"/obra/" + slug + "/" for slug in expected} <= set(credential_links), "an artwork page lacks its credentials link"
+        for route, target in credential_links.items():
+            assert target.startswith("https://naroagutierrezgil.com/images/"), (route, target)
+            assert has_credentials(output / urlsplit(target).path.lstrip("/")), ("credentials link to an unsigned photo", route, target)
+        assert any(re.fullmatch(rule["source"], "/images/x.jpg") and any(h["key"] == "Access-Control-Allow-Origin" for h in rule["headers"]) for rule in hosting["headers"]), "the verifier needs CORS on /images/"
+    else:
+        assert not credential_links, "credentials link without signed photos"
     # Ninguna redirección pública acaba en una ruta que el sitio no genera.
     for rule in hosting.get("redirects", []):
         destination = rule["destination"]

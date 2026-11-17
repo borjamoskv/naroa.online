@@ -1,0 +1,23 @@
+{
+  "nota": "Lo que la credencial C2PA de cada foto declara sobre su fuente (AGENTS.md §12). Solo entra lo comprobado.",
+  "remasterizadas": {
+    "descripcion": "Máster ampliado por remuestreo Lanczos (hasta ×2), con máscara de enfoque, +5 % de contraste y +3 % de color. Ninguno de estos pasos usa IA.",
+    "comprobacion": "Byte a byte iguales a un archivo de classic/assets que tools/enhance_masters.py sobrescribió (su copia previa está en classic/assets/backup_pre4k, fuera de git). Comprobado el 2026-11-17. johnny-rocks-4k.webp y rockagipsy-4k.webp miden 3840 px por su lado largo, como las salidas del script, pero no coinciden con ninguna: no se declaran.",
+    "archivos": [
+      "/images/artworks/boy-c4K6RUzC.webp",
+      "/images/artworks/geisha-MfRtKWdu.webp",
+      "/images/catalogo/amor-en-conserva-4k.webp",
+      "/images/catalogo/amy-rocks-4k.webp",
+      "/images/catalogo/baroque-farrokh-4k.webp",
+      "/images/catalogo/boy-4k.webp",
+      "/images/catalogo/cantinflowers-cigarrillo-4k.webp",
+      "/images/catalogo/cantinflowers-rostro-4k.webp",
+      "/images/catalogo/geisha-4k.webp",
+      "/images/catalogo/james-rocks-4k.webp",
+      "/images/catalogo/lagrimas-de-oro-4k.webp",
+      "/images/catalogo/marilyn-rocks-4k.webp",
+      "/images/catalogo/rockagipsy-estudio-4k.webp",
+      "/images/catalogo/the-golden-couple-4k.webp"
+    ]
+  }
+}

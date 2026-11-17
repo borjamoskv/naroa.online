@@ -3133,6 +3133,9 @@
         video.hidden = !p.video;
         if (p.video) video.href = p.video; else video.removeAttribute('href');
       }
+      // Credenciales C2PA de la foto en escena (§12): el enlace solo existe si el build firmó.
+      const credentials = $('[data-art-credentials]');
+      if (credentials) credentials.href = 'https://contentcredentials.org/verify?source=' + encodeURIComponent('https://naroagutierrezgil.com' + p.photos[0].original);
       scenes.forEach((s, i) => { s.setAttribute('aria-hidden', String(i !== state.index)); s.classList.toggle('is-current', i === state.index); });
       preloadNeighbours();
       paintDwell();
