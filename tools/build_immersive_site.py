@@ -720,16 +720,15 @@ def build(output):
         "https://siarte.com/2022-03-25-siarte-exposicion-pintura-collage-arte-naroa-gutierrez.php",
         "https://www.youtube.com/@naroarte",
     ]
+    # Solo la ciudad: la dirección del estudio no es pública; no se escribe calle ni código postal.
     bilbao_place = {
         "@type": "Place",
         "@id": ORIGIN + "/#studio",
         "name": "Estudio Naroa Gutiérrez Gil · Bilbao",
         "address": {
             "@type": "PostalAddress",
-            "streetAddress": "Bilbao, Bizkaia",
             "addressLocality": "Bilbao",
             "addressRegion": "Bizkaia",
-            "postalCode": "48001",
             "addressCountry": "ES",
         },
         "geo": {
@@ -743,6 +742,9 @@ def build(output):
         "@type": "Person",
         "@id": ORIGIN + "/#artist",
         "name": "Naroa Gutiérrez Gil",
+        "givenName": "Naroa",
+        "familyName": "Gutiérrez Gil",
+        "alternateName": "Naroa Gutiérrez",
         "jobTitle": "Artista plástica y retratista",
         "url": ORIGIN + "/",
         "image": ORIGIN + "/images/sobre-mi/naroa-monoculo.jpg",
@@ -801,7 +803,6 @@ def build(output):
                 "name": "Estudio Naroa Gutiérrez Gil · Bilbao",
                 "locality": "Bilbao",
                 "region": "Bizkaia",
-                "postalCode": "48001",
                 "country": "ES",
                 "geo": {"latitude": 43.2630, "longitude": -2.9350},
                 "mapUrl": "https://www.google.com/maps?q=Bilbao,+Bizkaia",
@@ -943,6 +944,10 @@ def build(output):
         ],
     }
 
+    def titled(title):
+        # El nombre va una sola vez: detrás del título de cada página y delante en el de la portada.
+        return title if title.startswith("Naroa Gutiérrez Gil") else f"{title} · Naroa Gutiérrez Gil"
+
     def page(path, title, description, body, image, gallery=False, schema=None, not_found=False, image_alt=None, card_alt=None):
         canonical = ORIGIN + path
         im_w, im_h, im_mime = image_info(image)
@@ -1000,7 +1005,7 @@ def build(output):
             }
         breadcrumb_tag = f'<script type="application/ld+json" id="seo-breadcrumb">{data_json(breadcrumb)}</script>' if breadcrumb else ''
         slug_class = "page-" + (path.strip("/").replace("/", "-") or "home")
-        html = f'''<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>{esc(title)} · Naroa Gutiérrez Gil</title><meta name="description" content="{esc(description)}"><meta name="robots" content="index, follow, max-image-preview:large">{'<meta name="google-site-verification" content="ED9YrilUJ8fhvdH3FI6e9hpWaV2fK70_UfpwfrufLcc">' if path == "/" else ''}<meta name="theme-color" content="#11120f"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Naroa"><link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/assets/naroa-icon-180-v1.png"><link rel="alternate" type="application/rss+xml" title="Naroa Gutiérrez Gil · Obras y Blog" href="{ORIGIN}/feed.xml"><link rel="mcp" type="application/json" href="{ORIGIN}/.well-known/mcp.json" title="WebMCP Model Context Protocol"><link rel="canonical" href="{canonical}"><meta property="og:site_name" content="Naroa Gutiérrez Gil"><meta property="og:locale" content="es_ES"><meta property="og:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{canonical}"><meta property="og:type" content="{'article' if gallery and path not in ('/', '/obra/', '/series/vaivenes/') else 'website'}"><meta property="og:image" content="{ORIGIN}{og_img_path}"><meta property="og:image:secure_url" content="{ORIGIN}{og_img_path}"><meta property="og:image:width" content="{og_w}"><meta property="og:image:height" content="{og_h}"><meta property="og:image:type" content="{og_mime}"><meta property="og:image:alt" content="{esc(og_alt)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{esc(title)} · Naroa Gutiérrez Gil"><meta name="twitter:description" content="{esc(description)}"><meta name="twitter:image" content="{ORIGIN}{og_img_path}"><meta name="twitter:image:alt" content="{esc(og_alt)}"><link rel="icon" href="{favicon_path}" type="image/svg+xml" sizes="any"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@400;500&family=Playwrite+ES:wght@100..400&display=swap" rel="stylesheet"><link rel="stylesheet" href="{assets['app.css']}"><script type="application/ld+json" id="page-schema">{data_json(structured)}</script>{breadcrumb_tag}<script type="application/vnd.mcp+json" id="webmcp-schema">{data_json(webmcp_manifest)}</script><script defer src="{catalog_path}"></script><script defer src="{assets['soundscape.js']}"></script><script defer src="{assets['journey.js']}"></script><script defer src="{assets['app.js']}"></script></head><body class="{'gallery-page' if gallery else 'editorial-page'} {slug_class}"><a class="skip-link" href="#main">Ir al contenido</a>{header(gallery, 'data-season-note' not in body)}{body}{'' if gallery else footer()}{dialogs()}</body></html>'''
+        html = f'''<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>{esc(titled(title))}</title><meta name="description" content="{esc(description)}"><meta name="robots" content="index, follow, max-image-preview:large">{'<meta name="google-site-verification" content="ED9YrilUJ8fhvdH3FI6e9hpWaV2fK70_UfpwfrufLcc">' if path == "/" else ''}<meta name="theme-color" content="#11120f"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Naroa"><link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/assets/naroa-icon-180-v1.png"><link rel="alternate" type="application/rss+xml" title="Naroa Gutiérrez Gil · Obras y Blog" href="{ORIGIN}/feed.xml"><link rel="mcp" type="application/json" href="{ORIGIN}/.well-known/mcp.json" title="WebMCP Model Context Protocol"><link rel="canonical" href="{canonical}"><meta property="og:site_name" content="Naroa Gutiérrez Gil"><meta property="og:locale" content="es_ES"><meta property="og:title" content="{esc(titled(title))}"><meta property="og:description" content="{esc(description)}"><meta property="og:url" content="{canonical}"><meta property="og:type" content="{'article' if gallery and path not in ('/', '/obra/', '/series/vaivenes/') else 'website'}"><meta property="og:image" content="{ORIGIN}{og_img_path}"><meta property="og:image:secure_url" content="{ORIGIN}{og_img_path}"><meta property="og:image:width" content="{og_w}"><meta property="og:image:height" content="{og_h}"><meta property="og:image:type" content="{og_mime}"><meta property="og:image:alt" content="{esc(og_alt)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{esc(titled(title))}"><meta name="twitter:description" content="{esc(description)}"><meta name="twitter:image" content="{ORIGIN}{og_img_path}"><meta name="twitter:image:alt" content="{esc(og_alt)}"><link rel="icon" href="{favicon_path}" type="image/svg+xml" sizes="any"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@400;500&family=Playwrite+ES:wght@100..400&display=swap" rel="stylesheet"><link rel="stylesheet" href="{assets['app.css']}"><script type="application/ld+json" id="page-schema">{data_json(structured)}</script>{breadcrumb_tag}<script type="application/vnd.mcp+json" id="webmcp-schema">{data_json(webmcp_manifest)}</script><script defer src="{catalog_path}"></script><script defer src="{assets['soundscape.js']}"></script><script defer src="{assets['journey.js']}"></script><script defer src="{assets['app.js']}"></script></head><body class="{'gallery-page' if gallery else 'editorial-page'} {slug_class}"><a class="skip-link" href="#main">Ir al contenido</a>{header(gallery, 'data-season-note' not in body)}{body}{'' if gallery else footer()}{dialogs()}</body></html>'''
         dest = output / ("404.html" if not_found else path.lstrip("/") + "index.html")
         write(dest, html)
         if not not_found:
@@ -1147,7 +1152,9 @@ def build(output):
         "@context": "https://schema.org",
         "@type": "WebSite",
         "@id": ORIGIN + "/#website",
-        "name": "Naroa Gutiérrez Gil · Retratista en Bilbao y Bizkaia",
+        # Nombre del sitio en los resultados de Google: el nombre a secas, igual en los tres idiomas.
+        "name": "Naroa Gutiérrez Gil",
+        "alternateName": ["Naroa Gutiérrez", "Naroa"],
         "url": ORIGIN + "/",
         "description": f"Obra de Naroa Gutiérrez Gil, artista plástica y retratista en Bilbao y Bizkaia. {len(projects)} retratos en dibujo, pintura, collage, objetos intervenidos y pizarra.",
         "publisher": canonical_artist_entity,
@@ -1225,7 +1232,7 @@ def build(output):
             ],
         },
     }
-    gallery("/", 0, title="Retratista en Bilbao y Bizkaia · Retratos, collage y objetos", description=f"Obra de Naroa Gutiérrez Gil, artista plástica y retratista en Bilbao y Bizkaia. {len(projects)} retratos en dibujo, pintura, collage, objetos intervenidos y pizarra.", schema=home_schema)
+    gallery("/", 0, title="Naroa Gutiérrez Gil · Artista plástica y retratista en Bilbao", description=f"Obra de Naroa Gutiérrez Gil, artista plástica y retratista en Bilbao y Bizkaia. {len(projects)} retratos en dibujo, pintura, collage, objetos intervenidos y pizarra.", schema=home_schema)
     gallery("/obra/", 0, title=f"Obra · {len(projects)} retratos, collage y objetos", description=f"Catálogo de {len(projects)} obras de Naroa Gutiérrez Gil, retratista en Bilbao: retratos en pizarra, collage textil sobre madera, dibujo y objetos intervenidos, con técnica, soporte y medidas.", schema=catalogue_schema)
     for i, p in enumerate(projects):
         gallery(f"/obra/{p['slug']}/", i)
@@ -1480,7 +1487,7 @@ def build(output):
             ],
         },
     }
-    page("/trayectoria/", "Trayectoria", "Exposiciones, encuentros y espacios compartidos de Naroa Gutiérrez Gil. Una selección documentada de su trayectoria.", '<main id="main">' + career + '</main>', "/images/trayectoria/cantinflowers.jpg", schema=career_schema)
+    page("/trayectoria/", "Exposiciones y trayectoria", "Exposiciones, encuentros y espacios compartidos de Naroa Gutiérrez Gil. Una selección documentada de su trayectoria.", '<main id="main">' + career + '</main>', "/images/trayectoria/cantinflowers.jpg", schema=career_schema)
 
     blog_data = read_data("blog")
     posts = blog_data["posts"]
@@ -1610,7 +1617,7 @@ def build(output):
             for post in blog_archive
         ],
     }
-    page("/cuaderno/", "Blog", "Historias de obras, procesos y encuentros. El blog de la artista Naroa Gutiérrez Gil.", '<main id="main">' + notebook + '</main>', "/images/cuaderno/cuaderno-twister-collage.jpg", schema=blog_schema)
+    page("/cuaderno/", "Blog y prensa", "Historias de obras, procesos y encuentros. El blog de la artista Naroa Gutiérrez Gil.", '<main id="main">' + notebook + '</main>', "/images/cuaderno/cuaderno-twister-collage.jpg", schema=blog_schema)
 
     commission_examples = [
         (jaio, "Madera noble & textil cosido", "Collage textil sobre madera"),
@@ -1845,12 +1852,12 @@ def build(output):
         "provider": canonical_artist_entity,
         "providerMobility": "dynamic",
         "availableLanguage": ["es", "eu"],
+        "telephone": "+34636060609",
+        "email": "encargos@naroagutierrezgil.com",
         "address": {
             "@type": "PostalAddress",
-            "streetAddress": "Bilbao, Bizkaia",
             "addressLocality": "Bilbao",
             "addressRegion": "Bizkaia",
-            "postalCode": "48001",
             "addressCountry": "ES",
         },
         "geo": {
@@ -2391,7 +2398,7 @@ def build(output):
         elif path == "/retratos-por-encargo-bilbao/":
             imgs = ''.join(f'<image:image><image:loc>{ORIGIN}{esc(ex["photos"][0]["original"])}</image:loc><image:title>{esc(ex["title"])} · {esc(kind_label)}</image:title><image:caption>{esc(work_alt(ex, kind_label))}</image:caption></image:image>' for ex, kind_label, *_ in commission_examples)
         else:
-            imgs = f'<image:image><image:loc>{ORIGIN}{esc(image)}</image:loc><image:title>{esc(page_title)} · Naroa Gutiérrez Gil</image:title><image:caption>{esc(page_alt)}</image:caption></image:image>' if image else ''
+            imgs = f'<image:image><image:loc>{ORIGIN}{esc(image)}</image:loc><image:title>{esc(titled(page_title))}</image:title><image:caption>{esc(page_alt)}</image:caption></image:image>' if image else ''
         sitemap_entries.append(f'<url><loc>{ORIGIN}{path}</loc><lastmod>{catalogue["reviewed"]}</lastmod>{imgs}</url>')
     robots_content = (
         "User-agent: OAI-SearchBot\n"
@@ -2529,7 +2536,6 @@ def build(output):
                     "name": "Estudio Naroa Gutiérrez Gil · Bilbao",
                     "address_locality": "Bilbao",
                     "address_region": "Bizkaia",
-                    "postal_code": "48001",
                     "country": "ES",
                     "coordinates": {"latitude": 43.2630, "longitude": -2.9350},
                     "hasMap": "https://www.google.com/maps?q=Bilbao,+Bizkaia",
