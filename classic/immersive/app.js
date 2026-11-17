@@ -4662,9 +4662,13 @@
         stage.style.setProperty('--velocity-depth', `${(Math.abs(velDepth) < 0.05 ? 0 : velDepth).toFixed(2)}px`);
         stage.style.setProperty('--velocity-tilt-x', `${(Math.abs(velTiltX) < 0.02 ? 0 : velTiltX).toFixed(2)}deg`);
         if (Math.abs(normVel) > 0.08 && Math.abs(delta) > 0.012 && window.NAROA_FLUID?.splat) {
-          const fx = 0.5 + Math.sin(motion.current * 2.4) * 0.16;
+          // El humo del scroll sale por los márgenes, alternando de lado, y empuja hacia fuera: en el centro
+          // blanqueaba la cara de los retratos.
+          const wave = Math.sin(motion.current * 2.4);
+          const side = wave < 0 ? -1 : 1;
+          const fx = 0.5 + side * (0.45 - Math.abs(wave) * 0.03);
           const fy = clamp(0.5 - normVel * 0.12, 0.14, 0.86);
-          window.NAROA_FLUID.splat(fx, fy, -normVel * 92, normVel * 215);
+          window.NAROA_FLUID.splat(fx, fy, side * Math.abs(normVel) * 40, normVel * 215);
         }
       }
       const pose = journey.read(motion.current);
