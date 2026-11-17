@@ -11,9 +11,14 @@
    (firma y notas) y la caligráfica (citas de Naroa en Sobre mí).
    Escala por tercios mayores (×1.25) desde base 14 px; las variantes
    capsulares comparten tracking y peso para que suenen al mismo instrumento. */
+/* Playwrite ES con otro nombre y un 78 % de tamaño: ocupa lo que ocupaba Cormorant y no empuja maquetas. Mismo archivo que pide Google Fonts. */
+@font-face{font-family:"Naroa Escolar";src:url(https://fonts.gstatic.com/s/playwritees/v11/kJE0BuMK4Q07lDHc2Xp9uokSqcx1BZw.woff2) format('woff2');font-weight:100 400;font-style:normal;font-display:swap;size-adjust:78%}
 :root {
   --font-body: "DM Sans", sans-serif;
-  --font-serif: "Cormorant Garamond", Georgia, serif;
+  /* Lo que era Cormorant en cursiva es letra de colegio (Playwrite ES) en rosa en toda la web: pedido el 2026-11-18. */
+  --font-serif: "Naroa Escolar", "Playwrite ES", Georgia, cursive;
+  --school-pink: #f7a8c8;       /* sobre fondo oscuro o azul */
+  --school-pink-deep: #b52a63;  /* sobre papel, rosa claro o crema */
   --font-hand: "Caveat", cursive;
   --font-script: "Playwrite ES", "Caveat", cursive;
   --font-mono: "Nino Prodigio", monospace;
@@ -3441,6 +3446,21 @@ dialog.menu-dialog .menu-sound-drawer-inner { color: #fffdf4b8; }
 dialog.menu-dialog .menu-sound-eyebrow { color: #fffdf4c7; font-weight: 400; letter-spacing: .18em; }
 dialog.menu-dialog .menu-sound-links a,
 dialog.menu-dialog .menu-sound-links button { color: #edbca4; }
+/* El cajón del sonido: el mes escrito a mano, una línea y la ficha. Sin rótulos en versalitas ni subrayados de formulario. */
+dialog.menu-dialog .menu-sound-drawer-inner { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 18px; max-width: 760px; font-size: 13px; line-height: 1.5; }
+dialog.menu-dialog .menu-sound-theme { font-family: var(--font-hand); font-weight: 400; font-size: 26px; line-height: 1.1; color: #fffdf4; }
+dialog.menu-dialog .menu-sound-drawer-inner > p { flex: 1 1 260px; margin: 0; }
+dialog.menu-dialog .menu-sound-links { flex: 0 0 auto; gap: 20px; margin-top: 0; }
+dialog.menu-dialog .menu-sound-links a, dialog.menu-dialog .menu-sound-links button { position: relative; font-size: 12px; text-decoration: none; padding-bottom: 5px; }
+dialog.menu-dialog .menu-sound-links a::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 6px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 8' preserveAspectRatio='none' fill='none'%3E%3Cpath d='M1 4.6 C 19 2, 37 6.6, 57 3.2 C 77 0.8, 92 5.4, 109 3' stroke='%23edbca4' stroke-width='1.6' stroke-linecap='round' opacity='0.85'/%3E%3C/svg%3E") center bottom / 100% 6px no-repeat; pointer-events: none; }
+dialog.menu-dialog .menu-sound-links button { color: #fffdf4a8; }
+dialog.menu-dialog .menu-sound-links button:hover, dialog.menu-dialog .menu-sound-links a:hover { color: #fffdf4; }
+/* Las líneas bajo cada página del menú, el aviso de temporada y el mes del sonido: letra de colegio (Playwrite ES, la caligrafía escolar española) en rosa, sin cursivas de libro. */
+dialog.menu-dialog { --menu-school-pink: #f7a8c8; }
+dialog.menu-dialog .menu-name small, dialog.menu-dialog .menu-season, dialog.menu-dialog .menu-season span, dialog.menu-dialog .menu-sound-theme { font-family: var(--font-script); font-style: normal; font-weight: 300; letter-spacing: 0; color: var(--menu-school-pink); }
+dialog.menu-dialog .menu-name small { font-size: 12px; line-height: 1.9; }
+dialog.menu-dialog .menu-season, dialog.menu-dialog .menu-season span { font-size: 11.5px; line-height: 1.9; }
+dialog.menu-dialog .menu-sound-theme { font-size: 17px; line-height: 1.6; }
 
 @media (max-width: 760px) {
   dialog.menu-dialog { --lens: 124vw; --lens-x: 50vw; --lens-dim: .3; --ink-x: 50%; --ink-y: 40%; }
@@ -3936,3 +3956,20 @@ body:has(.hero-threshold:not(.is-passed)) .sound-toggle[aria-pressed=false] .sou
 @keyframes sound-trace-draw{to{stroke-dashoffset:0}}
 @media(prefers-reduced-motion:reduce){body:has(.hero-threshold:not(.is-passed)) .sound-toggle[aria-pressed=false] .sound-trace path{animation:none;stroke-dashoffset:0}}
 @media(max-width:370px){.site-nav nav>.sound-toggle .sound-month,.sound-trace{display:none}}
+
+/* ─── Letra de colegio en rosa (2026-11-18) ───────────────────────────────
+   Todo lo que era Cormorant en cursiva usa --font-serif («Naroa Escolar», Playwrite ES).
+   Sin cursiva sintética: la letra de colegio ya va inclinada. Color: rosa claro sobre
+   oscuro o azul; rosa hondo sobre papel, rosa claro o crema; los controles y lo que va
+   sobre naranja o magenta conservan su color. */
+html { font-synthesis-style: none; }
+html:root body :is(.art-material, .story-body > p, .story-body dd, .menu-caption-quote, .spotlight-hud-meta, .spotlight-hud-quote,
+  .index-work-whisper, .index-work-whisper em, .index-empty, .story-remix-spinner > span, .kintsugi-quote-card p,
+  .work-gallery-header .eyebrow, .work-gallery-footer, .hero-lead, .notebook-year-number, .press-year-number,
+  .enc-word, .commission-work-title, .closing .hand, .enc-shout--serif, .ct-credit-title, .ct-say a, .ct-coda) {
+  color: var(--school-pink) !important;
+}
+html:root body :is(.kintsugi-shard p, .timeline-year, .press-piece h3, .press-piece h3 a, .notebook-card h3, .notebook-card h3 a,
+  .enc-h2 em, .enc-num, .ct-lead, .ct-reason label, .ct-send-lead) {
+  color: var(--school-pink-deep) !important;
+}
