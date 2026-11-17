@@ -2127,11 +2127,15 @@
       scheduleScroll();
     });
     // Pupil centres measured on the unaltered cover photographs, in source-image coordinates.
+    // `reach`: hasta dónde entra la cámara en ese ojo (diámetro del iris en pantalla, en lados cortos de la
+    // ventana); sin él vale EYE_REACH. Más adentro la foto (1800 px de lado mayor) se deshace en un borrón y
+    // el corte deja de leerse como dos ojos. Una trama gruesa, como la de RockaGipsy, aguanta menos.
+    const EYE_REACH = .55;
     const eyes = {
       'marilyn-rocks': { x: .635, y: .392, iris: .030 },
       'rara-avis': { x: .683, y: .417, iris: .025 },
       'johnny-rocks': { x: .583, y: .459, iris: .028 },
-      'rockagipsy': { x: .545, y: .402, iris: .018 },
+      'rockagipsy': { x: .459, y: .347, iris: .014, reach: .2 },
       'infusion-de-berto': { x: .469, y: .463, iris: .020 },
       'buena-fuente': { x: .678, y: .439, iris: .025 },
       'la-llorona': { x: .2985, y: .4192, iris: .022 },
@@ -2147,10 +2151,22 @@
       const focus = scenes[index].style.getPropertyValue('--position').split(' ').map(v => parseFloat(v) / 100);
       return { width, height, x: (width - pictureWidth) * focus[0] + eye.x * pictureWidth, y: (height - pictureHeight) * focus[1] + eye.y * pictureHeight, iris: eye.iris * pictureWidth };
     }
+    // El corte de ojos solo vale si la pupila está dentro de lo que se ve de la foto: en un móvil en vertical,
+    // el recorte de una foto apaisada puede dejarla fuera (La Llorona) y la cámara acabaría en negro.
+    function eyeInFrame(index) {
+      if (!eyes[works[index]?.slug]) return false;
+      const point = eyeGeometry(index), radius = point.iris / 2;
+      return point.x - radius >= 0 && point.x + radius <= point.width && point.y - radius >= 0 && point.y + radius <= point.height;
+    }
     function eyePose(index, diameter, focus, offset = 0) {
       const point = eyeGeometry(index), zoom = diameter / point.iris, img = images[index];
-      const tx = -(zoom - 1) * point.width / 2 * (1 - focus) + (geometry.width * .5 + 10 - point.x * zoom) * focus;
-      const ty = -(zoom - 1) * point.height / 2 * (1 - focus) + (geometry.height * .42 + 10 - point.y * zoom) * focus + offset * (1 - focus);
+      let tx = -(zoom - 1) * point.width / 2 * (1 - focus) + (geometry.width * .5 + 10 - point.x * zoom) * focus;
+      let ty = -(zoom - 1) * point.height / 2 * (1 - focus) + (geometry.height * .42 + 10 - point.y * zoom) * focus + offset * (1 - focus);
+      // La foto no deja ver el fondo: con el zoom aún corto, un ojo cercano al borde del recorte se acerca
+      // al eje solo hasta donde la foto sigue cubriendo la pantalla (Marilyn en móvil).
+      if (zoom >= 1 && scenes[index]?.dataset?.eyeSculptural !== 'true') {
+        tx = clamp(tx, point.width * (1 - zoom), 0); ty = clamp(ty, point.height * (1 - zoom), 0);
+      }
       img.style.transformOrigin = '0px 0px';
       img.style.transform = `translate3d(${tx.toFixed(3)}px,${ty.toFixed(3)}px,0) scale(${zoom.toFixed(5)})`;
     }
@@ -3450,13 +3466,35 @@
         image.style.filter = `blur(${(3.4 * k).toFixed(2)}px) contrast(${(1 + 0.1 * pulse).toFixed(3)})`;
       }
     }
+    // Zoom genérico: la obra siguiente no se funde sobre la que se va (se veían dos caras a la vez). Asoma por
+    // un hueco recortado a mano, distinto en cada obra (hash del slug), que crece desde el centro hasta ocupar
+    // la pantalla; en pizarra el hueco es un borrado de tiza, de borde difuso.
+    function zoomCut(scene, image, work, fraction) {
+      const open = smooth((fraction - .30) / .42);
+      if (open <= 0) { scene.style.opacity = '0'; return; }
+      if (open >= 1) return;
+      const w = geometry.width, h = geometry.height, cx = w * .5, cy = h * .46;
+      const reach = Math.hypot(Math.max(cx, w - cx), Math.max(cy, h - cy)) / .78 * open;
+      if (materialOf(work) === 'chalk') {
+        scene.style.maskImage = scene.style.webkitMaskImage = `radial-gradient(circle at ${cx.toFixed(1)}px ${cy.toFixed(1)}px,#000 ${(reach * .8).toFixed(1)}px,transparent ${(reach * 1.12).toFixed(1)}px)`;
+        return;
+      }
+      const jag = jaggedEdge(work.slug), turn = jag[32] * Math.PI * 2;
+      const pts = Array.from({ length: 32 }, (_, i) => {
+        const a = turn + i / 32 * Math.PI * 2, r = reach * (.8 + .2 * jag[i]);
+        return `${(cx + Math.cos(a) * r).toFixed(1)}px ${(cy + Math.sin(a) * r).toFixed(1)}px`;
+      });
+      scene.style.clipPath = `polygon(${pts.join(',')})`;
+    }
     function render() {
       const munsterSlugs = ['lily-munster', 'herman-munster', 'eddie-munster', 'abuelo-munster'];
       const pose = motion.pose, { entry, phase, progress: fraction } = pose;
       const base = entry.index, incoming = Math.min(base + 1, works.length - 1);
       const still = state.fit || reduced.matches;
       const transition = !still && phase === 'transition' && fraction > 0;
-      const mode = entry.mode, progress = smooth(fraction), eyeMatch = transition && mode === 'E';
+      // Sin las dos pupilas a la vista no hay corte de ojos: ese paso se hace con el zoom genérico.
+      const mode = entry.mode === 'E' && !(eyeInFrame(base) && eyeInFrame(incoming)) ? 'Z' : entry.mode;
+      const progress = smooth(fraction), eyeMatch = transition && mode === 'E';
       stage.dataset.transition = still ? 'still' : phase === 'explore' ? 'explore' : !transition ? 'hold' : ({ E: 'eyes', H: 'horizontal', V: 'vertical', Z: 'zoom', P: 'puzzle' })[mode];
       stage.dataset.journeyPhase = phase;
       const isDustinToGameOver = transition && works[base]?.slug === 'dustin' && works[incoming]?.slug === 'game-over';
@@ -3470,7 +3508,9 @@
       let depth = 0, diameter = 0, focus = 0;
       if (eyeMatch) {
         const from = eyeGeometry(base).iris * restZoom(base), to = eyeGeometry(incoming).iris * restZoom(incoming, true);
-        const deep = Math.hypot(geometry.width, geometry.height) * 1.02;
+        // El iris crece hasta `reach` lados cortos de la ventana y ahí se cruza con el de la obra siguiente.
+        const reach = Math.min(eyes[works[base].slug].reach || EYE_REACH, eyes[works[incoming].slug].reach || EYE_REACH);
+        const deep = Math.max(Math.min(geometry.width, geometry.height) * reach, from * 1.5, to * 1.5);
         const approach = smooth(fraction / .64), reveal = smooth((fraction - .64) / .36);
         diameter = Math.exp(fraction <= .64 ? Math.log(from) + Math.log(deep / from) * approach : Math.log(deep) + Math.log(to / deep) * reveal);
         focus = smooth(fraction / .34) * (1 - reveal); depth = approach * (1 - reveal);
@@ -3794,7 +3834,8 @@
           } else {
             const rest = restZoom(index, !outgoing);
             image.style.transform = `scale(${Math.exp(Math.log(rest) + Math.log(maxScale / rest) * close).toFixed(5)})`;
-            if (!outgoing) scene.style.opacity = smooth((fraction - .40) / .20).toFixed(4);
+            if (!outgoing && isHugoToJames) scene.style.opacity = smooth((fraction - .40) / .20).toFixed(4);
+            else if (!outgoing) zoomCut(scene, image, works[index], fraction);
             if (outgoing && isHugoToJames) {
               scene.style.opacity = fraction >= 0.50 ? smooth((0.75 - fraction) / 0.25).toFixed(4) : '1';
             } else if (outgoing) {
@@ -5373,7 +5414,7 @@
       'marilyn-rocks': { x: .635, y: .392, iris: .030 },
       'amy-rocks': { x: .512, y: .424, iris: .018 },
       'johnny-rocks': { x: .583, y: .459, iris: .028 },
-      'rockagipsy': { x: .545, y: .402, iris: .018 },
+      'rockagipsy': { x: .459, y: .347, iris: .018 },
       'infusion-de-berto': { x: .469, y: .463, iris: .020 },
       'buena-fuente': { x: .678, y: .439, iris: .025 },
       'james-rocks': { x: .420, y: .345, iris: .025 },

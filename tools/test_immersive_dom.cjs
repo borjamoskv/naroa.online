@@ -445,7 +445,7 @@ async function eyeMatch(ui, base, points) {
   assert.equal(ui.find('[data-art-title]').textContent, works[3].title, 'Reversing scroll follows the new position immediately');
   ui.scroll(7.3); ui.w.dispatchEvent(new ui.w.Event('resize')); await ui.flush();
   assert.equal(ui.w.scrollY, ui.distance(7.3), 'A resize with unchanged geometry must not jump back to the last decoded frame');
-  await eyeMatch(ui, 5, [[.583,.459],[.545,.402]]);
+  await eyeMatch(ui, 5, [[.583,.459],[.459,.347]]);
   await eyeMatch(ui, 10, [[.469,.463],[.678,.439]]);
   await eyeMatch(ui, 33, [[.2985,.4192],[.426,.383]]);
   ui.click('[data-select="0"]'); await ui.flush();
@@ -723,7 +723,7 @@ async function eyeMatch(ui, base, points) {
     assert.deepEqual([artwork.style.transform, artwork.style.opacity], lastPortalFrame, 'The portal and exhibition share exactly the same Rara Avis element and camera pose');
     const checkpoints = [
       [ .683, .417, .025 ], [ .635, .392, .030 ], [ .512, .424, .018 ],
-      [ .583, .459, .028 ], [ .545, .402, .018 ], [ .469, .463, .020 ],
+      [ .583, .459, .028 ], [ .459, .347, .018 ], [ .469, .463, .020 ],
       [ .678, .439, .025 ], [ .420, .345, .025 ], [ .487, .406, .029 ]
     ];
     for (let i = 0; i < checkpoints.length - 1; i++) {

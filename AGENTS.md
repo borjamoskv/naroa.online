@@ -36,7 +36,7 @@ Gobernanza general de la carpeta de proyectos: [Workspace AGENTS.md](file:///Use
 | --- | --- |
 | Una obra, `catalogo.json`, `journey.json` o `src/artworks.ts` | §1, §2 |
 | `soundscape.js` o cualquier sonido | §3, §5 |
-| Transiciones entre obras, el final del recorrido o `Game Over` | §4, §7c |
+| Transiciones entre obras, el final del recorrido o `Game Over` | §4, §7c, §7e |
 | Story, compartir o el retrato de la visita | §6, §8.4 |
 | El retrato inicial (umbral) | §7 |
 | La interfaz de la galería, la lupa o `classic/data/lecturas.json` | §7b, §7d |
@@ -131,12 +131,19 @@ Toda alta o mutación de obra exige paridad simultánea en 3 capas:
 
 ### 7c. Transición Ligada a la Materia (`INV_MATERIAL_TRANSITION`)
 1. En el desplazamiento genérico (`H`/`V`), el borde con que llega la obra siguiente sale de su materia (`materialEdge` en `app.js`): `collage` → borde rasgado determinista (hash del `slug`); `pizarra` → borrado de tiza con difuminado; `objetos` → sombra proyectada sobre la obra que se va; técnica con `mica`/`brillantina`/`dorad*`/`kintsugi` → destello dorado; `caracterizacion` → pasada de maquillaje (desenfoque que se asienta).
-2. Las transiciones a medida de cada par (ojos, lata, Kintsugi, Game Over…) no se tocan. Todo termina en la obra limpia (`clip-path`, máscara y filtros se reinician cada fotograma).
+2. En el zoom genérico (`Z`), la obra siguiente no se funde sobre la que se va (se veían dos caras a la vez): asoma por un hueco recortado a mano que crece desde el centro hasta ocupar la pantalla (`zoomCut`), con un contorno distinto en cada obra (hash del `slug`); en `pizarra` el hueco es un borrado de tiza, de borde difuso. Las fotos no llevan transparencia, así que el hueco no puede tomar la silueta de la pieza.
+3. Las transiciones a medida de cada par (ojos, lata, Kintsugi, Game Over…) no se tocan. Todo termina en la obra limpia (`clip-path`, máscara y filtros se reinician cada fotograma).
 
 ### 7d. Lupa de Macro (`INV_MACRO_LENS`)
 1. Una lente circular (`.art-lens`, `min(30vmin, 240px)`, ×3,2) muestra a resolución completa el original de la foto que está en escena (la portada o la que puso el pase de fotos; `photos[0]` en «Ver imagen completa») bajo el puntero, y mientras está encendida el pase de fotos se detiene, con la obra entera siempre visible detrás. Se enciende con «Lupa» (en «Más») o manteniendo pulsado 0,45 s sin mover; al soltar tras mantener, o con `Esc`, se cierra. Soltar tras mantener no abre el visor de fotos.
 2. Solo actúa en reposo o exploración (`stage.dataset.transition` = `hold`/`explore`); en transición se oculta. Calcula la posición sobre la imagen real (recorte `cover`/`contain` y `object-position`), no sobre la caja. Mientras está activa (`body.is-lens`) se retiran título, recorrido y flechas.
 3. **Leer un retrato:** con la lupa encendida, las obras que tienen anotaciones en `classic/data/lecturas.json` enseñan unas marcas a mano (`.art-readings`); al pasar la lente sobre una, su nota se escribe al lado, fuera de la lente (`.art-reading-note`; encima si la lupa se sostiene con el dedo). Cada anotación nombra algo que se ve en la foto y que consta en la ficha de `catalogo.json` (un material, el soporte, la firma): no interpreta la obra ni lleva « » (§8). `x` e `y` se miden sobre `photos[0]`, y solo se enseñan con esa foto en escena: si el pase de fotos ya había avanzado, una obra con anotaciones vuelve a la primera al encender la lupa (las demás siguen enseñando la foto que estaba en escena, punto 1); al cambiar la primera foto de una obra, se vuelven a medir. Los textos se traducen como cadenas del catálogo (§9). Una obra sin anotaciones no enseña nada.
+
+### 7e. Corte de Ojos Legible (`INV_EYE_MATCH_LEGIBLE`)
+1. En la galería, el paso `E` acerca la cámara al ojo de una obra y lo funde con el de la siguiente, pupila sobre pupila y con el mismo diámetro de iris. El iris no pasa de `EYE_REACH` (`0,55`) lados cortos de la ventana; una obra de trama gruesa lleva su propio `reach` en la tabla `eyes` de `app.js` (RockaGipsy, `0,2`). Más adentro la foto, de 1800 px de lado mayor, se queda en un borrón y el corte deja de leerse como dos ojos.
+2. Las coordenadas de `eyes` se miden sobre la foto de portada: al cambiar la portada de una obra con corte de ojos, se vuelven a medir (la de RockaGipsy apuntó a la nariz hasta el 2026-11-17).
+3. Si una de las dos pupilas queda fuera del recorte visible (La Llorona en un móvil en vertical), ese paso se hace con el zoom genérico. Con el zoom aún corto la foto nunca deja ver el fondo: la pupila se acerca al eje solo hasta donde la foto cubre la pantalla.
+4. El recorrido de `/sobre-mi/` tiene su propio corte (`eyePass`, `portraitPass`) y su propia tabla de ojos: allí la cámara sí entra hasta cubrir la pantalla, y así lo exige el test DOM.
 
 ### 8. Voz y Citas de «Sobre mí» (`INV_LITERAL_QUOTES`)
 1. **Lo que va entre « » lo dijo Naroa:** en `/sobre-mi/`, en el hero de `/trayectoria/` y en las tarjetas sociales, todo texto entre comillas latinas es cita literal de su blog (`naroagutierrez.wordpress.com`). Lo omitido se marca con `[…]`, no se funden ni se recomponen frases, y cada nota manuscrita (`.kintsugi-chasm-spark`) nombra la entrada y el año de donde sale.
