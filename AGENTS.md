@@ -59,6 +59,7 @@ Toda alta o mutación de obra exige paridad simultánea en 3 capas:
 - Falla también si una redirección de `vercel.json`, un `target` del recorrido o una exposición apunta a una obra inexistente.
 - **Ningún recuento de obras se escribe a mano.** El `index.html` de la SPA usa `%OBRAS_TOTAL%`, que rellena `vite.config.ts` desde los mismos datos.
 - El registro de la SPA arrastra una deuda anotada en el propio control (obras fuera de catálogo, dos sin registrar y un slug repetido): no puede crecer, y al resolver una entrada se borra de la lista.
+- **Imágenes limpias:** falla si un JPEG, WebP o PNG de `classic/images`, `classic/assets` o `public/` (el lab sube `public/` entero) lleva GPS (en el EXIF o en el XMP), o el pie, el lugar o el enlace que `tools/descargar_albumes_facebook.py` incrusta en cada foto del archivo. Al importar una foto de `raw_artworks_facebook/`, limpiarla antes con `exiftool -gps:all= -iptc:all= -xmp:all= -overwrite_original` y registrar su sha256 nuevo. El build vuelve a copiar un original cuando la fuente es más reciente que la copia publicada.
 
 **Caché:** `immutable` solo para archivos con versión en el nombre (hash de 12 cifras o sufijo `-vN`). `tools/check_immersive_site.py` falla si una regla de `vercel.json` se lo da a cualquier otro.
 
