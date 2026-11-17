@@ -162,7 +162,7 @@
           "url": "https://naroagutierrezgil.com/images/catalogo/marilyn-rocks-4k.webp",
           "width": 2880,
           "height": 3840,
-          "caption": "Marilyn Rocks — Retrato frontal en acrílico, mica mineral y pan de oro sobre pizarra natural.",
+          "caption": "Marilyn Rocks — Retrato frontal en acrílico, lápices de colores y escamas de mica sobre pizarra natural.",
           "sha256": "64f6ad930bc5b6bd124fb658c3f715249bb11b08b0f70b047e4cb3512edbc9b4"
         },
         {
@@ -176,7 +176,7 @@
           "url": "https://naroagutierrezgil.com/images/catalogo/marilyn-rocks-original-03-2048.jpg",
           "width": 2048,
           "height": 1536,
-          "caption": "Primer plano del rostro de Marilyn Monroe con incrustaciones doradas y escamas de mica.",
+          "caption": "Primer plano del rostro de Marilyn Monroe con detalles dorados y escamas de mica.",
           "sha256": "0b7e2cff277e5c7933464a833546389c23f276cd9cfeac2c6233ada612f9e511"
         }
       ],
@@ -2619,7 +2619,7 @@
       "support": "Lienzo 3D con laterales pintados",
       "dimensions": "50 × 70 cm",
       "materials": null,
-      "year": "2023",
+      "year": null,
       "story": "«Esta obra, al igual que el renombrado ‘Pensador’ de Rodin, representa de alguna manera el mundo interior y los procesos cognitivos: la mente y el cuerpo conectados e interactuando entre sí mediante pensamientos, emociones y sensaciones». — Naroa Gutiérrez Gil",
       "url": "https://naroagutierrezgil.com/obra/la-pensadora/",
       "cover_url": "https://naroagutierrezgil.com/immersive/media/la-pensadora-original-01-2048-d00881c21fae-view.webp",
@@ -2640,28 +2640,42 @@
       "title": "Baroque Farrokh",
       "category": "collage",
       "series": "Tributos",
-      "technique": "Lápiz de color sobre fondo floral, técnica mixta y collage",
-      "support": "Lámina sobre fondo floral en marco intervenido",
-      "dimensions": "45 × 36 cm",
+      "technique": "Retrato recortado por la silueta sobre lámina brillante, papel blanco arrugado y tela blanca bordada",
+      "support": "Lámina recortada, papel arrugado y tela bordada en marco de madera oscura",
+      "dimensions": null,
       "materials": null,
-      "year": 2024,
-      "story": "Ficha técnica: Técnica mixta barroca contemporánea con cenefa dorada y marco altar intervenido.",
+      "year": 2020,
+      "story": "Retrato de Freddie Mercury joven, con la mano en la barbilla y camisa de flores, en grises con trazos de color y recortado por la silueta sobre un fondo de papel blanco arrugado. Lo rodea, a modo de paspartú, una tela blanca bordada, dentro de un marco de madera oscura.",
       "url": "https://naroagutierrezgil.com/obra/baroque-farrokh/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/baroque-farrokh-4k-52f8182de160-view.webp",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/baroque-farrokh-fb-14-736e083a4a94-view.webp",
       "photos": [
         {
-          "url": "https://naroagutierrezgil.com/images/catalogo/baroque-farrokh-4k.webp",
-          "width": 3810,
-          "height": 3090,
-          "caption": "Fotografía master 4K del retrato de Freddie Mercury en clave barroca contemporánea.",
-          "sha256": "52f8182de160a40ac84f44d7aecf627556fd982c32a17d0579f3e5f00f263f47"
+          "url": "https://naroagutierrezgil.com/images/catalogo/baroque-farrokh-fb-14.jpg",
+          "width": 1737,
+          "height": 1409,
+          "caption": "La pieza completa en su marco oscuro: el retrato recortado sobre papel blanco arrugado, rodeado de tela blanca bordada.",
+          "sha256": "736e083a4a94a3ea26cac12d99b0a62f62e16305c8fef01fc5ad1ed1a6002b2b"
         },
         {
-          "url": "https://naroagutierrezgil.com/images/artworks/baroque-farrokh-mjg4ClA9.webp",
-          "width": 1024,
-          "height": 830,
-          "caption": "Detalle del marco intervenido y collage floral.",
-          "sha256": "88d967e7e56eafad3b0d8a1ef96670202ce7e63ce9e7a45ba782f1191b36d4f2"
+          "url": "https://naroagutierrezgil.com/images/catalogo/baroque-farrokh-fb-06.jpg",
+          "width": 2000,
+          "height": 1490,
+          "caption": "Esquina inferior izquierda: la camisa de flores, la firma con el año 2020 y el bordado junto al marco.",
+          "sha256": "a5455a6d2b024e1ea9690e0a9f191de7d2e5a9ea6283bda51e2a9708c720bd3b"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/baroque-farrokh-fb-05.jpg",
+          "width": 2000,
+          "height": 1500,
+          "caption": "El rostro y el pelo, con trazos de color, bajo la esquina superior del bordado.",
+          "sha256": "f03ac9a31eb5687354007c6a916a1d761330c26b53c31181dee7cce37426af81"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/baroque-farrokh-fb-08.jpg",
+          "width": 1999,
+          "height": 1492,
+          "caption": "Primer plano del rostro y la mano en la barbilla; la silueta recortada se separa del papel arrugado del fondo.",
+          "sha256": "2f8f22fb08a70800476c71e344e0e0e599615cfb147e8c57240a79738a1ea8e7"
         }
       ],
       "inquire_email": "mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Baroque%20Farrokh",
@@ -2741,30 +2755,51 @@
     {
       "slug": "lagrimas-de-oro",
       "title": "Lágrimas de Oro",
-      "category": "pizarra",
-      "series": "DiviNos",
-      "technique": "Pan de oro de 24k, acrílico y mica mineral",
-      "support": "Plato de pizarra natural con canto irregular",
-      "dimensions": "28 × 21 × 0,5 cm",
+      "category": "collage",
+      "series": null,
+      "technique": "Técnica mixta: marcas en negro y partículas brillantes sobre papel arrugado",
+      "support": "Dos lienzos cubiertos de papel arrugado sobre piezas de tela roja superpuestas, en un marco ornamentado",
+      "dimensions": null,
       "materials": null,
-      "year": 2023,
-      "story": "Ficha técnica: Acrílico, pan de oro y mica mineral sobre pizarra natural.",
+      "year": null,
+      "story": "Díptico de dos paneles blancos de papel arrugado con pares de ojos cerrados marcados en negro; en el izquierdo, de los ojos bajan regueros con partículas brillantes. Los dos paneles van montados sobre piezas de tela roja superpuestas, dentro de un marco ornamentado.",
       "url": "https://naroagutierrezgil.com/obra/lagrimas-de-oro/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/lagrimas-de-oro-4k-f585c8dca309-view.webp",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/lagrimas-de-oro-fb-01-011599b35099-view.webp",
       "photos": [
         {
-          "url": "https://naroagutierrezgil.com/images/catalogo/lagrimas-de-oro-4k.webp",
-          "width": 2880,
-          "height": 3840,
-          "caption": "Fotografía master 4K de Lágrimas de Oro con pan de oro de 24k sobre pizarra.",
-          "sha256": "f585c8dca309134f6037a3564f3eb00eb13b21ed03e5fe4f1adaeda11cd34305"
+          "url": "https://naroagutierrezgil.com/images/catalogo/lagrimas-de-oro-fb-01.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Lágrimas de Oro: los dos paneles sobre piezas de tela roja superpuestas, dentro de su marco.",
+          "sha256": "011599b35099aefaceccae3f2c18487782e0f6b63a549e0ed69a85a44ca2fdb4"
         },
         {
-          "url": "https://naroagutierrezgil.com/images/catalogo/lagrimas-de-oro-01.webp",
-          "width": 1195,
-          "height": 1600,
-          "caption": "Detalle de los destellos dorados y relieve de la piedra.",
-          "sha256": "61fa5125f3c3c05be4a894d920c52b73b64493df89425ab94643ab6a3902edda"
+          "url": "https://naroagutierrezgil.com/images/catalogo/lagrimas-de-oro-fb-02.jpg",
+          "width": 1536,
+          "height": 2048,
+          "caption": "Panel izquierdo: tres pares de ojos cerrados de los que bajan regueros con partículas brillantes.",
+          "sha256": "038fec4ffb1b8fad5bbacb2cc08a1f980330f362de2ece33d8ed533229f4a57c"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/lagrimas-de-oro-fb-03.jpg",
+          "width": 1536,
+          "height": 2048,
+          "caption": "El panel derecho de cerca: cinco pares de pestañas en negro sobre el papel arrugado.",
+          "sha256": "f5b08cdef9c74b8a453399bfa9fcf70d4e40f81ff2d7cd1892f8d37b78e94b32"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/lagrimas-de-oro-fb-13.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "Detalle de dos pares de ojos del panel izquierdo y sus regueros sobre el relieve del papel.",
+          "sha256": "e20f1179c2b0c764680a228917fcb359cea86500c00585946716b941c7b465ec"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/lagrimas-de-oro-fb-12.jpg",
+          "width": 2048,
+          "height": 1536,
+          "caption": "La separación entre los dos paneles, con la tela roja al fondo.",
+          "sha256": "d4e47f6926c8b3cabc36aa78c152d089e1545b124a92e52290ad667639b0332c"
         }
       ],
       "inquire_email": "mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20L%C3%A1grimas%20de%20Oro",
@@ -2779,7 +2814,7 @@
       "support": "Papel sobre fondo floral y celosía dorada en marco vitrina (shadow box)",
       "dimensions": "35 × 46 × 0,7 cm",
       "materials": "Lápices de colores, tintas, papeles estampados, celosía dorada, gominolas en relieve y marco vitrina negro",
-      "year": 2024,
+      "year": 2018,
       "story": "Ficha técnica: Retrato doble técnica mixta mediante collage textil y mineral.",
       "url": "https://naroagutierrezgil.com/obra/the-golden-couple/",
       "cover_url": "https://naroagutierrezgil.com/immersive/media/the-golden-couple-4k-7ef7502d06f6-view.webp",
@@ -2942,7 +2977,7 @@
       "support": "Tabla de madera de 50 × 50 cm barnizada con látex líquido",
       "dimensions": "50 × 50 cm",
       "materials": "Pintura acrílica (pincel y rotuladores Uni-Posca), papel de seda y de regalo plastificado, telas, celofán, aluminio y plástico decorado",
-      "year": 2021,
+      "year": 2017,
       "story": "«Mare mía, mecachisenlamar, que no me puedo imaginar algo más espectacular que junto a ti pasar unas vacaciones en el mar». Retrato colorista doble realizado mediante técnica mixta sobre tabla de madera de 50×50 cm barnizada con látex líquido. Materiales utilizados: pintura acrílica (pincel y rotuladores Uni-Posca), papel (de seda, de regalo y de alto gramaje plastificado con mensaje impreso), telas, celofán, aluminio, plástico decorado y toneladas de amor.",
       "url": "https://naroagutierrezgil.com/obra/the-love-boat/",
       "cover_url": "https://naroagutierrezgil.com/immersive/media/the-love-boat-frontal-2048-53ef178a27e4-view.webp",

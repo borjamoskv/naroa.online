@@ -100,16 +100,16 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 6,
-    category: 'divinos',
-    kicker: 'Serie DiviNos',
+    category: 'drawing',
+    kicker: 'Serie Tributos',
     slug: 'baroque-farrokh',
-    aspectRatio: 1.234,
-    url: '/assets/baroque-farrokh-mjg4ClA9.webp',
+    aspectRatio: 1.233,
+    url: '/images/catalogo/baroque-farrokh-fb-14.jpg',
     title: 'Baroque Farrokh',
     href: '#obra-baroque-farrokh',
-    year: '2024',
-    medium: 'Técnica Mixta Barroca Contemporánea',
-    description: 'Farrokh —antes de ser Freddie— posa pensativo sobre un azul de flores, la chaqueta estallando en color y la mano sosteniendo la barbilla. El marco se vuelve altar: cenefa dorada de coronas, recortes y ornamentos como quien adelanta una coronación.',
+    year: '2020',
+    medium: 'Retrato recortado, papel arrugado y tela bordada',
+    description: 'Retrato de Freddie Mercury joven, con la mano en la barbilla y camisa de flores, recortado por la silueta sobre papel blanco arrugado y rodeado de tela blanca bordada, en marco de madera oscura.',
     sizeCategory: 'large'
   },
   {
@@ -199,17 +199,17 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 13,
-    category: 'rocks',
-    kicker: 'Serie DiviNos',
+    category: 'drawing',
+    kicker: 'Díptico',
     slug: 'lagrimas-de-oro',
-    aspectRatio: 0.747,
-    url: '/assets/lagrimas-de-oro-DikHc-Tk.webp',
+    aspectRatio: 1.333,
+    url: '/images/catalogo/lagrimas-de-oro-fb-01.jpg',
     title: 'Lágrimas de Oro',
     href: '#obra-lagrimas-de-oro',
-    year: '2023',
-    medium: 'Pan de Oro de 24k y Acrílico',
-    description: 'Detalle expresionista de mirada sobrecogedora con lágrimas de pan de oro genuino y mica mineral. La luz reflectante del oro resbala sobre la textura pétrea y oscura del soporte.',
-    sizeCategory: 'small'
+    year: '2017',
+    medium: 'Técnica mixta sobre papel arrugado',
+    description: 'Díptico de dos paneles de papel arrugado con pares de ojos cerrados en negro; de los del panel izquierdo bajan regueros con partículas brillantes. Montado sobre tela roja en un marco ornamentado.',
+    sizeCategory: 'medium'
   },
   {
     id: 15,
@@ -377,7 +377,7 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
     url: '/assets/the-golden-couple-C9C95N75.webp',
     title: 'The Golden Couple',
     href: '#obra-the-golden-couple',
-    year: '2024',
+    year: '2018',
     medium: 'Retrato Doble — Técnica Mixta, Collage Floral & Marco Vitrina',
     description: 'Retrato doble técnica mixta mediante collage.',
     sizeCategory: 'medium'
@@ -1156,7 +1156,7 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
     url: '/images/catalogo/the-love-boat-frontal-2048.jpg',
     title: 'The Love Boat',
     href: '#obra-the-love-boat',
-    year: '2021',
+    year: '2017',
     medium: 'Técnica mixta, acrílico, rotuladores Uni-Posca y collage sobre tabla de madera de 50 × 50 cm barnizada con látex líquido',
     description: '«Mare mía, mecachisenlamar, que no me puedo imaginar algo más espectacular que junto a ti pasar unas vacaciones en el mar». Retrato colorista doble realizado mediante técnica mixta sobre tabla de madera de 50×50 cm barnizada con látex líquido. Materiales utilizados: pintura acrílica (pincel y rotuladores Uni-Posca), papel (de seda, de regalo y de alto gramaje plastificado con mensaje impreso), telas, celofán, aluminio, plástico decorado y toneladas de amor.',
     sizeCategory: 'medium'

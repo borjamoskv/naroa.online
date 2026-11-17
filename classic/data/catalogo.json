@@ -73,7 +73,7 @@
           "width": 2880,
           "height": 3840,
           "sha256": "64f6ad930bc5b6bd124fb658c3f715249bb11b08b0f70b047e4cb3512edbc9b4",
-          "caption": "Marilyn Rocks — Retrato frontal en acrílico, mica mineral y pan de oro sobre pizarra natural."
+          "caption": "Marilyn Rocks — Retrato frontal en acrílico, lápices de colores y escamas de mica sobre pizarra natural."
         },
         {
           "src": "/images/catalogo/marilyn-rocks-hq-02.webp",
@@ -87,7 +87,7 @@
           "width": 2048,
           "height": 1536,
           "sha256": "0b7e2cff277e5c7933464a833546389c23f276cd9cfeac2c6233ada612f9e511",
-          "caption": "Primer plano del rostro de Marilyn Monroe con incrustaciones doradas y escamas de mica."
+          "caption": "Primer plano del rostro de Marilyn Monroe con detalles dorados y escamas de mica."
         }
       ],
       "dimensions": "18 × 10 × 0,6 cm",
@@ -1987,7 +1987,7 @@
       "source": null,
       "dimensions": "50 × 70 cm",
       "series": "Mundo Interior",
-      "year": "2023",
+      "year": null,
       "credit": null,
       "selected": true,
       "kind": "obra",
@@ -2004,42 +2004,58 @@
       "slug": "baroque-farrokh",
       "title": "Baroque Farrokh",
       "category": "collage",
-      "technique": "Lápiz de color sobre fondo floral, técnica mixta y collage",
-      "support": "Lámina sobre fondo floral en marco intervenido",
-      "story": "Ficha técnica: Técnica mixta barroca contemporánea con cenefa dorada y marco altar intervenido.",
+      "technique": "Retrato recortado por la silueta sobre lámina brillante, papel blanco arrugado y tela blanca bordada",
+      "support": "Lámina recortada, papel arrugado y tela bordada en marco de madera oscura",
+      "story": "Retrato de Freddie Mercury joven, con la mano en la barbilla y camisa de flores, en grises con trazos de color y recortado por la silueta sobre un fondo de papel blanco arrugado. Lo rodea, a modo de paspartú, una tela blanca bordada, dentro de un marco de madera oscura.",
       "images": [
         {
-          "src": "/images/catalogo/baroque-farrokh-4k.webp",
-          "width": 3810,
-          "height": 3090,
-          "caption": "Fotografía master 4K del retrato de Freddie Mercury en clave barroca contemporánea.",
-          "source": null,
-          "sha256": "52f8182de160a40ac84f44d7aecf627556fd982c32a17d0579f3e5f00f263f47"
+          "src": "/images/catalogo/baroque-farrokh-fb-14.jpg",
+          "width": 1737,
+          "height": 1409,
+          "sha256": "736e083a4a94a3ea26cac12d99b0a62f62e16305c8fef01fc5ad1ed1a6002b2b",
+          "caption": "La pieza completa en su marco oscuro: el retrato recortado sobre papel blanco arrugado, rodeado de tela blanca bordada."
         },
         {
-          "src": "/images/artworks/baroque-farrokh-mjg4ClA9.webp",
-          "width": 1024,
-          "height": 830,
-          "caption": "Detalle del marco intervenido y collage floral.",
-          "source": null,
-          "sha256": "88d967e7e56eafad3b0d8a1ef96670202ce7e63ce9e7a45ba782f1191b36d4f2"
+          "src": "/images/catalogo/baroque-farrokh-fb-06.jpg",
+          "width": 2000,
+          "height": 1490,
+          "sha256": "a5455a6d2b024e1ea9690e0a9f191de7d2e5a9ea6283bda51e2a9708c720bd3b",
+          "caption": "Esquina inferior izquierda: la camisa de flores, la firma con el año 2020 y el bordado junto al marco."
+        },
+        {
+          "src": "/images/catalogo/baroque-farrokh-fb-05.jpg",
+          "width": 2000,
+          "height": 1500,
+          "sha256": "f03ac9a31eb5687354007c6a916a1d761330c26b53c31181dee7cce37426af81",
+          "caption": "El rostro y el pelo, con trazos de color, bajo la esquina superior del bordado."
+        },
+        {
+          "src": "/images/catalogo/baroque-farrokh-fb-08.jpg",
+          "width": 1999,
+          "height": 1492,
+          "sha256": "2f8f22fb08a70800476c71e344e0e0e599615cfb147e8c57240a79738a1ea8e7",
+          "caption": "Primer plano del rostro y la mano en la barbilla; la silueta recortada se separa del papel arrugado del fondo."
         }
       ],
-      "dimensions": "45 × 36 cm",
+      "dimensions": null,
       "series": "Tributos",
-      "year": 2024,
+      "year": 2020,
       "credit": null,
       "selected": true,
       "kind": "obra",
-      "source": null,
+      "source": "https://www.facebook.com/media/set/?set=a.4592656824142327&type=3",
       "editorial": {
         "image_order": [
           0,
-          1
+          1,
+          2,
+          3
         ],
         "captions": [
-          "La pieza completa: retrato barroco y cenefa de coronas.",
-          "Detalle de la textura y el collage sobre el marco."
+          "La pieza completa en su marco oscuro: el retrato recortado sobre papel blanco arrugado, rodeado de tela blanca bordada.",
+          "Esquina inferior izquierda: la camisa de flores, la firma con el año 2020 y el bordado junto al marco.",
+          "El rostro y el pelo, con trazos de color, bajo la esquina superior del bordado.",
+          "Primer plano del rostro y la mano en la barbilla; la silueta recortada se separa del papel arrugado del fondo."
         ]
       }
     },
@@ -2139,43 +2155,68 @@
     {
       "slug": "lagrimas-de-oro",
       "title": "Lágrimas de Oro",
-      "category": "pizarra",
-      "technique": "Pan de oro de 24k, acrílico y mica mineral",
-      "support": "Plato de pizarra natural con canto irregular",
-      "story": "Ficha técnica: Acrílico, pan de oro y mica mineral sobre pizarra natural.",
+      "category": "collage",
+      "technique": "Técnica mixta: marcas en negro y partículas brillantes sobre papel arrugado",
+      "support": "Dos lienzos cubiertos de papel arrugado sobre piezas de tela roja superpuestas, en un marco ornamentado",
+      "story": "Díptico de dos paneles blancos de papel arrugado con pares de ojos cerrados marcados en negro; en el izquierdo, de los ojos bajan regueros con partículas brillantes. Los dos paneles van montados sobre piezas de tela roja superpuestas, dentro de un marco ornamentado.",
       "images": [
         {
-          "src": "/images/catalogo/lagrimas-de-oro-4k.webp",
-          "width": 2880,
-          "height": 3840,
-          "caption": "Fotografía master 4K de Lágrimas de Oro con pan de oro de 24k sobre pizarra.",
-          "source": null,
-          "sha256": "f585c8dca309134f6037a3564f3eb00eb13b21ed03e5fe4f1adaeda11cd34305"
+          "src": "/images/catalogo/lagrimas-de-oro-fb-01.jpg",
+          "width": 2048,
+          "height": 1536,
+          "sha256": "011599b35099aefaceccae3f2c18487782e0f6b63a549e0ed69a85a44ca2fdb4",
+          "caption": "Lágrimas de Oro: los dos paneles sobre piezas de tela roja superpuestas, dentro de su marco."
         },
         {
-          "src": "/images/catalogo/lagrimas-de-oro-01.webp",
-          "width": 1195,
-          "height": 1600,
-          "caption": "Detalle de los destellos dorados y relieve de la piedra.",
-          "source": null,
-          "sha256": "61fa5125f3c3c05be4a894d920c52b73b64493df89425ab94643ab6a3902edda"
+          "src": "/images/catalogo/lagrimas-de-oro-fb-02.jpg",
+          "width": 1536,
+          "height": 2048,
+          "sha256": "038fec4ffb1b8fad5bbacb2cc08a1f980330f362de2ece33d8ed533229f4a57c",
+          "caption": "Panel izquierdo: tres pares de ojos cerrados de los que bajan regueros con partículas brillantes."
+        },
+        {
+          "src": "/images/catalogo/lagrimas-de-oro-fb-03.jpg",
+          "width": 1536,
+          "height": 2048,
+          "sha256": "f5b08cdef9c74b8a453399bfa9fcf70d4e40f81ff2d7cd1892f8d37b78e94b32",
+          "caption": "El panel derecho de cerca: cinco pares de pestañas en negro sobre el papel arrugado."
+        },
+        {
+          "src": "/images/catalogo/lagrimas-de-oro-fb-13.jpg",
+          "width": 2048,
+          "height": 1536,
+          "sha256": "e20f1179c2b0c764680a228917fcb359cea86500c00585946716b941c7b465ec",
+          "caption": "Detalle de dos pares de ojos del panel izquierdo y sus regueros sobre el relieve del papel."
+        },
+        {
+          "src": "/images/catalogo/lagrimas-de-oro-fb-12.jpg",
+          "width": 2048,
+          "height": 1536,
+          "sha256": "d4e47f6926c8b3cabc36aa78c152d089e1545b124a92e52290ad667639b0332c",
+          "caption": "La separación entre los dos paneles, con la tela roja al fondo."
         }
       ],
-      "dimensions": "28 × 21 × 0,5 cm",
-      "series": "DiviNos",
-      "year": 2023,
+      "dimensions": null,
+      "series": null,
+      "year": null,
       "credit": null,
       "selected": true,
       "kind": "obra",
-      "source": null,
+      "source": "https://www.facebook.com/media/set/?set=a.1766824846725553&type=3",
       "editorial": {
         "image_order": [
           0,
-          1
+          1,
+          2,
+          3,
+          4
         ],
         "captions": [
-          "Lágrimas de Oro: la mirada intensa sobre fondo oscuro.",
-          "El brillo de las láminas de pan de oro de 24k."
+          "Lágrimas de Oro: los dos paneles sobre piezas de tela roja superpuestas, dentro de su marco.",
+          "Panel izquierdo: tres pares de ojos cerrados de los que bajan regueros con partículas brillantes.",
+          "El panel derecho de cerca: cinco pares de pestañas en negro sobre el papel arrugado.",
+          "Detalle de dos pares de ojos del panel izquierdo y sus regueros sobre el relieve del papel.",
+          "La separación entre los dos paneles, con la tela roja al fondo."
         ]
       }
     },
@@ -2211,7 +2252,7 @@
       ],
       "dimensions": "35 × 46 × 0,7 cm",
       "series": null,
-      "year": 2024,
+      "year": 2018,
       "credit": null,
       "selected": true,
       "kind": "obra",
@@ -2398,7 +2439,7 @@
       "dimensions": "50 × 50 cm",
       "materials": "Pintura acrílica (pincel y rotuladores Uni-Posca), papel de seda y de regalo plastificado, telas, celofán, aluminio y plástico decorado",
       "series": null,
-      "year": 2021,
+      "year": 2017,
       "credit": null,
       "selected": false,
       "kind": "obra",
