@@ -474,6 +474,8 @@ async function eyeMatch(ui, base, points) {
   assert.ok(ui.find('[data-remix-shuffle]'), 'Shuffle button exists');
   assert.ok(ui.find('[data-remix-share]'), 'Share button exists');
   assert.ok(ui.find('[data-remix-download]'), 'Download button exists');
+  assert.ok(ui.find('[data-remix-link]')?.dataset.say, 'The Story dialog offers the artwork link for the link sticker, with its own confirmation text');
+  assert.ok(ui.find('[data-remix-detail]') && !ui.find('[data-remix-detail]').hidden, 'The Story of a work lets the visitor pick another detail of the same piece');
   assert.equal(ui.find('[data-remix-title]').textContent, ui.find('[data-art-title]').textContent, 'The story dialog names the artwork it is about');
   assert.ok(ui.find('[data-remix-status]'), 'Story messages are shown inside the dialog, not in alerts');
   assert.equal(ui.document.querySelectorAll('#story-remix-dialog .remix-btn').length, 0, 'Story actions are a typographic list, not pill buttons');
@@ -1221,14 +1223,16 @@ async function eyeMatch(ui, base, points) {
       }
       page.find('[data-cfg-cycle="motif"]').dispatchEvent(new page.w.KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
       assert.equal(page.w.NAROA_COMMISSION.getState().selectedMotif, 'Pareja o familia', 'Sentence words respond to the keyboard');
-      assert.ok(page.find('#cfg-preview').textContent.includes('Caja personalizada u objeto') && page.find('#cfg-preview').textContent.includes('Pareja o familia'), 'The WhatsApp draft follows the sentence');
+      assert.ok(page.find('#cfg-preview').textContent.startsWith(page.find('.enc-sentence').textContent.replace(/\s+/g, ' ').trim()) && page.find('#cfg-preview').textContent.includes('una lata de conserva') && page.find('#cfg-preview').textContent.includes('de mi pareja o mi familia'), 'The WhatsApp draft is the sentence on screen, word for word');
+      assert.ok(!/Costuras Vivas|con plazo|Pareja o familia|Caja personalizada/.test(page.find('#cfg-preview').textContent), 'The draft carries no form labels the visitor never read');
       page.w.NAROA_COMMISSION.setNote('Canción de Robe y entradas del concierto');
       assert.ok(page.find('#cfg-preview').textContent.includes('Canción de Robe y entradas del concierto'), 'Personal story note is interpolated live into the handwritten order preview');
       assert.ok(decodeURIComponent(page.find('#cfg-whatsapp-btn').getAttribute('href')).includes('Canción de Robe'), 'Personal story note is encoded into the WhatsApp CTA URL');
       assert.ok(page.find('[data-atelier-mobile-cta]'), 'Sticky mobile commission CTA bar is mounted in DOM');
       page.click('#cfg-copy-btn');
       await page.flush();
-      assert.ok(page.w.NAROA_COMMISSION.getState().lastCopiedMessage.includes('Aupa Naroa!'), 'Copy button captures the live handwritten draft');
+      assert.ok(page.w.NAROA_COMMISSION.getState().lastCopiedMessage.startsWith('Naroa, quiero un retrato') && page.w.NAROA_COMMISSION.getState().lastCopiedMessage.includes('Canción de Robe y entradas del concierto.'), 'Copy button captures the sentence and the note');
+      assert.equal(new URL(page.find('#cfg-email-btn').href).searchParams.get('subject'), 'Encargo de retrato', 'The email subject comes from the HTML, not from a script literal');
       assert.ok(page.w.NAROA_ATTRIBUTION, 'First-party attribution telemetry exposed on window');
       assert.ok(page.w.WebMCP, 'WebMCP interface exposed on window');
       const catalogResults = await page.w.WebMCP.callTool('search_catalogue', { query: 'pizarra' });

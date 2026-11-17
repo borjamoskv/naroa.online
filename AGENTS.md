@@ -45,6 +45,7 @@ Gobernanza general de la carpeta de proyectos: [Workspace AGENTS.md](file:///Use
 | `/contacto/`, la hoja de la nota o el humo del cursor | §10 |
 | Las notas de prensa de `/cuaderno/` o `classic/data/prensa.json` | §11 |
 | Una foto de obra, su procesado en el build o las credenciales C2PA | §12 |
+| `/retratos-por-encargo-bilbao/`, la frase del encargo o las condiciones | §13 |
 
 ### 1. Sincronización Atómica 1:1 de Catálogo (`INV_CATALOG_SYNC_1TO1`)
 Toda alta o mutación de obra exige paridad simultánea en 3 capas:
@@ -108,6 +109,8 @@ Toda alta o mutación de obra exige paridad simultánea en 3 capas:
    - El título de la imagen habla quien la comparte («El retrato de mi visita»); la interfaz, a quien visita («de tu visita»).
    - **En el diálogo:** la vista previa se describe (`alt`) con los títulos de las obras del paseo, y el tercer botón pasa a decir «La Story de una sola obra»; al volver a la Story de una obra, ambos recuperan su texto. El botón del retrato responde aunque la Story de la obra aún se esté componiendo: esa se descarta (`remixRun`); en un móvil lento tarda segundos y el toque se perdía.
    - **En móvil**, el bloque «Compartir recorrido» del final no cabe en una fila: el enlace del retrato baja a la suya (medido a 390, 360 y 320 px de ancho).
+4. **Compartir la Story (`shareStoryToInstagram`):** con la imagen van el título limpio de la obra y su enlace directo (la portada, si es el retrato de la visita); nada de frases promocionales. «Copiar el enlace para tu Story» deja ese enlace en el portapapeles para el sticker de enlace, y solo cuando se pulsa: el portapapeles no se toca sin pedirlo. En móvil, si no se puede compartir el archivo, se guarda la imagen y se abre la cámara de Instagram, sin abrir el perfil en otra pestaña.
+5. **Otro detalle de esta obra:** la Story de una obra nace con el encuadre de siempre (centro `0.5, 0.44`) y el botón recorre otros cuatro (`STORY_FOCI`) con el mismo aumento, sin cambiar de obra; al cambiar de obra vuelve al primero. No aparece en el retrato de la visita, que centra cada franja donde estuvo la lupa.
 
 ### 7. Pureza Visual en Umbral Hero (`INV_HERO_THRESHOLD_PURITY`)
 - El retrato inaugural (umbral de estudio, índice `0`) debe mostrarse limpio de superposiciones tipográficas o telemetría flotante (`LA MIRADA`, `UMBRAL DE ESTUDIO`, texto en SVG del monóculo). El umbral no lleva ningún bloque de texto (la antigua `.portrait-hero-copy` ya no existe): el protagonismo es íntegro del retrato.
@@ -166,3 +169,8 @@ Toda alta o mutación de obra exige paridad simultánea en 3 capas:
 3. **Solo con clave:** `NAROA_C2PA_KEY` (clave privada) y `NAROA_C2PA_CERTS` (certificado y CA), con el PEM o la ruta. Sin ellas no hay firma ni enlace, y la compilación sigue igual. Con ellas, `deploy.sh` exige `c2pa-python` (`requirements.txt`) y el build se para si la cadena no acaba en la CA publicada. Las claves viven en `~/.config/naroa-c2pa/` y nunca entran en el repositorio; `python3 tools/c2pa_sign.py claves` emite un certificado de firma nuevo (dura tres años) sin cambiar la CA, y `python3 tools/c2pa_sign.py leer <foto>` enseña y valida una credencial.
 4. **Nada toca la foto después de firmar:** cualquier recodificación, recorte o metadato posterior rompe la firma. `tools/check_immersive_site.py` valida contra la CA cada foto firmada, comprueba que cada obra enlaza a una foto firmada y que `/images/` sirve CORS (el verificador `contentcredentials.org/verify?source=` lo necesita). En una carpeta de salida reutilizada, lo ya firmado no se vuelve a firmar: para cambiar el manifiesto o la clave, compilar en limpio.
 5. **La huella del catálogo es de la fuente:** el `identifier` `sha256:` del JSON-LD de cada foto es la de `catalogo.json`, la del archivo revisado; la foto servida lleva además su credencial, así que sus bytes ya no coinciden.
+
+### 13. La frase del encargo y sus condiciones (`INV_COMMISSION_SENTENCE`)
+1. **Se envía lo que se lee:** en `/retratos-por-encargo-bilbao/` el mensaje de WhatsApp, el del correo y el de «Copiar el mensaje» son la frase de la portada tal como está en pantalla y, si la hay, la nota escrita debajo. `app.js` no añade etiquetas ni textos que quien visita no haya leído. La frase y el asunto del correo (`data-subject`) viven en el HTML ya traducido (§9).
+2. **Solo condiciones confirmadas:** la web no promete pago por mitades, seguro del envío, tipo de embalaje, barniz UV ni certificado de autenticidad; se retiraron el 2026-11-17 porque Naroa no los había confirmado. No se vuelven a escribir, ni en las páginas ni en los datos estructurados o `llms.txt`, sin su confirmación. Lo que sí se dice: precio cerrado por escrito antes de empezar, de 2 a 4 semanas, entrega en mano en Bilbao o envío con seguimiento.
+3. **Menos texto, más obra:** en esta página cada bloque enseña obra antes que explicarla; «Cuatro encargos de verdad» lleva la imagen de cada pieza, una línea y el enlace a su ficha.

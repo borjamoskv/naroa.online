@@ -150,6 +150,10 @@
   let isGeneratingRemix = false;
   let currentRemixImg = null;
   let remixRun = 0;
+  // Encuadres del macro de la Story (centro del recorte, en fracción de la foto). El primero es el de siempre;
+  // «Otro detalle de esta obra» recorre el resto con el mismo aumento.
+  const STORY_FOCI = [[0.5, 0.44], [0.3, 0.3], [0.7, 0.32], [0.34, 0.66], [0.68, 0.64]];
+  let storyFocus = 0;
   const projects = catalogue.projects || [];
   const storyLoopState = {
     backend: 'canvas-capture-mediastream-v1',
@@ -321,8 +325,9 @@
     const p = clamp(Number(panProgress) || 0, 0, 1);
     const zoom = p > 0 ? 2.65 + 0.30 * Math.sin(p * Math.PI) : 2.68;
     if (heroImg) {
-      const cx = p > 0 ? 0.48 + 0.12 * Math.cos(p * Math.PI * 2) : 0.5;
-      const cy = p > 0 ? 0.44 + 0.08 * Math.sin(p * Math.PI * 2) : 0.44;
+      const focus = STORY_FOCI[storyFocus % STORY_FOCI.length];
+      const cx = p > 0 ? 0.48 + 0.12 * Math.cos(p * Math.PI * 2) : focus[0];
+      const cy = p > 0 ? 0.44 + 0.08 * Math.sin(p * Math.PI * 2) : focus[1];
       drawStoryZoomedDetail(ctx, heroImg, 0, 0, W, H, 0, zoom, cx, cy);
     }
 
@@ -431,9 +436,11 @@
     if (status) status.textContent = text;
   }
 
-  async function generateStoryRemix(preferredSlug = null) {
+  async function generateStoryRemix(preferredSlug = null, keepFocus = false) {
     const dialog = $('#story-remix-dialog');
     if (!dialog) return null;
+    // Cada obra empieza por su encuadre de siempre; solo «Otro detalle» lo mueve.
+    if (!keepFocus) storyFocus = 0;
     const spinner = $('[data-story-remix-spinner]', dialog);
 
     if (spinner) spinner.hidden = false;
@@ -680,6 +687,8 @@
       heading.textContent = mode === 'visit' ? 'Modo Story · El retrato de tu visita' : remixHeading;
     }
     if (loop) loop.hidden = mode === 'visit';
+    const detail = $('[data-remix-detail]', dialog);
+    if (detail) detail.hidden = mode === 'visit';
     if (visitBtn) visitBtn.hidden = mode === 'visit' || !visitReady();
     // Desde el retrato del paseo, el tercer botón no baraja nada: vuelve a la Story de una obra, y lo dice.
     const shuffle = $('[data-remix-shuffle] span', dialog);
@@ -895,14 +904,23 @@
     getState: () => ({ ...storyLoopState })
   };
 
+  // Lo que enseña la Story: la obra, o la portada si es el retrato de la visita.
+  const storyShareWork = () => projects.find(w => w.slug === currentRemixSlug) || null;
+  const storyShareLink = () => {
+    const w = storyShareWork();
+    return w ? `${location.origin}${BASE}/obra/${w.slug}/` : `${location.origin}${BASE}/`;
+  };
+
   async function shareStoryToInstagram() {
     const dialog = $('#story-remix-dialog');
     if (!currentRemixFile && !currentRemixDataUrl) {
       // Se regenera la misma obra que ya estaba en curso, no otra al azar.
       await generateStoryRemix(currentRemixSlug);
     }
-    const title = 'Naroa Gutiérrez Gil · Exposición inmersiva Bilbao';
-    const text = 'Remix de obras pictóricas de Naroa Gutiérrez Gil · naroagutierrezgil.com';
+    // Con la imagen van el título limpio de la obra y su enlace directo (§6.2): Instagram los ignora,
+    // pero WhatsApp o Mensajes los ponen de pie de foto.
+    const title = storyShareWork()?.title || 'Naroa Gutiérrez Gil';
+    const text = `${title} · ${storyShareLink()}`;
 
     if (currentRemixFile && navigator.canShare && navigator.canShare({ files: [currentRemixFile] })) {
       try {
@@ -926,10 +944,9 @@
 
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     if (isMobile) {
+      // La imagen ya está guardada: se abre la cámara de Instagram y la visita se queda donde estaba.
+      setRemixStatus('Imagen guardada. Súbela a tus Stories y menciona a @naroa_art.');
       window.location.href = 'instagram://camera';
-      setTimeout(() => {
-        window.open('https://www.instagram.com/naroa_art/', '_blank');
-      }, 1500);
     } else {
       window.open('https://www.instagram.com/naroa_art/', '_blank');
       setRemixStatus('Imagen guardada. Súbela a tus Stories y menciona a @naroa_art.');
@@ -1000,6 +1017,17 @@
         recordStoryVideoLoop(currentRemixSlug || null, 6000);
       });
     }
+    // Otro encuadre de la misma obra: quien comparte elige qué trozo de la pieza enseña.
+    $('[data-remix-detail]', remixDialog)?.addEventListener('click', () => {
+      if (isGeneratingRemix || storyLoopState.isRecording || !currentRemixSlug) return;
+      storyFocus = (storyFocus + 1) % STORY_FOCI.length;
+      generateStoryRemix(currentRemixSlug, true);
+    });
+    // Una Story no lleva enlace propio: se copia el de la obra, solo cuando lo piden, para el sticker de enlace.
+    const linkBtn = $('[data-remix-link]', remixDialog);
+    linkBtn?.addEventListener('click', async () => {
+      if (await copyText(storyShareLink())) setRemixStatus(linkBtn.dataset.say || '');
+    });
     $('[data-remix-visit]', remixDialog)?.addEventListener('click', () => {
       // No espera a que termine la Story de la obra: en un móvil lento tarda segundos y el toque se perdía.
       // Esa composición se descarta sola al empezar esta (remixRun).
@@ -6696,6 +6724,7 @@
     const emailBtn = $('#cfg-email-btn');
     const copyBtn = $('#cfg-copy-btn');
     const previewEl = $('#cfg-preview');
+    const sentenceEl = $('.enc-sentence', configurator);
     const seedBanner = $('#cfg-seed-banner');
     const visualImg = $('#cfg-visual-img');
     const visualTitle = $('#cfg-visual-title');
@@ -6722,7 +6751,6 @@
         slug: 'custom-jaio',
         title: 'Custom Jaio · Collage textil y madera',
         tag: 'Tela vaquera, costuras y dibujo',
-        shortName: 'Tela Vaquera & Costuras Vivas',
         mobileTag: 'Tela Vaquera',
         swatchSrc: '/images/catalogo/commission-jaio-button.webp',
         swatchAlt: 'Botón rojo cosido a mano sobre tela vaquera'
@@ -6731,7 +6759,6 @@
         slug: 'amor-en-conserva',
         title: 'Amor en Conserva · Caja de memoria 3D',
         tag: 'Objeto tridimensional intervenido',
-        shortName: 'Amor en Conserva · Lata 3D',
         mobileTag: 'Lata 3D',
         swatchSrc: '/images/catalogo/commission-amor-purple-rose.webp',
         swatchAlt: 'Rosa morada de collage en lata de conserva'
@@ -6740,7 +6767,6 @@
         slug: 'amy-rocks',
         title: 'Amy Rocks · Pizarra natural y mica',
         tag: 'Piedra de cantera con escamas minerales',
-        shortName: 'Pizarra Natural & Mica Mineral',
         mobileTag: 'Pizarra & Mica',
         swatchSrc: '/images/catalogo/commission-amor-red-rose.webp',
         swatchAlt: 'Rosa carmesí sobre pizarra con mica mineral'
@@ -6749,7 +6775,6 @@
         slug: 'rara-avis',
         title: 'Rara Avis · Pastel, grafito y lápiz',
         tag: 'Pastel Conté y collage sobre papel',
-        shortName: 'Papel de Algodón, Pastel & Grafito',
         mobileTag: 'Papel & Grafito',
         swatchSrc: '/images/catalogo/commission-rara-peacock.webp',
         swatchAlt: 'Pluma de pavo real sobre papel de algodón'
@@ -6764,7 +6789,6 @@
         slug: 'el-armigo-atomico',
         title: 'El Armigo Atómico · Asesoramiento con Naroa',
         tag: 'Elección conjunta en el estudio de Bilbao',
-        shortName: 'Asesoramiento en estudio con Naroa',
         mobileTag: 'Asesoramiento',
         swatchSrc: '/images/catalogo/commission-amor-calla.webp',
         swatchAlt: 'Cala blanca esculpida de estudio'
@@ -6808,15 +6832,17 @@
       syncActiveSupportUI(s);
       syncCycleWords();
       const vMeta = supportVisualMap[s] || supportVisualMap['Collage textil sobre madera'];
-      const supportDesc = vMeta?.shortName ? `${vMeta.shortName} (${s})` : s;
-      const noteClause = n ? ` Historia o recuerdo a integrar: «${n}».` : ' Tengo una idea y fotos para contarte.';
+      // Se envía lo que se lee: la frase de la portada tal como está en pantalla y, si la hay, la nota.
+      const said = (sentenceEl?.textContent || '').replace(/\s+/g, ' ').trim();
+      const told = n ? n.charAt(0).toLocaleUpperCase() + n.slice(1) : '';
+      const noteClause = told ? ' ' + told + (/[.!?…]$/.test(told) ? '' : '.') : '';
       const refSuffix = attribution.generative ? ` [vía ${attribution.source}]` : '';
-      const msg = `Aupa Naroa! Me gustaría consultar un encargo de retrato sobre ${supportDesc} para ${m} con plazo ${t}.${noteClause}${refSuffix}`;
+      const msg = said + noteClause + refSuffix;
       if (previewEl) previewEl.textContent = msg;
       const waHref = `https://wa.me/34636060609?text=${encodeURIComponent(msg)}`;
       btn.href = waHref;
       if (emailBtn) {
-        emailBtn.href = `mailto:encargos@naroagutierrezgil.com?subject=${encodeURIComponent('Consulta encargo: ' + s)}&body=${encodeURIComponent(msg)}`;
+        emailBtn.href = `mailto:encargos@naroagutierrezgil.com?subject=${encodeURIComponent(emailBtn.dataset.subject || '')}&body=${encodeURIComponent(msg)}`;
       }
       if (mobileCtaWa) mobileCtaWa.href = waHref;
       if (mobileCtaSummary) {
