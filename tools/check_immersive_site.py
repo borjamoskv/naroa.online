@@ -264,6 +264,23 @@ def check(output):
                 assert versioned.search(file.name), ("immutable cache on a file without a version in its name", url)
                 immutable_files += 1
     assert immutable_files > len(expected), "the immutable cache rules no longer reach the hashed assets"
+    # Ráfaga de llegada (§7): las hojas que anuncia el catálogo compilado son, byte a byte, las de classic/images/rafaga/,
+    # el recuento sale de la ficha y solo la portada lleva el script que deja el umbral a la espera.
+    burst_file = REPO / "classic/data/rafaga.json"
+    home = (output / "index.html").read_text()
+    compiled = output / re.search(r'src="/(immersive/catalog-[0-9a-f]+\.js)"', home).group(1)
+    burst = json.loads(compiled.read_text().split("window.NAROA_CATALOG=", 1)[1].rstrip().rstrip(";")).get("burst")
+    if burst_file.is_file():
+        source_burst = json.loads(burst_file.read_text())
+        assert burst and burst["count"] == source_burst["count"] == sum(s["count"] for s in burst["sheets"]), "burst count drifted from classic/data/rafaga.json"
+        assert burst["count"] >= source_burst["reviewed"] > 0, "the burst must carry the reviewed catalogue"
+        for sheet, original in zip(burst["sheets"], source_burst["sheets"], strict=True):
+            assert versioned.search(sheet["src"]), ("burst sheet without a hash in its name", sheet["src"])
+            assert (output / sheet["src"].lstrip("/")).read_bytes() == (REPO / "classic" / original["src"].lstrip("/")).read_bytes(), ("burst sheet differs from its source", sheet["src"])
+        assert home.count("burst-pending") == 2, "the home must arm the arrival burst exactly once"
+        assert "burst-pending" not in (output / "obra" / "index.html").read_text(), "only the home arms the arrival burst"
+    else:
+        assert not burst and "burst-pending" not in home, "burst armed without classic/data/rafaga.json"
     # Credenciales C2PA (§12): si el build firmó, cada foto con firma valida contra la CA publicada
     # y el enlace de «Sobre esta obra» lleva a una de ellas; si no firmó, no hay enlace.
     credential_links = {}

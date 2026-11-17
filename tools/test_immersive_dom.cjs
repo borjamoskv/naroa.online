@@ -332,6 +332,11 @@ async function eyeMatch(ui, base, points) {
   ui.scroll(0); await ui.flush();
   assert.equal(ui.find('[data-art-title]').textContent, 'Marilyn Rocks');
   assert.ok(ui.find('[data-hero-threshold]'), 'Home route renders H1+H5 artist threshold overture');
+  // Ráfaga de llegada (§7): el recuento sale de las hojas y, donde no se arma (aquí no corre el script en línea), el umbral recibe como siempre.
+  const burst = ui.w.NAROA_CATALOG.burst;
+  if (burst) assert.equal(burst.count, burst.sheets.reduce((n, sheet) => n + sheet.count, 0), 'The arrival burst counts its own sheets');
+  assert.equal(ui.find('.hero-burst'), null, 'No arrival burst canvas unless the home armed it');
+  assert.equal(/burst-(pending|on)/.test(ui.w.document.documentElement.className), false, 'The threshold is never left waiting for a burst that will not run');
   assert.equal(ui.find('[data-hero-threshold]').style.visibility, 'visible');
   assert.equal(Number(ui.find('[data-hero-threshold]').style.opacity), 1);
   assert.equal(ui.find('[data-threshold-plane]').style.transform, 'scale(1.0000)');

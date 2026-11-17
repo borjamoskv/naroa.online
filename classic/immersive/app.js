@@ -102,6 +102,162 @@
     const seenPortrait = $('.hero-threshold-portrait', seenThreshold);
     seenThreshold.classList.add(seenPortrait?.complete && seenPortrait.naturalWidth ? 'is-arrived' : 'is-seen');
   }
+  // Ráfaga de llegada (§7): una vez por sesión, antes del retrato, las fotos de obra salen del punto donde estará el
+  // monóculo, aceleran hasta un torrente y se recogen de nuevo en él; entonces el retrato llega como siempre. Las fotos
+  // vienen en hojas de miniaturas (catalogue.burst, tools/build_burst_atlas.py). El script en línea de la portada dejó
+  // `burst-pending` en <html> para que el umbral no se pintara antes; si la ráfaga no puede empezar, se retira y listo.
+  // Es solo imagen: ni sonido ni texto. Cualquier gesto la corta.
+  const heroBurst = (() => {
+    const root = document.documentElement, threshold = $('[data-hero-threshold]'), spec = catalogue.burst;
+    const drop = () => root.classList.remove('burst-pending', 'burst-on');
+    if (!root.classList.contains('burst-pending')) return null;
+    if (!threshold || !spec?.sheets?.length || reduced.matches || scrollY > 2 || navigator.connection?.saveData
+      || typeof createImageBitmap !== 'function' || typeof fetch !== 'function') { drop(); return null; }
+    root.classList.add('burst-on');
+    const canvas = document.createElement('canvas');
+    canvas.className = 'hero-burst';
+    canvas.setAttribute('aria-hidden', 'true');
+    threshold.after(canvas);
+    const ctx = canvas.getContext('2d', { alpha: false });
+    if (!ctx) { canvas.remove(); drop(); return null; }
+    const small = Math.min(innerWidth, innerHeight) < 760;
+    const dpr = Math.min(devicePixelRatio || 1, small ? 1.5 : 2);
+    // Un móvil o un equipo con poca memoria se queda con las dos primeras hojas, que empiezan por el catálogo.
+    const sheets = small || (navigator.deviceMemory || 8) < 4 ? spec.sheets.slice(0, 2) : spec.sheets;
+    const [tw, th] = spec.tile, bitmaps = [], pool = [], queue = [], cards = [];
+    const DENSITY = small ? 170 : 360, SPAWN_UNTIL = 2.05, REVEAL_AT = 2.72, LAST = 3.4, STEP = 1 / 120;
+    const ease = x => x * x * (3 - 2 * x);
+    // Velocidad del viaje, en vidas de tarjeta por segundo: arranque, torrente, frenada y recogida (negativa).
+    const speed = t => t < 0.5 ? 0.25 + 1.5 * t
+      : t < 2 ? 1 + 2.4 * ease((t - 0.5) / 1.5)
+      : t < 2.4 ? 3.4 * (1 - ease((t - 2) / 0.4))
+      : -7 * ease(Math.min(1, (t - 2.4) / 0.3));
+    const tint = getComputedStyle(threshold).getPropertyValue('--hero-accent').trim(), accent = /^#[0-9a-f]{6}$/i.test(tint) ? tint : '#5fe3f2';
+    let W = 0, H = 0, vx = 0, vy = 0, lens = 0, reach = 0, far = 0, started = 0, clock = 0, ended = 0, seen = 0, pace = 16.7, travel = 0, spawned = 0, raf = 0, state = 'wait';
+    function measure() {
+      W = canvas.clientWidth || innerWidth; H = canvas.clientHeight || innerHeight;
+      canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+      const portal = $('[data-monocle-portal]', threshold)?.getBoundingClientRect();
+      vx = portal?.width ? portal.left + portal.width / 2 : W * 0.46;
+      vy = portal?.width ? portal.top + portal.height / 2 : H * 0.395;
+      lens = portal?.width ? portal.width / 2 : Math.min(W, H) * 0.07;
+      reach = Math.hypot(Math.max(vx, W - vx), Math.max(vy, H - vy)) * 1.1;
+      // Muchas imágenes pequeñas, nunca un destello a pantalla completa: de cerca una tarjeta ocupa un 5 % de la pantalla.
+      far = Math.sqrt(W * H) * 0.0125;
+    }
+    function next() {
+      if (!queue.length) {
+        queue.push(...pool);
+        for (let i = queue.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [queue[i], queue[j]] = [queue[j], queue[i]]; }
+      }
+      return queue.pop();
+    }
+    function frame(now) {
+      raf = requestAnimationFrame(frame);
+      // Reloj real: el viaje avanza a pasos fijos hasta la hora de este fotograma, así dura lo mismo a 30 que a 120 fps.
+      const t = Math.min((now - started) / 1000, clock + 1);
+      // Si el equipo no llega a pintar a tiempo, salen menos tarjetas en vez de ir a tirones.
+      const gap = seen ? Math.min(120, now - seen) : 16.7;
+      pace += (gap - pace) * 0.12;
+      seen = now;
+      const crowd = DENSITY * clamp(22 / pace, 0.3, 1);
+      if (state === 'run') {
+        for (; clock < t; clock += STEP) {
+          travel += speed(clock) * STEP;
+          while (clock < SPAWN_UNTIL && spawned < travel) {
+            cards.push({ born: spawned, angle: Math.random() * Math.PI * 2, lane: 0.45 + Math.random() * 0.7, tilt: (Math.random() - 0.5) * 0.5, swirl: 1.5 + Math.random() * 0.5, tile: next() });
+            spawned += 1 / crowd;
+          }
+        }
+        while (cards.length && travel - cards[0].born > 1) cards.shift();
+        while (cards.length && travel - cards[cards.length - 1].born < 0) cards.pop();
+        if (t >= REVEAL_AT || (t > 2.4 && !cards.length)) reveal();
+      }
+      // Estela: cuanto más deprisa va el viaje, menos se borra el fotograma anterior, y cada tarjeta deja su barrido.
+      const rush = state === 'run' ? Math.min(1, Math.abs(speed(t)) / 3.4) : 0.6;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.globalCompositeOperation = 'source-over';
+      // Por tiempo y no por fotograma: la estela dura lo mismo (unos 50 ms a toda velocidad) a 30 que a 120 fps.
+      ctx.globalAlpha = rush < 0.02 ? 1 : 1 - Math.exp(-gap / (47 * rush));
+      ctx.fillStyle = '#0d0e0b';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // Las más lejanas (recién nacidas) primero; las que ya llegan a quien mira, encima.
+      for (let i = cards.length - 1; i >= 0; i--) {
+        const card = cards[i], p = travel - card.born;
+        if (p <= 0) continue;
+        // Sale despacio del monóculo y se dispara al acercarse: de lejos mide un punto y de cerca, dieciséis veces más.
+        const away = reach * card.lane * (0.3 * p + 0.7 * p ** 2.4);
+        const w = far * (1 + 15 * p ** 1.8), h = w * th / tw, turn = card.tilt * p;
+        const cos = Math.cos(turn) * dpr, sin = Math.sin(turn) * dpr;
+        // Remolino: cerca del monóculo giran en torno a él y se enderezan al salir; al recogerse vuelven por la misma espiral.
+        const bearing = card.angle + card.swirl * (1 - p) ** 2;
+        ctx.globalAlpha = Math.min(1, p / 0.08, (1 - p) / 0.18);
+        ctx.setTransform(cos, sin, -sin, cos, (vx + Math.cos(bearing) * away) * dpr, (vy + Math.sin(bearing) * away) * dpr);
+        ctx.drawImage(card.tile.sheet, card.tile.x, card.tile.y, tw, th, -w / 2, -h / 2, w, h);
+      }
+      // La lente: un punto de luz antes de que salga la primera obra y un aro que se enciende cuando todas vuelven a él,
+      // justo donde el monóculo del retrato se enciende después.
+      const glow = Math.max(0.55 * (1 - Math.min(1, t / 0.7)), ease(clamp((t - 2.2) / 0.5, 0, 1)));
+      if (glow > 0.01) {
+        const x = vx * dpr, y = vy * dpr, radius = lens * dpr * (0.9 + 2.2 * glow);
+        const halo = ctx.createRadialGradient(x, y, 0, x, y, radius);
+        halo.addColorStop(0, accent + 'cc'); halo.addColorStop(0.35, accent + '55'); halo.addColorStop(1, accent + '00');
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.globalCompositeOperation = 'lighter';
+        ctx.globalAlpha = glow;
+        ctx.fillStyle = halo;
+        ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
+        ctx.strokeStyle = accent; ctx.lineWidth = 1.5 * dpr;
+        ctx.beginPath(); ctx.arc(x, y, lens * dpr * (0.4 + 0.6 * glow), 0, Math.PI * 2); ctx.stroke();
+      }
+      if (t > LAST) finish();
+    }
+    function start() {
+      if (state !== 'wait') return;
+      state = 'run';
+      try { sessionStorage.setItem('naroa-burst', '1'); } catch {}
+      measure();
+      started = performance.now();
+      raf = requestAnimationFrame(frame);
+      ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(type => addEventListener(type, reveal, { passive: true, capture: true, once: true }));
+      addEventListener('click', swallow, true);
+      addEventListener('resize', measure, { passive: true });
+    }
+    // El toque que corta la ráfaga enseña el retrato; no cuenta además como «entrar en la galería».
+    function swallow(event) { event.stopPropagation(); event.preventDefault(); }
+    // El retrato entra con su llegada de siempre mientras el lienzo de la ráfaga se funde encima.
+    function reveal() {
+      if (state === 'done') return;
+      const waiting = state === 'wait';
+      state = 'done';
+      ended = performance.now();
+      drop();
+      canvas.classList.add('is-leaving');
+      if (waiting) finish(); else setTimeout(finish, 520);
+    }
+    function finish() {
+      cancelAnimationFrame(raf);
+      removeEventListener('resize', measure);
+      removeEventListener('click', swallow, true);
+      canvas.remove();
+      bitmaps.splice(0).forEach(bitmap => bitmap.close?.());
+      pool.length = queue.length = cards.length = 0;
+    }
+    sheets.forEach(sheet => fetch(sheet.src).then(response => response.ok ? response.blob() : Promise.reject()).then(createImageBitmap).then(bitmap => {
+      if (state === 'done') { bitmap.close?.(); return; }
+      bitmaps.push(bitmap);
+      const fresh = [];
+      for (let i = 0; i < sheet.count; i++) fresh.push({ sheet: bitmap, x: (i % spec.cols) * tw, y: Math.floor(i / spec.cols) * th });
+      pool.push(...fresh);
+      // Una hoja que llega con la ráfaga en marcha entra barajada en lo que queda por salir.
+      for (const item of fresh) queue.splice(Math.floor(Math.random() * (queue.length + 1)), 0, item);
+      start();
+    }).catch(() => {}));
+    // Si la primera hoja no está a tiempo, no se hace esperar a nadie delante de una pantalla negra.
+    setTimeout(() => { if (state === 'wait') reveal(); }, 1200);
+    // La interfaz no se retira a contemplar hasta que el retrato lleva a la vista lo que cualquier obra.
+    return { get active() { return state !== 'done' || performance.now() - ended < 3200; } };
+  })();
   // Enable enhancements only after JavaScript has successfully initialized.
   document.documentElement.classList.add('has-motion');
   // Versiones por idioma: /en/… comparte este script. BASE es el prefijo de la versión ('' en español)
@@ -5261,7 +5417,7 @@
       const CALM_MS = 3200;
       let calmTimer = null, lastX = -1, lastY = -1;
       const root = document.body;
-      const busy = () => document.querySelector('dialog[open]') || stage.dataset.continue || stage.matches(':has(:focus-visible)') || document.querySelector('.site-nav:has(:focus-visible)');
+      const busy = () => heroBurst?.active || document.querySelector('dialog[open]') || stage.dataset.continue || stage.matches(':has(:focus-visible)') || document.querySelector('.site-nav:has(:focus-visible)');
       function settle() { calmTimer = null; if (busy() || state.quiet) { arm(); return; } root.classList.add('is-contemplating'); }
       function arm() { clearTimeout(calmTimer); calmTimer = setTimeout(settle, CALM_MS); }
       function wake() { if (root.classList.contains('is-contemplating')) root.classList.remove('is-contemplating'); arm(); }

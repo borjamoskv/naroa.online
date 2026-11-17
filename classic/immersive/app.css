@@ -248,6 +248,15 @@ body.page-sobre-mi .share-words .share-btn{font-size:clamp(22px,6.6vw,24px)}
 @media(forced-colors:active){.share-words .share-btn>span{text-decoration:underline}.share-words .share-btn:focus-visible{outline:2px solid CanvasText;outline-offset:4px}}
 @keyframes fade-in-share{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 .hero-threshold{position:absolute;inset:0;z-index:2;overflow:hidden;background:#0d0e0b;pointer-events:auto;cursor:pointer;perspective:1200px;--hero-rx:0deg;--hero-ry:0deg;--hero-mx:0;--hero-my:0;--hero-split:0;--hero-letter:0em;--hero-skew:0deg;--spot-x:46%;--spot-y:39.5%}
+/* Ráfaga de llegada (§7): mientras las obras pasan, el umbral espera oculto y sin animar; al retirarse las dos clases
+   su llegada empieza de cero. El `visibility` va con !important porque app.js lo escribe en línea en cada fotograma.
+   La interfaz se aparta (sigue en el DOM y con foco vuelve) y el lienzo queda bajo el velo de la escena. */
+html:is(.burst-pending,.burst-on) .hero-threshold{visibility:hidden!important}
+html:is(.burst-pending,.burst-on) :is(.hero-threshold,.hero-threshold *){animation:none!important}
+html:is(.burst-pending,.burst-on) .page-home :is(.art-bottom,.site-nav,.art-index,.art-progress):not(:focus-within){opacity:0}
+.hero-burst{position:absolute;inset:0;z-index:4;width:100%;height:100%;background:#0d0e0b;pointer-events:none;transition:opacity .5s cubic-bezier(.16,1,.3,1)}
+.hero-burst.is-leaving{opacity:0}
+html.motion-off .hero-burst{display:none}
 .has-motion .hero-threshold{animation:hero-fade-overture .8s cubic-bezier(.16,1,.3,1) backwards}
 @keyframes hero-fade-overture{from{opacity:0}to{opacity:1}}
 /* El umbral está vivo sin que nadie lo toque: la cámara llega acercándose, el retrato enfoca,
@@ -3987,3 +3996,44 @@ body:has(.hero-threshold:not(.is-passed)) .sound-toggle[aria-pressed=false] .sou
 @keyframes sound-trace-draw{to{stroke-dashoffset:0}}
 @media(prefers-reduced-motion:reduce){body:has(.hero-threshold:not(.is-passed)) .sound-toggle[aria-pressed=false] .sound-trace path{animation:none;stroke-dashoffset:0}}
 @media(max-width:370px){.site-nav nav>.sound-toggle .sound-month,.sound-trace{display:none}}
+/* Panel Story: tipografía de catálogo de galería */
+.story-body h2 {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  letter-spacing: var(--ls-serif);
+  line-height: var(--lh-display);
+}
+.story-body > p {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 15px;
+  line-height: var(--lh-body);
+  letter-spacing: .005em;
+}
+.story-body dt {
+  font-size: 10px;
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+}
+.story-body dd {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 14px;
+  letter-spacing: .01em;
+}
+.story-body .source-link {
+  font-size: 10px;
+  letter-spacing: var(--ls-caps);
+  text-transform: uppercase;
+  color: #fffdf4a0;
+  transition: color .25s;
+}
+.story-body .source-link:hover {
+  color: #edbca4;
+}
+.story-dialog .dialog-top {
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
