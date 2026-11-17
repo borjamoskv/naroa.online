@@ -2921,7 +2921,8 @@ html.motion-off .work-gallery-dialog[data-specular-surface] .work-gallery-image:
   font-size: 10px;
   letter-spacing: .18em;
   text-transform: uppercase;
-  opacity: .62;
+  opacity: .86; /* .62 no se leía sobre un collage claro (OUT, a 1440 px) */
+  text-shadow: 0 1px 2px #000c, 0 0 14px #000a;
   margin-bottom: 16px;
   display: flex;
   align-items: baseline;
@@ -2930,7 +2931,7 @@ html.motion-off .work-gallery-dialog[data-specular-surface] .work-gallery-image:
 .art-counter small {
   font-size: 10px;
   letter-spacing: .06em;
-  opacity: .78;
+  opacity: 1;
   margin-left: 0;
   color: var(--scene-accent, #edbca4);
   transition: color .45s var(--ease-out);
