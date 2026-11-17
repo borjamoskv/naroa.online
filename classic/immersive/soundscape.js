@@ -202,7 +202,7 @@
   const PIECES = [
     compose({
       // Enero: escarcha al sol. La bemol mayor, arpegio quieto y notas largas.
-      title: 'Urtarrila', level: 1.03, tonic: 32, sing: 68, scale: 'mayor', figure: 'quieta', swing: 0.03,
+      title: 'Urtarrila', level: 1.01, tonic: 32, sing: 68, scale: 'mayor', figure: 'quieta', swing: 0.03,
       accent: [1, 0, 0.7, 0, 0.8, 0, 0.66, 0.5], nature: { wind: 0.125, cold: true, whistle: 0.05 },
       A: [
         [0, '0 4 3, 4 2 2, 6 1 2'], [5, '0 0 4, 5 2 3'], [2, '0 2 2, 2 4 2, 4 6 4'], [4, '0 8 3, 3 6 1, 4 3 4'],
@@ -215,7 +215,7 @@
     }),
     compose({
       // Febrero: carnaval bajo la lluvia. Re dórico, bajo en tresillo (3+3+2).
-      title: 'Otsaila', level: 0.95, tonic: 38, sing: 62, scale: 'dorica', figure: 'tresillo', swing: 0.04,
+      title: 'Otsaila', level: 0.98, tonic: 38, sing: 62, scale: 'dorica', figure: 'tresillo', swing: 0.04,
       accent: [1, 0.5, 0.62, 0.95, 0.5, 0.62, 0.9, 0.55], nature: { rain: 0.135, wind: 0.05 },
       A: [
         [0, '0 7 3, 3 9 3, 6 11 2'], [3, '0 10 3, 3 8 1, 4 7 2, 6 5 2'], [0, '0 4 3, 3 7 3, 6 9 2'], [3, '0 10 2, 2 9 1, 3 7 3, 6 5 2'],
@@ -228,7 +228,7 @@
     }),
     compose({
       // Marzo: viento del sur. Sol mixolidio, ráfagas de corcheas que suben.
-      title: 'Martxoa', level: 1.04, tonic: 43, sing: 67, scale: 'mixolidia', figure: 'rafaga', swing: 0.06,
+      title: 'Martxoa', level: 1.01, tonic: 43, sing: 67, scale: 'mixolidia', figure: 'rafaga', swing: 0.06,
       nature: { wind: 0.11, whistle: 0.035, birds: 3 },
       A: [
         [0, '0 0 1, 1 1 1, 2 2 1, 3 4 1, 4 7 4'], [6, '0 6 2, 2 8 1, 3 10 1, 4 8 2, 6 6 2'], [3, '0 3 1, 1 4 1, 2 5 1, 3 7 1, 4 10 2, 6 7 2'], [0, '0 9 3, 3 7 1, 4 4 4'],
@@ -240,7 +240,7 @@
       ]
     }),
     // Abril: la pieza original, en Do mayor (escrita en Fa y transportada).
-    { title: 'Apirila', level: 0.92, transpose: -5, swing: 0.08, nature: { rain: 0.1, birds: 5 }, bars: arrange(INTRO, A, voice(B), OUTRO, voice(A)) },
+    { title: 'Apirila', level: 0.98, transpose: -5, swing: 0.08, nature: { rain: 0.1, birds: 5 }, bars: arrange(INTRO, A, voice(B), OUTRO, voice(A)) },
     compose({
       // Mayo: todo florece. Fa lidio, olas de arpegio y saltos de sexta.
       title: 'Maiatza', level: 1.02, tonic: 41, sing: 65, scale: 'lidia', figure: 'ola', swing: 0.08,
@@ -256,7 +256,7 @@
     }),
     compose({
       // Junio: hogueras de San Juan. Re mayor, danza de notas repetidas.
-      title: 'Ekaina', level: 1.03, tonic: 38, sing: 62, scale: 'mayor', figure: 'danza', swing: 0.1,
+      title: 'Ekaina', level: 0.98, tonic: 38, sing: 62, scale: 'mayor', figure: 'danza', swing: 0.1,
       nature: { embers: 0.05, birds: 4 },
       A: [
         [0, '0 7 1, 1 7 1, 2 9 2, 4 11 2, 6 9 2'], [4, '0 8 1, 1 8 1, 2 11 2, 4 8 2, 6 6 2'], [5, '0 7 1, 1 7 1, 2 9 2, 4 12 2, 6 9 2'], [3, '0 10 3, 3 9 1, 4 7 4'],
@@ -295,7 +295,7 @@
     }),
     compose({
       // Septiembre: la vuelta. Fa mayor que empieza en su relativo menor, terceras que caen.
-      title: 'Iraila', level: 0.99, tonic: 41, sing: 65, scale: 'mayor', figure: 'saltarina', swing: 0.08,
+      title: 'Iraila', level: 1.02, tonic: 41, sing: 65, scale: 'mayor', figure: 'saltarina', swing: 0.08,
       nature: { wind: 0.07, sea: 0.025, leaves: 0.2 },
       A: [
         [5, '0 9 3, 3 7 1, 4 5 2, 6 7 2'], [3, '0 10 3, 3 8 1, 4 7 2, 6 5 2'], [0, '0 9 2, 2 7 2, 4 4 3, 7 7 1'], [4, '0 8 3, 3 6 1, 4 4 4'],
@@ -308,7 +308,7 @@
     }),
     compose({
       // Octubre: hojas doradas. Si mayor, líneas que bajan por grados.
-      title: 'Urria', level: 1.01, tonic: 35, sing: 71, scale: 'mayor', figure: 'lluvia', swing: 0.06,
+      title: 'Urria', level: 0.98, tonic: 35, sing: 71, scale: 'mayor', figure: 'lluvia', swing: 0.06,
       nature: { rain: 0.11, wind: 0.08, leaves: 0.16 },
       A: [
         [0, '0 7 2, 2 6 1, 3 5 1, 4 4 4'], [4, '0 6 2, 2 5 1, 3 4 1, 4 3 4'], [5, '0 5 2, 2 4 1, 3 3 1, 4 2 4'], [4, '0 4 3, 3 1 1, 4 -1 4'],
@@ -321,7 +321,7 @@
     }),
     compose({
       // Noviembre: un claro entre el sirimiri. Sol mayor, vaivén a contratiempo y notas vecinas.
-      title: 'Azaroa', level: 1.09, tonic: 43, sing: 67, scale: 'mayor', figure: 'niebla', swing: 0.05,
+      title: 'Azaroa', level: 1.03, tonic: 43, sing: 67, scale: 'mayor', figure: 'niebla', swing: 0.05,
       accent: [1, 0, 0.72, 0.5, 0.85, 0, 0.7, 0.5], nature: { drizzle: 0.115, wind: 0.045 },
       A: [
         [0, '0 4 3, 3 5 1, 4 4 2, 6 2 2'], [3, '0 3 3, 3 4 1, 4 5 4'], [0, '0 4 3, 3 5 1, 4 4 2, 6 7 2'], [4, '0 6 3, 3 5 1, 4 4 4'],
@@ -334,7 +334,7 @@
     }),
     compose({
       // Diciembre: nana junto al fuego. Mi bemol mayor, campanas en terceras.
-      title: 'Abendua', level: 0.96, tonic: 39, sing: 63, scale: 'mayor', figure: 'campana', swing: 0.04,
+      title: 'Abendua', level: 1.02, tonic: 39, sing: 63, scale: 'mayor', figure: 'campana', swing: 0.04,
       nature: { embers: 0.05, wind: 0.04, cold: true, whistle: 0.02 },
       A: [
         [0, '0 11 2, 2 9 2, 4 11 2, 6 9 2'], [3, '0 12 2, 2 10 2, 4 7 4'], [0, '0 11 2, 2 9 2, 4 7 2, 6 9 2'], [4, '0 8 3, 3 6 1, 4 4 4'],
@@ -923,7 +923,7 @@
     const freq = hertz(midi + lift);
     const vel = clamp(velocity, 0.05, 1);
     const tone = ctx.createBiquadFilter(), amp = ctx.createGain();
-    tone.type = 'lowpass'; tone.Q.value = 1.8;
+    tone.type = 'lowpass'; tone.Q.setValueAtTime(3.2 + 2.4 * vel, when); tone.Q.setTargetAtTime(1.8, when + 0.01, 0.07);
     tone.frequency.setValueAtTime(Math.min(8000, freq * (4 + 9 * vel) + 500), when);
     tone.frequency.setTargetAtTime(Math.min(4000, freq * 4 + 400), when, 0.07 + 0.05 * vel);
     const ring = 0.11 * hold;
@@ -945,8 +945,11 @@
 
   // ── Bajo ─────────────────────────────────────────────────────────────────
   // Sierra con un seno debajo, por un filtro que se abre con el ataque y se cierra sobre la nota.
+  let lastThrum = null;
   function thrum(midi, when, seconds, velocity) {
     const freq = hertz(midi);
+    const from = lastThrum && when - lastThrum.until < 0.25 ? lastThrum.freq : freq;
+    lastThrum = { freq, until: when + seconds };
     const vel = clamp(velocity, 0.05, 1);
     const tone = ctx.createBiquadFilter(), amp = ctx.createGain();
     tone.type = 'lowpass'; tone.Q.value = 2.4;
@@ -960,7 +963,9 @@
     const end = when + seconds + 0.25;
     const oscs = [['sawtooth', 0.5], ['sine', 0.6]].map(([type, level]) => {
       const osc = ctx.createOscillator(), part = ctx.createGain();
-      osc.type = type; osc.frequency.value = freq;
+      osc.type = type;
+      osc.frequency.setValueAtTime(from, when);
+      osc.frequency.setTargetAtTime(freq, when, 0.035);
       part.gain.value = level;
       osc.connect(part); part.connect(tone);
       osc.start(when); osc.stop(end);
