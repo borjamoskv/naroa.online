@@ -17,6 +17,28 @@
     "boy": [
       {"x": 0.12, "y": 0.33, "text": "mica mineral"},
       {"x": 0.94, "y": 0.975, "text": "firmado: Naroa ’05"}
+    ],
+    "el-luengo-y-el-mar": [
+      {"x": 0.55, "y": 0.75, "text": "collage con mica"},
+      {"x": 0.1, "y": 0.34, "text": "concha de vieira"}
+    ],
+    "infusion-de-berto": [
+      {"x": 0.7, "y": 0.57, "text": "collage: la bolsita de infusión"},
+      {"x": 0.62, "y": 0.15, "text": "rodaja de fresno sin tratar"}
+    ],
+    "patxi-en-su-pino": [
+      {"x": 0.5, "y": 0.14, "text": "rodaja de pino sin tratar"}
+    ],
+    "i-got-you-babe": [
+      {"x": 0.87, "y": 0.3, "text": "el reloj de pared, con sus horas"},
+      {"x": 0.79, "y": 0.52, "text": "piezas ensambladas"}
+    ],
+    "red-red-wine": [
+      {"x": 0.57, "y": 0.48, "text": "vino"},
+      {"x": 0.42, "y": 0.45, "text": "lápiz magenta"}
+    ],
+    "jose-manuel-ezquerra": [
+      {"x": 0.63, "y": 0.9, "text": "tabla de cocina: el mango"}
     ]
   }
 }
