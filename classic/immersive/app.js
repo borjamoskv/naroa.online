@@ -275,7 +275,7 @@
     // Decorative dialog images (data-dialog-src) are fetched on first open, not with the page.
     $$('img[data-dialog-src]', dialog).forEach(img => { img.src = img.dataset.dialogSrc; img.removeAttribute('data-dialog-src'); });
     if (selector === '#menu-dialog') refreshMenu();
-    if (selector === '#index-dialog') $('#art-search').focus();
+    if (selector === '#index-dialog') obraIndex?.show();
   }
   $$('[data-close-dialog]').forEach(b => b.addEventListener('click', () => b.closest('dialog').close()));
   $$('dialog').forEach(d => d.addEventListener('click', e => {
@@ -1433,212 +1433,272 @@
   menuButtons.forEach(button => button.addEventListener('click', () => openDialog('#menu-dialog')));
   $$('[data-open-index]').forEach(b => b.addEventListener('click', e => { e.preventDefault(); openDialog('#index-dialog'); }));
   const indexDialogEl = $('#index-dialog');
-  const search = $('#art-search'), filters = $$('[data-filter]'), indexItems = $$('.index-work');
-  const indexListEl = $('.index-list', indexDialogEl || document);
-  const indexBackdropImg = $('[data-index-backdrop-img]', indexDialogEl || document);
-  const hudNum = $('[data-hud-num]', indexDialogEl || document);
-  const hudTitle = $('[data-hud-title]', indexDialogEl || document);
-  const hudMeta = $('[data-hud-meta]', indexDialogEl || document);
-  const hudQuote = $('[data-hud-quote]', indexDialogEl || document);
-  const modeButtons = $$('[data-obra-mode]', indexDialogEl || document);
-  const oracleBtn = $('[data-index-oracle]', indexDialogEl || document);
-  let filter = 'all';
-  let obraViewMode = 'muro';
-  let stencilWipeTimer = 0;
-  const stencilWallState = {
-    backend: 'stencil-roller-wheatpaste-v1',
-    activeFilter: 'all',
-    viewMode: 'muro',
-    wipeCount: 0,
-    lastWipeInk: 'rgba(217, 56, 30, 0.28)',
-    peeledSlug: null,
-    peelRx: 0,
-    peelRy: 0,
-    tapeLift: 0,
-    spotlightSlug: indexItems[0]?.dataset.work || null,
-    oracleSlug: null,
-    oracleRolls: 0
-  };
-  const STENCIL_INKS = {
-    all: 'rgba(217, 56, 30, 0.28)',
-    Retratos: 'rgba(217, 56, 30, 0.34)',
-    Vaivenes: 'rgba(42, 132, 178, 0.32)',
-    'Walking Gallery': 'rgba(212, 175, 55, 0.34)',
-    Pizarra: 'rgba(130, 145, 155, 0.34)',
-    pizarra: 'rgba(130, 145, 155, 0.34)',
-    collage: 'rgba(217, 56, 30, 0.34)',
-    objetos: 'rgba(212, 175, 55, 0.34)',
-    caracterizacion: 'rgba(185, 132, 165, 0.32)',
-    Naturaleza: 'rgba(84, 156, 92, 0.32)',
-    Instalaciones: 'rgba(198, 92, 56, 0.34)',
-    Archivo: 'rgba(185, 165, 132, 0.30)'
-  };
-  function updateIndexSpotlight(cardEl) {
-    if (!cardEl) return;
-    const slug = cardEl.dataset.work || null;
-    stencilWallState.spotlightSlug = slug;
-    const cover = cardEl.dataset.cover || $('img', cardEl)?.getAttribute('src') || '';
-    if (indexBackdropImg && cover) {
-      indexBackdropImg.style.backgroundImage = `url("${artSrc(cover)}")`;
+  // ── Índice de obra (§15 de AGENTS.md) ─────────────────────────────────────────────────────────────────
+  // Cuatro maneras de ver las obras: un rostro hecho con trozos de obras distintas, la pared de miradas,
+  // la hoja de contactos y esa misma hoja barajada. Los datos de cada obra viajan en su enlace (.ix-w)
+  // y los textos, en el HTML ya traducido (§9): aquí no hay ninguna frase.
+  const obraIndex = (dialog => {
+    if (!dialog) return null;
+    const wall = $('[data-ix-wall]', dialog), stage = $('[data-ix-stage]', dialog), list = $('[data-ix-list]', dialog), dealLine = $('[data-ix-deal-line]', dialog);
+    const plate = $('[data-ix-plate]', dialog), plateTitle = $('[data-ix-plate-title]', dialog), plateMeta = $('[data-ix-plate-meta]', dialog), plateOpen = $('[data-ix-plate-open]', dialog);
+    const obra = $('[data-ix-obra]', dialog), veil = $('.ix-veil', obra), big = obra.appendChild(Object.assign(document.createElement('img'), { alt: '', decoding: 'async' }));
+    const viewButtons = $$('[data-ix-view]', dialog), capas = $$('.ix-capa', dialog);
+    const nums = s => s.split(',').map(Number);
+    const safe = s => s.replace(/[&<>"]/g, c => '&#' + c.charCodeAt(0) + ';');
+    const still = () => systemMotion.matches && !document.documentElement.classList.contains('motion-opt-in');
+    const works = $$('.ix-w', list).map((a, i) => {
+      const d = a.dataset;
+      a.dataset.i = i;
+      return {
+        i, a, slug: d.work, ar: +d.ar, thumb: d.thumb, tile: d.tile, cover: d.cover, nat: nums(d.nat), box: nums(d.box),
+        ey: parseFloat(a.style.getPropertyValue('--ey')) || .5, face: d.face || '', coef: d.coef ? nums(d.coef) : null, fit: +d.fit || 0,
+        title: $('strong', a).textContent, meta: $$('em span', a).map(s => s.textContent).filter(Boolean).join(' · ')
+      };
+    });
+    // Trozos del rostro: los corta el build (data-ix-tiles) sobre una cara común; aquí pasan a % de su caja,
+    // con una rendija de papel entre ellos.
+    const tiles = JSON.parse(dialog.dataset.ixTiles || '[]'), [X0, X1, Y0, Y1] = nums(dialog.dataset.ixBox || '0,1,0,1'), DPX = +dialog.dataset.ixDpx || 1;
+    const cuts = tiles.map(t => {
+      const pts = t.p.map(([x, y]) => [(x - X0) / (X1 - X0) * 100, (y - Y0) / (Y1 - Y0) * 100]);
+      const cx = pts.reduce((s, p) => s + p[0], 0) / 4, cy = pts.reduce((s, p) => s + p[1], 0) / 4;
+      const inset = pts.map(([x, y]) => { const d = Math.hypot(x - cx, y - cy) || 1; return (x - (x - cx) / d * .34).toFixed(3) + '% ' + (y - (y - cy) / d * .24).toFixed(3) + '%'; });
+      return { clip: 'polygon(' + inset.join(', ') + ')', cx, cy };
+    });
+    const cands = tiles.map((t, k) => works.filter(w => w.face && (w.fit >> k & 1)).map(w => w.i));
+    const seen = new Map();
+    let view = 'rostro', picked = null, opened = null, lastPointer = 'mouse', shuffled = works, ready = false, loop = 0, faces = [];
+
+    const pickLeast = pool => {          // de las candidatas, una de las que menos han salido
+      const least = Math.min(...pool.map(i => seen.get(i) || 0));
+      const few = pool.filter(i => (seen.get(i) || 0) === least), i = few[Math.floor(Math.random() * few.length)];
+      seen.set(i, (seen.get(i) || 0) + 1);
+      return i;
+    };
+    function compose(n) {                // n rostros sin repetir obra
+      const taken = new Set(), order = tiles.map((t, k) => k).sort((a, b) => cands[a].length - cands[b].length);
+      return Array.from({ length: n }, () => order.filter(k => cands[k].length).map(k => {
+        const free = cands[k].filter(i => !taken.has(i)), i = pickLeast(free.length ? free : cands[k]);
+        taken.add(i);
+        return [k, i];
+      }).sort((a, b) => a[0] - b[0]));
     }
-    const num = cardEl.dataset.indexNum || '01';
-    const title = $('strong', cardEl)?.textContent || '';
-    const meta = $('small', cardEl)?.textContent?.replace(/^\/\/\s*/, '') || '';
-    const story = cardEl.dataset.story || $('em', cardEl)?.textContent || '';
-    if (hudNum) hudNum.textContent = `${num} / ${String(indexItems.length).padStart(2, '0')}`;
-    if (hudTitle) hudTitle.textContent = title;
-    if (hudMeta) hudMeta.textContent = meta;
-    if (hudQuote) hudQuote.textContent = story ? `«${story}…»` : '';
-    if (obraViewMode === 'constelacion') {
-      const cat = cardEl.dataset.category;
-      const ser = cardEl.dataset.series;
-      indexItems.forEach(item => {
-        const linked = item !== cardEl && !item.hidden && ((cat && item.dataset.category === cat) || (ser && item.dataset.series === ser));
-        item.classList.toggle('is-constellation-linked', Boolean(linked));
-      });
-    }
-  }
-  function setObraViewMode(nextMode = 'muro') {
-    obraViewMode = ['muro', 'mesa', 'constelacion'].includes(nextMode) ? nextMode : 'muro';
-    stencilWallState.viewMode = obraViewMode;
-    if (indexDialogEl) indexDialogEl.dataset.obraView = obraViewMode;
-    modeButtons.forEach(btn => btn.setAttribute('aria-pressed', String(btn.dataset.obraMode === obraViewMode)));
-    if (obraViewMode !== 'constelacion') {
-      indexItems.forEach(item => item.classList.remove('is-constellation-linked'));
-    }
-    triggerStencilRollerWipe(filter);
-    return obraViewMode;
-  }
-  function rollIndexOracle() {
-    const visible = indexItems.filter(item => !item.hidden);
-    if (!visible.length) return null;
-    stencilWallState.oracleRolls++;
-    const pickIdx = (stencilWallState.oracleRolls * 17 + Math.floor(Math.random() * visible.length)) % visible.length;
-    const chosen = visible[pickIdx] || visible[0];
-    indexItems.forEach(item => item.classList.toggle('is-oracle-chosen', item === chosen));
-    stencilWallState.oracleSlug = chosen.dataset.work || null;
-    updateIndexSpotlight(chosen);
-    applyWheatpastePeel(chosen, 0.68, 0.28);
-    window.NAROA_SOUND?.menuNote?.(pickIdx % 7);
-    if (typeof chosen.scrollIntoView === 'function') {
-      try { chosen.scrollIntoView({ behavior: reduced.matches ? 'auto' : 'smooth', block: 'center' }); } catch {}
-    }
-    return chosen.dataset.work || null;
-  }
-  modeButtons.forEach(btn => btn.addEventListener('click', () => setObraViewMode(btn.dataset.obraMode)));
-  oracleBtn?.addEventListener('click', () => rollIndexOracle());
-  function triggerStencilRollerWipe(targetFilter = filter) {
-    const ink = STENCIL_INKS[targetFilter] || STENCIL_INKS.all;
-    stencilWallState.activeFilter = targetFilter;
-    stencilWallState.wipeCount++;
-    stencilWallState.lastWipeInk = ink;
-    if (indexListEl) {
-      indexListEl.style.setProperty('--stencil-wipe-ink', ink);
-      indexListEl.classList.remove('is-stencil-wiping');
-      void indexListEl.offsetWidth;
-      indexListEl.classList.add('is-stencil-wiping');
-      clearTimeout(stencilWipeTimer);
-      stencilWipeTimer = setTimeout(() => {
-        indexListEl.classList.remove('is-stencil-wiping');
-      }, 480);
-    }
-    window.NAROA_SOUND?.stencilRollerWipe?.(targetFilter);
-    return { ...stencilWallState };
-  }
-  function applyWheatpastePeel(cardEl, normX = 0.5, normY = 0.5) {
-    if (!cardEl) return null;
-    const nx = clamp(Number(normX) || 0.5, 0, 1);
-    const ny = clamp(Number(normY) || 0.5, 0, 1);
-    const rx = Number(((0.5 - ny) * 9.5).toFixed(2));
-    const ry = Number(((nx - 0.5) * 11.5).toFixed(2));
-    const tx = Number(((nx - 0.5) * 3.5).toFixed(2));
-    const ty = Number((-2.5 - (1 - ny) * 3.5).toFixed(2));
-    const tapeRot = Number((-3.5 + (nx - 0.5) * 7.0).toFixed(2));
-    const tapeLift = Number((-2.0 - (1 - ny) * 3.0).toFixed(2));
-    cardEl.classList.add('is-wheatpaste-peeling');
-    cardEl.style.setProperty('--peel-rx', `${rx}deg`);
-    cardEl.style.setProperty('--peel-ry', `${ry}deg`);
-    cardEl.style.setProperty('--peel-tx', `${tx}px`);
-    cardEl.style.setProperty('--peel-ty', `${ty}px`);
-    cardEl.style.setProperty('--peel-tape-rot', `${tapeRot}deg`);
-    cardEl.style.setProperty('--peel-tape-lift', `${tapeLift}px`);
-    stencilWallState.peeledSlug = cardEl.dataset.work || null;
-    stencilWallState.peelRx = rx;
-    stencilWallState.peelRy = ry;
-    stencilWallState.tapeLift = tapeLift;
-    updateIndexSpotlight(cardEl);
-    return { ...stencilWallState };
-  }
-  function resetWheatpastePeel(cardEl) {
-    if (!cardEl) return;
-    cardEl.classList.remove('is-wheatpaste-peeling');
-    cardEl.style.removeProperty('--peel-rx');
-    cardEl.style.removeProperty('--peel-ry');
-    cardEl.style.removeProperty('--peel-tx');
-    cardEl.style.removeProperty('--peel-ty');
-    cardEl.style.removeProperty('--peel-tape-rot');
-    cardEl.style.removeProperty('--peel-tape-lift');
-  }
-  const normalized = s => s.toLocaleLowerCase(LANG).normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  function filterIndex() {
-    const term = normalized(search.value.trim());
-    let count = 0;
-    let firstVisible = null;
-    indexItems.forEach(item => {
-      const category = filter === 'all' || item.dataset.category === filter || item.dataset.series === filter;
-      item.hidden = !category || !normalized(item.dataset.search).includes(term);
-      if (!item.hidden) {
-        if (!firstVisible) firstVisible = item;
-        count++;
+    // Cada trozo queda puesto «a mano»: un giro y un desplazamiento mínimos, siempre los mismos para su sitio y su rostro.
+    const hand = (f, k, n) => { const v = Math.sin((f * 17 + k * 7 + n * 13 + 1) * 12.9898) * 43758.5453; return (v - Math.floor(v)) * 2 - 1; };
+    const DEPTH = { 'ojo-izq': 14, 'ojo-der': 14, nariz: 10, boca: 9, entrecejo: 8, mejilla: 5, frente: 4, menton: 4, sien: 3 };
+    const pieceHTML = ([k, i], fresh, delay, f) => `<a class="ix-p${fresh ? ' is-new' : ''}" href="${works[i].a.getAttribute('href')}" data-i="${i}" data-k="${k}" data-depth="${DEPTH[tiles[k].k] || 4}" aria-label="${safe(works[i].title)}" style="clip-path:${cuts[k].clip};--ox:${cuts[k].cx.toFixed(1)}%;--oy:${cuts[k].cy.toFixed(1)}%;--d:${delay};--jr:${(hand(f, k, 1) * .9).toFixed(2)}deg;--jx:${(hand(f, k, 2) * 2.2).toFixed(1)}px;--jy:${(hand(f, k, 3) * 2.2).toFixed(1)}px"><img src="${works[i].face}" alt="" decoding="async"></a>`;
+    const facesHTML = fresh => faces.map((face, f) => `<div class="ix-face">${face.map((p, n) => pieceHTML(p, fresh, f * 5 + n, f)).join('')}</div>`).join('');
+    const tileHTML = (w, width, height) => `<a class="ix-t" href="${w.a.getAttribute('href')}" data-i="${w.i}" aria-label="${safe(w.title)}" style="width:${width.toFixed(1)}px;height:${height.toFixed(1)}px"><img src="${w.thumb}" srcset="${w.thumb} 480w, ${w.tile} 960w" sizes="${Math.ceil(width)}px" alt="" loading="lazy" decoding="async"></a>`;
+    function rows(items, width, target, gap) {      // filas justificadas: cada obra entera, a la misma altura que sus vecinas
+      const out = [];
+      let row = [], sum = 0;
+      for (const w of items) {
+        row.push(w); sum += w.ar;
+        if (sum * target + gap * (row.length - 1) >= width) { out.push([row, (width - gap * (row.length - 1)) / sum]); row = []; sum = 0; }
       }
+      if (row.length) out.push([row, Math.min(target * 1.12, (width - gap * (row.length - 1)) / sum)]);
+      return out.map(([r, h]) => `<div class="ix-row" style="--gap:${gap}px">${r.map(w => tileHTML(w, h * w.ar, h)).join('')}</div>`).join('');
+    }
+    const facesFor = width => width >= 900 ? 3 : width >= 560 ? 2 : 1;
+    function render(fresh) {
+      const width = wall.clientWidth || 340, phone = width < 560;
+      dialog.dataset.ixView = view;
+      viewButtons.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.ixView === view)));
+      dealLine.hidden = view !== 'rostro'; list.hidden = view !== 'mirada'; stage.hidden = view === 'mirada';
+      if (view === 'rostro') {
+        const n = facesFor(width);
+        if (fresh || faces.length !== n) faces = compose(n);
+        stage.innerHTML = `<div class="ix-faces" style="--n:${n}">${facesHTML(fresh)}</div>`;
+      } else if (view === 'mirada') {
+        stage.innerHTML = '';
+        list.style.setProperty('--cols', width >= 1100 ? 5 : width >= 800 ? 4 : width >= 560 ? 3 : 2);
+      } else stage.innerHTML = rows(view === 'azar' ? shuffled : works, width, phone ? 92 : 172, phone ? 5 : 8);
+    }
+    function setView(next) {
+      if (!viewButtons.some(b => b.dataset.ixView === next)) return view;
+      const again = next === view;
+      if (again && next !== 'azar') return view;
+      view = next;
+      if (view === 'azar') shuffled = works.map(w => [Math.random(), w]).sort((a, b) => a[0] - b[0]).map(p => p[1]);   // cada toque vuelve a barajar
+      pick(null); label(null); render(false);
+      dialog.scrollTop = Math.min(dialog.scrollTop, wall.offsetTop);
+      return view;
+    }
+    const tileOf = i => i == null ? null : view === 'mirada' ? works[i].a : $(`[data-i="${i}"]`, stage);
+    function label(i, link) {            // la cartela: título y soporte; con enlace cuando la obra está elegida
+      if (i == null) { plate.classList.remove('is-on', 'is-link'); return; }
+      const w = works[i];
+      plateTitle.textContent = w.title; plateMeta.textContent = w.meta;
+      plateOpen.hidden = !link; plateOpen.setAttribute('href', w.a.getAttribute('href'));
+      plate.hidden = false; plate.classList.add('is-on'); plate.classList.toggle('is-link', Boolean(link));
+    }
+    function pick(i) {
+      $$('.is-on', wall).forEach(el => el.classList.remove('is-on'));
+      picked = i;
+      tileOf(i)?.classList.add('is-on');
+    }
+    const decoded = src => { const im = new Image(); im.src = src; return im.decode ? im.decode().then(() => im, () => im) : Promise.resolve(im); };
+    async function deal() {              // barajar: otras obras para cada trozo
+      const n = faces.length || 1;
+      faces = compose(n);
+      await Promise.race([Promise.all(faces.flat().map(([, i]) => decoded(works[i].face))), new Promise(r => setTimeout(r, 2500))]);
+      if (view !== 'rostro') return;
+      pick(null); label(null);
+      stage.innerHTML = `<div class="ix-faces" style="--n:${n}">${facesHTML(true)}</div>`;
+    }
+    // Intercambiar un trozo: el mismo sitio de la cara, tomado de otra obra que no esté ya en pantalla.
+    // El trozo queda elegido y la cartela, fija, deja abrir la obra de la que sale.
+    const relay = new WeakMap();
+    function prepare(a) {              // al acercarse a un trozo se elige ya su relevo y se va descodificando
+      if (relay.has(a)) return relay.get(a);
+      const pieces = $$('.ix-p', stage), busy = new Set(pieces.map(p => +p.dataset.i));
+      pieces.forEach(p => { if (relay.has(p)) busy.add(relay.get(p).i); });
+      const pool = cands[+a.dataset.k].filter(i => !busy.has(i));
+      if (!pool.length) return null;
+      const i = pickLeast(pool), next = { i, ready: decoded(works[i].face) };
+      relay.set(a, next);
+      return next;
+    }
+    async function swapPiece(a) {
+      const k = +a.dataset.k, next = prepare(a);
+      if (!next) return;
+      relay.delete(a);
+      const i = next.i, w = works[i];
+      await next.ready;
+      if (!a.isConnected) return;
+      const face = faces[$$('.ix-face', stage).indexOf(a.parentElement)], slot = face && face.find(p => p[0] === k);
+      if (slot) slot[1] = i;
+      a.dataset.i = i; a.setAttribute('href', w.a.getAttribute('href')); a.setAttribute('aria-label', w.title); $('img', a).src = w.face;
+      a.classList.remove('is-new'); void a.offsetWidth; a.style.setProperty('--d', 0); a.classList.add('is-new');
+      pick(i); label(i, true);
+      if (lastPointer === 'mouse') prepare(a);
+    }
+
+    // De la mirada, del trozo o de la miniatura a la obra entera: la foto completa arranca justo encima,
+    // escalada (y girada, en el rostro) y recortada con la misma forma, y la cámara se aleja.
+    function fit(w) {
+      const k = Math.min(innerWidth / w.nat[0], innerHeight / w.nat[1]);
+      big.style.width = w.nat[0] * k + 'px'; big.style.height = w.nat[1] * k + 'px';
+    }
+    const pct = v => (v * 100).toFixed(3) + '%';
+    const whole = { transform: 'matrix(1, 0, 0, 1, 0, 0)', clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)' };
+    function gazeFrames(w, el, wide) {
+      const S = $('.ix-eye', el).getBoundingClientRect(), F = big.getBoundingClientRect(), [l, t, cw, ch] = w.box;
+      const s = S.width / (cw * F.width), tx = S.left - F.left - s * l * F.width, ty = S.top - F.top - s * t * F.height;
+      const top = wide ? t : t + (w.ey - .25) * ch, bottom = wide ? t + ch : t + (w.ey + .25) * ch;
+      return [{ transform: `matrix(${s.toFixed(5)}, 0, 0, ${s.toFixed(5)}, ${tx.toFixed(2)}, ${ty.toFixed(2)})`, clipPath: `polygon(${pct(l)} ${pct(top)}, ${pct(l + cw)} ${pct(top)}, ${pct(l + cw)} ${pct(bottom)}, ${pct(l)} ${pct(bottom)})` }, whole];
+    }
+    function pieceFrames(w, el) {        // deshace la alineación de la cara: del lienzo común a la foto va `coef` (afín)
+      const B = el.parentElement.getBoundingClientRect(), F = big.getBoundingClientRect(), [ax, bx, cx, ay, by, cy] = w.coef, k = +el.dataset.k;
+      const q = B.width / ((X1 - X0) * DPX), sF = F.width / w.nat[0], det = ax * by - bx * ay;
+      const inv = [[by / det, -bx / det], [-ay / det, ax / det]], m = inv.map(row => row.map(v => v * q / sF));
+      const tx = B.left - F.left - q * (inv[0][0] * cx + inv[0][1] * cy), ty = B.top - F.top - q * (inv[1][0] * cx + inv[1][1] * cy);
+      const poly = tiles[k].p.map(([x, y]) => { const u = (x - X0) * DPX, v = (y - Y0) * DPX; return pct((ax * u + bx * v + cx) / w.nat[0]) + ' ' + pct((ay * u + by * v + cy) / w.nat[1]); });
+      return [{ transform: `matrix(${m[0][0].toFixed(6)}, ${m[1][0].toFixed(6)}, ${m[0][1].toFixed(6)}, ${m[1][1].toFixed(6)}, ${tx.toFixed(2)}, ${ty.toFixed(2)})`, clipPath: `polygon(${poly.join(', ')})` }, whole];
+    }
+    function tileFrames(w, el) {
+      const S = el.getBoundingClientRect(), F = big.getBoundingClientRect(), s = S.width / F.width;
+      return [{ transform: `matrix(${s.toFixed(5)}, 0, 0, ${(S.height / F.height).toFixed(5)}, ${(S.left - F.left).toFixed(2)}, ${(S.top - F.top).toFixed(2)})`, clipPath: whole.clipPath }, whole];
+    }
+    let leaving = false;
+    function resetObra() {
+      if (obra.parentNode !== dialog) dialog.appendChild(obra);
+      obra.hidden = true; opened = null; leaving = false;
+      [big, veil, obra].forEach(el => el.getAnimations && el.getAnimations().forEach(a => a.cancel()));
+      $$('.is-out', wall).forEach(el => el.classList.remove('is-out'));
+    }
+    // La obra ya está entera: entra en la galería (o en su página). La galería no cambia de obra con un diálogo
+    // abierto, así que la foto sale del índice, este se cierra y ella se funde sobre la escena ya colocada.
+    function enter(w) {
+      if (!gallery || !gallery.has(w.slug)) { location.href = w.a.href; return; }
+      const shown = !obra.hidden && !still() && Boolean(obra.animate);
+      leaving = shown;
+      if (shown) document.body.appendChild(obra);
+      dialog.close();
+      gallery.select(w.slug);
+      if (shown) obra.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 460, delay: 140, easing: 'ease-in', fill: 'both' }).finished.then(resetObra, resetObra);
+    }
+    async function open(i) {
+      if (opened != null) return;
+      const w = works[i], el = tileOf(i);
+      opened = i;
+      if (still() || !el || !big.animate) return enter(w);
+      const wide = el.matches(':hover') || el.classList.contains('is-on');
+      const photo = await decoded(w.cover);
+      if (opened !== i) return;
+      label(null);
+      big.src = photo.src; big.alt = w.title; fit(w);
+      obra.hidden = false;
+      const frames = el.classList.contains('ix-p') ? pieceFrames(w, el) : el.classList.contains('ix-w') ? gazeFrames(w, el, wide) : tileFrames(w, el);
+      veil.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 650, easing: 'ease-out', fill: 'both' });
+      el.classList.add('is-out');
+      await big.animate(frames, { duration: 1000, easing: 'cubic-bezier(.32, .72, .08, 1)', fill: 'both' }).finished.catch(() => {});
+      if (opened !== i) return;
+      setTimeout(() => { if (opened === i) enter(w); }, 220);
+    }
+
+    const hit = e => e.target.closest ? e.target.closest('.ix-w, .ix-t, .ix-p') : null;
+    dialog.addEventListener('pointerdown', e => { lastPointer = e.pointerType || 'mouse'; const el = hit(e); if (el && el.classList.contains('ix-p')) prepare(el); }, true);
+    wall.addEventListener('pointerover', e => {
+      const el = e.pointerType === 'mouse' && hit(e);
+      if (!el) return;
+      const i = +el.dataset.i;
+      label(i, view === 'rostro' && picked === i);
+      if (el.classList.contains('ix-p')) prepare(el);
+      else if (el.classList.contains('ix-t') && !el.dataset.sharp) {     // al quedarse encima, la miniatura grande sustituye a la pequeña ya descodificada
+        el.dataset.sharp = '1';
+        decoded(works[i].tile).then(im => { const img = $('img', el); if (img) { img.removeAttribute('srcset'); img.removeAttribute('sizes'); img.src = im.src; } });
+      } else if (!el.dataset.sharp) { el.dataset.sharp = '1'; new Image().src = works[i].cover; }
     });
-    $('.index-count').textContent = `${count} ${count === 1 ? 'obra' : 'obras'}`;
-    $('.index-empty').hidden = count !== 0;
-    filters.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.filter === filter)));
-    if (firstVisible) updateIndexSpotlight(firstVisible);
-  }
-  search.addEventListener('input', filterIndex);
-  filters.forEach(b => b.addEventListener('click', () => {
-    filter = b.dataset.filter;
-    filterIndex();
-    triggerStencilRollerWipe(filter);
-  }));
-  $('[data-reset-index]').addEventListener('click', () => {
-    search.value = '';
-    filter = 'all';
-    filterIndex();
-    triggerStencilRollerWipe('all');
-    search.focus();
-  });
-  indexItems.forEach(a => {
-    a.href = BASE + '/obra/' + encodeURIComponent(a.dataset.work) + '/#fotos';
-    a.addEventListener('pointerenter', () => updateIndexSpotlight(a), { passive: true });
-    a.addEventListener('focus', () => updateIndexSpotlight(a), { passive: true });
-    a.addEventListener('pointermove', e => {
-      const rect = a.getBoundingClientRect();
-      const nx = rect.width > 0 ? (e.clientX - rect.left) / rect.width : 0.5;
-      const ny = rect.height > 0 ? (e.clientY - rect.top) / rect.height : 0.5;
-      applyWheatpastePeel(a, nx, ny);
-    }, { passive: true });
-    a.addEventListener('pointerleave', () => resetWheatpastePeel(a), { passive: true });
-    a.addEventListener('click', e => {
-      if (!gallery || !gallery.has(a.dataset.work) || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      e.preventDefault(); $('#index-dialog').close();
-      (gallery.inspect || gallery.select)(a.dataset.work);
+    wall.addEventListener('pointerout', e => {
+      if (e.pointerType !== 'mouse' || !hit(e)) return;
+      if (picked != null && view === 'rostro') label(picked, true); else label(null);      // con un trozo elegido, la cartela se queda
     });
-  });
-  window.NAROA_STENCIL_WALL = {
-    triggerWipe: triggerStencilRollerWipe,
-    setMode: setObraViewMode,
-    rollOracle: rollIndexOracle,
-    peelCard: (slugOrEl, normX = 0.72, normY = 0.24) => {
-      const el = typeof slugOrEl === 'string'
-        ? indexItems.find(item => item.dataset.work === slugOrEl) || indexItems[0]
-        : slugOrEl;
-      return applyWheatpastePeel(el, normX, normY);
-    },
-    getState: () => ({ ...stencilWallState })
-  };
+    wall.addEventListener('focusin', e => { const el = hit(e); if (el) label(+el.dataset.i, view === 'rostro' && picked === +el.dataset.i); });
+    wall.addEventListener('animationend', e => { if (e.target.classList) e.target.classList.remove('is-new'); });
+    dialog.addEventListener('click', e => {
+      if (e.target.closest('[data-ix-deal]')) { e.preventDefault(); deal(); return; }
+      if (e.target.closest('[data-ix-plate-open]')) { e.preventDefault(); if (picked != null) open(picked); return; }
+      const el = hit(e);
+      if (!el) { if (picked != null && !e.target.closest('[data-ix-plate]')) { pick(null); label(null); } return; }
+      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      e.preventDefault();
+      const i = +el.dataset.i;
+      if (el.classList.contains('ix-p')) { swapPiece(el); return; }                          // en el rostro, tocar un trozo lo intercambia
+      if (lastPointer !== 'mouse' && picked !== i) { pick(i); label(i, true); return; }       // al tacto: primero se elige, después se abre
+      open(i);
+    });
+    dialog.addEventListener('keydown', e => {
+      const el = (e.key === 'Enter' || e.key === ' ') && e.target.closest('[data-ix-deal]');
+      if (el) { e.preventDefault(); deal(); }
+    });
+    viewButtons.forEach(b => b.addEventListener('click', () => setView(b.dataset.ixView)));
+    dialog.addEventListener('cancel', e => { if (opened != null) { e.preventDefault(); resetObra(); } });
+    dialog.addEventListener('close', () => { if (!leaving) resetObra(); pick(null); label(null); });
+    dialog.addEventListener('pointermove', e => { if (e.pointerType === 'mouse') { gx = e.clientX / innerWidth - .5; gy = e.clientY / innerHeight - .5; } }, { passive: true });
+    let resizeTimer = 0;
+    addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { if (dialog.open && opened == null) render(false); }, 140); });
+    // Profundidad: los recortes del fondo se mueven menos cuanto más lejos están; los rostros, un poco en sentido contrario.
+    let mx = 0, my = 0, gx = 0, gy = 0;
+    function drift() {
+      mx += (gx - mx) * .07; my += (gy - my) * .07;
+      const y = dialog.scrollTop;
+      capas.forEach(c => { c.style.transform = `translate3d(${(-mx * c.dataset.depth).toFixed(2)}px, ${(-my * c.dataset.depth - y * c.dataset.scroll).toFixed(2)}px, 0)`; });
+      if (view === 'rostro' && opened == null) {
+        $$('.ix-face', stage).forEach((f, n) => { f.style.transform = `translate3d(${(mx * (10 + n * 7)).toFixed(2)}px, ${(my * (8 + n * 5)).toFixed(2)}px, 0)`; });
+        $$('.ix-p', stage).forEach(piece => { piece.style.translate = `${(mx * piece.dataset.depth).toFixed(2)}px ${(my * piece.dataset.depth).toFixed(2)}px`; });   // los ojos, lo más cerca
+      }
+      loop = dialog.open && !still() ? requestAnimationFrame(drift) : 0;
+    }
+    return {
+      show() {                           // lo llama openDialog: el índice se monta la primera vez que se abre
+        if (!ready) { ready = true; render(!still()); }
+        if (!loop && !still()) loop = requestAnimationFrame(drift);
+      },
+      setView, deal, swap: swapPiece, open,
+      state: () => ({ view, picked, opened, works: works.length, faces: faces.map(face => face.map(([k, i]) => [k, works[i].slug])), candidates: cands.map(c => c.length) })
+    };
+  })(indexDialogEl);
+  window.NAROA_INDEX = obraIndex;
 
   const HERO_POOL_SLUGS = [
     'marilyn-rocks',
@@ -2202,11 +2262,11 @@
     const dissectionPills = createGalleryElement('div', 'work-dissection-pills');
     dissectionPills.dataset.workPills = '';
     const dissectionTools = createGalleryElement('div', 'work-dissection-tools');
-    const loupeToggleBtn = createGalleryElement('button', 'dissection-tool-btn is-active', '🔍 Lupa matérica');
+    const loupeToggleBtn = createGalleryElement('button', 'dissection-tool-btn is-active', 'Lupa matérica');
     loupeToggleBtn.type = 'button';
     loupeToggleBtn.dataset.galleryLoupeToggle = '';
     loupeToggleBtn.setAttribute('aria-pressed', 'true');
-    const xrayToggleBtn = createGalleryElement('button', 'dissection-tool-btn', '✦ Luz rasante');
+    const xrayToggleBtn = createGalleryElement('button', 'dissection-tool-btn', 'Luz rasante');
     xrayToggleBtn.type = 'button';
     xrayToggleBtn.dataset.galleryXrayToggle = '';
     xrayToggleBtn.setAttribute('aria-pressed', 'false');

@@ -158,6 +158,10 @@
    "{1} <{=2}>{3}</{=2}>"
   ],
   [
+   "^(\\d+) obras$",
+   "{=1} works"
+  ],
+  [
    "^Obras hechas en plato · (\\d+) obras$",
    "Works made on plates · {=1} works"
   ],
@@ -1734,7 +1738,15 @@
   "Historias de obras, procesos y encuentros.": "Stories of works, processes and encounters.",
   "También por <1>WhatsApp</1>, por <2>correo</2>, por <3>teléfono</3>, en <4>Instagram</4>, en <5>Facebook</5> o en su <6>blog</6>.": "Also on <1>WhatsApp</1>, by <2>email</2>, by <3>phone</3>, on <4>Instagram</4>, on <5>Facebook</5> or on her <6>blog</6>.",
   "WhatsApp y teléfono": "WhatsApp and phone",
-  "Añadir a tus contactos ↗": "Add to your contacts ↗"
+  "Añadir a tus contactos ↗": "Add to your contacts ↗",
+  "en un rostro": "in one face",
+  "por la mirada": "by the gaze",
+  "de un vistazo": "at a glance",
+  "o": "or",
+  "al azar": "at random",
+  "Toca un trozo para cambiarlo, o <1>baraja</1> todos.": "Tap a piece to change it, or <1>shuffle</1> them all.",
+  "ver la obra ↗": "see the work ↗",
+  "Retrato de Naroa Gutiérrez Gil con chistera, hecho con las miradas de sus obras": "Portrait of Naroa Gutiérrez Gil in a top hat, made from the gazes of her works"
  },
  "js": {
   "Pausar efectos": "Pause effects",
@@ -1756,8 +1768,8 @@
   "«${story}…»": "“${story}…”",
   "El Estudio · La obra, de cerca": "The Studio · The work, up close",
   "Cerrar ×": "Close ×",
-  "🔍 Lupa matérica": "🔍 Texture loupe",
-  "✦ Luz rasante": "✦ Raking light",
+  "Lupa matérica": "Texture loupe",
+  "Luz rasante": "Raking light",
   "Historia de la obra +": "Story of the work +",
   "Ocultar historia −": "Hide story −",
   "← Anterior": "← Previous",

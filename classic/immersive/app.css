@@ -2400,19 +2400,30 @@ html:not(.motion-opt-in) [data-kinetic-card] {
   text-shadow: 0 0 2px rgba(0, 0, 0, 0.9), 0 1px 18px rgba(0, 0, 0, 0.9);
 }
 .work-gallery-header button {
-  padding: 6px 16px;
-  border-radius: 38% 62% 54% 46% / 48% 52% 48% 52%;
-  border: 1px solid rgba(255, 253, 244, 0.32);
-  background: rgba(11, 11, 9, 0.62);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  position: relative;
+  padding: 6px 0 9px;
+  border: 0;
+  border-radius: 0;
+  background: none;
   color: #fffdf4;
-  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.25s var(--ease-out), color 0.25s var(--ease-out);
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: var(--ls-caps, .16em);
+  text-transform: uppercase;
+  text-shadow: 0 1px 12px #000d, 0 0 3px #000a;
+  transition: color 0.25s var(--ease-out);
+}
+.work-gallery-header button::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 2px;
+  height: 7px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 8' preserveAspectRatio='none' fill='none'%3E%3Cpath d='M1 5 C 20 2.2, 38 6.4, 58 3.6 C 76 1.2, 93 5.6, 109 2.6' stroke='%23fffdf4' stroke-width='1.5' stroke-linecap='round' opacity='0.62'/%3E%3C/svg%3E") center bottom / 100% 7px no-repeat;
 }
 .work-gallery-header button:hover {
-  border-color: #edbca4;
   color: #edbca4;
-  transform: scale(1.04) rotate(-1.5deg);
 }
 /* La ficha se apoya en el borde inferior de la primera pantalla y se va con el scroll. */
 .work-gallery-intro {
@@ -2491,19 +2502,14 @@ html:not(.motion-opt-in) [data-kinetic-card] {
   margin: 0;
   padding: 24px 28px;
   transform: translateX(-50%);
-  border: 1px solid rgba(255, 253, 244, 0.14);
-  border-left: 2px solid #edbca4;
-  border-radius: 4px 22px 22px 4px;
-  background: rgba(11, 11, 9, 0.82);
-  backdrop-filter: blur(22px);
-  -webkit-backdrop-filter: blur(22px);
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.7);
+  background: #f2ede2;
+  clip-path: polygon(0.5% 2.5%, 99.4% 0, 100% 97.4%, 1.1% 100%);
   font-family: var(--font-serif);
   font-style: italic;
   font-weight: 400;
   font-size: clamp(17px, 1.45vw, 21px);
   line-height: 1.6;
-  color: #f1eee2;
+  color: #14120e;
   animation: dissection-story-appear 0.32s var(--ease-out);
 }
 @keyframes dissection-story-appear {
@@ -2516,10 +2522,16 @@ html:not(.motion-opt-in) [data-kinetic-card] {
   align-items: center;
   gap: 6px 18px;
 }
+/* Técnica, soporte y medidas son datos, no enlaces: sin subrayado; los separa un punto. */
+.work-dissection-pill + .work-dissection-pill::before {
+  content: '·';
+  position: absolute;
+  left: -12px;
+  opacity: .55;
+}
 .work-dissection-pill {
   position: relative;
   padding: 2px 0;
-  border-bottom: 1px dashed rgba(237, 188, 164, 0.5);
   color: #f1eee2;
   font-family: var(--font-serif);
   font-style: italic;
@@ -2527,7 +2539,8 @@ html:not(.motion-opt-in) [data-kinetic-card] {
   letter-spacing: 0.01em;
   text-shadow: 0 1px 12px rgba(0, 0, 0, 0.8);
 }
-/* Las herramientas son un muelle fijo: siempre a mano mientras recorres las fotos. */
+/* Las herramientas de la ficha son palabras con su trazo a mano, al pie mientras se recorren las fotos:
+   sin muelle, sin píldoras y sin iconos. La que está encendida lleva la palabra y el trazo en el acento. */
 .work-dissection-tools {
   position: fixed;
   z-index: 6;
@@ -2536,18 +2549,12 @@ html:not(.motion-opt-in) [data-kinetic-card] {
   max-width: calc(100vw - 24px);
   display: flex;
   flex-wrap: nowrap;
-  align-items: center;
-  gap: 4px;
+  align-items: baseline;
+  gap: clamp(18px, 2.6vw, 36px);
   margin: 0;
-  padding: 6px;
+  padding: 0 4px;
   overflow-x: auto;
   transform: translateX(-50%);
-  border: 1px solid rgba(255, 253, 244, 0.16);
-  border-radius: 999px;
-  background: rgba(11, 11, 9, 0.68);
-  backdrop-filter: blur(22px) saturate(1.3);
-  -webkit-backdrop-filter: blur(22px) saturate(1.3);
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6);
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
@@ -2555,28 +2562,48 @@ html:not(.motion-opt-in) [data-kinetic-card] {
   display: none;
 }
 .dissection-tool-btn {
-  white-space: nowrap;
+  position: relative;
   flex-shrink: 0;
   min-height: 40px;
-  padding: 6px 16px;
-  border-radius: 999px;
-  background: transparent;
-  border: 1px solid transparent;
-  color: #fffdf4de;
-  font-size: 11.5px;
-  letter-spacing: 0.025em;
-  transition: background 0.2s var(--ease-out), border-color 0.2s var(--ease-out), color 0.2s var(--ease-out);
+  padding: 10px 0 13px;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: #fffdf4d9;
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: var(--ls-caps, .16em);
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-shadow: 0 1px 12px #000d, 0 0 3px #000a;
+  transition: color 0.2s var(--ease-out);
 }
-.dissection-tool-btn:hover {
-  border-color: rgba(237, 188, 164, 0.5);
+.dissection-tool-btn::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 6px;
+  height: 7px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 8' preserveAspectRatio='none' fill='none'%3E%3Cpath d='M1 5 C 20 2.2, 38 6.4, 58 3.6 C 76 1.2, 93 5.6, 109 2.6' stroke='%23fffdf4' stroke-width='1.5' stroke-linecap='round' opacity='0.62'/%3E%3C/svg%3E") center bottom / 100% 7px no-repeat;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s var(--ease-out);
+}
+.dissection-tool-btn:hover,
+.dissection-tool-btn:focus-visible {
   color: #fffdf4;
-  background: rgba(237, 188, 164, 0.12);
+}
+.dissection-tool-btn:hover::after,
+.dissection-tool-btn:focus-visible::after {
+  opacity: 1;
 }
 .dissection-tool-btn.is-active {
-  background: linear-gradient(135deg, #f3cfb6 0%, #e4ae8e 100%);
-  color: #14120e;
-  border-color: #f3cfb6;
-  font-weight: 500;
+  color: #edbca4;
+}
+.dissection-tool-btn.is-active::after {
+  opacity: 1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 8' preserveAspectRatio='none' fill='none'%3E%3Cpath d='M1 5 C 20 2.2, 38 6.4, 58 3.6 C 76 1.2, 93 5.6, 109 2.6' stroke='%23edbca4' stroke-width='1.8' stroke-linecap='round' opacity='0.95'/%3E%3C/svg%3E");
 }
 /* ═══ LÁMINAS A SANGRE ═══ */
 .work-gallery-dialog .work-gallery-grid,
@@ -2817,7 +2844,6 @@ html.motion-off .work-gallery-dialog[open] .work-gallery-intro h2 {
     right: 12px;
     max-width: none;
     transform: none;
-    border-radius: 26px;
   }
   .work-dissection-story {
     padding: 18px 20px;
@@ -4047,4 +4073,108 @@ body:has(.hero-threshold:not(.is-passed)) .sound-toggle[aria-pressed=false] .sou
 .story-dialog .dialog-top {
   letter-spacing: .08em;
   text-transform: uppercase;
+}
+
+/* ── Índice de obra (AGENTS.md §15): rostros por trozos, pared de miradas y hoja de contactos ──────────────
+   Rojo mate y, detrás, el retrato de Naroa hecho con las miradas de sus obras, en rojos; tipografía Fraunces.
+   Sin cajas ni píldoras: las vistas son palabras de una frase y la elegida lleva una pasada de rotulador. */
+dialog.ix {
+  --ix-wall: #E5261B; --ix-ink: #fffdf4; --ix-soft: #fffdf4cc; --ix-marker: #FFD21F; --ix-navy: #0B1447; --ix-pad: clamp(16px, 4.5vw, 72px);
+  --ix-line: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 8' preserveAspectRatio='none' fill='none'%3E%3Cpath d='M1 5 C 20 2.2, 38 6.4, 58 3.6 C 76 1.2, 93 5.6, 109 2.6' stroke='%23000' stroke-width='1.7' stroke-linecap='round'/%3E%3C/svg%3E");
+  --ix-stroke: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M1.5 7 Q 28 2.5 58 5 T 99 3.5 L 97.5 15.5 Q 62 19.5 31 16 T 3 18.5 Z'/%3E%3C/svg%3E");
+  position: fixed; inset: 0; width: 100vw; height: 100dvh; margin: 0; overflow: hidden auto; overscroll-behavior: contain; isolation: isolate;
+  background: var(--ix-wall); color: var(--ix-ink); font: 400 15px/1.45 var(--font-body);
+  scrollbar-width: thin; scrollbar-color: #fffdf466 transparent;
+}
+dialog.ix::backdrop { background: var(--ix-wall); backdrop-filter: none; }
+/* El foco se ve como el resto del índice: los textos, con su trazo; las obras, con un borde de rotulador. */
+dialog.ix :focus-visible { outline: none; }
+dialog.ix .ix-top h2:focus { outline: none; }
+dialog.ix :is(.ix-w, .ix-t):focus-visible { outline: 3px solid var(--ix-marker); outline-offset: 3px; }
+dialog.ix .ix-p:focus-visible { z-index: 2; transform: translate(var(--jx, 0), var(--jy, 0)) rotate(calc(var(--jr, 0deg) - .8deg)) scale(1.06); }
+dialog.ix [hidden] { display: none; }
+.ix-fondo { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.ix-capa { position: absolute; inset: 0; will-change: transform; }
+.ix-retrato { position: absolute; left: -12vw; top: -22vh; width: 124vw; height: 170vh; max-width: none; object-fit: cover; object-position: 50% 30%; }
+.ix-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; padding: clamp(22px, 4vw, 56px) var(--ix-pad) 0; }
+dialog.ix .ix-top h2 { margin: 0 0 0 -.04em; color: inherit; font: italic 430 clamp(56px, 13vw, 196px)/.84 "Fraunces", var(--font-serif); font-optical-sizing: auto; font-variation-settings: "SOFT" 30, "WONK" 1; letter-spacing: -.035em; word-spacing: .12em; text-transform: none; }
+dialog.ix .ix-links { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px 28px; margin: 0; }
+dialog.ix .ix-links a, dialog.ix .ix-close { position: relative; margin: 0; padding: 8px 0 11px; border: 0; background: none; color: inherit; cursor: pointer; font: 500 11px/1 var(--font-body); letter-spacing: .18em; text-transform: uppercase; text-decoration: none; white-space: nowrap; }
+dialog.ix .ix-links a::before, dialog.ix .ix-close::before { content: ""; position: absolute; left: 0; right: 0; bottom: 1px; height: 6px; background: currentColor; opacity: 0; -webkit-mask: var(--ix-line) center / 100% 100% no-repeat; mask: var(--ix-line) center / 100% 100% no-repeat; transition: opacity .2s; }
+dialog.ix .ix-links a:is(:hover, :focus-visible)::before, dialog.ix .ix-close:is(:hover, :focus-visible)::before { opacity: .8; }
+dialog.ix .ix-say { margin: clamp(18px, 2.2vw, 30px) var(--ix-pad) 0; max-width: 31em; font: 370 clamp(22px, 2.4vw, 34px)/1.42 "Fraunces", var(--font-serif); font-optical-sizing: auto; font-variation-settings: "SOFT" 50, "WONK" 0; letter-spacing: -.012em; }
+dialog.ix .ix-say button, dialog.ix [data-ix-deal] { position: relative; isolation: isolate; margin: 0; padding: 0; border: 0; border-radius: 0; background: none; color: inherit; cursor: pointer; font: inherit; white-space: nowrap; text-decoration: none; }
+dialog.ix .ix-say button { font-style: italic; font-weight: 470; font-variation-settings: "SOFT" 0, "WONK" 1; letter-spacing: -.02em; }
+/* Cada opción lleva debajo su trazo de boli; la elegida, la pasada de rotulador en su lugar */
+dialog.ix .ix-say button::before, dialog.ix [data-ix-deal]::before { content: ""; position: absolute; left: 0; right: 0; bottom: -.1em; height: .24em; background: currentColor; opacity: .5; -webkit-mask: var(--ix-line) center / 100% 100% no-repeat; mask: var(--ix-line) center / 100% 100% no-repeat; transition: opacity .2s; }
+dialog.ix .ix-say button:hover::before, dialog.ix .ix-say button:focus-visible::before { opacity: 1; }
+dialog.ix .ix-say button[aria-pressed="true"]::before { opacity: 0; }
+dialog.ix .ix-say button::after { content: ""; position: absolute; z-index: -1; left: -.14em; right: -.08em; top: .2em; bottom: -.02em; background: var(--ix-marker); -webkit-mask: var(--ix-stroke) center / 100% 100% no-repeat; mask: var(--ix-stroke) center / 100% 100% no-repeat; transform: scaleX(0); transform-origin: 0 50%; transition: transform .38s cubic-bezier(.2, .8, .2, 1); }
+dialog.ix .ix-say button[aria-pressed="true"] { color: var(--ix-navy); }
+dialog.ix .ix-say button[aria-pressed="true"]::after { transform: none; }
+/* La pista va escrita a mano, algo torcida, como una nota pegada junto a los rostros */
+dialog.ix .ix-deal { width: fit-content; margin: clamp(18px, 2.2vw, 30px) var(--ix-pad) 0; font: 300 clamp(14px, 1.15vw, 17px)/1.6 var(--font-script); transform: rotate(-1.4deg); transform-origin: 0 50%; }
+dialog.ix .ix-deal [data-ix-deal]::before { background: var(--ix-marker); opacity: 1; height: .3em; bottom: -.18em; }
+.ix-wall { padding: clamp(18px, 2.6vw, 40px) var(--ix-pad) 26vh; }
+/* En un rostro: cada trozo de la cara es de una obra distinta, alineadas todas por las pupilas */
+.ix-faces { display: grid; grid-template-columns: repeat(var(--n, 3), 1fr); gap: clamp(18px, 3vw, 46px); max-width: calc(var(--n, 3) * 520px); }
+.ix-face { position: relative; aspect-ratio: 572 / 814; background: #f2ede2; will-change: transform; }
+.ix-face:nth-child(3n + 1) { rotate: -1.1deg; }
+.ix-face:nth-child(3n + 2) { rotate: .8deg; }
+.ix-face:nth-child(3n) { rotate: -.45deg; }
+.ix-p { position: absolute; inset: 0; display: block; transform-origin: var(--ox) var(--oy); transform: translate(var(--jx, 0), var(--jy, 0)) rotate(var(--jr, 0deg)); transition: transform .35s cubic-bezier(.2, .8, .2, 1); }
+.ix-p img { display: block; width: 100%; height: 100%; }
+.ix-p.is-on { z-index: 2; transform: translate(var(--jx, 0), var(--jy, 0)) rotate(calc(var(--jr, 0deg) - .8deg)) scale(1.06); }
+@media (hover: hover) { .ix-p:hover { z-index: 2; transform: translate(var(--jx, 0), var(--jy, 0)) rotate(calc(var(--jr, 0deg) - .8deg)) scale(1.06); } }
+.ix-p.is-new { animation: ix-piece .55s cubic-bezier(.2, .8, .2, 1) both; animation-delay: calc(var(--d, 0) * 26ms); }
+@keyframes ix-piece { from { opacity: 0; transform: scale(1.14) rotate(2.4deg); } }
+.ix-p.is-out, .ix-t.is-out, .ix-w.is-out .ix-eye { visibility: hidden; }
+/* Por la mirada: cada obra es la franja de sus ojos; el párpado se abre al pasar o al primer toque */
+.ix-list { display: grid; grid-template-columns: repeat(var(--cols, 4), 1fr); gap: 10px; }
+.ix-w { position: relative; display: block; aspect-ratio: 3.2 / 1; color: inherit; }
+.ix-eye { position: absolute; left: 0; top: calc((var(--ey) - .25) * -200%); width: 100%; height: 200%; overflow: hidden; clip-path: inset(calc((var(--ey) - .25) * 100%) 0 calc((.75 - var(--ey)) * 100%) 0); transition: clip-path .55s cubic-bezier(.2, .8, .2, 1); }
+.ix-eye img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ix-w.is-on, .ix-w:focus-visible { z-index: 3; }
+.ix-w.is-on .ix-eye, .ix-w:focus-visible .ix-eye { clip-path: inset(0); }
+@media (hover: hover) { .ix-w:hover { z-index: 3; } .ix-w:hover .ix-eye { clip-path: inset(0); } }
+.ix-cap { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.ix-cap em span + span::before { content: " · "; }
+/* De un vistazo y al azar: la obra entera, en filas justificadas */
+.ix-row { display: flex; gap: var(--gap); margin: 0 0 var(--gap); }
+.ix-t { position: relative; display: block; flex: none; overflow: hidden; }
+.ix-t img { display: block; width: 100%; height: 100%; object-fit: cover; transform-origin: 50% 40%; transition: transform .9s cubic-bezier(.2, .7, .2, 1); }
+@media (hover: hover) { .ix-t:hover img { transform: scale(2.4); transition-delay: .5s; } }
+.ix-t.is-on { outline: 3px solid var(--ix-marker); outline-offset: 2px; }
+/* La cartela: papel amarillo recortado, abajo a la izquierda; nunca encima de la obra que nombra */
+dialog.ix .ix-plate { position: fixed; z-index: 5; left: calc(var(--ix-pad) - 14px); bottom: clamp(12px, 2.2vw, 28px); max-width: calc(100vw - 2 * var(--ix-pad) + 28px); margin: 0; padding: 9px 20px 12px 15px; background: var(--ix-marker); color: var(--ix-navy); clip-path: polygon(.7% 7%, 99.3% 0, 100% 91%, 1.4% 100%); opacity: 0; transform: translateY(6px) rotate(-.4deg); transition: opacity .18s, transform .28s cubic-bezier(.2, .8, .2, 1); pointer-events: none; }
+dialog.ix .ix-plate.is-on { opacity: 1; transform: rotate(-.4deg); }
+dialog.ix .ix-plate.is-link { pointer-events: auto; }
+dialog.ix .ix-plate b { display: block; font: italic 480 clamp(22px, 2.4vw, 32px)/1.05 "Fraunces", var(--font-serif); font-optical-sizing: auto; font-variation-settings: "SOFT" 20, "WONK" 1; letter-spacing: -.02em; }
+dialog.ix .ix-plate span, dialog.ix .ix-plate a { font-size: 12px; letter-spacing: .03em; }
+dialog.ix .ix-plate a { margin-left: .7em; color: inherit; white-space: nowrap; text-decoration: underline; text-underline-offset: .2em; }
+/* De la mirada, del trozo o de la miniatura a la obra entera */
+.ix-obra { position: fixed; inset: 0; z-index: 2147483000; display: grid; place-items: center; }
+.ix-obra[hidden] { display: none; }
+.ix-veil { position: absolute; inset: 0; background: #0b0b0a; }
+.ix-obra img { position: relative; display: block; max-width: none; transform-origin: 0 0; }
+@media (prefers-reduced-motion: reduce) {
+  html:not(.motion-opt-in) dialog.ix *, html:not(.motion-opt-in) dialog.ix *::after { transition: none !important; animation: none !important; }
+}
+
+/* Flechas y «+» de la galería: el glifo solo, sin aro ni fondo; al pasar o al enfocar, su trazo a mano
+   debajo, como el resto de acciones (2026-11-18: «fuera todo lo que parezca plantilla»). */
+.art-arrows button, .art-more { position: relative; border: 0 !important; border-radius: 0 !important; background: none !important; color: #fffdf4; text-shadow: 0 1px 12px #000d, 0 0 3px #000a; }
+.art-arrows button { font: 300 30px/1 var(--font-body); }
+.art-more { font-size: 30px; }
+.art-arrows button::after, .art-more::after { content: ''; position: absolute; left: 9px; right: 9px; bottom: 3px; height: 7px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 8' preserveAspectRatio='none' fill='none'%3E%3Cpath d='M1 5 C 20 2.2, 38 6.4, 58 3.6 C 76 1.2, 93 5.6, 109 2.6' stroke='%23edbca4' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") center bottom / 100% 7px no-repeat; opacity: 0; transition: opacity .2s var(--ease-out); }
+.art-arrows button:hover:not(:disabled), .art-arrows button:focus-visible, .art-more:hover, .art-more:focus-visible { color: var(--scene-accent, #edbca4) !important; background: none !important; }
+.art-arrows button:hover:not(:disabled)::after, .art-arrows button:focus-visible::after, .art-more:hover::after, .art-more:focus-visible::after { opacity: 1; }
+.art-arrows button:disabled { opacity: .32; }
+/* «Cerrar» de la ficha recibe el foco al abrirse: se marca con el color y su trazo, no con un rectángulo. */
+.work-gallery-header button:focus-visible { outline: none; color: #edbca4; }
+.work-gallery-header button:is(:hover, :focus-visible)::after { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 8' preserveAspectRatio='none' fill='none'%3E%3Cpath d='M1 5 C 20 2.2, 38 6.4, 58 3.6 C 76 1.2, 93 5.6, 109 2.6' stroke='%23edbca4' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E"); }
+/* En móvil los enlaces del índice van en una fila sobre el titular, que así queda en una sola línea. */
+@media (max-width: 560px) {
+  .ix-top { flex-direction: column-reverse; align-items: stretch; gap: 14px; }
+  dialog.ix .ix-links { justify-content: space-between; }
 }
