@@ -31,6 +31,8 @@
   const MELODY_GATE = 0.35, REST = 0.31;
   // Nivel general del paisaje: presente pero siempre por debajo del piano (unos 12–16 dB).
   const NATURE = 1.4;
+  // Envolvente: nivel de la sala que llega por detrás y de las reflexiones tempranas; el scroll los sube hasta un `WRAP_OPEN` más.
+  const WRAP = 0.7, WALLS = 0.16, WRAP_OPEN = 0.7;
   // Nivel de los instrumentos antes de la cinta; cada pieza lo corrige con su `level` para que los doce meses suenen igual de fuerte.
   const BUS = 0.72;
   // Mezcla: pico de cada instrumento. Teclado, arpegio, bajo y cuerdas pasan por la cinta; la caja de ritmos va aparte.
@@ -368,6 +370,7 @@
   let keys = null, arp = null, pad = null, drums = null, hatTone = null, clapTone = null, silk = null, pump = null, filterAt = 0;
   // Voz espacial y realimentación de los ecos cruzados [nodo, valor base].
   let lead = null, loops = [];
+  let wrap = null, walls = null, wrapAt = -1;
   let timer = null, playing = false, silent = false, resumeOnVisible = false;
   let barIndex = 0, eighth = 0, nextTime = 0, passes = 0, rubatoPhase = 0;
   // Suena la pieza del mes en curso, según el reloj del visitante.
@@ -470,7 +473,8 @@
     }
     room.buffer = impulse;
     const send = ctx.createGain(); send.gain.value = 0.7;
-    const wet = ctx.createGain(); wet.gain.value = 0.85;
+    // Por delante llega menos sala que antes: parte de ella sale ahora por detrás (`wrap`).
+    const wet = ctx.createGain(); wet.gain.value = 0.62;
 
     const glue = ctx.createDynamicsCompressor();
     glue.threshold.value = -20; glue.knee.value = 18; glue.ratio.value = 2.5;
@@ -500,6 +504,35 @@
     const roomTone = ctx.createBiquadFilter();
     roomTone.type = 'highpass'; roomTone.frequency.value = 150; roomTone.Q.value = 0.5;
     pump.connect(send); send.connect(roomTone); roomTone.connect(room); room.connect(wet); wet.connect(glue);
+    // Sonido envolvente: la cola de la sala no se queda delante. Cada canal sale además por detrás, uno a cada
+    // lado, y cuatro reflexiones tempranas (11–37 ms) devuelven el sonido desde paredes alrededor del oyente.
+    // Con el scroll, la parte de atrás crece y la sala se abre (`turnSpace`).
+    wrap = ctx.createGain(); wrap.gain.value = WRAP;
+    wrap.connect(glue);
+    if (typeof ctx.createChannelSplitter === 'function') {
+      // Por detrás solo la cola de medios y agudos: los graves llegan iguales a los dos oídos y no envuelven.
+      const halves = ctx.createChannelSplitter(2), backTone = ctx.createBiquadFilter();
+      backTone.type = 'highpass'; backTone.frequency.value = 380; backTone.Q.value = 0.5;
+      room.connect(backTone); backTone.connect(halves);
+      [[0, -125, 0.004], [1, 125, -0.004]].forEach(([channel, degrees, drift]) => {
+        const half = ctx.createGain();
+        halves.connect(half, channel);
+        surround(half, wrap, degrees, 0.2, drift, 0.25);
+      });
+    }
+    walls = ctx.createGain(); walls.gain.value = WALLS;
+    walls.connect(glue);
+    // Las paredes no devuelven graves (el bajo sigue seco y delante) y se tragan el brillo.
+    const wallLow = ctx.createBiquadFilter(), wallTone = ctx.createBiquadFilter();
+    wallLow.type = 'highpass'; wallLow.frequency.value = 320; wallLow.Q.value = 0.5;
+    wallTone.type = 'lowpass'; wallTone.frequency.value = 4500; wallTone.Q.value = 0.4;
+    pump.connect(wallLow); wallLow.connect(wallTone);
+    [[0.011, -50, 0.7], [0.017, 55, 0.62], [0.029, -140, 0.5], [0.037, 135, 0.45]].forEach(([seconds, degrees, level]) => {
+      const bounce = ctx.createDelay(0.1), loud = ctx.createGain();
+      bounce.delayTime.value = seconds; loud.gain.value = level;
+      wallTone.connect(bounce); bounce.connect(loud);
+      surround(loud, walls, degrees, degrees > 0 ? 0.05 : -0.05, 0, 0.35);
+    });
     // Voz espacial: va al centro y deja más sala que nadie.
     lead = ctx.createGain();
     const leadRoom = ctx.createGain(); leadRoom.gain.value = 0.6;
@@ -618,7 +651,7 @@
     plant();
 
     // Tras el compresor, un poco de ganancia y un techo que solo actúa en los picos.
-    const lift = ctx.createGain(); lift.gain.value = 0.85;
+    const lift = ctx.createGain(); lift.gain.value = 0.8;
     const ceiling = ctx.createDynamicsCompressor();
     ceiling.threshold.value = -4; ceiling.knee.value = 2; ceiling.ratio.value = 16;
     ceiling.attack.value = 0.003; ceiling.release.value = 0.12;
@@ -655,6 +688,13 @@
     if (silent || now - paceStamp > PACE_HOLD) turnGoal = 0;
     turn += (turnGoal - turn) * Math.min(1, dt / 0.45);
     orbit.forEach(body => { body.angle += (body.drift + turn * body.pull) * dt; steer(body, now, 0.12); });
+    // Al moverse, la sala rodea más: crecen la cola de detrás y las reflexiones.
+    const open = 1 + WRAP_OPEN * Math.abs(turn);
+    if (wrap && Math.abs(open - wrapAt) > 0.01) {
+      wrapAt = open;
+      wrap.gain.setTargetAtTime(WRAP * open, now, 0.5);
+      walls.gain.setTargetAtTime(WALLS * open, now, 0.5);
+    }
     // El paisaje se abre un poco con el movimiento y calla del todo en el silencio contemplativo.
     const swell = silent ? 0 : NATURE * (1 + 0.45 * Math.abs(turn));
     if (natureOut && Math.abs(swell - natureSwell) > 0.01) {
