@@ -27,6 +27,8 @@ Gobernanza general de la carpeta de proyectos: [Workspace AGENTS.md](file:///Use
 ### Subir es desplegar
 - Cada `git push` a `origin/master` lanza un despliegue de producción en Vercel (observado el 2026-11-11). Compila en remoto con `./deploy.sh --build-only` desde el commit, no desde el árbol de trabajo. Avisar antes de subir.
 - No sondear el dominio público en bucle: activa el control anti-bots de Vercel. El estado se mira con `npx vercel ls` y `npx vercel inspect <url>`.
+- **La cola no compila lo que ya quedó atrás** (desde el 2026-11-18): Vercel compila de uno en uno, y con varias sesiones subiendo seguidas se acumulaban builds de 25 minutos de commits que nadie iba a servir. `tools/vercel_ignore.sh` (`ignoreCommand` de `vercel.json`) salta en segundos el build de `master` cuyo commit ya no es la punta; si no puede saber la punta, compila. En `vercel ls` esos aparecen como cancelados.
+- **Caché de imágenes entre builds:** en Vercel, `deploy.sh` restaura las variantes de `/immersive/media/` desde `node_modules/.cache/naroa-media` antes de compilar y, al acabar, `tools/media_cache.py` guarda las que la compilación cita (por nombre o por la huella de 12 cifras de su fuente). Solo se optimiza lo nuevo: en Vercel la compilación en frío tardaba unos 25 minutos; en local, con la caché restaurada en una salida limpia, 81 s. Las ya firmadas con C2PA llevan la marca dentro y no se vuelven a firmar; para cambiar el manifiesto o la clave (§12.4), vaciar la caché con un redeploy sin caché de build.
 
 ---
 
