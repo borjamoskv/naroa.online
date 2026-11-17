@@ -4709,7 +4709,7 @@
           const side = wave < 0 ? -1 : 1;
           const fx = 0.5 + side * (0.45 - Math.abs(wave) * 0.03);
           const fy = clamp(0.5 - normVel * 0.12, 0.14, 0.86);
-          window.NAROA_FLUID.splat(fx, fy, side * Math.abs(normVel) * 40, normVel * 215);
+          window.NAROA_FLUID.splat(fx, fy, side * Math.abs(normVel) * 40, normVel * 215, null, dt);
         }
       }
       const pose = journey.read(motion.current);
@@ -7571,6 +7571,10 @@
     let quadVBO = null;
     let rafId = null;
     let idleFrames = 0;
+    let lastStep = 0;
+    const MAX_STAMPS = 32;
+    let pointerIsSmoke = false;
+    const WISP_MS = 2600;
 
     function initWebGL() {
       try {
@@ -7962,11 +7966,14 @@
       gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
     }
 
-    function splat(x, y, dx, dy, customColor) {
-      if (reduced.matches) return;
-      const c = customColor || PALETTE[paletteIdx++ % PALETTE.length];
-      const speed = Math.hypot(dx, dy);
-      fluidState.kineticEnergy = Math.min(1.0, fluidState.kineticEnergy * 0.7 + Math.min(speed / 900, 1.0) * 0.65);
+    // El humo va con el reloj, no con los fotogramas. `frames` es siempre una duración medida en fotogramas de 60 Hz
+    // (0,5 en una pantalla de 120 Hz), y los empujes y velocidades se expresan como los vería una pantalla de 60 Hz:
+    // con `frames` = 1 todo queda como estaba.
+
+    // Lo que el estado y el escenario notan de un gesto.
+    function feel(x, y, dx, dy, speed, frames) {
+      const keep = Math.pow(0.7, frames);
+      fluidState.kineticEnergy = Math.min(1.0, fluidState.kineticEnergy * keep + Math.min(speed / 900, 1.0) * (0.65 / 0.3) * (1 - keep));
       fluidState.vorticityPeak = Math.min(1.0, fluidState.kineticEnergy * 1.15);
       fluidState.splatCount++;
       fluidState.lastPointer = { x, y, vx: dx, vy: dy };
@@ -7978,43 +7985,109 @@
         stage.style.setProperty('--fluid-vx', clamp(dx * 0.008, -6, 6).toFixed(2) + 'px');
         stage.style.setProperty('--fluid-vy', clamp(dy * 0.008, -6, 6).toFixed(2) + 'px');
       }
+    }
 
-      if (!gl || !programs) return;
+    // Una huella: empuje en el campo de velocidades y tinta en el de pigmento.
+    function stamp(x, y, dx, dy, c, intensity, radius = fluidState.splatRadius) {
       const aspect = canvas.width / Math.max(1, canvas.height);
       programs.splat.bind();
       gl.uniform1i(programs.splat.uniforms.uTarget, velocityFBO.read.attach(0));
       gl.uniform1f(programs.splat.uniforms.aspectRatio, aspect);
       gl.uniform2f(programs.splat.uniforms.point, x, y);
       gl.uniform3f(programs.splat.uniforms.color, dx, dy, 0.0);
-      gl.uniform1f(programs.splat.uniforms.radius, fluidState.splatRadius);
+      gl.uniform1f(programs.splat.uniforms.radius, radius);
       blit(velocityFBO.write);
       velocityFBO.swap();
 
       gl.uniform1i(programs.splat.uniforms.uTarget, dyeFBO.read.attach(0));
-      const intensity = Math.min(1.15, Math.max(0.28, speed / 550));
       gl.uniform3f(programs.splat.uniforms.color, c[0] * intensity, c[1] * intensity, c[2] * intensity);
       blit(dyeFBO.write);
       dyeFBO.swap();
+    }
 
+    // Tinta que deja un gesto por cada fotograma de 60 Hz que dura, según su velocidad.
+    const dyeFor = speed => Math.min(1.15, Math.max(0.28, speed / 550));
+
+    // Una bocanada suelta en un punto. Quien la lance en cada fotograma pasa `frames` para soltar lo mismo por segundo.
+    function splat(x, y, dx, dy, customColor, frames = 1) {
+      if (reduced.matches) return;
+      const c = customColor || PALETTE[paletteIdx++ % PALETTE.length];
+      const speed = Math.hypot(dx, dy);
+      feel(x, y, dx, dy, speed, frames);
+      if (!gl || !programs) return;
+      stamp(x, y, dx * frames, dy * frames, c, dyeFor(speed) * frames);
       scheduleFluidStep();
     }
 
-    function stepFluid() {
+    // Un trazo del puntero: `path` son sus posiciones en píxeles de pantalla, de la anterior a la actual. Si el
+    // tramo es más largo que una huella, se reparte en varias a lo largo del camino: mismo empuje y misma tinta en
+    // total, sin huecos entre bocanadas cuando el gesto es rápido.
+    function stroke(path, frames) {
+      if (reduced.matches) return;
+      const w = innerWidth || 1280;
+      const h = innerHeight || 800;
+      let len = 0;
+      for (let i = 1; i < path.length; i++) len += Math.hypot(path[i].x - path[i - 1].x, path[i].y - path[i - 1].y);
+      if (len * 6.5 <= 0.25) return;
+      const a = path[0];
+      const b = path[path.length - 1];
+      const c = PALETTE[paletteIdx++ % PALETTE.length];
+      const speed = len * 6.5 / frames;
+      feel(b.x / w, 1 - b.y / h, (b.x - a.x) * 6.5 / frames, (a.y - b.y) * 6.5 / frames, speed, frames);
+      if (!gl || !programs) return;
+      // Huellas separadas como mucho el radio de una: a esa distancia se funden en una cinta sin rizado.
+      const n = Math.min(MAX_STAMPS, Math.max(1, Math.ceil(len / (Math.sqrt(fluidState.splatRadius) * h))));
+      const dye = dyeFor(speed) * frames / n;
+      const stride = len / n;
+      let from = a, walked = 0, next = stride, sx = a.x, sy = a.y, left = n - 1;
+      for (let i = 1; i < path.length && left > 0; i++) {
+        const to = path[i];
+        const seg = Math.hypot(to.x - from.x, to.y - from.y);
+        while (left > 0 && seg > 0 && walked + seg >= next) {
+          const t = (next - walked) / seg;
+          const px = from.x + (to.x - from.x) * t;
+          const py = from.y + (to.y - from.y) * t;
+          stamp(px / w, 1 - py / h, (px - sx) * 6.5, (sy - py) * 6.5, c, dye);
+          sx = px; sy = py; next += stride; left--;
+        }
+        walked += seg;
+        from = to;
+      }
+      stamp(b.x / w, 1 - b.y / h, (b.x - sx) * 6.5, (sy - b.y) * 6.5, c, dye);
+      scheduleFluidStep();
+    }
+
+    function stepFluid(now) {
       rafId = null;
       if (reduced.matches) {
         fluidState.kineticEnergy = 0;
         fluidState.vorticityPeak = 0;
+        lastStep = 0;
         return;
       }
-      fluidState.kineticEnergy *= 0.94;
-      fluidState.vorticityPeak *= 0.93;
+      // Lo que ha durado este paso, en fotogramas de 60 Hz. Con un paso fijo, a 120 Hz el humo corría y se apagaba
+      // el doble de rápido.
+      const frames = lastStep > 0 && now > lastStep ? clamp((now - lastStep) / 16.6667, 0.1, 2.2) : 1;
+      lastStep = now;
+      fluidState.kineticEnergy *= Math.pow(0.94, frames);
+      fluidState.vorticityPeak *= Math.pow(0.93, frames);
       if (stage) {
         stage.style.setProperty('--fluid-vorticity', fluidState.vorticityPeak.toFixed(4));
       }
 
       if (gl && programs) {
-        const dt = 0.016;
+        const dt = 0.016 * frames;
         gl.disable(gl.BLEND);
+
+        // El humo es el puntero: al parar, el punto suelta un hilo fino que sube y se apaga antes de que la interfaz
+        // se retire (CALM_MS). Va sin `feel`: no cuenta como gesto ni mueve el escenario. Con el dedo no hay punto
+        // ni hilo.
+        const still = pointerIsSmoke && prevHover && prevX >= 0 ? now - prevT : -1;
+        if (still > 120 && still < WISP_MS) {
+          const fade = 1 - still / WISP_MS;
+          idleFrames = Math.min(idleFrames, 60);   // el bucle sigue dos segundos más: que el hilo se apague del todo y no quede un resto fijo
+          stamp(prevX / (innerWidth || 1280), 1 - prevY / (innerHeight || 800), Math.sin(now / 260) * 14 * frames, 46 * fade * frames, PALETTE[0], 0.05 * fade * frames, fluidState.splatRadius / 7);
+        }
 
         // 1. Curl (Vorticidad: rotacional del campo de velocidades)
         programs.curl.bind();
@@ -8069,7 +8142,7 @@
         gl.uniform1i(programs.advection.uniforms.uVelocity, velocityFBO.read.attach(0));
         gl.uniform1i(programs.advection.uniforms.uSource, velocityFBO.read.attach(0));
         gl.uniform1f(programs.advection.uniforms.dt, dt);
-        gl.uniform1f(programs.advection.uniforms.dissipation, fluidState.velocityDissipation);
+        gl.uniform1f(programs.advection.uniforms.dissipation, Math.pow(fluidState.velocityDissipation, frames));
         blit(velocityFBO.write);
         velocityFBO.swap();
 
@@ -8077,7 +8150,7 @@
         gl.uniform2f(programs.advection.uniforms.texelSize, dyeFBO.texelSizeX, dyeFBO.texelSizeY);
         gl.uniform1i(programs.advection.uniforms.uVelocity, velocityFBO.read.attach(0));
         gl.uniform1i(programs.advection.uniforms.uSource, dyeFBO.read.attach(1));
-        gl.uniform1f(programs.advection.uniforms.dissipation, fluidState.dyeDissipation);
+        gl.uniform1f(programs.advection.uniforms.dissipation, Math.pow(fluidState.dyeDissipation, frames));
         blit(dyeFBO.write);
         dyeFBO.swap();
 
@@ -8088,10 +8161,12 @@
         blit(null);
       }
 
-      idleFrames++;
+      idleFrames += frames;
       const maxIdle = gl ? 180 : 12;
       if (idleFrames < maxIdle || (gl && fluidState.kineticEnergy > 0.002)) {
         scheduleFluidStep();
+      } else {
+        lastStep = 0;
       }
     }
 
@@ -8103,33 +8178,52 @@
 
     initWebGL();
 
-    let prevX = -1, prevY = -1;
+    // El humo es el puntero: con el humo en marcha, el pincel se cambia por un punto del que nace el humo (reglas
+    // .pointer-smoke en app.css) y que al parar suelta un hilo (ver stepFluid). Sin WebGL o sin efectos de movimiento
+    // el puntero sigue siendo el pincel. `?puntero=brocha` deja el pincel mientras dure la pestaña y `?puntero=humo`
+    // lo devuelve: sirve para comparar al revisar.
+    let pointerWanted = true;
+    try {
+      const asked = new URLSearchParams(location.search).get('puntero');
+      if (asked === 'humo' || asked === 'brocha') sessionStorage.setItem('naroa-puntero', asked);
+      pointerWanted = sessionStorage.getItem('naroa-puntero') !== 'brocha';
+    } catch {}
+    const paintPointer = () => {
+      pointerIsSmoke = pointerWanted && !!(gl && programs) && !reduced.matches;
+      document.documentElement.classList.toggle('pointer-smoke', pointerIsSmoke);
+    };
+    paintPointer();
+    reduced.addEventListener('change', paintPointer);
+
+    // El rastro del puntero, en píxeles de pantalla: dónde estaba, cuándo, cuál era y si lleva cursor (ratón o lápiz).
+    let prevX = -1, prevY = -1, prevT = 0, prevId, prevHover = false;
+    const track = e => { prevX = e.clientX; prevY = e.clientY; prevT = e.timeStamp; prevId = e.pointerId; prevHover = e.pointerType === 'mouse' || e.pointerType === 'pen'; };
     // Sobre una superficie de lectura clara (la hoja de contacto) el humo, que se funde en «screen», borraría el texto:
     // ahí no se emite. Al salir se olvida la posición anterior para no soltar una ráfaga de golpe.
     const fluidQuiet = e => !!e.target?.closest?.('[data-fluid-quiet]');
     addEventListener('pointermove', e => {
       if (reduced.matches) return;
       if (fluidQuiet(e)) { prevX = -1; return; }
-      const w = innerWidth || 1280;
-      const h = innerHeight || 800;
-      const x = e.clientX / w;
-      const y = 1.0 - e.clientY / h;
-      if (prevX < 0) {
-        prevX = x;
-        prevY = y;
-        return;
-      }
-      const dx = (x - prevX) * w * 6.5;
-      const dy = (y - prevY) * h * 6.5;
-      prevX = x;
-      prevY = y;
-      if (Math.hypot(dx, dy) > 0.25) {
-        splat(x, y, dx, dy);
-      }
+      const since = e.timeStamp - prevT;
+      // Solo hay trazo si el rastro sigue vivo: mismo puntero y menos de medio segundo desde el aviso anterior (una
+      // página atascada los retrasa). Otro dedo, o volver tras salir de la ventana, empieza de nuevo en vez de cruzar
+      // la pantalla con humo.
+      if (prevX < 0 || e.pointerId !== prevId || !(since <= 500)) { track(e); return; }
+      // Entre dos avisos el navegador agrupa varias posiciones del ratón; con ellas el trazo sigue la curva real.
+      const path = [{ x: prevX, y: prevY }];
+      const grouped = typeof e.getCoalescedEvents === 'function' ? e.getCoalescedEvents() : [];
+      for (const p of grouped) path.push({ x: p.clientX, y: p.clientY });
+      const end = path[path.length - 1];
+      if (end.x !== e.clientX || end.y !== e.clientY) path.push({ x: e.clientX, y: e.clientY });
+      track(e);
+      stroke(path, since > 0 ? clamp(since / 16.6667, 0.05, 3) : 1);
     }, { passive: true });
+
+    document.documentElement.addEventListener('pointerleave', () => { prevX = -1; }, { passive: true });
 
     addEventListener('pointerdown', e => {
       if (reduced.matches || fluidQuiet(e)) return;
+      track(e);
       const w = innerWidth || 1280;
       const h = innerHeight || 800;
       const x = e.clientX / w;

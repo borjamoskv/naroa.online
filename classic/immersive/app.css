@@ -926,7 +926,8 @@ body.page-sobre-mi .site-footer>a:not(.signature){display:inline-flex;align-item
 @keyframes stickman-chalk-pulse{0%{filter:drop-shadow(0 0 6px rgba(255,253,244,0.9)) drop-shadow(0 0 15px rgba(247,213,148,0.48)) drop-shadow(0 0 24px rgba(255,253,244,0.32))}100%{filter:drop-shadow(0 0 9px rgba(255,253,244,0.98)) drop-shadow(0 0 20px rgba(247,213,148,0.64)) drop-shadow(0 0 32px rgba(255,253,244,0.46))}}
 .art-stickman[hidden]{display:none!important}
 
-/* El puntero es siempre el pincel de Naroa, en todas las páginas: nunca se oculta.
+/* El puntero es el pincel de Naroa en todas las páginas y nunca se oculta; con el humo del cursor en marcha lo
+   releva un punto (más abajo, .pointer-smoke).
    Punta del pelo en la esquina superior izquierda (punto activo 3,3); sobre lo pulsable la punta se carga de rojo. Se genera con tools/build_brush_cursor.py. */
 * {
   cursor: url("/assets/cursors/naroa-brocha-48.png") 3 3, auto !important;
@@ -945,22 +946,24 @@ button:disabled, button:disabled * {
   cursor: url("/assets/cursors/naroa-brocha-48.png") 3 3, default !important;
   cursor: image-set(url("/assets/cursors/naroa-brocha-48.png") 1x, url("/assets/cursors/naroa-brocha-96.png") 2x) 3 3, default !important;
 }
-/* Prueba «el humo es el puntero» (?puntero=humo). app.js pone .pointer-smoke solo con el humo en marcha; en «Solo obra»
-   el humo se oculta y vuelve el pincel. El pincel se cambia por un punto con el punto activo en su centro (16,16), del que
-   nace el humo; sobre lo pulsable el punto se carga de rojo. Se genera con tools/build_brush_cursor.py punto. */
-html.pointer-smoke body:not(.is-quiet), html.pointer-smoke body:not(.is-quiet) * {
+/* Con el humo del cursor en marcha, el humo es el puntero: app.js pone .pointer-smoke y el pincel se cambia por un punto
+   con el punto activo en su centro (16,16), del que nace el humo; sobre lo pulsable el punto se carga de rojo. Donde no
+   hay humo sigue el pincel: en «Solo obra», con un diálogo abierto y sobre la hoja de contacto ([data-fluid-quiet]).
+   Mismos selectores que el pincel, más específicos. Se genera con tools/build_brush_cursor.py punto. */
+html.pointer-smoke body:not(.is-quiet):not(:has(dialog[open])),
+html.pointer-smoke body:not(.is-quiet):not(:has(dialog[open])) *:not([data-fluid-quiet], [data-fluid-quiet] *) {
   cursor: url("/assets/cursors/naroa-punto-32.png") 16 16, auto !important;
   cursor: image-set(url("/assets/cursors/naroa-punto-32.png") 1x, url("/assets/cursors/naroa-punto-64.png") 2x) 16 16, auto !important;
 }
-html.pointer-smoke body:not(.is-quiet) :is(a, button, select, summary, label[for], [role="button"], [data-compare-support], input[type="checkbox"], input[type="radio"], input[type="range"], input[type="submit"], input[type="button"], .art-gallery-trigger, .work-gallery-image),
-html.pointer-smoke body:not(.is-quiet) :is(a, button, summary, label[for], [role="button"]) * {
+html.pointer-smoke body:not(.is-quiet):not(:has(dialog[open])) :is(a, button, select, summary, label[for], [role="button"], [data-compare-support], input[type="checkbox"], input[type="radio"], input[type="range"], input[type="submit"], input[type="button"], .art-gallery-trigger, .work-gallery-image):not([data-fluid-quiet], [data-fluid-quiet] *),
+html.pointer-smoke body:not(.is-quiet):not(:has(dialog[open])) :is(a, button, summary, label[for], [role="button"]) *:not([data-fluid-quiet], [data-fluid-quiet] *) {
   cursor: url("/assets/cursors/naroa-punto-pointer-32.png") 16 16, pointer !important;
   cursor: image-set(url("/assets/cursors/naroa-punto-pointer-32.png") 1x, url("/assets/cursors/naroa-punto-pointer-64.png") 2x) 16 16, pointer !important;
 }
-html.pointer-smoke body:not(.is-quiet) :is(input[type="text"], input[type="email"], input[type="search"], input[type="tel"], input[type="url"], input[type="number"], input[type="password"], input:not([type]), textarea, label[for] textarea) {
+html.pointer-smoke body:not(.is-quiet):not(:has(dialog[open])) :is(input[type="text"], input[type="email"], input[type="search"], input[type="tel"], input[type="url"], input[type="number"], input[type="password"], input:not([type]), textarea, label[for] textarea):not([data-fluid-quiet], [data-fluid-quiet] *) {
   cursor: text !important;
 }
-html.pointer-smoke body:not(.is-quiet) :is(button:disabled, button:disabled *) {
+html.pointer-smoke body:not(.is-quiet):not(:has(dialog[open])) :is(button:disabled, button:disabled *):not([data-fluid-quiet], [data-fluid-quiet] *) {
   cursor: url("/assets/cursors/naroa-punto-32.png") 16 16, default !important;
   cursor: image-set(url("/assets/cursors/naroa-punto-32.png") 1x, url("/assets/cursors/naroa-punto-64.png") 2x) 16 16, default !important;
 }
