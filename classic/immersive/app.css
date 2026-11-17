@@ -1133,8 +1133,10 @@ html.motion-off .naroa-portal-canvas,body.is-quiet .naroa-portal-canvas{display:
 .remix-act>span:last-child{flex:none;font-size:15px;letter-spacing:0;color:#edbca4;transition:transform .35s var(--ease-out)}
 .remix-act:hover,.remix-act:focus-visible{color:#fffdf4;padding-left:10px}
 .remix-act:hover>span:last-child{transform:translate(3px,-3px)}
-.remix-act--lead{padding:20px 0 24px;font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:clamp(26px,2.8vw,34px);line-height:1.1;letter-spacing:-.01em;text-transform:none;color:#fffdf4}
-.remix-act--lead>span:last-child{font-family:'DM Sans',sans-serif;font-style:normal;font-size:20px}
+/* La acción principal va a mano y en fosforito: Playwrite ES ligera (200) para que respire con la Cormorant 300 del título; el glifo del final pasa a serif cursiva para hacer puente entre la caligráfica y la editorial. */
+.remix-act--lead{padding:18px 0 22px;font-family:'Playwrite ES','Caveat',cursive;font-style:normal;font-weight:200;font-size:clamp(20px,2.2vw,26px);line-height:1.55;letter-spacing:.01em;text-transform:none;color:#E8FF00}
+.remix-act--lead>span:last-child{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:19px;color:#E8FF00}
+.remix-act--lead:hover,.remix-act--lead:focus-visible{color:#E8FF00}
 .remix-act:disabled{opacity:1;cursor:progress}
 .remix-act.is-recording{color:#fffdf4}
 .remix-act.is-recording::after{content:"";position:absolute;left:0;right:0;bottom:0;height:8px;background:var(--remix-stroke-live) left bottom/100% 8px no-repeat;clip-path:inset(0 100% 0 0);animation:remix-recording 6s linear forwards}
@@ -1142,7 +1144,7 @@ html.motion-off .naroa-portal-canvas,body.is-quiet .naroa-portal-canvas{display:
 @keyframes remix-recording{to{clip-path:inset(0 0 0 0)}}
 @keyframes remix-blink{50%{opacity:.2}}
 .story-remix-status{min-height:1.5em;margin:16px 0 0;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;line-height:1.4;color:#fffdf4b8}
-@media(max-width:700px){.story-remix-dialog{width:96vw;max-height:96svh}.story-remix-dialog .dialog-top{padding:14px 22px 2px}.story-remix-content{grid-template-columns:minmax(0,1fr);justify-items:center;align-items:start;gap:16px;padding:12px 22px 24px}.story-remix-preview-frame{height:min(38svh,400px)}.story-remix-side{width:100%}.story-remix-eyebrow{margin-bottom:8px}.story-remix-title{font-size:32px}.story-remix-meta{margin-top:8px}.story-remix-actions{margin-top:14px}.remix-act{min-height:46px;padding:13px 0 17px}.remix-act--lead{padding:14px 0 18px;font-size:25px}.story-remix-status{margin-top:10px}}
+@media(max-width:700px){.story-remix-dialog{width:96vw;max-height:96svh}.story-remix-dialog .dialog-top{padding:14px 22px 2px}.story-remix-content{grid-template-columns:minmax(0,1fr);justify-items:center;align-items:start;gap:16px;padding:12px 22px 24px}.story-remix-preview-frame{height:min(38svh,400px)}.story-remix-side{width:100%}.story-remix-eyebrow{margin-bottom:8px}.story-remix-title{font-size:32px}.story-remix-meta{margin-top:8px}.story-remix-actions{margin-top:14px}.remix-act{min-height:46px;padding:13px 0 17px}.remix-act--lead{padding:14px 0 18px;font-size:26px}.story-remix-status{margin-top:10px}}
 @media(prefers-reduced-motion:reduce){.remix-act,.remix-act>span:last-child{transition:none}.remix-act.is-recording>span:last-child{animation:none}.story-remix-preview-frame{transform:none}}
 /* V3: Stencil Spray Roller Wipe & Wheatpaste Peel Physics */
 @keyframes stencil-roller-sweep{0%{clip-path:inset(0 100% 0 0);filter:contrast(1.35) drop-shadow(8px 0 0 var(--stencil-wipe-ink,#ffe600))}55%{clip-path:inset(0 0 0 0);filter:contrast(1.18) drop-shadow(3px 0 0 var(--stencil-wipe-ink,#00f0ff))}100%{clip-path:inset(0 0 0 0);filter:none}}
