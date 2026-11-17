@@ -161,7 +161,7 @@ def build(output):
         if not photo_signer:
             return ""
         target = quote(ORIGIN + p["photos"][0]["original"], safe="")
-        return f'<a class="source-link" data-art-credentials href="https://contentcredentials.org/verify?source={target}" target="_blank" rel="noopener noreferrer">Credenciales de la foto, firmadas por esta web ↗</a>'
+        return f'<a class="source-link" data-art-credentials href="https://verify.contentauthenticity.org/?source={target}" target="_blank" rel="noopener noreferrer">Credenciales de la foto, firmadas por esta web ↗</a>'
 
     def image_info(src):
         if src not in image_meta_cache:

@@ -237,7 +237,7 @@ def check(output):
     credential_links = {}
     for route in manifest["canonical_routes"]:
         if route.startswith("/obra/"):
-            for target in re.findall(r'data-art-credentials href="https://contentcredentials\.org/verify\?source=([^"]+)"', (output / route.lstrip("/") / "index.html").read_text()):
+            for target in re.findall(r'data-art-credentials href="https://verify\.contentauthenticity\.org/\?source=([^"]+)"', (output / route.lstrip("/") / "index.html").read_text()):
                 credential_links[route] = unquote(target)
     if manifest.get("c2pa"):
         from c2pa_sign import MIME, has_credentials, validate
