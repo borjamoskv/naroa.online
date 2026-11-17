@@ -158,6 +158,10 @@
    "{1} <{=2}>{3}</{=2}>"
   ],
   [
+   "^Obras hechas en plato · (\\d+) obras$",
+   "Works made on plates · {=1} works"
+  ],
+  [
    "^(.+?) · (.+)$",
    "{1} · {2}"
   ],
@@ -170,7 +174,7 @@
   "Pizarra": "Slate",
   "«Técnicas mixtas (como la pintura acrílica, los lápices de colores y el mineral de mica) conforman estas obras, hilando el abrazo entre la caverna y el cielo. “DiviNos” es un laberinto de espejos donde nuestra alma entra en juego».": "“Mixed media (such as acrylic paint, coloured pencils and mineral mica) make up these works, threading together the embrace between the cave and the sky. ‘DiviNos’ is a labyrinth of mirrors where our soul comes into play.”",
   "Técnica mixta con escamas de mica y esmalte con brillantina": "Mixed media with mica flakes and enamel with glitter",
-  "Plato de pizarra natural": "Natural slate plate",
+  "Pizarra natural": "Natural slate",
   "Retrato frontal en acrílico, mica mineral y pan de oro sobre pizarra natural.": "Frontal portrait in acrylic, mineral mica and gold leaf on natural slate.",
   "Detalle lateral del relieve matérico y esmalte rojo sobre el canto de pizarra.": "Side detail of the textured relief and red enamel on the edge of the slate.",
   "Primer plano del rostro de Marilyn Monroe con incrustaciones doradas y escamas de mica.": "Close-up of Marilyn Monroe’s face with gold inlays and mica flakes.",
@@ -194,7 +198,7 @@
   "Vista completa": "Full view",
   "Vista oblicua": "Oblique view",
   "Detalle del soporte": "Detail of the support",
-  "Fotografía master 4K del retrato de Amy Winehouse sobre plato de pizarra natural.": "4K master photograph of the portrait of Amy Winehouse on a natural slate plate.",
+  "Fotografía master 4K del retrato de Amy Winehouse sobre pizarra natural.": "4K master photograph of the portrait of Amy Winehouse on natural slate.",
   "«El retrato de Robe parte de un dibujo a lápices sobre poliéster. Tras escanearlo e imprimirlo a mayor tamaño, la imagen se recorta, retoca y combina con tela floral y una frase en alambre».": "“The portrait of Robe starts from a pencil drawing on polyester. After being scanned and printed at a larger size, the image is cut out, retouched and combined with floral fabric and a phrase in wire.”",
   "Ilustración reproducida e intervenida; collage textil y alambre": "Reproduced and intervened illustration; textile collage and wire",
   "Papel impreso sobre tela floral": "Printed paper on floral fabric",
@@ -552,7 +556,7 @@
   "plato de madera, a la vista": "the wooden plate, left showing",
   "mica mineral": "mineral mica",
   "firmado: Naroa ’05": "signed: Naroa ’05",
-  "Plato de pizarra natural con canto irregular": "Natural slate plate with irregular edge",
+  "Pizarra natural con canto irregular": "Natural slate with irregular edge",
   "Fotografía master 4K de Lágrimas de Oro con pan de oro de 24k sobre pizarra.": "4K master photograph of Lágrimas de Oro with 24k gold leaf on slate.",
   "Detalle de los destellos dorados y relieve de la piedra.": "Detail of the golden glints and the relief of the stone.",
   "Ficha técnica: Retrato doble técnica mixta mediante collage textil y mineral.": "Technical details: Double portrait in mixed media using textile and mineral collage.",

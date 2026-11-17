@@ -621,7 +621,11 @@ def build(output):
             # Imagen, título y enlace salen siempre de la misma ficha: el nombre no puede descuadrarse de la obra.
             w = work[slug]
             return {"src": w["tile"], "title": w["title"], "meta": meta or w["label"], "href": f"/obra/{slug}/"}
-        obras_reel = [frame("amy-rocks"), frame("marilyn-rocks"), frame("rara-avis"), frame("hugo-box")]
+        # El menú «Obras» solo enseña obras hechas en plato (soporte «Plato…» o «Platos…» en el catálogo).
+        # Las pizarras no son platos (corregido en el catálogo el 2026-11-17); el filtro las sigue excluyendo por si vuelve a escribirse así.
+        plato_slugs = [p["slug"] for p in projects if re.search(r"\bplatos?\b", p.get("support") or "", re.I) and not re.search(r"pizarra", p.get("support") or "", re.I)]
+        obras_reel = [frame(slug) for slug in ("holy-wood-retplatos-amores", "13n", "elene", "smile-and-the-world-smiles-back")]
+        assert all(frame_["href"].split("/")[2] in plato_slugs for frame_ in obras_reel), "El menú Obras debe mostrar solo obras en plato"
         trayectoria_reel = [frame("custom-jaio"), frame("cantinflowers"), frame("rara-avis"), frame("amor-en-conserva")]
         cuaderno_reel = [frame("entre-tantas-flores-de-dia"), frame("la-llorona"), frame("mario-moreno"), frame("infusion-de-berto")]
         encargos_reel = [frame("custom-jaio", "Retrato personalizado a medida · Bilbao"), frame("hugo-box", "Caja de madera intervenida · Regalo a medida"), frame("13n", "Retrato doble en plato de madera y pan de oro"), frame("lauralore", "Retrato con cerámica y eguzkilore en marco")]
@@ -631,7 +635,7 @@ def build(output):
             return f' data-preview-reel="{esc(json.dumps(seq, ensure_ascii=False, separators=(",", ":")))}"'
         items = [
             # Cuatro secciones: Vaivenes vive dentro de Obras y Trayectoria dentro de Naroa (último campo: rutas hijas).
-            ("/obra/", "Obras", f"{len(projects)} retratos · Un viaje", obras_reel[0]["src"], obras_reel[0]["title"], "Otra manera de mirar.", f"Pizarra, collage, Vaivenes y objetos · {len(projects)} obras", False, obras_reel, "#4063ea", "/series/"),
+            ("/obra/", "Obras", f"{len(projects)} retratos · Un viaje", obras_reel[0]["src"], obras_reel[0]["title"], "Otra manera de mirar.", f"Obras hechas en plato · {len(plato_slugs)} obras", False, obras_reel, "#4063ea", "/series/"),
             ("/sobre-mi/", "Naroa", "La artista y su trayectoria", menu_portrait, "Naroa Gutiérrez Gil", "Me encontré a mí en los demás.", "Retratista y artista plástica · Bilbao", False, None, "#3555de", "/trayectoria/"),
             ("/cuaderno/", "Blog", "Su WordPress, al día", cuaderno_reel[0]["src"], cuaderno_reel[0]["title"], "Apuntes desde el estudio.", "Historias de obras, procesos y encuentros", False, cuaderno_reel, "#2d4dd8", ""),
             ("/retratos-por-encargo-bilbao/", "Encargos", "Un retrato con tu historia · Contacto", encargos_reel[0]["src"], encargos_reel[0]["title"], "Cada rostro guarda un mundo.", "Retrato personalizado a medida · Bilbao", True, encargos_reel, "#6b395c", ""),
