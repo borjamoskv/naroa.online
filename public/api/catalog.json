@@ -589,6 +589,13 @@
           "height": 2048,
           "caption": "Bolsita de infusión y romero",
           "sha256": "8fd11360e3ae06f718d9aff09137f8534709ce920e38d7a67da397c86a8ecd1d"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/infusion-de-berto-proceso-lapiz.jpg",
+          "width": 1532,
+          "height": 2048,
+          "caption": "Proceso: el dibujo a lápiz sobre la rodaja de fresno, antes de la pintura.",
+          "sha256": "4864bdcd67c3cb4e2d27449948e406c623d7981be25b406b7878abf71f6c8a00"
         }
       ],
       "inquire_email": "mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Infusi%C3%B3n%20de%20Berto",
@@ -972,6 +979,27 @@
           "height": 1532,
           "caption": "Detalle del tejido y los botones",
           "sha256": "3d6ddc377621a51a5260d8c7eb4e48b633d2e2cf04857e288801504f81c4211b"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/custom-jaio-proceso-01-encaje.jpg",
+          "width": 1532,
+          "height": 2048,
+          "caption": "Proceso: la figura en blanco sobre la tela vaquera negra, con el rostro empezado.",
+          "sha256": "6f0ab494f19e2a4557a3990df4d9bd24eab269f76d480857dc03457ef0f108ec"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/custom-jaio-proceso-02-blanco-y-negro.jpg",
+          "width": 1532,
+          "height": 2048,
+          "caption": "Proceso: el retrato en blanco y negro, antes del color.",
+          "sha256": "679df8f94da1035f81e044d5dd5c5ec1166492630ade0fb6764071447ce71653"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/custom-jaio-proceso-03-color.jpg",
+          "width": 2048,
+          "height": 1532,
+          "caption": "Proceso: el color a medias, junto a los lápices.",
+          "sha256": "38c00d9b52592d048a3251f3ea118e8f315eeee853091a029e13fcdf30adfbdd"
         }
       ],
       "inquire_email": "mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Custom%20Jaio",
@@ -3408,6 +3436,13 @@
           "height": 1536,
           "caption": "Las RosaLías — Collage textil y plástico con pies en la barandilla de Copper Deli.",
           "sha256": "7d6bd9742afbedeb34188a8c2eba47c39ac75b6ade6d5126e430d0942eaecca4"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/las-rosalias-proceso-dibujo.jpg",
+          "width": 1473,
+          "height": 1808,
+          "caption": "Proceso: los dibujos de los pies y los elefantes, antes del collage.",
+          "sha256": "c750db3fbca6def4056d3022d6b83ccbf4ca2c081b012eff3b57cbcd0a269c46"
         }
       ],
       "inquire_email": "mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Las%20RosaL%C3%ADas",

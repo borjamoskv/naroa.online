@@ -1849,6 +1849,7 @@ def build(output):
         f'<a class="enc-ink-link" href="/retrato-de-pareja-y-familia/">Retrato de pareja y de familia ↗</a>'
         f'<a class="enc-ink-link" href="/retrato-de-un-ser-querido-fallecido/">Retrato en recuerdo de un ser querido ↗</a>'
         f'<a class="enc-ink-link" href="/retrato-de-mascota/">Retrato de mascota ↗</a>'
+        f'<a class="enc-ink-link" href="/como-se-hace-un-retrato/">Cómo se hace un retrato ↗</a>'
         f'</nav>'
         f'</section>'
         f'<section class="enc-band enc-close" aria-labelledby="enc-close-heading">'
@@ -2214,6 +2215,83 @@ def build(output):
             (gato_kutxa, "Interior de la caja"),
         ],
     )
+
+    # ── Cómo se hace un retrato ──────────────────────────────────────────────────────────────────────────────
+    # Fotos del trabajo a medias que Naroa publicó, cada una junto a la obra acabada. Todas salen de la ficha de su
+    # obra en el catálogo (se buscan por el principio del pie: si la ficha pierde la foto, el build falla). El texto
+    # solo dice lo que se ve en ellas; no describe un método general ni promete condiciones (§13 de AGENTS.md).
+    def rp_shot(slug, caption_start):
+        w = find_work(slug)
+        return w, next(ph for ph in w["photos"] if (ph.get("caption") or "").startswith(caption_start))
+
+    def rp_step(w, ph):
+        return (
+            f'<figure class="rp-detail" style="--ar:{ph["width"] / ph["height"]:.3f}"><a href="/obra/{w["slug"]}/" tabindex="-1"><img src="{ph["src"]}"{cover_dims(ph["src"])} sizes="(max-width:820px) 44vw, 30vw" alt="{esc(work_alt(w, ph["caption"]))}" loading="lazy" decoding="async"></a>'
+            f'<figcaption><a class="rp-work-meta" href="/obra/{w["slug"]}/">{esc(w["title"])}</a><p>{esc(ph["caption"])}</p></figcaption></figure>'
+        )
+
+    process_path = "/como-se-hace-un-retrato/"
+    process_hero_work, process_hero_ph = rp_shot("rara-avis", "Dibujo a pastel, antes del ensamblaje")
+    process_steps = [
+        ("proceso-dibujo", "Primero, el dibujo",
+         "Infusión de Berto empezó a lápiz, directamente sobre la rodaja de fresno.",
+         [rp_shot("infusion-de-berto", "Proceso: el dibujo a lápiz"), rp_shot("infusion-de-berto", "Vista completa")]),
+        ("proceso-color", "Del blanco y negro al color",
+         "Custom Jaio, sobre tela vaquera negra: la figura en blanco, el rostro en blanco y negro y, al final, el color.",
+         [rp_shot("custom-jaio", "Proceso: la figura en blanco"), rp_shot("custom-jaio", "Proceso: el retrato en blanco y negro"), rp_shot("custom-jaio", "Proceso: el color a medias"), rp_shot("custom-jaio", "Bastidor completo")]),
+        ("proceso-collage", "El dibujo, antes del collage",
+         "En estas piezas el dibujo se terminó primero; el collage llegó después.",
+         [rp_shot("roisin", "El dibujo de Róisín antes"), rp_shot("roisin", "Róisín, obra completa"), rp_shot("pippilotta", "El dibujo de Pippi"), rp_shot("pippilotta", "Loving Långstrump: collage terminado"), rp_shot("las-rosalias", "Proceso: los dibujos de los pies"), rp_shot("las-rosalias", "Las RosaLías")]),
+        ("proceso-materia", "Lo que rodea al retrato",
+         "Marian de Miranda creció sobre una caja de sardinas de chocolate.",
+         [rp_shot("marian-de-miranda", "Base de collage"), rp_shot("marian-de-miranda", "Montaje digital intermedio"), rp_shot("marian-de-miranda", "Obra final")]),
+    ]
+    process_shots = [shot for *_, shots in process_steps for shot in shots]
+    rp_images[process_path] = [(process_hero_work, process_hero_ph)] + process_shots
+    process_title = "Cómo se hace un retrato: el trabajo a medias, en fotos"
+    process_description = "Fotos del trabajo a medias de obras de Naroa Gutiérrez Gil, cada una junto a la pieza acabada: el dibujo, el blanco y negro, el color y el collage."
+    process_hero_meta = " · ".join(filter(None, [str(process_hero_work["year"]) if process_hero_work.get("year") else None, process_hero_work.get("technique"), process_hero_work.get("dimensions")]))
+    process_body = (
+        '<main id="main" class="retrato-pagina">'
+        '<header class="rp-hero"><div class="rp-hero-copy"><p class="rp-kicker">Naroa Gutiérrez Gil · Retratos por encargo</p><h1 class="rp-title">Cómo se hace un retrato</h1>'
+        '<p class="rp-lead"><strong>Fotos del trabajo a medias.</strong> Naroa fotografió estas obras antes de terminarlas. Aquí va cada una junto a cómo quedó.</p></div>'
+        f'<figure class="rp-hero-art"><a href="/obra/{process_hero_work["slug"]}/" tabindex="-1"><img src="{process_hero_ph["src"]}"{cover_dims(process_hero_ph["src"])} sizes="(max-width:980px) 88vw, 42vw" alt="{esc(work_alt(process_hero_work, process_hero_ph["caption"]))}" loading="eager" fetchpriority="high" decoding="async"></a>'
+        f'<figcaption><span class="rp-work-meta">{esc(process_hero_meta)}</span><a class="rp-work-title" href="/obra/{process_hero_work["slug"]}/">{esc(process_hero_work["title"])} ↗</a><p>{esc(process_hero_ph["caption"])}</p></figcaption></figure></header>'
+        + ''.join(
+            f'<section class="rp-section" aria-labelledby="{key}"><h2 id="{key}" class="rp-h2">{esc(heading)}</h2><p class="rp-text">{esc(text)}</p>'
+            + ''.join(
+                f'<div class="rp-seq" style="--n:{len(row)};--sum:{sum(ph["width"] / ph["height"] for _, ph in row):.3f}">' + ''.join(rp_step(w, ph) for w, ph in row) + '</div>'
+                for row in ([s for s in shots if s[0]["slug"] == slug] for slug in dict.fromkeys(w["slug"] for w, _ in shots))
+            ) + '</section>'
+            for key, heading, text, shots in process_steps
+        )
+        + '<section class="rp-section" aria-labelledby="rp-condiciones"><h2 id="rp-condiciones" class="rp-h2">Cómo se encarga</h2>'
+        '<p class="rp-text">Se le escribe a Naroa por WhatsApp o por correo con la foto o las fotos que haya y un par de líneas sobre la persona. Ella propone soporte y tamaño, y da el precio por escrito antes de empezar.</p>'
+        f'{rp_conditions_html}</section>'
+        '<section class="rp-section rp-close" aria-labelledby="rp-escribir"><h2 id="rp-escribir" class="rp-h2">Escribir a Naroa</h2>'
+        '<p class="rp-text">Responde ella misma, desde el estudio de Bilbao.</p>'
+        '<p class="rp-actions">'
+        f'<a class="rp-link rp-link--lead" href="https://wa.me/34636060609?text={quote("Hola Naroa, me gustaría encargar un retrato. Tengo fotos para enseñarte.")}" target="_blank" rel="noopener noreferrer">Por WhatsApp ↗</a>'
+        f'<a class="rp-link" href="mailto:encargos@naroagutierrezgil.com?subject={quote("Retrato por encargo")}">encargos@naroagutierrezgil.com ↗</a>'
+        '<a class="rp-link" href="/retratos-por-encargo-bilbao/#configurador">Componer el encargo paso a paso ↗</a>'
+        '</p></section>'
+        '<section class="rp-section" aria-labelledby="rp-otros"><h2 id="rp-otros" class="rp-h2">Otros retratos por encargo</h2><p class="rp-actions">'
+        + ''.join(f'<a class="rp-link" href="{href}">{esc(label)}</a>' for href, label in rp_siblings)
+        + '<a class="rp-link" href="/retratos-por-encargo-bilbao/">Todos los encargos ↗</a></p></section>'
+        '</main>'
+    )
+    process_schema = {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": ORIGIN + process_path + "#webpage",
+        "name": process_title,
+        "url": ORIGIN + process_path,
+        "description": process_description,
+        "isPartOf": {"@id": ORIGIN + "/#website"},
+        "about": {"@id": ORIGIN + "/retratos-por-encargo-bilbao/#service"},
+        "image": [ORIGIN + ph["original"] for _, ph in rp_images[process_path]],
+    }
+    page(process_path, process_title, process_description, process_body, process_hero_ph["original"], schema=process_schema, image_alt=work_alt(process_hero_work, process_hero_ph["caption"]))
 
     # ── Contacto: una nota para Naroa ────────────────────────────────────────────────────────────────────────
     # La obra (Rara Avis) queda entera y sin velo. Lo que dice la página va sobre ella, en neón; lo que escribe quien
@@ -2764,7 +2842,8 @@ def build(output):
         f"- [Contacto]({ORIGIN}/contacto/): Canales directos de consulta para obra y encargos.\n"
         f"- [Retrato de pareja y de familia]({ORIGIN}/retrato-de-pareja-y-familia/): Retratos dobles y familiares hechos a mano desde fotografías, con obras de ejemplo.\n"
         f"- [Retrato en recuerdo de un ser querido]({ORIGIN}/retrato-de-un-ser-querido-fallecido/): Retrato pintado a mano a partir de una foto antigua, pequeña o de móvil.\n"
-        f"- [Retrato de mascota]({ORIGIN}/retrato-de-mascota/): Encargos de retratos de perro o gato hechos a mano desde una foto.\n\n"
+        f"- [Retrato de mascota]({ORIGIN}/retrato-de-mascota/): Encargos de retratos de perro o gato hechos a mano desde una foto.\n"
+        f"- [Cómo se hace un retrato]({ORIGIN}/como-se-hace-un-retrato/): Fotografías de proceso de obras del catálogo, cada una junto a la pieza acabada.\n\n"
         "## Recursos Machine-to-Machine y GEO SOTA 2026\n"
         f"- [Catálogo JSON Estructurado]({ORIGIN}/api/catalog.json): Endpoint con especificaciones completas de las {len(projects)} obras y Evidence Graph.\n"
         f"- [Endpoint WebMCP]({ORIGIN}/.well-known/mcp.json): Manifiesto y definición formal de herramientas WebMCP para agentes autónomos.\n"
