@@ -41,6 +41,8 @@ assets-src/
 
 # Added by Antigravity C5-REAL Audit
 *.pem
+# El certificado público de la CA de procedencia (AGENTS.md §12) sí va al repositorio; las claves, nunca.
+!classic/data/c2pa-ca.pem
 *.key
 .env*
 classic/assets/backup_pre4k/

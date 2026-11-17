@@ -239,6 +239,8 @@ fi
 if [ "$SKIP_BUILD" = "0" ] && { [ "$TARGET" = "all" ] || [ "$TARGET" = "museum" ]; }; then
   log "Compilando portfolio inmersivo completo..."
   PIL_CHECK="from PIL import Image, ImageOps, ImageDraw, ImageFont, ImageFilter"
+  # Con clave de firma C2PA (AGENTS.md §12) el intérprete también necesita c2pa-python.
+  if [ -n "${NAROA_C2PA_KEY:-}" ]; then PIL_CHECK="$PIL_CHECK; import c2pa"; fi
   PYTHON_CMD=""
   for candidate in "python3" "python3.14" "python3.13" "python3.12" "python3.11"; do
     if command -v "$candidate" >/dev/null 2>&1 && "$candidate" -c "$PIL_CHECK" 2>/dev/null; then
