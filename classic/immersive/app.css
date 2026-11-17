@@ -450,10 +450,10 @@ dialog.menu-dialog .menu-ai-note{order:4}
 .closing{background:linear-gradient(135deg,rgba(10,24,46,0.85) 0%,rgba(4,10,20,0.95) 100%);border:1px solid rgba(59,130,246,0.22);border-radius:34px 18px 36px 20px;padding:65px 44px;margin:45px 0 85px;box-shadow:0 25px 60px rgba(4,10,20,0.45)}
 
 /* 1. /cuaderno/ · AZUL YInMn como se ve el pigmento en polvo (#2139C2, luz #2D4DD8, sombra #15269A; acento sobre papel #2340C8) + FORMAS 100% ORGÁNICAS SIN ÁNGULOS RECTOS */
-html:has(body.page-cuaderno),body.page-cuaderno{background:#2139C2;background:radial-gradient(circle at 18% 12%,#2D4DD8 0%,#2139C2 42%,#15269A 100%);color:#fffdf4}
+html:has(body.page-cuaderno),body.page-cuaderno{background:#2139C2;color:#fffdf4}
 body.page-cuaderno .site-nav.is-scrolled{background:rgba(31,56,184,0.92);color:#fffdf4;border-bottom:1px solid rgba(255,255,255,0.18)}
 body.page-cuaderno .page-hero{border-radius:0 0 68px 42px / 0 0 44px 58px;box-shadow:0 22px 54px rgba(8,18,44,0.22)}
-body.page-cuaderno .editorial.notebook{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.18);border-radius:52px 24px 48px 28px / 28px 46px 24px 52px;box-shadow:0 24px 60px rgba(8,18,44,0.12);backdrop-filter:blur(8px)}
+body.page-cuaderno .editorial.notebook{background:none;border:0;border-radius:0}
 body.page-cuaderno .section-opening h2,body.page-cuaderno .section-opening p,body.page-cuaderno .section-opening .eyebrow{color:#fffdf4}
 body.page-cuaderno .notebook-posts{gap:38px}
 body.page-cuaderno .notebook-card{background:#fffef8;color:#0e1a33;padding:26px;border:1px solid rgba(8,18,44,0.12)!important;border-radius:42px 18px 38px 22px / 22px 38px 18px 42px;box-shadow:0 16px 42px rgba(8,18,44,0.12);transform:rotate(-.35deg);transition:transform .4s cubic-bezier(.16,1,.3,1),box-shadow .4s var(--ease-out),border-radius .4s var(--ease-out)}
@@ -463,8 +463,9 @@ body.page-cuaderno .notebook-photo{border-radius:32px 14px 28px 16px / 16px 30px
 body.page-cuaderno .notebook-card h3 a{color:#0e1a33}
 body.page-cuaderno .notebook-card p,body.page-cuaderno .notebook-card .eyebrow{color:#27375a}
 body.page-cuaderno .notebook-card .eyebrow span{color:#2340C8;font-weight:500}
-body.page-cuaderno .text-link{color:#fffdf4;border-bottom:0;background:rgba(255,255,255,0.14);padding:8px 18px;border-radius:24px 12px 22px 14px / 14px 22px 12px 24px;transition:background .25s,transform .25s}
-body.page-cuaderno .text-link:hover{background:#fffdf4;color:#0e1a33;transform:translateY(-2px)}
+body.page-cuaderno .text-link{color:#fffdf4;border-bottom:0}
+body.page-cuaderno .text-link:hover{color:#FFD21F}
+body.page-cuaderno .text-link:hover:after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 8' preserveAspectRatio='none' fill='none'%3E%3Cpath d='M1 4.2 C 18 1.4, 35 6.8, 55 2.8 C 75 0.5, 90 5.2, 109 3.4' stroke='%23FFD21F' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E")}
 /* Blog: texto legible sobre el azul YInMn, carteles enteros y ritmo 1 · 2 · 3 */
 body.page-cuaderno .section-opening>p:last-child:not(.eyebrow){color:rgba(255,253,244,.92);font-size:16px;max-width:640px}
 /* El estado de la sincronización es una línea de texto, no una etiqueta: versalitas y un punto que se enciende. */
@@ -476,10 +477,10 @@ body.page-cuaderno .notebook-card-body{flex:1;display:flex;flex-direction:column
 body.page-cuaderno .notebook-card .eyebrow{margin:0}
 /* «Última entrada» va en el HTML para que se traduzca; el CSS solo pone el punto que la separa de la fecha. */
 body.page-cuaderno .notebook-latest::after{content:" · ";color:#27375a;font-weight:400}
-body.page-cuaderno .notebook-card h3{margin:14px 0 18px;overflow-wrap:anywhere}
+body.page-cuaderno .notebook-card h3{margin:12px 0 16px;font-family:var(--font-serif);font-style:italic;font-weight:400;font-size:clamp(30px,3vw,42px);line-height:1.08;letter-spacing:-.01em;text-wrap:balance;overflow-wrap:anywhere}
 body.page-cuaderno .notebook-card h3 a{text-decoration:none}
 body.page-cuaderno .notebook-summary{font-size:15px;line-height:1.75;margin:0 0 24px;color:#27375a}
-body.page-cuaderno .notebook-card .text-link{margin-top:auto;font-size:12px}
+body.page-cuaderno .notebook-card .text-link{margin-top:auto}
 /* La entrada que tiene encuentro en Trayectoria lo enlaza: texto subrayado, sin caja. */
 body.page-cuaderno .notebook-encounter{display:inline-flex;align-items:center;min-height:44px;margin-top:4px;font-size:12px;letter-spacing:.04em;color:#2340C8;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:5px;transition:color .25s var(--ease-out)}
 body.page-cuaderno .notebook-encounter:hover{color:#0e1a33}
@@ -495,7 +496,7 @@ body.page-cuaderno .notebook-photo img{position:absolute;inset:0;margin:auto;wid
   body.page-cuaderno .notebook-card:first-child:has(.notebook-photo){display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(28px,4vw,56px);align-items:center}
   body.page-cuaderno .notebook-card:first-child .notebook-photo{margin-bottom:0}
   body.page-cuaderno .notebook-card:first-child .notebook-card-body{flex:none}
-  body.page-cuaderno .notebook-card:first-child h3{font-size:clamp(32px,3.8vw,54px);line-height:1.1}
+  body.page-cuaderno .notebook-card:first-child h3{font-size:clamp(38px,4.4vw,64px);line-height:1.02}
   body.page-cuaderno .notebook-card:first-child .notebook-summary{font-size:16px}
 }
 @media(min-width:761px) and (max-width:1039.98px){
@@ -507,7 +508,7 @@ body.page-cuaderno .notebook-photo img{position:absolute;inset:0;margin:auto;wid
 }
 @media(min-width:1040px){
   body.page-cuaderno .notebook-card:nth-child(n+4){grid-column:span 2}
-  body.page-cuaderno .notebook-card:nth-child(n+4) h3{font-size:clamp(22px,2vw,27px)}
+  body.page-cuaderno .notebook-card:nth-child(n+4) h3{font-size:clamp(25px,2.2vw,31px)}
   body.page-cuaderno .notebook-card:nth-child(n+4) .notebook-summary{font-size:14px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:8;line-clamp:8;overflow:hidden}
 }
 .notebook-archive{margin:30px 0 10px}
@@ -543,13 +544,20 @@ body.page-cuaderno .notebook-photo img{position:absolute;inset:0;margin:auto;wid
 .notebook-year li a:hover{translate:6px 0;color:#dbe7ff}
 body.page-cuaderno .notebook-year li a.notebook-encounter{display:block;min-height:0;margin:0;padding:11px 0;font-size:11px;line-height:1.6;letter-spacing:var(--ls-caps);text-transform:uppercase;white-space:nowrap;color:rgba(255,253,244,.82);text-decoration:none}
 body.page-cuaderno .notebook-year li a.notebook-encounter:hover{translate:none;color:#fffdf4;text-decoration:underline;text-underline-offset:5px}
-body.page-cuaderno .timeline{padding-bottom:40px}
-body.page-cuaderno .timeline-entry{border-bottom:0;background:rgba(255,254,248,.95);padding:30px 32px;margin:16px 0;border-radius:30px 16px 28px 18px / 18px 28px 16px 30px;box-shadow:0 10px 30px rgba(8,18,44,.07)}
+/* Voces: sin tarjetas. Lo que escribió quien miraba va en cursiva sobre el pigmento; lo que respondió Naroa, a mano y en amarillo de cadmio. */
+body.page-cuaderno .timeline{padding-bottom:30px;border-bottom:1px solid rgba(255,255,255,.24)}
+body.page-cuaderno .timeline-entry{display:block;break-inside:avoid;background:none;box-shadow:none;border-radius:0;margin:0;padding:18px 8px 34px;border-bottom:0;border-top:1px solid rgba(255,255,255,.24)}
 body.page-cuaderno .timeline-entry>*{min-width:0}
-body.page-cuaderno .timeline-entry h3{font-size:clamp(20px,2.2vw,28px);letter-spacing:var(--ls-serif);color:#0e1a33;overflow-wrap:anywhere}
-body.page-cuaderno .timeline-entry p{color:#27375a;font-size:15px}
-body.page-cuaderno .timeline-entry>p{color:#0e1a33;font-size:12px;letter-spacing:.03em}
-body.page-cuaderno .timeline-entry p.timeline-location{color:#2340C8;font-size:14px;letter-spacing:0;margin:16px 0 0;padding-left:16px;border-left:2px solid rgba(35,64,200,.45)}
+body.page-cuaderno .timeline-entry>div{display:flex;flex-direction:column;align-items:flex-start}
+body.page-cuaderno .timeline-entry p{max-width:none;font-family:var(--font-serif);font-style:italic;font-size:clamp(22px,2vw,28px);line-height:1.28;color:#fffdf4;text-wrap:pretty}
+body.page-cuaderno .timeline-entry>p{padding:0;font-family:var(--font-body);font-style:normal;margin:0 0 14px;font-size:11px;line-height:1.6;letter-spacing:var(--ls-caps);text-transform:uppercase;color:rgba(255,253,244,.82)}
+body.page-cuaderno .timeline-entry h3{order:1;margin:14px 0 0;font-family:var(--font-body);font-size:12px;line-height:1.6;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#fffdf4;overflow-wrap:anywhere}
+body.page-cuaderno .timeline-entry h3:before{content:"— "}
+body.page-cuaderno .timeline-entry p.timeline-location{order:2;position:relative;margin:18px 0 0;padding-left:34px;font-family:var(--font-hand);font-style:normal;font-size:clamp(21px,1.8vw,24px);line-height:1.22;letter-spacing:0;color:#FFD21F;rotate:-.6deg}
+body.page-cuaderno .timeline-entry p.timeline-location:before{content:"";position:absolute;left:2px;top:-4px;width:24px;height:24px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FFD21F' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 2.5 C 4 9, 5.5 14.5, 20 15.2'/%3E%3Cpath d='M15.2 10.6 C 17 12.4, 18.6 13.8, 20.4 15.2 C 18.4 16.6, 16.6 18.2, 15.4 20'/%3E%3C/svg%3E") center / contain no-repeat}
+@media(min-width:900px){body.page-cuaderno .timeline{columns:2;column-gap:64px}}
+body.page-cuaderno .notebook-actions{margin-top:26px;gap:8px 40px}
+body.page-cuaderno .notebook-actions .text-link{font-size:15px}
 /* En prensa: lo que la prensa contó va en recortes de papel; lo que solo anunciaron las agendas, en un índice por años como el archivo. */
 body.page-cuaderno .notebook-press .press-kind{margin:0 0 24px;font-size:11px;line-height:1.6;letter-spacing:var(--ls-caps);text-transform:uppercase;color:rgba(255,253,244,.82)}
 body.page-cuaderno .press-pieces{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:30px 32px;margin:0 0 76px;padding:0;list-style:none}
@@ -565,10 +573,10 @@ body.page-cuaderno .press-links{display:flex;flex-wrap:wrap;align-items:center;g
 body.page-cuaderno .press-piece:first-child{grid-column:1/-1}
 body.page-cuaderno .press-piece:first-child>*{max-width:760px}
 /* El enlace a la fuente es texto con el garabato en tinta, no una píldora. */
-body.page-cuaderno .notebook-press .text-link{background:none;padding:0 0 6px;border-radius:0;font-size:13px;color:#0e1a33;transform:none}
-body.page-cuaderno .notebook-press .text-link:hover{background:none;color:#2340C8;transform:none}
-body.page-cuaderno .notebook-press .text-link:after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 8' preserveAspectRatio='none' fill='none'%3E%3Cpath d='M1 4.2 C 18 1.4, 35 6.8, 55 2.8 C 75 0.5, 90 5.2, 109 3.4' stroke='%230e1a33' stroke-width='1.5' stroke-linecap='round' opacity='0.7'/%3E%3C/svg%3E")}
-body.page-cuaderno .notebook-press .text-link:hover:after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 8' preserveAspectRatio='none' fill='none'%3E%3Cpath d='M1 4.2 C 18 1.4, 35 6.8, 55 2.8 C 75 0.5, 90 5.2, 109 3.4' stroke='%232340C8' stroke-width='1.8' stroke-linecap='round' opacity='0.95'/%3E%3C/svg%3E")}
+body.page-cuaderno :is(.notebook-press,.notebook-card) .text-link{background:none;padding:0 0 6px;border-radius:0;font-size:13px;color:#0e1a33;transform:none}
+body.page-cuaderno :is(.notebook-press,.notebook-card) .text-link:hover{background:none;color:#2340C8;transform:none}
+body.page-cuaderno :is(.notebook-press,.notebook-card) .text-link:after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 8' preserveAspectRatio='none' fill='none'%3E%3Cpath d='M1 4.2 C 18 1.4, 35 6.8, 55 2.8 C 75 0.5, 90 5.2, 109 3.4' stroke='%230e1a33' stroke-width='1.5' stroke-linecap='round' opacity='0.7'/%3E%3C/svg%3E")}
+body.page-cuaderno :is(.notebook-press,.notebook-card) .text-link:hover:after{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 8' preserveAspectRatio='none' fill='none'%3E%3Cpath d='M1 4.2 C 18 1.4, 35 6.8, 55 2.8 C 75 0.5, 90 5.2, 109 3.4' stroke='%232340C8' stroke-width='1.8' stroke-linecap='round' opacity='0.95'/%3E%3C/svg%3E")}
 body.page-cuaderno .press-piece .notebook-encounter{min-height:44px;margin:0}
 /* Índice de agendas: mismo filete, año en Cormorant y fecha en versalitas que el archivo del blog. */
 body.page-cuaderno .press-agenda{border-bottom:1px solid rgba(255,255,255,.24);margin:0 0 10px}
@@ -589,9 +597,9 @@ body.page-cuaderno .press-year .press-line p{margin:4px 0 0;font-size:14px;line-
 body.page-cuaderno .press-year .notebook-encounter{display:block;min-height:0;margin:0;padding:0;font-size:11px;line-height:1.6;letter-spacing:var(--ls-caps);text-transform:uppercase;white-space:nowrap;color:rgba(255,253,244,.82);text-decoration:none}
 body.page-cuaderno .press-year .notebook-encounter:hover{color:#fffdf4;text-decoration:underline;text-underline-offset:5px}
 /* El foco no dibuja un rectángulo: repasa el trazo (enlace a la fuente) o subraya grueso (resto). */
-body.page-cuaderno .notebook-press a:focus-visible{outline:0;text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:6px}
-body.page-cuaderno .press-links .text-link:focus-visible{text-decoration:none;color:#2340C8}
-body.page-cuaderno .press-links .text-link:focus-visible:after{height:10px;background-size:100% 10px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 8' preserveAspectRatio='none' fill='none'%3E%3Cpath d='M1 4.2 C 18 1.4, 35 6.8, 55 2.8 C 75 0.5, 90 5.2, 109 3.4' stroke='%232340C8' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E")}
+body.page-cuaderno :is(.notebook-press,.notebook-posts) a:focus-visible{outline:0;text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:6px}
+body.page-cuaderno :is(.press-links,.notebook-card) .text-link:focus-visible{text-decoration:none;color:#2340C8}
+body.page-cuaderno :is(.press-links,.notebook-card) .text-link:focus-visible:after{height:10px;background-size:100% 10px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 110 8' preserveAspectRatio='none' fill='none'%3E%3Cpath d='M1 4.2 C 18 1.4, 35 6.8, 55 2.8 C 75 0.5, 90 5.2, 109 3.4' stroke='%232340C8' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E")}
 @media(max-width:760px){
   body.page-cuaderno .press-pieces{grid-template-columns:minmax(0,1fr);gap:22px;margin-bottom:56px}
   body.page-cuaderno .press-piece:first-child{grid-column:auto}
@@ -608,18 +616,17 @@ body.page-cuaderno .press-links .text-link:focus-visible:after{height:10px;backg
 @media(max-width:760px){
   body.page-cuaderno .editorial.notebook{padding:36px 5% 30px}
   body.page-cuaderno .notebook-card{padding:20px}
-  body.page-cuaderno .timeline-entry{padding:24px 22px}
   .notebook-year li{grid-template-columns:58px minmax(0,1fr);gap:0 10px}
   body.page-cuaderno .notebook-year li a.notebook-encounter{grid-column:2;padding:0 0 12px}
   .notebook-search{grid-template-columns:minmax(0,1fr)}
   .notebook-search label,.notebook-search-count{white-space:normal}
-  body.page-cuaderno .notebook-card:nth-child(n+4) .text-link{background:none;padding:0;border-radius:0;font-size:11px;letter-spacing:.04em;text-decoration:underline;text-underline-offset:5px;color:#0e1a33}
+  body.page-cuaderno .notebook-card:nth-child(n+4) .text-link{font-size:12px}
   /* En el móvil las tres entradas más antiguas van en fila: cartel pequeño al lado y el texto recogido. */
   body.page-cuaderno .notebook-card:nth-child(n+4):has(.notebook-photo){display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);column-gap:16px;align-items:start}
   body.page-cuaderno .notebook-card:nth-child(n+4) .notebook-photo{margin-bottom:0}
   body.page-cuaderno .notebook-card:nth-child(n+4) .notebook-photo img{margin-top:0;border-radius:16px 8px 14px 9px / 9px 15px 8px 16px}
   body.page-cuaderno .notebook-card:nth-child(n+4) .notebook-card-body{flex:none}
-  body.page-cuaderno .notebook-card:nth-child(n+4) h3{font-size:19px;line-height:1.22;margin:8px 0 10px}
+  body.page-cuaderno .notebook-card:nth-child(n+4) h3{font-size:23px;line-height:1.1;margin:6px 0 10px}
   body.page-cuaderno .notebook-card:nth-child(n+4) .notebook-summary{font-size:13px;line-height:1.6;margin-bottom:12px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;line-clamp:4;overflow:hidden}
 }
 body.page-cuaderno .site-footer{color:#fffdf4;border-top:1px solid rgba(255,255,255,0.22)}
@@ -3617,8 +3624,6 @@ body.page-trayectoria .timeline-entry{background:rgba(255,254,248,.74)}
 @media(max-width:760px){body.page-trayectoria .career.editorial>.section-opening{padding:20px 20px 18px}}
 /* Blog en azul YInMn: sobre el campo el texto es papel; dentro de las tarjetas de papel, tinta azulada. */
 body.page-cuaderno .site-nav.is-scrolled{text-shadow:none}
-body.page-cuaderno :is(.notebook-card,.timeline-entry) .text-link{color:#0e1a33;background:rgba(14,26,51,.08)}
-body.page-cuaderno :is(.notebook-card,.timeline-entry) .text-link:hover{background:#0e1a33;color:#fffef8}
 /* Páginas por tipo de retrato (pareja y familia, recuerdo, mascota): tipografía, filetes y obra real, sin botones. */
 .retrato-pagina{--rp-live:#edbca4;--rp-rule:rgba(255,253,244,.4);max-width:1240px;margin:0 auto;padding:clamp(104px,14vh,150px) 6vw clamp(60px,9vw,120px)}
 .retrato-pagina .rp-kicker{font:500 11px/1.6 var(--font-body);letter-spacing:.14em;text-transform:uppercase;color:#edbca4;margin:0 0 22px}
