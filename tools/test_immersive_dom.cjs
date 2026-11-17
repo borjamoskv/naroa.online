@@ -815,10 +815,10 @@ async function eyeMatch(ui, base, points) {
   const score = music.w.NAROA_SCORE;
   assert.deepEqual([...score.titles], MONTH_TITLES, 'There are twelve pieces, one per month');
   assert.equal(score.title, MONTH_TITLES[new Date().getMonth()], 'The piece of the current month plays'); assert.equal(score.playing, true);
-  assert.ok(ctx.panners.length === 6 && ctx.panners.every(panner => panner.panningModel === 'HRTF'), 'Four echoes and two nature sources surround the listener in 3D');
-  assert.ok(score.state.intensity < .35, 'By default the right hand stays silent');
-  assert.ok(audio.oscillators.length > 0, 'Starting schedules the first piano notes');
-  assert.ok(ctx.rooms.length === 1 && ctx.delays.length === 5, 'The piano runs through a room and five tape delays');
+  assert.ok(ctx.panners.length === 8 && ctx.panners.every(panner => panner.panningModel === 'HRTF'), 'Four echoes, the arpeggio, the strings and two nature sources surround the listener in 3D');
+  assert.ok(score.state.intensity < .35, 'By default the melody stays silent');
+  assert.ok(audio.oscillators.length > 0, 'Starting schedules the first notes');
+  assert.ok(ctx.rooms.length === 1 && ctx.delays.length === 5, 'The band runs through a room and five tape delays');
   const leftRoom = ctx.rooms[0].buffer.getChannelData(0), rightRoom = ctx.rooms[0].buffer.getChannelData(1);
   assert.ok(leftRoom.some((value, i) => value !== rightRoom[i]), 'The room has distinct stereo reflections');
   assert.equal(typeof music.w.NAROA_SOUND.frame, 'function', 'NAROA_SOUND.frame interface is exposed');
@@ -915,7 +915,7 @@ async function eyeMatch(ui, base, points) {
     assert.ok(paceAudio.oscillators.length > notesSoFar, MONTH_TITLES[month] + ' schedules its own notes');
   }
   assert.equal(paced.w.NAROA_SOUND.getActiveMelodyInfo().name, 'Abendua', 'The menu names the piece that is playing');
-  // The written music: playable ranges, real cadences in the minor months and a decorated return.
+  // The written music: playable ranges, real cadences and a decorated return.
   for (let month = 0; month < 12; month++) {
     const sheet = pacedScore.sheet(month), name = MONTH_TITLES[month];
     const melody = sheet.flatMap(bar => bar.rh.map(note => note[1])), bass = sheet.flatMap(bar => bar.lh.filter(n => n != null));
@@ -943,9 +943,11 @@ async function eyeMatch(ui, base, points) {
       assert.ok(count('A · regreso') > count('A'), name + ' decorates its melody when the theme returns');
     }
   }
-  [[0, 'A', 8], [9, 'B', 10], [10, 'G', 6]].forEach(([month, key, leading]) => {
-    const cadence = pacedScore.sheet(month).filter(bar => bar.section === 'A')[7];
-    assert.ok(cadence.lh.some(n => n != null && n % 12 === leading), MONTH_TITLES[month] + ' (' + key + ' minor) closes its phrase on a dominant with a leading tone');
+  // No month is written in minor any more: the three that were open on a major chord and close on a real dominant.
+  [[0, 'A flat', 0, 7], [9, 'B', 3, 10], [10, 'G', 11, 6]].forEach(([month, key, third, leading]) => {
+    const verse = pacedScore.sheet(month).filter(bar => bar.section === 'A');
+    assert.ok(verse[0].lh.some(n => n != null && n % 12 === third), MONTH_TITLES[month] + ' opens on a major chord (' + key + ' major)');
+    assert.ok(verse[7].lh.some(n => n != null && n % 12 === leading), MONTH_TITLES[month] + ' (' + key + ' major) closes its phrase on a dominant with a leading tone');
   });
   pacedScore.setMonth(3);
   assert.equal(pacedScore.state.intensity, .31, 'At rest the right hand sleeps');
