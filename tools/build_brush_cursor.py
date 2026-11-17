@@ -123,12 +123,54 @@ def render(size, loaded):
     return im.resize((size, size), Image.LANCZOS)
 
 
+def render_point(size, loaded):
+    """El punto de la prueba «el humo es el puntero» (?puntero=humo): una gota de pintura vista desde arriba.
+
+    Punto activo en el centro (16,16 a 32 px). Borde irregular, de gota puesta a mano y sin degradados;
+    cerco oscuro y sombra para que se lea sobre obras claras y oscuras. Sobre lo pulsable, la gota crece y
+    es del rojo con que se carga el pincel.
+    """
+    s = size / 32 * SS
+    dim = size * SS
+    c = dim / 2
+
+    def blob(radius, phase):
+        pts = []
+        for i in range(96):
+            a = i / 96 * math.tau
+            k = 1 + .09 * math.sin(3 * a + phase) + .05 * math.sin(5 * a + phase * 2.3)
+            pts.append((c + math.cos(a) * radius * k * s, c + math.sin(a) * radius * k * s))
+        return pts
+
+    radius = 4.6 if loaded else 3.5
+    shadow = Image.new("RGBA", (dim, dim), (0, 0, 0, 0))
+    ImageDraw.Draw(shadow).polygon([(x + .5 * s, y + .9 * s) for x, y in blob(radius + 1.5, .7)], fill=(10, 6, 2, 170))
+    im = Image.new("RGBA", (dim, dim), (0, 0, 0, 0))
+    im.alpha_composite(shadow.filter(ImageFilter.GaussianBlur(1.1 * s)))
+    d = ImageDraw.Draw(im)
+    if loaded:
+        d.polygon(blob(radius + 1.5, .7), fill=PAPER)
+        d.polygon(blob(radius, .7), fill=RED + (255,))
+    else:
+        d.polygon(blob(radius + 1.3, .7), fill=(17, 18, 15, 255))
+        d.polygon(blob(radius, .7), fill=PAPER)
+    return im.resize((size, size), Image.LANCZOS)
+
+
 def main():
+    import sys
     OUT.mkdir(parents=True, exist_ok=True)
-    for size in (48, 96):
-        render(size, False).save(OUT / f"naroa-brocha-{size}.png", optimize=True)
-        render(size, True).save(OUT / f"naroa-brocha-pointer-{size}.png", optimize=True)
-    print("Pincel generado en", OUT)
+    only = sys.argv[1] if len(sys.argv) > 1 else ""      # «pincel» o «punto»; sin argumento, los dos
+    if only in ("", "pincel"):
+        for size in (48, 96):
+            render(size, False).save(OUT / f"naroa-brocha-{size}.png", optimize=True)
+            render(size, True).save(OUT / f"naroa-brocha-pointer-{size}.png", optimize=True)
+        print("Pincel generado en", OUT)
+    if only in ("", "punto"):
+        for size in (32, 64):
+            render_point(size, False).save(OUT / f"naroa-punto-{size}.png", optimize=True)
+            render_point(size, True).save(OUT / f"naroa-punto-pointer-{size}.png", optimize=True)
+        print("Punto generado en", OUT)
 
 
 if __name__ == "__main__":
