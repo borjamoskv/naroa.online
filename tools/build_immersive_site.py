@@ -2759,31 +2759,10 @@ def build(output):
     write(output / "llms-full.txt", llms_full_txt)
     write(REPO / "public" / "llms-full.txt", llms_full_txt)
 
-    headers_content = (
-        "/*\n"
-        "  X-Frame-Options: DENY\n"
-        "  X-Content-Type-Options: nosniff\n"
-        "  Referrer-Policy: strict-origin-when-cross-origin\n"
-        "  Permissions-Policy: camera=(), microphone=(), geolocation=()\n"
-        "  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload\n"
-        "  Cache-Control: public, max-age=0, must-revalidate\n"
-        "/api/*\n"
-        "  Content-Type: application/json; charset=utf-8\n"
-        "  Access-Control-Allow-Origin: *\n"
-        "  Cache-Control: public, max-age=3600, stale-while-revalidate=86400\n"
-        "/.well-known/*\n"
-        "  Content-Type: application/json; charset=utf-8\n"
-        "  Access-Control-Allow-Origin: *\n"
-        "  Cache-Control: public, max-age=3600, stale-while-revalidate=86400\n"
-        "/llms.txt\n"
-        "  Content-Type: text/markdown; charset=utf-8\n"
-        "  Cache-Control: public, max-age=3600, stale-while-revalidate=86400\n"
-        "/llms-full.txt\n"
-        "  Content-Type: text/markdown; charset=utf-8\n"
-        "  Cache-Control: public, max-age=3600, stale-while-revalidate=86400\n"
-        # Solo lo que lleva hash en el nombre: build-manifest.json y audio/creditos.txt no lo llevan.
-        + "".join(f"/immersive/{pattern}\n  Cache-Control: public, max-age=31536000, immutable\n" for pattern in ("media/*", "*.js", "*.css", "*.svg"))
-    )
+    # Vercel sirve el dominio y Cloudflare Pages es una copia (AGENTS.md §14): sus cabeceras salen de vercel.json.
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import hosting_rules
+    headers_content = hosting_rules.pages_headers(hosting_rules.hosting_rules(REPO / "vercel.json"), hosting_rules.public_urls(output))
     write(output / "_headers", headers_content)
     write(output / "_redirects", ''.join(f'{src.rstrip("/")} {dest} 301\n' for src, dest in aliases.items()) + '/landing-bilbao /retratos-por-encargo-bilbao/ 301\n')
     write(output / "immersive" / "build-manifest.json", json.dumps({"reviewed": catalogue["reviewed"], "projects": len(projects), "canonical_routes": [p[0] for p in pages], "media_files": len(jobs), "originals": len(originals), "c2pa": c2pa_files, "assets": assets}, ensure_ascii=False, indent=2) + '\n')
