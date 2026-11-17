@@ -1,15 +1,17 @@
 # Banda sonora de Naroa
 
-Doce piezas originales para piano, trombones y delays de cinta, compuestas para
-esta web: una por mes, tituladas con el nombre del mes en euskera. Suena la del
-mes en curso, a 96 pulsos por minuto en reposo.
+Doce piezas originales de electrónica cálida, de sintetizador analógico,
+compuestas para esta web: una por mes, tituladas con el nombre del mes en
+euskera. Suena la del mes en curso, a 96 pulsos por minuto en reposo; el pulso
+sigue al scroll.
 
 Urtarrila · Otsaila · Martxoa · Apirila · Maiatza · Ekaina · Uztaila · Abuztua ·
 Iraila · Urria · Azaroa · Abendua
 
-Toda la música se genera en el navegador con Web Audio: el piano, los trombones,
-la sala, los ecos, el ruido de fieltro y pedal y el paisaje de cada mes (viento,
-lluvia, mar, brasas, pájaros, grillos) son síntesis. No se usa ni se descarga
+Toda la música se genera en el navegador con Web Audio: arpegio, bajo, cuerdas,
+teclado eléctrico, voz espacial, trombones en el puente, caja de ritmos, la sala,
+los ecos y el paisaje de cada mes (viento, lluvia, mar, brasas, pájaros, grillos)
+son síntesis. No se usa ni se descarga
 ninguna grabación, muestra o canción de terceros.
 
 Suena al pulsar Sonido y se detiene al volver a pulsarlo. Se funde al ocultar la

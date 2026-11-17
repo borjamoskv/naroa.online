@@ -4842,6 +4842,38 @@
       }
       stage.classList.remove('is-resting');
       scheduleMotion();
+      armScrollSettle();
+    }
+    // Quien para el scroll a mitad de un paso no se queda mirando dos obras partidas: al quedarse quieto,
+    // el paso termina hacia la obra más cercana (la que se iba si no había llegado a la mitad).
+    // Nunca con el dedo o el puntero aún pulsados, con un diálogo, la lupa o una secuencia que retiene el scroll.
+    // var y no let: syncScroll puede correr antes de llegar a esta línea.
+    // Solo tras un gesto de quien visita (rueda, dedo, teclas o soltar la barra): un scroll por script
+    // (enlace directo, pruebas, el propio asentarse) no lo dispara. El puzle se puede dejar a medias a propósito.
+    var SCROLL_SETTLE_MS = 420, SCROLL_GESTURE_MS = 4000, scrollSettleTimer = null, scrollPointerHeld = false, scrollGestureAt = -Infinity;
+    const markScrollGesture = () => { scrollGestureAt = performance.now(); };
+    for (const type of ['wheel', 'touchmove', 'touchend', 'keydown']) addEventListener(type, markScrollGesture, { passive: true });
+    addEventListener('pointerdown', () => { scrollPointerHeld = true; clearTimeout(scrollSettleTimer); }, { passive: true });
+    for (const type of ['pointerup', 'pointercancel']) addEventListener(type, () => { if (!scrollPointerHeld) return; scrollPointerHeld = false; markScrollGesture(); armScrollSettle(); }, { passive: true });
+    function armScrollSettle() {
+      clearTimeout(scrollSettleTimer);
+      scrollSettleTimer = setTimeout(settleScroll, SCROLL_SETTLE_MS || 420);
+    }
+    function settleScroll() {
+      scrollSettleTimer = null;
+      if (performance.now() - scrollGestureAt > (SCROLL_GESTURE_MS || 4000)) return;
+      // Una navegación de la propia página (flechas, deslizar, índice) lleva su destino: no se corrige.
+      if (motion.navigation !== null && motion.navigation !== undefined) return;
+      if (reduced.matches || state.fit || scrollPointerHeld || isLauraZooming || isBreakdancing) return;
+      if (document.querySelector('dialog[open]') || document.body.classList.contains('is-lens') || stage.classList.contains('is-ezquerra-dazed') || stage.classList.contains('is-eguzkilore-stage')) return;
+      if (!(geometry.unit > 0)) return;
+      const unit = (scrollY - geometry.top) / geometry.unit;
+      if (unit <= 0 || unit >= journey.total) return;
+      const pose = journey.read(unit);
+      if (pose.phase !== 'transition' || pose.entry.mode === 'P' || pose.progress < 0.04 || pose.progress > 0.96) return;
+      const back = pose.progress < 0.5;
+      const top = geometry.top + (back ? pose.entry.transitionStart : pose.entry.end) * geometry.unit;
+      window.scrollTo({ top: back ? Math.floor(top) : Math.ceil(top), behavior: 'smooth' });
     }
     function scheduleMotion() {
       if (motion.frame === null) motion.frame = requestAnimationFrame(stepMotion);
