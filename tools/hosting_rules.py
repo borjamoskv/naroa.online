@@ -51,6 +51,29 @@ def to_globs(source):
     raise ValueError(f"regla de vercel.json sin traducción a _headers: {source!r} (añádela a GLOBS en tools/hosting_rules.py)")
 
 
+def _add(blocks, path, sets=(), unsets=()):
+    """Suma cabeceras a una ruta. Pages guarda una sola regla por ruta (la última sustituye a la
+    anterior), así que una ruta repetida se funde en un bloque y pasa al final."""
+    old_sets, old_unsets = blocks.pop(path, ({}, {}))
+    for name, value in sets:
+        old_sets[name.lower()] = (name, value)
+    for name in unsets:
+        old_unsets[name.lower()] = name
+    blocks[path] = (old_sets, old_unsets)
+
+
+def _render(blocks):
+    lines = ["# Generado desde vercel.json por tools/hosting_rules.py: no se edita a mano."]
+    seen = set()
+    for path, (sets, unsets) in blocks.items():
+        lines.append(path)
+        drop = dict(unsets) | {key: name for key, (name, _) in sets.items() if key in seen}
+        lines += [f"  ! {name}" for name in drop.values()]
+        lines += [f"  {name}: {value}" for name, value in sets.values()]
+        seen |= set(sets)
+    return "\n".join(lines) + "\n"
+
+
 def pages_headers(hosting, files=()):
     """Texto de `_headers` equivalente a las cabeceras de vercel.json.
 
@@ -58,33 +81,28 @@ def pages_headers(hosting, files=()):
     se sustituye (Vercel deja la última). Para que gane la más específica, cada ruta retira con
     `! Cabecera` las que una anterior ya haya puesto. `files` son las rutas públicas de la
     compilación (`/assets/x-v1.png`): donde un glob no da lo que vercel.json da a un archivo, se
-    añade al final una regla con su ruta exacta.
+    añade al final una regla con su ruta exacta. Si aun así algún archivo no coincide, falla.
     """
-    lines = ["# Generado desde vercel.json por tools/hosting_rules.py: no se edita a mano."]
-    seen = set()
+    blocks = {}
     for rule in hosting["headers"]:
         if rule.get("has"):
             continue  # reglas por host: Pages no las expresa (el www lo resolvía el Worker de Cloudflare)
         for glob in to_globs(rule["source"]):
-            lines.append(glob)
-            for header in rule["headers"]:
-                if header["key"].lower() in seen:
-                    lines.append(f"  ! {header['key']}")
-                lines.append(f"  {header['key']}: {header['value']}")
-            seen |= {header["key"].lower() for header in rule["headers"]}
-    rules = parse_pages_headers("\n".join(lines) + "\n")
+            _add(blocks, glob, [(header["key"], header["value"]) for header in rule["headers"]])
+    rules = parse_pages_headers(_render(blocks))
     for url in files:
         expected, got = vercel_effective(hosting, url), pages_effective(rules, url)
         if expected == got:
             continue
         if re.search(r"[*:\s]", url):
             raise ValueError(f"la ruta {url!r} no se puede escribir en _headers")
-        lines.append(url)
-        for name in got:
-            if name not in expected or expected[name] != got[name]:
-                lines.append(f"  ! {name}")
-        lines += [f"  {name}: {value}" for name, value in expected.items() if got.get(name) != value]
-    return "\n".join(lines) + "\n"
+        _add(blocks, url, [(name, value) for name, value in expected.items() if got.get(name) != value], [name for name in got if expected.get(name) != got[name]])
+    text = _render(blocks)
+    rules = parse_pages_headers(text)
+    wrong = [url for url in files if vercel_effective(hosting, url) != pages_effective(rules, url)]
+    if wrong:
+        raise ValueError(f"_headers no reproduce vercel.json en {len(wrong)} archivos (p. ej. {wrong[0]})")
+    return text
 
 
 def parse_pages_headers(text):
@@ -118,11 +136,17 @@ def parse_pages_headers(text):
             raise ValueError(f"_headers: la ruta {pattern!r} no lleva cabeceras")
     if len(rules) > PAGES_MAX_RULES:
         raise ValueError(f"_headers: {len(rules)} reglas; Pages admite {PAGES_MAX_RULES}")
-    return rules
+    # Wrangler guarda las reglas en un objeto indexado por ruta: una ruta repetida sustituye a la
+    # anterior y conserva su sitio (comprobado en workerd el 2026-11-17). El dict de Python hace lo mismo.
+    by_path = {}
+    for rule in rules:
+        by_path[rule[0]] = rule
+    return list(by_path.values())
 
 
 def pages_effective(rules, url):
-    """Cabeceras que daría Pages: reglas en orden; cada una retira y luego añade (las repetidas se unen)."""
+    """Cabeceras que daría Pages por su `_headers`: reglas en orden; cada una retira y luego añade
+    (las repetidas se unen). No incluye lo que Pages añade siempre (`Access-Control-Allow-Origin: *`)."""
     result = {}
     for pattern, headers, unset in rules:
         if re.fullmatch(".*".join(re.escape(part) for part in pattern.split("*")), url):
