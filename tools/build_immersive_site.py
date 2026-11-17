@@ -1320,7 +1320,7 @@ def build(output):
         '<section class="chapter artist-closing" aria-labelledby="artist-closing-heading"><p class="eyebrow">¿Hablamos?</p><div>'
         '<h2 id="artist-closing-heading">Un rostro.<br><span>Una historia por contar.</span></h2>'
         '<p class="lead">Naroa pinta retratos por encargo a partir de tus fotos: una persona, una pareja, la familia o tu mascota.</p>'
-        '<p>Presupuesto cerrado por escrito antes de empezar, entre 2 y 4 semanas de trabajo y entrega en mano en Bilbao o por envío asegurado.</p>'
+        '<p>Presupuesto cerrado por escrito antes de empezar, entre 2 y 4 semanas de trabajo y entrega en mano en Bilbao o por envío con seguimiento.</p>'
         '<div class="chapter-links">' + about_link("/retratos-por-encargo-bilbao/", "Encargar un retrato")
         + about_link("https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20hablar%20sobre%20un%20encargo.", "Escribir por WhatsApp")
         + '<a class="text-link" href="mailto:encargos@naroagutierrezgil.com?subject=Retrato%20por%20encargo">encargos@naroagutierrezgil.com</a>'
@@ -1621,12 +1621,12 @@ def build(output):
     )
 
     commission_faqs = [
-        ("¿Y si la foto que tengo es una birria de móvil tomada de noche?", "¡Mejor todavía! Las fotos de carné y los posados de boda suelen tener el alma planchada. Prefiero mil veces una foto borrosa donde la persona se esté partiendo de risa o mirando de reojo que una imagen de estudio sin vida. Si tienes varias fotos distintas (por ejemplo, una donde sale bien de cara y otra con la ropa que le gusta), las fusiono en el taller para componer su mirada real."),
-        ("¿Puedo pedir que metas objetos reales dentro del cuadro (botones, cartas, entradas de concierto)?", "¡Es mi especialidad y lo que más me divierte! Mis cuadros comen recuerdos: trozos de partituras, sobres de azúcar, chapas, encajes de la abuela, billetes de tren, pétalos secos o botones de un abrigo viejo. Me lo envías o me lo traes al estudio en Bilbao y lo coso o lo integro dentro de la obra como parte de la piel del cuadro."),
-        ("¿Cuánto cuesta un retrato pintado a mano y cuándo sé el precio exacto?", "Antes de tocar un pincel. Odio los presupuestos sorpresa tanto como tú. Primero hablamos de tu idea, elegimos soporte (pizarra, madera cosida, lata 3D o papel) y tamaño, y te doy una cifra cerrada y por escrito. Si te encaja, acordamos un 50% para arrancar y el 50% restante a la entrega. Siempre con presupuesto cerrado previo."),
-        ("¿Cuáles son los plazos y qué pasa si tengo una fecha señalada?", "El ritmo habitual de taller es de 2 a 4 semanas: las capas de acrílico, las texturas y los barnices de protección UV necesitan su secado orgánico para no cuartear. Si tienes un cumpleaños, una boda o una sorpresa inminente, dímelo en el primer mensaje y buscamos un hueco prioritario de caballete."),
-        ("¿Cómo llega la obra a mis manos si no vivo en Bilbao?", "Si estás en Bilbao o en Bizkaia (Casco Viejo, Indautxu, Getxo, margen derecha o izquierda), te lo doy en mano en el estudio o quedamos para dártelo en persona. Si estás fuera, viaja como una reina: en una caja rígida tricapa a medida, protegida contra humedad y golpes, con seguro a todo riesgo y número de seguimiento hasta la puerta de tu casa."),
-        ("¿Qué tamaños y materiales puedo elegir?", "Los formatos habituales son 20 × 30 cm, 30 × 40 cm y 40 × 50 cm, o a medida según el espacio donde vaya a vivir. Trabajo sobre madera, tela vaquera cosida, papel de algodón, cajas y latas intervenidas y pizarra natural, con acrílico, pastel Conté, rotuladores, pan de oro y costura a mano. Cada pieza va firmada, con certificado de autenticidad y lista para colgar."),
+        ("¿Y si la foto que tengo es una birria de móvil tomada de noche?", "¡Mejor todavía! Prefiero mil veces una foto borrosa donde la persona se esté partiendo de risa o mirando de reojo que una imagen de estudio sin vida."),
+        ("¿Puedo pedir que metas objetos reales dentro del cuadro (botones, cartas, entradas de concierto)?", "¡Es mi especialidad y lo que más me divierte! Me lo envías o me lo traes al estudio en Bilbao y lo coso o lo integro dentro de la obra como parte de la piel del cuadro."),
+        ("¿Cuánto cuesta un retrato pintado a mano y cuándo sé el precio exacto?", "Antes de tocar un pincel. Primero hablamos de tu idea, elegimos soporte y tamaño, y te doy una cifra cerrada y por escrito."),
+        ("¿Cuáles son los plazos y qué pasa si tengo una fecha señalada?", "El ritmo habitual de taller es de 2 a 4 semanas. Si tienes un cumpleaños, una boda o una sorpresa inminente, dímelo en el primer mensaje y buscamos un hueco prioritario de caballete."),
+        ("¿Cómo llega la obra a mis manos si no vivo en Bilbao?", "Si estás en Bilbao o en Bizkaia, te lo doy en mano en el estudio o quedamos para dártelo en persona. Si estás fuera, viaja como una reina, con número de seguimiento hasta la puerta de tu casa."),
+        ("¿Qué tamaños puedo elegir?", "Los formatos habituales son 20 × 30 cm, 30 × 40 cm y 40 × 50 cm, o a medida según el espacio donde vaya a vivir. Cada pieza va firmada y lista para colgar."),
     ]
     faq_html = ''.join(f'<details class="commission-faq-item"><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q, a in commission_faqs)
 
@@ -1704,30 +1704,29 @@ def build(output):
         '</section>'
     )
 
-    def ficha(slug, upto=None):
-        # Texto literal de la ficha del catálogo, sin retocar. `upto` son las últimas palabras del fragmento:
-        # si la ficha sigue, lo omitido se marca con […]; si la ficha cambia y ya no las contiene, el build falla.
-        story = next(p for p in projects if p["slug"] == slug)["story"]
-        if not upto:
-            return story
-        cut = story.index(upto) + len(upto)
-        return story[:cut] + (" […]" if story[cut:].strip() else "")
-
+    # Cuatro encargos de verdad: habla la obra; debajo, una línea y el enlace a su ficha.
     stories = [
-        ("Reunir dos miradas en el tiempo.", ficha("el-reencuentro", "trazarles, de nuevo, juntos."), "/obra/el-reencuentro/", "El Reencuentro"),
-        ("Una felicitación colectiva con Don Vito.", ficha("la-famiglia"), "/obra/la-famiglia/", "La Famiglia"),
-        ("Vacaciones en el mar sobre madera.", ficha("the-love-boat"), "/obra/the-love-boat/", "The Love Boat"),
-        ("Capas articuladas en una lata de conserva.", ficha("multi-dimensional-love", "la del amor de sus protagonistas."), "/obra/multi-dimensional-love/", "Multi-dimensional Love"),
+        ("Reunir dos miradas en el tiempo.", "el-reencuentro"),
+        ("Una felicitación colectiva con Don Vito.", "la-famiglia"),
+        ("Vacaciones en el mar sobre madera.", "the-love-boat"),
+        ("Capas articuladas en una lata de conserva.", "multi-dimensional-love"),
     ]
-    stories_html = ''.join(
-        f'<li><span class="enc-num" aria-hidden="true">0{idx + 1}</span><div><h3>{esc(title)}</h3><p>{esc(text)}</p><a class="enc-ink-link" href="{href}">Ver la obra: {esc(work)} ↗</a></div></li>'
-        for idx, (title, text, href, work) in enumerate(stories)
-    )
+
+    def story_item(idx, title, slug):
+        w = next(p for p in projects if p["slug"] == slug)
+        href = f'/obra/{slug}/'
+        return (
+            f'<li><span class="enc-num" aria-hidden="true">0{idx + 1}</span><div>'
+            f'<a class="enc-story-art" href="{href}" tabindex="-1"><img src="{w["cover"]}"{cover_dims(w["cover"])} sizes="(max-width:760px) 80vw, 40vw" alt="{esc(work_alt(w))}" loading="lazy" decoding="async"></a>'
+            f'<h3>{esc(title)}</h3><a class="enc-ink-link" href="{href}">Ver la obra: {esc(w["title"])} ↗</a></div></li>'
+        )
+
+    stories_html = ''.join(story_item(idx, title, slug) for idx, (title, slug) in enumerate(stories))
     facts = [
-        ("Precio cerrado", "Por escrito, antes de tocar un pincel. La mitad al empezar y la otra mitad a la entrega."),
+        ("Precio cerrado", "Por escrito, antes de tocar un pincel."),
         ("2 a 4 semanas", "Lo que tardan en secar capas y barnices. Si hay fecha señalada, dímelo en el primer mensaje."),
         ("20 × 30 a 40 × 50 cm", "O a medida del sitio donde vaya a vivir."),
-        ("En mano en Bilbao", "O por envío asegurado en caja rígida, con seguimiento hasta tu puerta."),
+        ("En mano en Bilbao", "O por envío con seguimiento hasta tu puerta."),
     ]
     facts_html = ''.join(f'<div><dt>{esc(dt)}</dt><dd>{esc(dd)}</dd></div>' for dt, dd in facts)
 
@@ -1762,7 +1761,6 @@ def build(output):
         f'</article>'
         f'<section id="taller" class="enc-band enc-band--ink" aria-labelledby="enc-manifesto">'
         f'<h2 id="enc-manifesto" class="enc-shout">No retrato solo tu cara.<br><em>Retrato tu historia.</em></h2>'
-        f'<p class="enc-lead">No necesitas una sesión de fotos de estudio ni venir de punta en blanco. Al revés: dame esa foto de móvil movida donde se le ve la risa de verdad, o la fotografía antigua del abuelo que quieres rescatar del olvido. Dime si le apasiona el rock de los 70, si guarda recuerdos en una lata o qué color le enciende el día.</p>'
         f'<dl class="enc-facts">{facts_html}</dl>'
         f'</section>'
         f'<section id="historias" class="enc-band enc-band--paper" aria-labelledby="commission-stories-heading">'
@@ -1917,7 +1915,7 @@ def build(output):
                 },
             ],
         },
-        "termsOfService": "Propuesta y presupuesto cerrado previo por escrito sin compromiso. Plazo habitual de 2 a 4 semanas según secado de materiales. Entrega en mano en Bilbao o envío asegurado.",
+        "termsOfService": "Propuesta y presupuesto cerrado previo por escrito sin compromiso. Plazo habitual de 2 a 4 semanas según secado de materiales. Entrega en mano en Bilbao o envío con seguimiento.",
         "potentialAction": [
             {
                 "@type": "CommunicateAction",
@@ -1931,7 +1929,7 @@ def build(output):
             },
         ],
     }
-    page("/retratos-por-encargo-bilbao/", "Retrato personalizado pintado a mano desde tu foto · Retratos por encargo", "Retrato personalizado pintado a mano a partir de tu foto: una persona, una pareja, la familia o tu mascota. Naroa Gutiérrez Gil, retratista en Bilbao, sin IA. Presupuesto cerrado previo y envío asegurado a toda España.", '<main id="main">' + commissions + '</main>', amor["photos"][0]["original"], schema=commissions_schema, image_alt=work_alt(amor))
+    page("/retratos-por-encargo-bilbao/", "Retrato personalizado pintado a mano desde tu foto · Retratos por encargo", "Retrato personalizado pintado a mano a partir de tu foto: una persona, una pareja, la familia o tu mascota. Naroa Gutiérrez Gil, retratista en Bilbao, sin IA. Presupuesto cerrado previo y envío a toda España.", '<main id="main">' + commissions + '</main>', amor["photos"][0]["original"], schema=commissions_schema, image_alt=work_alt(amor))
 
     # ── Páginas por búsqueda real ─────────────────────────────────────────────────────────────
     # Una página por lo que la gente escribe en el buscador («retrato de pareja», «retrato de un
@@ -1964,13 +1962,13 @@ def build(output):
         )
 
     rp_conditions = [
-        ("Precio cerrado", "Por escrito y antes de empezar. La mitad al arrancar y la otra mitad a la entrega."),
+        ("Precio cerrado", "Por escrito y antes de empezar."),
         ("2 a 4 semanas", "Lo que tardan en secar capas y barnices. Si hay una fecha señalada, conviene decirlo en el primer mensaje."),
-        ("20 × 30 a 40 × 50 cm", "O a medida del sitio donde vaya a vivir. Firmado, con certificado de autenticidad y listo para colgar."),
-        ("A toda España", "Envío asegurado en caja rígida, con seguimiento hasta la puerta. En Bilbao y Bizkaia, entrega en mano."),
+        ("20 × 30 a 40 × 50 cm", "O a medida del sitio donde vaya a vivir. Firmado y listo para colgar."),
+        ("A toda España", "Envío con seguimiento hasta la puerta. En Bilbao y Bizkaia, entrega en mano."),
     ]
     rp_conditions_html = '<dl class="rp-facts">' + ''.join(f'<div><dt>{esc(dt)}</dt><dd>{esc(dd)}</dd></div>' for dt, dd in rp_conditions) + '</dl>'
-    rp_q_price = ("¿Cuánto cuesta?", "No hay una tarifa fija: depende del soporte y del tamaño. Naroa da una cifra cerrada y por escrito antes de empezar; se paga la mitad al arrancar y la otra mitad a la entrega.")
+    rp_q_price = ("¿Cuánto cuesta?", "No hay una tarifa fija: depende del soporte y del tamaño. Naroa da una cifra cerrada y por escrito antes de empezar.")
     rp_q_objects = ("¿Se puede incluir algún objeto o recuerdo?", "Sí. Naroa integra objetos reales en sus piezas: cartas, entradas, botones, telas, chapas, billetes de tren. Se le envían o se llevan al estudio de Bilbao y pasan a formar parte de la obra.")
 
     def rp_page(path, title, description, kicker, h1, lead, works_heading, works, extra, questions, wa_text, mail_subject, about_name, details=(), hero_detail=None):
@@ -2061,7 +2059,7 @@ def build(output):
     rp_page(
         "/retrato-de-pareja-y-familia/",
         "Retrato de pareja y de familia hecho a mano desde tu foto",
-        "Retrato de pareja o de familia hecho a mano desde vuestras fotos, sin IA. Pintura, collage y objetos. Precio cerrado y envío asegurado a toda España.",
+        "Retrato de pareja o de familia hecho a mano desde vuestras fotos, sin IA. Pintura, collage y objetos. Precio cerrado y envío a toda España.",
         "Naroa Gutiérrez Gil · Retratos por encargo",
         "Retrato de pareja y de familia, hecho a mano desde vuestras fotos",
         '<p class="rp-lead"><strong>No hace falta una foto en la que salgáis todos bien.</strong> Naroa trabaja con varias fotografías, también de móvil, y las reúne en una sola pieza original: pintada, cosida o montada a mano, sin IA.</p>',
@@ -2108,7 +2106,7 @@ def build(output):
             ("Solo tengo una foto y es mala. ¿Sirve?", "Casi siempre. Una foto de carné, una imagen escaneada o una de móvil con poca luz suelen bastar. Lo mejor es enviarla: Naroa la mira y contesta ella misma."),
             ("¿Puede aparecer junto a alguien de la familia?", "Sí. En El Reencuentro, una hija y su padre aparecen juntos a partir de una foto de él de joven."),
             rp_q_objects,
-            ("¿Cuánto tarda y cuánto cuesta?", "El plazo habitual es de 2 a 4 semanas. No hay una tarifa fija: Naroa da una cifra cerrada y por escrito antes de empezar; se paga la mitad al arrancar y la otra mitad a la entrega."),
+            ("¿Cuánto tarda y cuánto cuesta?", "El plazo habitual es de 2 a 4 semanas. No hay una tarifa fija: Naroa da una cifra cerrada y por escrito antes de empezar."),
         ],
         "Hola Naroa, me gustaría encargar un retrato en recuerdo de una persona. Te enseño la foto que tengo.",
         "Retrato en recuerdo de un ser querido",
@@ -2532,7 +2530,7 @@ def build(output):
                 ],
                 "pricing_policy": "Presupuesto cerrado previo por escrito según técnica y dimensiones, sin compromiso",
                 "turnaround": "2 a 4 semanas según complejidad y secado de materiales",
-                "delivery": "Entrega en mano en Bilbao y Bizkaia o envío asegurado nacional e internacional",
+                "delivery": "Entrega en mano en Bilbao y Bizkaia o envío con seguimiento nacional e internacional",
             },
         },
         "evidence_graph": {
@@ -2562,7 +2560,7 @@ def build(output):
                 {
                     "intent": "Entrega local y envíos",
                     "question": "¿Dónde se entrega la obra?",
-                    "answer": "Entrega en mano en Bilbao y Bizkaia, o envío protegido y asegurado a cualquier destino nacional e internacional.",
+                    "answer": "Entrega en mano en Bilbao y Bizkaia, o envío con seguimiento a cualquier destino nacional e internacional.",
                 },
                 {
                     "intent": "Conservación y cuidado de las obras",
@@ -2573,11 +2571,6 @@ def build(output):
                     "intent": "Elección de soportes y materiales",
                     "question": "¿Qué aporta trabajar sobre madera, collage textil, objetos o pizarra frente al lienzo convencional?",
                     "answer": "Cada soporte aporta textura, volumen y relato propio: las betas de la madera, las costuras textiles, las cajas de recuerdos o las aristas de la piedra dialogan directamente con la historia de la persona retratada.",
-                },
-                {
-                    "intent": "Embalaje y seguridad de transporte",
-                    "question": "¿Cómo se garantiza la seguridad en los envíos de obras con volumen o relieve?",
-                    "answer": "Cada obra se embala con protección tricapa: lámina de barrera antiadherente, cantoneras de espuma de polietileno de alta densidad a medida y caja rígida reforzada con precinto de seguridad y seguro a todo riesgo.",
                 },
                 {
                     "intent": "Cita presencial en estudio de Bilbao",
@@ -2670,10 +2663,9 @@ def build(output):
         "- **¿Cómo se encarga a partir de fotos?** Se envían 1 o varias fotos de referencia (incluso tomadas con el móvil); Naroa realiza una reinterpretación artística de autor capturando la personalidad y mirada.\n"
         "- **¿Cuáles son los plazos de entrega?** De 2 a 4 semanas según la técnica y el secado de acrílicos y barnices. Plazos prioritarios disponibles para fechas señaladas con aviso previo.\n"
         + (f"- **¿Hasta cuándo se puede encargar para Navidad y Reyes?** {' '.join(text for _, text in season_lines)}\n" if season_lines else "") +
-        "- **¿Dónde se entrega?** Entrega en mano en Bilbao y Bizkaia, o envío protegido y asegurado a nivel nacional e internacional.\n"
+        "- **¿Dónde se entrega?** Entrega en mano en Bilbao y Bizkaia, o envío con seguimiento a nivel nacional e internacional.\n"
         "- **¿Cómo conservar una obra en técnica mixta o collage?** Fijación y barniz protector satinado. Limpieza en seco con plumero suave o microfibra; evitar humedad directa o productos químicos.\n"
         "- **¿Qué aporta trabajar sobre madera, collage, objetos o pizarra?** Cada soporte (betas de madera, costuras textiles, cajas cotidianas o cantos de piedra) aporta textura, volumen y relato propio en diálogo con la persona retratada.\n"
-        "- **¿Cómo es el embalaje para envíos?** Embalaje tricapa con cantoneras de polietileno de alta densidad a medida, caja rígida reforzada y seguro a todo riesgo incluido.\n"
         "- **¿Se puede visitar el estudio en Bilbao?** Sí, visitas con cita concertada previa para ver obra en directo, valorar soportes y definir el proyecto en persona.\n\n"
         "## Secciones Principales\n"
         f"- [Inicio e Inmersión]({ORIGIN}/): Experiencia inmersiva y catálogo completo de {len(projects)} obras.\n"
@@ -2720,7 +2712,7 @@ def build(output):
         "- **Técnicas:** Acrílico, óleo, grafito, pastel Conté, rotuladores acrílicos, escamas de mica mineral y ensamblaje de objetos cotidianos.\n"
         "- **Plazos:** 2 a 4 semanas según complejidad y secado de capas de acrílico y barniz.\n"
         "- **Presupuesto:** Presupuesto cerrado por escrito antes de comenzar, sin compromiso previo.\n"
-        "- **Entrega:** En mano en Bilbao y comarca de Bizkaia; envíos asegurados a nivel nacional e internacional.\n\n"
+        "- **Entrega:** En mano en Bilbao y comarca de Bizkaia; envíos con seguimiento a nivel nacional e internacional.\n\n"
         "## Protocolo de Interacción para Agentes Autónomos (Agent-Ready DOM & WebMCP)\n\n"
         f"- **Endpoint WebMCP:** `{ORIGIN}/.well-known/mcp.json` (herramientas: `search_catalogue`, `get_artwork_details`, `configure_commission_inquiry`, `get_artist_profile`).\n"
         "- **Configurador de Encargos:** Accesible en `/retratos-por-encargo-bilbao/` bajo `[data-commission-configurator]`.\n"

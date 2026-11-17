@@ -7100,9 +7100,9 @@
       canonical_url: 'https://naroagutierrezgil.com/retratos-por-encargo-bilbao/'
     },
     envios: {
-      intent: 'Entrega local en Bilbao y envíos asegurados',
+      intent: 'Entrega local en Bilbao y envíos',
       question: '¿Dónde y cómo se entrega la obra?',
-      answer: 'Entrega personal en mano en Bilbao y Bizkaia, o envío rígido protegido y asegurado a cualquier destino de España e internacional.',
+      answer: 'Entrega personal en mano en Bilbao y Bizkaia, o envío con seguimiento a cualquier destino de España e internacional.',
       canonical_url: 'https://naroagutierrezgil.com/retratos-por-encargo-bilbao/'
     }
   };

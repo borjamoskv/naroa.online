@@ -54,7 +54,7 @@
       ],
       "pricing_policy": "Presupuesto cerrado previo por escrito según técnica y dimensiones, sin compromiso",
       "turnaround": "2 a 4 semanas según complejidad y secado de materiales",
-      "delivery": "Entrega en mano en Bilbao y Bizkaia o envío asegurado nacional e internacional"
+      "delivery": "Entrega en mano en Bilbao y Bizkaia o envío con seguimiento nacional e internacional"
     }
   },
   "evidence_graph": {
@@ -84,7 +84,7 @@
       {
         "intent": "Entrega local y envíos",
         "question": "¿Dónde se entrega la obra?",
-        "answer": "Entrega en mano en Bilbao y Bizkaia, o envío protegido y asegurado a cualquier destino nacional e internacional."
+        "answer": "Entrega en mano en Bilbao y Bizkaia, o envío con seguimiento a cualquier destino nacional e internacional."
       },
       {
         "intent": "Conservación y cuidado de las obras",
@@ -95,11 +95,6 @@
         "intent": "Elección de soportes y materiales",
         "question": "¿Qué aporta trabajar sobre madera, collage textil, objetos o pizarra frente al lienzo convencional?",
         "answer": "Cada soporte aporta textura, volumen y relato propio: las betas de la madera, las costuras textiles, las cajas de recuerdos o las aristas de la piedra dialogan directamente con la historia de la persona retratada."
-      },
-      {
-        "intent": "Embalaje y seguridad de transporte",
-        "question": "¿Cómo se garantiza la seguridad en los envíos de obras con volumen o relieve?",
-        "answer": "Cada obra se embala con protección tricapa: lámina de barrera antiadherente, cantoneras de espuma de polietileno de alta densidad a medida y caja rígida reforzada con precinto de seguridad y seguro a todo riesgo."
       },
       {
         "intent": "Cita presencial en estudio de Bilbao",
