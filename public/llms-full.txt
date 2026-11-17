@@ -33,9 +33,9 @@
 - **¿Se puede visitar el estudio en Bilbao?** Sí, visitas con cita concertada previa para ver obra en directo, valorar soportes y definir el proyecto en persona.
 
 ## Secciones Principales
-- [Inicio e Inmersión](https://naroagutierrezgil.com/): Experiencia inmersiva y catálogo completo de 85 obras.
+- [Inicio e Inmersión](https://naroagutierrezgil.com/): Experiencia inmersiva y catálogo completo de 86 obras.
 - [Retratos por Encargo en Bilbao](https://naroagutierrezgil.com/retratos-por-encargo-bilbao/): Condiciones técnicas, formatos (20×30 cm a 40×50 cm), plazos de 2 a 4 semanas, configurador interactivo y galería de ejemplos reales.
-- [Catálogo Completo](https://naroagutierrezgil.com/obra/): Ficha detallada de las 85 piezas de la colección con fotografías de detalle y relato.
+- [Catálogo Completo](https://naroagutierrezgil.com/obra/): Ficha detallada de las 86 piezas de la colección con fotografías de detalle y relato.
 - [Serie Vaivenes](https://naroagutierrezgil.com/series/vaivenes/): Retratos en técnica mixta, collage textil y objetos de memoria.
 - [Sobre Mí](https://naroagutierrezgil.com/sobre-mi/): Biografía, técnica, proceso creativo y proyectos comunitarios (Walking Gallery Bilbao, El ReCreo).
 - [Trayectoria](https://naroagutierrezgil.com/trayectoria/): Archivo cronológico de exposiciones documentadas desde 2010 (DEIA, GARA, Politena, Dock Bilbao).
@@ -46,14 +46,14 @@
 - [Retrato de mascota](https://naroagutierrezgil.com/retrato-de-mascota/): Encargos de retratos de perro o gato hechos a mano desde una foto.
 
 ## Recursos Machine-to-Machine y GEO SOTA 2026
-- [Catálogo JSON Estructurado](https://naroagutierrezgil.com/api/catalog.json): Endpoint con especificaciones completas de las 85 obras y Evidence Graph.
+- [Catálogo JSON Estructurado](https://naroagutierrezgil.com/api/catalog.json): Endpoint con especificaciones completas de las 86 obras y Evidence Graph.
 - [Endpoint WebMCP](https://naroagutierrezgil.com/.well-known/mcp.json): Manifiesto y definición formal de herramientas WebMCP para agentes autónomos.
 - [Índice Extendido llms-full.txt](https://naroagutierrezgil.com/llms-full.txt): Desglose exhaustivo de todas las piezas, fotos de detalle con hashes SHA-256 y condiciones de encargo.
-- [Sitemap XML](https://naroagutierrezgil.com/sitemap.xml): Índice canónico de 96 rutas y metadatos de imágenes.
+- [Sitemap XML](https://naroagutierrezgil.com/sitemap.xml): Índice canónico de 97 rutas y metadatos de imágenes.
 - [Feed RSS 2.0](https://naroagutierrezgil.com/feed.xml): Sindicación de obras recientes y publicaciones del taller.
 - [Protocolo IndexNow](https://naroagutierrezgil.com/indexnow.json): Sincronización instantánea de indexación para Bing y motores asociados.
 
-## Catálogo Exhaustivo de Obras (85 Piezas Documentadas)
+## Catálogo Exhaustivo de Obras (86 Piezas Documentadas)
 
 ### Marilyn Rocks
 - **URL Canónica:** https://naroagutierrezgil.com/obra/marilyn-rocks/
@@ -675,14 +675,14 @@
 - **Relato:** Ficha técnica: Técnica mixta barroca contemporánea con cenefa dorada y marco altar intervenido.
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Baroque%20Farrokh
 
-### El Gran Dakari (2024)
+### El Gran Dakari (2022)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/el-gran-dakari/
-- **Técnica:** Acrílico y pigmentos minerales
-- **Soporte:** Plato de pizarra natural de cantera
-- **Medidas:** 32 × 24 × 0,8 cm
-- **Materiales:** Acrílico y pigmentos minerales
-- **Serie:** DiviNos
-- **Relato:** Ficha técnica: Acrílico y técnica mixta sobre pizarra natural de cantera con escamas de mica mineral.
+- **Técnica:** Rotuladores permanentes Sharpie y Edding, rotulador acrílico Uni-Posca, corrector blanco Tipp-Ex, bolígrafo Bic rojo y agua de colonia para diluir parte de las tintas
+- **Soporte:** Cuatro cartas de póker en marco tipo caja con profundidad
+- **Medidas:** Medidas variables
+- **Materiales:** Rotuladores permanentes Sharpie y Edding, rotulador acrílico Uni-Posca, corrector blanco Tipp-Ex, bolígrafo Bic rojo y agua de colonia para diluir parte de las tintas
+- **Serie:** Colección general
+- **Relato:** Retrato del Gran Dakari, mago encarnado por el sublime Fito Lasarte, realizado mediante técnica mixta con motivo de su cumpleaños. Trabajado sobre 4 cartas de póker y presentado en marco tipo caja con profundidad. “El arte de la magia debe tener la finalidad de elevar la cuota de felicidad en el mundo, en los demás y en nosotros mismos”. (Juan Tamariz).
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20El%20Gran%20Dakari
 
 ### Geisha (2023)
@@ -734,6 +734,16 @@
 - **Serie:** Colección general
 - **Relato:** «Shine, baby, shine». Retrato en blanco y negro con un toque de color, realizado mediante lápices de colores Art & Graphic de Faber-Castell sobre papel poliéster. Posteriormente escaneado e impreso en papel de 350 gr/m². Sobre el fondo de esta lámina he aplicado pinceladas de esmalte transparente con brillantina dorada y un detalle a rotulador acrílico Uni-Posca. Presentado en marco formato A3 con cristal.
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Izei
+
+### Into the Wild (2017)
+- **URL Canónica:** https://naroagutierrezgil.com/obra/into-the-wild/
+- **Técnica:** Bolígrafos negro y rojo y lápiz Art & Graphic de Faber-Castell ocre, impresión en A3 sobre papel de 350 gr/m² y fondo de rotulador de tinta azul y alcohol sobre papel poliéster
+- **Soporte:** Papel de 350 gr/m² con passepartout y marco
+- **Medidas:** 50 × 40 cm con marco
+- **Materiales:** Bolígrafos negro y rojo y lápiz Art & Graphic de Faber-Castell ocre, impresión en A3 sobre papel de 350 gr/m² y fondo de rotulador de tinta azul y alcohol sobre papel poliéster
+- **Serie:** Colección general
+- **Relato:** Basándome en el cartel de la película “Hacia Rutas Salvajes”, he fusionado el rostro de Paul -dado que este se trata de su film favorito- con el cuerpo del actor principal de la historia, convirtiéndole así en el protagonista del citado largometraje. Retrato personalizado en blanco y negro con el fondo y detalles en color realizado mediante técnica mixta. Primeramente he realizado la ilustración utilizando bolígrafos -negro y rojo- y lápiz Art & Graphic de Faber-Castell de color ocre. He escaneado el resultado y lo he impreso a mayor formato (tamaño A3) sobre papel de alto gramaje (350 gr/m²). Posteriormente he trabajado el fondo con rotulador de tinta azul y alcohol sobre papel poliéster. Lo he recortado para encajar la silueta y lo he fijado con cinta adhesiva de doble cara a la lámina. Por último, he añadido el passepartout y el marco de 50 x 40 cm, con el que he presentado la pieza.
+- **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Into%20the%20Wild
 
 ### The Love Boat (2021)
 - **URL Canónica:** https://naroagutierrezgil.com/obra/the-love-boat/

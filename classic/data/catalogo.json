@@ -2046,32 +2046,50 @@
     {
       "slug": "el-gran-dakari",
       "title": "El Gran Dakari",
-      "category": "pizarra",
-      "technique": "Acrílico y pigmentos minerales",
-      "support": "Plato de pizarra natural de cantera",
-      "story": "Ficha técnica: Acrílico y técnica mixta sobre pizarra natural de cantera con escamas de mica mineral.",
+      "category": "collage",
+      "technique": "Rotuladores permanentes Sharpie y Edding, rotulador acrílico Uni-Posca, corrector blanco Tipp-Ex, bolígrafo Bic rojo y agua de colonia para diluir parte de las tintas",
+      "support": "Cuatro cartas de póker en marco tipo caja con profundidad",
+      "story": "Retrato del Gran Dakari, mago encarnado por el sublime Fito Lasarte, realizado mediante técnica mixta con motivo de su cumpleaños. Trabajado sobre 4 cartas de póker y presentado en marco tipo caja con profundidad. “El arte de la magia debe tener la finalidad de elevar la cuota de felicidad en el mundo, en los demás y en nosotros mismos”. (Juan Tamariz).",
       "images": [
         {
-          "src": "/images/artworks/el-gran-dakari-C1tAWAhR.webp",
-          "width": 1498,
-          "height": 2000,
-          "sha256": "0a4a77967d4278f5b880719f03019b8464018a6e85a9c70604997589260c34a1",
-          "caption": "Fotografía original de El Gran Dakari sobre plato de pizarra natural."
+          "src": "/images/catalogo/el-gran-dakari-01.jpg",
+          "width": 1488,
+          "height": 2048,
+          "sha256": "afbafdb3b7d9d2507af6dce0fd949c97774c0d980c8a9271c77437d5edb52cea",
+          "caption": "El Gran Dakari: retrato a rotulador sobre cuatro cartas de póker."
+        },
+        {
+          "src": "/images/catalogo/el-gran-dakari-04.jpg",
+          "width": 1601,
+          "height": 2048,
+          "sha256": "fe4660b46ef257aa6d0cb289af0f616c327ff401f11d12f9319c6a410b21f137",
+          "caption": "La pieza en su marco tipo caja con profundidad."
+        },
+        {
+          "src": "/images/catalogo/el-gran-dakari-02.jpg",
+          "width": 1554,
+          "height": 2048,
+          "sha256": "a4bd40614455c0f210d04731a99b539a757650495020d6407ca7ed5e3670c373",
+          "caption": "Vista frontal de la obra enmarcada."
         }
       ],
-      "dimensions": "32 × 24 × 0,8 cm",
-      "series": "DiviNos",
-      "year": 2024,
+      "dimensions": null,
+      "series": null,
+      "year": 2022,
       "credit": null,
       "selected": true,
       "kind": "obra",
-      "source": null,
+      "source": "https://www.facebook.com/media/set/?set=a.540247684121324&type=3",
       "editorial": {
         "image_order": [
-          0
+          0,
+          1,
+          2
         ],
         "captions": [
-          "El Gran Dakari original sobre la superficie de pizarra."
+          "El Gran Dakari: retrato a rotulador sobre cuatro cartas de póker.",
+          "La pieza en su marco tipo caja con profundidad.",
+          "Vista frontal de la obra enmarcada."
         ]
       }
     },
@@ -2293,6 +2311,59 @@
       "selected": false,
       "kind": "obra",
       "source": null
+    },
+    {
+      "slug": "into-the-wild",
+      "title": "Into the Wild",
+      "category": "collage",
+      "technique": "Bolígrafos negro y rojo y lápiz Art & Graphic de Faber-Castell ocre, impresión en A3 sobre papel de 350 gr/m² y fondo de rotulador de tinta azul y alcohol sobre papel poliéster",
+      "support": "Papel de 350 gr/m² con passepartout y marco",
+      "story": "Basándome en el cartel de la película “Hacia Rutas Salvajes”, he fusionado el rostro de Paul -dado que este se trata de su film favorito- con el cuerpo del actor principal de la historia, convirtiéndole así en el protagonista del citado largometraje. Retrato personalizado en blanco y negro con el fondo y detalles en color realizado mediante técnica mixta. Primeramente he realizado la ilustración utilizando bolígrafos -negro y rojo- y lápiz Art & Graphic de Faber-Castell de color ocre. He escaneado el resultado y lo he impreso a mayor formato (tamaño A3) sobre papel de alto gramaje (350 gr/m²). Posteriormente he trabajado el fondo con rotulador de tinta azul y alcohol sobre papel poliéster. Lo he recortado para encajar la silueta y lo he fijado con cinta adhesiva de doble cara a la lámina. Por último, he añadido el passepartout y el marco de 50 x 40 cm, con el que he presentado la pieza.",
+      "images": [
+        {
+          "src": "/images/catalogo/into-the-wild-01.jpg",
+          "width": 1574,
+          "height": 2048,
+          "sha256": "c84c9fa430f1fdd556639198e79d3e865bb07b76a149c4de7c7d606082e00baf",
+          "caption": "Obra completa: el retratado sobre el autobús 142 del cartel de la película."
+        },
+        {
+          "src": "/images/catalogo/into-the-wild-02.jpg",
+          "width": 1718,
+          "height": 1456,
+          "sha256": "64843b8880e6074eeac3d8d72cabe77262bd0e6fd5075f7553ae8dc95249f7af",
+          "caption": "Detalle de la figura a bolígrafo sobre el fondo azul."
+        },
+        {
+          "src": "/images/catalogo/into-the-wild-09.jpg",
+          "width": 1536,
+          "height": 2048,
+          "sha256": "3038db6065d9a51ff6619c8e31131e79c0eee3f0cdf8b277b69dd15411c8eba7",
+          "caption": "La ilustración a bolígrafo y lápiz, antes de añadir el fondo."
+        },
+        {
+          "src": "/images/catalogo/into-the-wild-03.jpg",
+          "width": 1536,
+          "height": 2048,
+          "sha256": "d9c8a3feb1d3dd57b9d10ed123222faec550f6786fa428e59cfba5b1b0057c4e",
+          "caption": "La lámina con su passepartout."
+        },
+        {
+          "src": "/images/catalogo/into-the-wild-08.jpg",
+          "width": 1536,
+          "height": 2048,
+          "sha256": "cdd5a944e9a225c5bb52dbbb3d5898f27152c90d298f88fbb4b5fa00182c6bdb",
+          "caption": "La pieza en su marco de 50 × 40 cm."
+        }
+      ],
+      "dimensions": "50 × 40 cm con marco",
+      "materials": null,
+      "series": null,
+      "year": 2017,
+      "credit": null,
+      "selected": false,
+      "kind": "obra",
+      "source": "https://www.facebook.com/media/set/?set=a.1396216993786342&type=3"
     },
     {
       "slug": "the-love-boat",

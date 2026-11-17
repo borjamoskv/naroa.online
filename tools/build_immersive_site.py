@@ -453,7 +453,8 @@ def build(output):
             f"NAROA GUTIÉRREZ GIL  ·  {len(projects)} OBRAS EN BILBAO",
             "«Me encontré a mí en los demás: espejos de vuestras almas y la mía».",
             "Rara Avis · Espejos del Alma",
-            seed_phase=0.4
+            seed_phase=0.4,
+            version="v3"
         )
         create_card(
             "naroa-share-card-cuaderno.jpg",
@@ -953,8 +954,8 @@ def build(output):
         im_w, im_h, im_mime = image_info(image)
         im_alt = image_alt or f"{title} · Naroa Gutiérrez Gil"
         og_card_map = {
-            "/": "/images/social/naroa-share-card-home-v2.jpg",
-            "/obra/": "/images/social/naroa-share-card-home-v2.jpg",
+            "/": "/images/social/naroa-share-card-home-v3.jpg",
+            "/obra/": "/images/social/naroa-share-card-home-v3.jpg",
             "/cuaderno/": "/images/social/naroa-share-card-cuaderno-v2.jpg",
             "/trayectoria/": "/images/social/naroa-share-card-trayectoria-v2.jpg",
             "/sobre-mi/": "/images/social/naroa-share-card-sobre-mi-v3.jpg",

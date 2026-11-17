@@ -156,17 +156,17 @@ export const ARTWORKS: Artwork[] = [
   },
   {
     id: 10,
-    category: 'rocks',
-    kicker: 'Serie DiviNos',
+    category: 'drawing',
+    kicker: 'Retrato',
     slug: 'el-gran-dakari',
-    aspectRatio: 0.749,
-    url: '/assets/el-gran-dakari-C1tAWAhR.webp',
+    aspectRatio: 0.727,
+    url: '/images/catalogo/el-gran-dakari-01.jpg',
     title: 'El Gran Dakari',
     href: '#obra-el-gran-dakari',
-    year: '2024',
-    medium: 'Acrílico sobre Pizarra Natural',
-    description: 'Fuerza animal hiperrealista inmortalizada sobre la dureza del soporte de pizarra. La mirada felina emerge de la roca con veladuras y texturas que aprovechan el relieve geológico de la pieza.',
-    sizeCategory: 'medium'
+    year: '2022',
+    medium: 'Rotuladores, corrector blanco y bolígrafo sobre cuatro cartas de póker',
+    description: 'Retrato del mago Gran Dakari, encarnado por Fito Lasarte, dibujado a rotulador sobre cuatro cartas de póker y presentado en marco tipo caja con profundidad.',
+    sizeCategory: 'small'
   },
   {
     id: 11,
@@ -1506,5 +1506,20 @@ Un poquito de consciencia siempre ayuda a domar a la fiera y con el bicho amansa
     description: 'Retrato a grafito y carboncillo en blanco y negro, atravesado por la tridimensionalidad táctil de una corbata de seda roja con lunares, solapa vaquera y pañuelo de lienzo.',
     sizeCategory: 'medium',
     dimensions: 'Lienzo: 24 × 18 cm · Marco: 32 × 26 cm'
+  },
+  {
+    id: 106,
+    category: 'drawing',
+    kicker: 'Retrato personalizado',
+    slug: 'into-the-wild',
+    aspectRatio: 0.769,
+    url: '/images/catalogo/into-the-wild-01.jpg',
+    title: 'Into the Wild',
+    href: '#obra-into-the-wild',
+    year: '2017',
+    medium: 'Bolígrafo y lápiz, impresión en A3 y fondo de rotulador sobre papel poliéster',
+    description: 'Retrato personalizado a partir del cartel de la película «Hacia rutas salvajes»: el retratado ocupa el lugar del protagonista, sentado sobre el autobús 142.',
+    sizeCategory: 'medium',
+    dimensions: '50 × 40 cm con marco'
   }
 ]

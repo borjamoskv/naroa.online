@@ -141,7 +141,7 @@
       }
     ]
   },
-  "artworks_count": 85,
+  "artworks_count": 86,
   "reviewed": "2026-10-24",
   "artworks": [
     {
@@ -2670,23 +2670,37 @@
     {
       "slug": "el-gran-dakari",
       "title": "El Gran Dakari",
-      "category": "pizarra",
-      "series": "DiviNos",
-      "technique": "Acrílico y pigmentos minerales",
-      "support": "Plato de pizarra natural de cantera",
-      "dimensions": "32 × 24 × 0,8 cm",
+      "category": "collage",
+      "series": null,
+      "technique": "Rotuladores permanentes Sharpie y Edding, rotulador acrílico Uni-Posca, corrector blanco Tipp-Ex, bolígrafo Bic rojo y agua de colonia para diluir parte de las tintas",
+      "support": "Cuatro cartas de póker en marco tipo caja con profundidad",
+      "dimensions": null,
       "materials": null,
-      "year": 2024,
-      "story": "Ficha técnica: Acrílico y técnica mixta sobre pizarra natural de cantera con escamas de mica mineral.",
+      "year": 2022,
+      "story": "Retrato del Gran Dakari, mago encarnado por el sublime Fito Lasarte, realizado mediante técnica mixta con motivo de su cumpleaños. Trabajado sobre 4 cartas de póker y presentado en marco tipo caja con profundidad. “El arte de la magia debe tener la finalidad de elevar la cuota de felicidad en el mundo, en los demás y en nosotros mismos”. (Juan Tamariz).",
       "url": "https://naroagutierrezgil.com/obra/el-gran-dakari/",
-      "cover_url": "https://naroagutierrezgil.com/immersive/media/el-gran-dakari-C1tAWAhR-0a4a77967d42-view.webp",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/el-gran-dakari-01-afbafdb3b7d9-view.webp",
       "photos": [
         {
-          "url": "https://naroagutierrezgil.com/images/artworks/el-gran-dakari-C1tAWAhR.webp",
-          "width": 1498,
-          "height": 2000,
-          "caption": "Fotografía original de El Gran Dakari sobre plato de pizarra natural.",
-          "sha256": "0a4a77967d4278f5b880719f03019b8464018a6e85a9c70604997589260c34a1"
+          "url": "https://naroagutierrezgil.com/images/catalogo/el-gran-dakari-01.jpg",
+          "width": 1488,
+          "height": 2048,
+          "caption": "El Gran Dakari: retrato a rotulador sobre cuatro cartas de póker.",
+          "sha256": "afbafdb3b7d9d2507af6dce0fd949c97774c0d980c8a9271c77437d5edb52cea"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/el-gran-dakari-04.jpg",
+          "width": 1601,
+          "height": 2048,
+          "caption": "La pieza en su marco tipo caja con profundidad.",
+          "sha256": "fe4660b46ef257aa6d0cb289af0f616c327ff401f11d12f9319c6a410b21f137"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/el-gran-dakari-02.jpg",
+          "width": 1554,
+          "height": 2048,
+          "caption": "Vista frontal de la obra enmarcada.",
+          "sha256": "a4bd40614455c0f210d04731a99b539a757650495020d6407ca7ed5e3670c373"
         }
       ],
       "inquire_email": "mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20El%20Gran%20Dakari",
@@ -2865,6 +2879,59 @@
       ],
       "inquire_email": "mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Izei",
       "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Izei"
+    },
+    {
+      "slug": "into-the-wild",
+      "title": "Into the Wild",
+      "category": "collage",
+      "series": null,
+      "technique": "Bolígrafos negro y rojo y lápiz Art & Graphic de Faber-Castell ocre, impresión en A3 sobre papel de 350 gr/m² y fondo de rotulador de tinta azul y alcohol sobre papel poliéster",
+      "support": "Papel de 350 gr/m² con passepartout y marco",
+      "dimensions": "50 × 40 cm con marco",
+      "materials": null,
+      "year": 2017,
+      "story": "Basándome en el cartel de la película “Hacia Rutas Salvajes”, he fusionado el rostro de Paul -dado que este se trata de su film favorito- con el cuerpo del actor principal de la historia, convirtiéndole así en el protagonista del citado largometraje. Retrato personalizado en blanco y negro con el fondo y detalles en color realizado mediante técnica mixta. Primeramente he realizado la ilustración utilizando bolígrafos -negro y rojo- y lápiz Art & Graphic de Faber-Castell de color ocre. He escaneado el resultado y lo he impreso a mayor formato (tamaño A3) sobre papel de alto gramaje (350 gr/m²). Posteriormente he trabajado el fondo con rotulador de tinta azul y alcohol sobre papel poliéster. Lo he recortado para encajar la silueta y lo he fijado con cinta adhesiva de doble cara a la lámina. Por último, he añadido el passepartout y el marco de 50 x 40 cm, con el que he presentado la pieza.",
+      "url": "https://naroagutierrezgil.com/obra/into-the-wild/",
+      "cover_url": "https://naroagutierrezgil.com/immersive/media/into-the-wild-01-c84c9fa430f1-view.webp",
+      "photos": [
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/into-the-wild-01.jpg",
+          "width": 1574,
+          "height": 2048,
+          "caption": "Obra completa: el retratado sobre el autobús 142 del cartel de la película.",
+          "sha256": "c84c9fa430f1fdd556639198e79d3e865bb07b76a149c4de7c7d606082e00baf"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/into-the-wild-02.jpg",
+          "width": 1718,
+          "height": 1456,
+          "caption": "Detalle de la figura a bolígrafo sobre el fondo azul.",
+          "sha256": "64843b8880e6074eeac3d8d72cabe77262bd0e6fd5075f7553ae8dc95249f7af"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/into-the-wild-09.jpg",
+          "width": 1536,
+          "height": 2048,
+          "caption": "La ilustración a bolígrafo y lápiz, antes de añadir el fondo.",
+          "sha256": "3038db6065d9a51ff6619c8e31131e79c0eee3f0cdf8b277b69dd15411c8eba7"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/into-the-wild-03.jpg",
+          "width": 1536,
+          "height": 2048,
+          "caption": "La lámina con su passepartout.",
+          "sha256": "d9c8a3feb1d3dd57b9d10ed123222faec550f6786fa428e59cfba5b1b0057c4e"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/into-the-wild-08.jpg",
+          "width": 1536,
+          "height": 2048,
+          "caption": "La pieza en su marco de 50 × 40 cm.",
+          "sha256": "cdd5a944e9a225c5bb52dbbb3d5898f27152c90d298f88fbb4b5fa00182c6bdb"
+        }
+      ],
+      "inquire_email": "mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Into%20the%20Wild",
+      "inquire_whatsapp": "https://wa.me/34636060609?text=Hola%20Naroa%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20la%20obra%20Into%20the%20Wild"
     },
     {
       "slug": "the-love-boat",
