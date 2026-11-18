@@ -89,6 +89,8 @@ def check(output):
     assert manifest["projects"] == len(expected)
     assert set("/obra/" + slug + "/" for slug in expected).issubset(manifest["canonical_routes"])
     checked_refs = set()
+    # §7 INV_AI_WINK_NOTICE: el PNG entero del guiño no se publica suelto, sin aviso.
+    assert not (output / "images/sobre-mi/naroa-monoculo-guino.png").exists(), "el guiño de IA se publica entero en /images/"
     for route in manifest["canonical_routes"]:
         file = output / route.lstrip("/") / "index.html"
         page = Page()

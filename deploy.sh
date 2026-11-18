@@ -287,7 +287,21 @@ if [ "$SKIP_BUILD" = "0" ] && { [ "$TARGET" = "all" ] || [ "$TARGET" = "museum" 
       PYTHON_CMD="python3"
     fi
   fi
+  # En Vercel, las variantes de imagen se guardan entre builds en node_modules/.cache, que Vercel
+  # conserva: llevan la huella de su fuente en el nombre, así que solo se optimiza lo nuevo
+  # (antes, unos 25 minutos por build). Las que ya están firmadas con C2PA no se vuelven a firmar.
+  MEDIA_CACHE="node_modules/.cache/naroa-media"
+  if [ -n "${VERCEL:-}" ] && [ -d "$MEDIA_CACHE" ]; then
+    mkdir -p .deploy/immersive/media
+    cp -R "$MEDIA_CACHE"/. .deploy/immersive/media/
+    log "Caché de imágenes: $(ls "$MEDIA_CACHE" | wc -l | tr -d ' ') variantes reutilizadas"
+  fi
   $PYTHON_CMD tools/build_immersive_site.py || fail "Compilación del portfolio falló"
+  if [ -n "${VERCEL:-}" ]; then
+    # Solo vuelve a la caché lo que la compilación cita: lo que dejó de usarse no la hace crecer.
+    rm -rf "$MEDIA_CACHE" && mkdir -p "$MEDIA_CACHE"
+    $PYTHON_CMD tools/media_cache.py .deploy "$MEDIA_CACHE" || log "Caché de imágenes: no se pudo guardar (el próximo build optimizará todo)"
+  fi
   $PYTHON_CMD tools/check_immersive_site.py || fail "Validación del portfolio falló"
   node --max-old-space-size=4096 tools/test_immersive_dom.cjs || fail "Validación de interacciones falló"
   ok "Portfolio completo compilado → .deploy/"
