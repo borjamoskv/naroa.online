@@ -527,10 +527,26 @@
     return lines;
   }
 
+  // Lo que en la web es letra de colegio en rosa (§7f) también lo es en la Story: la misma «Naroa Escolar»,
+  // cuyo size-adjust respeta el lienzo. Sus astas y sus lazos suben y bajan más que los de Cormorant,
+  // así que las líneas van más separadas (STORY_LEAD) y lo que no cabe a lo ancho encoge. Sobre la foto
+  // va en su trazo más firme (400) y con una sombra corta y oscura que perfila el rosa sobre un detalle claro.
+  const STORY_HAND = '"Naroa Escolar", "Playwrite ES", cursive', STORY_PINK = '#f7a8c8', STORY_LEAD = 1.2;
+  const storyHand = size => `400 ${size}px ${STORY_HAND}`;
+  function storyHandInk(ctx) {
+    ctx.fillStyle = STORY_PINK;
+    ctx.shadowColor = 'rgba(11, 11, 10, 0.85)'; ctx.shadowBlur = 14; ctx.shadowOffsetY = 2;
+  }
+  function fitStoryLine(ctx, text, size, maxWidth) {
+    ctx.font = storyHand(size);
+    const width = ctx.measureText(text).width;
+    if (width > maxWidth) ctx.font = storyHand(Math.floor(size * maxWidth / width));
+  }
+
   // El lienzo usa las tipografías de la web; sin esperarlas, la primera Story saldría en la de reserva.
   async function storyFontsReady() {
     if (!document.fonts?.load) return;
-    const wanted = ['500 92px "Caveat"', 'italic 300 118px "Cormorant Garamond"', '400 28px "DM Sans"', '500 28px "DM Sans"'];
+    const wanted = ['500 92px "Caveat"', storyHand(118), '400 28px "DM Sans"', '500 28px "DM Sans"'];
     await Promise.race([
       Promise.all(wanted.map(font => document.fonts.load(font).catch(() => {}))),
       new Promise(resolve => setTimeout(resolve, 1500))
@@ -613,20 +629,20 @@
     spaced('0px');
     if (mini.w) {
       y -= 22;
-      ctx.fillStyle = 'rgba(255, 253, 244, 0.92)';
-      ctx.font = 'italic 300 40px "Cormorant Garamond", serif';
+      storyHandInk(ctx);
+      fitStoryLine(ctx, '← la pieza completa', 40, columnWidth);
       ctx.fillText('← la pieza completa', column, y);
     }
 
     // 6. Título a todo el ancho, sobre la miniatura.
-    ctx.fillStyle = paper;
+    storyHandInk(ctx);
     const title = heroWork.title || 'Obra';
     let size = 118;
-    ctx.font = `italic 300 ${size}px "Cormorant Garamond", serif`;
-    if (wrapStoryText(ctx, title, W - margin * 2, 9).length > 2) { size = 92; ctx.font = `italic 300 ${size}px "Cormorant Garamond", serif`; }
+    ctx.font = storyHand(size);
+    if (wrapStoryText(ctx, title, W - margin * 2, 9).length > 2) { size = 92; ctx.font = storyHand(size); }
     const titleLines = wrapStoryText(ctx, title, W - margin * 2, 3);
     let titleY = Math.min(mini.y, y - 40) - 72;
-    titleLines.slice().reverse().forEach(line => { ctx.fillText(line, margin - 4, titleY); titleY -= size * 1.02; });
+    titleLines.slice().reverse().forEach(line => { ctx.fillText(line, margin - 4, titleY); titleY -= size * STORY_LEAD; });
     inked(false);
   }
 
@@ -814,7 +830,8 @@
     spaced('5px');
     ctx.fillText('GUTIÉRREZ GIL', margin + signature + 22, 318);
     spaced('0px');
-    ctx.font = 'italic 300 78px "Cormorant Garamond", serif';
+    storyHandInk(ctx);
+    fitStoryLine(ctx, 'El retrato de mi visita', 78, W - margin * 2);
     ctx.fillText('El retrato de mi visita', margin - 4, 432);
     inked(false);
 
@@ -841,12 +858,12 @@
       const title = String(entry.work.title || '').split(/\s+/).filter(Boolean).join(' ');
       let size = Math.round(clamp(h * 0.25, 46, 78)), lines = [];
       for (;;) {
-        ctx.font = `italic 300 ${size}px "Cormorant Garamond", serif`;
-        lines = wrapStoryText(ctx, title, textW, clamp(Math.floor((h - 72) / (size * 1.02)), 1, 3));
+        ctx.font = storyHand(size);
+        lines = wrapStoryText(ctx, title, textW, clamp(Math.floor((h - 72) / (size * STORY_LEAD)), 1, 3));
         if (lines.join(' ') === title || size <= 38) break;
         size -= 4;
       }
-      const labelY = y + h - 30 - lines.length * size * 1.02 + size * 0.08 - 10;
+      const labelY = y + h - 30 - lines.length * size * STORY_LEAD + size * 0.08 - 10;
       const label = `${String(i + 1).padStart(2, '0')} · ${visitClock(entry.seconds)}`.toUpperCase();
       ctx.save();
       storyCutPath(ctx, x, y, bandW, h, 4.5, 11 + i * 17);
@@ -877,10 +894,11 @@
       if (img) drawStoryMiniature(ctx, img, x + bandW - pad - cardW, y + h - 22, maxW, maxH, i % 2 ? 2.1 : -2.4);
       // Rótulo: lo que duró la mirada y el título, apoyados en el borde inferior.
       inked(true);
-      ctx.font = `italic 300 ${size}px "Cormorant Garamond", serif`;
+      ctx.font = storyHand(size);
       let ty = y + h - 30;
-      ctx.fillStyle = paper;
-      lines.slice().reverse().forEach(line => { ctx.fillText(line, x + pad - 3, ty); ty -= size * 1.02; });
+      storyHandInk(ctx);
+      lines.slice().reverse().forEach(line => { ctx.fillText(line, x + pad - 3, ty); ty -= size * STORY_LEAD; });
+      inked(true);
       ctx.fillStyle = accent;
       ctx.font = '500 22px "DM Sans", sans-serif';
       spaced('4px');

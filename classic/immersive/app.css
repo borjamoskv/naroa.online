@@ -3973,14 +3973,12 @@ body.page-retratos-por-encargo-bilbao .enc-note input:focus-visible{outline:3px 
 /* 1.4.3: los numerales de los filtros del índice quedaban en 3,21:1 a 9 px. */
 dialog.index-dialog .index-filters .filter-num{opacity:.8}
 
-/* Encargos: fuentes de reserva con la anchura de las web. Mientras llegan DM Sans y Cormorant Garamond,
-   la frase ocupa las mismas líneas y nada salta al cambiar (CLS 0,11–0,68 según el ancho, medido el 2026-11-11).
-   Proporciones medidas contra Arial y Times New Roman; donde no existen, se usa la genérica como hasta ahora.
-   El antetítulo se queda con la genérica: ajustarlo exigía reducirlo al 92 % y apenas movía el salto (≤ 0,03 sin ajuste). */
+/* Encargos: fuente de reserva con la anchura de la web. Mientras llega DM Sans, la frase ocupa las mismas
+   líneas y nada salta al cambiar (CLS 0,11–0,68 según el ancho, medido el 2026-11-11). Proporción medida contra
+   Arial; donde no existe, se usa la genérica. La palabra que se cambia (.enc-word) va en letra de colegio por
+   --font-serif (§7f): ya no nombra Cormorant, que no se carga. El antetítulo se queda con la genérica. */
 @font-face{font-family:"DM Sans Reserva";src:local("Arial"),local("ArialMT");size-adjust:103.5%}
-@font-face{font-family:"Cormorant Reserva";font-style:italic;src:local("Times New Roman Italic"),local("TimesNewRomanPS-ItalicMT");size-adjust:86.5%}
 body.page-retratos-por-encargo-bilbao .enc-sentence{font-family:'DM Sans','DM Sans Reserva',sans-serif}
-body.page-retratos-por-encargo-bilbao .enc-word{font-family:'Cormorant Garamond','Cormorant Reserva',serif}
 
 /* ═══════════════════════════════════════════════════════════════
    ENCARGOS · Palabras, no píldoras
