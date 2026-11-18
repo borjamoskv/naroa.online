@@ -798,6 +798,13 @@ def catalogue_titles(output, routes):
         keep.add(project["title"])
         if project.get("series"):
             keep.add(project["series"])
+    # Titulares y medios de las notas de prensa que van en los datos estructurados: se citan tal como
+    # se publicaron (AGENTS.md §11). Las agendas no entran en esos datos.
+    press = SOURCE / "data" / "prensa.json"
+    if press.exists():
+        for note in json.loads(press.read_text())["notes"]:
+            if note["kind"] != "agenda":
+                keep.update((note["title"], note["medium"]))
     return keep
 
 
