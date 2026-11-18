@@ -9,6 +9,7 @@ import hashlib
 import json
 import re
 import shutil
+import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
@@ -137,7 +138,7 @@ def without_comments(text, css):
     return re.sub(r"(?m)^[ \t]*(?:/\*.*?\*/|//[^\n]*)", "", text, flags=re.S)
 
 
-def build(output):
+def build(output, minify=True):
     output.mkdir(parents=True, exist_ok=True)
     media = output / "immersive" / "media"
     media.mkdir(parents=True, exist_ok=True)
@@ -762,7 +763,7 @@ def build(output):
             'caracterizacion': sum(1 for p in projects if p.get('category') == 'caracterizacion' or p.get('series') == 'caracterizacion'),
             'Vaivenes': sum(1 for p in projects if p.get('series') == 'Vaivenes' or p.get('category') == 'Vaivenes')
         }
-        index = ''.join(f'''<a class="index-work" href="/obra/{p['slug']}/" data-work="{p['slug']}" data-index-num="{idx+1:02d}" data-category="{p['category']}" data-series="{esc(p['series'] or '')}" data-cover="{esc(p['cover'])}" data-dimensions="{esc(p.get('dimensions') or '')}" data-photos-count="{len(p.get('photos') or [])}" data-story="{esc((p.get('story') or '')[:140])}" data-search="{esc(' '.join(str(p[k] or '') for k in ['title','technique','support','series','story','materials']))}"><div class="index-work-frame"><img src="{p['thumb']}" srcset="{p['thumb']} 480w, {p['tile']} 960w" sizes="(max-width:1099px) 50vw, (max-width:1699px) 34vw, 25vw" width="280" height="320" alt="{esc(p['title'])}" loading="lazy" decoding="async"><span class="index-work-num" aria-hidden="true">{idx+1:02d}</span><span class="index-work-whisper" aria-hidden="true">«{esc((p.get('story') or p.get('label') or '')[:92]).rstrip()}…»</span></div><span><small>{esc(p['label'])}</small><strong>{esc(p['title'])}</strong><em>{esc(p['support'] or p['technique'] or '')}{f" · {esc(p['dimensions'])}" if p.get('dimensions') else ""}</em></span><span class="stencil-stamp" aria-hidden="true">{esc((p.get('series') or p.get('category') or 'ORIGINAL').upper())}</span><span class="index-work-arrow" aria-hidden="true">↗</span></a>''' for idx, p in enumerate(projects))
+        index = ''.join(f'''<a class="index-work" href="/obra/{p['slug']}/" data-work="{p['slug']}" data-index-num="{idx+1:02d}" data-category="{p['category']}" data-series="{esc(p['series'] or '')}" data-cover="{esc(p['cover'])}" data-dimensions="{esc(p.get('dimensions') or '')}" data-photos-count="{len(p.get('photos') or [])}" data-story="{esc((p.get('story') or '')[:140])}"><div class="index-work-frame"><img src="{p['thumb']}" srcset="{p['thumb']} 480w, {p['tile']} 960w" sizes="(max-width:1099px) 50vw, (max-width:1699px) 34vw, 25vw" width="280" height="320" alt="{esc(p['title'])}" loading="lazy" decoding="async"><span class="index-work-num" aria-hidden="true">{idx+1:02d}</span><span class="index-work-whisper" aria-hidden="true">«{esc((p.get('story') or p.get('label') or '')[:92]).rstrip()}…»</span></div><span><small>{esc(p['label'])}</small><strong>{esc(p['title'])}</strong><em>{esc(p['support'] or p['technique'] or '')}{f" · {esc(p['dimensions'])}" if p.get('dimensions') else ""}</em></span><span class="stencil-stamp" aria-hidden="true">{esc((p.get('series') or p.get('category') or 'ORIGINAL').upper())}</span><span class="index-work-arrow" aria-hidden="true">↗</span></a>''' for idx, p in enumerate(projects))
         return f'''<dialog id="menu-dialog" class="menu-dialog" aria-labelledby="menu-heading"><div class="dialog-top menu-top"><a class="signature" href="/" aria-label="Naroa Gutiérrez Gil, inicio"><span>Naroa</span> <small>GUTIÉRREZ GIL</small></a><span id="menu-heading">Otra manera de mirar</span><button type="button" data-close-dialog autofocus>Cerrar <span aria-hidden="true">×</span></button></div><div class="menu-layout"><figure class="menu-preview"><div class="menu-preview-picture" data-menu-picture data-preview-href="/obra/" title="Ir a la sección u obra en vista previa"><img data-menu-image alt="Amy Rocks" aria-hidden="true" width="480" height="360"><img data-menu-image alt="Amy Rocks" aria-hidden="true" width="480" height="360"><img class="menu-preview-wink" data-menu-wink data-dialog-src="{menu_portrait_wink}" alt="Guiño de Naroa Gutiérrez Gil" aria-hidden="true" width="480" height="360"><div class="menu-preview-loupe" data-menu-loupe aria-hidden="true"></div><div class="menu-preview-reel" data-menu-reel hidden aria-hidden="true"></div></div><figcaption class="menu-preview-caption"><div class="menu-caption-main"><span data-menu-preview-label>Obras</span><span class="menu-caption-quote" data-menu-quote>Otra manera de mirar.</span><span data-menu-preview-title>Amy Rocks</span></div><div class="menu-caption-sub"><span class="menu-preview-meta" data-menu-preview-meta>Pizarra, collage y objetos · {len(projects)} obras</span><div class="menu-caption-actions"><a class="menu-open-work-pill" href="/obra/" data-menu-open-work title="Entrar en esta vista"><span>Entrar</span><span aria-hidden="true">↗</span></a><button type="button" class="menu-index-pill" data-menu-open-index title="Abrir catálogo completo (atajo: / o I)"><span>Índice</span><span aria-hidden="true">⌕</span><kbd aria-hidden="true">/</kbd></button></div></div><p class="menu-ai-note" hidden>El guiño de este retrato está hecho con IA a partir de una fotografía de 2015.</p></figcaption></figure><nav class="menu-pages" aria-label="Todas las páginas">{links()}</nav></div><div class="menu-sound-drawer" data-menu-sound-drawer hidden aria-label="Paisaje sonoro y créditos"><div class="menu-sound-drawer-inner"><strong class="menu-sound-theme" data-menu-melody-today>Banda sonora del mes</strong><p>Una pieza original para cada mes, electrónica y sintetizada en tu navegador: sin grabaciones ni muestras.</p><div class="menu-sound-links"><a href="/immersive/audio/creditos.txt" target="_blank" rel="noopener noreferrer">Ficha técnica ↗</a><button type="button" data-close-sound-drawer>Cerrar</button></div></div></div><div class="menu-foot"><span>Desde Bilbao, con otra mirada. <em class="menu-kbd-hint" aria-hidden="true">· Teclas [1–6] Secciones · [/] Índice</em></span><a href="mailto:naroa@naroagutierrezgil.com">naroa@naroagutierrezgil.com ↗</a><a href="https://www.facebook.com/naroa.artista.plastica" target="_blank" rel="noopener noreferrer">Facebook ↗</a><a href="https://instagram.com/naroa_art/" target="_blank" rel="noopener noreferrer">Instagram ↗</a><a href="/immersive/audio/creditos.txt" data-menu-sound-credits aria-expanded="false">Créditos del sonido ↗</a></div></dialog>
 <dialog id="index-dialog" class="index-dialog" data-obra-view="muro" aria-labelledby="index-heading"><div class="index-backdrop" data-index-backdrop aria-hidden="true"><div class="index-backdrop-image" data-index-backdrop-img style="background-image:url('{projects[0]['cover']}')"></div><div class="index-backdrop-vignette"></div></div><div class="dialog-top"><h2 id="index-heading">La obra <span class="stencil-subtag" aria-hidden="true">✦ GABINETE DE MIRADAS &amp; MATERIA VIVA</span></h2><div class="index-top-actions"><div class="index-mode-switcher" role="group" aria-label="Modo de visualización del gabinete"><button type="button" data-obra-mode="muro" aria-pressed="true">Muro de Taller</button><button type="button" data-obra-mode="mesa" aria-pressed="false">Mesa de Luz</button><button type="button" data-obra-mode="constelacion" aria-pressed="false">Hilo Kintsugi</button></div><a class="index-oracle-btn" href="/series/vaivenes/" title="Ver solo la serie Vaivenes">Serie Vaivenes ↗</a><button type="button" class="index-oracle-btn" data-index-oracle title="Dejar que el azar elija una mirada"><span aria-hidden="true">🎲</span> <span class="oracle-word">Oráculo del </span>azar</button><button type="button" data-close-dialog class="stencil-close-btn">Cerrar ×</button></div></div><div class="index-controls"><label for="art-search"><span class="search-label-stencil">⌕ BUSCAR EN EL ESTUDIO // TRAZO, MATERIA O ROSTRO</span><input type="search" id="art-search" placeholder="Título, pizarra, lata, collage o personaje…" autocomplete="off"></label><div class="index-filters" role="group" aria-label="Filtrar obras"><button type="button" data-filter="all" aria-pressed="true"><span class="spray-dot" aria-hidden="true">●</span> Todas <span class="filter-num" aria-hidden="true">{counts['all']}</span></button><button type="button" data-filter="pizarra" aria-pressed="false"><span class="spray-dot" aria-hidden="true">●</span> Pizarra <span class="filter-num" aria-hidden="true">{counts['pizarra']}</span></button><button type="button" data-filter="collage" aria-pressed="false"><span class="spray-dot" aria-hidden="true">●</span> Collage <span class="filter-num" aria-hidden="true">{counts['collage']}</span></button><button type="button" data-filter="objetos" aria-pressed="false"><span class="spray-dot" aria-hidden="true">●</span> Objetos <span class="filter-num" aria-hidden="true">{counts['objetos']}</span></button><button type="button" data-filter="caracterizacion" aria-pressed="false"><span class="spray-dot" aria-hidden="true">●</span> Caracterización <span class="filter-num" aria-hidden="true">{counts['caracterizacion']}</span></button><button type="button" data-filter="Vaivenes" aria-pressed="false"><span class="spray-dot" aria-hidden="true">●</span> Vaivenes <span class="filter-num" aria-hidden="true">{counts['Vaivenes']}</span></button></div></div><div class="index-status-bar"><p class="index-count" role="status" aria-live="polite">{len(projects)} obras</p><div class="index-spotlight-hud" data-index-spotlight-hud aria-hidden="true"><span class="spotlight-hud-num" data-hud-num>01 / {len(projects):02d}</span><strong class="spotlight-hud-title" data-hud-title>{esc(projects[0]['title'])}</strong><span class="spotlight-hud-meta" data-hud-meta>{esc(projects[0]['label'])}</span><span class="spotlight-hud-quote" data-hud-quote>«{esc((projects[0].get('story') or '')[:110])}…»</span></div></div><div class="index-list">{index}</div><p class="index-empty" hidden>No hay obras que coincidan con esta búsqueda. <button type="button" data-reset-index>Ver todas</button></p></dialog>
 <dialog id="story-remix-dialog" class="story-remix-dialog" aria-labelledby="story-remix-heading"><div class="dialog-top"><span id="story-remix-heading">Modo Story · Detail Obsession</span><button type="button" data-close-dialog autofocus>Cerrar ×</button></div><div class="story-remix-content"><div class="story-remix-preview-frame"><img data-story-remix-img alt="Story Detail Obsession de Naroa Gutiérrez Gil" width="360" height="640"><div class="story-remix-spinner" data-story-remix-spinner hidden><span>Buscando el detalle…</span></div></div><div class="story-remix-side"><p class="story-remix-eyebrow">Para tus Stories · 9:16</p><p class="story-remix-title" data-remix-title></p><p class="story-remix-meta" data-remix-meta></p><div class="story-remix-actions"><button type="button" class="remix-act remix-act--lead" data-remix-share><span>Compartir en Instagram</span><span aria-hidden="true">↗</span></button><a class="remix-act" data-remix-download href="#" download="naroa-detail-obsession.jpg"><span>Guardar la imagen</span><span aria-hidden="true">↓</span></a><button type="button" class="remix-act" data-remix-link data-say="Enlace copiado. Pégalo en el sticker de enlace de tu Story."><span>Copiar el enlace para tu Story</span><span aria-hidden="true">∞</span></button><button type="button" class="remix-act" data-remix-video-loop><span data-remix-label>Grabar un loop de 6 s con música</span><span aria-hidden="true">●</span></button><button type="button" class="remix-act" data-remix-detail><span>Otro detalle de esta obra</span><span aria-hidden="true">⊕</span></button><button type="button" class="remix-act" data-remix-shuffle><span>Probar con otra obra</span><span aria-hidden="true">↻</span></button><button type="button" class="remix-act" data-remix-visit hidden><span>El retrato de tu visita</span><span aria-hidden="true">◐</span></button></div><p class="story-remix-status" data-remix-status role="status"></p></div></div></dialog>
@@ -2963,16 +2964,50 @@ def build(output):
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     from build_i18n import localize
     localize(output)
+    if minify:
+        minify_assets(output)
+
+
+def minify_assets(output):
+    """Minifica los scripts y la hoja de estilo que cargan las páginas, ya traducidos.
+
+    Va lo último: build_i18n.py sustituye literales en los scripts publicados y necesita leerlos
+    tal cual. El catálogo es JSON y check_immersive_site.py lo lee, así que no se toca.
+    Sin Node o sin las dependencias de Vite, avisa y deja los archivos legibles.
+    """
+    files = set()
+    for page in [output / "index.html", *sorted(output.glob("*/index.html"))]:
+        if page.parent != output and page.parent.name not in ("en", "eu"):
+            continue
+        for ref in re.findall(r'(?:src|href)="(/immersive/[^"]+\.(?:js|css))"', page.read_text()):
+            if not ref.rsplit("/", 1)[1].startswith("catalog-"):
+                files.add(output / ref.lstrip("/"))
+    files = sorted(f for f in files if f.exists())
+    if not files:
+        return
+    try:
+        done = subprocess.run(["node", str(REPO / "tools" / "minify_assets.mjs"), *map(str, files)], capture_output=True, text=True, timeout=300)
+    except (OSError, subprocess.TimeoutExpired) as error:
+        print(f"⚠ Sin minificar ({error}): se publican los scripts legibles.")
+        return
+    if done.returncode != 0:
+        print(f"⚠ Sin minificar del todo: {done.stderr.strip()[:400]}")
+    sizes = [line.split() for line in done.stdout.splitlines() if len(line.split()) == 3]
+    before, after = sum(int(s[1]) for s in sizes), sum(int(s[2]) for s in sizes)
+    if before:
+        print(f"Minificados {len(sizes)} scripts y hojas: {before // 1024} KB → {after // 1024} KB")
+
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=REPO / ".deploy")
+    parser.add_argument("--no-minify", action="store_true", help="Deja legibles app.js, soundscape.js y app.css (p. ej. para build_i18n.py extract)")
     parser.add_argument("--ping-indexnow", action="store_true", help="Ping IndexNow endpoints immediately after build")
     parser.add_argument("--indexnow-dry-run", action="store_true", help="Dry-run IndexNow ping without network dispatch")
     args = parser.parse_args()
     dest_output = args.output.resolve()
-    build(dest_output)
+    build(dest_output, minify=not args.no_minify)
     if args.ping_indexnow or args.indexnow_dry_run:
         sys.path.insert(0, str(Path(__file__).resolve().parent))
         from ping_indexnow import submit_indexnow, ENDPOINTS, load_payload

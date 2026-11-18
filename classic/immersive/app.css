@@ -4057,6 +4057,7 @@ body:has(.hero-threshold:not(.is-passed)) .sound-toggle[aria-pressed=false] .sou
 .story-dialog .dialog-top {
   letter-spacing: .08em;
   text-transform: uppercase;
+}
 
 /* ─── Letra de colegio en rosa (2026-11-18) ───────────────────────────────
    Todo lo que era Cormorant en cursiva usa --font-serif («Naroa Escolar», Playwrite ES).

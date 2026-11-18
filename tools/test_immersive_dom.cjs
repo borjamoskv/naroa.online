@@ -558,6 +558,24 @@ async function eyeMatch(ui, base, points) {
   ui.click('[data-quiet]'); assert.equal(ui.document.body.classList.contains('is-quiet'), true);
   ui.key('ArrowRight'); await ui.flush(); assert.equal(ui.find('[data-art-title]').textContent, 'Rara Avis');
   ui.key('Escape'); assert.equal(ui.document.body.classList.contains('is-quiet'), false);
+  // Deslizar el dedo de lado pasa de obra como ← y → (§7c.5); un gesto vertical o corto no.
+  const swipeStage = async (dx, dy = 0) => {
+    const target = ui.find('[data-gallery] .art-layers') || ui.find('[data-gallery]');
+    const fire = (type, touches, changed) => {
+      const event = new ui.w.Event(type, { bubbles: true });
+      Object.defineProperty(event, 'touches', { value: touches });
+      Object.defineProperty(event, 'changedTouches', { value: changed });
+      target.dispatchEvent(event);
+    };
+    fire('touchstart', [{ clientX: 200, clientY: 400 }], [{ clientX: 200, clientY: 400 }]);
+    fire('touchend', [], [{ clientX: 200 + dx, clientY: 400 + dy }]);
+    await ui.flush();
+  };
+  const titleBeforeSwipe = ui.find('[data-art-title]').textContent;
+  await swipeStage(-90); assert.notEqual(ui.find('[data-art-title]').textContent, titleBeforeSwipe, 'swipe left goes to the next work');
+  await swipeStage(90); assert.equal(ui.find('[data-art-title]').textContent, titleBeforeSwipe, 'swipe right goes back to the previous work');
+  await swipeStage(-30); assert.equal(ui.find('[data-art-title]').textContent, titleBeforeSwipe, 'a short swipe does not change work');
+  await swipeStage(-90, 120); assert.equal(ui.find('[data-art-title]').textContent, titleBeforeSwipe, 'a vertical drag is left to native scroll');
   const roisinIdx = works.findIndex(p => p.slug === 'roisin');
   const roisinEntry = ui.journey.entries[roisinIdx];
   ui.w.scrollTo({ top: roisinEntry.start * ui.w.innerHeight }); await ui.flush();
