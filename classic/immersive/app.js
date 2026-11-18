@@ -3587,9 +3587,11 @@
           vec3 refrG = refract(I, N, iorG);
           vec3 refrB = refract(I, N, iorB);
 
-          vec2 uvR = clamp(vUv + refrR.xy * 0.28, 0.001, 0.999);
-          vec2 uvG = clamp(vUv + refrG.xy * 0.28, 0.001, 0.999);
-          vec2 uvB = clamp(vUv + refrB.xy * 0.28, 0.001, 0.999);
+          // La textura sube con la fila de arriba primero: se lee con la y invertida, o la obra sale boca abajo.
+          vec2 uvTex = vec2(vUv.x, 1.0 - vUv.y);
+          vec2 uvR = clamp(uvTex + vec2(refrR.x, -refrR.y) * 0.28, 0.001, 0.999);
+          vec2 uvG = clamp(uvTex + vec2(refrG.x, -refrG.y) * 0.28, 0.001, 0.999);
+          vec2 uvB = clamp(uvTex + vec2(refrB.x, -refrB.y) * 0.28, 0.001, 0.999);
 
           vec3 texCol = vec3(0.0);
           if (uHasTexture > 0.5) {
@@ -3601,16 +3603,12 @@
             texCol = vec3(0.92, 0.74, 0.58) * (0.8 + 0.2 * sin(uTime + r * 6.0));
           }
 
+          // Cristal, no joya: solo un reflejo blanco y tenue en el borde, sin aros ni ondas doradas.
           float fresnel = pow(1.0 - clamp(dot(-I, N), 0.0, 1.0), 2.8);
-          vec3 goldCaustic = vec3(0.968, 0.835, 0.58);
-          vec3 rimHighlight = vec3(1.0, 0.98, 0.92) * pow(fresnel, 3.0) * 1.4;
-
-          float causticRing = smoothstep(0.72, 0.88, r) * (1.0 - smoothstep(0.88, 0.98, r));
-          float wave = sin(atan(p.y, p.x) * 6.0 + uTime * 1.5) * 0.5 + 0.5;
-          vec3 causticColor = goldCaustic * (fresnel * 0.85 + causticRing * wave * 0.65);
+          vec3 rimHighlight = vec3(1.0, 0.99, 0.96) * pow(fresnel, 3.0) * 0.45;
 
           float edgeAlpha = smoothstep(1.0, 0.95, r);
-          vec3 finalColor = texCol * 1.15 + causticColor + rimHighlight;
+          vec3 finalColor = texCol * 1.04 + rimHighlight;
 
           gl_FragColor = vec4(finalColor * edgeAlpha, edgeAlpha * 0.96);
         }

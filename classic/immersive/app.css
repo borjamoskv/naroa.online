@@ -304,35 +304,27 @@ html:not(.has-motion) .page-home .art-bottom:not(:focus-within){opacity:0}
    opacidad que pide el scroll (animation-composition:add): nunca la rebaja. */
 html.motion-opt-in.has-motion .art-stage.is-resting .hero-threshold-wink{animation:hero-welcome-wink 19s linear 3.2s infinite;animation-composition:add}
 html.motion-opt-in.has-motion .hero-spotlight{animation:hero-light-drift 26s ease-in-out 2.6s infinite}
-html.motion-opt-in.has-motion .hero-monocle-caustics{animation:hero-glass-shimmer 34s linear infinite}
 @keyframes hero-welcome-wink{0%{opacity:0}.6%,1.8%{opacity:1}2.7%,to{opacity:0}}
 @keyframes hero-light-drift{25%{translate:6% 4%}75%{translate:-5% -3%}}
-@keyframes hero-glass-shimmer{to{rotate:1turn}}
 /* Pasado el retrato, sus animaciones infinitas se detienen; al volver siguen donde estaban. */
 html.motion-opt-in.has-motion .hero-threshold.is-passed{animation-play-state:running,paused}
 .hero-threshold.is-passed .hero-threshold-plane{animation-play-state:running,paused!important}
-.hero-threshold.is-passed .hero-threshold-wink,.hero-threshold.is-passed .hero-spotlight,.hero-threshold.is-passed .hero-monocle-caustics,.hero-threshold.is-passed .hero-monocle-ring,.hero-threshold.is-passed .hero-monocle-marilyn{animation-play-state:paused!important}
+.hero-threshold.is-passed .hero-threshold-wink,.hero-threshold.is-passed .hero-spotlight,.hero-threshold.is-passed .hero-monocle-marilyn{animation-play-state:paused!important}
 /* Sin efectos de movimiento el retrato sigue recibiendo, pero quieto: ni el aro gira ni la obra late en la lente. */
-html.motion-off .hero-monocle-ring,html.motion-off .hero-monocle-marilyn{animation:none}
+html.motion-off .hero-monocle-marilyn{animation:none}
 /* …y como ahí no hay sombreador, la obra va opaca en la lente: es el único color de la página y la única puerta. */
 html.motion-off .hero-monocle-marilyn{opacity:.96;mix-blend-mode:normal}
-html.motion-off .hero-monocle-lens{box-shadow:0 0 46px 4px rgba(247,213,148,.62),inset 0 0 20px rgba(255,253,244,.38),inset 0 0 34px rgba(17,18,15,.85)}
 .hero-threshold-plane{position:absolute;inset:0;transform-origin:var(--lens-x) var(--lens-y);will-change:transform;transform-style:preserve-3d;rotate:x var(--hero-rx,0deg);translate:calc(var(--hero-mx,0)*-14px) calc(var(--hero-my,0)*-10px) 0}
 .hero-threshold-portrait,.hero-threshold-wink{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 38%;transform:rotateY(var(--hero-ry,0deg)) scale(1.02)}
 .hero-threshold-wink{opacity:0;transition:opacity .26s cubic-bezier(.16,1,.3,1);-webkit-mask-image:radial-gradient(ellipse var(--wink-rx) var(--wink-ry) at var(--wink-x) var(--wink-y),#000 54%,rgba(0,0,0,.45) 78%,transparent 100%);mask-image:radial-gradient(ellipse var(--wink-rx) var(--wink-ry) at var(--wink-x) var(--wink-y),#000 54%,rgba(0,0,0,.45) 78%,transparent 100%)}
 .hero-threshold-shade{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at calc(var(--lens-x) + var(--hero-mx,0)*4.5%) calc(var(--lens-y) + var(--hero-my,0)*4.5%),transparent 18%,rgba(11,12,9,.38) 55%,rgba(11,12,9,.88) 100%)}
 .hero-spotlight{position:absolute;inset:0;z-index:2;pointer-events:none;background:radial-gradient(circle 280px at var(--spot-x,46%) var(--spot-y,39.5%),rgba(247,213,148,.20) 0%,rgba(237,188,164,.09) 44%,transparent 76%);mix-blend-mode:screen;opacity:calc(1 - var(--hero-split,0))}
 .hero-monocle-portal{position:absolute;left:var(--lens-x);top:var(--lens-y);width:var(--portal-size);height:var(--portal-size);transform:translate(-50%,-50%) translate3d(calc(var(--hero-mx,0)*12px),calc(var(--hero-my,0)*12px),24px);pointer-events:none;z-index:3;display:grid;place-items:center}
-.hero-monocle-lens{position:relative;width:66%;height:66%;border-radius:50%;overflow:hidden;backdrop-filter:blur(2.5px) contrast(1.22) saturate(1.28) brightness(1.12);-webkit-backdrop-filter:blur(2.5px) contrast(1.22) saturate(1.28) brightness(1.12);box-shadow:0 0 36px rgba(247,213,148,.46),inset 0 0 20px rgba(255,253,244,.38),inset 0 0 34px rgba(17,18,15,.85);border:1.5px solid rgba(247,213,148,.58)}
+.hero-monocle-lens{position:relative;width:66%;height:66%;border-radius:50%;overflow:hidden;backdrop-filter:blur(2.5px) contrast(1.22) saturate(1.28) brightness(1.12);-webkit-backdrop-filter:blur(2.5px) contrast(1.22) saturate(1.28) brightness(1.12);box-shadow:inset 0 0 12px rgba(17,18,15,.72),inset 0 0 3px rgba(255,253,244,.32)}
 .hero-monocle-marilyn{position:absolute;inset:-14%;background-image:var(--monocle-preview);background-size:cover;background-position:var(--hero-focal,50.4% 51.7%);opacity:.76;mix-blend-mode:screen;filter:contrast(1.18) saturate(1.18);transform-origin:var(--hero-focal,50.4% 51.7%);animation:monocle-marilyn-pulse 3.4s ease-in-out infinite alternate;will-change:transform,opacity}
 .hero-monocle-canvas{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;pointer-events:none;z-index:2;mix-blend-mode:normal;opacity:0.96;transition:opacity .35s var(--ease-out)}
 html.motion-off .hero-monocle-canvas,body.is-quiet .hero-monocle-canvas{display:none!important}
 @keyframes monocle-marilyn-pulse{0%{transform:scale(1.05) rotate(-1.5deg);opacity:.58}50%{transform:scale(1.22) rotate(.8deg);opacity:.86}100%{transform:scale(1.12) rotate(1.8deg);opacity:.70}}
-.hero-monocle-caustics{position:absolute;inset:-30%;background:conic-gradient(from 45deg at 50% 50%,transparent 0deg,rgba(255,253,244,.38) 42deg,transparent 88deg,rgba(237,188,164,.42) 195deg,transparent 245deg,rgba(247,213,148,.28) 310deg,transparent 360deg);mix-blend-mode:overlay;transform:translate3d(calc(var(--hero-mx,0)*-22px),calc(var(--hero-my,0)*-22px),0) rotate(calc(var(--hero-mx,0)*35deg))}
-.hero-monocle-ring{position:absolute;inset:-16%;width:132%;height:132%;overflow:visible;filter:drop-shadow(0 2px 12px rgba(0,0,0,.75));animation:monocle-ring-spin 22s linear infinite}
-@keyframes monocle-ring-spin{to{transform:rotate(360deg)}}
-.hero-monocle-bezel{fill:none;stroke:rgba(237,188,164,.55);stroke-width:1.1;stroke-dasharray:6 3}
-.hero-monocle-inner-ring{fill:none;stroke:rgba(247,213,148,.42);stroke-width:.85}
 .page-hero{perspective:1200px;--hero-rx:0deg;--hero-ry:0deg;--hero-mx:0;--hero-my:0;--hero-split:0;--hero-letter:0em;--hero-skew:0deg}
 .page-hero-image{transform-style:preserve-3d;rotate:x var(--hero-rx,0deg)}
 .page-hero-copy h1{will-change:transform,letter-spacing;transform:translate3d(calc(var(--hero-split,0)*-18vw + var(--hero-mx,0)*18px),calc(var(--hero-my,0)*12px),0) skewX(var(--hero-skew,0deg));letter-spacing:calc(-.015em + var(--hero-letter,0em))}
@@ -819,7 +811,7 @@ body.page-sobre-mi .site-footer>a:not(.signature){display:inline-flex;align-item
   .commission-examples-section,.commission-steps,.commission-faq,.closing{padding:38px 20px;border-radius:24px 14px 22px 16px;margin:24px 0}
 }
 @media(prefers-reduced-motion:reduce){
-  html:not(.motion-opt-in) .hero-monocle-ring,html:not(.motion-opt-in) .hero-monocle-marilyn{animation:none!important}
+  html:not(.motion-opt-in) .hero-monocle-marilyn{animation:none!important}
   html:not(.motion-opt-in) .hero-threshold-plane{transform:none!important;rotate:none!important;translate:none!important}
 }
 
