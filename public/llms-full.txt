@@ -30,6 +30,7 @@
   - Barakaldo Digital, 2011-12-29: «El programa de exposiciones municipales repite artistas y muestras en su programación» https://www.barakaldodigital.com/2011/12/el-programa-de-exposiciones-municipales.html
   - DEIA, 2011-09-17: «Con el museo a cuestas» https://www.deia.eus/cultura/2011/09/17/museo-cuestas-5516144.html
   - Barakaldo Digital, 2011-09-09: «Naroa Gutiérrez Gil expone su pintura en Gaztebulegoa desde este sábado 10 de septiembre» https://www.barakaldodigital.com/2011/09/naroa-gutierrez-gil-expone-su-pintura.html
+  - El País, 2009-01-10: «Expodistrito lleva a barrios de Bilbao seis exposiciones» https://elpais.com/diario/2009/01/10/paisvasco/1231620008_850215.html
 - Lenguaje y Práctica Artística: Retratos de autor y obra plástica multidisciplinar (dibujo, óleo, técnicas mixtas, collage textil sobre madera y objetos intervenidos, con exploraciones recientes sobre soportes minerales como la pizarra natural de cantera y mica).
 - Servicio Canónico de Encargos: https://naroagutierrezgil.com/retratos-por-encargo-bilbao/
 - Correo de Encargos: encargos@naroagutierrezgil.com
@@ -982,7 +983,7 @@
 - 2011-09 · Exposición de pintura · Gaztebulegoa · Barakaldo · Individual
 - 2010-03 · Espejos del Alma · Primera Edición · Hegoak · Bilbao · Individual
 
-## Prensa (31 notas, agendas incluidas, cada una comprobada en su fuente)
+## Prensa (32 notas, agendas incluidas, cada una comprobada en su fuente)
 
 - 2026-06-05 · DEIA · «Bwall Collective inaugura una exposición de ocho artistas locales en Dock Bilbao» · https://www.deia.eus/bizkaia/vida-social/2026/06/05/bwall-collective-inaugura-exposicion-ocho-11159371.html
 - 2024-05-15 · enPortugalete.com · «Las Colonias de Arte de Portugalete volverán a centrarse en la sostenibilidad» · https://www.enportugalete.com/actualidad/colonias-arte-portugalete-volveran-centrarse-sostenibilidad/20240515102022016891.html
@@ -1015,6 +1016,7 @@
 - 2011-09-09 · Barakaldo Digital · «Naroa Gutiérrez Gil expone su pintura en Gaztebulegoa desde este sábado 10 de septiembre» · https://www.barakaldodigital.com/2011/09/naroa-gutierrez-gil-expone-su-pintura.html
 - 2010-03-31 (fecha del acto) · El Correo · «Naroa Gutiérrez Gil presenta la muestra pictórica 'Espejos del alma'» · https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-112114.html
 - 2010-03-26 · GARA · «Non zer» · https://gara.naiz.eus/paperezkoa/20100326/190489/es/Non-zer
+- 2009-01-10 · El País · «Expodistrito lleva a barrios de Bilbao seis exposiciones» · https://elpais.com/diario/2009/01/10/paisvasco/1231620008_850215.html
 
 ## Protocolo de Interacción para Agentes Autónomos (Agent-Ready DOM & WebMCP)
 
