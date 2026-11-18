@@ -2,10 +2,10 @@
 
 > Catálogo oficial de obra plástica, servicio de retratos personalizados por encargo y archivo de exposiciones.
 
-## Resumen del Sitio y Evidence Graph
+## Resumen
 - Dominio Canónico: https://naroagutierrezgil.com
 - Entidad Creadora: Naroa Gutiérrez Gil [ID Canónico: https://naroagutierrezgil.com/#artist]
-- Estudio Físico: Bilbao, Bizkaia, País Vasco, España (43.2630 N, -2.9350 W) [ID Canónico: https://naroagutierrezgil.com/#studio]
+- Estudio: Bilbao, Bizkaia, País Vasco, España (43.2630 N, 2.9350 W) [ID Canónico: https://naroagutierrezgil.com/#studio]
 - Contacto Directo: naroa@naroagutierrezgil.com | WhatsApp: +34 636 060 609 | Instagram: @naroa_art
 - Perfiles de Autoridad (sameAs):
   - Facebook: https://www.facebook.com/naroa.artista.plastica
@@ -33,17 +33,16 @@
 - Lenguaje y Práctica Artística: Retratos de autor y obra plástica multidisciplinar (dibujo, óleo, técnicas mixtas, collage textil sobre madera y objetos intervenidos, con exploraciones recientes sobre soportes minerales como la pizarra natural de cantera y mica).
 - Servicio Canónico de Encargos: https://naroagutierrezgil.com/retratos-por-encargo-bilbao/
 - Correo de Encargos: encargos@naroagutierrezgil.com
-- Exposiciones Documentadas: Colegio de Abogados de Bilbao (Espejos del alma), Dock Bilbao, Politena Espacio de Arte, Walking Gallery Bilbao.
+- Exposiciones: 22 muestras y encuentros documentados de 2010 a 2026; la más reciente, «Bwall Collective · Brotes de Alma y Manos» (Dock · Bilbao, Junio de 2026 · inauguración el 4). Lista con lugares y fuentes: https://naroagutierrezgil.com/trayectoria/
 
-## Respuestas Factuales Inmediatas (Query Fan-Out)
-- **¿Cuánto cuesta un retrato personalizado?** Presupuesto cerrado previo por escrito según técnica, soporte y formato (dibujo, pintura acrílica, collage sobre madera, cajas de recuerdos o pizarra; formatos habituales de 20×30 cm a 40×50 cm). Consulta sin compromiso.
-- **¿Cómo se encarga a partir de fotos?** Se envían 1 o varias fotos de referencia (incluso tomadas con el móvil); Naroa realiza una reinterpretación artística de autor capturando la personalidad y mirada.
-- **¿Cuáles son los plazos de entrega?** De 2 a 4 semanas según la técnica y el secado de acrílicos y barnices. Plazos prioritarios disponibles para fechas señaladas con aviso previo.
+## Preguntas sobre encargos (las de la página, tal cual)
+- **¿Y si la foto que tengo es una birria de móvil tomada de noche?** ¡Mejor todavía! Prefiero mil veces una foto borrosa donde la persona se esté partiendo de risa o mirando de reojo que una imagen de estudio sin vida.
+- **¿Puedo pedir que metas objetos reales dentro del cuadro (botones, cartas, entradas de concierto)?** ¡Es mi especialidad y lo que más me divierte! Me lo envías o me lo traes al estudio en Bilbao y lo coso o lo integro dentro de la obra como parte de la piel del cuadro.
+- **¿Cuánto cuesta un retrato pintado a mano y cuándo sé el precio exacto?** Antes de tocar un pincel. Primero hablamos de tu idea, elegimos soporte y tamaño, y te doy una cifra cerrada y por escrito.
+- **¿Cuáles son los plazos y qué pasa si tengo una fecha señalada?** El ritmo habitual de taller es de 2 a 4 semanas. Si tienes un cumpleaños, una boda o una sorpresa inminente, dímelo en el primer mensaje y buscamos un hueco prioritario de caballete.
+- **¿Cómo llega la obra a mis manos si no vivo en Bilbao?** Si estás en Bilbao o en Bizkaia, te lo doy en mano en el estudio o quedamos para dártelo en persona. Si estás fuera, viaja como una reina, con número de seguimiento hasta la puerta de tu casa.
+- **¿Qué tamaños puedo elegir?** Los formatos habituales son 20 × 30 cm, 30 × 40 cm y 40 × 50 cm, o a medida según el espacio donde vaya a vivir. Cada pieza va firmada y lista para colgar.
 - **¿Hasta cuándo se puede encargar para Navidad y Reyes?** Para que llegue en Navidad, encargos hasta el 22 de noviembre. Para Reyes, hasta el 4 de diciembre.
-- **¿Dónde se entrega?** Entrega en mano en Bilbao y Bizkaia, o envío con seguimiento a nivel nacional e internacional.
-- **¿Cómo conservar una obra en técnica mixta o collage?** Fijación y barniz protector satinado. Limpieza en seco con plumero suave o microfibra; evitar humedad directa o productos químicos.
-- **¿Qué aporta trabajar sobre madera, collage, objetos o pizarra?** Cada soporte (betas de madera, costuras textiles, cajas cotidianas o cantos de piedra) aporta textura, volumen y relato propio en diálogo con la persona retratada.
-- **¿Se puede visitar el estudio en Bilbao?** Sí, visitas con cita concertada previa para ver obra en directo, valorar soportes y definir el proyecto en persona.
 
 ## Secciones Principales
 - [Inicio e Inmersión](https://naroagutierrezgil.com/): Experiencia inmersiva y catálogo completo de 86 obras.
@@ -51,7 +50,7 @@
 - [Catálogo Completo](https://naroagutierrezgil.com/obra/): Ficha detallada de las 86 piezas de la colección con fotografías de detalle y relato.
 - [Serie Vaivenes](https://naroagutierrezgil.com/series/vaivenes/): Retratos en técnica mixta, collage textil y objetos de memoria.
 - [Sobre Mí](https://naroagutierrezgil.com/sobre-mi/): Biografía, técnica, proceso creativo y proyectos comunitarios (Walking Gallery Bilbao, El ReCreo).
-- [Trayectoria](https://naroagutierrezgil.com/trayectoria/): Archivo cronológico de exposiciones documentadas desde 2010 (DEIA, GARA, Politena, Dock Bilbao).
+- [Trayectoria](https://naroagutierrezgil.com/trayectoria/): Archivo cronológico de las 22 muestras y encuentros documentados desde 2010, con su lugar y sus fuentes.
 - [Cuaderno](https://naroagutierrezgil.com/cuaderno/): Relatos de proceso, vivencias del taller y artículos de prensa.
 - [Contacto](https://naroagutierrezgil.com/contacto/): Canales directos de consulta para obra y encargos.
 - [Retrato de pareja y de familia](https://naroagutierrezgil.com/retrato-de-pareja-y-familia/): Retratos dobles y familiares hechos a mano desde fotografías, con obras de ejemplo.
@@ -930,14 +929,92 @@
 - **Contacto Obra:** mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Game%20Over
 
 
-## Condiciones del Servicio de Encargos en Bilbao (Evidence Base)
+## Preguntas de las páginas de encargo (tal como se leen en cada una)
 
-- **Soportes:** Pizarra natural de cantera con contorno irregular, madera noble, collage textil sobre tela vaquera o papel de algodón, y cajas tridimensionales.
-- **Formatos habituales:** Pizarra de 20×30 cm a 40×50 cm; piezas especiales adaptadas al espacio.
-- **Técnicas:** Acrílico, óleo, grafito, pastel Conté, rotuladores acrílicos, escamas de mica mineral y ensamblaje de objetos cotidianos.
-- **Plazos:** 2 a 4 semanas según complejidad y secado de capas de acrílico y barniz.
-- **Presupuesto:** Presupuesto cerrado por escrito antes de comenzar, sin compromiso previo.
-- **Entrega:** En mano en Bilbao y comarca de Bizkaia; envíos con seguimiento a nivel nacional e internacional.
+### Retrato por encargo (https://naroagutierrezgil.com/retratos-por-encargo-bilbao/)
+- **¿Y si la foto que tengo es una birria de móvil tomada de noche?** ¡Mejor todavía! Prefiero mil veces una foto borrosa donde la persona se esté partiendo de risa o mirando de reojo que una imagen de estudio sin vida.
+- **¿Puedo pedir que metas objetos reales dentro del cuadro (botones, cartas, entradas de concierto)?** ¡Es mi especialidad y lo que más me divierte! Me lo envías o me lo traes al estudio en Bilbao y lo coso o lo integro dentro de la obra como parte de la piel del cuadro.
+- **¿Cuánto cuesta un retrato pintado a mano y cuándo sé el precio exacto?** Antes de tocar un pincel. Primero hablamos de tu idea, elegimos soporte y tamaño, y te doy una cifra cerrada y por escrito.
+- **¿Cuáles son los plazos y qué pasa si tengo una fecha señalada?** El ritmo habitual de taller es de 2 a 4 semanas. Si tienes un cumpleaños, una boda o una sorpresa inminente, dímelo en el primer mensaje y buscamos un hueco prioritario de caballete.
+- **¿Cómo llega la obra a mis manos si no vivo en Bilbao?** Si estás en Bilbao o en Bizkaia, te lo doy en mano en el estudio o quedamos para dártelo en persona. Si estás fuera, viaja como una reina, con número de seguimiento hasta la puerta de tu casa.
+- **¿Qué tamaños puedo elegir?** Los formatos habituales son 20 × 30 cm, 30 × 40 cm y 40 × 50 cm, o a medida según el espacio donde vaya a vivir. Cada pieza va firmada y lista para colgar.
+
+### Retrato de pareja y de familia por encargo, hecho a mano desde fotografía (https://naroagutierrezgil.com/retrato-de-pareja-y-familia/)
+- **¿Sirve una foto de móvil, o varias fotos distintas?** Sí. Vale una foto de móvil, aunque esté movida, y valen varias: una en la que alguien sale bien de cara y otra con el gesto o la ropa que le define. Naroa las combina en el taller en una sola composición.
+- **¿Se puede incluir algún objeto o recuerdo?** Sí. Naroa integra objetos reales en sus piezas: cartas, entradas, botones, telas, chapas, billetes de tren. Se le envían o se llevan al estudio de Bilbao y pasan a formar parte de la obra.
+- **¿Cuánto cuesta?** No hay una tarifa fija: depende del soporte y del tamaño. Naroa da una cifra cerrada y por escrito antes de empezar.
+- **¿Llega a tiempo para una boda o un aniversario?** El plazo habitual es de 2 a 4 semanas. Si hay fecha, conviene decirlo en el primer mensaje para que Naroa busque hueco.
+
+### Retrato en recuerdo de un ser querido, pintado a mano desde una fotografía antigua (https://naroagutierrezgil.com/retrato-de-un-ser-querido-fallecido/)
+- **Solo tengo una foto y es mala. ¿Sirve?** Casi siempre. Una foto de carné, una imagen escaneada o una de móvil con poca luz suelen bastar. Lo mejor es enviarla: Naroa la mira y contesta ella misma.
+- **¿Puede aparecer junto a alguien de la familia?** Sí. En El Reencuentro, una hija y su padre aparecen juntos a partir de una foto de él de joven.
+- **¿Se puede incluir algún objeto o recuerdo?** Sí. Naroa integra objetos reales en sus piezas: cartas, entradas, botones, telas, chapas, billetes de tren. Se le envían o se llevan al estudio de Bilbao y pasan a formar parte de la obra.
+- **¿Cuánto tarda y cuánto cuesta?** El plazo habitual es de 2 a 4 semanas. No hay una tarifa fija: Naroa da una cifra cerrada y por escrito antes de empezar.
+
+### Retrato de mascota por encargo, hecho a mano desde fotografía (https://naroagutierrezgil.com/retrato-de-mascota/)
+- **¿Sirve una foto de móvil?** Sí, aunque esté movida. Si hay varias, mejor: una donde se le vea bien la cara y otra con su gesto de siempre. Naroa las combina en el taller.
+- **¿Y si ya no está?** Sirve una foto antigua. El encargo se hace igual, a partir de la imagen que haya.
+- **¿Se puede incluir algún objeto o recuerdo?** Sí. Naroa integra objetos reales en sus piezas: cartas, entradas, botones, telas, chapas, billetes de tren. Se le envían o se llevan al estudio de Bilbao y pasan a formar parte de la obra.
+- **¿Cuánto cuesta?** No hay una tarifa fija: depende del soporte y del tamaño. Naroa da una cifra cerrada y por escrito antes de empezar.
+
+## Exposiciones y encuentros documentados (22)
+
+- 2026-06-04 · Bwall Collective · Brotes de Alma y Manos · Dock · Bilbao · Colectiva
+- 2026-04-27 · Autorretratos: Mujeres a través del Espejo · Marienea · Basauri · Colectiva
+- 2026-01-30 · DiviNos VaiVenes · Politena, espacio de arte · Bilbao · Individual
+- 2025-05-25 · Azoka de arte y artesanía · Lataska · Sopela · Mercado de arte
+- 2025-05-18 · Udaberriko Jaia · Sopela · Mercado de arte
+- 2022-12-20 · Emakumeen arteaN · Harilka elkartea · Bilbao · Colectiva
+- 2022-11-12 · Bwall Collective «GIRLS» · Dock · Bilbao · Colectiva
+- 2022-10-23 · Walking Gallery · Por Amor al Arte · Calles de Bilbao · Arte en la calle
+- 2022-04-04 · Repóker de Reinas · Vaivenes · Siarte Leku · Bilbao · Individual
+- 2020-10-02 · Iconos Pop · Casa de Cultura Clara Campoamor · Barakaldo · Colectiva
+- 2020-09-30 · Vaivenes · El Ojo del Huracán · Haika · Sodupe · Individual
+- 2019-11-28 · Vaivenes · Primera Muestra · Copper Deli Museo · Bilbao · Individual
+- 2018-06-28 · 360° · Baserri Antzoki · Derio · Colectiva
+- 2017-09-05 · Personas · Sarean · Bilbao · Colectiva
+- 2017-04-02 · Madera, Papel y Tijera · Ambigú · Bilbao · Individual
+- 2016-12 · Sácame los Colores · Tegobi · Bilbao · Individual
+- 2015-05-28 · Espejos del Alma · Galería de los Espejos · Colegio de Abogados · Bilbao · Individual
+- 2015-05-16 · Walking Gallery · Bilbao Art District · Calles de Bilbao · salida desde Galería Kalao · Arte en la calle
+- 2014-07-03 · Espejos del Alma · Laberinto de Espejos · Torre Salazar · Portugalete · Individual
+- 2013-05-20 · La Bolsa y la Vida · Spazio Grossi · Bilbao · Individual
+- 2011-09 · Exposición de pintura · Gaztebulegoa · Barakaldo · Individual
+- 2010-03 · Espejos del Alma · Primera Edición · Hegoak · Bilbao · Individual
+
+## Prensa (31 notas, agendas incluidas, cada una comprobada en su fuente)
+
+- 2026-06-05 · DEIA · «Bwall Collective inaugura una exposición de ocho artistas locales en Dock Bilbao» · https://www.deia.eus/bizkaia/vida-social/2026/06/05/bwall-collective-inaugura-exposicion-ocho-11159371.html
+- 2024-05-15 · enPortugalete.com · «Las Colonias de Arte de Portugalete volverán a centrarse en la sostenibilidad» · https://www.enportugalete.com/actualidad/colonias-arte-portugalete-volveran-centrarse-sostenibilidad/20240515102022016891.html
+- 2020-03-18 (fecha del acto) · NOIZ Agenda · «COLECTIVO BWALL: Akelarre» · https://www.noizagenda.com/agenda/62119/akelarre-bwall-kolektiboa
+- 2017-11-22 · NOIZ Agenda · «Gau Irekia 2017 presenta su oda a lo efímero y fugaz con un centenar de planes en Sanfran» · https://www.noizagenda.com/noticias/33837/gau-irekia-2017-presenta-su-oda-a-lo-efmero-y-fugaz-con-un-centenar-de-planes-en-sanfran
+- 2017-09-07 (fecha del acto) · El Correo · «Muestra titulada 'Gizakiak-Personas'» · https://agenda.elcorreo.com/evento/gizakiak-personas-573411.html
+- 2017-07-20 · DEIA · «Planes para todos este finde en Bilbao y alrededores.» · https://blogs.deia.eus/un-sinfin-de-planes/2017/07/20/planes-para-todos-este-finde-en-bilbao-y-alrededores/
+- 2016-12-02 · DEIA · «Ongi Etorri Abendua! – Planes para todos» · https://blogs.deia.eus/un-sinfin-de-planes/2016/12/02/ongi-etorri-abendua-planes-para-todos/
+- 2016-06-06 · DEIA · «Agenda» · https://www.deia.eus/cultura/2016/06/06/agenda-5031497.html
+- 2016-05-05 (fecha del acto) · El Correo · «Naroa Gutiérrez Gil presenta 'Y see your true colors'» · https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-y-see-your-true-colors-519981.html
+- 2016-04-25 · ilovebilbao.com · «I SEE YOUR TRUE COLORS» · https://ilovebilbao.com/i-see-your-true-colors/
+- 2015-10-14 (fecha del acto) · NOIZ Agenda · «EXPOSICIÓN COLECTIVA "GU GARA GARROBI" TALDE ERAKUSKETA» · https://www.noizagenda.com/agenda/22279/exposicin-colectiva-gu-gara-garrobi-talde-erakusketa
+- 2015-10-08 · DEIA · «Estamos de Puente!» · https://blogs.deia.eus/un-sinfin-de-planes/2015/10/08/estamos-de-puente/
+- 2015-06-01 · DEIA · «Agenda» · https://www.deia.eus/cultura/2015/06/01/agenda-5123953.html
+- 2015-05-28 (fecha del acto) · El Correo · «Naroa Gutiérrez Gil presenta 'Espejos del alma'» · https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-476343.html
+- 2015-05-16 · Radio Popular · «Entrevista en 'La Flor de la Canela'» · https://www.youtube.com/watch?v=bn4tOI5M7sM
+- 2015-03-06 (fecha del acto) · NOIZ Agenda · «GRITO DE MUJER» · https://www.noizagenda.com/agenda/19497/grito-de-mujer
+- 2014-09-03 · Barakaldo Digital · «El CIS de los Hermanos acoge una exposición colectiva con fotografía, ilustraciones y pintura» · https://www.barakaldodigital.com/2014/09/el-cis-de-los-hermanos-acoge-una.html
+- 2014-07-03 (fecha del acto) · El Correo · «Naroa Gutiérrez Gil presenta 'Espejos del alma'» · https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-430614.html
+- 2014-01-16 (fecha del acto) · El Correo · «Naroa Gutiérrez Gil presenta la exposición de pinturas e ilustraciones 'Facefood'» · https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-402297.html
+- 2013-05-04 · El Correo · «Los bilbaínos tienen mucho arte» · https://naroagutierrez.wordpress.com/wp-content/uploads/2017/05/7gperic3b3dicobilbao-art-districtx-2.jpg
+- 2013-04-27 · GARA · «Walking gallery: arte al aire libre y en movimiento, arte en evolución» · https://gara.naiz.eus/paperezkoa/20130427/399965/es/Walking-gallery-arte-aire-libre-movimiento-arte-evolucion
+- 2013-03-06 · Kubilha · «Arte itinerante» · https://web.archive.org/web/20130815055345/http://www.kubilha.com:80/arte-itinerante/
+- 2013-02-13 · Kubilha · «Naroa Gutiérrez Gil: `the walking artist´» · https://web.archive.org/web/20130217182414/http://www.kubilha.com:80/naroa-gutierrez-gil-the-walking-artist%C2%B4/
+- 2013-02-07 · Kubilha · «Tarde de radio en un bar» · https://web.archive.org/web/20130215103222/http://www.kubilha.com:80/tarde-de-radio-en-un-bar/
+- 2012-03-11 · Barakaldo Digital · «Agenda semanal | Desobediencia, Porco Bravo, Banda de Música y BOS» · https://www.barakaldodigital.com/2012/03/agenda-semanal-desobediencia-porco.html
+- 2011-12-29 · Barakaldo Digital · «El programa de exposiciones municipales repite artistas y muestras en su programación» · https://www.barakaldodigital.com/2011/12/el-programa-de-exposiciones-municipales.html
+- 2011-09-17 · DEIA · «Con el museo a cuestas» · https://www.deia.eus/cultura/2011/09/17/museo-cuestas-5516144.html
+- 2011-09-15 · Barakaldo Digital · «Agenda | Recital acústico de Porco» · https://www.barakaldodigital.com/2011/09/agenda-recital-acustico-de-porco.html
+- 2011-09-09 · Barakaldo Digital · «Naroa Gutiérrez Gil expone su pintura en Gaztebulegoa desde este sábado 10 de septiembre» · https://www.barakaldodigital.com/2011/09/naroa-gutierrez-gil-expone-su-pintura.html
+- 2010-03-31 (fecha del acto) · El Correo · «Naroa Gutiérrez Gil presenta la muestra pictórica 'Espejos del alma'» · https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-112114.html
+- 2010-03-26 · GARA · «Non zer» · https://gara.naiz.eus/paperezkoa/20100326/190489/es/Non-zer
 
 ## Protocolo de Interacción para Agentes Autónomos (Agent-Ready DOM & WebMCP)
 

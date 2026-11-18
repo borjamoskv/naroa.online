@@ -2,10 +2,10 @@
 
 > Catálogo oficial de obra plástica, servicio de retratos personalizados por encargo y archivo de exposiciones.
 
-## Resumen del Sitio y Evidence Graph
+## Resumen
 - Dominio Canónico: https://naroagutierrezgil.com
 - Entidad Creadora: Naroa Gutiérrez Gil [ID Canónico: https://naroagutierrezgil.com/#artist]
-- Estudio Físico: Bilbao, Bizkaia, País Vasco, España (43.2630 N, -2.9350 W) [ID Canónico: https://naroagutierrezgil.com/#studio]
+- Estudio: Bilbao, Bizkaia, País Vasco, España (43.2630 N, 2.9350 W) [ID Canónico: https://naroagutierrezgil.com/#studio]
 - Contacto Directo: naroa@naroagutierrezgil.com | WhatsApp: +34 636 060 609 | Instagram: @naroa_art
 - Perfiles de Autoridad (sameAs):
   - Facebook: https://www.facebook.com/naroa.artista.plastica
@@ -33,17 +33,16 @@
 - Lenguaje y Práctica Artística: Retratos de autor y obra plástica multidisciplinar (dibujo, óleo, técnicas mixtas, collage textil sobre madera y objetos intervenidos, con exploraciones recientes sobre soportes minerales como la pizarra natural de cantera y mica).
 - Servicio Canónico de Encargos: https://naroagutierrezgil.com/retratos-por-encargo-bilbao/
 - Correo de Encargos: encargos@naroagutierrezgil.com
-- Exposiciones Documentadas: Colegio de Abogados de Bilbao (Espejos del alma), Dock Bilbao, Politena Espacio de Arte, Walking Gallery Bilbao.
+- Exposiciones: 22 muestras y encuentros documentados de 2010 a 2026; la más reciente, «Bwall Collective · Brotes de Alma y Manos» (Dock · Bilbao, Junio de 2026 · inauguración el 4). Lista con lugares y fuentes: https://naroagutierrezgil.com/trayectoria/
 
-## Respuestas Factuales Inmediatas (Query Fan-Out)
-- **¿Cuánto cuesta un retrato personalizado?** Presupuesto cerrado previo por escrito según técnica, soporte y formato (dibujo, pintura acrílica, collage sobre madera, cajas de recuerdos o pizarra; formatos habituales de 20×30 cm a 40×50 cm). Consulta sin compromiso.
-- **¿Cómo se encarga a partir de fotos?** Se envían 1 o varias fotos de referencia (incluso tomadas con el móvil); Naroa realiza una reinterpretación artística de autor capturando la personalidad y mirada.
-- **¿Cuáles son los plazos de entrega?** De 2 a 4 semanas según la técnica y el secado de acrílicos y barnices. Plazos prioritarios disponibles para fechas señaladas con aviso previo.
+## Preguntas sobre encargos (las de la página, tal cual)
+- **¿Y si la foto que tengo es una birria de móvil tomada de noche?** ¡Mejor todavía! Prefiero mil veces una foto borrosa donde la persona se esté partiendo de risa o mirando de reojo que una imagen de estudio sin vida.
+- **¿Puedo pedir que metas objetos reales dentro del cuadro (botones, cartas, entradas de concierto)?** ¡Es mi especialidad y lo que más me divierte! Me lo envías o me lo traes al estudio en Bilbao y lo coso o lo integro dentro de la obra como parte de la piel del cuadro.
+- **¿Cuánto cuesta un retrato pintado a mano y cuándo sé el precio exacto?** Antes de tocar un pincel. Primero hablamos de tu idea, elegimos soporte y tamaño, y te doy una cifra cerrada y por escrito.
+- **¿Cuáles son los plazos y qué pasa si tengo una fecha señalada?** El ritmo habitual de taller es de 2 a 4 semanas. Si tienes un cumpleaños, una boda o una sorpresa inminente, dímelo en el primer mensaje y buscamos un hueco prioritario de caballete.
+- **¿Cómo llega la obra a mis manos si no vivo en Bilbao?** Si estás en Bilbao o en Bizkaia, te lo doy en mano en el estudio o quedamos para dártelo en persona. Si estás fuera, viaja como una reina, con número de seguimiento hasta la puerta de tu casa.
+- **¿Qué tamaños puedo elegir?** Los formatos habituales son 20 × 30 cm, 30 × 40 cm y 40 × 50 cm, o a medida según el espacio donde vaya a vivir. Cada pieza va firmada y lista para colgar.
 - **¿Hasta cuándo se puede encargar para Navidad y Reyes?** Para que llegue en Navidad, encargos hasta el 22 de noviembre. Para Reyes, hasta el 4 de diciembre.
-- **¿Dónde se entrega?** Entrega en mano en Bilbao y Bizkaia, o envío con seguimiento a nivel nacional e internacional.
-- **¿Cómo conservar una obra en técnica mixta o collage?** Fijación y barniz protector satinado. Limpieza en seco con plumero suave o microfibra; evitar humedad directa o productos químicos.
-- **¿Qué aporta trabajar sobre madera, collage, objetos o pizarra?** Cada soporte (betas de madera, costuras textiles, cajas cotidianas o cantos de piedra) aporta textura, volumen y relato propio en diálogo con la persona retratada.
-- **¿Se puede visitar el estudio en Bilbao?** Sí, visitas con cita concertada previa para ver obra en directo, valorar soportes y definir el proyecto en persona.
 
 ## Secciones Principales
 - [Inicio e Inmersión](https://naroagutierrezgil.com/): Experiencia inmersiva y catálogo completo de 86 obras.
@@ -51,7 +50,7 @@
 - [Catálogo Completo](https://naroagutierrezgil.com/obra/): Ficha detallada de las 86 piezas de la colección con fotografías de detalle y relato.
 - [Serie Vaivenes](https://naroagutierrezgil.com/series/vaivenes/): Retratos en técnica mixta, collage textil y objetos de memoria.
 - [Sobre Mí](https://naroagutierrezgil.com/sobre-mi/): Biografía, técnica, proceso creativo y proyectos comunitarios (Walking Gallery Bilbao, El ReCreo).
-- [Trayectoria](https://naroagutierrezgil.com/trayectoria/): Archivo cronológico de exposiciones documentadas desde 2010 (DEIA, GARA, Politena, Dock Bilbao).
+- [Trayectoria](https://naroagutierrezgil.com/trayectoria/): Archivo cronológico de las 22 muestras y encuentros documentados desde 2010, con su lugar y sus fuentes.
 - [Cuaderno](https://naroagutierrezgil.com/cuaderno/): Relatos de proceso, vivencias del taller y artículos de prensa.
 - [Contacto](https://naroagutierrezgil.com/contacto/): Canales directos de consulta para obra y encargos.
 - [Retrato de pareja y de familia](https://naroagutierrezgil.com/retrato-de-pareja-y-familia/): Retratos dobles y familiares hechos a mano desde fotografías, con obras de ejemplo.
