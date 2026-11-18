@@ -2117,7 +2117,7 @@ def build(output):
         siblings_html = (
             '<section class="rp-section" aria-labelledby="rp-otros"><h2 id="rp-otros" class="rp-h2">Otros retratos por encargo</h2><p class="rp-actions">'
             + ''.join(f'<a class="rp-link" href="{href}">{esc(label)}</a>' for href, label in rp_siblings if href != path)
-            + '<a class="rp-link" href="/retratos-por-encargo-bilbao/">Todos los encargos ↗</a></p></section>'
+            + '<a class="rp-link" href="/como-se-hace-un-retrato/">Cómo se hace un retrato ↗</a><a class="rp-link" href="/retratos-por-encargo-bilbao/">Todos los encargos ↗</a></p></section>'
         )
         rp_images[path] = [(w, w["photos"][0]) for w, _ in works] + ([(hero_work, hero_ph)] if hero_ph else []) + [(w, next(ph for ph in w["photos"] if (ph.get("caption") or "").startswith(start))) for w, start in details]
         body = (
@@ -2268,6 +2268,7 @@ def build(output):
     # Fotos del trabajo a medias que Naroa publicó, cada una junto a la obra acabada. Todas salen de la ficha de su
     # obra en el catálogo (se buscan por el principio del pie: si la ficha pierde la foto, el build falla). El texto
     # solo dice lo que se ve en ellas; no describe un método general ni promete condiciones (§13 de AGENTS.md).
+    # Cada obra es una fila: su título una vez y, debajo, las fotos en orden, unidas por una flecha a mano.
     def rp_shot(slug, caption_start):
         w = find_work(slug)
         return w, next(ph for ph in w["photos"] if (ph.get("caption") or "").startswith(caption_start))
@@ -2275,26 +2276,42 @@ def build(output):
     def rp_step(w, ph):
         return (
             f'<figure class="rp-detail" style="--ar:{ph["width"] / ph["height"]:.3f}"><a href="/obra/{w["slug"]}/" tabindex="-1"><img src="{ph["src"]}"{cover_dims(ph["src"])} sizes="(max-width:820px) 44vw, 30vw" alt="{esc(work_alt(w, ph["caption"]))}" loading="lazy" decoding="async"></a>'
-            f'<figcaption><a class="rp-work-meta" href="/obra/{w["slug"]}/">{esc(w["title"])}</a><p>{esc(ph["caption"])}</p></figcaption></figure>'
+            f'<figcaption><p>{esc(ph["caption"])}</p></figcaption></figure>'
+        )
+
+    def rp_row(shots):
+        w = shots[0][0]
+        meta = " · ".join(filter(None, [str(w["year"]) if w.get("year") else None, w.get("technique"), w.get("dimensions")]))
+        return (
+            f'<div class="rp-seq-row"><p class="rp-seq-head"><a class="rp-work-title" href="/obra/{w["slug"]}/">{esc(w["title"])} ↗</a><span class="rp-work-meta">{esc(meta)}</span></p>'
+            f'<div class="rp-seq{" rp-seq--pair" if len(shots) == 2 else ""}" style="--n:{len(shots)};--sum:{sum(ph["width"] / ph["height"] for _, ph in shots):.3f}">'
+            + ''.join(rp_step(w, ph) for _, ph in shots) + '</div></div>'
         )
 
     process_path = "/como-se-hace-un-retrato/"
     process_hero_work, process_hero_ph = rp_shot("rara-avis", "Dibujo a pastel, antes del ensamblaje")
     process_steps = [
         ("proceso-dibujo", "Primero, el dibujo",
-         "Infusión de Berto empezó a lápiz, directamente sobre la rodaja de fresno.",
-         [rp_shot("infusion-de-berto", "Proceso: el dibujo a lápiz"), rp_shot("infusion-de-berto", "Vista completa")]),
+         "Infusión de Berto empezó a lápiz, directamente sobre la rodaja de fresno. En Into the Wild, el fondo llegó después de la figura.",
+         [[rp_shot("infusion-de-berto", "Proceso: el dibujo a lápiz"), rp_shot("infusion-de-berto", "Vista completa")],
+          [rp_shot("into-the-wild", "La ilustración a bolígrafo y lápiz"), rp_shot("into-the-wild", "Obra completa")]]),
         ("proceso-color", "Del blanco y negro al color",
          "Custom Jaio, sobre tela vaquera negra: la figura en blanco, el rostro en blanco y negro y, al final, el color.",
-         [rp_shot("custom-jaio", "Proceso: la figura en blanco"), rp_shot("custom-jaio", "Proceso: el retrato en blanco y negro"), rp_shot("custom-jaio", "Proceso: el color a medias"), rp_shot("custom-jaio", "Bastidor completo")]),
+         [[rp_shot("custom-jaio", "Proceso: la figura en blanco"), rp_shot("custom-jaio", "Proceso: el retrato en blanco y negro"), rp_shot("custom-jaio", "Proceso: el color a medias"), rp_shot("custom-jaio", "Bastidor completo")]]),
         ("proceso-collage", "El dibujo, antes del collage",
          "En estas piezas el dibujo se terminó primero; el collage llegó después.",
-         [rp_shot("roisin", "El dibujo de Róisín antes"), rp_shot("roisin", "Róisín, obra completa"), rp_shot("pippilotta", "El dibujo de Pippi"), rp_shot("pippilotta", "Loving Långstrump: collage terminado"), rp_shot("las-rosalias", "Proceso: los dibujos de los pies"), rp_shot("las-rosalias", "Las RosaLías")]),
+         [[rp_shot("roisin", "El dibujo de Róisín antes"), rp_shot("roisin", "Róisín, obra completa")],
+          [rp_shot("pippilotta", "El dibujo de Pippi"), rp_shot("pippilotta", "Loving Långstrump: collage terminado")],
+          [rp_shot("rosetta", "Dibujo inicial"), rp_shot("rosetta", "La obra terminada")],
+          [rp_shot("dustin", "Dibujo inicial"), rp_shot("dustin", "La obra terminada")],
+          [rp_shot("las-rosalias", "Proceso: los dibujos de los pies"), rp_shot("las-rosalias", "Las RosaLías")]]),
         ("proceso-materia", "Lo que rodea al retrato",
-         "Marian de Miranda creció sobre una caja de sardinas de chocolate.",
-         [rp_shot("marian-de-miranda", "Base de collage"), rp_shot("marian-de-miranda", "Montaje digital intermedio"), rp_shot("marian-de-miranda", "Obra final")]),
+         "Marcos, cajas y recortes: lo que acompaña al retrato se monta alrededor de él.",
+         [[rp_shot("marian-de-miranda", "Base de collage"), rp_shot("marian-de-miranda", "Montaje digital intermedio"), rp_shot("marian-de-miranda", "Obra final")],
+          [rp_shot("rara-avis", "Proceso: el pastel junto a la pluma"), rp_shot("rara-avis", "Proceso: el pastel recortado"), rp_shot("rara-avis", "Ensamblaje completo")],
+          [rp_shot("el-gato-que-es-kutxa", "Proceso: fondo e imagen recortada"), rp_shot("el-gato-que-es-kutxa", "Tapa terminada")]]),
     ]
-    process_shots = [shot for *_, shots in process_steps for shot in shots]
+    process_shots = [shot for *_, rows in process_steps for row in rows for shot in row]
     rp_images[process_path] = [(process_hero_work, process_hero_ph)] + process_shots
     process_title = "Cómo se hace un retrato: el trabajo a medias, en fotos"
     process_description = "Fotos del trabajo a medias de obras de Naroa Gutiérrez Gil, cada una junto a la pieza acabada: el dibujo, el blanco y negro, el color y el collage."
@@ -2302,16 +2319,14 @@ def build(output):
     process_body = (
         '<main id="main" class="retrato-pagina">'
         '<header class="rp-hero"><div class="rp-hero-copy"><p class="rp-kicker">Naroa Gutiérrez Gil · Retratos por encargo</p><h1 class="rp-title">Cómo se hace un retrato</h1>'
-        '<p class="rp-lead"><strong>Fotos del trabajo a medias.</strong> Naroa fotografió estas obras antes de terminarlas. Aquí va cada una junto a cómo quedó.</p></div>'
+        '<p class="rp-lead"><strong>Fotos del trabajo a medias.</strong> Naroa fotografió estas obras antes de terminarlas. Aquí va cada una junto a cómo quedó.</p>'
+        '<p class="rp-actions"><a class="rp-link" href="#proceso-dibujo">Ver el proceso ↓</a><a class="rp-link" href="#rp-escribir">Encargar un retrato ↓</a></p></div>'
         f'<figure class="rp-hero-art"><a href="/obra/{process_hero_work["slug"]}/" tabindex="-1"><img src="{process_hero_ph["src"]}"{cover_dims(process_hero_ph["src"])} sizes="(max-width:980px) 88vw, 42vw" alt="{esc(work_alt(process_hero_work, process_hero_ph["caption"]))}" loading="eager" fetchpriority="high" decoding="async"></a>'
         f'<figcaption><span class="rp-work-meta">{esc(process_hero_meta)}</span><a class="rp-work-title" href="/obra/{process_hero_work["slug"]}/">{esc(process_hero_work["title"])} ↗</a><p>{esc(process_hero_ph["caption"])}</p></figcaption></figure></header>'
         + ''.join(
             f'<section class="rp-section" aria-labelledby="{key}"><h2 id="{key}" class="rp-h2">{esc(heading)}</h2><p class="rp-text">{esc(text)}</p>'
-            + ''.join(
-                f'<div class="rp-seq" style="--n:{len(row)};--sum:{sum(ph["width"] / ph["height"] for _, ph in row):.3f}">' + ''.join(rp_step(w, ph) for w, ph in row) + '</div>'
-                for row in ([s for s in shots if s[0]["slug"] == slug] for slug in dict.fromkeys(w["slug"] for w, _ in shots))
-            ) + '</section>'
-            for key, heading, text, shots in process_steps
+            + ''.join(rp_row(row) for row in rows) + '</section>'
+            for key, heading, text, rows in process_steps
         )
         + '<section class="rp-section" aria-labelledby="rp-condiciones"><h2 id="rp-condiciones" class="rp-h2">Cómo se encarga</h2>'
         '<p class="rp-text">Se le escribe a Naroa por WhatsApp o por correo con la foto o las fotos que haya y un par de líneas sobre la persona. Ella propone soporte y tamaño, y da el precio por escrito antes de empezar.</p>'

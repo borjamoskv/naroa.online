@@ -3730,13 +3730,23 @@ dialog.menu-dialog .menu-name>small.menu-season,.menu-name>small.menu-season{col
 @media print{.season-nav{display:none}}
 body.page-retratos-por-encargo-bilbao .enc-also{display:flex;flex-wrap:wrap;gap:12px 34px;margin-top:clamp(28px,4vw,48px)}
 /* «Cómo se hace un retrato»: una fila por obra, de la pieza a medias a la acabada. Las fotos se reparten el ancho según
-   su proporción (--ar), así que todas quedan a la misma altura; la fila no pasa de la que daría esa altura (--sum). */
-.retrato-pagina .rp-seq{--rp-seq-h:clamp(230px,27vw,400px);--rp-seq-gap:clamp(18px,2.4vw,36px);display:flex;align-items:flex-start;gap:var(--rp-seq-gap);max-width:calc(var(--rp-seq-h)*var(--sum,1) + var(--rp-seq-gap)*(var(--n,1) - 1));margin-top:clamp(30px,4vw,52px)}
+   su proporción (--ar), así que todas quedan a la misma altura; la fila no pasa de la que daría esa altura (--sum).
+   Entre una foto y la siguiente, una flecha a mano en el rosa de colegio (§7f). El título de la obra va una vez, encima. */
+.retrato-pagina .rp-seq-row{margin-top:clamp(40px,5vw,72px)}
+.retrato-pagina .rp-seq-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 20px;margin:0}
+.retrato-pagina .rp-seq{--rp-seq-h:clamp(230px,27vw,400px);--rp-seq-gap:clamp(30px,3.6vw,54px);display:flex;align-items:flex-start;gap:var(--rp-seq-gap);max-width:calc(var(--rp-seq-h)*var(--sum,1) + var(--rp-seq-gap)*(var(--n,1) - 1));margin-top:clamp(14px,1.8vw,22px)}
 .retrato-pagina .rp-seq .rp-detail{flex:var(--ar,1) 1 0;min-width:0}
+.retrato-pagina .rp-seq .rp-detail>a{position:relative;display:block}
+.retrato-pagina .rp-seq .rp-detail+.rp-detail>a::before{content:"";position:absolute;top:50%;left:calc(var(--rp-seq-gap) * -.86);width:calc(var(--rp-seq-gap) * .72);height:24px;margin-top:-12px;pointer-events:none;background:var(--school-pink);-webkit-mask:var(--rp-arrow) center/contain no-repeat;mask:var(--rp-arrow) center/contain no-repeat}
+.retrato-pagina .rp-seq .rp-detail:nth-child(3n)+.rp-detail>a::before{transform:rotate(-4deg) scaleY(-1)}
+.retrato-pagina{--rp-arrow:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 24'%3E%3Cpath d='M2 13.5C9 11 17 14.5 25 12.2S36 11 40.5 11.6M31.5 4.2c3 2.4 6.2 4.6 9.3 7.3-3.4 2.1-6.4 4.7-9 7.9' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
 @media (max-width:820px){
   .retrato-pagina .rp-works,.retrato-pagina .rp-works--solo .rp-work{grid-template-columns:minmax(0,1fr)}
   .retrato-pagina .rp-seq{flex-wrap:wrap;max-width:none;gap:28px var(--rp-seq-gap)}
   .retrato-pagina .rp-seq .rp-detail{flex:var(--ar,1) 1 34%}
+  .retrato-pagina .rp-seq:not(.rp-seq--pair) .rp-detail+.rp-detail>a::before{display:none}
+  .retrato-pagina .rp-seq--pair{flex-wrap:nowrap;gap:var(--rp-seq-gap)}
+  .retrato-pagina .rp-seq--pair .rp-detail{flex:var(--ar,1) 1 0}
   .retrato-pagina .rp-hero{grid-template-columns:minmax(0,1fr);gap:clamp(34px,7vw,56px)}
   .retrato-pagina .rp-hero-art img{max-height:none}
   .retrato-pagina .rp-facts{grid-template-columns:repeat(2,minmax(0,1fr))}
