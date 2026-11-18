@@ -221,7 +221,7 @@ export const ARTWORKS: Artwork[] = [
     url: '/assets/la-pensadora-CFHSnMA0.webp',
     title: 'La pensadora',
     href: '#obra-la-pensadora',
-    year: '2023',
+    year: '2011 o antes',
     medium: 'Acrílico mate y metálico sobre lienzo 3D con laterales pintados. Barniz mate y satinado.',
     description: `Esta obra, al igual que el renombrado ‘Pensador’ de Rodin, representa de alguna manera el mundo interior y los procesos cognitivos de la humanidad. A su vez pretende romper el tópico de que la belleza y la intelectualidad son excluyentes.
 
