@@ -916,6 +916,20 @@
    ],
    "d": 0.34
   },
+  "lagrimas-de-oro": {
+   "foto": "/images/catalogo/lagrimas-de-oro-fb-01.jpg",
+   "ojos": [
+    [
+     0.3,
+     0.343
+    ],
+    [
+     0.447,
+     0.343
+    ]
+   ],
+   "por": "a ojo"
+  },
   "las-rosalias": {
    "foto": "/images/catalogo/las-rosalias-01.jpg",
    "ojos": [
