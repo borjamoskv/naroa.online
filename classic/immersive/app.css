@@ -140,6 +140,8 @@ dialog{color:#fffdf4;background:#11120f;border:0;padding:0;max-width:none;max-he
 .gallery-page [data-journey-cue]{display:inline-block}
 @media(max-width:760px){.gallery-page [data-journey-cue]{max-width:230px;vertical-align:top}}
 @media(prefers-reduced-motion:reduce){html:not(.motion-opt-in) .gallery-page .art-scene{transform:none!important}}
+.art-tear{position:absolute;inset:0;z-index:2;visibility:hidden;pointer-events:none}
+.art-tear i{position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22160%22 height=%22160%22%3E%3Cfilter id=%22f%22 x=%220%22 y=%220%22 width=%22100%25%22 height=%22100%25%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%22.9 .35%22 numOctaves=%222%22 seed=%223%22 stitchTiles=%22stitch%22/%3E%3CfeColorMatrix values=%220 0 0 0 .42 0 0 0 0 .36 0 0 0 0 .26 0 0 0 .45 -.12%22/%3E%3C/filter%3E%3Crect width=%22160%22 height=%22160%22 filter=%22url(%23f)%22/%3E%3C/svg%3E"),#f2e9d5}
 
 /* A visitor can choose motion for this gallery independently of the system. */
 html.motion-off .art-layers,html.motion-off [data-art-title],html.motion-off .art-counter,html.motion-off .art-material{animation:none!important}
@@ -3981,14 +3983,13 @@ body.page-retratos-por-encargo-bilbao .enc-note input:focus-visible{outline:3px 
 /* 1.4.3: los numerales de los filtros del índice quedaban en 3,21:1 a 9 px. */
 dialog.index-dialog .index-filters .filter-num{opacity:.8}
 
-/* Encargos: fuentes de reserva con la anchura de las web. Mientras llegan DM Sans y Cormorant Garamond,
+/* Encargos: fuente de reserva con la anchura de la web. Mientras llega DM Sans,
    la frase ocupa las mismas líneas y nada salta al cambiar (CLS 0,11–0,68 según el ancho, medido el 2026-11-11).
    Proporciones medidas contra Arial y Times New Roman; donde no existen, se usa la genérica como hasta ahora.
    El antetítulo se queda con la genérica: ajustarlo exigía reducirlo al 92 % y apenas movía el salto (≤ 0,03 sin ajuste). */
 @font-face{font-family:"DM Sans Reserva";src:local("Arial"),local("ArialMT");size-adjust:103.5%}
-@font-face{font-family:"Cormorant Reserva";font-style:italic;src:local("Times New Roman Italic"),local("TimesNewRomanPS-ItalicMT");size-adjust:86.5%}
 body.page-retratos-por-encargo-bilbao .enc-sentence{font-family:'DM Sans','DM Sans Reserva',sans-serif}
-body.page-retratos-por-encargo-bilbao .enc-word{font-family:'Cormorant Garamond','Cormorant Reserva',serif}
+/* La palabra que cambia va en letra de colegio (§7f) por --font-serif: Cormorant ya no se carga. */
 
 /* ═══════════════════════════════════════════════════════════════
    ENCARGOS · Palabras, no píldoras

@@ -527,10 +527,26 @@
     return lines;
   }
 
+  // Lo que en la web es letra de colegio en rosa (§7f) también lo es en la Story: la misma «Naroa Escolar»,
+  // cuyo size-adjust respeta el lienzo. Sus astas y sus lazos suben y bajan más que los de Cormorant,
+  // así que las líneas van más separadas (STORY_LEAD) y lo que no cabe a lo ancho encoge. Sobre la foto
+  // va en su trazo más firme (400) y con una sombra corta y oscura que perfila el rosa sobre un detalle claro.
+  const STORY_HAND = '"Naroa Escolar", "Playwrite ES", cursive', STORY_PINK = '#f7a8c8', STORY_LEAD = 1.2;
+  const storyHand = size => `400 ${size}px ${STORY_HAND}`;
+  function storyHandInk(ctx) {
+    ctx.fillStyle = STORY_PINK;
+    ctx.shadowColor = 'rgba(11, 11, 10, 0.85)'; ctx.shadowBlur = 14; ctx.shadowOffsetY = 2;
+  }
+  function fitStoryLine(ctx, text, size, maxWidth) {
+    ctx.font = storyHand(size);
+    const width = ctx.measureText(text).width;
+    if (width > maxWidth) ctx.font = storyHand(Math.floor(size * maxWidth / width));
+  }
+
   // El lienzo usa las tipografías de la web; sin esperarlas, la primera Story saldría en la de reserva.
   async function storyFontsReady() {
     if (!document.fonts?.load) return;
-    const wanted = ['500 92px "Caveat"', 'italic 300 118px "Cormorant Garamond"', '400 28px "DM Sans"', '500 28px "DM Sans"'];
+    const wanted = ['500 92px "Caveat"', storyHand(118), '400 28px "DM Sans"', '500 28px "DM Sans"'];
     await Promise.race([
       Promise.all(wanted.map(font => document.fonts.load(font).catch(() => {}))),
       new Promise(resolve => setTimeout(resolve, 1500))
@@ -613,20 +629,20 @@
     spaced('0px');
     if (mini.w) {
       y -= 22;
-      ctx.fillStyle = 'rgba(255, 253, 244, 0.92)';
-      ctx.font = 'italic 300 40px "Cormorant Garamond", serif';
+      storyHandInk(ctx);
+      fitStoryLine(ctx, '← la pieza completa', 40, columnWidth);
       ctx.fillText('← la pieza completa', column, y);
     }
 
     // 6. Título a todo el ancho, sobre la miniatura.
-    ctx.fillStyle = paper;
+    storyHandInk(ctx);
     const title = heroWork.title || 'Obra';
     let size = 118;
-    ctx.font = `italic 300 ${size}px "Cormorant Garamond", serif`;
-    if (wrapStoryText(ctx, title, W - margin * 2, 9).length > 2) { size = 92; ctx.font = `italic 300 ${size}px "Cormorant Garamond", serif`; }
+    ctx.font = storyHand(size);
+    if (wrapStoryText(ctx, title, W - margin * 2, 9).length > 2) { size = 92; ctx.font = storyHand(size); }
     const titleLines = wrapStoryText(ctx, title, W - margin * 2, 3);
     let titleY = Math.min(mini.y, y - 40) - 72;
-    titleLines.slice().reverse().forEach(line => { ctx.fillText(line, margin - 4, titleY); titleY -= size * 1.02; });
+    titleLines.slice().reverse().forEach(line => { ctx.fillText(line, margin - 4, titleY); titleY -= size * STORY_LEAD; });
     inked(false);
   }
 
@@ -814,7 +830,8 @@
     spaced('5px');
     ctx.fillText('GUTIÉRREZ GIL', margin + signature + 22, 318);
     spaced('0px');
-    ctx.font = 'italic 300 78px "Cormorant Garamond", serif';
+    storyHandInk(ctx);
+    fitStoryLine(ctx, 'El retrato de mi visita', 78, W - margin * 2);
     ctx.fillText('El retrato de mi visita', margin - 4, 432);
     inked(false);
 
@@ -841,12 +858,12 @@
       const title = String(entry.work.title || '').split(/\s+/).filter(Boolean).join(' ');
       let size = Math.round(clamp(h * 0.25, 46, 78)), lines = [];
       for (;;) {
-        ctx.font = `italic 300 ${size}px "Cormorant Garamond", serif`;
-        lines = wrapStoryText(ctx, title, textW, clamp(Math.floor((h - 72) / (size * 1.02)), 1, 3));
+        ctx.font = storyHand(size);
+        lines = wrapStoryText(ctx, title, textW, clamp(Math.floor((h - 72) / (size * STORY_LEAD)), 1, 3));
         if (lines.join(' ') === title || size <= 38) break;
         size -= 4;
       }
-      const labelY = y + h - 30 - lines.length * size * 1.02 + size * 0.08 - 10;
+      const labelY = y + h - 30 - lines.length * size * STORY_LEAD + size * 0.08 - 10;
       const label = `${String(i + 1).padStart(2, '0')} · ${visitClock(entry.seconds)}`.toUpperCase();
       ctx.save();
       storyCutPath(ctx, x, y, bandW, h, 4.5, 11 + i * 17);
@@ -877,10 +894,11 @@
       if (img) drawStoryMiniature(ctx, img, x + bandW - pad - cardW, y + h - 22, maxW, maxH, i % 2 ? 2.1 : -2.4);
       // Rótulo: lo que duró la mirada y el título, apoyados en el borde inferior.
       inked(true);
-      ctx.font = `italic 300 ${size}px "Cormorant Garamond", serif`;
+      ctx.font = storyHand(size);
       let ty = y + h - 30;
-      ctx.fillStyle = paper;
-      lines.slice().reverse().forEach(line => { ctx.fillText(line, x + pad - 3, ty); ty -= size * 1.02; });
+      storyHandInk(ctx);
+      lines.slice().reverse().forEach(line => { ctx.fillText(line, x + pad - 3, ty); ty -= size * STORY_LEAD; });
+      inked(true);
       ctx.fillStyle = accent;
       ctx.font = '500 22px "DM Sans", sans-serif';
       spaced('4px');
@@ -1865,6 +1883,13 @@
       }
     }
     const scenes = $$('.art-scene', stage), images = scenes.map(s => $('img', s));
+    // Fibra del rasgado (§7c): la capa va fuera de la escena porque `clip-path` recorta también el `filter`
+    // del propio elemento. Antes en el DOM que las escenas y con su mismo z-index: la obra que entra queda
+    // encima y la que se va, debajo. Se crea después de que el héroe de sesión se haya colocado el primero.
+    const tearFiber = document.createElement('div');
+    tearFiber.className = 'art-tear'; tearFiber.setAttribute('aria-hidden', 'true');
+    tearFiber.append(document.createElement('i'));
+    $('.art-layers', stage)?.prepend(tearFiber);
     images.forEach((img, i) => adoptSrcset(img, works[i]?.cover));
     // Scenes cover the stage (.art-pan is inset -10px); measured on the stage so fit mode
     // and camera transforms never skew the choice.
@@ -3747,10 +3772,25 @@
       if (k < 0.002) return;
       const side = mode === 'V' ? 'top' : direction > 0 ? 'left' : 'right';
       if (kind === 'paper') {
-        const jag = jaggedEdge(work.slug), amp = 7 * k;
-        const pts = jag.map((v, i) => { const t = (i / (jag.length - 1) * 100).toFixed(2), d = (v * amp).toFixed(2); return side === 'top' ? `${t}% ${d}%` : side === 'left' ? `${d}% ${t}%` : `${(100 - v * amp).toFixed(2)}% ${t}%`; });
+        const jag = jaggedEdge(work.slug), amp = 7 * k, n = jag.length - 1;
+        // La fibra blanca del papel roto: 1,5–6 px según el punto (otro tramo del mismo hash), y se estrecha al llegar.
+        const thin = Math.min(1, k / .18), fiber = jag.map((_, i) => (1.5 + 4.5 * jag[(i * 7 + 11) % jag.length]) * thin);
+        // Punto u del rasgado (u fraccionario cae sobre el tramo recto), metido `inset` px hacia dentro de la obra que entra.
+        const at = (u, inset) => {
+          const a = Math.floor(u), b = Math.min(n, a + 1), d = (jag[a] + (jag[b] - jag[a]) * (u - a)) * amp;
+          const t = (u / n * 100).toFixed(2), e = inset.toFixed(2);
+          return side === 'top' ? `${t}% calc(${d.toFixed(2)}% + ${e}px)` : side === 'left' ? `calc(${d.toFixed(2)}% + ${e}px) ${t}%` : `calc(${(100 - d).toFixed(2)}% - ${e}px) ${t}%`;
+        };
         const tail = side === 'top' ? ['100% 100%', '0% 100%'] : side === 'left' ? ['100% 100%', '100% 0%'] : ['0% 100%', '0% 0%'];
-        scene.style.clipPath = `polygon(${[...pts, ...tail].join(',')})`;
+        scene.style.clipPath = `polygon(${[...jag.map((_, i) => at(i, fiber[i])), ...tail].join(',')})`;
+        // Borde de fuera deshilachado: tres puntos por tramo que asoman hasta 2 px más allá del rasgado. El de dentro
+        // queda 2 px bajo la obra, para que no quede rendija entre papel y fibra.
+        const fray = Array.from({ length: n * 3 + 1 }, (_, s) => at(s / 3, -2 * thin * jag[(s * 5 + 3) % jag.length]));
+        tearFiber.firstChild.style.clipPath = `polygon(${[...fray, ...jag.map((_, i) => at(n - i, fiber[n - i] + 2))].join(',')})`;
+        const o = (3 * thin).toFixed(2), shadow = side === 'top' ? `0 -${o}px` : side === 'left' ? `-${o}px 0` : `${o}px 0`;
+        tearFiber.style.filter = `blur(.5px) drop-shadow(${shadow} ${(5 * thin).toFixed(2)}px rgba(0,0,0,.5))`;
+        tearFiber.style.transform = scene.style.transform;
+        tearFiber.style.visibility = 'visible';
       } else if (kind === 'chalk') {
         const dir = side === 'top' ? 'to bottom' : side === 'left' ? 'to right' : 'to left';
         scene.style.maskImage = scene.style.webkitMaskImage = `linear-gradient(${dir},transparent 0,#000 ${(26 * k).toFixed(2)}%)`;
@@ -3786,6 +3826,8 @@
       scene.style.clipPath = `polygon(${pts.join(',')})`;
     }
     function render() {
+      // La fibra del rasgado solo existe mientras dura su paso: cada fotograma empieza sin ella.
+      if (tearFiber.style.visibility !== 'hidden') tearFiber.style.visibility = 'hidden';
       const munsterSlugs = ['lily-munster', 'herman-munster', 'eddie-munster', 'abuelo-munster'];
       const pose = motion.pose, { entry, phase, progress: fraction } = pose;
       const base = entry.index, incoming = Math.min(base + 1, works.length - 1);
