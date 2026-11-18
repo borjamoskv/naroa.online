@@ -1664,11 +1664,46 @@ html:not(.motion-opt-in) [data-kinetic-card] {
   pointer-events: none;
   will-change: transform, opacity;
 }
+/* La estrella vuela en el mismo espacio que las fotos: la caja y la transformación de `.art-pan` (sin su
+   respiración, que solo corre en reposo), para posarse sin salto en la copia de dentro de Olinga. */
+.iw-rig[data-fx="bowiestar"] {
+  inset: -10px;
+  width: auto;
+  height: auto;
+  transform: perspective(1400px) translate3d(var(--pan-x, 0px), calc(var(--pan-y, 0px) - var(--hold-progress, 0) * 2.5px), var(--velocity-depth, 0px)) rotateX(calc(var(--pan-rx, 0deg) + var(--velocity-tilt-x, 0deg))) rotateY(var(--pan-ry, 0deg)) scale(calc(1 + var(--hold-progress, 0) * 0.014));
+}
+/* La estrella de Bowie: 100 px de ancho con las proporciones del recorte (139 × 141), girando sobre su
+   centro de masa. La capa de fuera se mueve, crece y lleva la sombra; la de dentro gira. */
 .iw-bowie-star {
-  width: 116px;
-  height: 116px;
-  transform-origin: 50% 50%;
-  filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.42)) drop-shadow(0 10px 22px rgba(0, 0, 0, 0.55));
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100px;
+  height: 101.44px;
+  transform-origin: 53.23px 53.14px;
+  pointer-events: none;
+  will-change: transform, filter, opacity;
+}
+.iw-bowie-star > i {
+  position: absolute;
+  inset: 0;
+  background: url("/images/catalogo/bowie-star-cutout.webp") center / 100% 100% no-repeat;
+  transform-origin: 53.23px 53.14px;
+}
+/* El bindi de Olinga: la misma estrella, ya posada, dentro de su escena. */
+.iw-bindi {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .35s;
+}
+.iw-bindi.is-on {
+  opacity: 1;
+  transition: none;
+}
+.art-stage.is-fit .iw-bindi {
+  display: none;
 }
 
 /* --- Cantinflowers Reactive Cigarette Drag & Smoke Plumes --- */
