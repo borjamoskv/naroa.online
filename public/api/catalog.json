@@ -1,5 +1,5 @@
 {
-  "version": "1.2",
+  "version": "1.3",
   "entity_id": "https://naroagutierrezgil.com/#artist",
   "studio_id": "https://naroagutierrezgil.com/#studio",
   "artist": {
@@ -41,14 +41,20 @@
       "url": "https://naroagutierrezgil.com/retratos-por-encargo-bilbao/",
       "provider": "https://naroagutierrezgil.com/#artist",
       "supports": [
-        "Collage y técnica mixta textil sobre madera",
-        "Dibujo a grafito y pastel Conté",
-        "Cajas tridimensionales y objetos intervenidos",
-        "Pizarra natural (exploración reciente)"
+        "Collage textil sobre madera",
+        "Pizarra natural rústica",
+        "Caja personalizada u objeto",
+        "Retrato a pastel o grafito",
+        "Lienzo",
+        "Plato de madera",
+        "Caja de madera",
+        "Rodaja de árbol",
+        "Un objeto tuyo",
+        "Asesoramiento en estudio"
       ],
-      "pricing_policy": "Presupuesto cerrado previo por escrito según técnica y dimensiones, sin compromiso",
-      "turnaround": "2 a 4 semanas según complejidad y secado de materiales",
-      "delivery": "Entrega en mano en Bilbao y Bizkaia o envío con seguimiento nacional e internacional"
+      "pricing_policy": "Cifra cerrada y por escrito antes de empezar.",
+      "turnaround": "De 2 a 4 semanas.",
+      "delivery": "En mano en Bilbao y Bizkaia; fuera, envío con número de seguimiento."
     }
   },
   "evidence_graph": {
@@ -61,81 +67,537 @@
     ],
     "query_fan_out": [
       {
-        "intent": "Precios y presupuestos de retratos por encargo",
-        "question": "¿Cuánto cuesta un retrato personalizado en Bilbao con Naroa Gutiérrez Gil?",
-        "answer": "Presupuesto cerrado previo por escrito según técnica, soporte y formato (dibujo, pintura acrílica, collage textil sobre madera, cajas de memoria o piezas en pizarra; formatos habituales de 20×30 cm a 40×50 cm). Sin compromiso previo."
+        "intent": "Retrato por encargo",
+        "question": "¿Y si la foto que tengo es una birria de móvil tomada de noche?",
+        "answer": "¡Mejor todavía! Prefiero mil veces una foto borrosa donde la persona se esté partiendo de risa o mirando de reojo que una imagen de estudio sin vida.",
+        "url": "https://naroagutierrezgil.com/retratos-por-encargo-bilbao/"
       },
       {
-        "intent": "Plazos de entrega",
-        "question": "¿Cuál es el plazo de entrega habitual de un encargo?",
-        "answer": "De 2 a 4 semanas según la técnica elegida y los tiempos de secado de acrílicos y barnices. Plazos prioritarios con aviso previo para fechas señaladas."
+        "intent": "Retrato por encargo",
+        "question": "¿Puedo pedir que metas objetos reales dentro del cuadro (botones, cartas, entradas de concierto)?",
+        "answer": "¡Es mi especialidad y lo que más me divierte! Me lo envías o me lo traes al estudio en Bilbao y lo coso o lo integro dentro de la obra como parte de la piel del cuadro.",
+        "url": "https://naroagutierrezgil.com/retratos-por-encargo-bilbao/"
       },
       {
-        "intent": "Proceso de encargo a partir de fotos",
-        "question": "¿Cómo se encarga un retrato personalizado a partir de fotografías?",
-        "answer": "Se envían fotografías de referencia por WhatsApp o email comentando el carácter o anécdotas; Naroa realiza una reinterpretación artística de autor en el soporte acordado."
+        "intent": "Retrato por encargo",
+        "question": "¿Cuánto cuesta un retrato pintado a mano y cuándo sé el precio exacto?",
+        "answer": "Antes de tocar un pincel. Primero hablamos de tu idea, elegimos soporte y tamaño, y te doy una cifra cerrada y por escrito.",
+        "url": "https://naroagutierrezgil.com/retratos-por-encargo-bilbao/"
       },
       {
-        "intent": "Entrega local y envíos",
-        "question": "¿Dónde se entrega la obra?",
-        "answer": "Entrega en mano en Bilbao y Bizkaia, o envío con seguimiento a cualquier destino nacional e internacional."
+        "intent": "Retrato por encargo",
+        "question": "¿Cuáles son los plazos y qué pasa si tengo una fecha señalada?",
+        "answer": "El ritmo habitual de taller es de 2 a 4 semanas. Si tienes un cumpleaños, una boda o una sorpresa inminente, dímelo en el primer mensaje y buscamos un hueco prioritario de caballete.",
+        "url": "https://naroagutierrezgil.com/retratos-por-encargo-bilbao/"
       },
       {
-        "intent": "Conservación y cuidado de las obras",
-        "question": "¿Cómo se conserva y limpia una obra en técnica mixta, collage u objeto intervenido?",
-        "answer": "Las piezas cuentan con fijación y barniz protector satinado. Se recomienda limpieza en seco con plumero suave o gamuza de microfibra, evitando humedad directa, disolventes o productos abrasivos."
+        "intent": "Retrato por encargo",
+        "question": "¿Cómo llega la obra a mis manos si no vivo en Bilbao?",
+        "answer": "Si estás en Bilbao o en Bizkaia, te lo doy en mano en el estudio o quedamos para dártelo en persona. Si estás fuera, viaja como una reina, con número de seguimiento hasta la puerta de tu casa.",
+        "url": "https://naroagutierrezgil.com/retratos-por-encargo-bilbao/"
       },
       {
-        "intent": "Elección de soportes y materiales",
-        "question": "¿Qué aporta trabajar sobre madera, collage textil, objetos o pizarra frente al lienzo convencional?",
-        "answer": "Cada soporte aporta textura, volumen y relato propio: las betas de la madera, las costuras textiles, las cajas de recuerdos o las aristas de la piedra dialogan directamente con la historia de la persona retratada."
+        "intent": "Retrato por encargo",
+        "question": "¿Qué tamaños puedo elegir?",
+        "answer": "Los formatos habituales son 20 × 30 cm, 30 × 40 cm y 40 × 50 cm, o a medida según el espacio donde vaya a vivir. Cada pieza va firmada y lista para colgar.",
+        "url": "https://naroagutierrezgil.com/retratos-por-encargo-bilbao/"
       },
       {
-        "intent": "Cita presencial en estudio de Bilbao",
-        "question": "¿Es posible visitar el estudio en Bilbao para elegir soportes o ver obra en directo?",
-        "answer": "Sí, previa cita por email o WhatsApp se conciertan visitas al estudio en Bilbao para valorar formatos, maderas, tejidos, objetos y definir la obra en persona."
+        "intent": "Retrato de pareja y de familia por encargo, hecho a mano desde fotografía",
+        "question": "¿Sirve una foto de móvil, o varias fotos distintas?",
+        "answer": "Sí. Vale una foto de móvil, aunque esté movida, y valen varias: una en la que alguien sale bien de cara y otra con el gesto o la ropa que le define. Naroa las combina en el taller en una sola composición.",
+        "url": "https://naroagutierrezgil.com/retrato-de-pareja-y-familia/"
       },
       {
-        "intent": "Combinar varias fotografías en un retrato",
-        "question": "¿Se puede encargar un retrato en Bilbao uniendo a varias personas de fotografías distintas?",
-        "answer": "Sí, Naroa compone retratos conjuntos a partir de fotografías separadas (de distintas épocas, familiares o mascotas), integrándolas con coherencia cromática y narrativa en una misma obra de autor."
+        "intent": "Retrato de pareja y de familia por encargo, hecho a mano desde fotografía",
+        "question": "¿Se puede incluir algún objeto o recuerdo?",
+        "answer": "Sí. Naroa integra objetos reales en sus piezas: cartas, entradas, botones, telas, chapas, billetes de tren. Se le envían o se llevan al estudio de Bilbao y pasan a formar parte de la obra.",
+        "url": "https://naroagutierrezgil.com/retrato-de-pareja-y-familia/"
       },
       {
-        "intent": "Regalos de boda, aniversario, jubilación u homenaje",
-        "question": "¿Qué formato de retrato personalizado se recomienda para un regalo de boda, aniversario o jubilación en Bilbao?",
-        "answer": "Para bodas, aniversarios o jubilaciones destacan las composiciones en collage textil sobre madera noble (30×40 cm o 40×50 cm) y las cajas de memoria tridimensionales intervenidas con objetos biográficos."
+        "intent": "Retrato de pareja y de familia por encargo, hecho a mano desde fotografía",
+        "question": "¿Cuánto cuesta?",
+        "answer": "No hay una tarifa fija: depende del soporte y del tamaño. Naroa da una cifra cerrada y por escrito antes de empezar.",
+        "url": "https://naroagutierrezgil.com/retrato-de-pareja-y-familia/"
+      },
+      {
+        "intent": "Retrato de pareja y de familia por encargo, hecho a mano desde fotografía",
+        "question": "¿Llega a tiempo para una boda o un aniversario?",
+        "answer": "El plazo habitual es de 2 a 4 semanas. Si hay fecha, conviene decirlo en el primer mensaje para que Naroa busque hueco.",
+        "url": "https://naroagutierrezgil.com/retrato-de-pareja-y-familia/"
+      },
+      {
+        "intent": "Retrato en recuerdo de un ser querido, pintado a mano desde una fotografía antigua",
+        "question": "Solo tengo una foto y es mala. ¿Sirve?",
+        "answer": "Casi siempre. Una foto de carné, una imagen escaneada o una de móvil con poca luz suelen bastar. Lo mejor es enviarla: Naroa la mira y contesta ella misma.",
+        "url": "https://naroagutierrezgil.com/retrato-de-un-ser-querido-fallecido/"
+      },
+      {
+        "intent": "Retrato en recuerdo de un ser querido, pintado a mano desde una fotografía antigua",
+        "question": "¿Puede aparecer junto a alguien de la familia?",
+        "answer": "Sí. En El Reencuentro, una hija y su padre aparecen juntos a partir de una foto de él de joven.",
+        "url": "https://naroagutierrezgil.com/retrato-de-un-ser-querido-fallecido/"
+      },
+      {
+        "intent": "Retrato en recuerdo de un ser querido, pintado a mano desde una fotografía antigua",
+        "question": "¿Se puede incluir algún objeto o recuerdo?",
+        "answer": "Sí. Naroa integra objetos reales en sus piezas: cartas, entradas, botones, telas, chapas, billetes de tren. Se le envían o se llevan al estudio de Bilbao y pasan a formar parte de la obra.",
+        "url": "https://naroagutierrezgil.com/retrato-de-un-ser-querido-fallecido/"
+      },
+      {
+        "intent": "Retrato en recuerdo de un ser querido, pintado a mano desde una fotografía antigua",
+        "question": "¿Cuánto tarda y cuánto cuesta?",
+        "answer": "El plazo habitual es de 2 a 4 semanas. No hay una tarifa fija: Naroa da una cifra cerrada y por escrito antes de empezar.",
+        "url": "https://naroagutierrezgil.com/retrato-de-un-ser-querido-fallecido/"
+      },
+      {
+        "intent": "Retrato de mascota por encargo, hecho a mano desde fotografía",
+        "question": "¿Sirve una foto de móvil?",
+        "answer": "Sí, aunque esté movida. Si hay varias, mejor: una donde se le vea bien la cara y otra con su gesto de siempre. Naroa las combina en el taller.",
+        "url": "https://naroagutierrezgil.com/retrato-de-mascota/"
+      },
+      {
+        "intent": "Retrato de mascota por encargo, hecho a mano desde fotografía",
+        "question": "¿Y si ya no está?",
+        "answer": "Sirve una foto antigua. El encargo se hace igual, a partir de la imagen que haya.",
+        "url": "https://naroagutierrezgil.com/retrato-de-mascota/"
+      },
+      {
+        "intent": "Retrato de mascota por encargo, hecho a mano desde fotografía",
+        "question": "¿Se puede incluir algún objeto o recuerdo?",
+        "answer": "Sí. Naroa integra objetos reales en sus piezas: cartas, entradas, botones, telas, chapas, billetes de tren. Se le envían o se llevan al estudio de Bilbao y pasan a formar parte de la obra.",
+        "url": "https://naroagutierrezgil.com/retrato-de-mascota/"
+      },
+      {
+        "intent": "Retrato de mascota por encargo, hecho a mano desde fotografía",
+        "question": "¿Cuánto cuesta?",
+        "answer": "No hay una tarifa fija: depende del soporte y del tamaño. Naroa da una cifra cerrada y por escrito antes de empezar.",
+        "url": "https://naroagutierrezgil.com/retrato-de-mascota/"
       }
     ],
-    "exhibitions_chronology": [
-      {
-        "year": 2026,
-        "title": "BWALL Collective",
-        "venue": "Colegio de Abogados de Bilbao",
-        "press": "DEIA"
-      },
-      {
-        "year": 2018,
-        "title": "Dock Bilbao Showcase",
-        "venue": "Dock Bilbao"
-      },
-      {
-        "year": 2014,
-        "title": "Politena Encuentros de Arte",
-        "venue": "Politena Espacio de Arte, Bilbao"
-      },
-      {
-        "year": 2010,
-        "title": "Espejos del alma",
-        "venue": "Colegio de Abogados de Bilbao",
-        "press": "GARA, El Correo"
-      },
-      {
-        "year": "2010+",
-        "title": "Walking Gallery Bilbao",
-        "venue": "Espacios públicos y galerías abiertas, Bilbao"
-      }
+    "season_deadlines": [
+      "Para que llegue en Navidad, encargos hasta el 22 de noviembre.",
+      "Para Reyes, hasta el 4 de diciembre."
     ]
   },
+  "exhibitions": [
+    {
+      "date": "2026-06-04",
+      "title": "Bwall Collective · Brotes de Alma y Manos",
+      "location": "Dock · Bilbao",
+      "type": "group",
+      "page": "https://naroagutierrezgil.com/trayectoria/",
+      "press": [
+        "https://www.deia.eus/bizkaia/vida-social/2026/06/05/bwall-collective-inaugura-exposicion-ocho-11159371.html"
+      ]
+    },
+    {
+      "date": "2026-04-27",
+      "title": "Autorretratos: Mujeres a través del Espejo",
+      "location": "Marienea · Basauri",
+      "type": "group",
+      "page": "https://naroagutierrezgil.com/trayectoria/",
+      "press": []
+    },
+    {
+      "date": "2026-01-30",
+      "title": "DiviNos VaiVenes",
+      "location": "Politena, espacio de arte · Bilbao",
+      "type": "solo",
+      "page": "https://naroagutierrezgil.com/trayectoria/",
+      "press": []
+    },
+    {
+      "date": "2025-05-25",
+      "title": "Azoka de arte y artesanía",
+      "location": "Lataska · Sopela",
+      "type": "market",
+      "page": "https://naroagutierrezgil.com/trayectoria/",
+      "press": []
+    },
+    {
+      "date": "2025-05-18",
+      "title": "Udaberriko Jaia",
+      "location": "Sopela",
+      "type": "market",
+      "page": "https://naroagutierrezgil.com/trayectoria/",
+      "press": []
+    },
+    {
+      "date": "2022-12-20",
+      "title": "Emakumeen arteaN",
+      "location": "Harilka elkartea · Bilbao",
+      "type": "group",
+      "page": "https://naroagutierrezgil.com/trayectoria/",
+      "press": []
+    },
+    {
+      "date": "2022-11-12",
+      "title": "Bwall Collective «GIRLS»",
+      "location": "Dock · Bilbao",
+      "type": "group",
+      "page": "https://naroagutierrezgil.com/trayectoria/",
+      "press": []
+    },
+    {
+      "date": "2022-10-23",
+      "title": "Walking Gallery · Por Amor al Arte",
+      "location": "Calles de Bilbao",
+      "type": "street",
+      "page": "https://naroagutierrezgil.com/trayectoria/",
+      "press": []
+    },
+    {
+      "date": "2022-04-04",
+      "title": "Repóker de Reinas · Vaivenes",
+      "location": "Siarte Leku · Bilbao",
+      "type": "solo",
+      "page": "https://naroagutierrezgil.com/trayectoria/",
+      "press": []
+    },
+    {
+      "date": "2020-10-02",
+      "title": "Iconos Pop",
+      "location": "Casa de Cultura Clara Campoamor · Barakaldo",
+      "type": "group",
+      "page": "https://naroagutierrezgil.com/trayectoria/",
+      "press": []
+    },
+    {
+      "date": "2020-09-30",
+      "title": "Vaivenes · El Ojo del Huracán",
+      "location": "Haika · Sodupe",
+      "type": "solo",
+      "page": "https://naroagutierrezgil.com/trayectoria/",
+      "press": []
+    },
+    {
+      "date": "2019-11-28",
+      "title": "Vaivenes · Primera Muestra",
+      "location": "Copper Deli Museo · Bilbao",
+      "type": "solo",
+      "page": "https://naroagutierrezgil.com/trayectoria/",
+      "press": []
+    },
+    {
+      "date": "2018-06-28",
+      "title": "360°",
+      "location": "Baserri Antzoki · Derio",
+      "type": "group",
+      "page": "https://naroagutierrezgil.com/trayectoria/",
+      "press": []
+    },
+    {
+      "date": "2017-09-05",
+      "title": "Personas",
+      "location": "Sarean · Bilbao",
+      "type": "group",
+      "page": "https://naroagutierrezgil.com/trayectoria/",
+      "press": [
+        "https://agenda.elcorreo.com/evento/gizakiak-personas-573411.html"
+      ]
+    },
+    {
+      "date": "2017-04-02",
+      "title": "Madera, Papel y Tijera",
+      "location": "Ambigú · Bilbao",
+      "type": "solo",
+      "page": "https://naroagutierrezgil.com/trayectoria/",
+      "press": []
+    },
+    {
+      "date": "2016-12",
+      "title": "Sácame los Colores",
+      "location": "Tegobi · Bilbao",
+      "type": "solo",
+      "page": "https://naroagutierrezgil.com/trayectoria/",
+      "press": [
+        "https://blogs.deia.eus/un-sinfin-de-planes/2016/12/02/ongi-etorri-abendua-planes-para-todos/"
+      ]
+    },
+    {
+      "date": "2015-05-28",
+      "title": "Espejos del Alma · Galería de los Espejos",
+      "location": "Colegio de Abogados · Bilbao",
+      "type": "solo",
+      "page": "https://naroagutierrezgil.com/trayectoria/",
+      "press": [
+        "https://www.deia.eus/cultura/2015/06/01/agenda-5123953.html",
+        "https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-476343.html",
+        "https://www.youtube.com/watch?v=bn4tOI5M7sM"
+      ]
+    },
+    {
+      "date": "2015-05-16",
+      "title": "Walking Gallery · Bilbao Art District",
+      "location": "Calles de Bilbao · salida desde Galería Kalao",
+      "type": "street",
+      "page": "https://naroagutierrezgil.com/trayectoria/",
+      "press": []
+    },
+    {
+      "date": "2014-07-03",
+      "title": "Espejos del Alma · Laberinto de Espejos",
+      "location": "Torre Salazar · Portugalete",
+      "type": "solo",
+      "page": "https://naroagutierrezgil.com/trayectoria/",
+      "press": [
+        "https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-430614.html"
+      ]
+    },
+    {
+      "date": "2013-05-20",
+      "title": "La Bolsa y la Vida",
+      "location": "Spazio Grossi · Bilbao",
+      "type": "solo",
+      "page": "https://naroagutierrezgil.com/trayectoria/",
+      "press": []
+    },
+    {
+      "date": "2011-09",
+      "title": "Exposición de pintura",
+      "location": "Gaztebulegoa · Barakaldo",
+      "type": "solo",
+      "page": "https://naroagutierrezgil.com/trayectoria/",
+      "press": [
+        "https://www.barakaldodigital.com/2011/09/agenda-recital-acustico-de-porco.html",
+        "https://www.barakaldodigital.com/2011/09/naroa-gutierrez-gil-expone-su-pintura.html"
+      ]
+    },
+    {
+      "date": "2010-03",
+      "title": "Espejos del Alma · Primera Edición",
+      "location": "Hegoak · Bilbao",
+      "type": "solo",
+      "page": "https://naroagutierrezgil.com/trayectoria/",
+      "press": [
+        "https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-112114.html",
+        "https://gara.naiz.eus/paperezkoa/20100326/190489/es/Non-zer"
+      ]
+    }
+  ],
+  "press": [
+    {
+      "date": "2026-06-05",
+      "date_kind": "published",
+      "medium": "DEIA",
+      "headline": "Bwall Collective inaugura una exposición de ocho artistas locales en Dock Bilbao",
+      "url": "https://www.deia.eus/bizkaia/vida-social/2026/06/05/bwall-collective-inaugura-exposicion-ocho-11159371.html"
+    },
+    {
+      "date": "2024-05-15",
+      "date_kind": "published",
+      "medium": "enPortugalete.com",
+      "headline": "Las Colonias de Arte de Portugalete volverán a centrarse en la sostenibilidad",
+      "url": "https://www.enportugalete.com/actualidad/colonias-arte-portugalete-volveran-centrarse-sostenibilidad/20240515102022016891.html"
+    },
+    {
+      "date": "2020-03-18",
+      "date_kind": "event",
+      "medium": "NOIZ Agenda",
+      "headline": "COLECTIVO BWALL: Akelarre",
+      "url": "https://www.noizagenda.com/agenda/62119/akelarre-bwall-kolektiboa"
+    },
+    {
+      "date": "2017-11-22",
+      "date_kind": "published",
+      "medium": "NOIZ Agenda",
+      "headline": "Gau Irekia 2017 presenta su oda a lo efímero y fugaz con un centenar de planes en Sanfran",
+      "url": "https://www.noizagenda.com/noticias/33837/gau-irekia-2017-presenta-su-oda-a-lo-efmero-y-fugaz-con-un-centenar-de-planes-en-sanfran"
+    },
+    {
+      "date": "2017-09-07",
+      "date_kind": "event",
+      "medium": "El Correo",
+      "headline": "Muestra titulada 'Gizakiak-Personas'",
+      "url": "https://agenda.elcorreo.com/evento/gizakiak-personas-573411.html"
+    },
+    {
+      "date": "2017-07-20",
+      "date_kind": "published",
+      "medium": "DEIA",
+      "headline": "Planes para todos este finde en Bilbao y alrededores.",
+      "url": "https://blogs.deia.eus/un-sinfin-de-planes/2017/07/20/planes-para-todos-este-finde-en-bilbao-y-alrededores/"
+    },
+    {
+      "date": "2016-12-02",
+      "date_kind": "published",
+      "medium": "DEIA",
+      "headline": "Ongi Etorri Abendua! – Planes para todos",
+      "url": "https://blogs.deia.eus/un-sinfin-de-planes/2016/12/02/ongi-etorri-abendua-planes-para-todos/"
+    },
+    {
+      "date": "2016-06-06",
+      "date_kind": "published",
+      "medium": "DEIA",
+      "headline": "Agenda",
+      "url": "https://www.deia.eus/cultura/2016/06/06/agenda-5031497.html"
+    },
+    {
+      "date": "2016-05-05",
+      "date_kind": "event",
+      "medium": "El Correo",
+      "headline": "Naroa Gutiérrez Gil presenta 'Y see your true colors'",
+      "url": "https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-y-see-your-true-colors-519981.html"
+    },
+    {
+      "date": "2016-04-25",
+      "date_kind": "published",
+      "medium": "ilovebilbao.com",
+      "headline": "I SEE YOUR TRUE COLORS",
+      "url": "https://ilovebilbao.com/i-see-your-true-colors/"
+    },
+    {
+      "date": "2015-10-14",
+      "date_kind": "event",
+      "medium": "NOIZ Agenda",
+      "headline": "EXPOSICIÓN COLECTIVA \"GU GARA GARROBI\" TALDE ERAKUSKETA",
+      "url": "https://www.noizagenda.com/agenda/22279/exposicin-colectiva-gu-gara-garrobi-talde-erakusketa"
+    },
+    {
+      "date": "2015-10-08",
+      "date_kind": "published",
+      "medium": "DEIA",
+      "headline": "Estamos de Puente!",
+      "url": "https://blogs.deia.eus/un-sinfin-de-planes/2015/10/08/estamos-de-puente/"
+    },
+    {
+      "date": "2015-06-01",
+      "date_kind": "published",
+      "medium": "DEIA",
+      "headline": "Agenda",
+      "url": "https://www.deia.eus/cultura/2015/06/01/agenda-5123953.html"
+    },
+    {
+      "date": "2015-05-28",
+      "date_kind": "event",
+      "medium": "El Correo",
+      "headline": "Naroa Gutiérrez Gil presenta 'Espejos del alma'",
+      "url": "https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-476343.html"
+    },
+    {
+      "date": "2015-05-16",
+      "date_kind": "published",
+      "medium": "Radio Popular",
+      "headline": "Entrevista en 'La Flor de la Canela'",
+      "url": "https://www.youtube.com/watch?v=bn4tOI5M7sM"
+    },
+    {
+      "date": "2015-03-06",
+      "date_kind": "event",
+      "medium": "NOIZ Agenda",
+      "headline": "GRITO DE MUJER",
+      "url": "https://www.noizagenda.com/agenda/19497/grito-de-mujer"
+    },
+    {
+      "date": "2014-09-03",
+      "date_kind": "published",
+      "medium": "Barakaldo Digital",
+      "headline": "El CIS de los Hermanos acoge una exposición colectiva con fotografía, ilustraciones y pintura",
+      "url": "https://www.barakaldodigital.com/2014/09/el-cis-de-los-hermanos-acoge-una.html"
+    },
+    {
+      "date": "2014-07-03",
+      "date_kind": "event",
+      "medium": "El Correo",
+      "headline": "Naroa Gutiérrez Gil presenta 'Espejos del alma'",
+      "url": "https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-430614.html"
+    },
+    {
+      "date": "2014-01-16",
+      "date_kind": "event",
+      "medium": "El Correo",
+      "headline": "Naroa Gutiérrez Gil presenta la exposición de pinturas e ilustraciones 'Facefood'",
+      "url": "https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-402297.html"
+    },
+    {
+      "date": "2013-05-04",
+      "date_kind": "published",
+      "medium": "El Correo",
+      "headline": "Los bilbaínos tienen mucho arte",
+      "url": "https://naroagutierrez.wordpress.com/wp-content/uploads/2017/05/7gperic3b3dicobilbao-art-districtx-2.jpg"
+    },
+    {
+      "date": "2013-04-27",
+      "date_kind": "published",
+      "medium": "GARA",
+      "headline": "Walking gallery: arte al aire libre y en movimiento, arte en evolución",
+      "url": "https://gara.naiz.eus/paperezkoa/20130427/399965/es/Walking-gallery-arte-aire-libre-movimiento-arte-evolucion"
+    },
+    {
+      "date": "2013-03-06",
+      "date_kind": "published",
+      "medium": "Kubilha",
+      "headline": "Arte itinerante",
+      "url": "https://web.archive.org/web/20130815055345/http://www.kubilha.com:80/arte-itinerante/",
+      "archived": true
+    },
+    {
+      "date": "2013-02-13",
+      "date_kind": "published",
+      "medium": "Kubilha",
+      "headline": "Naroa Gutiérrez Gil: `the walking artist´",
+      "url": "https://web.archive.org/web/20130217182414/http://www.kubilha.com:80/naroa-gutierrez-gil-the-walking-artist%C2%B4/",
+      "archived": true
+    },
+    {
+      "date": "2013-02-07",
+      "date_kind": "published",
+      "medium": "Kubilha",
+      "headline": "Tarde de radio en un bar",
+      "url": "https://web.archive.org/web/20130215103222/http://www.kubilha.com:80/tarde-de-radio-en-un-bar/",
+      "archived": true
+    },
+    {
+      "date": "2012-03-11",
+      "date_kind": "published",
+      "medium": "Barakaldo Digital",
+      "headline": "Agenda semanal | Desobediencia, Porco Bravo, Banda de Música y BOS",
+      "url": "https://www.barakaldodigital.com/2012/03/agenda-semanal-desobediencia-porco.html"
+    },
+    {
+      "date": "2011-12-29",
+      "date_kind": "published",
+      "medium": "Barakaldo Digital",
+      "headline": "El programa de exposiciones municipales repite artistas y muestras en su programación",
+      "url": "https://www.barakaldodigital.com/2011/12/el-programa-de-exposiciones-municipales.html"
+    },
+    {
+      "date": "2011-09-17",
+      "date_kind": "published",
+      "medium": "DEIA",
+      "headline": "Con el museo a cuestas",
+      "url": "https://www.deia.eus/cultura/2011/09/17/museo-cuestas-5516144.html"
+    },
+    {
+      "date": "2011-09-15",
+      "date_kind": "published",
+      "medium": "Barakaldo Digital",
+      "headline": "Agenda | Recital acústico de Porco",
+      "url": "https://www.barakaldodigital.com/2011/09/agenda-recital-acustico-de-porco.html"
+    },
+    {
+      "date": "2011-09-09",
+      "date_kind": "published",
+      "medium": "Barakaldo Digital",
+      "headline": "Naroa Gutiérrez Gil expone su pintura en Gaztebulegoa desde este sábado 10 de septiembre",
+      "url": "https://www.barakaldodigital.com/2011/09/naroa-gutierrez-gil-expone-su-pintura.html"
+    },
+    {
+      "date": "2010-03-31",
+      "date_kind": "event",
+      "medium": "El Correo",
+      "headline": "Naroa Gutiérrez Gil presenta la muestra pictórica 'Espejos del alma'",
+      "url": "https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-112114.html"
+    },
+    {
+      "date": "2010-03-26",
+      "date_kind": "published",
+      "medium": "GARA",
+      "headline": "Non zer",
+      "url": "https://gara.naiz.eus/paperezkoa/20100326/190489/es/Non-zer"
+    }
+  ],
   "artworks_count": 86,
   "reviewed": "2026-10-24",
   "artworks": [

@@ -934,6 +934,7 @@ def build(output):
         "https://naroagutierrez.wordpress.com/",
         "https://www.youtube.com/@naroarte",
     ]
+    press_notes = read_data("prensa")["notes"]
     # Solo la ciudad: la dirección del estudio no es pública; no se escribe calle ni código postal.
     bilbao_place = {
         "@type": "Place",
@@ -1282,9 +1283,14 @@ def build(output):
         threshold_html = ""
         if threshold_page:
             threshold_html = f'''<div class="hero-threshold" data-hero-threshold data-threshold-enter><div class="hero-threshold-plane" data-threshold-plane><img class="hero-threshold-portrait" src="{portrait}" srcset="{portrait_srcset}" sizes="{portrait_sizes}" width="2201" height="3468" alt="Naroa Gutiérrez Gil con chistera y monóculo en el umbral del estudio, en una fotografía de 2015; el guiño que hace está hecho con IA" fetchpriority="high" decoding="sync"><img class="hero-threshold-wink" data-threshold-wink src="{portrait_wink}" srcset="{portrait_wink_srcset}" sizes="{portrait_sizes}" width="2201" height="3468" alt="Guiño de bienvenida de Naroa Gutiérrez Gil" aria-hidden="true" decoding="async" fetchpriority="low"><div class="hero-monocle-portal" data-monocle-portal><div class="hero-monocle-lens"><div class="hero-monocle-marilyn" data-monocle-marilyn></div><canvas class="hero-monocle-canvas" data-monocle-canvas width="256" height="256" aria-hidden="true"></canvas><div class="hero-monocle-caustics"></div></div><svg class="hero-monocle-ring" viewBox="0 0 220 220" focusable="false" aria-hidden="true"><circle class="hero-monocle-bezel" cx="110" cy="110" r="98"/><circle class="hero-monocle-inner-ring" cx="110" cy="110" r="74"/></svg></div></div><div class="hero-threshold-shade"></div><div class="hero-spotlight" data-hero-spotlight></div></div><p class="threshold-ai-note" data-threshold-note aria-hidden="true">El guiño de este retrato está hecho con IA a partir de una fotografía de 2015.</p>'''
-        # Presentación de la portada para lectores de pantalla y buscadores: no se ve ni toca el umbral (§7).
-        intro_html = f'<p class="sr-only" data-home-intro>{esc(description)}</p>' if threshold_page and description else ''
-        body = f'''<main id="main" class="art-scroll" style="--steps:{len(selected)-1}">{intro_html}<section class="art-stage" data-gallery data-initial="{initial}" data-subset="{subset}"><div class="art-layers">{stages}</div>{threshold_html}<div class="art-shade" aria-hidden="true"></div><div class="art-stickman" data-stickman aria-hidden="true" hidden><div class="stickman-runner" data-stick-runner><svg viewBox="0 0 110 120" class="stickman-svg" aria-hidden="true"><ellipse data-stick-shadow cx="50" cy="103" rx="18" ry="2.6" fill="rgba(247,213,148,0.28)" /><path data-stick-scarf-gold d="M52,34 Q30,24 10,38" stroke="#f7d594" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.78" /><path data-stick-scarf d="M54,32 Q34,28 16,36" stroke="#fffdf4" stroke-width="2.6" stroke-linecap="round" fill="none" opacity="0.92" /><polyline data-stick-hair points="49,10 54,3 57,10 63,4 62,12" stroke="#fffdf4" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none" /><circle data-stick-head cx="58" cy="20" r="9.5" stroke="#fffdf4" stroke-width="3.2" fill="#070706" /><circle data-stick-eye cx="62" cy="18.5" r="1.8" fill="#fffdf4" /><line data-stick-torso x1="56" y1="29" x2="50" y2="62" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" /><polyline data-stick-arm-l points="55,36 39,48 29,39" stroke="#fffdf4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none" /><polyline data-stick-arm-r points="55,36 69,46 81,34" stroke="#fffdf4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none" /><polyline data-stick-leg-l points="50,62 34,82 22,102" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" fill="none" /><polyline data-stick-leg-r points="50,62 68,80 80,100" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" fill="none" /><line data-stick-dust-1 x1="26" y1="98" x2="6" y2="98" stroke="rgba(255,253,244,0.82)" stroke-width="2.6" stroke-linecap="round" /><line data-stick-dust-2 x1="32" y1="105" x2="12" y2="105" stroke="rgba(255,253,244,0.55)" stroke-width="2.2" stroke-linecap="round" /><circle data-stick-spark cx="18" cy="93" r="2.2" fill="rgba(255,253,244,0.85)" /><circle data-stick-spark-2 cx="10" cy="88" r="1.7" fill="rgba(247,213,148,0.9)" /><circle data-stick-spark-3 cx="24" cy="97" r="1.4" fill="rgba(237,188,164,0.85)" /></svg></div></div><div class="kinetic-title" data-kinetic-title aria-hidden="true"></div><nav class="art-index" aria-label="Recorrido de obras">{nav}</nav><div class="art-bottom"><div><div data-art-copy aria-live="polite"><p class="art-counter"><span data-counter>{initial+1:02d} / {len(selected):02d}</span><small data-journey-cue>Desplázate para recorrer ↕</small></p><h1 data-art-title>{esc(p['title'])}</h1><p class="art-material" data-art-material>{esc(p['label'])}</p></div><button type="button" class="art-story-link" data-open-story>Sobre esta obra <span aria-hidden="true">+</span></button></div><div class="art-controls"><div class="art-view-actions"><button type="button" data-effects aria-pressed="false">Activar efectos</button><button type="button" class="kintsugi-toggle-btn" data-kintsugi-toggle hidden aria-pressed="false">Rasgado Kintsugi ✦</button><button type="button" data-fit aria-pressed="false">Ver imagen completa ↗</button><button type="button" data-lens aria-pressed="false">Lupa</button><button type="button" data-open-photos>Otras miradas ↗</button><button type="button" data-visit-portrait data-visit-more hidden>El retrato de tu visita <span aria-hidden="true">↗</span></button><button type="button" class="ouroboros-loop-btn" data-ouroboros hidden aria-label="Volver al origen de la exposición">Volver al origen ↺</button>{social_share_dock(is_finale=True)}</div><div class="art-arrows"><button type="button" data-prev aria-label="Obra anterior"{' disabled' if initial==0 else ''}>←</button><button type="button" data-next aria-label="Obra siguiente"{' disabled' if initial==len(selected)-1 else ''}>→</button></div></div></div><button type="button" class="restore-ui" data-restore hidden>Volver a la navegación ↙</button><div class="art-progress" aria-hidden="true"><span></span></div></section></main>
+        # Presentación para lectores de pantalla y buscadores; no se ve ni toca el umbral (§7). En la portada,
+        # el índice y la serie es el H1: el título de la obra en escena cambia con el recorrido y va en h2.
+        # En la página de una obra el H1 es su título, y su ficha (la del diálogo) queda también fuera de él (§16).
+        work_page = title is None
+        title_tag = "h2" if description and not work_page else "h1"
+        intro_html = f'<h1 class="sr-only"{" data-home-intro" if threshold_page else ""}>{esc(description)}</h1>' if title_tag == "h2" else ''
+        work_intro = f'<div class="sr-only" data-work-intro><p>{esc(p["story"])}</p><dl>{facts_html}</dl></div>' if work_page else ''
+        body = f'''<main id="main" class="art-scroll" style="--steps:{len(selected)-1}">{intro_html}<section class="art-stage" data-gallery data-initial="{initial}" data-subset="{subset}"><div class="art-layers">{stages}</div>{threshold_html}<div class="art-shade" aria-hidden="true"></div><div class="art-stickman" data-stickman aria-hidden="true" hidden><div class="stickman-runner" data-stick-runner><svg viewBox="0 0 110 120" class="stickman-svg" aria-hidden="true"><ellipse data-stick-shadow cx="50" cy="103" rx="18" ry="2.6" fill="rgba(247,213,148,0.28)" /><path data-stick-scarf-gold d="M52,34 Q30,24 10,38" stroke="#f7d594" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.78" /><path data-stick-scarf d="M54,32 Q34,28 16,36" stroke="#fffdf4" stroke-width="2.6" stroke-linecap="round" fill="none" opacity="0.92" /><polyline data-stick-hair points="49,10 54,3 57,10 63,4 62,12" stroke="#fffdf4" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none" /><circle data-stick-head cx="58" cy="20" r="9.5" stroke="#fffdf4" stroke-width="3.2" fill="#070706" /><circle data-stick-eye cx="62" cy="18.5" r="1.8" fill="#fffdf4" /><line data-stick-torso x1="56" y1="29" x2="50" y2="62" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" /><polyline data-stick-arm-l points="55,36 39,48 29,39" stroke="#fffdf4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none" /><polyline data-stick-arm-r points="55,36 69,46 81,34" stroke="#fffdf4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none" /><polyline data-stick-leg-l points="50,62 34,82 22,102" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" fill="none" /><polyline data-stick-leg-r points="50,62 68,80 80,100" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" fill="none" /><line data-stick-dust-1 x1="26" y1="98" x2="6" y2="98" stroke="rgba(255,253,244,0.82)" stroke-width="2.6" stroke-linecap="round" /><line data-stick-dust-2 x1="32" y1="105" x2="12" y2="105" stroke="rgba(255,253,244,0.55)" stroke-width="2.2" stroke-linecap="round" /><circle data-stick-spark cx="18" cy="93" r="2.2" fill="rgba(255,253,244,0.85)" /><circle data-stick-spark-2 cx="10" cy="88" r="1.7" fill="rgba(247,213,148,0.9)" /><circle data-stick-spark-3 cx="24" cy="97" r="1.4" fill="rgba(237,188,164,0.85)" /></svg></div></div><div class="kinetic-title" data-kinetic-title aria-hidden="true"></div><nav class="art-index" aria-label="Recorrido de obras">{nav}</nav><div class="art-bottom"><div><div data-art-copy aria-live="polite"><p class="art-counter"><span data-counter>{initial+1:02d} / {len(selected):02d}</span><small data-journey-cue>Desplázate para recorrer ↕</small></p><{title_tag} data-art-title>{esc(p['title'])}</{title_tag}><p class="art-material" data-art-material>{esc(p['label'])}</p></div><button type="button" class="art-story-link" data-open-story>Sobre esta obra <span aria-hidden="true">+</span></button></div><div class="art-controls"><div class="art-view-actions"><button type="button" data-effects aria-pressed="false">Activar efectos</button><button type="button" class="kintsugi-toggle-btn" data-kintsugi-toggle hidden aria-pressed="false">Rasgado Kintsugi ✦</button><button type="button" data-fit aria-pressed="false">Ver imagen completa ↗</button><button type="button" data-lens aria-pressed="false">Lupa</button><button type="button" data-open-photos>Otras miradas ↗</button><button type="button" data-visit-portrait data-visit-more hidden>El retrato de tu visita <span aria-hidden="true">↗</span></button><button type="button" class="ouroboros-loop-btn" data-ouroboros hidden aria-label="Volver al origen de la exposición">Volver al origen ↺</button>{social_share_dock(is_finale=True)}</div><div class="art-arrows"><button type="button" data-prev aria-label="Obra anterior"{' disabled' if initial==0 else ''}>←</button><button type="button" data-next aria-label="Obra siguiente"{' disabled' if initial==len(selected)-1 else ''}>→</button></div></div></div><button type="button" class="restore-ui" data-restore hidden>Volver a la navegación ↙</button><div class="art-progress" aria-hidden="true"><span></span></div></section>{work_intro}</main>
 <dialog id="story-dialog" class="story-dialog" aria-labelledby="story-title"><div class="dialog-top"><span data-story-category>{esc(p['label'])}</span><button type="button" data-close-dialog>Cerrar ×</button></div><div class="story-body"><h2 id="story-title">{esc(p['title'])}</h2><p data-story>{esc(p['story'])}</p><dl data-facts>{facts_html}</dl><p class="art-credit" data-credit>{esc(p['credit'] or '')}</p><div class="story-actions"><a class="text-link" data-art-email href="mailto:naroa@naroagutierrezgil.com?subject={quote('Consulta sobre '+p['title'])}">Consultar por email ↗</a><a class="text-link" data-art-whatsapp href="https://wa.me/34636060609?text={quote('Hola Naroa, me gustaría consultar sobre la obra ' + p['title'])}" target="_blank" rel="noopener noreferrer">Consultar por WhatsApp ↗</a><button type="button" class="text-link" data-share-link>Compartir enlace directo ↗</button>{social_share_dock(url=ORIGIN + '/obra/' + p['slug'] + '/', title=p['title'])}</div><a class="source-link" data-art-video{' hidden' if not p.get('video') else ''} href="{esc(p.get('video') or '')}" target="_blank" rel="noopener noreferrer">Ver proceso en YouTube ↗</a><a class="source-link" data-art-source{' hidden' if not p['source'] else ''} href="{esc(p['source'] or '')}" target="_blank" rel="noopener noreferrer">Ver publicación de la artista ↗</a>{credentials_link(p)}</div><a class="story-footer" href="/retratos-por-encargo-bilbao/">Tu propio retrato empieza aquí ↗</a></dialog>
 <dialog id="photos-dialog" class="photos-dialog" aria-labelledby="photos-heading"><div class="dialog-top"><span id="photos-heading">{esc(p['title'])}</span><button type="button" data-close-dialog>Cerrar ×</button></div><div class="photo-view"><button type="button" data-photo-prev aria-label="Fotografía anterior">←</button><img data-photo-image data-src="{p['photos'][0]['src']}" alt="{esc(work_alt(p, p['photos'][0]['caption']))}" decoding="async"><button type="button" data-photo-next aria-label="Fotografía siguiente">→</button></div><p data-photo-caption aria-live="polite"></p></dialog>'''
         artwork_photos = []
@@ -1337,16 +1343,7 @@ def build(output):
             "artworkSurface": p.get("support"),
             "material": p.get("materials"),
             "artform": "VisualArtwork",
-            "offers": {
-                "@type": "Offer",
-                "@id": ORIGIN + "/obra/" + p["slug"] + "/#offer",
-                "availability": "https://schema.org/InStock",
-                "priceCurrency": "EUR",
-                "url": ORIGIN + "/obra/" + p["slug"] + "/",
-                "description": "Obra original de catálogo y encargos personalizados basados en esta técnica. Consulta directa con la artista.",
-                "seller": artist_ref,
-                "itemOffered": ORIGIN + "/obra/" + p["slug"] + "/#artwork",
-            },
+            # Sin `offers`: no consta qué obras están a la venta, y varias son encargos que ya tienen dueño (§13.2, §16).
         }
         if p.get("series") == "Vaivenes":
             default_schema["partOfSeries"] = {
@@ -1909,6 +1906,8 @@ def build(output):
         ("¿Qué tamaños puedo elegir?", "Los formatos habituales son 20 × 30 cm, 30 × 40 cm y 40 × 50 cm, o a medida según el espacio donde vaya a vivir. Cada pieza va firmada y lista para colgar."),
     ]
     faq_html = ''.join(f'<details class="commission-faq-item"><summary>{esc(q)}</summary><p>{esc(a)}</p></details>' for q, a in commission_faqs)
+    # Lo que se responde a las IA (llms.txt, api/catalog.json) son estas preguntas y las de cada rp_page, tal cual (§16).
+    page_faqs = [("/retratos-por-encargo-bilbao/", "Retrato por encargo", commission_faqs)]
 
     # La portada es el encargo: una frase gigante con tres palabras que se cambian al tocarlas.
     # Cada <option> lleva en data-say cómo se dice dentro de la frase; app.js las recorre.
@@ -2255,6 +2254,7 @@ def build(output):
     rp_q_objects = ("¿Se puede incluir algún objeto o recuerdo?", "Sí. Naroa integra objetos reales en sus piezas: cartas, entradas, botones, telas, chapas, billetes de tren. Se le envían o se llevan al estudio de Bilbao y pasan a formar parte de la obra.")
 
     def rp_page(path, title, description, kicker, h1, lead, works_heading, works, extra, questions, wa_text, mail_subject, about_name, details=(), hero_detail=None):
+        page_faqs.append((path, about_name, questions))
         cover = works[0][0]
         # La cabecera lleva obra: la única de la página o, si hay varias, un detalle de la primera (`hero_detail`).
         solo = len(works) == 1
@@ -2828,12 +2828,9 @@ def build(output):
 
     feed_items = []
     for p in projects:
-        pub_year = p.get("year")
-        try:
-            year_int = int(pub_year)
-        except (ValueError, TypeError):
-            year_int = 2026
-        dt = datetime(year_int, 1, 1, 12, 0, 0, tzinfo=timezone.utc)
+        # Una obra no tiene fecha de publicación: solo su año, y no siempre (§16). Va como dc:date, sin pubDate
+        # inventado (antes, el 1 de enero de su año o de 2026).
+        work_date = f"<dc:date>{esc(str(p['year']))}</dc:date>" if p.get("year") else ""
         medium_parts = [p.get("technique"), p.get("support"), p.get("dimensions")]
         medium_desc = " · ".join(filter(None, medium_parts))
         desc_text = f"{p['story']} ({medium_desc})" if medium_desc else p['story']
@@ -2842,7 +2839,7 @@ def build(output):
             f"<title>{esc(p['title'])} · Retrato de autor</title>"
             f"<link>{ORIGIN}/obra/{p['slug']}/</link>"
             f"<guid isPermaLink=\"true\">{ORIGIN}/obra/{p['slug']}/</guid>"
-            f"<pubDate>{format_datetime(dt)}</pubDate>"
+            f"{work_date}"
             "<dc:creator>Naroa Gutiérrez Gil</dc:creator>"
             "<author>naroa@naroagutierrezgil.com (Naroa Gutiérrez Gil)</author>"
             f"<description>{esc(desc_text)}</description>"
@@ -2895,7 +2892,7 @@ def build(output):
     write(REPO / "public" / "indexnow.json", indexnow_payload)
 
     catalog_api = {
-        "version": "1.2",
+        "version": "1.3",
         "entity_id": ORIGIN + "/#artist",
         "studio_id": ORIGIN + "/#studio",
         "artist": {
@@ -2925,15 +2922,11 @@ def build(output):
                 "@id": ORIGIN + "/retratos-por-encargo-bilbao/#service",
                 "url": ORIGIN + "/retratos-por-encargo-bilbao/",
                 "provider": ORIGIN + "/#artist",
-                "supports": [
-                    "Collage y técnica mixta textil sobre madera",
-                    "Dibujo a grafito y pastel Conté",
-                    "Cajas tridimensionales y objetos intervenidos",
-                    "Pizarra natural (exploración reciente)",
-                ],
-                "pricing_policy": "Presupuesto cerrado previo por escrito según técnica y dimensiones, sin compromiso",
-                "turnaround": "2 a 4 semanas según complejidad y secado de materiales",
-                "delivery": "Entrega en mano en Bilbao y Bizkaia o envío con seguimiento nacional e internacional",
+                # Los soportes que ofrece la frase de la página; las condiciones, las confirmadas (§13.2).
+                "supports": [value for value, _ in cfg_supports],
+                "pricing_policy": "Cifra cerrada y por escrito antes de empezar.",
+                "turnaround": "De 2 a 4 semanas.",
+                "delivery": "En mano en Bilbao y Bizkaia; fuera, envío con número de seguimiento.",
             },
         },
         "evidence_graph": {
@@ -2944,61 +2937,37 @@ def build(output):
                 "Cajas tridimensionales de memoria y objetos intervenidos",
                 "Exploraciones en técnica mixta sobre pizarra natural",
             ],
+            # Las preguntas y respuestas que se leen en las páginas de encargo, tal cual: ninguna escrita aparte (§16).
             "query_fan_out": [
-                {
-                    "intent": "Precios y presupuestos de retratos por encargo",
-                    "question": "¿Cuánto cuesta un retrato personalizado en Bilbao con Naroa Gutiérrez Gil?",
-                    "answer": "Presupuesto cerrado previo por escrito según técnica, soporte y formato (dibujo, pintura acrílica, collage textil sobre madera, cajas de memoria o piezas en pizarra; formatos habituales de 20×30 cm a 40×50 cm). Sin compromiso previo.",
-                },
-                {
-                    "intent": "Plazos de entrega",
-                    "question": "¿Cuál es el plazo de entrega habitual de un encargo?",
-                    "answer": "De 2 a 4 semanas según la técnica elegida y los tiempos de secado de acrílicos y barnices. Plazos prioritarios con aviso previo para fechas señaladas.",
-                },
-                {
-                    "intent": "Proceso de encargo a partir de fotos",
-                    "question": "¿Cómo se encarga un retrato personalizado a partir de fotografías?",
-                    "answer": "Se envían fotografías de referencia por WhatsApp o email comentando el carácter o anécdotas; Naroa realiza una reinterpretación artística de autor en el soporte acordado.",
-                },
-                {
-                    "intent": "Entrega local y envíos",
-                    "question": "¿Dónde se entrega la obra?",
-                    "answer": "Entrega en mano en Bilbao y Bizkaia, o envío con seguimiento a cualquier destino nacional e internacional.",
-                },
-                {
-                    "intent": "Conservación y cuidado de las obras",
-                    "question": "¿Cómo se conserva y limpia una obra en técnica mixta, collage u objeto intervenido?",
-                    "answer": "Las piezas cuentan con fijación y barniz protector satinado. Se recomienda limpieza en seco con plumero suave o gamuza de microfibra, evitando humedad directa, disolventes o productos abrasivos.",
-                },
-                {
-                    "intent": "Elección de soportes y materiales",
-                    "question": "¿Qué aporta trabajar sobre madera, collage textil, objetos o pizarra frente al lienzo convencional?",
-                    "answer": "Cada soporte aporta textura, volumen y relato propio: las betas de la madera, las costuras textiles, las cajas de recuerdos o las aristas de la piedra dialogan directamente con la historia de la persona retratada.",
-                },
-                {
-                    "intent": "Cita presencial en estudio de Bilbao",
-                    "question": "¿Es posible visitar el estudio en Bilbao para elegir soportes o ver obra en directo?",
-                    "answer": "Sí, previa cita por email o WhatsApp se conciertan visitas al estudio en Bilbao para valorar formatos, maderas, tejidos, objetos y definir la obra en persona.",
-                },
-                {
-                    "intent": "Combinar varias fotografías en un retrato",
-                    "question": "¿Se puede encargar un retrato en Bilbao uniendo a varias personas de fotografías distintas?",
-                    "answer": "Sí, Naroa compone retratos conjuntos a partir de fotografías separadas (de distintas épocas, familiares o mascotas), integrándolas con coherencia cromática y narrativa en una misma obra de autor.",
-                },
-                {
-                    "intent": "Regalos de boda, aniversario, jubilación u homenaje",
-                    "question": "¿Qué formato de retrato personalizado se recomienda para un regalo de boda, aniversario o jubilación en Bilbao?",
-                    "answer": "Para bodas, aniversarios o jubilaciones destacan las composiciones en collage textil sobre madera noble (30×40 cm o 40×50 cm) y las cajas de memoria tridimensionales intervenidas con objetos biográficos.",
-                },
+                {"intent": about, "question": q, "answer": a, "url": ORIGIN + path}
+                for path, about, questions in page_faqs
+                for q, a in questions
             ],
-            "exhibitions_chronology": [
-                {"year": 2026, "title": "BWALL Collective", "venue": "Colegio de Abogados de Bilbao", "press": "DEIA"},
-                {"year": 2018, "title": "Dock Bilbao Showcase", "venue": "Dock Bilbao"},
-                {"year": 2014, "title": "Politena Encuentros de Arte", "venue": "Politena Espacio de Arte, Bilbao"},
-                {"year": 2010, "title": "Espejos del alma", "venue": "Colegio de Abogados de Bilbao", "press": "GARA, El Correo"},
-                {"year": "2010+", "title": "Walking Gallery Bilbao", "venue": "Espacios públicos y galerías abiertas, Bilbao"},
-            ],
+            "season_deadlines": [text for _, text in season_lines],
         },
+        # Exposiciones y prensa salen de sus fuentes revisadas, igual que /trayectoria/ y /cuaderno/ (§11, §16).
+        "exhibitions": [
+            {
+                "date": x["date"],
+                "title": x["title"],
+                "location": x.get("location"),
+                "type": x.get("type"),
+                "page": ORIGIN + "/trayectoria/",
+                "press": [n["url"] for n in press_notes if n.get("encounter") == x.get("id")],
+            }
+            for x in sorted(read_data("exhibitions")["exhibitions"], key=lambda x: x["date"], reverse=True)
+        ],
+        "press": [
+            {
+                "date": n["date"],
+                "date_kind": n.get("date_kind"),
+                "medium": n["medium"],
+                "headline": n["title"],
+                "url": n["url"],
+                **({"archived": n["archived"]} if n.get("archived") else {}),
+            }
+            for n in sorted(press_notes, key=lambda n: n["date"], reverse=True)
+        ],
         "artworks_count": len(projects),
         "reviewed": catalogue["reviewed"],
         "artworks": [
@@ -3039,13 +3008,17 @@ def build(output):
     write(output / ".well-known" / "mcp.json", webmcp_json)
     write(REPO / "public" / ".well-known" / "mcp.json", webmcp_json)
 
+    # Lo que se cuenta a las IA sale de los mismos datos que las páginas: nada escrito aparte (§16).
+    llms_exhibitions = sorted(read_data("exhibitions")["exhibitions"], key=lambda x: x["date"])
+    llms_press = sorted(press_notes, key=lambda n: n["date"])
+    llms_latest = llms_exhibitions[-1]
     llms_txt = (
         "# Naroa Gutiérrez Gil · Artista Plástica y Retratista (Bilbao)\n\n"
         "> Catálogo oficial de obra plástica, servicio de retratos personalizados por encargo y archivo de exposiciones.\n\n"
-        "## Resumen del Sitio y Evidence Graph\n"
+        "## Resumen\n"
         f"- Dominio Canónico: {ORIGIN}\n"
         f"- Entidad Creadora: Naroa Gutiérrez Gil [ID Canónico: {ORIGIN}/#artist]\n"
-        f"- Estudio Físico: Bilbao, Bizkaia, País Vasco, España (43.2630 N, -2.9350 W) [ID Canónico: {ORIGIN}/#studio]\n"
+        f"- Estudio: Bilbao, Bizkaia, País Vasco, España (43.2630 N, 2.9350 W) [ID Canónico: {ORIGIN}/#studio]\n"
         "- Contacto Directo: naroa@naroagutierrezgil.com | WhatsApp: +34 636 060 609 | Instagram: @naroa_art\n"
         "- Perfiles de Autoridad (sameAs):\n"
         "  - Facebook: https://www.facebook.com/naroa.artista.plastica\n"
@@ -3058,23 +3031,18 @@ def build(output):
         "- Lenguaje y Práctica Artística: Retratos de autor y obra plástica multidisciplinar (dibujo, óleo, técnicas mixtas, collage textil sobre madera y objetos intervenidos, con exploraciones recientes sobre soportes minerales como la pizarra natural de cantera y mica).\n"
         f"- Servicio Canónico de Encargos: {ORIGIN}/retratos-por-encargo-bilbao/\n"
         "- Correo de Encargos: encargos@naroagutierrezgil.com\n"
-        "- Exposiciones Documentadas: Colegio de Abogados de Bilbao (Espejos del alma), Dock Bilbao, Politena Espacio de Arte, Walking Gallery Bilbao.\n\n"
-        "## Respuestas Factuales Inmediatas (Query Fan-Out)\n"
-        "- **¿Cuánto cuesta un retrato personalizado?** Presupuesto cerrado previo por escrito según técnica, soporte y formato (dibujo, pintura acrílica, collage sobre madera, cajas de recuerdos o pizarra; formatos habituales de 20×30 cm a 40×50 cm). Consulta sin compromiso.\n"
-        "- **¿Cómo se encarga a partir de fotos?** Se envían 1 o varias fotos de referencia (incluso tomadas con el móvil); Naroa realiza una reinterpretación artística de autor capturando la personalidad y mirada.\n"
-        "- **¿Cuáles son los plazos de entrega?** De 2 a 4 semanas según la técnica y el secado de acrílicos y barnices. Plazos prioritarios disponibles para fechas señaladas con aviso previo.\n"
-        + (f"- **¿Hasta cuándo se puede encargar para Navidad y Reyes?** {' '.join(text for _, text in season_lines)}\n" if season_lines else "") +
-        "- **¿Dónde se entrega?** Entrega en mano en Bilbao y Bizkaia, o envío con seguimiento a nivel nacional e internacional.\n"
-        "- **¿Cómo conservar una obra en técnica mixta o collage?** Fijación y barniz protector satinado. Limpieza en seco con plumero suave o microfibra; evitar humedad directa o productos químicos.\n"
-        "- **¿Qué aporta trabajar sobre madera, collage, objetos o pizarra?** Cada soporte (betas de madera, costuras textiles, cajas cotidianas o cantos de piedra) aporta textura, volumen y relato propio en diálogo con la persona retratada.\n"
-        "- **¿Se puede visitar el estudio en Bilbao?** Sí, visitas con cita concertada previa para ver obra en directo, valorar soportes y definir el proyecto en persona.\n\n"
+        f"- Exposiciones: {len(llms_exhibitions)} muestras y encuentros documentados de {llms_exhibitions[0]['year']} a {llms_latest['year']}; la más reciente, «{llms_latest['title']}» ({llms_latest['location']}, {llms_latest.get('dateLabel') or llms_latest['date']}). Lista con lugares y fuentes: {ORIGIN}/trayectoria/\n\n"
+        "## Preguntas sobre encargos (las de la página, tal cual)\n"
+        + "".join(f"- **{q}** {a}\n" for q, a in commission_faqs)
+        + (f"- **¿Hasta cuándo se puede encargar para Navidad y Reyes?** {' '.join(text for _, text in season_lines)}\n" if season_lines else "")
+        + "\n"
         "## Secciones Principales\n"
         f"- [Inicio e Inmersión]({ORIGIN}/): Experiencia inmersiva y catálogo completo de {len(projects)} obras.\n"
         f"- [Retratos por Encargo en Bilbao]({ORIGIN}/retratos-por-encargo-bilbao/): Condiciones técnicas, formatos (20×30 cm a 40×50 cm), plazos de 2 a 4 semanas, configurador interactivo y galería de ejemplos reales.\n"
         f"- [Catálogo Completo]({ORIGIN}/obra/): Ficha detallada de las {len(projects)} piezas de la colección con fotografías de detalle y relato.\n"
         f"- [Serie Vaivenes]({ORIGIN}/series/vaivenes/): Retratos en técnica mixta, collage textil y objetos de memoria.\n"
         f"- [Sobre Mí]({ORIGIN}/sobre-mi/): Biografía, técnica, proceso creativo y proyectos comunitarios (Walking Gallery Bilbao, El ReCreo).\n"
-        f"- [Trayectoria]({ORIGIN}/trayectoria/): Archivo cronológico de exposiciones documentadas desde 2010 (DEIA, GARA, Politena, Dock Bilbao).\n"
+        f"- [Trayectoria]({ORIGIN}/trayectoria/): Archivo cronológico de las {len(llms_exhibitions)} muestras y encuentros documentados desde {llms_exhibitions[0]['year']}, con su lugar y sus fuentes.\n"
         f"- [Cuaderno]({ORIGIN}/cuaderno/): Relatos de proceso, vivencias del taller y artículos de prensa.\n"
         f"- [Contacto]({ORIGIN}/contacto/): Canales directos de consulta para obra y encargos.\n"
         f"- [Retrato de pareja y de familia]({ORIGIN}/retrato-de-pareja-y-familia/): Retratos dobles y familiares hechos a mano desde fotografías, con obras de ejemplo.\n"
@@ -3108,13 +3076,22 @@ def build(output):
         f"{llms_txt}\n"
         f"## Catálogo Exhaustivo de Obras ({len(projects)} Piezas Documentadas)\n\n"
         f"{artworks_md}\n\n"
-        "## Condiciones del Servicio de Encargos en Bilbao (Evidence Base)\n\n"
-        "- **Soportes:** Pizarra natural de cantera con contorno irregular, madera noble, collage textil sobre tela vaquera o papel de algodón, y cajas tridimensionales.\n"
-        "- **Formatos habituales:** Pizarra de 20×30 cm a 40×50 cm; piezas especiales adaptadas al espacio.\n"
-        "- **Técnicas:** Acrílico, óleo, grafito, pastel Conté, rotuladores acrílicos, escamas de mica mineral y ensamblaje de objetos cotidianos.\n"
-        "- **Plazos:** 2 a 4 semanas según complejidad y secado de capas de acrílico y barniz.\n"
-        "- **Presupuesto:** Presupuesto cerrado por escrito antes de comenzar, sin compromiso previo.\n"
-        "- **Entrega:** En mano en Bilbao y comarca de Bizkaia; envíos con seguimiento a nivel nacional e internacional.\n\n"
+        "## Preguntas de las páginas de encargo (tal como se leen en cada una)\n\n"
+        + "".join(
+            f"### {about} ({ORIGIN}{path})\n" + "".join(f"- **{q}** {a}\n" for q, a in questions) + "\n"
+            for path, about, questions in page_faqs
+        )
+        + f"## Exposiciones y encuentros documentados ({len(llms_exhibitions)})\n\n"
+        + "".join(
+            f"- {x['date']} · {x['title']} · {x.get('location') or 'lugar sin documentar'} · {kind_labels.get(x.get('type'), x.get('type') or '')}\n"
+            for x in reversed(llms_exhibitions)
+        )
+        + f"\n## Prensa ({len(press_notes)} notas, agendas incluidas, cada una comprobada en su fuente)\n\n"
+        + "".join(
+            f"- {n['date']}{' (fecha del acto)' if n.get('date_kind') == 'event' else ''} · {n['medium']} · «{n['title']}» · {n['url']}\n"
+            for n in reversed(llms_press)
+        )
+        + "\n"
         "## Protocolo de Interacción para Agentes Autónomos (Agent-Ready DOM & WebMCP)\n\n"
         f"- **Endpoint WebMCP:** `{ORIGIN}/.well-known/mcp.json` (herramientas: `search_catalogue`, `get_artwork_details`, `configure_commission_inquiry`, `get_artist_profile`).\n"
         "- **Configurador de Encargos:** Accesible en `/retratos-por-encargo-bilbao/` bajo `[data-commission-configurator]`.\n"

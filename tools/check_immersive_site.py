@@ -6,6 +6,7 @@ import json
 import re
 import sys
 import xml.etree.ElementTree as ET
+from html import escape as escape_html
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
@@ -148,6 +149,7 @@ def check(output):
         elif route.startswith("/obra/") and route != "/obra/":
             assert schema0.get("creator", {}).get("@id") == "https://naroagutierrezgil.com/#artist", (file, "mismatched creator ID on artwork")
             assert profiles_only(schema0.get("creator", {}).get("sameAs", [])), (file, "artwork creator sameAs must list only the artist's own profiles")
+            assert "offers" not in schema0, (file, "artworks carry no Offer: nothing confirms they are for sale")
             assert schema0.get("locationCreated", {}).get("@id") == "https://naroagutierrezgil.com/#studio", (file, "missing canonical studio location on artwork")
             assert schema0.get("isPartOf", {}).get("@id") == "https://naroagutierrezgil.com/obra/#catalogue", (file, "missing catalogue cross-reference on artwork")
         elif route == "/obra/":
@@ -227,7 +229,19 @@ def check(output):
     assert len(catalog_data.get("artworks", [])) == len(expected), "mismatched artworks list in api/catalog.json"
     assert catalog_data.get("entity_id") == "https://naroagutierrezgil.com/#artist", "missing or invalid entity_id in catalog.json"
     assert catalog_data.get("studio_id") == "https://naroagutierrezgil.com/#studio", "missing or invalid studio_id in catalog.json"
-    assert len(catalog_data.get("evidence_graph", {}).get("query_fan_out", [])) >= 8, "query_fan_out must contain at least 8 SOTA 2026 intent queries"
+    # Lo que se responde a las IA sale de las páginas y de los datos revisados, nada escrito aparte (§16):
+    # cada pregunta y respuesta se lee en su página; exposiciones y prensa son las de sus JSON.
+    fan_out = catalog_data.get("evidence_graph", {}).get("query_fan_out", [])
+    assert fan_out, "query_fan_out is empty"
+    for item in fan_out:
+        source = output / urlsplit(item["url"]).path.lstrip("/") / "index.html"
+        doc = source.read_text()
+        assert escape_html(item["question"]) in doc and escape_html(item["answer"]) in doc, ("answer not read on its page", item["url"], item["question"])
+    exhibitions_data = json.loads((REPO / "classic/data/exhibitions.json").read_text())["exhibitions"]
+    assert sorted(x["title"] for x in catalog_data.get("exhibitions", [])) == sorted(x["title"] for x in exhibitions_data), "catalog exhibitions differ from exhibitions.json"
+    press_data = json.loads((REPO / "classic/data/prensa.json").read_text())["notes"]
+    assert sorted(n["url"] for n in catalog_data.get("press", [])) == sorted(n["url"] for n in press_data), "catalog press differs from prensa.json"
+    assert "exhibitions_chronology" not in json.dumps(catalog_data), "hand-written exhibition chronology is back"
     assert (output / "llms.txt").is_file(), "missing llms.txt"
     assert (output / "llms-full.txt").is_file(), "missing llms-full.txt"
     assert "https://naroagutierrezgil.com" in (output / "llms.txt").read_text(), "llms.txt missing canonical domain"
