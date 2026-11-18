@@ -444,6 +444,20 @@
       "url": "https://gara.naiz.eus/paperezkoa/20100326/190489/es/Non-zer",
       "encounter": "hegoak-2010",
       "checked": "2026-11-11"
+    },
+    {
+      "id": "elpais-2009-expodistrito",
+      "medium": "El País",
+      "kind": "noticia",
+      "date": "2009-01-10",
+      "date_kind": "published",
+      "date_label": "10 de enero de 2009",
+      "title": "Expodistrito lleva a barrios de Bilbao seis exposiciones",
+      "byline": "Noticia de la redacción, en la sección País Vasco",
+      "summary": "Presenta Expodistrito, que lleva seis exposiciones a otros tantos centros municipales de barrio de Bilbao durante el primer trimestre de 2009, y nombra entre ellas “Espejos del Alma”, la muestra de Naroa Gutiérrez.",
+      "url": "https://elpais.com/diario/2009/01/10/paisvasco/1231620008_850215.html",
+      "encounter": "",
+      "checked": "2026-11-18"
     }
   ],
   "unconfirmed": [
@@ -536,7 +550,7 @@
       "date": "",
       "title": "",
       "url": "",
-      "why": "Berria, Argia, Bilbo Hiria, EITB, El País, El Mundo, 20minutos, Europa Press, eldiario.es y otros: sin resultados que la nombren (búsqueda del 2026-11-11). GARA desde 2014 solo está en PDF de pago."
+      "why": "Berria, Argia, Bilbo Hiria, EITB, El Mundo, 20minutos, Europa Press, eldiario.es y otros: sin resultados que la nombren (búsqueda del 2026-11-11). GARA desde 2014 solo está en PDF de pago. De El País apareció después, por un borrador de Wikipedia, la nota de Expodistrito de 2009 (ya en «notes», comprobada el 2026-11-18)."
     },
     {
       "medium": "DEIA",

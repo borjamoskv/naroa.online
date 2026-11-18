@@ -3282,7 +3282,7 @@
 
       interworkStage.innerHTML = `
         <div class="iw-rig" data-fx="bowiestar" hidden>
-          <div class="iw-cutout iw-bowie-star" data-bowie-star style="background-image:url(&quot;/images/catalogo/bowie-star-cutout.webp&quot;)"></div>
+          <div class="iw-bowie-star" data-bowie-star><i></i></div>
         </div>
       `;
       stage.appendChild(interworkStage);
@@ -3291,6 +3291,18 @@
     Array.from(interworkStage.querySelectorAll('[data-fx]')).forEach(el => {
       interworkRigs[el.getAttribute('data-fx')] = el;
     });
+    // El bindi de Olinga: la estrella de Bowie ya posada en su entrecejo. Vive dentro de su escena para ir con
+    // la foto en reposo y al marcharse; solo aparece después de haberla visto llegar.
+    const bindiIndex = works.findIndex(work => work.slug === 'olinga-a-la-naranja');
+    let bindiEl = null, bindiLanded = false;
+    if (bindiIndex >= 0) {
+      bindiEl = document.createElement('div');
+      bindiEl.className = 'iw-bindi';
+      bindiEl.setAttribute('aria-hidden', 'true');
+      bindiEl.append(Object.assign(document.createElement('div'), { className: 'iw-bowie-star' }));
+      bindiEl.firstChild.append(document.createElement('i'));
+      ($('.art-pan', scenes[bindiIndex]) || scenes[bindiIndex]).append(bindiEl);
+    }
 
     function updateStickmanPose(phase, leapArc = 0, portalStyle = 0) {
       const isFlip = portalStyle === 1 && leapArc > 0.05;
@@ -3805,14 +3817,50 @@
         image.style.filter = `blur(${(3.4 * k).toFixed(2)}px) contrast(${(1 + 0.1 * pulse).toFixed(3)})`;
       }
     }
+    // Dónde cae en pantalla el punto (u, v) de la portada de una obra, con la foto a `scale` desde su centro
+    // (bx, by: el mismo punto dentro de la caja de la foto, sin escala).
+    function coverPoint(index, u, v, scale = 1) {
+      const img = images[index], width = geometry.width + 20, height = geometry.height + 20;
+      const nw = img.naturalWidth || 2048, nh = img.naturalHeight || 1536;
+      const fit = Math.max(width / nw, height / nh), pw = nw * fit, ph = nh * fit;
+      const focus = (scenes[index].style.getPropertyValue('--position') || '50% 44%').split(' ').map(n => parseFloat(n) / 100);
+      const bx = (width - pw) * focus[0] + u * pw, by = (height - ph) * focus[1] + v * ph;
+      return { x: width / 2 + (bx - width / 2) * scale - 10, y: height / 2 + (by - height / 2) * scale - 10, bx, by, pw };
+    }
+    // La estrella del susurro (Bowie → Olinga): nace en los labios de «El hombre que susurraba a las estrellas»,
+    // sube hacia su cielo y baja a posarse, pequeña, en el entrecejo de Olinga, como un bindi; allí se queda.
+    // El recorte (bowie-star-cutout.webp, 139 × 141) sale al píxel de la portada de Bowie: mide 139/2048 de
+    // su ancho. `.iw-bowie-star` mide 100 px de ancho y gira sobre el centro de masa de la estrella.
+    const STAR_ORIGIN = { x: 53.23, y: 53.14 };
+    const BINDI = { u: .461, v: .336, size: .023, turn: 739 }; // entrecejo en la portada de Olinga; ancho en anchos de foto; giro final (punta arriba)
+    const BINDI_LAND = .92;
+    const bindiScale = (index, f) => restZoom(index, true) * (1 + .12 * (1 - smooth((f - .3) / .7)));
+    function bowieStarPose(base, incoming, f) {
+      const w = geometry.width, h = geometry.height;
+      // Los labios de Bowie son el foco de su encuadre (65,2 % 57,4 %): no se mueven por mucho que se acerque.
+      const lips = { x: .652 * (w + 20) - 10, y: .574 * (h + 20) - 10 };
+      const scale = bindiScale(incoming, f), spot = coverPoint(incoming, BINDI.u, BINDI.v, scale);
+      const painted = 139 / 2048 * coverPoint(base, 0, 0).pw * restZoom(base), bindi = BINDI.size * spot.pw * scale;
+      const t = smooth((f - .06) / .74), s = 1 - t;
+      const ctrl = { x: (lips.x + spot.x) / 2 - w * .26, y: Math.min(lips.y, spot.y) - h * .4 };
+      const flight = painted * smooth((f - .03) / .15) * (1 + .45 * Math.sin(Math.PI * clamp((f - .12) / .5, 0, 1)));
+      const settle = smooth((f - .52) / .32), press = f > .84 && f < BINDI_LAND ? 1 - .14 * Math.sin(Math.PI * (f - .84) / (BINDI_LAND - .84)) : 1;
+      const lift = smooth((f - .04) / .24) * (1 - smooth((f - .6) / .26)), rot = BINDI.turn * smooth((f - .04) / .84);
+      return {
+        x: s * s * lips.x + 2 * s * t * ctrl.x + t * t * spot.x,
+        y: s * s * lips.y + 2 * s * t * ctrl.y + t * t * spot.y,
+        size: (flight * (1 - settle) + bindi * settle) * press, rot, lift,
+        glint: 1 + .3 * lift * Math.max(0, Math.sin(rot * Math.PI / 90 + .6)), spot, scale
+      };
+    }
     // Zoom genérico: la obra siguiente no se funde sobre la que se va (se veían dos caras a la vez). Asoma por
     // un hueco recortado a mano, distinto en cada obra (hash del slug), que crece desde el centro hasta ocupar
     // la pantalla; en pizarra el hueco es un borrado de tiza, de borde difuso.
-    function zoomCut(scene, image, work, fraction) {
+    function zoomCut(scene, image, work, fraction, at = null) {
       const open = smooth((fraction - .30) / .42);
       if (open <= 0) { scene.style.opacity = '0'; return; }
       if (open >= 1) return;
-      const w = geometry.width, h = geometry.height, cx = w * .5, cy = h * .46;
+      const w = geometry.width, h = geometry.height, cx = at ? at.x : w * .5, cy = at ? at.y : h * .46;
       const reach = Math.hypot(Math.max(cx, w - cx), Math.max(cy, h - cy)) / .78 * open;
       if (materialOf(work) === 'chalk') {
         scene.style.maskImage = scene.style.webkitMaskImage = `radial-gradient(circle at ${cx.toFixed(1)}px ${cy.toFixed(1)}px,#000 ${(reach * .8).toFixed(1)}px,transparent ${(reach * 1.12).toFixed(1)}px)`;
@@ -3871,7 +3919,7 @@
         const isMunsterFamily = transition && munsterSlugs.includes(works[base]?.slug) && munsterSlugs.includes(works[incoming]?.slug);
         const isMurrayToEzquerra = transition && works[base]?.slug === 'i-got-you-babe' && works[incoming]?.slug === 'jose-manuel-ezquerra';
         paintedScenes.add(index);
-        const isTopOutgoing = isRockaToHugo || isTinCanPeel || isJamesToMario || isJaioTo13n || isRaraToAmor || isBowieToOlinga || isDustinToGameOver || isSistaToMulti || isMurrayToEzquerra;
+        const isTopOutgoing = isRockaToHugo || isTinCanPeel || isJamesToMario || isJaioTo13n || isRaraToAmor || isDustinToGameOver || isSistaToMulti || isMurrayToEzquerra;
         scene.style.visibility = 'visible'; scene.style.zIndex = isTopOutgoing ? (outgoing ? '2' : '1') : (outgoing ? '1' : '2');
         scene.style.willChange = transition ? 'opacity,transform' : 'auto'; image.style.willChange = still ? 'auto' : 'transform';
         scene.style.clipPath = 'inset(0)'; scene.style.opacity = '1'; scene.style.transform = 'translate3d(0px,0px,0)';
@@ -4121,19 +4169,17 @@
             maxScale = 2.45;
           }
           if (isBowieToOlinga) {
+            // La cámara se acerca a los labios mientras la estrella sale; Olinga asoma por un rasgado que se abre
+            // en su entrecejo, donde va a posarse (bowieStarPose).
             if (outgoing) {
-              const flare = smooth(fraction);
-              const rot = (flare * 12.0).toFixed(2);
-              const prismScale = (1.25 + flare * 1.93).toFixed(5);
               image.style.transformOrigin = '65.2% 57.4%';
-              image.style.transform = `scale(${prismScale}) rotate(${rot}deg)`;
-              scene.style.opacity = fraction >= 0.68 ? smooth((1 - fraction) / 0.32).toFixed(4) : '1';
-              image.style.filter = `saturate(${(1 + flare * 1.6).toFixed(3)}) brightness(${(1 + Math.sin(fraction * Math.PI) * 0.75).toFixed(3)})`;
+              image.style.transform = `scale(${(restZoom(index) * Math.exp(Math.log(1.6) * smooth(fraction / .8))).toFixed(5)})`;
+              image.style.filter = `brightness(${(1 - .12 * smooth((fraction - .2) / .5)).toFixed(3)})`;
             } else {
-              scene.style.transform = 'translate3d(0px,0px,0)';
-              scene.style.opacity = fraction < 0.28 ? '0' : smooth((fraction - 0.28) / 0.32).toFixed(4);
-              const olingaScale = 0.95 + 0.13 * smooth(fraction);
+              const olingaScale = bindiScale(index, fraction);
               image.style.transform = `scale(${olingaScale.toFixed(5)})`;
+              // El rasgado se abre una décima más tarde que el genérico (0,40–0,82): antes vuela la estrella.
+              zoomCut(scene, image, works[index], fraction - .1, coverPoint(index, BINDI.u, BINDI.v, olingaScale));
             }
           } else if (isDustinToGameOver) {
             stage.classList.add('is-glitching');
@@ -4702,19 +4748,22 @@
         });
 
         const rig = interworkRigs[activePairKey];
-        const stageW = geometry.width || window.innerWidth || 1280;
-        const stageH = geometry.height || window.innerHeight || 800;
-        const fSmooth = smooth(fraction);
-
         if (activePairKey === 'bowiestar' && rig) {
-          const starEl = rig.querySelector('[data-bowie-star]');
-          const sx = stageW * (0.34 + 0.16 * fSmooth) - 58;
-          const sy = stageH * (0.16 + 0.34 * fSmooth) - Math.sin(fSmooth * Math.PI) * 44 - 58;
-          const spin = fraction * (540 + st.count * 180);
-          const sc = 0.72 + Math.sin(fSmooth * Math.PI) * 0.52;
-          if (starEl) {
-            starEl.style.opacity = (fraction > 0.94 ? clamp((1 - fraction) / 0.06, 0.2, 1) : 1).toFixed(3);
-            starEl.style.transform = `translate3d(${sx.toFixed(1)}px,${sy.toFixed(1)}px,0) scale(${sc.toFixed(3)}) rotate(${spin.toFixed(1)}deg)`;
+          // Vuela por encima de las dos escenas; al posarse (BINDI_LAND) la releva la de dentro de Olinga.
+          const starEl = rig.querySelector('[data-bowie-star]'), face = starEl?.firstElementChild;
+          const star = mode === 'Z' ? bowieStarPose(base, incoming, fraction) : null;
+          if (starEl && face) {
+            if (!star || fraction >= BINDI_LAND || star.size < .5) starEl.style.opacity = '0';
+            else {
+              const s = star.size / 100;
+              starEl.style.opacity = '1';
+              // La capa mide lo que `.art-pan` (10 px más por cada lado): sus coordenadas van 10 px por delante.
+              starEl.style.transform = `translate3d(${(star.x + 10 - STAR_ORIGIN.x).toFixed(2)}px,${(star.y + 10 - STAR_ORIGIN.y).toFixed(2)}px,0) scale(${s.toFixed(5)})`;
+              // La sombra no gira con la estrella: va en la capa que solo se mueve y crece.
+              starEl.style.filter = `drop-shadow(0 ${((2 + 20 * star.lift) / s).toFixed(2)}px ${((2 + 22 * star.lift) / s).toFixed(2)}px rgba(0,0,0,${(.42 + .1 * star.lift).toFixed(3)}))`;
+              face.style.transform = `rotate(${star.rot.toFixed(2)}deg)`;
+              face.style.filter = `brightness(${star.glint.toFixed(3)})`;
+            }
           }
         }
       } else if (interworkStage && !interworkStage.hasAttribute('hidden')) {
@@ -4730,6 +4779,21 @@
             interworkState[key].fired = false;
           }
         });
+      }
+      if (bindiEl) {
+        // El bindi sigue a la foto de Olinga (copia su transformación) y se retira si el pase de fotos cambia de foto.
+        const arriving = transition && mode === 'Z' && incoming === bindiIndex && works[base]?.slug === 'el-hombre-que-susurraba-a-las-estrellas';
+        if (arriving && fraction >= BINDI_LAND) bindiLanded = true;
+        const show = bindiLanded && !still && visible.has(bindiIndex) && !(arriving && fraction < BINDI_LAND) && !(dwell.index === bindiIndex && dwell.photo);
+        bindiEl.classList.toggle('is-on', show);
+        if (show) {
+          const img = images[bindiIndex], spot = coverPoint(bindiIndex, BINDI.u, BINDI.v), s = BINDI.size * spot.pw / 100, star = bindiEl.firstChild;
+          bindiEl.style.transformOrigin = img.style.transformOrigin;
+          bindiEl.style.transform = img.style.transform;
+          star.style.transform = `translate3d(${(spot.bx - STAR_ORIGIN.x).toFixed(2)}px,${(spot.by - STAR_ORIGIN.y).toFixed(2)}px,0) scale(${s.toFixed(5)})`;
+          star.style.filter = `drop-shadow(0 ${(2 / s / restZoom(bindiIndex, true)).toFixed(2)}px ${(2 / s / restZoom(bindiIndex, true)).toFixed(2)}px rgba(0,0,0,.42))`;
+          star.firstChild.style.transform = `rotate(${BINDI.turn}deg)`;
+        }
       }
       const isTinCanPeelOuter = isAmorToAmy || (transition && (works[base]?.slug === 'dar-la-lata' || works[base]?.slug === 'enlatadas'));
       if (isTinCanPeelOuter && fraction >= 0.08 && fraction <= 0.35) {
