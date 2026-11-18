@@ -285,7 +285,11 @@
       addEventListener('resize', measure, { passive: true });
     }
     // El toque que corta la ráfaga enseña el retrato; no cuenta además como «entrar en la galería».
-    function swallow(event) { event.stopPropagation(); event.preventDefault(); }
+    function swallow(event) {
+      // Una entrada o pausa explícita responde incluso mientras se recoge la ráfaga.
+      if (event.target.closest?.('[data-enter-gallery],[data-effects]')) { reveal(); finish(); return; }
+      event.stopPropagation(); event.preventDefault();
+    }
     // El retrato entra con su llegada de siempre mientras el lienzo de la ráfaga se funde encima.
     function reveal() {
       if (state === 'done') return;
@@ -4414,6 +4418,14 @@
         // sigue expuesto a los lectores de pantalla, y el `inert` de «Solo obra» sobre el pie entero es de metadata().
         $$('.art-more-row,.art-controls', artBottom).forEach(el => { if (el.inert !== faded) el.inert = faded; });
       }
+      // La entrada permanece disponible al contemplar; al cruzar el umbral deja también el orden de tabulación.
+      const heroEntry = $('[data-hero-entry]', stage);
+      if (heroEntry) {
+        const entryFade = heroThreshold && !state.fit && !state.quiet ? 1 - smooth(pose.distance / 0.28) : 0;
+        heroEntry.hidden = entryFade <= 0;
+        heroEntry.inert = entryFade < 0.5;
+        heroEntry.style.setProperty('--entry-fade', entryFade.toFixed(4));
+      }
       // Aviso del guiño hecho con IA (§7): se apaga al bajar hacia la primera obra, antes de que asome el pie.
       const thresholdNote = $('[data-threshold-note]', stage);
       if (thresholdNote) {
@@ -5265,11 +5277,19 @@
       if (works[state.index]?.slug === 'dustin' || works[state.index]?.slug === 'game-over') change(0);
     });
     $('[data-fit]', stage).addEventListener('click', () => { pause(); resetDwell(0); state.fit = !state.fit; images[state.index].src = state.fit ? works[state.index].photos[0].src : coverSrc(works[state.index].cover, images[state.index]); resetPan(); metadata(); render(); });
-    $('[data-threshold-enter]', stage)?.addEventListener('click', () => {
+    function enterGallery(sound = null) {
+      // El gesto conserva la activación del navegador: el motor decide antes de mover la cámara.
+      document.dispatchEvent(new CustomEvent('naroa:enter-gallery', { detail: { sound } }));
       window.NAROA_SOUND?.menuNote?.(0);
       window.scrollTo({ top: Math.ceil(geometry.top + 0.38 * geometry.unit), behavior: reduced.matches ? 'auto' : 'smooth' });
       scheduleScroll();
-    });
+    }
+    $('[data-threshold-enter]', stage)?.addEventListener('click', () => enterGallery());
+    $$('[data-enter-gallery]', stage).forEach(button => button.addEventListener('click', () => {
+      enterGallery(button.dataset.enterSound === 'on');
+      // Al retirarse la entrada, el teclado sigue en la galería, no en un botón oculto.
+      $('.art-gallery-trigger', stage)?.focus({ preventScroll: true });
+    }));
     $('[data-open-story]', stage).addEventListener('click', () => openDialog('#story-dialog'));
     // El fundido del pie de obra sobre el umbral depende de si el foco visible está dentro (render):
     // en reposo nadie repinta, así que se repinta al entrar o salir el foco.
@@ -5716,6 +5736,9 @@
       if (e.key === 'Escape' && state.quiet) { e.preventDefault(); quiet(false); return; }
       // Enter sobre un control lo activa; solo cuenta como moneda cuando no hay ninguno enfocado.
       if (e.key === 'Enter' && !e.repeat && !e.target.closest?.('a,button,summary,[role=button]')) insertCoin();
+      if (e.key === 'Enter' && !e.repeat && !e.target.closest?.('a,button,summary,[role=button]') && heroThresholdEl && !state.fit && !state.quiet && motion.pose.distance < 0.36) {
+        e.preventDefault(); enterGallery(); return;
+      }
       if (e.key === 'ArrowRight') {
         e.preventDefault();
         // Desde el retrato, «siguiente» es la primera obra, que aún no se ha visto: mismo gesto que tocarlo.

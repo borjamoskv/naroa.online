@@ -10,7 +10,7 @@ const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 // One original piece per month, titled with the Basque name of the month.
 const MONTH_TITLES = ['Urtarrila', 'Otsaila', 'Martxoa', 'Apirila', 'Maiatza', 'Ekaina', 'Uztaila', 'Abuztua', 'Iraila', 'Urria', 'Azaroa', 'Abendua'];
 
-function create(route = '/', reduce = false, viewport = { width: 1024, height: 768 }, audio = null, effects = null, storageDenied = false, blogFetch = null) {
+function create(route = '/', reduce = false, viewport = { width: 1024, height: 768 }, audio = null, effects = null, storageDenied = false, blogFetch = null, soundSettings = {}) {
   const file = path.join(output, route, 'index.html');
   let time = 0, id = 0;
   const observers = [];
@@ -28,6 +28,8 @@ function create(route = '/', reduce = false, viewport = { width: 1024, height: 7
       Object.defineProperty(w, 'innerHeight', { value: viewport.height, configurable: true });
       w.matchMedia = () => ({ matches: reduce, addEventListener() {} });
       if (effects) w.localStorage.setItem('naroa-effects', effects);
+      if (soundSettings.preference) w.localStorage.setItem('naroa-score-preference', soundSettings.preference);
+      if (soundSettings.resume) w.sessionStorage.setItem('naroa-score-on', '1');
       if (storageDenied) Object.defineProperty(w, 'localStorage', { get() { throw new Error('Storage unavailable'); } });
       if (audio) {
         w.AudioContext = audio.Context; w.fetch = audio.fetch;
@@ -835,6 +837,50 @@ async function eyeMatch(ui, base, points) {
   assert.equal(stillPortrait.find('.page-hero-copy').style.opacity, '1');
   stillPortrait.dom.window.close();
 
+  {
+    const firstAudio = audioBoundary(), entry = create('/', false, undefined, firstAudio);
+    await entry.flush();
+    assert.equal(entry.find('[data-hero-entry]').hidden, false, 'The welcome has a visible keyboard-accessible entrance');
+    assert.ok([...entry.document.querySelectorAll('[data-effects]')].every(b => b.getAttribute('aria-pressed') === 'true'), 'Effects start active on a fresh visit');
+    assert.equal(firstAudio.contexts.length, 0, 'The welcome never creates audio before entering');
+    entry.click('[data-enter-sound="on"]'); await entry.flush();
+    assert.equal(firstAudio.contexts.length, 1, 'Entering with music starts one synthesiser');
+    assert.equal(entry.w.NAROA_SCORE.playing, true);
+    assert.equal(entry.w.localStorage.getItem('naroa-score-preference'), 'on');
+    assert.equal(entry.find('[data-hero-entry]').hidden, true, 'The entrance leaves the screen and tab order after entering');
+    assert.equal(entry.document.activeElement, entry.find('.art-gallery-trigger'), 'Keyboard focus follows the visitor into the gallery');
+    entry.click('[data-sound]'); firstAudio.advance(6000); entry.dom.window.close();
+
+    const silentAudio = audioBoundary(), silentEntry = create('/', true, undefined, silentAudio);
+    await silentEntry.flush(); silentEntry.click('[data-enter-sound="off"]'); await silentEntry.flush();
+    assert.equal(silentAudio.contexts.length, 0, 'Entering in silence does not create an audio context');
+    assert.equal(silentEntry.w.localStorage.getItem('naroa-score-preference'), 'off');
+    silentEntry.scroll(0); await silentEntry.flush(); silentEntry.click('[data-threshold-enter]'); await silentEntry.flush();
+    assert.equal(silentAudio.contexts.length, 0, 'A later portrait tap preserves an explicit silence');
+    silentEntry.dom.window.close();
+
+    const naturalAudio = audioBoundary(), naturalEntry = create('/', false, undefined, naturalAudio);
+    await naturalEntry.flush(); naturalEntry.key('Enter'); await naturalEntry.flush();
+    assert.equal(naturalEntry.w.NAROA_SCORE.playing, true, 'Enter on the welcome starts the first work with music');
+    naturalEntry.click('[data-sound]'); naturalAudio.advance(6000); naturalEntry.dom.window.close();
+
+    const savedAudio = audioBoundary(), savedSilent = create('/', false, undefined, savedAudio, null, false, null, { preference: 'off', resume: true });
+    await savedSilent.flush();
+    savedSilent.w.dispatchEvent(new savedSilent.w.Event('pointerup', { bubbles: true })); await savedSilent.flush();
+    savedSilent.click('[data-threshold-enter]'); await savedSilent.flush();
+    assert.equal(savedAudio.contexts.length, 0, 'A saved silence wins over stale session resumption on a new page');
+    savedSilent.scroll(0); await savedSilent.flush(); savedSilent.click('[data-enter-sound="on"]'); await savedSilent.flush();
+    assert.equal(savedSilent.w.NAROA_SCORE.playing, true, 'An explicit music entrance can replace the saved silence');
+    savedSilent.click('[data-sound]'); savedAudio.advance(6000); savedSilent.dom.window.close();
+
+    const resumeAudio = audioBoundary(), resumeSilent = create('/', false, undefined, resumeAudio, null, false, null, { preference: 'on', resume: true });
+    await resumeSilent.flush();
+    resumeSilent.find('[data-enter-sound="off"]').dispatchEvent(new resumeSilent.w.Event('pointerup', { bubbles: true }));
+    resumeSilent.click('[data-enter-sound="off"]'); await resumeSilent.flush();
+    assert.equal(resumeAudio.contexts.length, 0, 'The silence entrance cancels resumption before its click');
+    resumeSilent.dom.window.close();
+  }
+
   const audio = audioBoundary(), music = create('/sobre-mi/', false, { width: 390, height: 844 }, audio);
   await music.flush();
   assert.equal(audio.contexts.length, 0, 'No audio context is created before a visitor gesture');
@@ -1505,7 +1551,7 @@ async function eyeMatch(ui, base, points) {
     assert.equal(more.getAttribute('aria-controls'), 'art-actions');
     assert.equal(tidyStage.classList.contains('is-more-open'), false);
     for (const selector of ['[data-open-story]', '[data-effects]', '[data-fit]', '[data-open-photos]', '[data-ouroboros]']) {
-      assert.ok(actions.contains(tidy.find(selector)), `${selector} lives behind the "+"`);
+      assert.ok(actions.querySelector(selector), `${selector} lives behind the "+"`);
     }
     assert.ok(tidy.find('.art-more-row').previousElementSibling.matches('[data-art-copy]'), 'The "+" sits right under the title');
     tidy.click('[data-more]');

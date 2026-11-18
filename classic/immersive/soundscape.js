@@ -1469,13 +1469,17 @@
   if (!button) return;
   const status = document.querySelector('[data-sound-status]');
   const RESUME_KEY = 'naroa-score-on';
+  const PREFERENCE_KEY = 'naroa-score-preference';
+  let soundPreference = null;
+  try { soundPreference = localStorage.getItem(PREFERENCE_KEY); } catch {}
   const MONTHS = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
   const TITLES = ['Urtarrila', 'Otsaila', 'Martxoa', 'Apirila', 'Maiatza', 'Ekaina', 'Uztaila', 'Abuztua', 'Iraila', 'Urria', 'Azaroa', 'Abendua'];
   // Sin motor (navegador sin Web Audio) el título sigue siendo el del mes.
   const month = () => (score ? score.month : new Date().getMonth());
   const title = () => (score ? score.title : TITLES[month()]);
   const monthName = () => MONTHS[month()];
-  let busy = false, quiet = false;
+  let busy = false, quiet = false, wanted = false;
+  let resume = null;
   let energy = 0, calm = 0, heading = 1, feltAt = 0, seenAt = 0, seenDistance = 0;
   // Para escuchar otra pieza sin esperar al mes: `?mes=1` … `?mes=12`. No hay selector en la web.
   try {
@@ -1490,6 +1494,16 @@
   const remember = on => {
     try { if (on) sessionStorage.setItem(RESUME_KEY, '1'); else sessionStorage.removeItem(RESUME_KEY); } catch {}
   };
+  function chooseSound(on) {
+    soundPreference = on ? 'on' : 'off';
+    try { localStorage.setItem(PREFERENCE_KEY, soundPreference); } catch {}
+  }
+  function cancelResume() {
+    if (!resume) return;
+    removeEventListener('pointerup', resume, true);
+    removeEventListener('keydown', resume, true);
+    resume = null;
+  }
   // El aviso solo aparece si el navegador bloquea el audio.
   function say(text) {
     if (!status) return;
@@ -1505,17 +1519,38 @@
   }
   async function turnOn() {
     if (!score) { say('Este navegador no puede reproducir la banda sonora.'); return; }
+    wanted = true;
     if (busy || score.playing) return;
     busy = true; paint();
-    const ok = await score.start();
+    let ok = false;
+    try { ok = await score.start(); } catch {}
+    // Una entrada en silencio durante resume() tiene prioridad sobre el inicio pendiente.
+    if (!wanted && ok) score.stop();
     busy = false;
-    say(ok ? '' : 'El navegador no ha permitido iniciar el sonido. Vuelve a intentarlo.');
-    remember(ok);
+    say(!wanted || ok ? '' : 'El navegador no ha permitido iniciar el sonido. Vuelve a intentarlo.');
+    remember(wanted && ok);
     paint();
   }
+  function turnOff() {
+    wanted = false;
+    if (score) score.stop();
+    remember(false); say(''); paint();
+  }
   button.addEventListener('click', () => {
-    if (score && score.playing) { score.stop(); remember(false); say(''); paint(); }
-    else turnOn();
+    cancelResume();
+    const on = !(busy || (score && score.playing));
+    chooseSound(on);
+    if (on) turnOn(); else turnOff();
+  });
+  // Se despacha de forma síncrona desde el clic de entrada: conserva el permiso de audio del gesto.
+  document.addEventListener('naroa:enter-gallery', event => {
+    const choice = event.detail?.sound;
+    if (choice != null && typeof choice !== 'boolean') return;
+    const on = choice == null ? soundPreference !== 'off' : choice;
+    if (on && navigator.userActivation && !navigator.userActivation.isActive) return;
+    cancelResume();
+    chooseSound(on);
+    if (on) turnOn(); else turnOff();
   });
   if (score) score.on(paint);
   say('');
@@ -1523,14 +1558,14 @@
 
   // Si la música sonaba en la página anterior, vuelve con el primer gesto en esta.
   let wasOn = false;
-  try { wasOn = !!score && sessionStorage.getItem(RESUME_KEY) === '1'; } catch {}
+  try { wasOn = !!score && soundPreference !== 'off' && sessionStorage.getItem(RESUME_KEY) === '1'; } catch {}
   if (wasOn) {
-    const resume = event => {
+    resume = event => {
       // Un dedo que se apoya, un arrastre o una tecla como Mayús o Esc no dan permiso para sonar: se espera al siguiente gesto.
       if (navigator.userActivation && !navigator.userActivation.isActive) return;
-      removeEventListener('pointerup', resume, true);
-      removeEventListener('keydown', resume, true);
-      if (event.target instanceof Element && event.target.closest('[data-sound]')) return;
+      // Los controles de entrada deciden en su click; no anticipar la elección con pointerup o Enter.
+      if (event.target instanceof Element && event.target.closest('[data-sound], [data-enter-gallery]')) return;
+      cancelResume();
       turnOn();
     };
     addEventListener('pointerup', resume, true);

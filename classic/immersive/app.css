@@ -314,6 +314,22 @@ html.motion-opt-in.has-motion .hero-threshold.is-passed{animation-play-state:run
 html.motion-off .hero-monocle-marilyn{animation:none}
 /* …y como ahí no hay sombreador, la obra va opaca en la lente: es el único color de la página y la única puerta. */
 html.motion-off .hero-monocle-marilyn{opacity:.96;mix-blend-mode:normal}
+/* La entrada pertenece a la navegación, fuera del retrato y de la ráfaga. */
+.hero-entry{position:absolute;z-index:8;left:4.5%;right:4.5%;bottom:max(5.5rem,calc(env(safe-area-inset-bottom) + 4rem));display:flex;align-items:center;justify-content:space-between;gap:1rem;opacity:var(--entry-fade,1)}
+.hero-entry[hidden]{display:none}
+.hero-entry-actions{display:flex;align-items:center;gap:1.5rem}
+.hero-entry button{min-height:48px;font-size:1rem;font-weight:500;line-height:1.35;letter-spacing:0;text-transform:none;cursor:pointer}
+.hero-entry-primary{padding:.8rem 1.35rem;background:var(--hero-accent,#5fe3f2);color:#101310;border:1px solid transparent;box-shadow:0 4px 32px #0005}
+.hero-entry-primary:hover{background:#fffdf4}
+.hero-entry-silent,.hero-entry-effects{padding:.5rem 0;background:none;border:0;color:#fffdf4;text-shadow:0 1px 12px #000;text-decoration:underline;text-underline-offset:.3em;text-decoration-color:#fffdf470}
+.hero-entry-effects{font-size:.875rem!important}
+.hero-entry button:focus-visible{outline:2px solid #fffdf4;outline-offset:5px}
+@media(max-width:760px){
+  .hero-entry{left:6%;right:6%;bottom:max(5.5rem,calc(env(safe-area-inset-bottom) + 4rem));flex-wrap:wrap;gap:.35rem}
+  .hero-entry-actions{width:100%;gap:1rem;justify-content:space-between}
+  .hero-entry-primary{padding:.75rem 1rem}
+  .hero-entry-silent{font-size:.875rem!important}
+}
 .hero-threshold-plane{position:absolute;inset:0;transform-origin:var(--lens-x) var(--lens-y);will-change:transform;transform-style:preserve-3d;rotate:x var(--hero-rx,0deg);translate:calc(var(--hero-mx,0)*-14px) calc(var(--hero-my,0)*-10px) 0}
 .hero-threshold-portrait,.hero-threshold-wink{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 38%;transform:rotateY(var(--hero-ry,0deg)) scale(1.02)}
 .hero-threshold-wink{opacity:0;transition:opacity .26s cubic-bezier(.16,1,.3,1);-webkit-mask-image:radial-gradient(ellipse var(--wink-rx) var(--wink-ry) at var(--wink-x) var(--wink-y),#000 54%,rgba(0,0,0,.45) 78%,transparent 100%);mask-image:radial-gradient(ellipse var(--wink-rx) var(--wink-ry) at var(--wink-x) var(--wink-y),#000 54%,rgba(0,0,0,.45) 78%,transparent 100%)}
