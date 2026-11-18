@@ -140,6 +140,8 @@ dialog{color:#fffdf4;background:#11120f;border:0;padding:0;max-width:none;max-he
 .gallery-page [data-journey-cue]{display:inline-block}
 @media(max-width:760px){.gallery-page [data-journey-cue]{max-width:230px;vertical-align:top}}
 @media(prefers-reduced-motion:reduce){html:not(.motion-opt-in) .gallery-page .art-scene{transform:none!important}}
+.art-tear{position:absolute;inset:0;z-index:2;visibility:hidden;pointer-events:none}
+.art-tear i{position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22160%22 height=%22160%22%3E%3Cfilter id=%22f%22 x=%220%22 y=%220%22 width=%22100%25%22 height=%22100%25%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%22.9 .35%22 numOctaves=%222%22 seed=%223%22 stitchTiles=%22stitch%22/%3E%3CfeColorMatrix values=%220 0 0 0 .42 0 0 0 0 .36 0 0 0 0 .26 0 0 0 .45 -.12%22/%3E%3C/filter%3E%3Crect width=%22160%22 height=%22160%22 filter=%22url(%23f)%22/%3E%3C/svg%3E"),#f2e9d5}
 
 /* A visitor can choose motion for this gallery independently of the system. */
 html.motion-off .art-layers,html.motion-off [data-art-title],html.motion-off .art-counter,html.motion-off .art-material{animation:none!important}

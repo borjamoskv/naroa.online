@@ -1644,6 +1644,13 @@
       }
     }
     const scenes = $$('.art-scene', stage), images = scenes.map(s => $('img', s));
+    // Fibra del rasgado (§7c): la capa va fuera de la escena porque `clip-path` recorta también el `filter`
+    // del propio elemento. Antes en el DOM que las escenas y con su mismo z-index: la obra que entra queda
+    // encima y la que se va, debajo. Se crea después de que el héroe de sesión se haya colocado el primero.
+    const tearFiber = document.createElement('div');
+    tearFiber.className = 'art-tear'; tearFiber.setAttribute('aria-hidden', 'true');
+    tearFiber.append(document.createElement('i'));
+    $('.art-layers', stage)?.prepend(tearFiber);
     images.forEach((img, i) => adoptSrcset(img, works[i]?.cover));
     // Scenes cover the stage (.art-pan is inset -10px); measured on the stage so fit mode
     // and camera transforms never skew the choice.
@@ -3519,10 +3526,25 @@
       if (k < 0.002) return;
       const side = mode === 'V' ? 'top' : direction > 0 ? 'left' : 'right';
       if (kind === 'paper') {
-        const jag = jaggedEdge(work.slug), amp = 7 * k;
-        const pts = jag.map((v, i) => { const t = (i / (jag.length - 1) * 100).toFixed(2), d = (v * amp).toFixed(2); return side === 'top' ? `${t}% ${d}%` : side === 'left' ? `${d}% ${t}%` : `${(100 - v * amp).toFixed(2)}% ${t}%`; });
+        const jag = jaggedEdge(work.slug), amp = 7 * k, n = jag.length - 1;
+        // La fibra blanca del papel roto: 1,5–6 px según el punto (otro tramo del mismo hash), y se estrecha al llegar.
+        const thin = Math.min(1, k / .18), fiber = jag.map((_, i) => (1.5 + 4.5 * jag[(i * 7 + 11) % jag.length]) * thin);
+        // Punto u del rasgado (u fraccionario cae sobre el tramo recto), metido `inset` px hacia dentro de la obra que entra.
+        const at = (u, inset) => {
+          const a = Math.floor(u), b = Math.min(n, a + 1), d = (jag[a] + (jag[b] - jag[a]) * (u - a)) * amp;
+          const t = (u / n * 100).toFixed(2), e = inset.toFixed(2);
+          return side === 'top' ? `${t}% calc(${d.toFixed(2)}% + ${e}px)` : side === 'left' ? `calc(${d.toFixed(2)}% + ${e}px) ${t}%` : `calc(${(100 - d).toFixed(2)}% - ${e}px) ${t}%`;
+        };
         const tail = side === 'top' ? ['100% 100%', '0% 100%'] : side === 'left' ? ['100% 100%', '100% 0%'] : ['0% 100%', '0% 0%'];
-        scene.style.clipPath = `polygon(${[...pts, ...tail].join(',')})`;
+        scene.style.clipPath = `polygon(${[...jag.map((_, i) => at(i, fiber[i])), ...tail].join(',')})`;
+        // Borde de fuera deshilachado: tres puntos por tramo que asoman hasta 2 px más allá del rasgado. El de dentro
+        // queda 2 px bajo la obra, para que no quede rendija entre papel y fibra.
+        const fray = Array.from({ length: n * 3 + 1 }, (_, s) => at(s / 3, -2 * thin * jag[(s * 5 + 3) % jag.length]));
+        tearFiber.firstChild.style.clipPath = `polygon(${[...fray, ...jag.map((_, i) => at(n - i, fiber[n - i] + 2))].join(',')})`;
+        const o = (3 * thin).toFixed(2), shadow = side === 'top' ? `0 -${o}px` : side === 'left' ? `-${o}px 0` : `${o}px 0`;
+        tearFiber.style.filter = `blur(.5px) drop-shadow(${shadow} ${(5 * thin).toFixed(2)}px rgba(0,0,0,.5))`;
+        tearFiber.style.transform = scene.style.transform;
+        tearFiber.style.visibility = 'visible';
       } else if (kind === 'chalk') {
         const dir = side === 'top' ? 'to bottom' : side === 'left' ? 'to right' : 'to left';
         scene.style.maskImage = scene.style.webkitMaskImage = `linear-gradient(${dir},transparent 0,#000 ${(26 * k).toFixed(2)}%)`;
@@ -3558,6 +3580,8 @@
       scene.style.clipPath = `polygon(${pts.join(',')})`;
     }
     function render() {
+      // La fibra del rasgado solo existe mientras dura su paso: cada fotograma empieza sin ella.
+      if (tearFiber.style.visibility !== 'hidden') tearFiber.style.visibility = 'hidden';
       const munsterSlugs = ['lily-munster', 'herman-munster', 'eddie-munster', 'abuelo-munster'];
       const pose = motion.pose, { entry, phase, progress: fraction } = pose;
       const base = entry.index, incoming = Math.min(base + 1, works.length - 1);
