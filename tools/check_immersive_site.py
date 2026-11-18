@@ -14,6 +14,13 @@ REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from build_immersive_site import without_comments  # noqa: E402
 
+# «sameAs» solo con perfiles propios de la artista; la prensa va en «subjectOf» (AGENTS.md §11).
+PROFILE_HOSTS = {"facebook.com", "instagram.com", "naroagutierrez.wordpress.com", "youtube.com"}
+
+
+def profiles_only(urls):
+    return bool(urls) and all((urlsplit(u).hostname or "").removeprefix("www.") in PROFILE_HOSTS for u in urls)
+
 
 class Page(HTMLParser):
     def __init__(self):
@@ -119,24 +126,28 @@ def check(output):
         if route == "/retratos-por-encargo-bilbao/":
             assert schema0.get("geo", {}).get("latitude") == 43.263, (file, "missing geo latitude in commissions")
             assert schema0.get("address", {}).get("addressLocality") == "Bilbao", (file, "missing addressLocality in commissions")
-            assert any("deia.eus" in s for s in schema0.get("provider", {}).get("sameAs", [])), (file, "missing external entity citation in provider")
+            assert profiles_only(schema0.get("provider", {}).get("sameAs", [])), (file, "provider sameAs must list only the artist's own profiles")
             assert schema0.get("provider", {}).get("@id") == "https://naroagutierrezgil.com/#artist", (file, "mismatched provider ID in commissions")
         elif route == "/":
             pub = schema0.get("publisher", {})
             assert pub.get("homeLocation", {}).get("geo", {}).get("latitude") == 43.263, (file, "missing geo in publisher")
-            assert any("deia.eus" in s for s in pub.get("sameAs", [])), (file, "missing external entity citation in publisher")
+            assert profiles_only(pub.get("sameAs", [])), (file, "publisher sameAs must list only the artist's own profiles")
             assert pub.get("@id") == "https://naroagutierrezgil.com/#artist", (file, "mismatched publisher ID on home")
         elif route == "/sobre-mi/":
             ent = schema0.get("mainEntity", {})
             assert ent.get("homeLocation", {}).get("geo", {}).get("latitude") == 43.263, (file, "missing geo in artist entity")
             assert ent.get("@id") == "https://naroagutierrezgil.com/#artist", (file, "mismatched artist ID on sobre-mi")
+            assert profiles_only(ent.get("sameAs", [])), (file, "artist sameAs must list only the artist's own profiles")
+            told = [n["url"] for n in json.loads((REPO / "classic/data/prensa.json").read_text())["notes"] if n["kind"] != "agenda"]
+            cited = [a.get("url") for a in ent.get("subjectOf", [])]
+            assert sorted(cited) == sorted(told), (file, "subjectOf must list every non-agenda press note", len(cited), len(told))
         elif route == "/contacto/":
             ent = schema0.get("mainEntity", {})
             assert ent.get("homeLocation", {}).get("geo", {}).get("latitude") == 43.263, (file, "missing geo in contact entity")
             assert ent.get("@id") == "https://naroagutierrezgil.com/#artist", (file, "mismatched artist ID on contacto")
         elif route.startswith("/obra/") and route != "/obra/":
             assert schema0.get("creator", {}).get("@id") == "https://naroagutierrezgil.com/#artist", (file, "mismatched creator ID on artwork")
-            assert any("deia.eus" in s for s in schema0.get("creator", {}).get("sameAs", [])), (file, "missing sameAs on artwork creator")
+            assert profiles_only(schema0.get("creator", {}).get("sameAs", [])), (file, "artwork creator sameAs must list only the artist's own profiles")
             assert schema0.get("locationCreated", {}).get("@id") == "https://naroagutierrezgil.com/#studio", (file, "missing canonical studio location on artwork")
             assert schema0.get("isPartOf", {}).get("@id") == "https://naroagutierrezgil.com/obra/#catalogue", (file, "missing catalogue cross-reference on artwork")
         elif route == "/obra/":

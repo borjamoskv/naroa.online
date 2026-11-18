@@ -773,15 +773,12 @@ def build(output):
 
     pages = []
 
+    # Solo perfiles propios: «sameAs» dice «esta misma persona en otra web». Lo que la prensa
+    # publicó sobre ella va en el «subjectOf» del perfil de /sobre-mi/ (AGENTS.md §11).
     artist_same_as = [
         "https://www.facebook.com/naroa.artista.plastica",
         "https://instagram.com/naroa_art/",
         "https://naroagutierrez.wordpress.com/",
-        "https://www.deia.eus/bizkaia/vida-social/2026/06/05/bwall-collective-inaugura-exposicion-ocho-11159371.html",
-        "https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-112114.html",
-        "https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-476343.html",
-        "https://gara.naiz.eus/paperezkoa/20130427/399965/es/Walking-gallery-arte-aire-libre-movimiento-arte-evolucion",
-        "https://siarte.com/2022-03-25-siarte-exposicion-pintura-collage-arte-naroa-gutierrez.php",
         "https://www.youtube.com/@naroarte",
     ]
     # Solo la ciudad: la dirección del estudio no es pública; no se escribe calle ni código postal.
@@ -1441,6 +1438,17 @@ def build(output):
     about += ('<article id="contenido" class="editorial" data-kintsugi-editorial>' + about_brief + about_mirada + about_pull + about_materia + about_lata
               + about_espejo + about_rara + about_compartir + about_reverse + about_closing + '</article>')
     about_description = f"Naroa Gutiérrez Gil, artista plástica y retratista en Bilbao: {len(projects)} obras en pizarra, collage y objetos, muestras documentadas desde {min(about_years)} y retratos por encargo."
+    # Lo que la prensa publicó sobre ella (classic/data/prensa.json, AGENTS.md §11): las agendas no, que
+    # solo anunciaron una muestra. Titular literal y sin «inLanguage», que la capa de idiomas reescribiría.
+    press_types = {"blog": "BlogPosting", "radio": "CreativeWork"}
+    press_articles = []
+    for note in sorted(read_data("prensa")["notes"], key=lambda x: x["date"], reverse=True):
+        if note["kind"] == "agenda":
+            continue
+        article = {"@type": press_types.get(note["kind"], "NewsArticle"), "headline": note["title"], "url": note["url"], "publisher": {"@type": "Organization", "name": note["medium"]}}
+        if note.get("date_kind") == "published":
+            article["datePublished"] = note["date"]
+        press_articles.append(article)
     about_schema = {
         "@context": "https://schema.org",
         "@type": "ProfilePage",
@@ -1450,7 +1458,7 @@ def build(output):
         "url": ORIGIN + "/sobre-mi/",
         "isPartOf": {"@id": ORIGIN + "/#website"},
         "relatedLink": [ORIGIN + "/trayectoria/", ORIGIN + "/retratos-por-encargo-bilbao/"],
-        "mainEntity": canonical_artist_entity,
+        "mainEntity": {**canonical_artist_entity, "subjectOf": press_articles},
     }
     page("/sobre-mi/", "Sobre mí · Retratista en Bilbao", about_description, '<main id="main">' + about + '</main>', "/images/sobre-mi/naroa-monoculo.jpg", schema=about_schema, image_alt="Naroa Gutiérrez Gil con chistera y un monóculo ante un ojo",
          card_alt="Naroa Gutiérrez Gil con chistera y monóculo; a su lado, una caracterización de rostro pálido y ojos ahumados, y la pizarra Marilyn Rocks. Sobre la imagen, su frase «Me encontré a mí en los demás».")
@@ -2045,7 +2053,7 @@ def build(output):
             },
         ],
     }
-    page("/retratos-por-encargo-bilbao/", "Retratos por encargo en Bilbao · Pintados a mano desde tu foto", "Retrato personalizado pintado a mano a partir de tu foto: una persona, una pareja, la familia o tu mascota. Naroa Gutiérrez Gil, retratista en Bilbao, sin IA. Presupuesto cerrado previo y envío a toda España.", '<main id="main">' + commissions + '</main>', amor["photos"][0]["original"], schema=commissions_schema, image_alt=work_alt(amor))
+    page("/retratos-por-encargo-bilbao/", "Retratos por encargo en Bilbao · Pintados a mano desde tu foto", "Retratos por encargo en Bilbao, pintados a mano desde tu foto: una persona, una pareja, la familia o tu mascota. Sin IA, precio cerrado y envío a toda España.", '<main id="main">' + commissions + '</main>', amor["photos"][0]["original"], schema=commissions_schema, image_alt=work_alt(amor))
 
     # ── Páginas por búsqueda real ─────────────────────────────────────────────────────────────
     # Una página por lo que la gente escribe en el buscador («retrato de pareja», «retrato de un
@@ -2853,12 +2861,10 @@ def build(output):
         "  - Facebook: https://www.facebook.com/naroa.artista.plastica\n"
         "  - Instagram: https://instagram.com/naroa_art/\n"
         "  - Cuaderno WordPress: https://naroagutierrez.wordpress.com/\n"
-        "  - DEIA Bizkaia: https://www.deia.eus/bizkaia/vida-social/2026/06/05/bwall-collective-inaugura-exposicion-ocho-11159371.html\n"
-        "  - El Correo Agenda (2010): https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-112114.html\n"
-        "  - El Correo Agenda (2015): https://agenda.elcorreo.com/evento/naroa-gutierrez-gil-espejos-del-alma-476343.html\n"
-        "  - GARA Reportaje: https://gara.naiz.eus/paperezkoa/20130427/399965/es/Walking-gallery-arte-aire-libre-movimiento-arte-evolucion\n"
-        "  - Siarte Leku: https://siarte.com/2022-03-25-siarte-exposicion-pintura-collage-arte-naroa-gutierrez.php\n"
         "  - YouTube: https://www.youtube.com/@naroarte\n"
+        "- En prensa (cada nota comprobada en su fuente; titular literal):\n"
+        + "".join(f"  - {a['publisher']['name']}, {a.get('datePublished', 's. f.')}: «{a['headline']}» {a['url']}\n" for a in press_articles)
+        + ""
         "- Lenguaje y Práctica Artística: Retratos de autor y obra plástica multidisciplinar (dibujo, óleo, técnicas mixtas, collage textil sobre madera y objetos intervenidos, con exploraciones recientes sobre soportes minerales como la pizarra natural de cantera y mica).\n"
         f"- Servicio Canónico de Encargos: {ORIGIN}/retratos-por-encargo-bilbao/\n"
         "- Correo de Encargos: encargos@naroagutierrezgil.com\n"
