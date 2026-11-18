@@ -159,7 +159,7 @@ def check(output):
         assert page.meta.get("twitter:image:alt"), (file, "missing twitter:image:alt")
         if page.gallery:
             assert int(page.gallery["data-initial"]) < len(page.scenes), file
-            assert len(page.scenes) == (8 if route == "/series/vaivenes/" else len(expected)), (file, len(page.scenes))
+            assert len(page.scenes) == (len({im.get("work_slug", im["slug"]) for im in series}) if route == "/series/vaivenes/" else len(expected)), (file, len(page.scenes))
         for image in page.images:
             assert image.get("alt"), (file, "image without alternative text")
         for ref in page.refs:

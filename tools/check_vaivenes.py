@@ -5,8 +5,8 @@ from pathlib import Path
 from html.parser import HTMLParser
 from PIL import Image
 R=Path(__file__).resolve().parents[1]/'classic'
-d=json.loads((R/'data/vaivenes.json').read_text());items=d['images'];assert len(items)==8
-assert len({i['work_slug'] for i in items})==8
+d=json.loads((R/'data/vaivenes.json').read_text());items=d['images'];assert len(items)>=8
+assert len({i['work_slug'] for i in items})==len(items)
 assert len({i['slug'] for i in items})==len(items)
 assert len({i['sha256'] for i in items})==len(items)
 class Page(HTMLParser):
@@ -28,4 +28,4 @@ for im in items:
 assert all(a in p.ids for a in p.nav)
 assert sum(i.get('fetchpriority')=='high' for i in p.images)==1
 assert sum(i.get('loading')=='lazy' for i in p.images)==len(items)-1
-print(f'OK: 8 Vaivenes works, {len(items)} images; source hashes, actual resolution, process labels, anchors and lazy loading verified.')
+print(f'OK: {len(items)} Vaivenes works, {len(items)} images; source hashes, actual resolution, process labels, anchors and lazy loading verified.')

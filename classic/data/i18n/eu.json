@@ -180,6 +180,10 @@
    "{1} <{=2}>{3}</{=2}>"
   ],
   [
+   "^(\\d+) obras$",
+   "{=1} lan"
+  ],
+  [
    "^Obras hechas en plato · (\\d+) obras$",
    "Platoan egindako lanak · {=1} lan"
   ],
@@ -1794,6 +1798,14 @@
   "También por <1>WhatsApp</1>, por <2>correo</2>, por <3>teléfono</3>, en <4>Instagram</4>, en <5>Facebook</5> o en su <6>blog</6>.": "Baita <1>WhatsAppez</1>, <2>e-postaz</2>, <3>telefonoz</3>, <4>Instagramen</4>, <5>Facebooken</5> edo haren <6>blogean</6> ere.",
   "WhatsApp y teléfono": "WhatsApp eta telefonoa",
   "Añadir a tus contactos ↗": "Gehitu zure kontaktuetara ↗",
+  "en un rostro": "aurpegi batean",
+  "por la mirada": "begiradaren arabera",
+  "de un vistazo": "begirada batean",
+  "o": "edo",
+  "al azar": "ausaz",
+  "Toca un trozo para cambiarlo, o <1>baraja</1> todos.": "Ukitu zati bat aldatzeko, edo <1>nahastu</1> denak.",
+  "ver la obra ↗": "ikusi lana ↗",
+  "Retrato de Naroa Gutiérrez Gil con chistera, hecho con las miradas de sus obras": "Naroa Gutiérrez Gilen erretratua kapela luzearekin, bere lanen begiradekin egina",
   "Pizarra natural": "Arbel naturala",
   "Retrato frontal en acrílico, mica mineral y pan de oro sobre pizarra natural.": "Aurrez aurreko erretratua, akrilikoz, mika mineralez eta urre-orriz egina, arbel naturalaren gainean.",
   "Primer plano del rostro de Marilyn Monroe con incrustaciones doradas y escamas de mica.": "Marilyn Monroeren aurpegiaren lehen planoa, urre-koloreko inkrustazioekin eta mika-ezkatekin.",
@@ -1856,8 +1868,8 @@
   "Banda sonora del mes": null,
   "El Estudio · La obra, de cerca": "Estudioa · Lana, gertutik",
   "Cerrar ×": null,
-  "🔍 Lupa matérica": "🔍 Materia-lupa",
-  "✦ Luz rasante": "✦ Argi zeharra",
+  "Lupa matérica": "Materia-lupa",
+  "Luz rasante": "Argi zeharra",
   "Historia de la obra +": "Lanaren istorioa +",
   "Ocultar historia −": "Ezkutatu istorioa −",
   "← Anterior": "← Aurrekoa",

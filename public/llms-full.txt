@@ -944,6 +944,6 @@
 - **Endpoint WebMCP:** `https://naroagutierrezgil.com/.well-known/mcp.json` (herramientas: `search_catalogue`, `get_artwork_details`, `configure_commission_inquiry`, `get_artist_profile`).
 - **Configurador de Encargos:** Accesible en `/retratos-por-encargo-bilbao/` bajo `[data-commission-configurator]`.
 - **Selectores Semánticos y Labels:** Soporte (`#cfg-support`), Motivo (`#cfg-motif`), Plazo (`#cfg-timing`) con `<label for="...">` explícitos.
-- **Búsqueda en Catálogo:** Input `#art-search` con `<label for="art-search">` accesible desde modal `#index-dialog`.
+- **Índice de obra:** modal `#index-dialog` con un enlace por obra (`.ix-w`); cuatro vistas: en un rostro, por la mirada, de un vistazo y al azar.
 - **Acción de Salida:** Botón dinámico `#cfg-whatsapp-btn` con query de WhatsApp pre-rellenada en $O(1)$.
 - **Consultas Directas:** Canales directos con asunto pre-rellenado disponibles en `/contacto/`.
