@@ -94,6 +94,64 @@
   }));
   systemMotion.addEventListener('change', motionChanged);
   paintEffects();
+  // Toma del umbral (§7): cada sesión la cámara encuadra el retrato de otra manera (más cerca del monóculo, a un lado,
+  // con el sombrero…), y la lente, el guiño y el asomo se colocan sobre la foto, no sobre la pantalla. La toma vive en
+  // sessionStorage y no repite la de la sesión anterior; la 0 es la de siempre, la que pinta el CSS sin script. Si el
+  // retrato ya estaba a la vista antes de este script, se queda en ella para no saltar.
+  (() => {
+    const threshold = $('[data-hero-threshold]'), portrait = threshold && $('.hero-threshold-portrait', threshold);
+    if (!threshold || !portrait) return;
+    // Medido sobre naroa-monoculo.jpg (2201 × 3468): centro del aro, pupila tras el cristal, ojo que guiña, diámetro del aro.
+    const IW = 2201, IH = 3468, LENS = [0.468, 0.391], WINK = [0.605, 0.391], RING = 0.145;
+    // [x, y] de la pantalla donde cae la lente y cuánto se acerca la cámara sobre el encuadre que cubre la pantalla.
+    const TOMAS = [null, [0.5, 0.45, 1.6], [0.3, 0.41, 1.22], [0.64, 0.38, 1.26], [0.5, 0.56, 1.14], [0.42, 0.33, 1.38]];
+    const painted = !document.documentElement.classList.contains('burst-pending')
+      && (performance.getEntriesByName?.('first-contentful-paint') || []).length && portrait.complete && portrait.naturalWidth;
+    let toma = 0;
+    try {
+      const kept = sessionStorage.getItem('naroa-toma');
+      if (kept !== null && TOMAS[+kept] !== undefined) toma = +kept;
+      else if (!painted) {
+        const last = localStorage.getItem('naroa-toma-last');
+        const options = TOMAS.map((_, i) => i).filter(i => String(i) !== last);
+        toma = options[Math.floor(Math.random() * options.length)];
+        sessionStorage.setItem('naroa-toma', String(toma));
+        localStorage.setItem('naroa-toma-last', String(toma));
+      }
+    } catch { toma = 0; }
+    if (painted && toma) toma = 0;
+    threshold.dataset.toma = String(toma);
+    const wink = $('.hero-threshold-wink', threshold), imgs = [portrait, wink].filter(Boolean);
+    function frame() {
+      const W = threshold.clientWidth || innerWidth, H = threshold.clientHeight || innerHeight;
+      if (!W || !H) return;
+      let dw, dh, left, top;
+      if (toma) {
+        const [vx, vy, zoom] = TOMAS[toma], c = Math.max(W / IW, H / IH) * zoom;
+        dw = IW * c; dh = IH * c;
+        left = Math.min(0, Math.max(W - dw, vx * W - LENS[0] * dw));
+        top = Math.min(0, Math.max(H - dh, vy * H - LENS[1] * dh));
+        for (const img of imgs) {
+          Object.assign(img.style, { inset: 'auto', left: `${left.toFixed(1)}px`, top: `${top.toFixed(1)}px`, width: `${dw.toFixed(1)}px`, height: `${dh.toFixed(1)}px`, maxWidth: 'none', maxHeight: 'none', objectFit: 'fill' });
+          img.sizes = `${Math.ceil(dw)}px`;
+        }
+      } else {
+        // La toma de siempre: object-fit cover con object-position 50% 38% (app.css).
+        const c = Math.max(W / IW, H / IH);
+        dw = IW * c; dh = IH * c; left = (W - dw) * 0.5; top = (H - dh) * 0.38;
+      }
+      const at = ([x, y]) => [(left + x * dw) / W * 100, (top + y * dh) / H * 100];
+      // La máscara del guiño se mide sobre la caja de la propia imagen: en la toma 0 es la pantalla; en las demás, la foto entera.
+      const [lx, ly] = at(LENS), [wx, wy] = toma ? WINK.map(v => v * 100) : at(WINK);
+      const set = (k, v) => threshold.style.setProperty(k, v);
+      set('--lens-x', `${lx.toFixed(2)}%`); set('--lens-y', `${ly.toFixed(2)}%`);
+      set('--wink-x', `${wx.toFixed(2)}%`); set('--wink-y', `${wy.toFixed(2)}%`);
+      set('--wink-rx', `${(dw * 0.1225).toFixed(1)}px`); set('--wink-ry', `${(dh * 0.035).toFixed(1)}px`);
+      set('--portal-size', `${Math.max(108, dw * RING * 0.61).toFixed(1)}px`);
+    }
+    frame();
+    addEventListener('resize', frame, { passive: true });
+  })();
   // Lo que ya se vio no vuelve a entrar (§7): con red o móvil lentos el navegador pinta el umbral antes de que llegue este
   // script, y la llegada de app.css borraba el retrato y lo traía de nuevo desenfocado. Si ya hubo pintura, el umbral se
   // salta el fundido y el encendido del monóculo (.is-seen); si además el retrato estaba cargado, toda la llegada (.is-arrived).
@@ -3618,6 +3676,11 @@
     }
 
     const monocleShader = initMonocleAnamorphicShader(heroThresholdEl);
+    // Dónde cae la lente en la pantalla según la toma de la sesión (fracciones); por defecto, la de siempre.
+    const heroLens = () => {
+      const s = heroThresholdEl?.style, x = parseFloat(s?.getPropertyValue('--lens-x')), y = parseFloat(s?.getPropertyValue('--lens-y'));
+      return [Number.isFinite(x) ? x / 100 : 0.46, Number.isFinite(y) ? y / 100 : 0.395];
+    };
 
     function stepHeroPointer() {
       heroPointer.raf = null;
@@ -3633,14 +3696,10 @@
       heroThresholdEl.style.setProperty('--hero-my', my.toFixed(4));
       heroThresholdEl.style.setProperty('--hero-rx', `${(-my * 6.5).toFixed(3)}deg`);
       heroThresholdEl.style.setProperty('--hero-ry', `${(mx * 8.5).toFixed(3)}deg`);
-      heroThresholdEl.style.setProperty('--spot-x', `${(46 + mx * 34).toFixed(1)}%`);
-      heroThresholdEl.style.setProperty('--spot-y', `${(39.5 + my * 34).toFixed(1)}%`);
+      const lens = heroLens();
+      heroThresholdEl.style.setProperty('--spot-x', `${(lens[0] * 100 + mx * 34).toFixed(1)}%`);
+      heroThresholdEl.style.setProperty('--spot-y', `${(lens[1] * 100 + my * 34).toFixed(1)}%`);
       if (monocleShader) monocleShader.render(mx, my, performance.now() * 0.001);
-      const cta = $('.hero-kinetic-cta', heroThresholdEl);
-      if (cta) {
-        cta.style.setProperty('--magnet-x', `${(mx * 18).toFixed(2)}px`);
-        cta.style.setProperty('--magnet-y', `${(my * 14).toFixed(2)}px`);
-      }
       if (Math.abs(dx) > 0.0008 || Math.abs(dy) > 0.0008) {
         heroPointer.raf = requestAnimationFrame(stepHeroPointer);
       }
@@ -3650,8 +3709,9 @@
         if (reduced.matches || state.fit || motion.pose.distance >= 0.36) return;
         const w = geometry.width || innerWidth || 1;
         const h = geometry.height || innerHeight || 1;
-        heroPointer.tx = clamp((e.clientX / w) - 0.46, -0.5, 0.5) * 2;
-        heroPointer.ty = clamp((e.clientY / h) - 0.395, -0.5, 0.5) * 2;
+        const lens = heroLens();
+        heroPointer.tx = clamp((e.clientX / w) - lens[0], -0.5, 0.5) * 2;
+        heroPointer.ty = clamp((e.clientY / h) - lens[1], -0.5, 0.5) * 2;
         if (heroPointer.raf === null) heroPointer.raf = requestAnimationFrame(stepHeroPointer);
       }, { passive: true });
       stage.addEventListener('pointerleave', () => {
@@ -4202,7 +4262,6 @@
         const thresholdWink = $('[data-threshold-wink]', heroThreshold);
         const monoclePortal = $('[data-monocle-portal]', heroThreshold);
         const monocleMarilyn = $('[data-monocle-marilyn]', heroThreshold);
-        const zoomReadout = $('[data-hero-zoom-readout]', heroThreshold);
         nameTrigger();
         // Pasado el retrato, sus animaciones infinitas se detienen (app.css).
         heroThreshold.classList.toggle('is-passed', state.fit || pose.distance >= 0.36);
@@ -4244,9 +4303,6 @@
           if (monocleMarilyn) {
             const innerCounterScale = Math.exp(Math.log(1.35) * (1 - t));
             monocleMarilyn.style.transform = `scale(${innerCounterScale.toFixed(4)})`;
-          }
-          if (zoomReadout) {
-            zoomReadout.textContent = `LENTE ÓPTICA ${scale.toFixed(2)}×`;
           }
         }
       }

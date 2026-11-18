@@ -212,6 +212,20 @@
           "height": 2048,
           "caption": "Detalle del marco y los reflejos",
           "sha256": "bdb3606cf3a5b057a926fba4d5628dbfae9c534a7965add0d7e8c271967d295f"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/rara-avis-proceso-01-pluma.jpg",
+          "width": 2048,
+          "height": 1542,
+          "caption": "Proceso: el pastel junto a la pluma de pavo real y el marco, antes del ensamblaje.",
+          "sha256": "a82b4e223f518b5da5e63b209d2cf9770872e020d74d27347ec22fe3e8585de0"
+        },
+        {
+          "url": "https://naroagutierrezgil.com/images/catalogo/rara-avis-proceso-02-recortado.jpg",
+          "width": 1204,
+          "height": 1600,
+          "caption": "Proceso: el pastel recortado sobre el marco y el espejo, en la mesa de corte.",
+          "sha256": "f86d21978bed6892da48fcd30763fd47ea7d1c6eed3a41d8cc42c7f9a30498bb"
         }
       ],
       "inquire_email": "mailto:naroa@naroagutierrezgil.com?subject=Consulta%20sobre%20Rara%20Avis",

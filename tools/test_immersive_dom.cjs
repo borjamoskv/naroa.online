@@ -139,6 +139,7 @@ function audioBoundary() {
     createStereoPanner() { return node({ pan: parameter(0) }); }
     createPanner() { const panner = node({ positionX: parameter(0), positionY: parameter(0), positionZ: parameter(0) }); this.panners.push(panner); return panner; }
     createWaveShaper() { return node(); }
+    createChannelSplitter() { return node(); }
     createAnalyser() { return node({ fftSize: 2048, frequencyBinCount: 1024 }); }
     createDelay() { const delay = node({ delayTime: parameter(0) }); this.delays.push(delay); return delay; }
     createDynamicsCompressor() { return node({ threshold: parameter(0), knee: parameter(0), ratio: parameter(0), attack: parameter(0), release: parameter(0) }); }
@@ -836,10 +837,10 @@ async function eyeMatch(ui, base, points) {
   const score = music.w.NAROA_SCORE;
   assert.deepEqual([...score.titles], MONTH_TITLES, 'There are twelve pieces, one per month');
   assert.equal(score.title, MONTH_TITLES[new Date().getMonth()], 'The piece of the current month plays'); assert.equal(score.playing, true);
-  assert.ok(ctx.panners.length === 8 && ctx.panners.every(panner => panner.panningModel === 'HRTF'), 'Four echoes, the arpeggio, the strings and two nature sources surround the listener in 3D');
+  assert.ok(ctx.panners.length === 14 && ctx.panners.every(panner => panner.panningModel === 'HRTF'), 'Four echoes, the arpeggio, the strings, two nature sources, the room tail from behind and four early reflections surround the listener in 3D');
   assert.ok(score.state.intensity < .35, 'By default the melody stays silent');
   assert.ok(audio.oscillators.length > 0, 'Starting schedules the first notes');
-  assert.ok(ctx.rooms.length === 1 && ctx.delays.length === 5, 'The band runs through a room and five tape delays');
+  assert.ok(ctx.rooms.length === 1 && ctx.delays.length === 9, 'The band runs through a room, five tape delays and four early reflections');
   const leftRoom = ctx.rooms[0].buffer.getChannelData(0), rightRoom = ctx.rooms[0].buffer.getChannelData(1);
   assert.ok(leftRoom.some((value, i) => value !== rightRoom[i]), 'The room has distinct stereo reflections');
   assert.equal(typeof music.w.NAROA_SOUND.frame, 'function', 'NAROA_SOUND.frame interface is exposed');

@@ -430,6 +430,22 @@
           "height": 2048,
           "sha256": "bdb3606cf3a5b057a926fba4d5628dbfae9c534a7965add0d7e8c271967d295f",
           "caption": "Detalle del marco y los reflejos"
+        },
+        {
+          "src": "/images/catalogo/rara-avis-proceso-01-pluma.jpg",
+          "width": 2048,
+          "height": 1542,
+          "sha256": "a82b4e223f518b5da5e63b209d2cf9770872e020d74d27347ec22fe3e8585de0",
+          "source": "https://www.facebook.com/photo/?fbid=1696470255165722",
+          "caption": "Proceso: el pastel junto a la pluma de pavo real y el marco, antes del ensamblaje."
+        },
+        {
+          "src": "/images/catalogo/rara-avis-proceso-02-recortado.jpg",
+          "width": 1204,
+          "height": 1600,
+          "sha256": "f86d21978bed6892da48fcd30763fd47ea7d1c6eed3a41d8cc42c7f9a30498bb",
+          "source": "https://www.facebook.com/photo/?fbid=1696470155165732",
+          "caption": "Proceso: el pastel recortado sobre el marco y el espejo, en la mesa de corte."
         }
       ],
       "dimensions": "50 × 35 cm",

@@ -1275,7 +1275,7 @@ def build(output):
         )
         threshold_html = ""
         if threshold_page:
-            threshold_html = f'''<div class="hero-threshold" data-hero-threshold data-threshold-enter><div class="hero-threshold-plane" data-threshold-plane><img class="hero-threshold-portrait" src="{portrait}" srcset="{portrait_srcset}" sizes="{portrait_sizes}" width="2201" height="3468" alt="Naroa Gutiérrez Gil con chistera y monóculo en el umbral del estudio, en una fotografía de 2015; el guiño que hace está hecho con IA" fetchpriority="high" decoding="sync"><img class="hero-threshold-wink" data-threshold-wink src="{portrait_wink}" srcset="{portrait_wink_srcset}" sizes="{portrait_sizes}" width="2201" height="3468" alt="Guiño de bienvenida de Naroa Gutiérrez Gil" aria-hidden="true" decoding="async" fetchpriority="low"><div class="hero-monocle-portal" data-monocle-portal><div class="hero-monocle-lens"><div class="hero-monocle-marilyn" data-monocle-marilyn></div><canvas class="hero-monocle-canvas" data-monocle-canvas width="256" height="256" aria-hidden="true"></canvas><div class="hero-monocle-caustics"></div></div><svg class="hero-monocle-ring" viewBox="0 0 220 220" focusable="false" aria-hidden="true"><circle class="hero-monocle-bezel" cx="110" cy="110" r="98"/><circle class="hero-monocle-inner-ring" cx="110" cy="110" r="74"/></svg></div></div><div class="hero-threshold-shade"></div><div class="hero-spotlight" data-hero-spotlight></div><div class="hero-shards" data-hero-shards><span class="hero-shard hero-shard--1" data-shard-depth="1.4"></span><span class="hero-shard hero-shard--2" data-shard-depth="-1.1"></span><span class="hero-shard hero-shard--3" data-shard-depth="1.8"></span><span class="hero-shard hero-shard--4" data-shard-depth="-1.5"></span><span class="hero-shard hero-shard--5" data-shard-depth="0.9"></span><span class="hero-shard hero-shard--6" data-shard-depth="2.1"></span></div></div><p class="threshold-ai-note" data-threshold-note aria-hidden="true">El guiño de este retrato está hecho con IA a partir de una fotografía de 2015.</p>'''
+            threshold_html = f'''<div class="hero-threshold" data-hero-threshold data-threshold-enter><div class="hero-threshold-plane" data-threshold-plane><img class="hero-threshold-portrait" src="{portrait}" srcset="{portrait_srcset}" sizes="{portrait_sizes}" width="2201" height="3468" alt="Naroa Gutiérrez Gil con chistera y monóculo en el umbral del estudio, en una fotografía de 2015; el guiño que hace está hecho con IA" fetchpriority="high" decoding="sync"><img class="hero-threshold-wink" data-threshold-wink src="{portrait_wink}" srcset="{portrait_wink_srcset}" sizes="{portrait_sizes}" width="2201" height="3468" alt="Guiño de bienvenida de Naroa Gutiérrez Gil" aria-hidden="true" decoding="async" fetchpriority="low"><div class="hero-monocle-portal" data-monocle-portal><div class="hero-monocle-lens"><div class="hero-monocle-marilyn" data-monocle-marilyn></div><canvas class="hero-monocle-canvas" data-monocle-canvas width="256" height="256" aria-hidden="true"></canvas><div class="hero-monocle-caustics"></div></div><svg class="hero-monocle-ring" viewBox="0 0 220 220" focusable="false" aria-hidden="true"><circle class="hero-monocle-bezel" cx="110" cy="110" r="98"/><circle class="hero-monocle-inner-ring" cx="110" cy="110" r="74"/></svg></div></div><div class="hero-threshold-shade"></div><div class="hero-spotlight" data-hero-spotlight></div></div><p class="threshold-ai-note" data-threshold-note aria-hidden="true">El guiño de este retrato está hecho con IA a partir de una fotografía de 2015.</p>'''
         # Presentación de la portada para lectores de pantalla y buscadores: no se ve ni toca el umbral (§7).
         intro_html = f'<p class="sr-only" data-home-intro>{esc(description)}</p>' if threshold_page and description else ''
         body = f'''<main id="main" class="art-scroll" style="--steps:{len(selected)-1}">{intro_html}<section class="art-stage" data-gallery data-initial="{initial}" data-subset="{subset}"><div class="art-layers">{stages}</div>{threshold_html}<div class="art-shade" aria-hidden="true"></div><div class="art-stickman" data-stickman aria-hidden="true" hidden><div class="stickman-runner" data-stick-runner><svg viewBox="0 0 110 120" class="stickman-svg" aria-hidden="true"><ellipse data-stick-shadow cx="50" cy="103" rx="18" ry="2.6" fill="rgba(247,213,148,0.28)" /><path data-stick-scarf-gold d="M52,34 Q30,24 10,38" stroke="#f7d594" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.78" /><path data-stick-scarf d="M54,32 Q34,28 16,36" stroke="#fffdf4" stroke-width="2.6" stroke-linecap="round" fill="none" opacity="0.92" /><polyline data-stick-hair points="49,10 54,3 57,10 63,4 62,12" stroke="#fffdf4" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none" /><circle data-stick-head cx="58" cy="20" r="9.5" stroke="#fffdf4" stroke-width="3.2" fill="#070706" /><circle data-stick-eye cx="62" cy="18.5" r="1.8" fill="#fffdf4" /><line data-stick-torso x1="56" y1="29" x2="50" y2="62" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" /><polyline data-stick-arm-l points="55,36 39,48 29,39" stroke="#fffdf4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none" /><polyline data-stick-arm-r points="55,36 69,46 81,34" stroke="#fffdf4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none" /><polyline data-stick-leg-l points="50,62 34,82 22,102" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" fill="none" /><polyline data-stick-leg-r points="50,62 68,80 80,100" stroke="#fffdf4" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" fill="none" /><line data-stick-dust-1 x1="26" y1="98" x2="6" y2="98" stroke="rgba(255,253,244,0.82)" stroke-width="2.6" stroke-linecap="round" /><line data-stick-dust-2 x1="32" y1="105" x2="12" y2="105" stroke="rgba(255,253,244,0.55)" stroke-width="2.2" stroke-linecap="round" /><circle data-stick-spark cx="18" cy="93" r="2.2" fill="rgba(255,253,244,0.85)" /><circle data-stick-spark-2 cx="10" cy="88" r="1.7" fill="rgba(247,213,148,0.9)" /><circle data-stick-spark-3 cx="24" cy="97" r="1.4" fill="rgba(237,188,164,0.85)" /></svg></div></div><div class="kinetic-title" data-kinetic-title aria-hidden="true"></div><nav class="art-index" aria-label="Recorrido de obras">{nav}</nav><div class="art-bottom"><div><div data-art-copy aria-live="polite"><p class="art-counter"><span data-counter>{initial+1:02d} / {len(selected):02d}</span><small data-journey-cue>Desplázate para recorrer ↕</small></p><h1 data-art-title>{esc(p['title'])}</h1><p class="art-material" data-art-material>{esc(p['label'])}</p></div><button type="button" class="art-story-link" data-open-story>Sobre esta obra <span aria-hidden="true">+</span></button></div><div class="art-controls"><div class="art-view-actions"><button type="button" data-effects aria-pressed="false">Activar efectos</button><button type="button" class="kintsugi-toggle-btn" data-kintsugi-toggle hidden aria-pressed="false">Rasgado Kintsugi ✦</button><button type="button" data-fit aria-pressed="false">Ver imagen completa ↗</button><button type="button" data-lens aria-pressed="false">Lupa</button><button type="button" data-open-photos>Otras miradas ↗</button><button type="button" data-visit-portrait data-visit-more hidden>El retrato de tu visita <span aria-hidden="true">↗</span></button><button type="button" class="ouroboros-loop-btn" data-ouroboros hidden aria-label="Volver al origen de la exposición">Volver al origen ↺</button>{social_share_dock(is_finale=True)}</div><div class="art-arrows"><button type="button" data-prev aria-label="Obra anterior"{' disabled' if initial==0 else ''}>←</button><button type="button" data-next aria-label="Obra siguiente"{' disabled' if initial==len(selected)-1 else ''}>→</button></div></div></div><button type="button" class="restore-ui" data-restore hidden>Volver a la navegación ↙</button><div class="art-progress" aria-hidden="true"><span></span></div></section></main>
@@ -2270,7 +2270,7 @@ def build(output):
         siblings_html = (
             '<section class="rp-section" aria-labelledby="rp-otros"><h2 id="rp-otros" class="rp-h2">Otros retratos por encargo</h2><p class="rp-actions">'
             + ''.join(f'<a class="rp-link" href="{href}">{esc(label)}</a>' for href, label in rp_siblings if href != path)
-            + '<a class="rp-link" href="/retratos-por-encargo-bilbao/">Todos los encargos ↗</a></p></section>'
+            + '<a class="rp-link" href="/como-se-hace-un-retrato/">Cómo se hace un retrato ↗</a><a class="rp-link" href="/retratos-por-encargo-bilbao/">Todos los encargos ↗</a></p></section>'
         )
         rp_images[path] = [(w, w["photos"][0]) for w, _ in works] + ([(hero_work, hero_ph)] if hero_ph else []) + [(w, next(ph for ph in w["photos"] if (ph.get("caption") or "").startswith(start))) for w, start in details]
         body = (
@@ -2421,6 +2421,7 @@ def build(output):
     # Fotos del trabajo a medias que Naroa publicó, cada una junto a la obra acabada. Todas salen de la ficha de su
     # obra en el catálogo (se buscan por el principio del pie: si la ficha pierde la foto, el build falla). El texto
     # solo dice lo que se ve en ellas; no describe un método general ni promete condiciones (§13 de AGENTS.md).
+    # Cada obra es una fila: su título una vez y, debajo, las fotos en orden, unidas por una flecha a mano.
     def rp_shot(slug, caption_start):
         w = find_work(slug)
         return w, next(ph for ph in w["photos"] if (ph.get("caption") or "").startswith(caption_start))
@@ -2428,26 +2429,42 @@ def build(output):
     def rp_step(w, ph):
         return (
             f'<figure class="rp-detail" style="--ar:{ph["width"] / ph["height"]:.3f}"><a href="/obra/{w["slug"]}/" tabindex="-1"><img src="{ph["src"]}"{cover_dims(ph["src"])} sizes="(max-width:820px) 44vw, 30vw" alt="{esc(work_alt(w, ph["caption"]))}" loading="lazy" decoding="async"></a>'
-            f'<figcaption><a class="rp-work-meta" href="/obra/{w["slug"]}/">{esc(w["title"])}</a><p>{esc(ph["caption"])}</p></figcaption></figure>'
+            f'<figcaption><p>{esc(ph["caption"])}</p></figcaption></figure>'
+        )
+
+    def rp_row(shots):
+        w = shots[0][0]
+        meta = " · ".join(filter(None, [str(w["year"]) if w.get("year") else None, w.get("technique"), w.get("dimensions")]))
+        return (
+            f'<div class="rp-seq-row"><p class="rp-seq-head"><a class="rp-work-title" href="/obra/{w["slug"]}/">{esc(w["title"])} ↗</a><span class="rp-work-meta">{esc(meta)}</span></p>'
+            f'<div class="rp-seq{" rp-seq--pair" if len(shots) == 2 else ""}" style="--n:{len(shots)};--sum:{sum(ph["width"] / ph["height"] for _, ph in shots):.3f}">'
+            + ''.join(rp_step(w, ph) for _, ph in shots) + '</div></div>'
         )
 
     process_path = "/como-se-hace-un-retrato/"
     process_hero_work, process_hero_ph = rp_shot("rara-avis", "Dibujo a pastel, antes del ensamblaje")
     process_steps = [
         ("proceso-dibujo", "Primero, el dibujo",
-         "Infusión de Berto empezó a lápiz, directamente sobre la rodaja de fresno.",
-         [rp_shot("infusion-de-berto", "Proceso: el dibujo a lápiz"), rp_shot("infusion-de-berto", "Vista completa")]),
+         "Infusión de Berto empezó a lápiz, directamente sobre la rodaja de fresno. En Into the Wild, el fondo llegó después de la figura.",
+         [[rp_shot("infusion-de-berto", "Proceso: el dibujo a lápiz"), rp_shot("infusion-de-berto", "Vista completa")],
+          [rp_shot("into-the-wild", "La ilustración a bolígrafo y lápiz"), rp_shot("into-the-wild", "Obra completa")]]),
         ("proceso-color", "Del blanco y negro al color",
          "Custom Jaio, sobre tela vaquera negra: la figura en blanco, el rostro en blanco y negro y, al final, el color.",
-         [rp_shot("custom-jaio", "Proceso: la figura en blanco"), rp_shot("custom-jaio", "Proceso: el retrato en blanco y negro"), rp_shot("custom-jaio", "Proceso: el color a medias"), rp_shot("custom-jaio", "Bastidor completo")]),
+         [[rp_shot("custom-jaio", "Proceso: la figura en blanco"), rp_shot("custom-jaio", "Proceso: el retrato en blanco y negro"), rp_shot("custom-jaio", "Proceso: el color a medias"), rp_shot("custom-jaio", "Bastidor completo")]]),
         ("proceso-collage", "El dibujo, antes del collage",
          "En estas piezas el dibujo se terminó primero; el collage llegó después.",
-         [rp_shot("roisin", "El dibujo de Róisín antes"), rp_shot("roisin", "Róisín, obra completa"), rp_shot("pippilotta", "El dibujo de Pippi"), rp_shot("pippilotta", "Loving Långstrump: collage terminado"), rp_shot("las-rosalias", "Proceso: los dibujos de los pies"), rp_shot("las-rosalias", "Las RosaLías")]),
+         [[rp_shot("roisin", "El dibujo de Róisín antes"), rp_shot("roisin", "Róisín, obra completa")],
+          [rp_shot("pippilotta", "El dibujo de Pippi"), rp_shot("pippilotta", "Loving Långstrump: collage terminado")],
+          [rp_shot("rosetta", "Dibujo inicial"), rp_shot("rosetta", "La obra terminada")],
+          [rp_shot("dustin", "Dibujo inicial"), rp_shot("dustin", "La obra terminada")],
+          [rp_shot("las-rosalias", "Proceso: los dibujos de los pies"), rp_shot("las-rosalias", "Las RosaLías")]]),
         ("proceso-materia", "Lo que rodea al retrato",
-         "Marian de Miranda creció sobre una caja de sardinas de chocolate.",
-         [rp_shot("marian-de-miranda", "Base de collage"), rp_shot("marian-de-miranda", "Montaje digital intermedio"), rp_shot("marian-de-miranda", "Obra final")]),
+         "Marcos, cajas y recortes: lo que acompaña al retrato se monta alrededor de él.",
+         [[rp_shot("marian-de-miranda", "Base de collage"), rp_shot("marian-de-miranda", "Montaje digital intermedio"), rp_shot("marian-de-miranda", "Obra final")],
+          [rp_shot("rara-avis", "Proceso: el pastel junto a la pluma"), rp_shot("rara-avis", "Proceso: el pastel recortado"), rp_shot("rara-avis", "Ensamblaje completo")],
+          [rp_shot("el-gato-que-es-kutxa", "Proceso: fondo e imagen recortada"), rp_shot("el-gato-que-es-kutxa", "Tapa terminada")]]),
     ]
-    process_shots = [shot for *_, shots in process_steps for shot in shots]
+    process_shots = [shot for *_, rows in process_steps for row in rows for shot in row]
     rp_images[process_path] = [(process_hero_work, process_hero_ph)] + process_shots
     process_title = "Cómo se hace un retrato: el trabajo a medias, en fotos"
     process_description = "Fotos del trabajo a medias de obras de Naroa Gutiérrez Gil, cada una junto a la pieza acabada: el dibujo, el blanco y negro, el color y el collage."
@@ -2455,16 +2472,14 @@ def build(output):
     process_body = (
         '<main id="main" class="retrato-pagina">'
         '<header class="rp-hero"><div class="rp-hero-copy"><p class="rp-kicker">Naroa Gutiérrez Gil · Retratos por encargo</p><h1 class="rp-title">Cómo se hace un retrato</h1>'
-        '<p class="rp-lead"><strong>Fotos del trabajo a medias.</strong> Naroa fotografió estas obras antes de terminarlas. Aquí va cada una junto a cómo quedó.</p></div>'
+        '<p class="rp-lead"><strong>Fotos del trabajo a medias.</strong> Naroa fotografió estas obras antes de terminarlas. Aquí va cada una junto a cómo quedó.</p>'
+        '<p class="rp-actions"><a class="rp-link" href="#proceso-dibujo">Ver el proceso ↓</a><a class="rp-link" href="#rp-escribir">Encargar un retrato ↓</a></p></div>'
         f'<figure class="rp-hero-art"><a href="/obra/{process_hero_work["slug"]}/" tabindex="-1"><img src="{process_hero_ph["src"]}"{cover_dims(process_hero_ph["src"])} sizes="(max-width:980px) 88vw, 42vw" alt="{esc(work_alt(process_hero_work, process_hero_ph["caption"]))}" loading="eager" fetchpriority="high" decoding="async"></a>'
         f'<figcaption><span class="rp-work-meta">{esc(process_hero_meta)}</span><a class="rp-work-title" href="/obra/{process_hero_work["slug"]}/">{esc(process_hero_work["title"])} ↗</a><p>{esc(process_hero_ph["caption"])}</p></figcaption></figure></header>'
         + ''.join(
             f'<section class="rp-section" aria-labelledby="{key}"><h2 id="{key}" class="rp-h2">{esc(heading)}</h2><p class="rp-text">{esc(text)}</p>'
-            + ''.join(
-                f'<div class="rp-seq" style="--n:{len(row)};--sum:{sum(ph["width"] / ph["height"] for _, ph in row):.3f}">' + ''.join(rp_step(w, ph) for w, ph in row) + '</div>'
-                for row in ([s for s in shots if s[0]["slug"] == slug] for slug in dict.fromkeys(w["slug"] for w, _ in shots))
-            ) + '</section>'
-            for key, heading, text, shots in process_steps
+            + ''.join(rp_row(row) for row in rows) + '</section>'
+            for key, heading, text, rows in process_steps
         )
         + '<section class="rp-section" aria-labelledby="rp-condiciones"><h2 id="rp-condiciones" class="rp-h2">Cómo se encarga</h2>'
         '<p class="rp-text">Se le escribe a Naroa por WhatsApp o por correo con la foto o las fotos que haya y un par de líneas sobre la persona. Ella propone soporte y tamaño, y da el precio por escrito antes de empezar.</p>'
