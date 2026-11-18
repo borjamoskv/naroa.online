@@ -1098,6 +1098,12 @@ def build(output):
         detail = f" ({caption})" if caption else ""
         return f"{q['title']}{detail} — {medium}, retrato artístico original de Naroa Gutiérrez Gil"
 
+    def work_description(q):
+        # Una ficha técnica suelta («Ficha técnica: …») no dice qué obra es ni de quién, y varias se repiten
+        # (los Munster): en el buscador va el texto alternativo de la obra, que ya está traducido.
+        story = q.get("story") or ""
+        return work_alt(q) if story.startswith("Ficha técnica") or len(story) < 90 else story
+
     def gallery(path, initial=0, subset="all", title=None, description=None, schema=None):
         selected = [p for p in projects if subset != "Vaivenes" or p["series"] == "Vaivenes"]
         p = selected[initial]
@@ -1214,7 +1220,7 @@ def build(output):
         # En el buscador, la ficha de una obra dice además de qué está hecha. Al compartirla sigue saliendo
         # el título limpio (§6.2): og:title y twitter:title no cambian.
         work_head = None if title else " · ".join(filter(None, [p["title"], p.get("technique")]))
-        page(path, title or p["title"], description or p["story"], body, p["photos"][0]["original"], True, schema or default_schema, image_alt=work_alt(p, p["photos"][0]["caption"]), head_title=work_head)
+        page(path, title or p["title"], description or work_description(p), body, p["photos"][0]["original"], True, schema or default_schema, image_alt=work_alt(p, p["photos"][0]["caption"]), head_title=work_head)
 
     def hero(image, eyebrow, heading, lead="", link=None, alt="Obra de Naroa Gutiérrez Gil", position="50% 45%", mobile_position=None):
         # mobile_position: encuadre propio para pantallas verticales, donde el recorte deja ver una franja estrecha.
