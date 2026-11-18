@@ -1500,8 +1500,7 @@
   }
   function cancelResume() {
     if (!resume) return;
-    removeEventListener('pointerup', resume, true);
-    removeEventListener('keydown', resume, true);
+    removeEventListener('click', resume, true);
     resume = null;
   }
   // El aviso solo aparece si el navegador bloquea el audio.
@@ -1556,20 +1555,18 @@
   say('');
   paint();
 
-  // Si la música sonaba en la página anterior, vuelve con el primer gesto en esta.
-  let wasOn = false;
-  try { wasOn = !!score && soundPreference !== 'off' && sessionStorage.getItem(RESUME_KEY) === '1'; } catch {}
-  if (wasOn) {
+  // Primer clic en cualquier página, también durante la ráfaga: captura en window antes de sus filtros.
+  if (score && soundPreference !== 'off') {
     resume = event => {
-      // Un dedo que se apoya, un arrastre o una tecla como Mayús o Esc no dan permiso para sonar: se espera al siguiente gesto.
-      if (navigator.userActivation && !navigator.userActivation.isActive) return;
-      // Los controles de entrada deciden en su click; no anticipar la elección con pointerup o Enter.
+      // Los clics de scripts no dan permiso para sonar ni consumen el primer clic del visitante.
+      if (!event.isTrusted || navigator.userActivation && !navigator.userActivation.isActive) return;
+      // Sonido y las entradas explícitas deciden en su propio click, una sola vez.
       if (event.target instanceof Element && event.target.closest('[data-sound], [data-enter-gallery]')) return;
       cancelResume();
+      chooseSound(true);
       turnOn();
     };
-    addEventListener('pointerup', resume, true);
-    addEventListener('keydown', resume, true);
+    addEventListener('click', resume, true);
   }
 
   // El pulso sigue al scroll. `velocity` llega en alturas de pantalla por segundo.

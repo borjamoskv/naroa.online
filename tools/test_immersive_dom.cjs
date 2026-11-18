@@ -881,6 +881,14 @@ async function eyeMatch(ui, base, points) {
     resumeSilent.dom.window.close();
   }
 
+  {
+    const syntheticAudio = audioBoundary(), synthetic = create('/sobre-mi/', false, undefined, syntheticAudio);
+    await synthetic.flush();
+    synthetic.find('h1').click(); await synthetic.flush();
+    assert.equal(syntheticAudio.contexts.length, 0, 'A scripted click cannot start music before a real visitor click');
+    synthetic.dom.window.close();
+  }
+
   const audio = audioBoundary(), music = create('/sobre-mi/', false, { width: 390, height: 844 }, audio);
   await music.flush();
   assert.equal(audio.contexts.length, 0, 'No audio context is created before a visitor gesture');

@@ -287,7 +287,7 @@
     // El toque que corta la ráfaga enseña el retrato; no cuenta además como «entrar en la galería».
     function swallow(event) {
       // Una entrada o pausa explícita responde incluso mientras se recoge la ráfaga.
-      if (event.target.closest?.('[data-enter-gallery],[data-effects]')) { reveal(); finish(); return; }
+      if (event.target.closest?.('[data-enter-gallery],[data-effects],[data-sound]')) { reveal(); finish(); return; }
       event.stopPropagation(); event.preventDefault();
     }
     // El retrato entra con su llegada de siempre mientras el lienzo de la ráfaga se funde encima.
